@@ -4,26 +4,18 @@ import { Table } from 'antd'
 function list({ loading, dataSource }) {
   const columns = [
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-    }, {
-      title: 'Name',
+      title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 100,
     }, {
-      title: 'Host',
-      dataIndex: 'hostId',
-      key: 'hostId',
+      title: 'Snaphost Name',
+      dataIndex: 'snapshot',
+      key: 'snapshot',
     }, {
-      title: 'External Id',
-      dataIndex: 'externalId',
-      key: 'externalId',
-    }, {
-      title: 'Frontend',
-      dataIndex: 'frontEnd',
-      key: 'frontEnd',
+      title: 'Timestamp',
+      dataIndex: 'timestamp',
+      key: 'timestamp',
     }, {
       title: 'Size',
       dataIndex: 'size',
