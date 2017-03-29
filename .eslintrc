@@ -1,0 +1,32 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "semi": [2, "never"],
+    "no-console": 0,
+    "comma-dangle": [2, "always-multiline"],
+    "max-len": 0,
+    "react/jsx-first-prop-new-line": 0,
+    "no-unused-expressions": [0, {
+      "allowShortCircuit": true,
+      "allowTernary": true
+    }],
+    "arrow-body-style": [0, "never"],
+    "func-names": 0,
+    "prefer-const": 0,
+    "no-extend-native": 0,
+    "no-param-reassign": 0,
+    "no-restricted-syntax": 0,
+    "no-eval": 0,
+    "react/jsx-no-bind": 0,
+    "no-unused-vars": [2, { "ignoreRestSiblings": true }],
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  }
+}

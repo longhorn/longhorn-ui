@@ -1,0 +1,110 @@
+module.exports = {
+  'GET /v1/volumes'(req, res) {
+    res.json({
+      type: 'collection',
+      resourceType: 'volume',
+      links: {
+        self: '…/v1/volumes',
+      },
+      actions: {},
+      data: [
+        {
+          id: 'vol1',
+          type: 'volume',
+          links: {
+            self: '…/v1/volumes/vol1',
+            backups: '…/v1/volumes/vol1/backups',
+            snapshots: '…/v1/volumes/vol1/snapshots',
+            recurrings: '…/v1/volumes/vol1/recurrings',
+          },
+          actions: {
+            attach: '…/v1/volumes/vol1/?action=attach',
+            detach: '…/v1/volumes/vol1/?action=detach',
+          },
+          controller: {
+            id: '1i69',
+            hostId: '39e1f6b7-8ea7-4987-ba57-13e1fc89c815',
+            address: 'http://controller.volume-vol1.rancher.internal:9501',
+            running: true,
+          },
+          replicas: {
+            '5a0e1172-afb5-47fa': {
+              id: '1i82',
+              hostId: '39e1f6b7-8ea7-4987-ba57-13e1fc89c815',
+              address: 'tcp://replica-5a0e1172-afb5-47fa.rancher.internal:9502',
+              running: true,
+              mode: 'RW',
+              name: 'replica-5a0e1172-afb5-47fa',
+            },
+            '78373bce-8954-49cb': {
+              id: '1i81',
+              hostId: '6fc92a6d-695a-4ffc-b4a1-b07fd1dcfc7c',
+              address: 'tcp://replica-78373bce-8954-49cb.rancher.internal:9502',
+              running: true,
+              mode: 'ERR',
+              badTimestamp: '2017-02-28T02:43:19Z',
+              name: 'replica-78373bce-8954-49cb',
+            },
+          },
+          status: 'attached',
+          created: '2017-03-21T01:13:58Z',
+          hostId: '84e983d2-ee35-4460-81e9-8912728b2c96',
+          externalId: 'container-test',
+          frontEnd: '/dev/longhorn/vol1',
+          size: 429496729600,
+          used: 23580672,
+          numberOfReplicas: 2,
+          staleReplicaTimeout: 24,
+        },
+        {
+          id: 'vol2',
+          type: 'volume',
+          links: {
+            self: '…/v1/volumes/vol1',
+            backups: '…/v1/volumes/vol1/backups',
+            snapshots: '…/v1/volumes/vol1/snapshots',
+            recurrings: '…/v1/volumes/vol1/recurrings',
+          },
+          actions: {
+            attach: '…/v1/volumes/vol1/?action=attach',
+            detach: '…/v1/volumes/vol1/?action=detach',
+          },
+          controller: {
+            id: '1i69',
+            hostId: '39e1f6b7-8ea7-4987-ba57-13e1fc89c815',
+            address: 'http://controller.volume-vol1.rancher.internal:9501',
+            running: true,
+          },
+          replicas: {
+            '5a0e1172-afb5-47fa': {
+              id: '1i82',
+              hostId: '39e1f6b7-8ea7-4987-ba57-13e1fc89c815',
+              address: 'tcp://replica-5a0e1172-afb5-47fa.rancher.internal:9502',
+              running: true,
+              mode: 'RW',
+              name: 'replica-5a0e1172-afb5-47fa',
+            },
+            '78373bce-8954-49cb': {
+              id: '1i81',
+              hostId: '6fc92a6d-695a-4ffc-b4a1-b07fd1dcfc7c',
+              address: 'tcp://replica-78373bce-8954-49cb.rancher.internal:9502',
+              running: true,
+              mode: 'ERR',
+              badTimestamp: '2017-02-28T02:43:19Z',
+              name: 'replica-78373bce-8954-49cb',
+            },
+          },
+          status: 'attached',
+          created: '2017-03-21T01:13:58Z',
+          hostId: '84e983d2-ee35-4460-81e9-8912728b2c96',
+          externalId: 'container-test',
+          frontEnd: '/dev/longhorn/vol1',
+          size: 429496729600,
+          used: 23580672,
+          numberOfReplicas: 2,
+          staleReplicaTimeout: 24,
+        },
+      ],
+    })
+  },
+}
