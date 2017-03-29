@@ -5,6 +5,7 @@ export default {
   namespace: 'host',
   state: {
     data: [],
+    modalVisible: false,
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -25,6 +26,12 @@ export default {
         ...state,
         ...action.payload,
       }
+    },
+    showModal(state, action) {
+      return { ...state, ...action.payload, modalVisible: true }
+    },
+    hideModal(state) {
+      return { ...state, modalVisible: false }
     },
   },
 }

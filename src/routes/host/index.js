@@ -1,9 +1,31 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import HostList from './HostList'
+import AddHost from './AddHost'
+import HostAction from './HostAction'
 
-function Host({ host, loading }) {
-  const { data } = host
+function Host({ host, loading, dispatch }) {
+  const { data, modalVisible } = host
+
+  const addHostModalProps = {
+    visible: modalVisible,
+    onCancel() {
+      dispatch({
+        type: 'host/hideModal',
+      })
+    },
+  }
+
+  const hostActionProps = {
+    onAdd() {
+      dispatch({
+        type: 'host/showModal',
+        payload: {
+          modalType: 'create',
+        },
+      })
+    },
+  }
 
   const hostListProps = {
     dataSource: data,
@@ -12,7 +34,9 @@ function Host({ host, loading }) {
 
   return (
     <div className="content-inner">
+      <HostAction {...hostActionProps} />
       <HostList {...hostListProps} />
+      <AddHost {...addHostModalProps} />
     </div>
   )
 }

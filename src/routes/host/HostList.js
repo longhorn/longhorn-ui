@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
+import { DropOption } from '../../components'
 
 function list({ loading, dataSource }) {
   const columns = [
@@ -24,6 +25,20 @@ function list({ loading, dataSource }) {
       title: 'Used Space',
       dataIndex: 'used',
       key: 'used',
+    }, {
+      title: '',
+      key: 'operation',
+      width: 100,
+      render: () => {
+        return (
+          <DropOption menuOptions={[
+            { key: '1', name: 'Deactivate' },
+            { key: '2', name: 'Activate' },
+            { key: '3', name: 'Delete' },
+            { key: '4', name: 'Add Disk' },
+          ]} />
+        )
+      },
     },
   ]
 
