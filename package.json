@@ -49,7 +49,8 @@
     "start": "dora --plugins \"proxy,webpack?publicPath=/,webpack-hmr,browser-history?index=/src/index.html\"",
     "dev": "dora --plugins \"webpack?publicPath=/,webpack-hmr,browser-history?index=/src/index.html\"",
     "lint": "eslint --fix --ext .js src",
-    "build": "atool-build"
+    "build": "atool-build",
+    "serve": "superstatic dist --gzip true --port 8000 --host 0.0.0.0"
   },
   "theme": "./src/theme.js",
   "standard": {
