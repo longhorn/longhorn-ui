@@ -11,8 +11,8 @@ COPY . /web
 WORKDIR /web
 
 RUN npm run build
-RUN npm install http-serve -g --registry=https://registry.npm.taobao.org
+RUN npm install http-server@indexzero/http-server -g --registry=https://registry.npm.taobao.org
 
 WORKDIR /web/dist
 
-CMD ["http-serve", ".", "-g", "-p", "8000"]
+CMD ["http-server", ".", "-g", "-p", "8000"]
