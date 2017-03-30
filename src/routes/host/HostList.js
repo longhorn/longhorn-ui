@@ -2,7 +2,13 @@ import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import { DropOption } from '../../components'
 
-function list({ loading, dataSource }) {
+function list({ loading, dataSource, showAddDiskModal }) {
+  const handleMenuClick = (event) => {
+    if (event.key === '4') {
+      showAddDiskModal()
+    }
+  }
+
   const columns = [
     {
       title: 'State',
@@ -36,7 +42,8 @@ function list({ loading, dataSource }) {
             { key: '2', name: 'Activate' },
             { key: '3', name: 'Delete' },
             { key: '4', name: 'Add Disk' },
-          ]} />
+          ]} onMenuClick={handleMenuClick}
+          />
         )
       },
     },
@@ -62,6 +69,7 @@ function list({ loading, dataSource }) {
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  showAddDiskModal: PropTypes.func,
 }
 
 export default list

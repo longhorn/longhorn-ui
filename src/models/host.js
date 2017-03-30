@@ -6,6 +6,7 @@ export default {
   state: {
     data: [],
     modalVisible: false,
+    addDiskModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -32,6 +33,12 @@ export default {
     },
     hideModal(state) {
       return { ...state, modalVisible: false }
+    },
+    showAddDiskModal(state, action) {
+      return { ...state, ...action.payload, addDiskModalVisible: true }
+    },
+    hideAddDiskModal(state) {
+      return { ...state, addDiskModalVisible: false }
     },
   },
 }
