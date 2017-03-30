@@ -3,10 +3,11 @@ import { connect } from 'dva'
 import HostList from './HostList'
 import AddHost from './AddHost'
 import AddDisk from './AddDisk'
+import HostReplica from './HostReplica'
 import HostAction from './HostAction'
 
 function Host({ host, loading, dispatch }) {
-  const { data, modalVisible, addDiskModalVisible } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible } = host
 
   const addHostModalProps = {
     visible: modalVisible,
@@ -37,9 +38,6 @@ function Host({ host, loading, dispatch }) {
     onAdd() {
       dispatch({
         type: 'host/showModal',
-        payload: {
-          modalType: 'create',
-        },
       })
     },
   }
@@ -50,9 +48,24 @@ function Host({ host, loading, dispatch }) {
     showAddDiskModal() {
       dispatch({
         type: 'host/showAddDiskModal',
+      })
+    },
+    showReplicaModal(record) {
+      dispatch({
+        type: 'host/showReplicaModal',
         payload: {
-          modalType: 'create',
+          selected: record,
         },
+      })
+    },
+  }
+
+  const hostReplicaModalProps = {
+    selected,
+    visible: replicaModalVisible,
+    onCancel() {
+      dispatch({
+        type: 'host/hideReplicaModal',
       })
     },
   }
@@ -60,12 +73,16 @@ function Host({ host, loading, dispatch }) {
   const AddDiskGen = () =>
     <AddDisk {...addDiskModalProps} />
 
+  const HostReplicaGen = () =>
+    <HostReplica {...hostReplicaModalProps} />
+
   return (
     <div className="content-inner">
       <HostAction {...hostActionProps} />
       <HostList {...hostListProps} />
       <AddHost {...addHostModalProps} />
       <AddDiskGen />
+      <HostReplicaGen />
     </div>
   )
 }

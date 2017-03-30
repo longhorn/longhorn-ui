@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, InputNumber, Radio, Modal } from 'antd'
+import { Form, Input, Modal } from 'antd'
 const FormItem = Form.Item
 
 const formItemLayout = {

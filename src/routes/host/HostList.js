@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import { DropOption } from '../../components'
+import styles from './HostList.less'
 
-function list({ loading, dataSource, showAddDiskModal }) {
+function list({ loading, dataSource, showAddDiskModal, showReplicaModal }) {
   const handleMenuClick = (event) => {
     if (event.key === '4') {
       showAddDiskModal()
@@ -15,6 +16,7 @@ function list({ loading, dataSource, showAddDiskModal }) {
       dataIndex: 'state',
       key: 'state',
       width: 100,
+      className: styles.status,
     }, {
       title: 'Name',
       dataIndex: 'name',
@@ -23,6 +25,17 @@ function list({ loading, dataSource, showAddDiskModal }) {
       title: 'IP',
       dataIndex: 'ip',
       key: 'ip',
+    }, {
+      title: 'Replicas',
+      dataIndex: 'replicas',
+      key: 'replicas',
+      render: (text, record) => {
+        return (
+          <a onClick={e => showReplicaModal(record, e)}>
+            {text.length} Replicas
+          </a>
+        )
+      },
     }, {
       title: 'Total Space',
       dataIndex: 'total',
@@ -70,6 +83,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   showAddDiskModal: PropTypes.func,
+  showReplicaModal: PropTypes.func,
 }
 
 export default list
