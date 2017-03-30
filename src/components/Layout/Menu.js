@@ -26,12 +26,12 @@ const getMenus = function (menuArray, siderFold, parentPath = '/') {
   })
 }
 
-function Menus({ location }) {
+function Menus({ location, isNavbar }) {
   const menuItems = getMenus(menu, false)
 
   return (
     <Menu
-      mode="horizontal"
+      mode={isNavbar ? 'inline' : 'horizontal'}
       defaultSelectedKeys={[location.pathname !== '/' ? location.pathname : '/dashboard']}
     >
       {menuItems}
@@ -41,6 +41,7 @@ function Menus({ location }) {
 
 Menus.propTypes = {
   location: PropTypes.object,
+  isNavbar: PropTypes.bool,
 }
 
 export default Menus

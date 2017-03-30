@@ -8,9 +8,16 @@ import { LocaleProvider } from 'antd'
 import '../components/skin.less'
 const { Header, Bread, styles } = Layout
 
-const App = ({ children, location }) => {
+const App = ({ children, dispatch, location, app }) => {
+  const { menuPopoverVisible, isNavbar } = app
+
   const headerProps = {
     location,
+    menuPopoverVisible,
+    isNavbar,
+    switchMenuPopover() {
+      dispatch({ type: 'app/switchMenuPopver' })
+    },
   }
 
   return (
@@ -39,7 +46,9 @@ const App = ({ children, location }) => {
 
 App.propTypes = {
   children: PropTypes.element.isRequired,
+  app: PropTypes.object,
   location: PropTypes.object,
+  dispatch: PropTypes.func,
 }
 
-export default connect()(App)
+export default connect(({ app, loading }) => ({ app, loading: loading.models.app }))(App)
