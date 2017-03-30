@@ -11,6 +11,7 @@ COPY . /web
 WORKDIR /web
 
 RUN npm run build
+RUN npm install http-server -g --registry=https://registry.npm.taobao.org
 
 WORKDIR /web/dist
 
