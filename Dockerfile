@@ -13,4 +13,4 @@ WORKDIR /web
 
 RUN npm run build
 
-CMD ["http-server", "./dist", "-p", "8000"]
+CMD ["http-server", "./dist", "-g", "-p", "8000"]
