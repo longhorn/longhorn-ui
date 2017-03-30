@@ -15,4 +15,4 @@ RUN npm install http-server -g --registry=https://registry.npm.taobao.org
 
 WORKDIR /web/dist
 
-CMD ["npm", ".", "-g", "-p", "8000"]
+CMD ["http-server", ".", "-g", "-p", "8000"]
