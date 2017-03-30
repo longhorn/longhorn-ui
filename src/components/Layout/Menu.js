@@ -26,12 +26,13 @@ const getMenus = function (menuArray, siderFold, parentPath = '/') {
   })
 }
 
-function Menus({ location, isNavbar }) {
+function Menus({ location, isNavbar, switchMenuPopover }) {
   const menuItems = getMenus(menu, false)
 
   return (
     <Menu
       mode={isNavbar ? 'inline' : 'horizontal'}
+      onSelect={switchMenuPopover}
       defaultSelectedKeys={[location.pathname !== '/' ? location.pathname : '/dashboard']}
     >
       {menuItems}
@@ -42,6 +43,7 @@ function Menus({ location, isNavbar }) {
 Menus.propTypes = {
   location: PropTypes.object,
   isNavbar: PropTypes.bool,
+  switchMenuPopover: PropTypes.func,
 }
 
 export default Menus

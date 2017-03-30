@@ -6,6 +6,7 @@ export default {
   },
   subscriptions: {
     setup({ dispatch }) {
+      dispatch({ type: 'changeNavbar' })
       window.onresize = () => {
         dispatch({ type: 'changeNavbar' })
       }

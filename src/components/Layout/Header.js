@@ -7,6 +7,7 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   const menusProps = {
     location,
     isNavbar,
+    switchMenuPopover,
   }
 
   return (
