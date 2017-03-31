@@ -9,6 +9,7 @@ function list({ loading, dataSource }) {
       dataIndex: 'status',
       key: 'status',
       width: 100,
+      className: 'active',
     }, {
       title: 'Name',
       dataIndex: 'id',

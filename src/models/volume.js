@@ -7,8 +7,15 @@ export default {
     data: [],
   },
   subscriptions: {
-    setup({ dispatch }) {
-      dispatch({ type: 'query' })
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        if (location.pathname === '/volume') {
+          dispatch({
+            type: 'query',
+            payload: location.query,
+          })
+        }
+      })
     },
   },
   effects: {
@@ -16,6 +23,9 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
+      if (payload.field && payload.keyword) {
+        data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
+      }
       yield put({ type: 'queryVolume', payload: { ...data } })
     },
   },
