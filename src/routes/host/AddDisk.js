@@ -54,7 +54,7 @@ const modal = ({
                 message: 'required field',
               },
             ],
-          })(<Input />)}
+          })(<Input placeholder="A Linux directaory path like “/foo/bar”" />)}
         </FormItem>
         <FormItem label="Labels" hasFeedback {...formItemLayout}>
           {getFieldDecorator('labels', {
@@ -65,7 +65,7 @@ const modal = ({
                 message: 'required field',
               },
             ],
-          })(<Input />)}
+          })(<Input placeholder="A comma-separate list of strings, 10-20 chars" />)}
         </FormItem>
       </Form>
     </Modal>
