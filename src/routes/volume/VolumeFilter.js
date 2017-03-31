@@ -40,7 +40,7 @@ const VolumeFilter = ({
         <AttchedHostSelect {...attchedHostProps} />
       </Col>
 
-      <Col lg={{ offset: 4, span: 8 }} md={12} sm={8} xs={24} style={{ marginBottom: 16, textAlign: 'right' }}>
+      <Col lg={{ offset: 4, span: 8 }} md={{ offset: 0, span: 24 }} sm={{ offset: 0, span: 24 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
         <Button size="large" type="primary" onClick={onAdd}>Create Volume</Button>
       </Col>
     </Row>
