@@ -8,7 +8,9 @@ const VolumeFilter = ({
   field,
   keyword,
   onSearch,
+  onSelect,
   onAdd,
+  location,
 }) => {
   const searchGroupProps = {
     field,
@@ -26,8 +28,9 @@ const VolumeFilter = ({
   const attchedHostProps = {
     hosts,
     onSelect: (value) => {
-      console.log(value)
+      onSelect(value)
     },
+    location,
   }
 
   return (
@@ -50,10 +53,12 @@ const VolumeFilter = ({
 VolumeFilter.propTypes = {
   form: PropTypes.object.isRequired,
   onSearch: PropTypes.func,
+  onSelect: PropTypes.func,
   onAdd: PropTypes.func,
   field: PropTypes.string,
   keyword: PropTypes.string,
   hosts: PropTypes.array,
+  location: PropTypes.object,
 }
 
 export default Form.create()(VolumeFilter)

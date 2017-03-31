@@ -17,16 +17,36 @@ function Volume({ host, volume, location, loading, dispatch }) {
   const volumeFilterProps = {
     hosts,
     field,
+    location,
     keyword,
     onSearch(fieldsValue) {
       fieldsValue.keyword.length ? dispatch(routerRedux.push({
         pathname: '/volume',
         query: {
+          ...location.query,
           field: fieldsValue.field,
           keyword: fieldsValue.keyword,
         },
       })) : dispatch(routerRedux.push({
         pathname: '/volume',
+        query: {
+          host: location.query.host,
+        },
+      }))
+    },
+    onSelect(selectedHost) {
+      selectedHost ? dispatch(routerRedux.push({
+        pathname: '/volume',
+        query: {
+          ...location.query,
+          host: selectedHost,
+        },
+      })) : dispatch(routerRedux.push({
+        pathname: '/volume',
+        query: {
+          field: location.query.field,
+          keyword: location.query.keyword,
+        },
       }))
     },
     onAdd() {

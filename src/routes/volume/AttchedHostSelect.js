@@ -5,6 +5,7 @@ const InputGroup = Input.Group
 const AttchedHostSelect = ({
   hosts,
   onSelect,
+  location,
 }) => {
   const allowClear = true
 
@@ -13,7 +14,7 @@ const AttchedHostSelect = ({
   return (
     <InputGroup compact>
       <span className="ant-input-group-addon">Attached to Host</span>
-      <Select style={{ minWidth: '200px' }} allowClear={allowClear} size="large" onSelect={onSelect}>
+      <Select style={{ minWidth: '200px' }} defaultValue={location.query ? location.query.host : ''} allowClear={allowClear} size="large" onChange={onSelect}>
         {options}
       </Select>
     </InputGroup>
@@ -23,6 +24,7 @@ const AttchedHostSelect = ({
 AttchedHostSelect.propTypes = {
   onSelect: PropTypes.func,
   hosts: PropTypes.array,
+  location: PropTypes.object,
 }
 
 export default Form.create()(AttchedHostSelect)

@@ -26,6 +26,9 @@ export default {
       if (payload.field && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
       }
+      if (payload.host) {
+        data.data = data.data.filter(item => item.hostId === payload.host)
+      }
       yield put({ type: 'queryVolume', payload: { ...data } })
     },
   },
