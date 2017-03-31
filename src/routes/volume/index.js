@@ -4,8 +4,9 @@ import { routerRedux } from 'dva/router'
 import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
 
-function Volume({ volume, location, loading, dispatch }) {
+function Volume({ host, volume, location, loading, dispatch }) {
   const { data } = volume
+  const hosts = host.data
   const { field, keyword } = location.query
 
   const volumeListProps = {
@@ -14,6 +15,7 @@ function Volume({ volume, location, loading, dispatch }) {
   }
 
   const volumeFilterProps = {
+    hosts,
     field,
     keyword,
     onSearch(fieldsValue) {
@@ -50,6 +52,7 @@ Volume.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
+  host: PropTypes.object,
 }
 
-export default connect(({ volume, loading }) => ({ volume, loading: loading.models.volume }))(Volume)
+export default connect(({ host, volume, loading }) => ({ host, volume, loading: loading.models.volume }))(Volume)

@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
-import { Select, Input, Form, Button, Row, Col } from 'antd'
+import { Form, Button, Row, Col } from 'antd'
 import { Search } from '../../components'
-const InputGroup = Input.Group
+import AttchedHostSelect from './AttchedHostSelect'
 
 const VolumeFilter = ({
+  hosts,
   field,
   keyword,
   onSearch,
@@ -22,7 +23,13 @@ const VolumeFilter = ({
       onSearch(value)
     },
   }
-  const allowClear = true
+  const attchedHostProps = {
+    hosts,
+    onSelect: (value) => {
+      console.log(value)
+    },
+  }
+
   return (
     <Row gutter={24}>
       <Col lg={6} md={12} sm={16} xs={24} style={{ marginBottom: 16 }}>
@@ -30,12 +37,7 @@ const VolumeFilter = ({
       </Col>
 
       <Col lg={6} md={12} sm={16} xs={24} style={{ marginBottom: 16 }}>
-        <InputGroup compact>
-          <span className="ant-input-group-addon">Attached to Host</span>
-          <Select style={{ minWidth: '200px' }} allowClear={allowClear} size="large">
-            <Select.Option value="Jiangsu">84e983d2-ee35-4460-81e9-8912728b2c96</Select.Option>
-          </Select>
-        </InputGroup>
+        <AttchedHostSelect {...attchedHostProps} />
       </Col>
 
       <Col lg={{ offset: 4, span: 8 }} md={12} sm={8} xs={24} style={{ marginBottom: 16, textAlign: 'right' }}>
@@ -51,6 +53,7 @@ VolumeFilter.propTypes = {
   onAdd: PropTypes.func,
   field: PropTypes.string,
   keyword: PropTypes.string,
+  hosts: PropTypes.array,
 }
 
 export default Form.create()(VolumeFilter)
