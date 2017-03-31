@@ -3,9 +3,10 @@ import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
+import CreateVolume from './CreateVolume'
 
 function Volume({ host, volume, location, loading, dispatch }) {
-  const { data } = volume
+  const { data, createVolumeModalVisible } = volume
   const hosts = host.data
   const { field, keyword } = location.query
 
@@ -51,18 +52,41 @@ function Volume({ host, volume, location, loading, dispatch }) {
     },
     onAdd() {
       dispatch({
-        type: 'volume/showModal',
-        payload: {
-          modalType: 'volume',
-        },
+        type: 'volume/showCreateVolumeModal',
       })
     },
   }
+
+  const createVolumeModalProps = {
+    item: {
+      replicaNum: 2,
+      size: 20,
+      iops: 1000,
+      frontend: 'iscsi',
+    },
+    hosts,
+    visible: createVolumeModalVisible,
+    onOk(newVolume) {
+      dispatch({
+        type: 'volume/createVolume',
+        payload: newVolume,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideCreateVolumeModal',
+      })
+    },
+  }
+
+  const CreateVolumeGen = () =>
+    <CreateVolume {...createVolumeModalProps} />
 
   return (
     <div className="content-inner" >
       <VolumeFilter {...volumeFilterProps} />
       <VolumeList {...volumeListProps} />
+      <CreateVolumeGen />
     </div>
   )
 }

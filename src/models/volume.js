@@ -5,6 +5,7 @@ export default {
   namespace: 'volume',
   state: {
     data: [],
+    createVolumeModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -38,6 +39,12 @@ export default {
         ...state,
         ...action.payload,
       }
+    },
+    showCreateVolumeModal(state, action) {
+      return { ...state, ...action.payload, createVolumeModalVisible: true }
+    },
+    hideCreateVolumeModal(state) {
+      return { ...state, createVolumeModalVisible: false }
     },
   },
 }
