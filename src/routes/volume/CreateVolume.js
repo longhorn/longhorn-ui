@@ -128,7 +128,7 @@ const modal = ({
               },
             ],
           })(
-            <RadioGroup value={item.frontend}>
+            <RadioGroup setFieldsValue={item.frontend}>
               <Radio value={'linuxDev'}>linux-dev</Radio>
               <Radio value={'iscsi'}>iscsi</Radio>
             </RadioGroup>)}

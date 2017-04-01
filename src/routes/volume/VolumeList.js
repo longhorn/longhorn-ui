@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import { DropOption } from '../../components'
+import { Link } from 'dva/router'
 
 function list({ loading, dataSource }) {
   const columns = [
@@ -14,6 +15,15 @@ function list({ loading, dataSource }) {
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
+      render: (text) => {
+        return (
+          <div>
+            <Link to={`/volume/${text}`}>
+                {text}
+            </Link>
+          </div>
+        )
+      },
     }, {
       title: 'Host',
       dataIndex: 'hostId',
