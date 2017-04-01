@@ -5,11 +5,12 @@ export default {
   namespace: 'volume',
   state: {
     data: [],
+    createVolumeModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (location.pathname === '/volume') {
+        if (location.pathname.indexOf('/volume') === 0) {
           dispatch({
             type: 'query',
             payload: location.query,
@@ -26,6 +27,9 @@ export default {
       if (payload.field && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
       }
+      if (payload.host) {
+        data.data = data.data.filter(item => item.hostId === payload.host)
+      }
       yield put({ type: 'queryVolume', payload: { ...data } })
     },
   },
@@ -35,6 +39,12 @@ export default {
         ...state,
         ...action.payload,
       }
+    },
+    showCreateVolumeModal(state, action) {
+      return { ...state, ...action.payload, createVolumeModalVisible: true }
+    },
+    hideCreateVolumeModal(state) {
+      return { ...state, createVolumeModalVisible: false }
     },
   },
 }

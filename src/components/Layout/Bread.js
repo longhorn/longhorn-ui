@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Breadcrumb, Icon } from 'antd'
 import styles from './Bread.less'
 import { menu } from '../../utils'
+import { Link } from 'dva/router'
 
 let pathSet = []
 const getPathSet = function (menuArray, parentPath) {
@@ -22,23 +23,34 @@ getPathSet(menu)
 
 function Bread({ location }) {
   let pathNames = []
+  let last = ''
   location.pathname.substr(1).split('/').forEach((item, key) => {
     if (key > 0) {
       pathNames.push((`${pathNames[key - 1]}-${item}`).hyphenToHump())
     } else {
       pathNames.push((`-${item}`).hyphenToHump())
     }
+    last = item
   })
+
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {
-      item = 'Dashboard'
+      pathSet[item] = {
+        name: last,
+      }
     }
     return (
-      <Breadcrumb.Item key={key} {...((pathNames.length - 1 === key) || !pathSet[item].clickable) ? '' : { href: `#${pathSet[item].path}` }}>
+      <Breadcrumb.Item key={key}>
         {pathSet[item].icon
           ? <Icon type={pathSet[item].icon} />
           : ''}
-        <span>{pathSet[item].name}</span>
+        {
+          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ?
+            <span>{pathSet[item].name}</span> :
+            <Link to={pathSet[item].path}>
+              {pathSet[item].name}
+            </Link>
+        }
       </Breadcrumb.Item>
     )
   })

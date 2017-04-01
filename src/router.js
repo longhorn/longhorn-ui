@@ -63,6 +63,18 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'volume/:id',
+          name: 'volume/detail',
+          getComponent(nextState, cb) {
+            nprogress.start()
+            require.ensure([], require => {
+              nprogress.done()
+              registerModel(app, require('./models/volume'))
+              cb(null, require('./routes/volume/detail'))
+            }, '/volume-detail')
+          },
+        },
+        {
           path: 'backups',
           name: 'backups',
           getComponent(nextState, cb) {

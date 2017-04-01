@@ -13,6 +13,12 @@ module.exports = [
     key: 'volume',
     name: 'Volume',
     icon: 'database',
+    child: [
+      {
+        key: 'detail',
+        name: 'Detail',
+      },
+    ],
   },
   {
     key: 'backups',

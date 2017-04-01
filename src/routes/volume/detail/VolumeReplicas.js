@@ -1,45 +1,32 @@
 import React, { PropTypes } from 'react'
-import { Table } from 'antd'
-import { DropOption } from '../../components'
-import { Link } from 'dva/router'
+import { Table, Card } from 'antd'
+import { DropOption } from '../../../components'
 
 function list({ loading, dataSource }) {
   const columns = [
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'running',
+      key: 'running',
       width: 100,
       className: 'active',
+      render: () => {
+        return (
+          <span>Healthy</span>
+        )
+      },
     }, {
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      render: (text) => {
-        return (
-          <div>
-            <Link to={`/volume/${text}`}>
-                {text}
-            </Link>
-          </div>
-        )
-      },
+    }, {
+      title: 'Used',
+      dataIndex: 'used',
+      key: 'used',
     }, {
       title: 'Host',
       dataIndex: 'hostId',
       key: 'hostId',
-    }, {
-      title: 'External Id',
-      dataIndex: 'externalId',
-      key: 'externalId',
-    }, {
-      title: 'Frontend',
-      dataIndex: 'frontEnd',
-      key: 'frontEnd',
-    }, {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
     }, {
       title: 'Created',
       dataIndex: 'created',
@@ -52,11 +39,6 @@ function list({ loading, dataSource }) {
         return (
           <DropOption menuOptions={[
             { key: '1', name: 'Delete' },
-            { key: '2', name: 'Attach' },
-            { key: '3', name: 'Detach' },
-            { key: '4', name: 'Snapshots' },
-            { key: '5', name: 'Backups' },
-            { key: '6', name: 'Recurring Snapshot and Backup' },
           ]} />
         )
       },
@@ -66,7 +48,7 @@ function list({ loading, dataSource }) {
   const pagination = false
 
   return (
-    <div>
+    <Card bordered={false} bodyStyle={{ padding: 0 }}>
       <Table
         bordered={false}
         columns={columns}
@@ -76,7 +58,7 @@ function list({ loading, dataSource }) {
         pagination={pagination}
         rowKey={record => record.id}
       />
-    </div>
+    </Card>
   )
 }
 
