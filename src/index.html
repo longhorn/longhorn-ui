@@ -10,6 +10,68 @@
       <script
         src="https://as.alipayobjects.com/g/component/??console-polyfill/0.2.2/index.js,media-match/2.0.2/media.match.min.js"></script>
   <![endif]-->
+  <style>
+    .ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree{
+      margin-top: -56px;
+      margin-left: 200px;
+      }
+    .ant-tree .ant-tree-switcher.ant-tree-switcher.ant-tree-switcher.ant-tree-switcher{
+      display: none;
+    }
+    .ant-tree-title{
+      display: inline-block;
+      vertical-align: text-top;
+    }
+    .ant-tree li{
+      position: relative;
+      top: 0;
+      padding: 0;
+    }
+    .ant-tree-child-tree > li::before{
+      content: '';
+      display: block;
+      width: 198px;
+      height: 1px;
+      border-top: 1px solid black;
+      position: absolute;
+      top: 26px;
+      z-index: 0;
+      right: 100%;
+    }
+    .ant-tree-child-tree{
+      position: relative;
+      top: 0;
+    }
+    .ant-tree-child-tree:after{
+        content: '';
+        display: block;
+        width: 1px;
+        height: calc(100% - 57px);
+        border-left: 1px solid black;
+        position: absolute;
+        top: 27px;
+        left: -180px;
+    }
+    .ant-tree li:last-child>.ant-tree-child-tree:before{
+        content: '';
+        display: block;
+        width: 1px;
+        height: calc(100% - 57px);
+        border-left: 1px solid white;
+        position: absolute;
+        top: 27px;
+        left: -398px;
+        z-index: 1;
+    }
+    /*.ant-tree-child-tree:last-child*/
+    .ant-tree li a{
+      position: relative;
+      top: 0;
+      z-index: 2;
+      background: white;
+      padding: 10px 5px;
+    }
+  </style>
 </head>
 
 <body>
