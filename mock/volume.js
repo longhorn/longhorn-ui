@@ -27,25 +27,29 @@ module.exports = {
             address: 'http://controller.volume-vol1.rancher.internal:9501',
             running: true,
           },
-          replicas: {
-            '5a0e1172-afb5-47fa': {
+          replicas: [
+            {
               id: '1i82',
-              hostId: '39e1f6b7-8ea7-4987-ba57-13e1fc89c815',
+              used: '61GB',
+              hostId: 'HostnameOne',
               address: 'tcp://replica-5a0e1172-afb5-47fa.rancher.internal:9502',
               running: true,
               mode: 'RW',
               name: 'replica-5a0e1172-afb5-47fa',
+              created: '2017-03-21T01:13:58Z',
             },
-            '78373bce-8954-49cb': {
+            {
               id: '1i81',
-              hostId: '6fc92a6d-695a-4ffc-b4a1-b07fd1dcfc7c',
+              used: '1G',
+              hostId: 'HostnameOne',
               address: 'tcp://replica-78373bce-8954-49cb.rancher.internal:9502',
               running: true,
               mode: 'ERR',
               badTimestamp: '2017-02-28T02:43:19Z',
               name: 'replica-78373bce-8954-49cb',
+              created: '2017-03-21T01:13:58Z',
             },
-          },
+          ],
           status: 'Attached',
           created: '2017-03-21T01:13:58Z',
           hostId: 'HostnameOne',
@@ -75,25 +79,29 @@ module.exports = {
             address: 'http://controller.volume-vol1.rancher.internal:9501',
             running: true,
           },
-          replicas: {
-            '5a0e1172-afb5-47fa': {
+          replicas: [
+            {
               id: '1i82',
-              hostId: '39e1f6b7-8ea7-4987-ba57-13e1fc89c815',
+              used: '61GB',
+              hostId: 'HostnameOne',
               address: 'tcp://replica-5a0e1172-afb5-47fa.rancher.internal:9502',
               running: true,
               mode: 'RW',
               name: 'replica-5a0e1172-afb5-47fa',
+              created: '2017-03-21T01:13:58Z',
             },
-            '78373bce-8954-49cb': {
+            {
               id: '1i81',
-              hostId: '6fc92a6d-695a-4ffc-b4a1-b07fd1dcfc7c',
+              used: '61GB',
+              hostId: 'HostnameOne',
               address: 'tcp://replica-78373bce-8954-49cb.rancher.internal:9502',
               running: true,
               mode: 'ERR',
               badTimestamp: '2017-02-28T02:43:19Z',
               name: 'replica-78373bce-8954-49cb',
+              created: '2017-03-21T01:13:58Z',
             },
-          },
+          ],
           status: 'Attached',
           created: '2017-03-21T01:13:58Z',
           hostId: 'HostnameTwo',

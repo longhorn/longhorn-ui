@@ -10,7 +10,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (location.pathname === '/volume') {
+        if (location.pathname.indexOf('/volume') === 0) {
           dispatch({
             type: 'query',
             payload: location.query,
