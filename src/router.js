@@ -71,7 +71,7 @@ const Routers = function ({ history, app }) {
               nprogress.done()
               registerModel(app, require('./models/volume'))
               cb(null, require('./routes/volume/detail'))
-            }, '/volume-detail')
+            }, 'volume-detail')
           },
         },
         {

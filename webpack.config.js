@@ -18,6 +18,7 @@ module.exports = function (webpackConfig, env) {
     webpackConfig.babel.plugins.push('dev-expression')
     webpackConfig.entry = { index: './src/index.js' }
   }
+  webpackConfig.output.publicPath = '/'
 
   webpackConfig.plugins = webpackConfig.plugins.filter((plugin) => {
     return !(plugin instanceof webpack.optimize.CommonsChunkPlugin)
