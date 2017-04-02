@@ -21,8 +21,8 @@ module.exports = [
     ],
   },
   {
-    key: 'backups',
-    name: 'Backups',
+    key: 'backup',
+    name: 'Backup',
     icon: 'copy',
   },
   {

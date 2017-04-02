@@ -2,7 +2,13 @@ import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import { DropOption } from '../../components'
 
-function list({ loading, dataSource }) {
+function list({ loading, dataSource, showRestoreBackup }) {
+  const handleMenuClick = (record, event) => {
+    if (event.key === '2') {
+      showRestoreBackup(record)
+    }
+  }
+
   const columns = [
     {
       title: 'ID',
@@ -29,12 +35,13 @@ function list({ loading, dataSource }) {
       title: '',
       key: 'operation',
       width: 100,
-      render: () => {
+      render: (text, record) => {
         return (
           <DropOption menuOptions={[
             { key: '1', name: 'Delete' },
             { key: '2', name: 'Restore' },
-          ]} />
+          ]} onMenuClick={e => handleMenuClick(record, e)}
+          />
         )
       },
     },
@@ -60,6 +67,7 @@ function list({ loading, dataSource }) {
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  showRestoreBackup: PropTypes.func,
 }
 
 export default list

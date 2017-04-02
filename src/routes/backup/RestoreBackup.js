@@ -40,7 +40,7 @@ const modal = ({
   const allowClear = false
   const options = hosts.map(host => <Select.Option key={host.name} value={host.name}>{host.name}</Select.Option>)
   const modalOpts = {
-    title: 'Create Volume',
+    title: `Restore Backup ${item.id}`,
     visible,
     onCancel,
     onOk: handleOk,
@@ -49,28 +49,6 @@ const modal = ({
   return (
     <Modal {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('name', {
-            initialValue: item.name,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
-        <FormItem label="Size" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('size', {
-            initialValue: item.size,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
-              },
-            ],
-          })(<InputNumber min={1} />)}
-        </FormItem>
         <FormItem label="IOPS" hasFeedback {...formItemLayout}>
           {getFieldDecorator('iops', {
             initialValue: item.iops,
@@ -96,12 +74,6 @@ const modal = ({
         <FormItem label="Host" hasFeedback {...formItemLayout}>
           {getFieldDecorator('host', {
             initialValue: item.host,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
-              },
-            ],
           })(
             <Select allowClear={allowClear} size="large">
               {options}
@@ -128,7 +100,7 @@ const modal = ({
               },
             ],
           })(
-            <RadioGroup>
+            <RadioGroup setFieldsValue={item.frontend}>
               <Radio value={'linuxDev'}>linux-dev</Radio>
               <Radio value={'iscsi'}>iscsi</Radio>
             </RadioGroup>)}

@@ -5,6 +5,8 @@ export default {
   namespace: 'backup',
   state: {
     data: [],
+    currentItem: {},
+    restoreBackupModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -25,6 +27,12 @@ export default {
         ...state,
         ...action.payload,
       }
+    },
+    showRestoreBackupModal(state, action) {
+      return { ...state, ...action.payload, restoreBackupModalVisible: true }
+    },
+    hideRestoreBackupModal(state) {
+      return { ...state, restoreBackupModalVisible: false }
     },
   },
 }

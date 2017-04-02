@@ -75,12 +75,13 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'backups',
-          name: 'backups',
+          path: 'backup',
+          name: 'backup',
           getComponent(nextState, cb) {
             nprogress.start()
             require.ensure([], require => {
               nprogress.done()
+              registerModel(app, require('./models/host'))
               registerModel(app, require('./models/backup'))
               cb(null, require('./routes/backup/'))
             }, 'backup')
