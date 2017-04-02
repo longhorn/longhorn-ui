@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { Search } from '../../components'
-import AttchedHostSelect from './AttchedHostSelect'
+import AttachedHostSelect from './AttachedHostSelect'
 
 const VolumeFilter = ({
   hosts,
@@ -40,7 +40,7 @@ const VolumeFilter = ({
       </Col>
 
       <Col lg={6} md={12} sm={16} xs={24} style={{ marginBottom: 16 }}>
-        <AttchedHostSelect {...attchedHostProps} />
+        <AttachedHostSelect {...attchedHostProps} />
       </Col>
 
       <Col lg={{ offset: 4, span: 8 }} md={{ offset: 0, span: 24 }} sm={{ offset: 0, span: 24 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>

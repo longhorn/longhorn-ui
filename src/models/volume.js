@@ -6,6 +6,7 @@ export default {
   state: {
     data: [],
     createVolumeModalVisible: false,
+    attachHostModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -45,6 +46,12 @@ export default {
     },
     hideCreateVolumeModal(state) {
       return { ...state, createVolumeModalVisible: false }
+    },
+    showAttachHostModal(state, action) {
+      return { ...state, ...action.payload, attachHostModalVisible: true }
+    },
+    hideAttachHostModal(state) {
+      return { ...state, attachHostModalVisible: false }
     },
   },
 }

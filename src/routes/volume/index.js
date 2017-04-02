@@ -4,15 +4,21 @@ import { routerRedux } from 'dva/router'
 import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
 import CreateVolume from './CreateVolume'
+import AttachHost from './AttachHost'
 
 function Volume({ host, volume, location, loading, dispatch }) {
-  const { data, createVolumeModalVisible } = volume
+  const { data, createVolumeModalVisible, attachHostModalVisible } = volume
   const hosts = host.data
   const { field, keyword } = location.query
 
   const volumeListProps = {
     dataSource: data,
     loading,
+    showAttachHost() {
+      dispatch({
+        type: 'volume/showAttachHostModal',
+      })
+    },
   }
 
   const volumeFilterProps = {
@@ -57,6 +63,24 @@ function Volume({ host, volume, location, loading, dispatch }) {
     },
   }
 
+  const attachHostModalProps = {
+    item: {
+    },
+    visible: attachHostModalVisible,
+    hosts,
+    onOk(newVolume) {
+      dispatch({
+        type: 'volume/attachHost',
+        payload: newVolume,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideAttachHostModal',
+      })
+    },
+  }
+
   const createVolumeModalProps = {
     item: {
       replicaNum: 2,
@@ -82,11 +106,15 @@ function Volume({ host, volume, location, loading, dispatch }) {
   const CreateVolumeGen = () =>
     <CreateVolume {...createVolumeModalProps} />
 
+  const AttachHostGen = () =>
+    <AttachHost {...attachHostModalProps} />
+
   return (
     <div className="content-inner" >
       <VolumeFilter {...volumeFilterProps} />
       <VolumeList {...volumeListProps} />
       <CreateVolumeGen />
+      <AttachHostGen />
     </div>
   )
 }

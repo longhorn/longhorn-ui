@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Select, Input, Form } from 'antd'
 const InputGroup = Input.Group
 
-const AttchedHostSelect = ({
+const AttachedHostSelect = ({
   hosts,
   onSelect,
   location,
@@ -21,10 +21,10 @@ const AttchedHostSelect = ({
   )
 }
 
-AttchedHostSelect.propTypes = {
+AttachedHostSelect.propTypes = {
   onSelect: PropTypes.func,
   hosts: PropTypes.array,
   location: PropTypes.object,
 }
 
-export default Form.create()(AttchedHostSelect)
+export default Form.create()(AttachedHostSelect)

@@ -3,7 +3,12 @@ import { Table } from 'antd'
 import { DropOption } from '../../components'
 import { Link } from 'dva/router'
 
-function list({ loading, dataSource }) {
+function list({ loading, dataSource, showAttachHost }) {
+  const handleMenuClick = (event) => {
+    if (event.key === '2') {
+      showAttachHost()
+    }
+  }
   const columns = [
     {
       title: 'Status',
@@ -19,7 +24,7 @@ function list({ loading, dataSource }) {
         return (
           <div>
             <Link to={`/volume/${text}`}>
-                {text}
+              {text}
             </Link>
           </div>
         )
@@ -57,7 +62,8 @@ function list({ loading, dataSource }) {
             { key: '4', name: 'Snapshots' },
             { key: '5', name: 'Backups' },
             { key: '6', name: 'Recurring Snapshot and Backup' },
-          ]} />
+          ]} onMenuClick={handleMenuClick}
+          />
         )
       },
     },
@@ -83,6 +89,7 @@ function list({ loading, dataSource }) {
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  showAttachHost: PropTypes.func,
 }
 
 export default list
