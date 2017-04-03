@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Form, Modal, Button } from 'antd'
+import { Form, Modal } from 'antd'
 import RecurringList from './RecurringList'
 
 const modal = ({
@@ -36,13 +36,9 @@ const modal = ({
     ],
   }
 
-  const onNewRecurring = () => {
-    recurringListProps.dataSource = []
-  }
   return (
     <Modal {...modalOpts}>
       <RecurringList {...recurringListProps} />
-      <Button style={{ marginTop: '20px' }} onClick={onNewRecurring} type="primary" icon="plus">New</Button>
     </Modal>
   )
 }
