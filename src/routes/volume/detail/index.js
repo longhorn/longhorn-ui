@@ -7,9 +7,10 @@ import { DropOption } from '../../../components'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Recurring from '../Recurring'
+import Snapshots from '../Snapshots'
 
 function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, recurringModalVisible } = volume
+  const { data, attachHostModalVisible, snapshotsModalVisible, recurringModalVisible } = volume
   const hosts = host.data
   const selectedVolume = data.find(item => item.id === volumeId)
   if (!selectedVolume) {
@@ -32,11 +33,19 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
     })
   }
 
+  const showSnapshots = () => {
+    dispatch({
+      type: 'volume/showSnapshotsModal',
+    })
+  }
+
   const handleMenuClick = (event) => {
     if (event.key === '2') {
       showAttachHost()
     } else if (event.key === '6') {
       showRecurring()
+    } else if (event.key === '4') {
+      showSnapshots()
     }
   }
 
@@ -75,11 +84,25 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
     },
   }
 
+  const snapshotsModalProps = {
+    item: {
+    },
+    visible: snapshotsModalVisible,
+    onCancel() {
+      dispatch({
+        type: 'volume/hideSnapshotsModal',
+      })
+    },
+  }
+
   const RecurringGen = () =>
     <Recurring {...recurringModalProps} />
 
   const AttachHostGen = () =>
     <AttachHost {...attachHostModalProps} />
+
+  const SnapshotsGen = () =>
+    <Snapshots {...snapshotsModalProps} />
 
 
   return (
@@ -105,6 +128,7 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
       </Row>
       <AttachHostGen />
       <RecurringGen />
+      <SnapshotsGen />
     </div>
   )
 }

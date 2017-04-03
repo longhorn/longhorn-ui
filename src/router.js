@@ -101,18 +101,6 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'snapshot',
-          name: 'snapshot',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], require => {
-              nprogress.done()
-              registerModel(app, require('./models/snapshot'))
-              cb(null, require('./routes/snapshot'))
-            }, 'snapshot')
-          },
-        },
-        {
           path: '*',
           name: 'error',
           getComponent(nextState, cb) {

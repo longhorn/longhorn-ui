@@ -1,0 +1,6 @@
+{
+  "name": "Snapshot",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Snapshot.js"
+}

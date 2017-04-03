@@ -8,6 +8,7 @@ export default {
     createVolumeModalVisible: false,
     attachHostModalVisible: false,
     recurringModalVisible: false,
+    snapshotsModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -59,6 +60,12 @@ export default {
     },
     hideRecurringModal(state) {
       return { ...state, recurringModalVisible: false }
+    },
+    showSnapshotsModal(state, action) {
+      return { ...state, ...action.payload, snapshotsModalVisible: true }
+    },
+    hideSnapshotsModal(state) {
+      return { ...state, snapshotsModalVisible: false }
     },
   },
 }
