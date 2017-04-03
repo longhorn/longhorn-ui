@@ -3,10 +3,12 @@ import { Table } from 'antd'
 import { DropOption } from '../../components'
 import { Link } from 'dva/router'
 
-function list({ loading, dataSource, showAttachHost }) {
+function list({ loading, dataSource, showAttachHost, showRecurring }) {
   const handleMenuClick = (event) => {
     if (event.key === '2') {
       showAttachHost()
+    } else if (event.key === '6') {
+      showRecurring()
     }
   }
   const columns = [
@@ -90,6 +92,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   showAttachHost: PropTypes.func,
+  showRecurring: PropTypes.func,
 }
 
 export default list

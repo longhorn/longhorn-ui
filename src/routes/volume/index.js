@@ -5,9 +5,10 @@ import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
 import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
+import Recurring from './Recurring'
 
 function Volume({ host, volume, location, loading, dispatch }) {
-  const { data, createVolumeModalVisible, attachHostModalVisible } = volume
+  const { data, createVolumeModalVisible, attachHostModalVisible, recurringModalVisible } = volume
   const hosts = host.data
   const { field, keyword } = location.query
 
@@ -17,6 +18,11 @@ function Volume({ host, volume, location, loading, dispatch }) {
     showAttachHost() {
       dispatch({
         type: 'volume/showAttachHostModal',
+      })
+    },
+    showRecurring() {
+      dispatch({
+        type: 'volume/showRecurringModal',
       })
     },
   }
@@ -103,11 +109,31 @@ function Volume({ host, volume, location, loading, dispatch }) {
     },
   }
 
+  const recurringModalProps = {
+    item: {
+    },
+    visible: recurringModalVisible,
+    onOk(recurring) {
+      dispatch({
+        type: 'volume/recurring',
+        payload: recurring,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideRecurringModal',
+      })
+    },
+  }
+
   const CreateVolumeGen = () =>
     <CreateVolume {...createVolumeModalProps} />
 
   const AttachHostGen = () =>
     <AttachHost {...attachHostModalProps} />
+
+  const RecurringGen = () =>
+    <Recurring {...recurringModalProps} />
 
   return (
     <div className="content-inner" >
@@ -115,6 +141,7 @@ function Volume({ host, volume, location, loading, dispatch }) {
       <VolumeList {...volumeListProps} />
       <CreateVolumeGen />
       <AttachHostGen />
+      <RecurringGen />
     </div>
   )
 }
