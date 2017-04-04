@@ -8,13 +8,13 @@ const modal = ({
 }) => {
   const modalOpts = {
     title: 'Snapshots',
-    width: 800,
+    width: 1000,
     visible,
     onCancel,
   }
 
   return (
-    <Modal {...modalOpts}>
+    <Modal className="lh-modal-snapshot" {...modalOpts}>
       <Snapshot />
     </Modal>
   )

@@ -1,41 +1,96 @@
 import React, { PropTypes } from 'react'
-import { Tree, Icon } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button } from 'antd'
 
 const TreeNode = Tree.TreeNode
 
-function icon() {
+const ButtonGroup = Button.Group
+
+function StartPoint() {
   return (
-    <div>
-      <div style={{ position: 'relative', width: '30px', height: '30px', display: 'inline-block', borderRadius: '50%', backgroundColor: 'hsl(209, 66%, 51%)' }}>
-        <Icon style={{ lineHeight: '25px', width: '25px', height: '25px', position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, margin: 'auto', fontSize: '20px', color: 'white' }} type="camera" />
+      <div className="tree-snapshot-start-point">
       </div>
-      <div style={{ lineHeight: '15px', verticalAlign: 'super', marginLeft: '10px', fontSize: '10px', display: 'inline-block' }}>
-        <p style={{ fontSize: '120%' }}>SnapShot Name</p>
-        <p style={{ color: '#a4a4a4' }}>13:02:04 2017-04-04</p>
-      </div>
-    </div>
+    )
+}
+function SnapshotIcon() {
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <span>Revert</span>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <span>Backup</span>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <span>Delete</span>
+      </Menu.Item>
+    </Menu>
   )
+  return (
+    <Dropdown
+      overlay={menu}
+      trigger={['click']}
+    >
+      <div>
+        <div className="tree-snapshot-icon">
+          <Icon className="snapshot-icon" type="camera" />
+        </div>
+        <div className="tree-snapshot-desc">
+          <p className="snapshot-name">Snapshot Name</p>
+          <p className="snapshot-time">created 13:02:04 2017-04-04</p>
+        </div>
+     </div>
+    </Dropdown>
+  )
+}
+
+function CurrentPoint(){
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <span>Take Snapshot</span>
+      </Menu.Item>
+    </Menu>
+  )
+   return (
+     <Dropdown
+        overlay={menu}
+        trigger={['click']}
+      >
+        <div className="snapshot-current-desc">
+          <Button>
+            <Icon type="caret-right" />Live Volume
+          </Button>
+        </div>
+      </Dropdown>
+   )
 }
 
 class Snapshot extends React.Component {
   render() {
     return (
-      <div>
         <Tree
           defaultExpandAll
           ref="snapshotTree"
           id="snapshotTree"
+          className="lh-tree-snapshot"
         >
-          <TreeNode title={icon()} key="0-0">
-            <TreeNode title={icon()} key="0-0-2">
-              <TreeNode title={icon()} key="0-0-2-0" />
-              <TreeNode title={icon()} key="0-0-1-1" />
-              <TreeNode title={icon()} key="0-0-1-2" />
+          <TreeNode title={StartPoint()} disabled key="0-0">
+            <TreeNode title={SnapshotIcon()} key="0-0-2">
+              <TreeNode title={SnapshotIcon()} key="0-0-2-0" />
+              <TreeNode title={SnapshotIcon()} key="0-0-1-2" />
+              <TreeNode title={SnapshotIcon()} key="0-0-1-1">
+                <TreeNode title={SnapshotIcon()} key="0-0-2-5" />
+                <TreeNode title={SnapshotIcon()} key="0-0-2-7">
+                  <TreeNode title={SnapshotIcon()} key="1-0-2-5" />
+                  <TreeNode title={SnapshotIcon()} key="1-0-2-7">
+                    <TreeNode title={CurrentPoint()} key="1-0-2-10" />
+                  </TreeNode>
+                </TreeNode>
+              </TreeNode>
+              <TreeNode title={SnapshotIcon()} key="0-0-2-11" />
             </TreeNode>
-            <TreeNode title={icon()} key="b-b-b" />
           </TreeNode>
         </Tree>
-      </div>
     )
   }
 }
