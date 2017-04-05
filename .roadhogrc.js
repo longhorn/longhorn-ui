@@ -23,6 +23,10 @@ export default {
     "/v1/volumes": {
       "target": "http://54.223.25.181:9500/",
       "changeOrigin": true
+    },
+    "/v1/hosts": {
+      "target": "http://54.223.25.181:9500/",
+      "changeOrigin": true
     }
   },
   "theme": "./src/theme.js"

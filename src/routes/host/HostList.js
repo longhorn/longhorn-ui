@@ -22,9 +22,9 @@ function list({ loading, dataSource, showAddDiskModal, showReplicaModal }) {
       dataIndex: 'name',
       key: 'name',
     }, {
-      title: 'IP',
-      dataIndex: 'ip',
-      key: 'ip',
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
     }, {
       title: 'Replicas',
       dataIndex: 'replicas',
@@ -32,7 +32,7 @@ function list({ loading, dataSource, showAddDiskModal, showReplicaModal }) {
       render: (text, record) => {
         return (
           <a onClick={e => showReplicaModal(record, e)}>
-            {text.length} Replicas
+            {text ? text.length : 0} Replicas
           </a>
         )
       },
