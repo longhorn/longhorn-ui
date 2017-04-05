@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
+import nprogress from 'nprogress'
 import { Router } from 'dva/router'
 import App from './routes/app'
-import nprogress from 'nprogress'
 
 const cached = {}
 const registerModel = (app, model) => {
@@ -18,7 +18,7 @@ const Routers = function ({ history, app }) {
       component: App,
       getIndexRoute(nextState, cb) {
         nprogress.start()
-        require.ensure([], require => {
+        require.ensure([], (require) => {
           nprogress.done()
           registerModel(app, require('./models/dashboard'))
           cb(null, { component: require('./routes/dashboard/') })
@@ -30,7 +30,7 @@ const Routers = function ({ history, app }) {
           name: 'dashboard',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/dashboard'))
               cb(null, require('./routes/dashboard/'))
@@ -42,7 +42,7 @@ const Routers = function ({ history, app }) {
           name: 'host',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/host'))
               cb(null, require('./routes/host/'))
@@ -54,7 +54,7 @@ const Routers = function ({ history, app }) {
           name: 'volume',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
@@ -67,7 +67,7 @@ const Routers = function ({ history, app }) {
           name: 'volume/detail',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
@@ -80,7 +80,7 @@ const Routers = function ({ history, app }) {
           name: 'backup',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/backup'))
@@ -93,7 +93,7 @@ const Routers = function ({ history, app }) {
           name: 'setting',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/setting'))
               cb(null, require('./routes/setting/'))
@@ -105,7 +105,7 @@ const Routers = function ({ history, app }) {
           name: 'error',
           getComponent(nextState, cb) {
             nprogress.start()
-            require.ensure([], require => {
+            require.ensure([], (require) => {
               nprogress.done()
               cb(null, require('./routes/error/'))
             }, 'error')

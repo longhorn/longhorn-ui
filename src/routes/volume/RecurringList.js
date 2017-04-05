@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Table, Button, Select, TimePicker } from 'antd'
 
+const Option = Select.Option
+
 class RecurringList extends React.Component {
 
   state = {

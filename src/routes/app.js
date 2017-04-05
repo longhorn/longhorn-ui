@@ -4,7 +4,7 @@ import { Layout } from '../components'
 import { classnames, config } from '../utils'
 import { Helmet } from 'react-helmet'
 import enUS from 'antd/lib/locale-provider/en_US'
-import { LocaleProvider, Modal } from 'antd'
+import { LocaleProvider } from 'antd'
 import '../components/skin.less'
 const { Header, Bread, styles } = Layout
 

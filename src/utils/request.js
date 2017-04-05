@@ -1,6 +1,11 @@
 import axios from 'axios'
 import qs from 'qs'
 
+const config = {
+  headers: {
+    Accept: 'application/json',
+  },
+}
 const fetch = (options) => {
   const {
     method = 'get',
@@ -9,17 +14,13 @@ const fetch = (options) => {
   } = options
   switch (method.toLowerCase()) {
     case 'get':
-      return axios.get(`${url}${options.data ? `?${qs.stringify(options.data)}` : ''}`)
+      return axios.get(`${url}${options.data ? `?${qs.stringify(options.data)}` : ''}`, config)
     case 'delete':
-      return axios.delete(url, { data })
-    case 'head':
-      return axios.head(url, data)
+      return axios.delete(url, { ...config, data })
     case 'post':
-      return axios.post(url, data)
+      return axios.post(url, data, config)
     case 'put':
-      return axios.put(url, data)
-    case 'patch':
-      return axios.patch(url, data)
+      return axios.put(url, data, config)
     default:
       return axios(options)
   }

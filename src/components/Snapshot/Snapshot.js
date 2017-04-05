@@ -3,8 +3,6 @@ import { Tree, Icon, Menu, Dropdown, Button } from 'antd'
 
 const TreeNode = Tree.TreeNode
 
-const ButtonGroup = Button.Group
-
 function StartPoint() {
   return (
       <div className="tree-snapshot-start-point">

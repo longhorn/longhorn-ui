@@ -1,9 +1,7 @@
+import classnames from 'classnames'
 import config from './config'
 import menu from './menu'
 import request from './request'
-import classnames from 'classnames'
-import { color } from './theme'
-require('./mock.js')
 
 String.prototype.hyphenToHump = function () {
   return this.replace(/-(\w)/g, (...args) => {
@@ -41,6 +39,5 @@ module.exports = {
   config,
   menu,
   request,
-  color,
   classnames,
 }
