@@ -3,7 +3,6 @@
   "scripts": {
     "dev": "roadhog server",
     "build": "roadhog build",
-    "serve": "superstatic dist --gzip true --port 8000 --host 0.0.0.0",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
   },

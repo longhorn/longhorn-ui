@@ -10,6 +10,4 @@ VOLUME /dist
 COPY . /web
 WORKDIR /web
 
-RUN npm run build
-
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev"]
