@@ -28,5 +28,3 @@ function formatSi(inValue, increment = 1000, suffix = '', firstSuffix = null) {
 export function formatMib(value) {
   return formatSi(value, 1024, 'B', 'B')
 }
-
-
