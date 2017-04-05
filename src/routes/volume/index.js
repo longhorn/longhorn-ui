@@ -23,6 +23,10 @@ function Volume({ host, volume, location, loading, dispatch }) {
     },
     showSnapshots() {
       dispatch({
+        type: 'app/changeBlur',
+        payload: true,
+      })
+      dispatch({
         type: 'volume/showSnapshotsModal',
       })
     },
@@ -137,6 +141,10 @@ function Volume({ host, volume, location, loading, dispatch }) {
     },
     visible: snapshotsModalVisible,
     onCancel() {
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
       dispatch({
         type: 'volume/hideSnapshotsModal',
       })

@@ -3,6 +3,7 @@ export default {
   state: {
     menuPopoverVisible: false,
     isNavbar: document.body.clientWidth < 769,
+    blur: false,
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -31,6 +32,12 @@ export default {
     },
   },
   reducers: {
+    changeBlur(state, action) {
+      return {
+        ...state,
+        blur: action.payload,
+      }
+    },
     showNavbar(state) {
       return {
         ...state,

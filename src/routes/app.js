@@ -4,13 +4,16 @@ import { Layout } from '../components'
 import { classnames, config } from '../utils'
 import { Helmet } from 'react-helmet'
 import enUS from 'antd/lib/locale-provider/en_US'
-import { LocaleProvider } from 'antd'
+import { LocaleProvider, Modal } from 'antd'
 import '../components/skin.less'
 const { Header, Bread, styles } = Layout
 
+let blur = (bl) => {
+  return bl ? 'lh-blur' : ''
+}
+
 const App = ({ children, dispatch, location, app }) => {
   const { menuPopoverVisible, isNavbar } = app
-
   const headerProps = {
     location,
     menuPopoverVisible,
@@ -22,7 +25,7 @@ const App = ({ children, dispatch, location, app }) => {
 
   return (
     <LocaleProvider locale={enUS}>
-      <div>
+      <div className={blur(app.blur)}>
         <Helmet>
           <title>Longhorn</title>
           <link rel="icon" href={config.logoSrc} type="image/x-icon" />

@@ -9,11 +9,13 @@ function StartPoint() {
   return (
       <div className="tree-snapshot-start-point">
       </div>
-    )
+  )
 }
 function SnapshotIcon() {
   const menu = (
-    <Menu>
+    <Menu
+      className="lh-snapshot-dropdown"
+    >
       <Menu.Item key="0">
         <span>Revert</span>
       </Menu.Item>
@@ -27,6 +29,7 @@ function SnapshotIcon() {
   )
   return (
     <Dropdown
+      placement="bottomRight"
       overlay={menu}
       trigger={['click']}
     >
@@ -43,26 +46,26 @@ function SnapshotIcon() {
   )
 }
 
-function CurrentPoint(){
+function CurrentPoint() {
   const menu = (
-    <Menu>
+    <Menu style={{ width: '120px !important' }}>
       <Menu.Item key="0">
         <span>Take Snapshot</span>
       </Menu.Item>
     </Menu>
   )
-   return (
+  return (
      <Dropdown
-        overlay={menu}
-        trigger={['click']}
-      >
+       overlay={menu}
+       trigger={['click']}
+     >
         <div className="snapshot-current-desc">
           <Button>
             <Icon type="caret-right" />Live Volume
           </Button>
         </div>
       </Dropdown>
-   )
+  )
 }
 
 class Snapshot extends React.Component {
@@ -70,8 +73,6 @@ class Snapshot extends React.Component {
     return (
         <Tree
           defaultExpandAll
-          ref="snapshotTree"
-          id="snapshotTree"
           className="lh-tree-snapshot"
         >
           <TreeNode title={StartPoint()} disabled key="0-0">
