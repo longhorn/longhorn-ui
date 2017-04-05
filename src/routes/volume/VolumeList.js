@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import { DropOption } from '../../components'
 import { Link } from 'dva/router'
+import { formatMib } from '../../utils/formater'
 
 function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots }) {
   const handleMenuClick = (event) => {
@@ -16,10 +17,17 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
   const columns = [
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'state',
+      key: 'state',
       width: 100,
       className: 'active',
+      render: (text) => {
+        return (
+          <div>
+            {text.hyphenToHump()}
+          </div>
+        )
+      },
     }, {
       title: 'Name',
       dataIndex: 'id',
@@ -49,6 +57,13 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
+      render: (text) => {
+        return (
+          <div>
+            {formatMib(text)}
+          </div>
+        )
+      },
     }, {
       title: 'Created',
       dataIndex: 'created',
