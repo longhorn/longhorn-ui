@@ -32,6 +32,7 @@ export default {
       },
     ],
   },
+  'GET /v1/settings': {"data":[{"actions":{},"id":"backupTarget","links":{"self":"http://54.223.25.181:9500/v1/settings/backupTarget"},"name":"backupTarget","type":"setting","value":"vfs:///var/lib/longhorn/backups/default"},{"actions":{},"id":"longhornImage","links":{"self":"http://54.223.25.181:9500/v1/settings/longhornImage"},"name":"longhornImage","type":"setting","value":"rancher/longhorn:latest"}],"links":{"self":"http://54.223.25.181:9500/v1/settings"},"resourceType":"setting","type":"collection"},
   'GET /v1/hosts': {"data":[{"actions":{},"address":"172.17.0.2:9500","id":"1855b313-afd7-4280-8159-0b0003799125","links":{"self":"http://54.223.25.181:9500/v1/hosts/1855b313-afd7-4280-8159-0b0003799125"},"name":"7bd760eca456","type":"host","uuid":"1855b313-afd7-4280-8159-0b0003799125"},{"actions":{},"address":"172.17.0.2:9500","id":"75af1511-7078-48e3-a14b-1b4c7307bc0f","links":{"self":"http://54.223.25.181:9500/v1/hosts/75af1511-7078-48e3-a14b-1b4c7307bc0f"},"name":"5c983ce6c5e4","type":"host","uuid":"75af1511-7078-48e3-a14b-1b4c7307bc0f"},{"actions":{},"address":"172.17.0.6:9500","id":"d7c419e3-ae14-4115-a060-3f201395a17b","links":{"self":"http://54.223.25.181:9500/v1/hosts/d7c419e3-ae14-4115-a060-3f201395a17b"},"name":"9833f6cae4dc","type":"host","uuid":"d7c419e3-ae14-4115-a060-3f201395a17b"}],"links":{"self":"http://54.223.25.181:9500/v1/hosts"},"resourceType":"host","type":"collection"},
   'GET /v1/dashboard': {
     numbers: [
