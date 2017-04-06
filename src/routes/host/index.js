@@ -6,8 +6,23 @@ import AddDisk from './AddDisk'
 import HostReplica from './HostReplica'
 import HostAction from './HostAction'
 
-function Host({ host, loading, dispatch }) {
+function Host({ host, volume, loading, dispatch }) {
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible } = host
+  const volumeList = volume.data
+
+  data.forEach(agent => {
+    const replicas = []
+    volumeList.forEach(vol => {
+      vol.replicas.forEach(replica => {
+        if (agent.id === replica.hostId) {
+          replicas.push(replica)
+        }
+      })
+    })
+    agent.replicas = replicas
+  })
+
+  console.log(volumeList, data)
 
   const addHostModalProps = {
     visible: modalVisible,
@@ -89,9 +104,10 @@ function Host({ host, loading, dispatch }) {
 
 Host.propTypes = {
   host: PropTypes.object,
+  volume: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
 }
 
-export default connect(({ host, loading }) => ({ host, loading: loading.models.host }))(Host)
+export default connect(({ volume, host, loading }) => ({ volume, host, loading: loading.models.host }))(Host)
