@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Modal, InputNumber, Radio, Select } from 'antd'
+import { Form, Input, InputNumber, Radio, Select } from 'antd'
+import { ModalBlur } from '../../components'
+
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 
@@ -47,7 +49,7 @@ const modal = ({
   }
 
   return (
-    <Modal {...modalOpts}>
+    <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Name" hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
@@ -134,7 +136,7 @@ const modal = ({
             </RadioGroup>)}
         </FormItem>
       </Form>
-    </Modal>
+    </ModalBlur>
   )
 }
 

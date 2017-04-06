@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Form, Modal } from 'antd'
+import { Form } from 'antd'
 import RecurringList from './RecurringList'
+import { ModalBlur } from '../../components'
 
 const modal = ({
   visible,
@@ -37,9 +38,9 @@ const modal = ({
   }
 
   return (
-    <Modal {...modalOpts}>
+    <ModalBlur {...modalOpts}>
       <RecurringList {...recurringListProps} />
-    </Modal>
+    </ModalBlur>
   )
 }
 
