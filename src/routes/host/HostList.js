@@ -1,15 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
-import { DropOption } from '../../components'
 import styles from './HostList.less'
 
-function list({ loading, dataSource, showAddDiskModal, showReplicaModal }) {
-  const handleMenuClick = (event) => {
-    if (event.key === '4') {
-      showAddDiskModal()
-    }
-  }
-
+function list({ loading, dataSource, showReplicaModal }) {
   const columns = [
     {
       title: 'State',
@@ -17,12 +10,17 @@ function list({ loading, dataSource, showAddDiskModal, showReplicaModal }) {
       key: 'state',
       width: 100,
       className: styles.status,
+      render: () => {
+        return (
+          <div>Activate</div>
+        )
+      },
     }, {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
     }, {
-      title: 'Address',
+      title: 'Agent Address',
       dataIndex: 'address',
       key: 'address',
     }, {
@@ -34,29 +32,6 @@ function list({ loading, dataSource, showAddDiskModal, showReplicaModal }) {
           <a onClick={e => showReplicaModal(record, e)}>
             {text ? text.length : 0} Replicas
           </a>
-        )
-      },
-    }, {
-      title: 'Total Space',
-      dataIndex: 'total',
-      key: 'total',
-    }, {
-      title: 'Used Space',
-      dataIndex: 'used',
-      key: 'used',
-    }, {
-      title: '',
-      key: 'operation',
-      width: 100,
-      render: () => {
-        return (
-          <DropOption menuOptions={[
-            { key: '1', name: 'Deactivate' },
-            { key: '2', name: 'Activate' },
-            { key: '3', name: 'Delete' },
-            { key: '4', name: 'Add Disk' },
-          ]} onMenuClick={handleMenuClick}
-          />
         )
       },
     },

@@ -1,32 +1,30 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
-import { Row, Col, Input } from 'antd'
+import SettingForm from './setting'
 
-function Setting() {
+function Setting({ setting, dispatch }) {
+  const { data, saving } = setting
+  const props = {
+    data,
+    saving,
+    onSubmit(payload) {
+      dispatch({
+        type: 'setting/update',
+        payload,
+      })
+    },
+  }
+
   return (
     <div className="content-inner">
-      <Row gutter={24}>
-        <Col lg={12} md={24} >
-          <div style={{ marginBottom: 16 }}>
-            <Input addonBefore="Backup Target" defaultValue="" />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <Input addonBefore="IOPs Overprovision" defaultValue="" />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <Input addonBefore="Capacity Overprovisioned" defaultValue="" />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <Input addonBefore="Syslog Server" defaultValue="" />
-          </div>
-        </Col>
-      </Row>
+      <SettingForm {...props} />
     </div>
   )
 }
 
 Setting.propTypes = {
   setting: PropTypes.object,
+  dispatch: PropTypes.func,
 }
 
 export default connect(({ setting }) => ({ setting }))(Setting)

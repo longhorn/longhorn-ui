@@ -1,42 +1,23 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
-import { DropOption } from '../../components'
 
 function list({ dataSource }) {
   const columns = [
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'running',
+      key: 'running',
       width: 100,
       className: 'active',
+      render: (text) => {
+        return (
+          <div>{text ? 'Running' : 'Error'}</div>
+        )
+      },
     }, {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-    }, {
-      title: 'Used',
-      dataIndex: 'used',
-      key: 'used',
-    }, {
-      title: 'Volume',
-      dataIndex: 'volume',
-      key: 'volume',
-    }, {
-      title: 'Created',
-      dataIndex: 'created',
-      key: 'created',
-    }, {
-      title: '',
-      key: 'operation',
-      width: 100,
-      render: () => {
-        return (
-          <DropOption menuOptions={[
-            { key: '1', name: 'Delete' },
-          ]} />
-        )
-      },
     },
   ]
 
@@ -50,7 +31,7 @@ function list({ dataSource }) {
         dataSource={dataSource}
         simple
         pagination={pagination}
-        rowKey={record => record.id}
+        rowKey={record => record.name}
       />
     </div>
   )

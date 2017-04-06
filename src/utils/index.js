@@ -13,6 +13,10 @@ String.prototype.humpToHyphen = function () {
   return this.replace(/([A-Z])/g, '-$1').toLowerCase()
 }
 
+String.prototype.humpToSpace = function () {
+  return this.replace(/([A-Z])/g, ' $1').toLowerCase()
+}
+
 Date.prototype.format = function (format) {
   const o = {
     'M+': this.getMonth() + 1,

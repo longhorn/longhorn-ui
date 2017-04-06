@@ -1,22 +1,28 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import { Row, Col, Card } from 'antd'
-import { NumberCard, Resource, EventLogs } from './components'
-import styles from './index.less'
+import { NumberCard, EventLogs } from './components'
 
-function Dashboard({ dashboard }) {
-  const { numbers } = dashboard
-  const numberCards = numbers.map((item, key) => <Col key={key} lg={6} md={12}>
+function Dashboard({ host, volume }) {
+  const hostNum = host.data.length
+  const volumeNum = volume.data.length
+
+  const numbers = [{
+    icon: 'laptop',
+    color: '#64ea91',
+    title: 'Hosts',
+    number: hostNum,
+  }, {
+    icon: 'database',
+    color: '#d897eb',
+    title: 'Volumes',
+    number: volumeNum,
+  },
+  ]
+
+  const numberCards = numbers.map((item, key) => <Col key={key} lg={12} md={12}>
     <NumberCard {...item} />
   </Col>)
-  const resource = {
-    total: 5000,
-    used: 3500,
-    data: [
-      { name: 'Used', value: 3500 },
-      { name: 'Available', value: 1500 },
-    ],
-  }
 
   const eventLogs = {
     data: [
@@ -32,12 +38,7 @@ function Dashboard({ dashboard }) {
     <div>
       <Row gutter={24}>
         {numberCards}
-        <Col lg={8} md={24} className={styles.col}>
-          <Card bordered={false}>
-            <Resource {...resource} />
-          </Card>
-        </Col>
-        <Col lg={16} md={24}>
+        <Col md={24}>
           <Card title="Event Logs" bordered={false}>
             <EventLogs {...eventLogs} />
           </Card>
@@ -48,7 +49,8 @@ function Dashboard({ dashboard }) {
 }
 
 Dashboard.propTypes = {
-  dashboard: PropTypes.object,
+  host: PropTypes.object,
+  volume: PropTypes.object,
 }
 
-export default connect(({ dashboard }) => ({ dashboard }))(Dashboard)
+export default connect(({ host, volume }) => ({ host, volume }))(Dashboard)
