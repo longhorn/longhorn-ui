@@ -56,7 +56,7 @@ function list({ loading, dataSource }) {
         loading={loading}
         simple
         pagination={pagination}
-        rowKey={record => record.id}
+        rowKey={record => record.name}
       />
     </Card>
   )

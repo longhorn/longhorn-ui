@@ -2,31 +2,11 @@ import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
-import { DropOption } from '../../components'
 import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
+import VolumeActions from './VolumeActions'
 
 function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume }) {
-  const handleMenuClick = (event, record) => {
-    switch (event.key) {
-      case 'attach':
-        showAttachHost(record)
-        break
-      case 'delete':
-        deleteVolume(record)
-        break
-      case 'detach':
-        detach(record.actions.detach)
-        break
-      case 'recurring':
-        showRecurring()
-        break
-      case 'snapshotList':
-        showSnapshots()
-        break
-      default:
-    }
-  }
   const getStateWeight = (state) => {
     switch (state) {
       case 'healthy':
@@ -40,6 +20,13 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
     }
   }
   dataSource.sort((a, b) => getStateWeight(a.state) - getStateWeight(b.state))
+  const volumeActionsProps = {
+    showAttachHost,
+    showRecurring,
+    showSnapshots,
+    detach,
+    deleteVolume,
+  }
   const columns = [
     {
       title: 'Status',
@@ -101,24 +88,8 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
       key: 'operation',
       width: 100,
       render: (text, record) => {
-        const allActions = [
-          { key: 'attach', name: 'Attach' },
-          { key: 'detach', name: 'Detach' },
-          { key: 'snapshotList', name: 'Snapshots' },
-          { key: '5', name: 'Backups' },
-          { key: '6', name: 'Recurring Snapshot and Backup' },
-        ]
-        const availableActions = [{ key: 'delete', name: 'Delete' }]
-        allActions.forEach(action => {
-          for (const key of Object.keys(record.actions)) {
-            if (key === action.key) {
-              availableActions.push(action)
-            }
-          }
-        })
         return (
-          <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, record)}
-          />
+          <VolumeActions {...volumeActionsProps} selected={record} />
         )
       },
     },

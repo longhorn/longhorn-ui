@@ -26,9 +26,16 @@ class ModalBlur extends React.Component {
     })
     this.props.onCancel && this.props.onCancel()
   }
+  onOk() {
+    this.props.dispatch({
+      type: 'app/changeBlur',
+      payload: false,
+    })
+    this.props.onOk && this.props.onOk()
+  }
   render() {
     return (
-      <Modal {...this.props} onCancel={this.onCancel.bind(this)}></Modal>
+      <Modal {...this.props} onOk={this.onOk.bind(this)} onCancel={this.onCancel.bind(this)}></Modal>
     )
   }
 }
@@ -37,6 +44,7 @@ ModalBlur.propTypes = {
   visible: PropTypes.bool,
   dispatch: PropTypes.func,
   onCancel: PropTypes.func,
+  onOk: PropTypes.func,
 }
 
 export default connect(({ app }) => ({ app }))(ModalBlur)
