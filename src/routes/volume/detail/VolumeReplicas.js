@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { Table, Card } from 'antd'
-import { DropOption } from '../../../components'
 
 function list({ loading, dataSource }) {
   const columns = [
@@ -10,38 +9,19 @@ function list({ loading, dataSource }) {
       key: 'running',
       width: 100,
       className: 'active',
-      render: () => {
+      render: (text) => {
         return (
-          <span>Healthy</span>
+          <span className={text ? 'healthy' : 'faulted'}>{text ? 'Running' : 'Error'}</span>
         )
       },
     }, {
       title: 'Name',
-      dataIndex: 'id',
-      key: 'id',
-    }, {
-      title: 'Used',
-      dataIndex: 'used',
-      key: 'used',
+      dataIndex: 'name',
+      key: 'name',
     }, {
       title: 'Host',
-      dataIndex: 'hostId',
-      key: 'hostId',
-    }, {
-      title: 'Created',
-      dataIndex: 'created',
-      key: 'created',
-    }, {
-      title: '',
-      key: 'operation',
-      width: 100,
-      render: () => {
-        return (
-          <DropOption menuOptions={[
-            { key: '1', name: 'Delete' },
-          ]} />
-        )
-      },
+      dataIndex: 'host',
+      key: 'host',
     },
   ]
 

@@ -11,7 +11,7 @@ function list({ dataSource }) {
       className: 'active',
       render: (text) => {
         return (
-          <div>{text ? 'Running' : 'Error'}</div>
+          <div className={text ? 'healthy' : 'faulted'}>{text ? 'Running' : 'Error'}</div>
         )
       },
     }, {

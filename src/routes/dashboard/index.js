@@ -12,11 +12,13 @@ function Dashboard({ host, volume }) {
     color: '#64ea91',
     title: 'Hosts',
     number: hostNum,
+    linkTo: '/host',
   }, {
     icon: 'database',
     color: '#d897eb',
     title: 'Volumes',
     number: volumeNum,
+    linkTo: '/volume',
   },
   ]
 

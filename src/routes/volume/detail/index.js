@@ -16,6 +16,13 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
   if (!selectedVolume) {
     return (<div></div>)
   }
+  const found = hosts.find(h => selectedVolume.controller && h.id === selectedVolume.controller.hostId)
+  if (found) {
+    selectedVolume.host = found.name
+  }
+  selectedVolume.replicas.forEach(replica => {
+    replica.host = hosts.find(h => h.id === replica.hostId).name
+  })
   const replicasListProps = {
     dataSource: selectedVolume.replicas || [],
     loading,
