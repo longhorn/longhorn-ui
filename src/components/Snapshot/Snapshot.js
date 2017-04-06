@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Tree, Icon, Menu, Dropdown, Button } from 'antd'
 
+import request from '../../utils/request'
 const TreeNode = Tree.TreeNode
 
 function StartPoint() {
@@ -46,7 +47,7 @@ function SnapshotIcon() {
 
 function CurrentPoint() {
   const menu = (
-    <Menu style={{ width: '120px !important' }}>
+    <Menu>
       <Menu.Item key="0">
         <span>Take Snapshot</span>
       </Menu.Item>
@@ -67,6 +68,14 @@ function CurrentPoint() {
 }
 
 class Snapshot extends React.Component {
+  componentDidMount() {
+    request({
+      url: `/v1/volumes/${this.props.volume}?action=snapshotList`,
+      method: 'POST',
+    }).then((res) => {
+      console.log(res)
+    })
+  }
   render() {
     return (
         <Tree
@@ -95,7 +104,7 @@ class Snapshot extends React.Component {
 }
 
 Snapshot.propTypes = {
-  snapshot: PropTypes.object,
+  volume: PropTypes.String,
 }
 
 export default Snapshot

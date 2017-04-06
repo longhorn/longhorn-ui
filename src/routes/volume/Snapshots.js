@@ -1,20 +1,11 @@
 import React, { PropTypes } from 'react'
 import { Snapshot, ModalBlur } from '../../components'
 
-const modal = ({
-  visible,
-  onCancel,
-}) => {
-  const modalOpts = {
-    title: 'Snapshots',
-    width: 1000,
-    visible,
-    onCancel,
-  }
 
+const modal = (props) => {
   return (
-    <ModalBlur className="lh-modal-snapshot" {...modalOpts}>
-      <Snapshot />
+    <ModalBlur width="1000" className="lh-modal-snapshot" {...props}>
+      <Snapshot volume={props.volume} />
     </ModalBlur>
   )
 }
@@ -24,6 +15,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  volume: PropTypes.string,
 }
 
 export default modal
