@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Modal, InputNumber, Radio, Select } from 'antd'
+import { Form, Input, Modal, InputNumber } from 'antd'
 const FormItem = Form.Item
-const RadioGroup = Radio.Group
 
 const formItemLayout = {
   labelCol: {
-    span: 6,
+    span: 7,
   },
   wrapperCol: {
-    span: 14,
+    span: 15,
   },
 }
 
@@ -17,7 +16,6 @@ const modal = ({
   visible,
   onCancel,
   onOk,
-  hosts,
   form: {
     getFieldDecorator,
     validateFields,
@@ -31,14 +29,11 @@ const modal = ({
       }
       const data = {
         ...getFieldsValue(),
-        key: item.key,
       }
       onOk(data)
     })
   }
 
-  const allowClear = false
-  const options = hosts.map(host => <Select.Option key={host.name} value={host.name}>{host.name}</Select.Option>)
   const modalOpts = {
     title: 'Create Volume',
     visible,
@@ -55,7 +50,7 @@ const modal = ({
             rules: [
               {
                 required: true,
-                message: 'required field',
+                message: 'Please input volume name',
               },
             ],
           })(<Input />)}
@@ -66,72 +61,22 @@ const modal = ({
             rules: [
               {
                 required: true,
-                message: 'required field',
+                message: 'Please input volume size',
               },
             ],
           })(<InputNumber min={1} />)}
         </FormItem>
-        <FormItem label="IOPS" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('iops', {
-            initialValue: item.iops,
+
+        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('numberOfReplicas', {
+            initialValue: item.numberOfReplicas,
             rules: [
               {
                 required: true,
-                message: 'required field',
-              },
-            ],
-          })(<InputNumber min={1} />)}
-        </FormItem>
-        <FormItem label="# of Replicas" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('replicaNum', {
-            initialValue: item.replicaNum,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
+                message: 'Please input the number of replicas',
               },
             ],
           })(<InputNumber min={2} />)}
-        </FormItem>
-        <FormItem label="Host" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('host', {
-            initialValue: item.host,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
-              },
-            ],
-          })(
-            <Select allowClear={allowClear} size="large">
-              {options}
-            </Select>)}
-        </FormItem>
-        <FormItem label="Disk Label" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('diskLabel', {
-            initialValue: item.diskLabel,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
-        <FormItem label="Frontend" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('frontend', {
-            initialValue: item.frontend,
-            rules: [
-              {
-                required: true,
-                message: 'required field',
-              },
-            ],
-          })(
-            <RadioGroup>
-              <Radio value={'linuxDev'}>linux-dev</Radio>
-              <Radio value={'iscsi'}>iscsi</Radio>
-            </RadioGroup>)}
         </FormItem>
       </Form>
     </Modal>

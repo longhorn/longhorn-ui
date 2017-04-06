@@ -30,9 +30,8 @@ const modal = ({
       }
       const data = {
         ...getFieldsValue(),
-        key: item.key,
       }
-      onOk(data)
+      onOk(data.host, item.actions.attach)
     })
   }
 
@@ -43,7 +42,7 @@ const modal = ({
     onOk: handleOk,
   }
 
-  const options = hosts.map(host => <Select.Option key={host.name} value={host.name}>{host.name}</Select.Option>)
+  const options = hosts.map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
 
   return (
     <Modal {...modalOpts}>
@@ -54,7 +53,7 @@ const modal = ({
             rules: [
               {
                 required: true,
-                message: 'required field',
+                message: 'Please select a host to attach',
               },
             ],
           })(<Select style={{ minWidth: '200px' }} size="large">

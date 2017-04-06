@@ -8,13 +8,17 @@ const AttachedHostSelect = ({
   location,
 }) => {
   const allowClear = true
-
-  const options = hosts.map(item => <Select.Option key={item.name} value={item.name}>{item.name}</Select.Option>)
-
+  const options = hosts.map(item => <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>)
+  let defaultValue = ''
+  const found = hosts.find(h => location.query && h.id === location.query.host)
+  if (found) {
+    defaultValue = found.name
+  }
+  console.log(hosts, defaultValue)
   return (
     <InputGroup compact>
       <span className="ant-input-group-addon">Attached to Host</span>
-      <Select style={{ minWidth: '200px' }} defaultValue={location.query ? location.query.host : ''} allowClear={allowClear} size="large" onChange={onSelect}>
+      <Select style={{ minWidth: '200px' }} defaultValue={defaultValue} allowClear={allowClear} size="large" onChange={onSelect}>
         {options}
       </Select>
     </InputGroup>

@@ -9,16 +9,26 @@ import Recurring from './Recurring'
 import Snapshots from './Snapshots'
 
 function Volume({ host, volume, location, loading, dispatch }) {
-  const { data, snapshotsModalVisible, createVolumeModalVisible, attachHostModalVisible, recurringModalVisible } = volume
+  const { selected, data, snapshotsModalVisible, createVolumeModalVisible, attachHostModalVisible, recurringModalVisible } = volume
   const hosts = host.data
   const { field, keyword } = location.query
+
+  data.forEach(vol => {
+    const found = hosts.find(h => vol.controller && h.id === vol.controller.hostId)
+    if (found) {
+      vol.host = found.name
+    }
+  })
 
   const volumeListProps = {
     dataSource: data,
     loading,
-    showAttachHost() {
+    showAttachHost(record) {
       dispatch({
         type: 'volume/showAttachHostModal',
+        payload: {
+          selected: record,
+        },
       })
     },
     showSnapshots() {
@@ -33,6 +43,14 @@ function Volume({ host, volume, location, loading, dispatch }) {
     showRecurring() {
       dispatch({
         type: 'volume/showRecurringModal',
+      })
+    },
+    detach(url) {
+      dispatch({
+        type: 'volume/detach',
+        payload: {
+          url,
+        },
       })
     },
   }
@@ -80,14 +98,16 @@ function Volume({ host, volume, location, loading, dispatch }) {
   }
 
   const attachHostModalProps = {
-    item: {
-    },
+    item: selected,
     visible: attachHostModalVisible,
     hosts,
-    onOk(newVolume) {
+    onOk(selectedHost, url) {
       dispatch({
-        type: 'volume/attachHost',
-        payload: newVolume,
+        type: 'volume/attach',
+        payload: {
+          host: selectedHost,
+          url,
+        },
       })
     },
     onCancel() {
@@ -99,7 +119,7 @@ function Volume({ host, volume, location, loading, dispatch }) {
 
   const createVolumeModalProps = {
     item: {
-      replicaNum: 2,
+      numberOfReplicas: 2,
       size: 20,
       iops: 1000,
       frontend: 'iscsi',
@@ -108,7 +128,7 @@ function Volume({ host, volume, location, loading, dispatch }) {
     visible: createVolumeModalVisible,
     onOk(newVolume) {
       dispatch({
-        type: 'volume/createVolume',
+        type: 'volume/create',
         payload: newVolume,
       })
     },

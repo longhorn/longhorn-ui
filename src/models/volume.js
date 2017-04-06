@@ -1,10 +1,11 @@
-import { query } from '../services/volume'
+import { create, query, execAction } from '../services/volume'
 import { parse } from 'qs'
 
 export default {
   namespace: 'volume',
   state: {
     data: [],
+    selected: {},
     createVolumeModalVisible: false,
     attachHostModalVisible: false,
     recurringModalVisible: false,
@@ -25,13 +26,33 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
-      if (payload.field && payload.keyword) {
+      if (payload && payload.field && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
       }
-      if (payload.host) {
-        data.data = data.data.filter(item => item.hostId === payload.host)
+      if (payload && payload.host) {
+        data.data = data.data.filter(item => item.controller && item.controller.hostId === payload.host)
       }
       yield put({ type: 'queryVolume', payload: { ...data } })
+    },
+    *detach({
+      payload,
+    }, { call, put }) {
+      yield call(execAction, payload.url)
+      yield put({ type: 'query' })
+    },
+    *attach({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideAttachHostModal' })
+      yield call(execAction, payload.url, { hostId: payload.host })
+      yield put({ type: 'query' })
+    },
+    *create({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreateVolumeModal' })
+      yield call(create, payload)
+      yield put({ type: 'query' })
     },
   },
   reducers: {

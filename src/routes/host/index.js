@@ -13,16 +13,16 @@ function Host({ host, volume, loading, dispatch }) {
   data.forEach(agent => {
     const replicas = []
     volumeList.forEach(vol => {
-      vol.replicas.forEach(replica => {
-        if (agent.id === replica.hostId) {
-          replicas.push(replica)
-        }
-      })
+      if (vol.replicas) {
+        vol.replicas.forEach(replica => {
+          if (agent.id === replica.hostId) {
+            replicas.push(replica)
+          }
+        })
+      }
     })
     agent.replicas = replicas
   })
-
-  console.log(volumeList, data)
 
   const addHostModalProps = {
     visible: modalVisible,
