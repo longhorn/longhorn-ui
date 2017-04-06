@@ -28,3 +28,10 @@ export async function create(params) {
     },
   })
 }
+
+export async function deleteVolume(params) {
+  return request({
+    url: params.links.self,
+    method: 'delete',
+  })
+}

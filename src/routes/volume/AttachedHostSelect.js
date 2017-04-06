@@ -14,7 +14,6 @@ const AttachedHostSelect = ({
   if (found) {
     defaultValue = found.name
   }
-  console.log(hosts, defaultValue)
   return (
     <InputGroup compact>
       <span className="ant-input-group-addon">Attached to Host</span>

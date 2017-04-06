@@ -41,6 +41,12 @@ function Volume({ host, volume, location, loading, dispatch }) {
         type: 'volume/showRecurringModal',
       })
     },
+    deleteVolume(record) {
+      dispatch({
+        type: 'volume/delete',
+        payload: record,
+      })
+    },
     detach(url) {
       dispatch({
         type: 'volume/detach',

@@ -1,15 +1,19 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import moment from 'moment'
+import classnames from 'classnames'
 import { DropOption } from '../../components'
 import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
 
-function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach }) {
+function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
         showAttachHost(record)
+        break
+      case 'delete':
+        deleteVolume(record)
         break
       case 'detach':
         detach(record.actions.detach)
@@ -23,16 +27,28 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
       default:
     }
   }
+  const getStateWeight = (state) => {
+    switch (state) {
+      case 'healthy':
+        return 0
+      case 'faulted':
+        return 1
+      case 'detached':
+        return 2
+      default:
+        return 99
+    }
+  }
+  dataSource.sort((a, b) => getStateWeight(a.state) - getStateWeight(b.state))
   const columns = [
     {
       title: 'Status',
       dataIndex: 'state',
       key: 'state',
       width: 100,
-      className: 'active',
       render: (text) => {
         return (
-          <div>
+          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
             {text.hyphenToHump()}
           </div>
         )
@@ -92,7 +108,7 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
           { key: '5', name: 'Backups' },
           { key: '6', name: 'Recurring Snapshot and Backup' },
         ]
-        const availableActions = []
+        const availableActions = [{ key: 'delete', name: 'Delete' }]
         allActions.forEach(action => {
           for (const key of Object.keys(record.actions)) {
             if (key === action.key) {
@@ -129,6 +145,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   detach: PropTypes.func,
+  deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,

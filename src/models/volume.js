@@ -1,4 +1,4 @@
-import { create, query, execAction } from '../services/volume'
+import { create, deleteVolume, query, execAction } from '../services/volume'
 import { parse } from 'qs'
 
 export default {
@@ -52,6 +52,12 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideCreateVolumeModal' })
       yield call(create, payload)
+      yield put({ type: 'query' })
+    },
+    *delete({
+      payload,
+    }, { call, put }) {
+      yield call(deleteVolume, payload)
       yield put({ type: 'query' })
     },
   },

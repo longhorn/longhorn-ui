@@ -5,10 +5,10 @@ import { Modal } from 'antd'
 class ModalBlur extends React.Component {
   componentDidMount() {
     this.props.visible
-    && this.props.dispatch({
-      type: 'app/changeBlur',
-      payload: this.props.visible,
-    })
+      && this.props.dispatch({
+        type: 'app/changeBlur',
+        payload: this.props.visible,
+      })
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.visible === nextProps.visible) {
@@ -34,7 +34,7 @@ class ModalBlur extends React.Component {
 }
 
 ModalBlur.propTypes = {
-  visible: PropTypes.string,
+  visible: PropTypes.bool,
   dispatch: PropTypes.func,
   onCancel: PropTypes.func,
 }
