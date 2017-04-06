@@ -8,8 +8,13 @@ export default {
     saving: false,
   },
   subscriptions: {
-    setup({ dispatch }) {
-      dispatch({ type: 'query' })
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        dispatch({
+          type: 'query',
+          payload: location.query,
+        })
+      })
     },
   },
   effects: {
