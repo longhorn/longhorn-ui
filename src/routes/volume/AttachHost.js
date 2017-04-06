@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
-import { Form, Select, Modal } from 'antd'
-const FormItem = Form.Item
+import { Form, Select } from 'antd'
+import { ModalBlur } from '../../components'
 
+const FormItem = Form.Item
 const formItemLayout = {
   labelCol: {
     span: 6,
@@ -45,7 +46,7 @@ const modal = ({
   const options = hosts.map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
 
   return (
-    <Modal {...modalOpts}>
+    <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Host" hasFeedback {...formItemLayout}>
           {getFieldDecorator('host', {
@@ -61,7 +62,7 @@ const modal = ({
           </Select>)}
         </FormItem>
       </Form>
-    </Modal>
+    </ModalBlur>
   )
 }
 

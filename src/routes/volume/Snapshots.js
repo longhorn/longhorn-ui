@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Snapshot } from '../../components'
-import { Modal } from 'antd'
+import { Snapshot, ModalBlur } from '../../components'
 
 const modal = ({
   visible,
@@ -14,9 +13,9 @@ const modal = ({
   }
 
   return (
-    <Modal className="lh-modal-snapshot" {...modalOpts}>
+    <ModalBlur className="lh-modal-snapshot" {...modalOpts}>
       <Snapshot />
-    </Modal>
+    </ModalBlur>
   )
 }
 

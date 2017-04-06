@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Modal, InputNumber } from 'antd'
+import { Form, Input, InputNumber } from 'antd'
+import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -42,7 +43,7 @@ const modal = ({
   }
 
   return (
-    <Modal {...modalOpts}>
+    <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Name" hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
@@ -79,7 +80,7 @@ const modal = ({
           })(<InputNumber min={2} />)}
         </FormItem>
       </Form>
-    </Modal>
+    </ModalBlur>
   )
 }
 
