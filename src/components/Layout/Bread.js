@@ -28,7 +28,7 @@ function Bread({ location }) {
     if (key > 0) {
       pathNames.push((`${pathNames[key - 1]}-${item}`).hyphenToHump())
     } else {
-      pathNames.push((`-${item}`).hyphenToHump())
+      pathNames.push(item.length > 0 ? (`-${item}`).hyphenToHump() : 'Dashboard')
     }
     last = item
   })
