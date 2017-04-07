@@ -20,12 +20,11 @@ const getMenus = function (menuArray, siderFold, parentPath = '/') {
 
 function Menus({ location, isNavbar, switchMenuPopover }) {
   const menuItems = getMenus(menu, false)
-
   return (
     <Menu
       mode={isNavbar ? 'inline' : 'horizontal'}
       onSelect={switchMenuPopover}
-      defaultSelectedKeys={[location.pathname !== '/' ? location.pathname : '/dashboard']}
+      selectedKeys={[location.pathname !== '/' ? location.pathname : '/dashboard']}
     >
       {menuItems}
     </Menu>
