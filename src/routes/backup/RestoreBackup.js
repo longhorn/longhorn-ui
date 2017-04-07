@@ -32,7 +32,6 @@ const modal = ({
         ...getFieldsValue(),
         fromBackup: item.fromBackup,
       }
-      debugger
       onOk(data)
     })
   }
