@@ -13,10 +13,12 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   return (
     <div className={styles.header}>
       <Row>
-        <Col className={styles.logoCol} lg={4} md={5} sm={24} xs={24}>
-          <div className={styles.logo}>
-            <h1>LONGHORN</h1>
+        <Col className={styles.logoCol} lg={4} md={5} sm={8} xs={12}>
+          <div className={styles.logoContainer}>
+            <img className={styles.logo} src="/longhorn-logo.svg" alt="LONGHORN" />
           </div>
+        </Col>
+        <Col lg={0} md={0} sm={16} xs={12}>
           {isNavbar ?
             <div className={styles.popupMenu}>
               <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} visible={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
