@@ -12,9 +12,9 @@ const BackupFilter = ({
     keyword,
     size: 'large',
     select: true,
-    selectOptions: [{ value: 'id', name: 'volume' }],
+    selectOptions: [{ value: 'volumeName', name: 'volume' }],
     selectProps: {
-      defaultValue: field || 'id',
+      defaultValue: field || 'volumeName',
     },
     onSearch: (value) => {
       onSearch(value)

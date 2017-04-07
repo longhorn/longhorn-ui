@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import { DropOption } from '../../components'
+import moment from 'moment'
 
 function list({ loading, dataSource, showRestoreBackup }) {
   const handleMenuClick = (record, event) => {
@@ -14,15 +15,25 @@ function list({ loading, dataSource, showRestoreBackup }) {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      width: 100,
+    }, {
+      title: 'Volume',
+      dataIndex: 'volumeName',
+      key: 'volumeName',
     }, {
       title: 'Snaphost Name',
-      dataIndex: 'snapshot',
-      key: 'snapshot',
+      dataIndex: 'snapshotName',
+      key: 'snapshotName',
     }, {
       title: 'Timestamp',
-      dataIndex: 'timestamp',
-      key: 'timestamp',
+      dataIndex: 'snapshotCreated',
+      key: 'snapshotCreated',
+      render: (text) => {
+        return (
+          <div>
+            {moment(new Date(text)).fromNow()}
+          </div>
+        )
+      },
     }, {
       title: 'Size',
       dataIndex: 'size',
@@ -31,6 +42,13 @@ function list({ loading, dataSource, showRestoreBackup }) {
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
+      render: (text) => {
+        return (
+          <div>
+            {moment(new Date(text)).fromNow()}
+          </div>
+        )
+      },
     }, {
       title: '',
       key: 'operation',

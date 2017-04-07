@@ -18,10 +18,8 @@ function Backup({ host, backup, loading, location, dispatch }) {
         type: 'backup/showRestoreBackupModal',
         payload: {
           currentItem: {
-            ...item,
-            iops: 100,
-            replicaNum: 2,
-            frontend: 'iscsi',
+            fromBackup: item.url,
+            numberOfReplicas: 2,
           },
         },
       })
@@ -49,10 +47,10 @@ function Backup({ host, backup, loading, location, dispatch }) {
     item: currentItem,
     hosts,
     visible: restoreBackupModalVisible,
-    onOk(newVolume) {
+    onOk(selectedBackup) {
       dispatch({
-        type: 'backup/restoreBackup',
-        payload: newVolume,
+        type: 'backup/restore',
+        payload: selectedBackup,
       })
     },
     onCancel() {
