@@ -1,4 +1,4 @@
-import { query, execAction, restore } from '../services/backup'
+import { query, execAction, restore, deleteBackup } from '../services/backup'
 import { parse } from 'qs'
 
 export default {
@@ -43,6 +43,12 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideRestoreBackupModal' })
       yield call(restore, payload)
+    },
+    *delete({
+      payload,
+    }, { call, put }) {
+      yield call(deleteBackup, payload)
+      yield put({ type: 'query' })
     },
   },
   reducers: {

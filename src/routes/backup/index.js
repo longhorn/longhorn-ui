@@ -24,6 +24,15 @@ function Backup({ host, backup, loading, location, dispatch }) {
         },
       })
     },
+    deleteBackup(record) {
+      dispatch({
+        type: 'backup/delete',
+        payload: {
+          volumeName: record.volumeName,
+          name: record.name,
+        },
+      })
+    },
   }
 
   const backupFilterProps = {

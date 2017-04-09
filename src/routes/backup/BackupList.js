@@ -1,12 +1,24 @@
 import React, { PropTypes } from 'react'
-import { Table } from 'antd'
+import { Table, Modal } from 'antd'
 import { DropOption } from '../../components'
 import moment from 'moment'
+const confirm = Modal.confirm
 
-function list({ loading, dataSource, showRestoreBackup }) {
+function list({ loading, dataSource, showRestoreBackup, deleteBackup }) {
   const handleMenuClick = (record, event) => {
-    if (event.key === '2') {
-      showRestoreBackup(record)
+    switch (event.key) {
+      case 'restore':
+        showRestoreBackup(record)
+        break
+      case 'delete':
+        confirm({
+          title: `Are you sure you want to delete backup ${record.name} ?`,
+          onOk() {
+            deleteBackup(record)
+          },
+        })
+        break
+      default:
     }
   }
 
@@ -56,8 +68,8 @@ function list({ loading, dataSource, showRestoreBackup }) {
       render: (text, record) => {
         return (
           <DropOption menuOptions={[
-            { key: '1', name: 'Delete' },
-            { key: '2', name: 'Restore' },
+            { key: 'delete', name: 'Delete' },
+            { key: 'restore', name: 'Restore' },
           ]} onMenuClick={e => handleMenuClick(record, e)}
           />
         )
@@ -86,6 +98,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   showRestoreBackup: PropTypes.func,
+  deleteBackup: PropTypes.func,
 }
 
 export default list

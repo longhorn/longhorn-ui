@@ -26,3 +26,15 @@ export async function restore(params) {
     },
   })
 }
+
+export async function deleteBackup(payload) {
+  return request({
+    url: `/v1/backupvolumes/${payload.volumeName}?action=backupDelete`,
+    method: 'post',
+    data: {
+      name: payload.name,
+    },
+  })
+}
+
+
