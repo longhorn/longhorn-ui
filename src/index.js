@@ -1,16 +1,5 @@
-import createLoading from 'dva-loading'
-import dva from 'dva'
-import { browserHistory } from 'dva/router'
+import app from './main'
 import './index.html'
-
-// 1. Initialize
-const app = dva({
-  ...createLoading(),
-  history: browserHistory,
-  onError(error) {
-    console.error('app onError -- ', error)
-  },
-})
 
 // 2. Model
 app.model(require('./models/app'))

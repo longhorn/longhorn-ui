@@ -16,10 +16,8 @@ class RecurringList extends React.Component {
   }
 
   onNewRecurring = () => {
-    this.state.dataSource.push({ name: `recurring${new Date().getTime()}`, editing: true, cron: '1 1 * * *', task: 'snapshot' })
-    const dataSource = this.state.dataSource
     this.setState({
-      dataSource,
+      dataSource: this.state.dataSource.concat[{ name: `recurring${new Date().getTime()}`, editing: true, cron: '1 1 * * *', task: 'snapshot' }],
     })
   }
 

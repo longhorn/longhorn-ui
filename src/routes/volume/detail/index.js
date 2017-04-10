@@ -8,10 +8,12 @@ import VolumeActions from '../VolumeActions'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Recurring from '../Recurring'
-import Snapshots from '../Snapshots'
 
-function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, snapshotsModalVisible, recurringModalVisible } = volume
+const RecurringGen = (recurringModalProps) =>
+  <Recurring {...recurringModalProps} />
+
+function VolumeDetail({ dispatch, host, volume, volumeId, loading, history }) {
+  const { data, attachHostModalVisible, recurringModalVisible } = volume
   const hosts = host.data
   const selectedVolume = data.find(item => item.id === volumeId)
   if (!selectedVolume) {
@@ -39,10 +41,8 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
         },
       })
     },
-    showSnapshots() {
-      dispatch({
-        type: 'volume/showSnapshotsModal',
-      })
+    showSnapshots(record) {
+      history.push(`/volume/${record.name}/snapshot`)
     },
     showRecurring(record) {
       dispatch({
@@ -116,21 +116,6 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
     },
   }
 
-  const snapshotsModalProps = {
-    item: {
-    },
-    visible: snapshotsModalVisible,
-    onCancel() {
-      dispatch({
-        type: 'volume/hideSnapshotsModal',
-      })
-    },
-  }
-
-  const SnapshotsGen = () =>
-    <Snapshots {...snapshotsModalProps} />
-
-
   return (
     <div>
       <Row gutter={24}>
@@ -145,8 +130,7 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
         </Col>
       </Row>
       <AttachHost {...attachHostModalProps} />
-      <Recurring {...recurringModalProps} />
-      <SnapshotsGen />
+      <RecurringGen {...recurringModalProps} />
     </div>
   )
 }
@@ -158,6 +142,7 @@ VolumeDetail.propTypes = {
   host: PropTypes.object,
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
+  history: PropTypes.object,
 }
 
 export default connect(({ host, volume, loading }, { params }) => ({ host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)

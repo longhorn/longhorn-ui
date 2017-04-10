@@ -43,3 +43,10 @@ export async function recurringUpdate(data, url) {
     data,
   })
 }
+
+export async function getVolume(volumeName) {
+  return request({
+    url: `/v1/volumes/${volumeName}`,
+    method: 'get',
+  })
+}
