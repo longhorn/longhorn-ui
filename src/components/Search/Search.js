@@ -8,6 +8,12 @@ class Search extends React.Component {
     clearVisible: true,
     selectValue: (this.props.select && this.props.selectProps) ? this.props.selectProps.defaultValue : '',
   }
+  componentWillMount() {
+    const { keyword } = this.props
+    this.setState({
+      clearVisible: keyword && keyword.length > 0,
+    })
+  }
   handleSearch = () => {
     const data = {
       keyword: ReactDOM.findDOMNode(this.refs.searchInput).value,
@@ -35,12 +41,6 @@ class Search extends React.Component {
       clearVisible: false,
     })
     this.handleSearch()
-  }
-  componentWillMount() {
-    const { keyword } = this.props
-    this.setState({
-      clearVisible: keyword && keyword.length > 0,
-    })
   }
   render() {
     const { size, select, selectOptions, selectProps, style, keyword } = this.props
