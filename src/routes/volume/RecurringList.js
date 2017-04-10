@@ -24,12 +24,12 @@ class RecurringList extends React.Component {
         title: 'Type',
         dataIndex: 'task',
         key: 'task',
-        width: 100,
+        width: 120,
         render: (text, record) => {
           return (
             record.creating ?
               <div>
-                <Select defaultValue="backup" style={{ width: 80 }}>
+                <Select defaultValue="backup" style={{ width: 100 }}>
                   <Option value="snapshot">Snapshot</Option>
                   <Option value="backup">Backup</Option>
                 </Select>
