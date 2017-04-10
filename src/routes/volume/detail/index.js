@@ -122,9 +122,6 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
     },
   }
 
-  const RecurringGen = () =>
-    <Recurring {...recurringModalProps} />
-
   const SnapshotsGen = () =>
     <Snapshots {...snapshotsModalProps} />
 
@@ -143,7 +140,7 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
         </Col>
       </Row>
       <AttachHost {...attachHostModalProps} />
-      <RecurringGen />
+      <Recurring {...recurringModalProps} />
       <SnapshotsGen />
     </div>
   )

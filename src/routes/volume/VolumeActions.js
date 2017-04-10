@@ -23,7 +23,7 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
       case 'backups':
         showBackups(record)
         break
-      case 'recurring':
+      case 'recurringUpdate':
         showRecurring()
         break
       case 'snapshotList':
@@ -37,7 +37,7 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
     { key: 'attach', name: 'Attach' },
     { key: 'detach', name: 'Detach' },
     { key: 'snapshotList', name: 'Snapshots' },
-    { key: '6', name: 'Recurring Snapshot and Backup' },
+    { key: 'recurringUpdate', name: 'Recurring Snapshot and Backup' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups' }, { key: 'delete', name: 'Delete' }]
   allActions.forEach(action => {
