@@ -68,7 +68,6 @@ class Volume extends React.Component {
         })
       },
     }
-
     const volumeFilterProps = {
       hosts,
       field,

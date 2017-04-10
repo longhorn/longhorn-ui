@@ -22,7 +22,6 @@ const Routers = function ({ history, app }) {
           nprogress.done()
           registerModel(app, require('./models/host'))
           registerModel(app, require('./models/volume'))
-          registerModel(app, require('./models/dashboard'))
           cb(null, { component: require('./routes/dashboard/') })
         }, 'dashboard')
       },
@@ -36,7 +35,6 @@ const Routers = function ({ history, app }) {
               nprogress.done()
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
-              registerModel(app, require('./models/dashboard'))
               cb(null, require('./routes/dashboard/'))
             }, 'dashboard')
           },

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Table, Button, Select, TimePicker } from 'antd'
+import { Table, Button, Select } from 'antd'
+import { Schedule } from '../../components'
 
 const Option = Select.Option
 
@@ -19,8 +20,8 @@ class RecurringList extends React.Component {
     const columns = [
       {
         title: 'Type',
-        dataIndex: 'type',
-        key: 'type',
+        dataIndex: 'task',
+        key: 'task',
         width: 100,
         render: (text, record) => {
           return (
@@ -31,7 +32,7 @@ class RecurringList extends React.Component {
                   <Option value="backup">Backup</Option>
                 </Select>
               </div> :
-              <div>
+              <div className="capitalize">
                 {text}
               </div>
           )
@@ -42,38 +43,9 @@ class RecurringList extends React.Component {
         key: 'schedule',
         render: (text, record) => {
           return (
-            record.creating ?
-              <div>
-                <Select defaultValue="daily" style={{ width: 80 }}>
-                  <Option value="hourly">Hourly</Option>
-                  <Option value="daily">Daily</Option>
-                  <Option value="weekly">Weekly</Option>
-                </Select>
-              </div> :
-              <div>
-                {text}
-              </div>
+            <Schedule cron={record.cron} />
           )
         },
-      }, {
-        title: 'Time',
-        dataIndex: 'time',
-        key: 'time',
-        render: (text, record) => {
-          return (
-            record.creating ?
-              <div>
-                <TimePicker />
-              </div> :
-              <div>
-                {text}
-              </div>
-          )
-        },
-      }, {
-        title: 'Created',
-        dataIndex: 'created',
-        key: 'created',
       }, {
         title: '',
         key: 'operation',
@@ -99,7 +71,7 @@ class RecurringList extends React.Component {
           dataSource={dataSource}
           simple
           pagination={pagination}
-          rowKey={record => record.id}
+          rowKey={record => record.name}
         />
         <Button style={{ marginTop: '20px' }} onClick={this.onNewRecurring} type="primary" icon="plus">New</Button>
       </div>

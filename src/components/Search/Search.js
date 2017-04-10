@@ -5,8 +5,14 @@ import { Input, Select, Button, Icon } from 'antd'
 
 class Search extends React.Component {
   state = {
-    clearVisible: false,
+    clearVisible: true,
     selectValue: (this.props.select && this.props.selectProps) ? this.props.selectProps.defaultValue : '',
+  }
+  componentWillMount() {
+    const { keyword } = this.props
+    this.setState({
+      clearVisible: keyword && keyword.length > 0,
+    })
   }
   handleSearch = () => {
     const data = {

@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume }) {
+function actions({ selected, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -20,8 +20,11 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
       case 'detach':
         detach(record.actions.detach)
         break
-      case 'recurring':
-        showRecurring()
+      case 'backups':
+        showBackups(record)
+        break
+      case 'recurringUpdate':
+        showRecurring(record)
         break
       case 'snapshotList':
         showSnapshots(record)
@@ -34,10 +37,9 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
     { key: 'attach', name: 'Attach' },
     { key: 'detach', name: 'Detach' },
     { key: 'snapshotList', name: 'Snapshots' },
-    { key: '5', name: 'Backups' },
-    { key: '6', name: 'Recurring Snapshot and Backup' },
+    { key: 'recurringUpdate', name: 'Recurring Snapshot and Backup' },
   ]
-  const availableActions = [{ key: 'delete', name: 'Delete' }]
+  const availableActions = [{ key: 'backups', name: 'Backups' }, { key: 'delete', name: 'Delete' }]
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
       if (key === action.key) {
@@ -58,6 +60,7 @@ actions.propTypes = {
   showAttachHost: PropTypes.func,
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,
+  showBackups: PropTypes.func,
 }
 
 export default actions

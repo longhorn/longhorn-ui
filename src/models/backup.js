@@ -1,4 +1,4 @@
-import { query } from '../services/backup'
+import { query, execAction, restore, deleteBackup } from '../services/backup'
 import { parse } from 'qs'
 
 export default {
@@ -11,10 +11,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.query,
-        })
+        if (location.pathname === '/backup') {
+          dispatch({
+            type: 'query',
+            payload: location.query,
+          })
+        }
       })
     },
   },
@@ -22,8 +24,33 @@ export default {
     *query({
       payload,
     }, { call, put }) {
+      let backups = []
       const data = yield call(query, parse(payload))
-      yield put({ type: 'queryBackup', payload: { ...data } })
+      const filter = payload && payload.field && payload.keyword
+      if (data && data.status === 200) {
+        for (const backup of data.data) {
+          if ((filter && backup.name.indexOf(payload.keyword) > -1) || !filter) {
+            const url = backup.actions.backupList
+            const list = yield call(execAction, url)
+            if (list && list.status === 200) {
+              backups = backups.concat(list.data)
+            }
+          }
+        }
+      }
+      yield put({ type: 'queryBackup', payload: { data: backups } })
+    },
+    *restore({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideRestoreBackupModal' })
+      yield call(restore, payload)
+    },
+    *delete({
+      payload,
+    }, { call, put }) {
+      yield call(deleteBackup, payload)
+      yield put({ type: 'query' })
     },
   },
   reducers: {
