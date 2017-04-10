@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Table, Button, Select, TimePicker } from 'antd'
+import { Table, Button, Select } from 'antd'
+import { Schedule } from '../../components'
 
 const Option = Select.Option
 
@@ -44,32 +45,7 @@ class RecurringList extends React.Component {
         key: 'schedule',
         render: (text, record) => {
           return (
-            record.creating ?
-              <div>
-                <Select defaultValue="daily" style={{ width: 80 }}>
-                  <Option value="hourly">Hourly</Option>
-                  <Option value="daily">Daily</Option>
-                  <Option value="weekly">Weekly</Option>
-                </Select>
-              </div> :
-              <div>
-                {text}
-              </div>
-          )
-        },
-      }, {
-        title: 'Time',
-        dataIndex: 'time',
-        key: 'time',
-        render: (text, record) => {
-          return (
-            record.creating ?
-              <div>
-                <TimePicker />
-              </div> :
-              <div>
-                {text}
-              </div>
+            <Schedule cron={record.cron} />
           )
         },
       }, {

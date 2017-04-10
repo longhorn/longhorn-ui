@@ -15,7 +15,7 @@ const modal = ({
     onCancel,
   }
   const recurringListProps = {
-    dataSource: item.recurringJobs,
+    dataSource: item.recurringJobs || [],
   }
 
   return (
