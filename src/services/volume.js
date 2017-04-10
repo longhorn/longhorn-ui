@@ -35,3 +35,10 @@ export async function deleteVolume(params) {
     method: 'delete',
   })
 }
+
+export async function getVolume(volumeName) {
+  return request({
+    url: `/v1/volumes/${volumeName}`,
+    method: 'get',
+  })
+}

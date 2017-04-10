@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Tree, Icon, Menu, Dropdown, Button } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button, Spin } from 'antd'
+import moment from 'moment'
 
-import request from '../../utils/request'
 const TreeNode = Tree.TreeNode
 
 function StartPoint() {
@@ -10,18 +10,28 @@ function StartPoint() {
       </div>
   )
 }
-function SnapshotIcon() {
+function SnapshotIcon(props, snapshotProps) {
+  function onClick({ key }) {
+    snapshotProps.onAction({
+      type: key,
+      payload: {
+        volume: snapshotProps.volume,
+        snapshot: props,
+      },
+    })
+  }
   const menu = (
     <Menu
       className="lh-snapshot-dropdown"
+      onClick={onClick}
     >
-      <Menu.Item key="0">
+      <Menu.Item key="snapshotRevert">
         <span>Revert</span>
       </Menu.Item>
-      <Menu.Item key="1">
+      <Menu.Item key="snapshotBackup">
         <span>Backup</span>
       </Menu.Item>
-      <Menu.Item key="2">
+      <Menu.Item key="snapshotDelete">
         <span>Delete</span>
       </Menu.Item>
     </Menu>
@@ -30,25 +40,41 @@ function SnapshotIcon() {
     <Dropdown
       placement="bottomRight"
       overlay={menu}
-      trigger={['click']}
+      trigger={props.removed ? [] : ['click']}
+      key={props.name}
     >
       <div>
         <div className="tree-snapshot-icon">
           <Icon className="snapshot-icon" type="camera" />
         </div>
         <div className="tree-snapshot-desc">
-          <p className="snapshot-name">Snapshot Name</p>
-          <p className="snapshot-time">created 13:02:04 2017-04-04</p>
+          <p className="snapshot-name">{props.name.substr(0, 5)}</p>
+          <p className="snapshot-time">{moment(new Date(props.created)).fromNow()}</p>
         </div>
      </div>
     </Dropdown>
   )
 }
+SnapshotIcon.propTypes = {
+  removed: PropTypes.bool,
+  name: PropTypes.string,
+  created: PropTypes.string,
+}
 
-function CurrentPoint() {
+function CurrentPoint(props) {
+  function onClick() {
+    props.onAction({
+      type: 'snapshotCreate',
+      payload: {
+        volume: props.volume,
+      },
+    })
+  }
   const menu = (
-    <Menu>
-      <Menu.Item key="0">
+    <Menu
+      onClick={onClick}
+    >
+      <Menu.Item key="1">
         <span>Take Snapshot</span>
       </Menu.Item>
     </Menu>
@@ -57,6 +83,7 @@ function CurrentPoint() {
      <Dropdown
        overlay={menu}
        trigger={['click']}
+       key={props.volume.id}
      >
         <div className="snapshot-current-desc">
           <Button>
@@ -66,45 +93,58 @@ function CurrentPoint() {
       </Dropdown>
   )
 }
-
-class Snapshot extends React.Component {
-  componentDidMount() {
-    request({
-      url: `/v1/volumes/${this.props.volume}?action=snapshotList`,
-      method: 'POST',
-    }).then((res) => {
-      console.log(res)
-    })
-  }
-  render() {
+CurrentPoint.propTypes = {
+  onAction: PropTypes.func,
+  volume: PropTypes.object,
+}
+function Snapshot(props) {
+  if (props.snapshotTree.length <= 0) {
     return (
-        <Tree
-          defaultExpandAll
-          className="lh-tree-snapshot"
-        >
-          <TreeNode title={StartPoint()} disabled key="0-0">
-            <TreeNode title={SnapshotIcon()} key="0-0-2">
-              <TreeNode title={SnapshotIcon()} key="0-0-2-0" />
-              <TreeNode title={SnapshotIcon()} key="0-0-1-2" />
-              <TreeNode title={SnapshotIcon()} key="0-0-1-1">
-                <TreeNode title={SnapshotIcon()} key="0-0-2-5" />
-                <TreeNode title={SnapshotIcon()} key="0-0-2-7">
-                  <TreeNode title={SnapshotIcon()} key="1-0-2-5" />
-                  <TreeNode title={SnapshotIcon()} key="1-0-2-7">
-                    <TreeNode title={CurrentPoint()} key="1-0-2-10" />
-                  </TreeNode>
-                </TreeNode>
-              </TreeNode>
-              <TreeNode title={SnapshotIcon()} key="0-0-2-11" />
-            </TreeNode>
-          </TreeNode>
-        </Tree>
+    <Spin tip="Loading..." spinning={props.loading}>
+      <Tree
+        defaultExpandAll
+        className="lh-tree-snapshot"
+        key={`00${props.volume.id}`}
+      >
+        <TreeNode title={StartPoint()} disabled key={`11${props.volume.id}`}>
+          <TreeNode key="1" title={CurrentPoint(props)} />
+        </TreeNode>
+      </Tree>
+    </Spin>
     )
   }
+  const loop = data => data.map((item) => {
+    let title
+    if (item.name) {
+      title = SnapshotIcon(item, props)
+    } else {
+      title = CurrentPoint(props)
+      return <TreeNode key={`${props.volume.name}`} title={title} />
+    }
+    if (item.childrenNode && item.childrenNode.length) {
+      return <TreeNode key={item.name} title={title} disabled={item.removed}>{loop(item.childrenNode)}</TreeNode>
+    }
+    return <TreeNode key={item.name} title={title} disabled={item.removed} />
+  })
+  return (
+    <Spin tip="Loading..." spinning={props.loading}>
+     <Tree
+       defaultExpandAll
+       className="lh-tree-snapshot"
+       key={`${props.volume.id}`}
+      >
+        <TreeNode title={StartPoint()} disabled key={`${props.volume.id}`}>
+          { loop(props.snapshotTree) }
+        </TreeNode>
+      </Tree>
+    </Spin>
+  )
 }
 
 Snapshot.propTypes = {
-  volume: PropTypes.String,
+  snapshotTree: PropTypes.array,
+  loading: PropTypes.bool,
+  volume: PropTypes.object,
 }
 
 export default Snapshot

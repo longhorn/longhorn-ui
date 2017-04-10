@@ -60,6 +60,12 @@ export default {
       yield call(deleteVolume, payload)
       yield put({ type: 'query' })
     },
+    *actions({
+      payload,
+    }, { call }) {
+      yield call(execAction, payload.url, payload.params)
+      yield call(payload.callBack, '')
+    },
   },
   reducers: {
     queryVolume(state, action) {

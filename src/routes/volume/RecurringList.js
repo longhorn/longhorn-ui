@@ -10,10 +10,8 @@ class RecurringList extends React.Component {
   }
 
   onNewRecurring = () => {
-    this.state.dataSource.push({ id: new Date().getTime(), creating: true })
-    const dataSource = this.state.dataSource
     this.setState({
-      dataSource,
+      dataSource: this.state.dataSource.concat[{ id: new Date().getTime(), creating: true }],
     })
   }
 

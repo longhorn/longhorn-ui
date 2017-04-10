@@ -44,7 +44,9 @@ const modal = ({
   }
 
   const options = hosts.map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
-
+  if (!item) {
+    return null
+  }
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">

@@ -24,7 +24,7 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
         showRecurring()
         break
       case 'snapshotList':
-        showSnapshots()
+        showSnapshots(record)
         break
       default:
     }
