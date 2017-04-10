@@ -3,6 +3,7 @@ import { connect } from 'dva'
 import VolumeInfo from './VolumeInfo'
 import VolumeReplicas from './VolumeReplicas'
 import { Row, Col } from 'antd'
+import { routerRedux } from 'dva/router'
 import VolumeActions from '../VolumeActions'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
@@ -61,6 +62,15 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
           url,
         },
       })
+    },
+    showBackups(record) {
+      dispatch(routerRedux.push({
+        pathname: '/backup',
+        query: {
+          field: 'volumeName',
+          keyword: record.volumeName,
+        },
+      }))
     },
   }
 

@@ -11,10 +11,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.query,
-        })
+        if (location.pathname === '/backup') {
+          dispatch({
+            type: 'query',
+            payload: location.query,
+          })
+        }
       })
     },
   },
@@ -24,17 +26,17 @@ export default {
     }, { call, put }) {
       let backups = []
       const data = yield call(query, parse(payload))
+      const filter = payload && payload.field && payload.keyword
       if (data && data.status === 200) {
         for (const backup of data.data) {
-          const url = backup.actions.backupList
-          const list = yield call(execAction, url)
-          if (list && list.status === 200) {
-            backups = backups.concat(list.data)
+          if ((filter && backup.name.indexOf(payload.keyword) > -1) || !filter) {
+            const url = backup.actions.backupList
+            const list = yield call(execAction, url)
+            if (list && list.status === 200) {
+              backups = backups.concat(list.data)
+            }
           }
         }
-      }
-      if (payload && payload.field && payload.keyword) {
-        backups = backups.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
       }
       yield put({ type: 'queryBackup', payload: { data: backups } })
     },

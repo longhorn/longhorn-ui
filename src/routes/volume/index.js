@@ -31,6 +31,15 @@ function Volume({ host, volume, location, loading, dispatch }) {
         },
       })
     },
+    showBackups(record) {
+      dispatch(routerRedux.push({
+        pathname: '/backup',
+        query: {
+          field: 'volumeName',
+          keyword: record.name,
+        },
+      }))
+    },
     showSnapshots() {
       dispatch({
         type: 'volume/showSnapshotsModal',

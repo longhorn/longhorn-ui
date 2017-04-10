@@ -5,7 +5,7 @@ import { Input, Select, Button, Icon } from 'antd'
 
 class Search extends React.Component {
   state = {
-    clearVisible: false,
+    clearVisible: true,
     selectValue: (this.props.select && this.props.selectProps) ? this.props.selectProps.defaultValue : '',
   }
   handleSearch = () => {
