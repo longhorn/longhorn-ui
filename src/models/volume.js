@@ -65,7 +65,6 @@ export default {
     *recurringUpdate({
       payload,
     }, { call, put }) {
-      console.log(payload)
       const data = {
         jobs: [],
       }

@@ -71,7 +71,7 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading, history }) {
         pathname: '/backup',
         query: {
           field: 'volumeName',
-          keyword: record.volumeName,
+          keyword: record.name,
         },
       }))
     },

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Button, Form, Modal } from 'antd'
+import { Button, Form } from 'antd'
+import { ModalBlur } from '../../components'
 
 const modal = ({
   visible,
@@ -17,9 +18,9 @@ const modal = ({
   }
 
   return (
-    <Modal {...modalOpts}>
+    <ModalBlur {...modalOpts}>
       Show the command to run Longhorn volume manager (/var/lib/docker disk will automatically be added)
-    </Modal>
+    </ModalBlur>
   )
 }
 

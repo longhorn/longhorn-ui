@@ -6,7 +6,6 @@
       "never"
     ],
     "allowForLoopAfterthoughts": 0,
-    "no-console": 0,
     "comma-dangle": [
       2,
       "always-multiline"

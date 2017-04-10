@@ -6,8 +6,7 @@ import dva from 'dva'
 const app = dva({
   ...createLoading(),
   history: browserHistory,
-  onError(error) {
-    console.error('app onError -- ', error)
+  onError() {
   },
 })
 

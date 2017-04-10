@@ -10,7 +10,6 @@ class Snapshots extends React.Component {
     })
   }
   onAction(action) {
-    console.log(action)
     this.props.dispatch({
       type: 'snapshotModal/snapshotAction',
       payload: {

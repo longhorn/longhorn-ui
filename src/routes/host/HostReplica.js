@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Button, Form, Modal } from 'antd'
+import { Button, Form } from 'antd'
 import ReplicaList from './ReplicaList'
+import { ModalBlur } from '../../components'
 
 const modal = ({
   selected,
@@ -24,9 +25,9 @@ const modal = ({
   }
 
   return (
-    <Modal {...modalOpts}>
+    <ModalBlur {...modalOpts}>
       <ReplicaList {...replicaListProps} />
-    </Modal>
+    </ModalBlur>
   )
 }
 

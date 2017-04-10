@@ -23,20 +23,20 @@ getPathSet(menu)
 
 function Bread({ location }) {
   let pathNames = []
-  let last = ''
+  const paths = {}
   location.pathname.substr(1).split('/').forEach((item, key) => {
     if (key > 0) {
       pathNames.push((`${pathNames[key - 1]}-${item}`).hyphenToHump())
     } else {
       pathNames.push(item.length > 0 ? (`-${item}`).hyphenToHump() : 'Dashboard')
     }
-    last = item
+    paths[key] = item
   })
 
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {
       pathSet[item] = {
-        name: last,
+        name: paths[key],
       }
     }
     return (

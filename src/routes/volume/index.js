@@ -8,20 +8,6 @@ import AttachHost from './AttachHost'
 import Recurring from './Recurring'
 
 class Volume extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      CreateVolumeGen(createVolumeModalProps) {
-        return <CreateVolume {...createVolumeModalProps} />
-      },
-      AttachHostGen(attachHostModalProps) {
-        return <AttachHost {...attachHostModalProps} />
-      },
-      RecurringGen(recurringModalProps) {
-        return <Recurring {...recurringModalProps} />
-      },
-    }
-  }
   render() {
     const { dispatch, loading, history, location } = this.props
     const { selected, data, createVolumeModalVisible, attachHostModalVisible, recurringModalVisible } = this.props.volume
@@ -48,9 +34,12 @@ class Volume extends React.Component {
       showSnapshots: (record) => {
         history.push(`/volume/${record.name}/snapshot`)
       },
-      showRecurring() {
+      showRecurring(record) {
         dispatch({
           type: 'volume/showRecurringModal',
+          payload: {
+            selected: record,
+          },
         })
       },
       deleteVolume(record) {
@@ -67,7 +56,17 @@ class Volume extends React.Component {
           },
         })
       },
+      showBackups(record) {
+        dispatch(routerRedux.push({
+          pathname: '/backup',
+          query: {
+            field: 'volumeName',
+            keyword: record.name,
+          },
+        }))
+      },
     }
+
     const volumeFilterProps = {
       hosts,
       field,
@@ -176,7 +175,10 @@ class Volume extends React.Component {
       },
     }
 
-    const { CreateVolumeGen, AttachHostGen, RecurringGen } = this.state
+    const CreateVolumeGen = () => <CreateVolume {...createVolumeModalProps} />
+    const AttachHostGen = () => <AttachHost {...attachHostModalProps} />
+    const RecurringGen = () => <Recurring {...recurringModalProps} />
+
     return (
       <div className="content-inner" >
         <VolumeFilter {...volumeFilterProps} />
