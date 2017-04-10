@@ -7,7 +7,7 @@ const Option = Select.Option
 class RecurringList extends React.Component {
 
   state = {
-    dataSource: this.props.dataSource.slice(0),
+    dataSource: this.props.dataSource,
   }
 
   componentWillMount() {
@@ -16,7 +16,7 @@ class RecurringList extends React.Component {
   }
 
   onNewRecurring = () => {
-    this.state.dataSource.push({ name: new Date().getTime(), editing: true, cron: '1 1 * * *' })
+    this.state.dataSource.push({ name: `recurring${new Date().getTime()}`, editing: true, cron: '1 1 * * *', task: 'snapshot' })
     const dataSource = this.state.dataSource
     this.setState({
       dataSource,
@@ -40,6 +40,28 @@ class RecurringList extends React.Component {
     })
   }
 
+  onScheduleChange = (record, newCron) => {
+    const found = this.state.dataSource.find(data => data.name === record.name)
+    if (found) {
+      found.cron = newCron
+      const dataSource = this.state.dataSource
+      this.setState({
+        dataSource,
+      })
+    }
+  }
+
+  onTaskTypeChange = (record, task) => {
+    const found = this.state.dataSource.find(data => data.name === record.name)
+    if (found) {
+      found.task = task
+      const dataSource = this.state.dataSource
+      this.setState({
+        dataSource,
+      })
+    }
+  }
+
   render() {
     const columns = [
       {
@@ -51,7 +73,7 @@ class RecurringList extends React.Component {
           return (
             record.editing ?
               <div>
-                <Select defaultValue="backup" style={{ width: 100 }}>
+                <Select onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 100 }}>
                   <Option value="snapshot">Snapshot</Option>
                   <Option value="backup">Backup</Option>
                 </Select>
@@ -67,7 +89,7 @@ class RecurringList extends React.Component {
         key: 'schedule',
         render: (text, record) => {
           return (
-            <Schedule cron={record.cron} editing={record.editing} />
+            <Schedule cron={record.cron} editing={record.editing} onChange={(newCron) => this.onScheduleChange(record, newCron)} />
           )
         },
       }, {

@@ -7,17 +7,20 @@ const modal = ({
   item,
   visible,
   onCancel,
+  onOk,
 }) => {
+  const recurringListProps = {
+    dataSource: item.recurringJobs ? item.recurringJobs.slice(0) : [],
+  }
   const modalOpts = {
     title: 'Recurring Snapshot and Backup',
     width: 800,
     visible,
     onCancel,
+    onOk: () => {
+      onOk(recurringListProps.dataSource, item.actions.recurringUpdate)
+    },
   }
-  const recurringListProps = {
-    dataSource: item.recurringJobs || [],
-  }
-
   return (
     <ModalBlur {...modalOpts}>
       <RecurringList {...recurringListProps} />

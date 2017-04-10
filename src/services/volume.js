@@ -35,3 +35,11 @@ export async function deleteVolume(params) {
     method: 'delete',
   })
 }
+
+export async function recurringUpdate(data, url) {
+  return request({
+    url,
+    method: 'post',
+    data,
+  })
+}

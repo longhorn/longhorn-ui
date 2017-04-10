@@ -1,4 +1,4 @@
-import { create, deleteVolume, query, execAction } from '../services/volume'
+import { create, deleteVolume, query, execAction, recurringUpdate } from '../services/volume'
 import { parse } from 'qs'
 
 export default {
@@ -60,6 +60,20 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteVolume, payload)
+      yield put({ type: 'query' })
+    },
+    *recurringUpdate({
+      payload,
+    }, { call, put }) {
+      console.log(payload)
+      const data = {
+        jobs: [],
+      }
+      payload.recurring.forEach(r => {
+        data.jobs.push({ cron: r.cron, name: r.name, task: r.task })
+      })
+      yield put({ type: 'hideRecurringModal' })
+      yield call(recurringUpdate, data, payload.url)
       yield put({ type: 'query' })
     },
   },

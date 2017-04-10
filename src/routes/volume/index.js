@@ -156,10 +156,13 @@ function Volume({ host, volume, location, loading, dispatch }) {
   const recurringModalProps = {
     item: selected,
     visible: recurringModalVisible,
-    onOk(recurring) {
+    onOk(recurring, url) {
       dispatch({
-        type: 'volume/recurring',
-        payload: recurring,
+        type: 'volume/recurringUpdate',
+        payload: {
+          recurring,
+          url,
+        },
       })
     },
     onCancel() {
