@@ -45,9 +45,12 @@ function Volume({ host, volume, location, loading, dispatch }) {
         type: 'volume/showSnapshotsModal',
       })
     },
-    showRecurring() {
+    showRecurring(record) {
       dispatch({
         type: 'volume/showRecurringModal',
+        payload: {
+          selected: record,
+        },
       })
     },
     deleteVolume(record) {
@@ -151,8 +154,7 @@ function Volume({ host, volume, location, loading, dispatch }) {
   }
 
   const recurringModalProps = {
-    item: {
-    },
+    item: selected,
     visible: recurringModalVisible,
     onOk(recurring) {
       dispatch({

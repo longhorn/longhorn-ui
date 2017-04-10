@@ -4,6 +4,7 @@ import RecurringList from './RecurringList'
 import { ModalBlur } from '../../components'
 
 const modal = ({
+  item,
   visible,
   onCancel,
 }) => {
@@ -13,28 +14,8 @@ const modal = ({
     visible,
     onCancel,
   }
-
   const recurringListProps = {
-    dataSource: [{
-      id: '1',
-      type: 'Snapshot',
-      schedule: 'Hourly',
-      time: '00:00 Every Hour',
-      created: '4:10PM 3/14/17',
-    }, {
-      id: '2',
-      type: 'Backup',
-      schedule: 'Daily',
-      time: '12:00:00AM',
-      created: '4:10PM 3/14/17',
-    }, {
-      id: '3',
-      type: 'Backup',
-      schedule: 'Weekly',
-      time: 'Sunday 12:00:00AM',
-      created: '4:10PM 3/14/17',
-    },
-    ],
+    dataSource: item.recurringJobs,
   }
 
   return (

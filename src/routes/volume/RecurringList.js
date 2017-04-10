@@ -21,8 +21,8 @@ class RecurringList extends React.Component {
     const columns = [
       {
         title: 'Type',
-        dataIndex: 'type',
-        key: 'type',
+        dataIndex: 'task',
+        key: 'task',
         width: 100,
         render: (text, record) => {
           return (
@@ -33,7 +33,7 @@ class RecurringList extends React.Component {
                   <Option value="backup">Backup</Option>
                 </Select>
               </div> :
-              <div>
+              <div className="capitalize">
                 {text}
               </div>
           )
@@ -73,10 +73,6 @@ class RecurringList extends React.Component {
           )
         },
       }, {
-        title: 'Created',
-        dataIndex: 'created',
-        key: 'created',
-      }, {
         title: '',
         key: 'operation',
         width: 100,
@@ -101,7 +97,7 @@ class RecurringList extends React.Component {
           dataSource={dataSource}
           simple
           pagination={pagination}
-          rowKey={record => record.id}
+          rowKey={record => record.name}
         />
         <Button style={{ marginTop: '20px' }} onClick={this.onNewRecurring} type="primary" icon="plus">New</Button>
       </div>
