@@ -7,11 +7,33 @@ const Option = Select.Option
 class RecurringList extends React.Component {
 
   state = {
-    dataSource: this.props.dataSource,
+    dataSource: this.props.dataSource.slice(0),
+  }
+
+  componentWillMount() {
+    const { dataSource } = this.state
+    dataSource.forEach((data) => { data.editing = false })
   }
 
   onNewRecurring = () => {
-    this.state.dataSource.push({ id: new Date().getTime(), creating: true })
+    this.state.dataSource.push({ name: new Date().getTime(), editing: true, cron: '1 1 * * *' })
+    const dataSource = this.state.dataSource
+    this.setState({
+      dataSource,
+    })
+  }
+
+  onDelete = (record) => {
+    const index = this.state.dataSource.findIndex(data => data.name === record.name)
+    this.state.dataSource.splice(index, 1)
+    const dataSource = this.state.dataSource
+    this.setState({
+      dataSource,
+    })
+  }
+
+  onEdit = (record) => {
+    record.editing = true
     const dataSource = this.state.dataSource
     this.setState({
       dataSource,
@@ -27,7 +49,7 @@ class RecurringList extends React.Component {
         width: 120,
         render: (text, record) => {
           return (
-            record.creating ?
+            record.editing ?
               <div>
                 <Select defaultValue="backup" style={{ width: 100 }}>
                   <Option value="snapshot">Snapshot</Option>
@@ -45,18 +67,18 @@ class RecurringList extends React.Component {
         key: 'schedule',
         render: (text, record) => {
           return (
-            <Schedule cron={record.cron} />
+            <Schedule cron={record.cron} editing={record.editing} />
           )
         },
       }, {
         title: '',
         key: 'operation',
         width: 100,
-        render: () => {
+        render: (text, record) => {
           return (
-            <div>
-              <Button style={{ marginRight: '20px' }} type="primary" icon="delete" shape="circle" />
-              <Button type="primary" icon="edit" shape="circle" />
+            <div style={{ textAlign: 'right' }}>
+              {!record.editing && <Button type="primary" icon="edit" shape="circle" onClick={() => this.onEdit(record)} />}
+              <Button style={{ marginLeft: '20px' }} type="primary" icon="delete" shape="circle" onClick={() => this.onDelete(record)} />
             </div>
           )
         },

@@ -1,24 +1,65 @@
 import React, { PropTypes } from 'react'
 import { Select, TimePicker } from 'antd'
+import moment from 'moment'
 const Option = Select.Option
 
 class Schedule extends React.Component {
   state = {
     scheduleType: 'day',
+    mins: '',
+    hour: '',
+    dom: '',
+    month: '',
+    dow: '',
+  }
+  componentWillMount() {
+    const { cron } = this.props
+    const d = cron.split(' ')
+    let scheduleType = ''
+    const v = {
+      mins: d[0],
+      hour: d[1],
+      dom: d[2],
+      month: d[3],
+      dow: d[4],
+    }
+    if (v.month !== '*') {
+      scheduleType = 'year'
+    } else if (v.dom !== '*') {
+      scheduleType = 'month'
+    } else if (v.dow !== '*') {
+      scheduleType = 'week'
+    } else if (v.hour !== '*') {
+      scheduleType = 'day'
+    } else if (v.mins !== '*') {
+      scheduleType = 'hour'
+    } else {
+      scheduleType = 'minute'
+    }
+    this.setState({
+      scheduleType,
+      ...v,
+    })
   }
   onScheduleTypeChange = (value) => {
     this.setState({
       scheduleType: value,
+      mins: '00',
+      hour: '00',
+      dom: '1',
+      month: '1',
+      dow: '0',
     })
   }
   render() {
-    const { scheduleType } = this.state
+    const { scheduleType, mins, hour, dom, month, dow } = this.state
+    const { editing } = this.props
     return (
       <div style={{ textAlign: 'left' }}>
         <span style={{ marginRight: '10px' }}>
           Every
         </span>
-        <Select defaultValue={scheduleType} style={{ width: 90 }} onChange={this.onScheduleTypeChange}>
+        <Select disabled={!editing} defaultValue={scheduleType} style={{ width: 90 }} onChange={this.onScheduleTypeChange}>
           <Option value="minute">minute</Option>
           <Option value="hour">hour</Option>
           <Option value="day">day</Option>
@@ -30,36 +71,36 @@ class Schedule extends React.Component {
         {scheduleType === 'hour' &&
           <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker format={'mm'} />
+            <TimePicker disabled={!editing} defaultValue={moment(mins, 'mm')} format={'mm'} />
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>minutes past the hour</span>
           </span>}
 
         {scheduleType === 'day' &&
           <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker format={'HH:mm'} />
+            <TimePicker disabled={!editing} defaultValue={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
         {scheduleType === 'week' &&
           <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>on</span>
-            <Select style={{ width: 90 }}>
-              <Option value="sunday">Sunday</Option>
-              <Option value="monday">Monday</Option>
-              <Option value="tuesday">Tuesday</Option>
-              <Option value="wednesday">Wednesday</Option>
-              <Option value="thursday">Thursday</Option>
-              <Option value="friday">Friday</Option>
-              <Option value="saturday">Saturday</Option>
+            <Select disabled={!editing} defaultValue={dow} style={{ width: 90 }}>
+              <Option value="0">Sunday</Option>
+              <Option value="1">Monday</Option>
+              <Option value="2">Tuesday</Option>
+              <Option value="3">Wednesday</Option>
+              <Option value="4">Thursday</Option>
+              <Option value="5">Friday</Option>
+              <Option value="6">Saturday</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker format={'HH:mm'} />
+            <TimePicker disabled={!editing} defaultValue={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
         {scheduleType === 'month' &&
           <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>on the</span>
-            <Select style={{ width: 90 }}>
+            <Select disabled={!editing} defaultValue={dom} style={{ width: 90 }}>
               <Option value="1">1st</Option>
               <Option value="2">2nd</Option>
               <Option value="3">3rd</Option>
@@ -93,13 +134,13 @@ class Schedule extends React.Component {
               <Option value="31">31st</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker format={'HH:mm'} />
+            <TimePicker disabled={!editing} defaultValue={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
         {scheduleType === 'year' &&
           <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>on the</span>
-            <Select style={{ width: 90 }}>
+            <Select disabled={!editing} defaultValue={dom} style={{ width: 90 }}>
               <Option value="1">1st</Option>
               <Option value="2">2nd</Option>
               <Option value="3">3rd</Option>
@@ -133,7 +174,7 @@ class Schedule extends React.Component {
               <Option value="31">31st</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>of</span>
-            <Select style={{ width: 90 }}>
+            <Select disabled={!editing} defaultValue={month} style={{ width: 90 }}>
               <Option value="1">January</Option>
               <Option value="2">February</Option>
               <Option value="3">March</Option>
@@ -148,9 +189,8 @@ class Schedule extends React.Component {
               <Option value="12">December</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker format={'HH:mm'} />
+            <TimePicker disabled={!editing} defaultValue={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
-
       </div>
     )
   }
@@ -159,6 +199,7 @@ class Schedule extends React.Component {
 
 Schedule.propTypes = {
   cron: PropTypes.string,
+  editing: PropTypes.bool,
 }
 
 export default Schedule

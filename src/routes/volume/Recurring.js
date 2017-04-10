@@ -9,7 +9,7 @@ const modal = ({
   onCancel,
 }) => {
   const modalOpts = {
-    title: 'Recurring Backup',
+    title: 'Recurring Snapshot and Backup',
     width: 800,
     visible,
     onCancel,
