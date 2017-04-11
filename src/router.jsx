@@ -79,7 +79,7 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'volume/:id/snapshot',
+          path: 'volume/:id/snapshots',
           // name: 'volume/detail',
           getComponent(nextState, cb) {
             nprogress.start()

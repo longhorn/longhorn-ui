@@ -1,8 +1,21 @@
+
 :global {
+  .lh-snapshot-dropdown{
+    width: 80%;
+    margin-left: 20%;
+  }
   .lh-tree-snapshot.ant-tree{
     .ant-tree-treenode-disabled{
-      >a .tree-snapshot-icon{
-        background-color: gray
+      >a {
+        .tree-snapshot-icon{
+          background-color: #b4b4b4
+        }
+        .snapshot-name{
+          color: #a4a4a4
+        }
+        .snapshot-time{
+          color: #c4c4c4
+        }
       }
     }
     .snapshot-current-desc{
@@ -79,9 +92,10 @@
         color: #a4a4a4;
       }
     }
+    @treeNodeGap: 160px;
     .ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree {
       margin-top: -56px;
-      margin-left: 200px;
+      margin-left: @treeNodeGap;
     }
 
     .ant-tree-switcher.ant-tree-switcher.ant-tree-switcher.ant-tree-switcher {
@@ -117,7 +131,7 @@
         &::before {
           content: '';
           display: block;
-          width: 198px;
+          width: @treeNodeGap - 2px;
           height: 2px;
           border-top: 2px solid #ecf0f1;
           position: absolute;
@@ -133,7 +147,7 @@
           border-left: 2px solid white;
           position: absolute;
           top: 28px;
-          left: -398px;
+          left: -(2*@treeNodeGap - 2);
           z-index: 1;
         }
       }
@@ -145,7 +159,7 @@
         border-left: 2px solid #ecf0f1;
         position: absolute;
         top: 28px;
-        left: -180px;
+        left: -(@treeNodeGap - 20px);
       }
     }
   }

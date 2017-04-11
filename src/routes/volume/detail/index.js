@@ -42,7 +42,7 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading, history }) {
       })
     },
     showSnapshots(record) {
-      history.push(`/volume/${record.name}/snapshot`)
+      history.push(`/volume/${record.name}/snapshots`)
     },
     showRecurring(record) {
       dispatch({
