@@ -44,6 +44,10 @@ class List extends React.Component {
         dataIndex: 'snapshotName',
         key: 'snapshotName',
       }, {
+        title: 'Size',
+        dataIndex: 'size',
+        key: 'size',
+      }, {
         title: 'Timestamp',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
@@ -54,10 +58,6 @@ class List extends React.Component {
             </div>
           )
         },
-      }, {
-        title: 'Size',
-        dataIndex: 'size',
-        key: 'size',
       }, {
         title: 'Created',
         dataIndex: 'created',

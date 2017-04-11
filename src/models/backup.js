@@ -1,5 +1,6 @@
 import { query, execAction, restore, deleteBackup } from '../services/backup'
 import { parse } from 'qs'
+import { sortVolumeBackups } from '../utils/sort'
 
 export default {
   namespace: 'backup',
@@ -35,6 +36,7 @@ export default {
           }
         }
       }
+      sortVolumeBackups(backups)
       yield put({ type: 'queryBackup', payload: { data: backups } })
     },
     *queryBackupList({
@@ -42,6 +44,7 @@ export default {
     }, { call, put }) {
       const url = payload.url
       const list = yield call(execAction, url)
+      sortVolumeBackups(list.data)
       yield put({ type: 'queryBackups', payload: { name: payload.name, data: list.data } })
     },
     *restore({
