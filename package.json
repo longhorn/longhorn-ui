@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "LONGHORN=http://54.223.25.181:9500/ roadhog server",
+    "dev": "roadhog server",
     "build": "roadhog build",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"

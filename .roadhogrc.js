@@ -1,4 +1,4 @@
-const endpoint = process.env.LONGHORN || 'http://localhost:9500';
+const endpoint = process.env.LONGHORN || 'http://54.223.25.181:9500/';
 export default {
   "entry": "src/index.js",
   "disableCSSModules": false,
