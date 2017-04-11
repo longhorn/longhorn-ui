@@ -9,9 +9,6 @@ import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Recurring from '../Recurring'
 
-const RecurringGen = (recurringModalProps) =>
-  <Recurring {...recurringModalProps} />
-
 function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, recurringModalVisible } = volume
   const hosts = host.data
@@ -131,8 +128,8 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
           <VolumeReplicas {...replicasListProps} />
         </Col>
       </Row>
-      <AttachHost {...attachHostModalProps} />
-      <RecurringGen {...recurringModalProps} />
+      {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
+      {recurringModalVisible && <Recurring {...recurringModalProps} />}
     </div>
   )
 }
