@@ -33,6 +33,9 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading, history }) {
 
 
   const volumeActionsProps = {
+    takeSnapshot(record) {
+      console.log(record)
+    },
     showAttachHost(record) {
       dispatch({
         type: 'volume/showAttachHostModal',

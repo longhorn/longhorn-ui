@@ -1,23 +1,19 @@
 import { execAction, getVolume } from '../services/volume'
 
-let loopTree = function (node, treeArry) {
+let loopTree = (node, treeArry) => {
   for (let i = 0; i < node.children.length; i += 1) {
     let item = node.children[i]
     node.childrenNode || (node.childrenNode = [])
     if (!item || item === 'volume-head') {
-      node.childrenNode.push(
-              'volume-head'
-              )
-    } else {
-      let selected = treeArry.find(ele => ele.name === item)
-      let child = {
-        ...selected,
-      }
-      node.childrenNode.push(
-        child
-                )
-      loopTree(child, treeArry)
+      node.childrenNode.push('volume-head')
+      continue
     }
+    let selected = treeArry.find(ele => ele.name === item)
+    let child = {
+      ...selected,
+    }
+    node.childrenNode.push(child)
+    loopTree(child, treeArry)
   }
   node.childrenNode && node.childrenNode.sort((a, b) => {
     if (a === 'volume-head') {
@@ -28,6 +24,35 @@ let loopTree = function (node, treeArry) {
     }
     return (new Date(a.created)).getTime() - (new Date(b.created)).getTime()
   })
+}
+let filterRemoved = (data) => {
+  let filteredData = []
+  for (let i = 0; i < data.length; i += 1) {
+    let item = data[i]
+    if (item.removed) {
+      let parent = item.parent
+      let parentEntity = data.find(el => el.name === parent)
+
+      // change parent children
+      let pChildArray = parentEntity.children
+      let itemPos = pChildArray.findIndex(ele => ele === item.name)
+      pChildArray = pChildArray.slice(0, itemPos)
+                      .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
+                        .concat(item.children)
+      parentEntity.children = pChildArray
+
+      // change children parent
+      for (let j = 0; j < item.children.length; j += 1) {
+        let itemC = item.children[j]
+        let itemCEntity = data.find(el => el.name === itemC)
+        itemCEntity.parent = parent
+      }
+
+      continue
+    }
+    filteredData.push(item)
+  }
+  return filteredData
 }
 export default (namespace) => {
   return {
@@ -46,6 +71,12 @@ export default (namespace) => {
       }, { call, put }) {
         yield put({ type: 'setLoading', payload: true })
         yield call(execAction, payload.url, payload.params)
+        if (payload.actions && payload.actions.length) {
+          for (let i = 0; i < payload.actions.length; i += 1) {
+            let item = payload.actions[i]
+            yield call(execAction, item.url, item.params)
+          }
+        }
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
       },
@@ -62,11 +93,15 @@ export default (namespace) => {
         yield put({ type: 'setLoading', payload: true })
         const treeData = yield call(execAction, payload.url)
         yield put({ type: 'setLoading', payload: false })
+        // yield put({ type: 'setSnapshot', payload: treeData.data })
+        let actualData =
+                  // treeData.data
+                  filterRemoved(treeData.data)
         let rootNode = {
-          ...treeData.data.find(ele => ele.parent === ''),
+          ...actualData.find(ele => ele.parent === ''),
         }
         if (rootNode.name) {
-          loopTree(rootNode, treeData.data)
+          loopTree(rootNode, actualData)
           yield put({ type: 'setSnapshot', payload: [rootNode] })
         } else {
           yield put({ type: 'setSnapshot', payload: [] })

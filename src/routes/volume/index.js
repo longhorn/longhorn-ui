@@ -23,6 +23,9 @@ class Volume extends React.Component {
     const volumeListProps = {
       dataSource: data,
       loading,
+      takeSnapshot(record) {
+        console.log(record)
+      },
       showAttachHost(record) {
         dispatch({
           type: 'volume/showAttachHostModal',

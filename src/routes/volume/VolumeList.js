@@ -6,7 +6,7 @@ import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 
-function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups }) {
+function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot }) {
   const getStateWeight = (state) => {
     switch (state) {
       case 'healthy':
@@ -27,6 +27,7 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
     detach,
     showBackups,
     deleteVolume,
+    takeSnapshot,
   }
   const columns = [
     {
@@ -122,6 +123,8 @@ list.propTypes = {
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,
   showBackups: PropTypes.func,
+  takeSnapshot: PropTypes.func,
+
 }
 
 export default list
