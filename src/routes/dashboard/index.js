@@ -40,11 +40,6 @@ function Dashboard({ host, volume }) {
     <div>
       <Row gutter={24}>
         {numberCards}
-        <Col md={24}>
-          <Card title="Event Logs" bordered={false}>
-            <EventLogs {...eventLogs} />
-          </Card>
-        </Col>
       </Row>
     </div>
   )
