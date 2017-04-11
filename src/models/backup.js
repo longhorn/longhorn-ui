@@ -5,6 +5,7 @@ export default {
   namespace: 'backup',
   state: {
     data: [],
+    backups: {},
     currentItem: {},
     restoreBackupModalVisible: false,
   },
@@ -30,15 +31,18 @@ export default {
       if (data && data.status === 200) {
         for (const backup of data.data) {
           if ((filter && backup.name.indexOf(payload.keyword) > -1) || !filter) {
-            const url = backup.actions.backupList
-            const list = yield call(execAction, url)
-            if (list && list.status === 200) {
-              backups = backups.concat(list.data)
-            }
+            backups.push(backup)
           }
         }
       }
       yield put({ type: 'queryBackup', payload: { data: backups } })
+    },
+    *queryBackupList({
+      payload,
+    }, { call, put }) {
+      const url = payload.url
+      const list = yield call(execAction, url)
+      yield put({ type: 'queryBackups', payload: { name: payload.name, data: list.data } })
     },
     *restore({
       payload,
@@ -50,7 +54,7 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteBackup, payload)
-      yield put({ type: 'query' })
+      yield put({ type: 'queryBackupList', payload: { name: payload.volumeName, url: payload.listUrl } })
     },
   },
   reducers: {
@@ -58,6 +62,19 @@ export default {
       return {
         ...state,
         ...action.payload,
+      }
+    },
+    queryBackups(state, action) {
+      if (state.backups[action.payload.name]) {
+        const current = state.backups[action.payload.name].data
+        state.backups[action.payload.name].data = current.slice(current.length).concat(action.payload.data || [])
+      } else {
+        state.backups[action.payload.name] = {
+          data: action.payload.data,
+        }
+      }
+      return {
+        ...state,
       }
     },
     showRestoreBackupModal(state, action) {
