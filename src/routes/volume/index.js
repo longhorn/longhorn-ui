@@ -9,7 +9,7 @@ import Recurring from './Recurring'
 
 class Volume extends React.Component {
   render() {
-    const { dispatch, loading, history, location } = this.props
+    const { dispatch, loading, location } = this.props
     const { selected, data, createVolumeModalVisible, attachHostModalVisible, recurringModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const { field, keyword } = this.props.location.query
@@ -35,7 +35,9 @@ class Volume extends React.Component {
         })
       },
       showSnapshots: (record) => {
-        history.push(`/volume/${record.name}/snapshots`)
+        dispatch(routerRedux.push({
+          pathname: `/volume/${record.name}/snapshots`,
+        }))
       },
       showRecurring(record) {
         dispatch({
@@ -200,7 +202,6 @@ Volume.propTypes = {
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
   host: PropTypes.object,
-  history: PropTypes.object,
 }
 
 export default connect(({ host, volume, loading }) => ({ host, volume, loading: loading.models.volume }))(Volume)

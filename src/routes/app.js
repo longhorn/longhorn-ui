@@ -29,7 +29,6 @@ const App = ({ children, dispatch, location, app }) => {
         <Helmet>
           <title>Longhorn</title>
           <link rel="icon" href={config.logoSrc} type="image/x-icon" />
-          {config.iconFontUrl ? <script src={config.iconFontUrl}></script> : ''}
         </Helmet>
         <div className={classnames(styles.layout, { [styles.fold]: true }, { [styles.withnavbar]: true })}>
           <div className={styles.main}>

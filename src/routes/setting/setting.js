@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Spin } from 'antd'
 import styles from './setting.less'
 const FormItem = Form.Item
 
@@ -11,6 +11,7 @@ const form = ({
   data,
   saving,
   onSubmit,
+  loading,
 }) => {
   const handleOnSubmit = () => {
     const fields = getFieldsValue()
@@ -23,18 +24,20 @@ const form = ({
   </FormItem>)
 
   return (
-    <Form layout="horizontal" className={styles.setting}>
-      {settings}
-      <FormItem style={{ textAlign: 'center' }}>
-        <Button
-          onClick={handleOnSubmit}
-          loading={saving}
-          type="primary"
-          htmlType="submit">
-          Save
+    <Spin spinning={loading}>
+      {loading ? <div></div> : <Form layout="horizontal" className={styles.setting}>
+        {settings}
+        <FormItem style={{ textAlign: 'center' }}>
+          <Button
+            onClick={handleOnSubmit}
+            loading={saving}
+            type="primary"
+            htmlType="submit">
+            Save
           </Button>
-      </FormItem>
-    </Form>
+        </FormItem>
+      </Form>}
+    </Spin>
   )
 }
 
@@ -43,6 +46,7 @@ form.propTypes = {
   data: PropTypes.array,
   onSubmit: PropTypes.func,
   saving: PropTypes.bool,
+  loading: PropTypes.bool,
 }
 
 export default Form.create()(form)

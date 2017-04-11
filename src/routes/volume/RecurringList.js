@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Table, Button, Select } from 'antd'
+import { Table, Button, Select, InputNumber } from 'antd'
 import { Schedule } from '../../components'
 
 const Option = Select.Option
@@ -61,6 +61,17 @@ class RecurringList extends React.Component {
     }
   }
 
+  onTaskTypeChange = (record, retain) => {
+    const found = this.state.dataSource.find(data => data.name === record.name)
+    if (found) {
+      found.retain = retain
+      const dataSource = this.state.dataSource
+      this.setState({
+        dataSource,
+      })
+    }
+  }
+
   render() {
     const columns = [
       {
@@ -89,6 +100,23 @@ class RecurringList extends React.Component {
         render: (text, record) => {
           return (
             <Schedule cron={record.cron} editing={record.editing} onChange={(newCron) => this.onScheduleChange(record, newCron)} />
+          )
+        },
+      },
+      {
+        title: 'Retain',
+        dataIndex: 'retain',
+        key: 'retain',
+        width: 120,
+        render: (text, record) => {
+          return (
+            record.editing ?
+              <div>
+                <InputNumber min={1} defaultValue={20} onChange={(value) => this.onTaskTypeChange(record, value)} />
+              </div> :
+              <div>
+                {text}
+              </div>
           )
         },
       }, {

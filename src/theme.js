@@ -1,5 +1,6 @@
 module.exports = () => {
   return {
+    '@icon-url': '"/iconfont/iconfont"',
     '@border-radius-base': '3px',
     '@border-radius-sm': '2px',
     '@shadow-color': 'rgba(0,0,0,0.05)',

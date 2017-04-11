@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import SettingForm from './setting'
 
-function Setting({ setting, dispatch }) {
+function Setting({ setting, dispatch, loading }) {
   const { data, saving } = setting
   const props = {
     data,
     saving,
+    loading,
     onSubmit(payload) {
       dispatch({
         type: 'setting/update',
@@ -25,6 +26,7 @@ function Setting({ setting, dispatch }) {
 Setting.propTypes = {
   setting: PropTypes.object,
   dispatch: PropTypes.func,
+  loading: PropTypes.bool,
 }
 
-export default connect(({ setting }) => ({ setting }))(Setting)
+export default connect(({ setting, loading }) => ({ setting, loading: loading.models.setting }))(Setting)

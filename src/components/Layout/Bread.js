@@ -37,6 +37,8 @@ function Bread({ location }) {
     if (!(item in pathSet)) {
       pathSet[item] = {
         name: paths[key],
+        clickable: true,
+        path: location.pathname.split('/').splice(0, key + 2).join('/'),
       }
     }
     return (

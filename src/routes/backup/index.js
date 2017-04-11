@@ -1,18 +1,28 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
-import BackupList from './BackupList'
+import BackupVolumes from './BackupVolumes'
 import BackupFilter from './BackupFilter'
 import { routerRedux } from 'dva/router'
 import RestoreBackup from './RestoreBackup'
 
 function Backup({ host, backup, loading, location, dispatch }) {
-  const { data, restoreBackupModalVisible, currentItem } = backup
+  const { data, backups, restoreBackupModalVisible, currentItem } = backup
   const { field, keyword } = location.query
   const hosts = host.data
 
-  const backupListProps = {
+  const backupVolumesProps = {
     dataSource: data,
+    backups,
     loading,
+    queryBackups(name, url) {
+      dispatch({
+        type: 'backup/queryBackupList',
+        payload: {
+          url,
+          name,
+        },
+      })
+    },
     showRestoreBackup(item) {
       dispatch({
         type: 'backup/showRestoreBackupModal',
@@ -24,12 +34,13 @@ function Backup({ host, backup, loading, location, dispatch }) {
         },
       })
     },
-    deleteBackup(record) {
+    deleteBackup(record, listUrl) {
       dispatch({
         type: 'backup/delete',
         payload: {
           volumeName: record.volumeName,
           name: record.name,
+          listUrl,
         },
       })
     },
@@ -75,7 +86,7 @@ function Backup({ host, backup, loading, location, dispatch }) {
   return (
     <div className="content-inner" >
       <BackupFilter {...backupFilterProps} />
-      <BackupList {...backupListProps} />
+      <BackupVolumes {...backupVolumesProps} />
       <RestoreBackupGen />
     </div >
   )
