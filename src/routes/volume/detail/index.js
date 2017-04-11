@@ -12,7 +12,7 @@ import Recurring from '../Recurring'
 const RecurringGen = (recurringModalProps) =>
   <Recurring {...recurringModalProps} />
 
-function VolumeDetail({ dispatch, host, volume, volumeId, loading, history }) {
+function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, recurringModalVisible } = volume
   const hosts = host.data
   const selectedVolume = data.find(item => item.id === volumeId)
@@ -42,7 +42,9 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading, history }) {
       })
     },
     showSnapshots(record) {
-      history.push(`/volume/${record.name}/snapshots`)
+      dispatch(routerRedux.push({
+        pathname: `/volume/${record.name}/snapshots`,
+      }))
     },
     showRecurring(record) {
       dispatch({
@@ -142,7 +144,6 @@ VolumeDetail.propTypes = {
   host: PropTypes.object,
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
-  history: PropTypes.object,
 }
 
 export default connect(({ host, volume, loading }, { params }) => ({ host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)
