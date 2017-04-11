@@ -71,7 +71,7 @@ export default {
         jobs: [],
       }
       payload.recurring.forEach(r => {
-        data.jobs.push({ cron: r.cron, name: r.name, task: r.task })
+        data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
       })
       yield put({ type: 'hideRecurringModal' })
       yield call(recurringUpdate, data, payload.url)

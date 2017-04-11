@@ -11,7 +11,7 @@ class Modal extends React.Component {
     }
     const modalOpts = {
       title: `Recurring Snapshot and Backup - ${item.id}`,
-      width: 800,
+      width: 920,
       visible,
       onCancel,
       onOk: () => {
