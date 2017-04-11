@@ -1,5 +1,10 @@
 import axios from 'axios'
 import qs from 'qs'
+import { message } from 'antd'
+message.config({
+  top: 60,
+  duration: 5,
+})
 
 const config = {
   headers: {
@@ -36,6 +41,8 @@ export default function request(options) {
       message: statusText,
       ...data,
     }
+  }, (error) => {
+    message.error(error.response.data.message)
   }).catch((error) => {
     const { response = { statusText: 'Network Error' } } = error
     return { code: 1, message: response.statusText }
