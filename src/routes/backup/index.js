@@ -6,7 +6,7 @@ import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
 
 function Backup({ host, backup, loading, location, dispatch }) {
-  const { data, restoreBackupModalVisible, currentItem } = backup
+  const { data, backupVolumes, restoreBackupModalVisible, currentItem } = backup
   const { field, keyword } = location.query
   const hosts = host.data
   const backupVolumesProps = {
@@ -49,6 +49,7 @@ function Backup({ host, backup, loading, location, dispatch }) {
   const backupFilterProps = {
     field,
     keyword,
+    backupVolumes,
     onSearch(fieldsValue) {
       fieldsValue.keyword.length ? dispatch(routerRedux.push({
         pathname: '/backup',

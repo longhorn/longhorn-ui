@@ -3,6 +3,16 @@
   box-shadow: none;
 }
 
+.searchSelect {
+  :global {
+    .ant-select {
+      width: 80px;
+      flex-shrink: 0;
+      flex-grow: 0;
+    }
+  }
+}
+
 .search {
   display: flex;
   width: 100%;
@@ -24,10 +34,6 @@
     }
 
     .ant-select {
-      width: 80px;
-      flex-shrink: 0;
-      flex-grow: 0;
-
       &.ant-select-focused .ant-select-selection,
       &.ant-select-open .ant-select-selection,
       .ant-select-selection:active,

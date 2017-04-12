@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react'
-import { Form, Row, Col } from 'antd'
+import { Select, Form, Row, Col } from 'antd'
 import { Search } from '../../components'
+const Option = Select.Option
 
 const BackupFilter = ({
+  backupVolumes,
   field,
   keyword,
   onSearch,
@@ -12,7 +14,20 @@ const BackupFilter = ({
     keyword,
     size: 'large',
     select: true,
-    selectOptions: [{ value: 'volumeName', name: 'Volume' }],
+    selectOptions: [
+      {
+        value: 'volumeName',
+        name: 'Volume',
+        options(value) {
+          if (backupVolumes.find(b => b.name === value)) {
+            return []
+          }
+          return backupVolumes.filter(b => b.name.indexOf(value) > -1).map(f => {
+            return <Option key={f.name}>{f.name}</Option>
+          })
+        },
+      },
+    ],
     selectProps: {
       defaultValue: field || 'volumeName',
     },
@@ -35,6 +50,7 @@ BackupFilter.propTypes = {
   onSearch: PropTypes.func,
   field: PropTypes.string,
   keyword: PropTypes.string,
+  backupVolumes: PropTypes.array,
 }
 
 export default Form.create()(BackupFilter)

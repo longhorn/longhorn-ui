@@ -1,32 +1,32 @@
 import React, { PropTypes } from 'react'
-import ReactDOM from 'react-dom'
 import styles from './Search.less'
-import { Input, Select, Button, Icon } from 'antd'
+import { Form, Input, Select, Button } from 'antd'
 
 class Search extends React.Component {
   state = {
-    clearVisible: true,
+    value: '',
+    options: [],
     selectValue: (this.props.select && this.props.selectProps) ? this.props.selectProps.defaultValue : '',
-  }
-  componentWillMount() {
-    const { keyword } = this.props
-    this.setState({
-      clearVisible: keyword && keyword.length > 0,
-    })
   }
   handleSearch = () => {
     const data = {
-      keyword: ReactDOM.findDOMNode(this.refs.searchInput).value,
+      keyword: this.state.value,
     }
     if (this.props.select) {
       data.field = this.state.selectValue
     }
     if (this.props.onSearch) this.props.onSearch(data)
   }
-  handleInputChange = e => {
+  handleInputChange = value => {
+    let options = []
+    const setting = this.props.selectOptions.find(s => s.value === this.state.selectValue)
+    if (setting.options) {
+      options = setting.options(value)
+    }
     this.setState({
       ...this.state,
-      clearVisible: e.target.value !== '',
+      value: value || '',
+      options,
     })
   }
   handeleSelectChange = value => {
@@ -35,25 +35,29 @@ class Search extends React.Component {
       selectValue: value,
     })
   }
-  handleClearInput = () => {
-    ReactDOM.findDOMNode(this.refs.searchInput).value = ''
-    this.setState({
-      clearVisible: false,
-    })
-    this.handleSearch()
-  }
+
   render() {
+    const allowClear = true
     const { size, select, selectOptions, selectProps, style, keyword } = this.props
-    const { clearVisible } = this.state
     return (
-      <Input.Group compact size={size} className={styles.search} style={style}>
-        {select && <Select ref="searchSelect" onChange={this.handeleSelectChange} size={size} {...selectProps}>
-          {selectOptions && selectOptions.map((item, key) => <Select.Option value={item.value} key={key}>{item.name || item.value}</Select.Option>)}
-        </Select>}
-        <Input ref="searchInput" size={size} onChange={this.handleInputChange} onPressEnter={this.handleSearch} defaultValue={keyword} />
-        <Button size={size} type="primary" onClick={this.handleSearch}>Go</Button>
-        {clearVisible && <Icon type="cross" onClick={this.handleClearInput} />}
-      </Input.Group>
+      <Form>
+        <Input.Group compact size={size} className={styles.search} style={style} onKeyPress={this.handleSearch}>
+          {select && <Select className={styles.searchSelect} ref="searchSelect" onChange={this.handeleSelectChange} size={size} {...selectProps}>
+            {selectOptions && selectOptions.map((item, key) => <Select.Option value={item.value} key={key}>{item.name || item.value}</Select.Option>)}
+          </Select>}
+          <Select size={size}
+            allowClear={allowClear}
+            style={{ width: '100%' }}
+            mode="combobox"
+            onChange={this.handleInputChange}
+            filterOption={false}
+            onKeyPress={this.handleSearch} defaultValue={keyword}
+          >
+            {this.state.options}
+          </Select>
+          <Button htmlType="submit" size={size} type="primary" onClick={this.handleSearch}>Go</Button>
+        </Input.Group>
+      </Form>
     )
   }
 }

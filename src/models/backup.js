@@ -5,6 +5,7 @@ import { sortVolumeBackups } from '../utils/sort'
 export default {
   namespace: 'backup',
   state: {
+    backupVolumes: [],
     backupStatus: {},
     currentItem: {},
     restoreBackupModalVisible: false,
@@ -27,17 +28,20 @@ export default {
     }, { call, put }) {
       const data = yield call(query, parse(payload))
       const filter = payload && payload.field && payload.keyword
-      if (data && data.status === 200 && filter) {
-        const found = data.data.find(b => b.name === payload.keyword)
-        if (found) {
-          const list = yield call(execAction, found.actions.backupList)
-          sortVolumeBackups(list.data)
-          yield put({ type: 'queryBackup', payload: { data: list.data } })
+      if (data && data.status === 200) {
+        yield put({ type: 'queryBackup', payload: { backupVolumes: data.data } })
+        if (filter) {
+          const found = data.data.find(b => b.name === payload.keyword)
+          if (found) {
+            const list = yield call(execAction, found.actions.backupList)
+            sortVolumeBackups(list.data)
+            yield put({ type: 'queryBackup', payload: { data: list.data } })
+          } else {
+            yield put({ type: 'queryBackup', payload: { data: [] } })
+          }
         } else {
-          yield put({ type: 'queryBackup', payload: { data: [] } })
+          yield put({ type: 'queryBackup', payload: { data: null } })
         }
-      } else {
-        yield put({ type: 'queryBackup', payload: { data: null } })
       }
     },
     *queryBackupStatus({
