@@ -18,7 +18,12 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
         })
         break
       case 'detach':
-        detach(record.actions.detach)
+        confirm({
+          title: `Are you sure you want to detach volume ${record.name} ?`,
+          onOk() {
+            detach(record.actions.detach)
+          },
+        })
         break
       case 'backups':
         showBackups(record)
