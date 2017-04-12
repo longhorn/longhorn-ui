@@ -6,6 +6,10 @@ const getStateWeight = (state) => {
       return 1
     case 'detached':
       return 2
+    case 'created':
+      return 3
+    case 'degraded':
+      return 4
     default:
       return 99
   }
