@@ -177,7 +177,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
         <Col md={8} xs={24} className={styles.col}>
           <VolumeInfo {...backupStatusProps} />
         </Col>
-        <Col md={16} xs={24}>
+        <Col md={16} xs={24} style={{ marginBottom: 16 }}>
           <Snapshots {...snapshotsProp} />
         </Col>
         <Col xs={24}>
