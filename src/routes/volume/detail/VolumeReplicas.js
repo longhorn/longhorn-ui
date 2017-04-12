@@ -1,7 +1,22 @@
 import React, { PropTypes } from 'react'
-import { Table, Card } from 'antd'
+import { Table, Card, Modal } from 'antd'
+import { DropOption } from '../../../components'
+const confirm = Modal.confirm
 
-function list({ loading, dataSource }) {
+function list({ loading, dataSource, deleteReplica }) {
+  const handleMenuClick = (record, event) => {
+    switch (event.key) {
+      case 'delete':
+        confirm({
+          title: `Are you sure you want to delete replica ${record.name} ?`,
+          onOk() {
+            deleteReplica(record.name)
+          },
+        })
+        break
+      default:
+    }
+  }
   const columns = [
     {
       title: 'Status',
@@ -22,6 +37,18 @@ function list({ loading, dataSource }) {
       title: 'Host',
       dataIndex: 'host',
       key: 'host',
+    }, {
+      title: '',
+      key: 'operation',
+      width: 100,
+      render: (text, record) => {
+        return (
+          <DropOption menuOptions={[
+            { key: 'delete', name: 'Delete' },
+          ]} onMenuClick={e => handleMenuClick(record, e)}
+          />
+        )
+      },
     },
   ]
 
@@ -45,6 +72,7 @@ function list({ loading, dataSource }) {
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  deleteReplica: PropTypes.func,
 }
 
 export default list

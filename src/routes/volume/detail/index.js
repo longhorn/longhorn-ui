@@ -29,6 +29,15 @@ function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
   })
   const replicasListProps = {
     dataSource: selectedVolume.replicas || [],
+    deleteReplica(name) {
+      dispatch({
+        type: 'backup/updateBackupStatus',
+        payload: {
+          name,
+          url: selectedVolume.actions.url,
+        },
+      })
+    },
     loading,
   }
 
