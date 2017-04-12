@@ -24,7 +24,15 @@ class Volume extends React.Component {
       dataSource: data,
       loading,
       takeSnapshot(record) {
-        console.log(record)
+        dispatch({
+          type: 'volume/actions',
+          payload: {
+            url: record.actions.snapshotCreate,
+            params: {
+              name: '',
+            },
+          },
+        })
       },
       showAttachHost(record) {
         dispatch({

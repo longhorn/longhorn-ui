@@ -29,7 +29,7 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
       case 'snapshotList':
         showSnapshots(record)
         break
-      case 'takeSnapshot':
+      case 'snapshotCreate':
         takeSnapshot(record)
         break
       default:

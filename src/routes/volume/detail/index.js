@@ -31,7 +31,15 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
 
   const volumeActionsProps = {
     takeSnapshot(record) {
-      console.log(record)
+      dispatch({
+        type: 'volume/actions',
+        payload: {
+          url: record.actions.snapshotCreate,
+          params: {
+            name: '',
+          },
+        },
+      })
     },
     showAttachHost(record) {
       dispatch({

@@ -81,7 +81,7 @@ export default {
       payload,
     }, { call }) {
       yield call(execAction, payload.url, payload.params)
-      yield call(payload.callBack, '')
+      if (payload.callBack) { yield call(payload.callBack, '') }
     },
   },
   reducers: {
