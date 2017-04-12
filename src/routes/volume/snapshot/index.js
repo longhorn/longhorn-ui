@@ -46,18 +46,18 @@ class Snapshots extends React.Component {
       return (<Snapshot {...this.props} onAction={this.onAction} />)
     }
     return (
-    <Spin tip="Loading..." spinning={this.props.loading}>
-      <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '400px', overflow: 'auto' }}>
-        <SnapshotGen />
-        <div style={{ position: 'absolute', right: '150px', bottom: '50px', fontSize: '150%' }}>
-          <div style={{ position: 'fixed', fontSize: '100%' }}>
-            <Button icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
-              Take Snapshot
+      <Spin spinning={this.props.loading}>
+        <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '400px', overflow: 'auto' }}>
+          <SnapshotGen />
+          <div style={{ position: 'absolute', right: '150px', bottom: '50px', fontSize: '150%' }}>
+            <div style={{ position: 'fixed', fontSize: '100%' }}>
+              <Button icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+                Take Snapshot
             </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </Spin>
+      </Spin>
     )
   }
 
