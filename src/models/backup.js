@@ -5,6 +5,7 @@ import { sortVolumeBackups } from '../utils/sort'
 export default {
   namespace: 'backup',
   state: {
+    backupStatus: {},
     data: [],
     backups: {},
     currentItem: {},
@@ -47,6 +48,12 @@ export default {
       sortVolumeBackups(list.data)
       yield put({ type: 'queryBackups', payload: { name: payload.name, data: list.data } })
     },
+    *queryBackupStatus({
+      payload,
+    }, { call, put }) {
+      const data = yield call(execAction, payload.url)
+      yield put({ type: 'updateBackupStatus', payload: { backupStatus: { ...data } } })
+    },
     *restore({
       payload,
     }, { call, put }) {
@@ -65,6 +72,12 @@ export default {
       return {
         ...state,
         ...action.payload,
+      }
+    },
+    updateBackupStatus(state, action) {
+      return {
+        ...state,
+        backupStatus: action.payload.backupStatus,
       }
     },
     queryBackups(state, action) {

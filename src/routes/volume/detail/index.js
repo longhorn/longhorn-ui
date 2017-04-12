@@ -9,8 +9,9 @@ import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Recurring from '../Recurring'
 
-function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
+function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, recurringModalVisible } = volume
+  const { backupStatus } = backup
   const hosts = host.data
   const selectedVolume = data.find(item => item.id === volumeId)
   if (!selectedVolume) {
@@ -21,13 +22,36 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
     selectedVolume.host = found.name
   }
   selectedVolume.replicas.forEach(replica => {
-    replica.host = hosts.find(h => h.id === replica.hostId).name
+    const targetHost = hosts.find(h => h.id === replica.hostId)
+    if (targetHost) {
+      replica.host = targetHost.name
+    }
   })
   const replicasListProps = {
     dataSource: selectedVolume.replicas || [],
     loading,
   }
 
+  const backupStatusProps = {
+    selectedVolume,
+    backupStatus,
+    clearBackupStatus() {
+      dispatch({
+        type: 'backup/updateBackupStatus',
+        payload: {
+          backupStatus: {},
+        },
+      })
+    },
+    queryBackupStatus() {
+      dispatch({
+        type: 'backup/queryBackupStatus',
+        payload: {
+          url: selectedVolume.actions.latestBackupStatus,
+        },
+      })
+    },
+  }
 
   const volumeActionsProps = {
     takeSnapshot(record) {
@@ -127,13 +151,13 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
   }
 
   return (
-    <div>
+    <div >
       <Row gutter={24}>
         <Col md={{ offset: 16, span: 8 }} style={{ marginBottom: 16, textAlign: 'right' }}>
           <VolumeActions {...volumeActionsProps} selected={selectedVolume} />
         </Col>
         <Col lg={8} md={24} className={styles.col}>
-          <VolumeInfo selectedVolume={selectedVolume} />
+          <VolumeInfo {...backupStatusProps} />
         </Col>
         <Col lg={16} md={24}>
           <VolumeReplicas {...replicasListProps} />
@@ -141,7 +165,7 @@ function VolumeDetail({ dispatch, host, volume, volumeId, loading }) {
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
       {recurringModalVisible && <Recurring {...recurringModalProps} />}
-    </div>
+    </div >
   )
 }
 
@@ -149,9 +173,10 @@ VolumeDetail.propTypes = {
   volume: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  backup: PropTypes.object,
   host: PropTypes.object,
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
 }
 
-export default connect(({ host, volume, loading }, { params }) => ({ host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)
+export default connect(({ backup, host, volume, loading }, { params }) => ({ backup, host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)

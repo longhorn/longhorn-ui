@@ -72,6 +72,7 @@ const Routers = function ({ history, app }) {
             nprogress.start()
             require.ensure([], (require) => {
               nprogress.done()
+              registerModel(app, require('./models/backup'))
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
               cb(null, require('./routes/volume/detail'))
@@ -80,7 +81,6 @@ const Routers = function ({ history, app }) {
         },
         {
           path: 'volume/:id/snapshots',
-          // name: 'volume/detail',
           getComponent(nextState, cb) {
             nprogress.start()
             require.ensure([], (require) => {

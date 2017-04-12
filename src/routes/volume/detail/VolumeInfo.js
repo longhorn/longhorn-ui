@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
-import { Card } from 'antd'
+import { Card, Row, Col } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib } from '../../../utils/formater'
 import styles from './VolumeInfo.less'
+import LatestBackup from './LatestBackup'
 
-function VolumeInfo({ selectedVolume }) {
+function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus }) {
   return (
     <Card bordered={false} bodyStyle={{ padding: '20px' }}>
       <div className={styles.row}>
@@ -30,12 +31,25 @@ function VolumeInfo({ selectedVolume }) {
         <span className={styles.label}> Created:</span>
         {moment(new Date(selectedVolume.created)).fromNow()}
       </div>
+      <div className={styles.row}>
+        <Row>
+          <Col md={10}>
+            <span className={styles.label}> Latest Backup:</span>
+          </Col>
+          <Col md={12}>
+            <LatestBackup clearBackupStatus={clearBackupStatus} backupStatus={backupStatus} queryBackupStatus={queryBackupStatus} />
+          </Col>
+        </Row>
+      </div>
     </Card>
   )
 }
 
 VolumeInfo.propTypes = {
+  backupStatus: PropTypes.object,
   selectedVolume: PropTypes.object,
+  queryBackupStatus: PropTypes.func,
+  clearBackupStatus: PropTypes.func,
 }
 
 export default VolumeInfo
