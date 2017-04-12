@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Tree, Icon, Menu, Dropdown, Button, Spin } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button } from 'antd'
 import moment from 'moment'
 
 const TreeNode = Tree.TreeNode
@@ -98,115 +98,6 @@ CurrentPoint.propTypes = {
   volume: PropTypes.object,
 }
 
-// TODO: convert TreeLoop to Tail Call
-// let toTree = (item, props) => {
-//   let title
-//   if (item.name) {
-//     title = SnapshotIcon(item, props)
-//   } else {
-//     title = CurrentPoint(props)
-//     return <TreeNode key={`${props.volume.name}`} title={title} ><div></div><div></div></TreeNode>
-//   }
-//   return <TreeNode key={item.name} title={title} disabled={item.removed} ><div></div><div></div></TreeNode>
-// }
-
-// let convertTree = function (snapshotTree, props) {
-//   let treeRootNode = []
-//   if (snapshotTree.length <= 0) {
-//     return treeRootNode
-//   }
-
-//   let rootNode = {
-//     ...snapshotTree.find(ele => ele.parent === ''),
-//   }
-
-//   treeRootNode = toTree(rootNode, props)
-//   let loopTailCall = function (treeRootNode, node, treeArry) {
-//     let i = 0
-//     if (i < node.children.length) {
-//       let item = node.children[i]
-//       node.childrenNode || (node.childrenNode = [])
-//       // treeRootNode.props.children || (treeRootNode.props.children = [])
-//       if (!item || item === 'volume-head') {
-//         let treeChlidNode = toTree(item, props)
-
-//         treeRootNode.props.children.push(treeChlidNode)
-//         treeRootNode.props.created = item.created
-//         node.childrenNode.push(
-//                 'volume-head'
-//                 )
-//       } else {
-//         let selected = treeArry.find(ele => ele.name === item)
-//         let child = {
-//           ...selected,
-//         }
-//         treeChlidNode = toTree(child, props)
-//         treeRootNode.props.children.push(treeChlidNode)
-//         treeRootNode.props.created = child.created
-
-//         node.childrenNode.push(child)
-//         loopTree(treeChlidNode, child, treeArry)
-//       }
-//       i += 1
-//     } else {
-//       node.childrenNode && node.childrenNode.sort((a, b) => {
-//         if (a === 'volume-head') {
-//           return 1
-//         }
-//         if (b === 'volume-head') {
-//           return -1
-//         }
-//         return (new Date(a.created)).getTime() - (new Date(b.created)).getTime()
-//       })
-//       return node.childrenNode.map(el => {
-//         return toTree(el)
-//       })
-//     }
-//     for (let i = 0; i < node.children.length; i += 1) {
-//       let item = node.children[i]
-//       node.childrenNode || (node.childrenNode = [])
-//       // treeRootNode.props.children || (treeRootNode.props.children = [])
-//       if (!item || item === 'volume-head') {
-//         let treeChlidNode = toTree(item, props)
-
-//         treeRootNode.props.children.push(treeChlidNode)
-//         treeRootNode.props.created = item.created
-//         node.childrenNode.push(
-//                 'volume-head'
-//                 )
-//       } else {
-//         let selected = treeArry.find(ele => ele.name === item)
-//         let child = {
-//           ...selected,
-//         }
-//         treeChlidNode = toTree(child, props)
-//         treeRootNode.props.children.push(treeChlidNode)
-//         treeRootNode.props.created = child.created
-
-//         node.childrenNode.push(child)
-//         loopTree(treeChlidNode, child, treeArry)
-//       }
-//     }
-//     node.childrenNode && node.childrenNode.sort((a, b) => {
-//       if (a === 'volume-head') {
-//         return 1
-//       }
-//       if (b === 'volume-head') {
-//         return -1
-//       }
-//       return (new Date(a.created)).getTime() - (new Date(b.created)).getTime()
-//     })
-//     return node.childrenNode.map(el => {
-//       return toTree(el)
-//     })
-//   }
-//   let loopTree = tco(loopTailCall)
-
-//   loopTree(treeRootNode, rootNode, snapshotTree)
-//   return treeRootNode
-// }
-
-
 const loop = (data, props) => data.map((item) => {
   let title
   if (item.name) {
@@ -222,37 +113,23 @@ const loop = (data, props) => data.map((item) => {
 })
 
 function Snapshot(props) {
-  if (props.snapshotTree.length <= 0) {
-    return (
-    <Spin tip="Loading..." spinning={props.loading}>
-      <Tree
-        defaultExpandAll
-        className="lh-tree-snapshot"
-        key={`00${props.volume.id}`}
-      >
-        <TreeNode title={StartPoint()} disabled key={`11${props.volume.id}`}>
-          <TreeNode key="1" title={CurrentPoint(props)} />
-        </TreeNode>
-      </Tree>
-    </Spin>
-    )
+  let children = (<TreeNode key="1" title={CurrentPoint(props)} />)
+  if (props.snapshotTree.length > 0) {
+     // let children = convertTree(props.snapshotTree, props)
+    children = loop(props.snapshotTree, props)
   }
 
-  // let children = convertTree(props.snapshotTree, props)
-  let children = loop(props.snapshotTree, props)
 
   return (
-    <Spin tip="Loading..." spinning={props.loading}>
      <Tree
        defaultExpandAll
        className="lh-tree-snapshot"
        key={`${props.volume.id}`}
       >
-        <TreeNode title={StartPoint()} disabled key={`${props.volume.id}`}>
+        <TreeNode className="tree-start-wrap" title={StartPoint()} disabled key={`${props.volume.id}`}>
           {children}
         </TreeNode>
       </Tree>
-    </Spin>
   )
 }
 

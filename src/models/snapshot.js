@@ -4,7 +4,7 @@ let loopTree = (node, treeArry) => {
   for (let i = 0; i < node.children.length; i += 1) {
     let item = node.children[i]
     node.childrenNode || (node.childrenNode = [])
-    if (!item || item === 'volume-head') {
+    if (item === 'volume-head') {
       node.childrenNode.push('volume-head')
       continue
     }
@@ -15,15 +15,17 @@ let loopTree = (node, treeArry) => {
     node.childrenNode.push(child)
     loopTree(child, treeArry)
   }
-  node.childrenNode && node.childrenNode.sort((a, b) => {
-    if (a === 'volume-head') {
-      return 1
-    }
-    if (b === 'volume-head') {
-      return -1
-    }
-    return (new Date(a.created)).getTime() - (new Date(b.created)).getTime()
-  })
+  if (node.childrenNode) {
+    node.childrenNode.sort((a, b) => {
+      if (a === 'volume-head') {
+        return 1
+      }
+      if (b === 'volume-head') {
+        return -1
+      }
+      return (new Date(a.created)).getTime() - (new Date(b.created)).getTime()
+    })
+  }
 }
 let filterRemoved = (data) => {
   let filteredData = []
@@ -31,19 +33,23 @@ let filterRemoved = (data) => {
     let item = data[i]
     if (item.removed) {
       let parent = item.parent
-      let parentEntity = data.find(el => el.name === parent)
-
       // change parent children
-      let pChildArray = parentEntity.children
-      let itemPos = pChildArray.findIndex(ele => ele === item.name)
-      pChildArray = pChildArray.slice(0, itemPos)
-                      .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
-                        .concat(item.children)
-      parentEntity.children = pChildArray
+      if (parent !== '') {
+        let parentEntity = data.find(el => el.name === parent)
 
+        let pChildArray = parentEntity.children
+        let itemPos = pChildArray.findIndex(ele => ele === item.name)
+        pChildArray = pChildArray.slice(0, itemPos)
+                        .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
+                          .concat(item.children)
+        parentEntity.children = pChildArray
+      }
       // change children parent
       for (let j = 0; j < item.children.length; j += 1) {
         let itemC = item.children[j]
+        if (itemC === 'volume-head') {
+          continue
+        }
         let itemCEntity = data.find(el => el.name === itemC)
         itemCEntity.parent = parent
       }
@@ -97,15 +103,33 @@ export default (namespace) => {
         let actualData =
                   // treeData.data
                   filterRemoved(treeData.data)
-        let rootNode = {
-          ...actualData.find(ele => ele.parent === ''),
+        let rootNodes = []
+        for (let i = 0; i < actualData.length; i++) {
+          let item = actualData[i]
+          if (item.parent === '') {
+            rootNodes.push({
+              ...item,
+            })
+          }
         }
-        if (rootNode.name) {
-          loopTree(rootNode, actualData)
-          yield put({ type: 'setSnapshot', payload: [rootNode] })
+        let rootNode = {
+          children: rootNodes.map(el => el.name),
+        }
+        if (rootNodes.length) {
+          yield call(loopTree, rootNode, actualData)
+          yield put({ type: 'setSnapshot', payload: rootNode.childrenNode })
         } else {
           yield put({ type: 'setSnapshot', payload: [] })
         }
+        // let rootNode = {
+        //   ...actualData.find(ele => ele.parent === ''),
+        // }
+        // if (rootNode.name) {
+        //   loopTree(rootNode, actualData)
+        //   yield put({ type: 'setSnapshot', payload: [rootNode] })
+        // } else {
+        //   yield put({ type: 'setSnapshot', payload: [] })
+        // }
       },
     },
     reducers: {

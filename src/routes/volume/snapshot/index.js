@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, Icon, Tooltip } from 'antd'
+import { Button, Icon, Tooltip, Spin } from 'antd'
 import { connect } from 'dva'
 
 import { Snapshot } from '../../../components'
@@ -35,7 +35,6 @@ class Snapshots extends React.Component {
     })
   }
   componentWillUnmount() {
-    console.log('unmount')
     this.props.dispatch({ type: 'snapshotModal/setSnapshot', payload: [] })
   }
   render() {
@@ -47,6 +46,7 @@ class Snapshots extends React.Component {
       return (<Snapshot {...this.props} onAction={this.onAction} />)
     }
     return (
+    <Spin tip="Loading..." spinning={this.props.loading}>
       <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '400px', overflow: 'auto' }}>
         <SnapshotGen />
         <div style={{ position: 'absolute', right: '50px', bottom: '50px', fontSize: '150%' }}>
@@ -59,6 +59,7 @@ class Snapshots extends React.Component {
           </div>
         </div>
       </div>
+    </Spin>
     )
   }
 
@@ -68,6 +69,7 @@ Snapshots.propTypes = {
   dispatch: PropTypes.func,
   routeParams: PropTypes.object,
   volume: PropTypes.object,
+  loading: PropTypes.bool,
 }
 
 export default connect(({ snapshotModal }) => ({ ...snapshotModal }))(Snapshots)

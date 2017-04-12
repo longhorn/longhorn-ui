@@ -5,6 +5,9 @@
     margin-left: 20%;
   }
   .lh-tree-snapshot.ant-tree{
+    .tree-start-wrap>a{
+      padding-bottom: 0;
+    }
     .ant-tree-treenode-disabled{
       >a {
         .tree-snapshot-icon{
@@ -46,15 +49,16 @@
     .tree-snapshot-start-point{
       width: 15px; 
       height: 15px; 
-      margin-bottom: 7px;
+      margin-bottom: 2px;
       display: inline-block; 
       border-radius: 50%; 
       background-color: hsl(209, 66%, 51%);
     }
     >li>.ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree{
       margin-left: 40px;
+      margin-top: -42px;
       >li:before{
-        width: 50px;
+        width: 46px;
       }
     }
     .tree-snapshot-icon{ 
@@ -160,6 +164,18 @@
         position: absolute;
         top: 28px;
         left: -(@treeNodeGap - 20px);
+      }
+    }
+    >li>.ant-tree-child-tree{
+      >li{
+        &:last-child>.ant-tree-child-tree:before{
+          left: -(@treeNodeGap + 46);
+        }
+      }
+    }
+    >li>.ant-tree-child-tree{
+      &:after {
+        left: -(@treeNodeGap - 132px);
       }
     }
   }

@@ -35,6 +35,7 @@
         "allowTernary": true
       }
     ],
+    no-plusplus: "off",
     "no-continue": "off",
     "arrow-body-style": [
       0,
