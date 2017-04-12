@@ -35,15 +35,15 @@ const VolumeFilter = ({
 
   return (
     <Row gutter={24}>
-      <Col lg={6} md={12} sm={16} xs={24} style={{ marginBottom: 16 }}>
+      <Col lg={6} md={8} sm={16} xs={24} style={{ marginBottom: 16 }}>
         <Search {...searchGroupProps} />
       </Col>
 
-      <Col lg={6} md={12} sm={16} xs={24} style={{ marginBottom: 16 }}>
+      <Col lg={6} md={8} sm={16} xs={24} style={{ marginBottom: 16 }}>
         <AttachedHostSelect {...attchedHostProps} />
       </Col>
 
-      <Col lg={{ offset: 4, span: 8 }} md={{ offset: 0, span: 24 }} sm={{ offset: 0, span: 24 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
+      <Col lg={{ offset: 4, span: 8 }} md={{ offset: 0, span: 8 }} sm={{ offset: 0, span: 24 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
         <Button size="large" type="primary" onClick={onAdd}>Create Volume</Button>
       </Col>
     </Row>
