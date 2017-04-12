@@ -28,6 +28,10 @@ http {
         proxy_busy_buffers_size    64k;
         proxy_temp_file_write_size 64k;
 
+        location /v1  {
+              proxy_pass ${LONGHORN_ORC_IP};
+        }
+
         location / {
             root /dist;
             index  index.html;
