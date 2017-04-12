@@ -12,6 +12,6 @@ WORKDIR /web
 EXPOSE 8000
 ENV LONGHORN_ORC_IP http://localhost:9500
 RUN npm run build
-COPY /dist /dist
+COPY dist /dist
 
 CMD ["/bin/bash", "-c", "envsubst '${LONGHORN_ORC_IP}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
