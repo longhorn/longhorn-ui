@@ -65,7 +65,7 @@ const modal = ({
                 message: 'Please input volume size',
               },
             ],
-          })(<span><InputNumber min={1} />GB</span>)}
+          })(<span><InputNumber min={1} defaultValue={item.size} />GB</span>)}
         </FormItem>
 
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>

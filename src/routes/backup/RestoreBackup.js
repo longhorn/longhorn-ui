@@ -35,9 +35,8 @@ const modal = ({
       onOk(data)
     })
   }
-
   const modalOpts = {
-    title: `Restore Backup ${item.id}`,
+    title: `Restore Backup ${item.backupName}`,
     visible,
     onCancel,
     onOk: handleOk,

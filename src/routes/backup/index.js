@@ -28,6 +28,7 @@ function Backup({ host, backup, loading, location, dispatch }) {
         type: 'backup/showRestoreBackupModal',
         payload: {
           currentItem: {
+            backupName: item.name,
             fromBackup: item.url,
             numberOfReplicas: 2,
           },
