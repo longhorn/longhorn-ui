@@ -1,36 +1,32 @@
 import React, { PropTypes } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { Search } from '../../components'
-import AttachedHostSelect from './AttachedHostSelect'
 
 const VolumeFilter = ({
   hosts,
   field,
   keyword,
   onSearch,
-  onSelect,
   onAdd,
-  location,
 }) => {
   const searchGroupProps = {
     field,
     keyword,
     size: 'large',
     select: true,
-    selectOptions: [{ value: 'id', name: 'Name' }],
+    selectOptions: [{ value: 'id', name: 'Name' }, { value: 'host', name: 'Host' }],
     selectProps: {
       defaultValue: field || 'id',
     },
     onSearch: (value) => {
+      if (value.field === 'host' && value.keyword.length > 0) {
+        const found = hosts.filter(h => h.name.indexOf(value.keyword) > -1)
+        if (found.length > 0) {
+          value.keyword = found.map(f => f.id).join(',')
+        }
+      }
       onSearch(value)
     },
-  }
-  const attchedHostProps = {
-    hosts,
-    onSelect: (value) => {
-      onSelect(value)
-    },
-    location,
   }
 
   return (
@@ -39,11 +35,7 @@ const VolumeFilter = ({
         <Search {...searchGroupProps} />
       </Col>
 
-      <Col lg={6} md={8} sm={16} xs={24} style={{ marginBottom: 16 }}>
-        <AttachedHostSelect {...attchedHostProps} />
-      </Col>
-
-      <Col lg={{ offset: 4, span: 8 }} md={{ offset: 0, span: 8 }} sm={{ offset: 0, span: 24 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
+      <Col lg={{ offset: 10, span: 8 }} md={{ offset: 8, span: 8 }} sm={{ offset: 0, span: 8 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
         <Button size="large" type="primary" onClick={onAdd}>Create Volume</Button>
       </Col>
     </Row>

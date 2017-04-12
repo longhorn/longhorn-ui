@@ -29,11 +29,12 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
-      if (payload && payload.field && payload.keyword) {
+      if (payload && payload.field === 'id' && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
       }
-      if (payload && payload.host) {
-        data.data = data.data.filter(item => item.controller && item.controller.hostId === payload.host)
+      if (payload && payload.field === 'host' && payload.keyword) {
+        data.data = data.data.filter(item => item.controller && item.controller.hostId
+          && payload.keyword.split(',').indexOf(item.controller.hostId) > -1)
       }
       sortVolume(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })

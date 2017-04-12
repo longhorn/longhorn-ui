@@ -96,7 +96,6 @@ class Volume extends React.Component {
         })) : dispatch(routerRedux.push({
           pathname: '/volume',
           query: {
-            host: location.query.host,
           },
         }))
       },
