@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Table, Modal } from 'antd'
 import { DropOption } from '../../components'
+import { formatMib } from '../../utils/formater'
 import moment from 'moment'
 const confirm = Modal.confirm
 
@@ -47,6 +48,13 @@ class List extends React.Component {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
+        render: (text) => {
+          return (
+            <div>
+              {formatMib(text)}
+            </div>
+          )
+        },
       }, {
         title: 'Timestamp',
         dataIndex: 'snapshotCreated',
