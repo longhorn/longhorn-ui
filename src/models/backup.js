@@ -6,8 +6,6 @@ export default {
   namespace: 'backup',
   state: {
     backupStatus: {},
-    data: [],
-    backups: {},
     currentItem: {},
     restoreBackupModalVisible: false,
   },
@@ -27,26 +25,20 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      let backups = []
       const data = yield call(query, parse(payload))
       const filter = payload && payload.field && payload.keyword
-      if (data && data.status === 200) {
-        for (const backup of data.data) {
-          if ((filter && backup.name.indexOf(payload.keyword) > -1) || !filter) {
-            backups.push(backup)
-          }
+      if (data && data.status === 200 && filter) {
+        const found = data.data.find(b => b.name === payload.keyword)
+        if (found) {
+          const list = yield call(execAction, found.actions.backupList)
+          sortVolumeBackups(list.data)
+          yield put({ type: 'queryBackup', payload: { data: list.data } })
+        } else {
+          yield put({ type: 'queryBackup', payload: { data: [] } })
         }
+      } else {
+        yield put({ type: 'queryBackup', payload: { data: null } })
       }
-      sortVolumeBackups(backups)
-      yield put({ type: 'queryBackup', payload: { data: backups } })
-    },
-    *queryBackupList({
-      payload,
-    }, { call, put }) {
-      const url = payload.url
-      const list = yield call(execAction, url)
-      sortVolumeBackups(list.data)
-      yield put({ type: 'queryBackups', payload: { name: payload.name, data: list.data } })
     },
     *queryBackupStatus({
       payload,
@@ -64,7 +56,7 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteBackup, payload)
-      yield put({ type: 'queryBackupList', payload: { name: payload.volumeName, url: payload.listUrl } })
+      yield put({ type: 'query', payload })
     },
   },
   reducers: {
@@ -78,19 +70,6 @@ export default {
       return {
         ...state,
         backupStatus: action.payload.backupStatus,
-      }
-    },
-    queryBackups(state, action) {
-      if (state.backups[action.payload.name]) {
-        const current = state.backups[action.payload.name].data
-        state.backups[action.payload.name].data = current.slice(current.length).concat(action.payload.data || [])
-      } else {
-        state.backups[action.payload.name] = {
-          data: action.payload.data,
-        }
-      }
-      return {
-        ...state,
       }
     },
     showRestoreBackupModal(state, action) {

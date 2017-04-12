@@ -6,14 +6,9 @@ import moment from 'moment'
 const confirm = Modal.confirm
 
 class List extends React.Component {
-  componentWillMount() {
-    const { backupVolume, queryBackups } = this.props
-    queryBackups(backupVolume.id, backupVolume.actions.backupList)
-  }
-
   render() {
-    const { backups, backupVolume, showRestoreBackup, deleteBackup } = this.props
-    const dataSource = backups[backupVolume.id] ? backups[backupVolume.id].data : []
+    const { backup, loading, showRestoreBackup, deleteBackup } = this.props
+    const dataSource = backup || []
     const handleMenuClick = (record, event) => {
       switch (event.key) {
         case 'restore':
@@ -23,7 +18,7 @@ class List extends React.Component {
           confirm({
             title: `Are you sure you want to delete backup ${record.name} ?`,
             onOk() {
-              deleteBackup(record, backupVolume.actions.backupList)
+              deleteBackup(record)
             },
           })
           break
@@ -95,11 +90,17 @@ class List extends React.Component {
 
     const pagination = false
 
+    const locale = {
+      emptyText: backup ? 'No Data' : 'Please select a volume first',
+    }
+
     return (
       <div>
         <Table
+          locale={locale}
           bordered={false}
           columns={columns}
+          loading={loading}
           dataSource={dataSource}
           simple
           pagination={pagination}
@@ -111,11 +112,10 @@ class List extends React.Component {
 }
 
 List.propTypes = {
-  backupVolume: PropTypes.object,
-  backups: PropTypes.object,
+  backup: PropTypes.array,
   showRestoreBackup: PropTypes.func,
   deleteBackup: PropTypes.func,
-  queryBackups: PropTypes.func,
+  loading: PropTypes.bool,
 }
 
 export default List
