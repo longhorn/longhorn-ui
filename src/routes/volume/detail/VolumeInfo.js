@@ -33,10 +33,10 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
       </div>
       <div className={styles.row}>
         <Row>
-          <Col md={10}>
+          <Col xs={10}>
             <span className={styles.label}> Latest Backup:</span>
           </Col>
-          <Col md={12}>
+          <Col xs={14}>
             <LatestBackup clearBackupStatus={clearBackupStatus} backupStatus={backupStatus} queryBackupStatus={queryBackupStatus} />
           </Col>
         </Row>

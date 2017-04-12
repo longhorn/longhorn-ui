@@ -156,10 +156,10 @@ function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
         <Col md={{ offset: 16, span: 8 }} style={{ marginBottom: 16, textAlign: 'right' }}>
           <VolumeActions {...volumeActionsProps} selected={selectedVolume} />
         </Col>
-        <Col lg={8} md={24} className={styles.col}>
+        <Col md={8} xs={24} className={styles.col}>
           <VolumeInfo {...backupStatusProps} />
         </Col>
-        <Col lg={16} md={24}>
+        <Col md={16} xs={24}>
           <VolumeReplicas {...replicasListProps} />
         </Col>
       </Row>
