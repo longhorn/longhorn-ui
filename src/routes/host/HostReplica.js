@@ -7,6 +7,7 @@ const modal = ({
   selected,
   visible,
   onCancel,
+  deleteReplica,
 }) => {
   const modalOpts = {
     title: `Replicas on ${selected.name}`,
@@ -22,6 +23,7 @@ const modal = ({
 
   const replicaListProps = {
     dataSource: selected.replicas,
+    deleteReplica,
   }
 
   return (
@@ -35,6 +37,7 @@ modal.propTypes = {
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   selected: PropTypes.object,
+  deleteReplica: PropTypes.func,
 }
 
 export default Form.create()(modal)

@@ -31,10 +31,10 @@ function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
     dataSource: selectedVolume.replicas || [],
     deleteReplica(name) {
       dispatch({
-        type: 'backup/updateBackupStatus',
+        type: 'volume/deleteReplica',
         payload: {
           name,
-          url: selectedVolume.actions.url,
+          url: selectedVolume.actions.replicaRemove,
         },
       })
     },

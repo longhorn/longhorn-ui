@@ -64,6 +64,12 @@ export default {
       yield call(deleteVolume, payload)
       yield put({ type: 'query' })
     },
+    *deleteReplica({
+      payload,
+    }, { call, put }) {
+      yield call(execAction, payload.url, { name: payload.name })
+      yield put({ type: 'query' })
+    },
     *recurringUpdate({
       payload,
     }, { call, put }) {

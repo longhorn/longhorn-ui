@@ -16,6 +16,7 @@ function Host({ host, volume, loading, dispatch }) {
       if (vol.replicas) {
         vol.replicas.forEach(replica => {
           if (agent.id === replica.hostId) {
+            replica.removeUrl = vol.actions.replicaRemove
             replicas.push(replica)
           }
         })
@@ -83,21 +84,24 @@ function Host({ host, volume, loading, dispatch }) {
         type: 'host/hideReplicaModal',
       })
     },
+    deleteReplica(name, url) {
+      dispatch({
+        type: 'volume/deleteReplica',
+        payload: {
+          name,
+          url,
+        },
+      })
+    },
   }
-
-  const AddDiskGen = () =>
-    <AddDisk {...addDiskModalProps} />
-
-  const HostReplicaGen = () =>
-    <HostReplica {...hostReplicaModalProps} />
 
   return (
     <div className="content-inner">
       <HostAction {...hostActionProps} />
       <HostList {...hostListProps} />
       <AddHost {...addHostModalProps} />
-      <AddDiskGen />
-      <HostReplicaGen />
+      {modalVisible && <AddDisk {...addDiskModalProps} />}
+      {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
     </div>
   )
 }
