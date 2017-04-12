@@ -43,7 +43,7 @@ class LatestBackup extends React.Component {
     const { progress } = this.state
     return (
       <div>
-        {backupStatus.actions && !backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>No Backup yet</div>}
+        {backupStatus.actions && !backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>no backup yet</div>}
         {backupStatus.started && <Progress percent={backupStatus.inProgress ? progress : 100} status={backupStatus.inProgress ? 'active' : 'success'} />}
         {backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>{moment(backupStatus.started).calendar()}</div>}
       </div>)
