@@ -99,9 +99,7 @@ export default (namespace) => {
         yield put({ type: 'setLoading', payload: true })
         const treeData = yield call(execAction, payload.url)
         yield put({ type: 'setLoading', payload: false })
-        // yield put({ type: 'setSnapshot', payload: treeData.data })
         let actualData =
-                  // treeData.data
                   filterRemoved(treeData.data)
         let rootNodes = []
         for (let i = 0; i < actualData.length; i++) {
@@ -121,15 +119,6 @@ export default (namespace) => {
         } else {
           yield put({ type: 'setSnapshot', payload: [] })
         }
-        // let rootNode = {
-        //   ...actualData.find(ele => ele.parent === ''),
-        // }
-        // if (rootNode.name) {
-        //   loopTree(rootNode, actualData)
-        //   yield put({ type: 'setSnapshot', payload: [rootNode] })
-        // } else {
-        //   yield put({ type: 'setSnapshot', payload: [] })
-        // }
       },
     },
     reducers: {

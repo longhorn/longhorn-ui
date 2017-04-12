@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, Icon, Tooltip, Spin } from 'antd'
+import { Button, Spin } from 'antd'
 import { connect } from 'dva'
 
 import { Snapshot } from '../../../components'
@@ -49,13 +49,11 @@ class Snapshots extends React.Component {
     <Spin tip="Loading..." spinning={this.props.loading}>
       <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '400px', overflow: 'auto' }}>
         <SnapshotGen />
-        <div style={{ position: 'absolute', right: '50px', bottom: '50px', fontSize: '150%' }}>
+        <div style={{ position: 'absolute', right: '150px', bottom: '50px', fontSize: '150%' }}>
           <div style={{ position: 'fixed', fontSize: '100%' }}>
-            <Tooltip placement="top" title="Take Snapshot">
-              <Button onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" shape="circle" >
-                <Icon type="scan" />
-              </Button>
-            </Tooltip>
+            <Button icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+              Take Snapshot
+            </Button>
           </div>
         </div>
       </div>
