@@ -72,6 +72,7 @@ const Routers = function ({ history, app }) {
             nprogress.start()
             require.ensure([], (require) => {
               nprogress.done()
+              registerModel(app, require('./models/snapshot')('snapshotModal'))
               registerModel(app, require('./models/backup'))
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
@@ -85,9 +86,9 @@ const Routers = function ({ history, app }) {
             nprogress.start()
             require.ensure([], (require) => {
               nprogress.done()
+              registerModel(app, require('./models/snapshot')('snapshotModal'))
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
-              registerModel(app, require('./models/snapshot')('snapshotModal'))
               cb(null, require('./routes/volume/snapshot'))
             })
           },

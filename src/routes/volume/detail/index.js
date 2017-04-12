@@ -8,8 +8,9 @@ import VolumeActions from '../VolumeActions'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Recurring from '../Recurring'
+import Snapshots from '../Snapshots'
 
-function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
+function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, recurringModalVisible } = volume
   const { backupStatus } = backup
   const hosts = host.data
@@ -65,12 +66,14 @@ function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
   const volumeActionsProps = {
     takeSnapshot(record) {
       dispatch({
-        type: 'volume/actions',
+        type: 'snapshotModal/snapshotAction',
         payload: {
+          type: 'snapshotCreate',
           url: record.actions.snapshotCreate,
           params: {
             name: '',
           },
+          querySnapShotUrl: record.actions.snapshotList,
         },
       })
     },
@@ -159,6 +162,12 @@ function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
     },
   }
 
+  const snapshotsProp = {
+    ...snapshotModal,
+    volumeId,
+    dispatch,
+  }
+
   return (
     <div >
       <Row gutter={24}>
@@ -169,6 +178,9 @@ function VolumeDetail({ dispatch, backup, host, volume, volumeId, loading }) {
           <VolumeInfo {...backupStatusProps} />
         </Col>
         <Col md={16} xs={24}>
+          <Snapshots {...snapshotsProp} />
+        </Col>
+        <Col xs={24}>
           <VolumeReplicas {...replicasListProps} />
         </Col>
       </Row>
@@ -186,6 +198,7 @@ VolumeDetail.propTypes = {
   host: PropTypes.object,
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
+  snapshotModal: PropTypes.object,
 }
 
-export default connect(({ backup, host, volume, loading }, { params }) => ({ backup, host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, volume, loading }, { params }) => ({ snapshotModal, backup, host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)
