@@ -24,7 +24,7 @@ function Menus({ location, isNavbar, switchMenuPopover }) {
     <Menu
       mode={isNavbar ? 'inline' : 'horizontal'}
       onSelect={switchMenuPopover}
-      selectedKeys={[location.pathname !== '/' ? location.pathname : '/dashboard']}
+      selectedKeys={[location.pathname !== '/' ? `/${location.pathname.split('/')[1]}` : '/dashboard']}
     >
       {menuItems}
     </Menu>

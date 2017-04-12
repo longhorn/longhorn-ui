@@ -42,7 +42,7 @@ export default function request(options) {
       ...data,
     }
   }, (error) => {
-    message.error(error.response.data.message)
+    message.error(error.response.data.message || error.message)
   }).catch((error) => {
     const { response = { statusText: 'Network Error' } } = error
     return { code: 1, message: response.statusText }
