@@ -2,7 +2,7 @@ FROM luissalgadofreire/nginx-node:6.x
 MAINTAINER logan@rancher.com
 
 COPY package.json /tmp/package.json
-RUN cd /tmp && npm install --registry=https://registry.npm.taobao.org
+RUN cd /tmp && npm install
 RUN mkdir -p /web && cp -a /tmp/node_modules /web
 COPY nginx.conf.template /etc/nginx/nginx.conf.template
 

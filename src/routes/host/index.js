@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import HostList from './HostList'
-import AddHost from './AddHost'
 import AddDisk from './AddDisk'
 import HostReplica from './HostReplica'
-import HostAction from './HostAction'
 
 function Host({ host, volume, loading, dispatch }) {
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible } = host
@@ -25,15 +23,6 @@ function Host({ host, volume, loading, dispatch }) {
     agent.replicas = replicas
   })
 
-  const addHostModalProps = {
-    visible: modalVisible,
-    onCancel() {
-      dispatch({
-        type: 'host/hideModal',
-      })
-    },
-  }
-
   const addDiskModalProps = {
     item: {},
     visible: addDiskModalVisible,
@@ -46,14 +35,6 @@ function Host({ host, volume, loading, dispatch }) {
     onCancel() {
       dispatch({
         type: 'host/hideAddDiskModal',
-      })
-    },
-  }
-
-  const hostActionProps = {
-    onAdd() {
-      dispatch({
-        type: 'host/showModal',
       })
     },
   }
@@ -83,6 +64,10 @@ function Host({ host, volume, loading, dispatch }) {
       dispatch({
         type: 'host/hideReplicaModal',
       })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
     },
     deleteReplica(name, url) {
       dispatch({
@@ -97,9 +82,7 @@ function Host({ host, volume, loading, dispatch }) {
 
   return (
     <div className="content-inner">
-      <HostAction {...hostActionProps} />
       <HostList {...hostListProps} />
-      <AddHost {...addHostModalProps} />
       {modalVisible && <AddDisk {...addDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
     </div>
