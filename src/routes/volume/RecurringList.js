@@ -61,7 +61,7 @@ class RecurringList extends React.Component {
     }
   }
 
-  onTaskTypeChange = (record, retain) => {
+  onRetainChange = (record, retain) => {
     const found = this.state.dataSource.find(data => data.name === record.name)
     if (found) {
       found.retain = retain
@@ -118,7 +118,7 @@ class RecurringList extends React.Component {
           return (
             record.editing ?
               <div>
-                <InputNumber min={1} defaultValue={20} onChange={(value) => this.onTaskTypeChange(record, value)} />
+                <InputNumber min={1} defaultValue={20} onChange={(value) => this.onRetainChange(record, value)} />
               </div> :
               <div>
                 {text}
