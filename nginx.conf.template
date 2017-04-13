@@ -28,16 +28,15 @@ http {
         proxy_busy_buffers_size    64k;
         proxy_temp_file_write_size 64k;
 
+        location /v1  {
+            proxy_pass ${LONGHORN_MANAGER_IP};
+        }
+
         location / {
             root /web/dist;
             index  index.html;
             add_header Cache-Control "max-age=0";
             try_files $uri $uri/ /index.html =404;
-        }
-
-        location /v1  {
-            add_header Cache-Control "";
-            proxy_pass ${LONGHORN_MANAGER_IP};
         }
     }
 }

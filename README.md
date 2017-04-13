@@ -27,7 +27,7 @@ Compiling for distribution
 Build and run a docker image
 ```bash
   make
-  make LONGHORN_MANAGER_IP=http://longhron:9500/ run
+  make LONGHORN_MANAGER_IP=http://longhorn:9500 run
 ```
 
 License

@@ -16,6 +16,6 @@ stop:
 	docker stop $(NAME)-$(INSTANCE)
 
 run:
-	docker run -d --rm --name $(NAME)-$(INSTANCE) -p $(PORT):8000 -e LONGHORN_MANAGER_IP=$(LONGHORN_MANAGER_IP) $(NS)/$(REPO):$(VERSION)
+	docker run -d --name $(NAME)-$(INSTANCE) -p $(PORT):8000 -e LONGHORN_MANAGER_IP=$(LONGHORN_MANAGER_IP) $(NS)/$(REPO):$(VERSION)
 
 default: build
