@@ -22,12 +22,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
   if (found) {
     selectedVolume.host = found.name
   }
-  selectedVolume.replicas.forEach(replica => {
-    const targetHost = hosts.find(h => h.id === replica.hostId)
-    if (targetHost) {
-      replica.host = targetHost.name
-    }
-  })
+  if (selectedVolume.replicas) {
+    selectedVolume.replicas.forEach(replica => {
+      const targetHost = hosts.find(h => h.id === replica.hostId)
+      if (targetHost) {
+        replica.host = targetHost.name
+      }
+    })
+  }
   const replicasListProps = {
     dataSource: selectedVolume.replicas || [],
     deleteReplica(name) {

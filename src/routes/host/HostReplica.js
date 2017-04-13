@@ -15,8 +15,8 @@ const modal = ({
     onCancel,
     width: 800,
     footer: [
-      <Button key="submit" type="primary" size="large" onClick={onCancel}>
-        OK
+      <Button key="submit" size="large" onClick={onCancel}>
+        Close
       </Button>,
     ],
   }
