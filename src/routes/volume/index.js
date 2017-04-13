@@ -5,12 +5,11 @@ import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
 import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
-import Recurring from './Recurring'
 
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, data, createVolumeModalVisible, attachHostModalVisible, recurringModalVisible } = this.props.volume
+    const { selected, data, createVolumeModalVisible, attachHostModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const { field, keyword } = this.props.location.query
 
@@ -168,28 +167,8 @@ class Volume extends React.Component {
       },
     }
 
-    const recurringModalProps = {
-      item: selected,
-      visible: recurringModalVisible,
-      onOk(recurring, url) {
-        dispatch({
-          type: 'volume/recurringUpdate',
-          payload: {
-            recurring,
-            url,
-          },
-        })
-      },
-      onCancel() {
-        dispatch({
-          type: 'volume/hideRecurringModal',
-        })
-      },
-    }
-
     const CreateVolumeGen = () => <CreateVolume {...createVolumeModalProps} />
     const AttachHostGen = () => <AttachHost {...attachHostModalProps} />
-    const RecurringGen = () => <Recurring {...recurringModalProps} />
 
     return (
       <div className="content-inner" >
@@ -197,7 +176,6 @@ class Volume extends React.Component {
         <VolumeList {...volumeListProps} />
         <CreateVolumeGen {...createVolumeModalProps} />
         <AttachHostGen {...attachHostModalProps} />
-        <RecurringGen {...recurringModalProps} />
       </div>
     )
   }

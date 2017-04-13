@@ -53,8 +53,8 @@ class Schedule extends React.Component {
       case 'scheduleType':
         state = {
           scheduleType: value,
-          mins: '1',
-          hour: '1',
+          mins: '0',
+          hour: '0',
           dow: '1',
           dom: '1',
           month: '1',

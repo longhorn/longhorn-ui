@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot }) {
+function actions({ selected, showAttachHost, detach, deleteVolume, showBackups }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -28,15 +28,6 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
       case 'backups':
         showBackups(record)
         break
-      case 'recurringUpdate':
-        showRecurring(record)
-        break
-      case 'snapshotList':
-        showSnapshots(record)
-        break
-      case 'snapshotCreate':
-        takeSnapshot(record)
-        break
       default:
     }
   }
@@ -44,9 +35,6 @@ function actions({ selected, showAttachHost, showRecurring, showSnapshots, detac
   const allActions = [
     { key: 'attach', name: 'Attach' },
     { key: 'detach', name: 'Detach' },
-    { key: 'snapshotList', name: 'Snapshots' },
-    { key: 'snapshotCreate', name: 'Take Snapshot' },
-    { key: 'recurringUpdate', name: 'Recurring Snapshot and Backup' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups' }, { key: 'delete', name: 'Delete' }]
   allActions.forEach(action => {

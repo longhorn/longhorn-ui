@@ -16,7 +16,7 @@ class RecurringList extends React.Component {
   }
 
   onNewRecurring = () => {
-    this.state.dataSource.push({ name: `recurring${new Date().getTime()}`, editing: true, cron: '0 0 * * *', task: 'snapshot' })
+    this.state.dataSource.push({ retain: 20, name: `recurring${new Date().getTime()}`, editing: true, cron: '0 0 * * *', task: 'snapshot' })
     this.setState({
       dataSource: this.state.dataSource,
     })
@@ -70,6 +70,12 @@ class RecurringList extends React.Component {
         dataSource,
       })
     }
+  }
+
+  onSave = () => {
+    const { dataSource } = this.state
+    dataSource.forEach((data) => { data.editing = false })
+    this.props.onOk(dataSource)
   }
 
   render() {
@@ -135,6 +141,7 @@ class RecurringList extends React.Component {
     ]
     const pagination = false
     const { dataSource } = this.state
+    const { loading } = this.props
 
     return (
       <div>
@@ -146,7 +153,8 @@ class RecurringList extends React.Component {
           pagination={pagination}
           rowKey={record => record.name}
         />
-        <Button style={{ marginTop: '20px' }} onClick={this.onNewRecurring} type="primary" icon="plus">New</Button>
+        <Button style={{ marginTop: '20px' }} onClick={this.onNewRecurring} icon="plus">New</Button>
+        <Button loading={loading} style={{ marginTop: '20px', float: 'right' }} onClick={this.onSave} type="primary">Save</Button>
       </div>
     )
   }
@@ -154,6 +162,8 @@ class RecurringList extends React.Component {
 
 RecurringList.propTypes = {
   dataSource: PropTypes.array,
+  onOk: PropTypes.func,
+  loading: PropTypes.bool,
 }
 
 export default RecurringList

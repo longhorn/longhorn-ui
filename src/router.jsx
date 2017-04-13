@@ -81,19 +81,6 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'volume/:id/snapshots',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/snapshot')('snapshotModal'))
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/volume'))
-              cb(null, require('./routes/volume/snapshot'))
-            })
-          },
-        },
-        {
           path: 'backup',
           name: 'backup',
           getComponent(nextState, cb) {

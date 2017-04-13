@@ -60,6 +60,7 @@ function list({ loading, dataSource, deleteReplica }) {
         bordered={false}
         columns={columns}
         dataSource={dataSource}
+        scroll={{ y: 200 }}
         loading={loading}
         simple
         pagination={pagination}
