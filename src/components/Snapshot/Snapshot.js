@@ -104,35 +104,35 @@ const loop = (data, props) => data.map((item) => {
     title = SnapshotIcon(item, props)
   } else {
     title = CurrentPoint(props)
-    return <TreeNode key={`${props.volume.name}`} title={title} />
+    return <TreeNode key={item} title={title} />
   }
   if (item.childrenNode && item.childrenNode.length) {
     return <TreeNode key={item.name} title={title} disabled={item.removed}>{loop(item.childrenNode, props)}</TreeNode>
   }
-  return <TreeNode key={item.name} title={title} disabled={item.removed} />
+  return <TreeNode isLeaf key={item.name} title={title} disabled={item.removed} />
 })
 
-function Snapshot(props) {
-  let children = (<TreeNode key="1" title={CurrentPoint(props)} />)
-  if (props.snapshotTree.length > 0) {
-     // let children = convertTree(props.snapshotTree, props)
-    children = loop(props.snapshotTree, props)
+class Snapshot extends React.Component {
+  render() {
+    let props = this.props
+    let children = (<TreeNode key="1" title={CurrentPoint(props)} />)
+    if (props.snapshotTree.length > 0) {
+       // let children = convertTree(props.snapshotTree, props)
+      children = loop(props.snapshotTree, props)
+    }
+    return (
+       <Tree
+         defaultExpandAll
+         className="lh-tree-snapshot"
+         autoExpandParent={false}
+        >
+          <TreeNode className="tree-start-wrap" title={StartPoint()} disabled key={`${props.volume.id}`}>
+            {children}
+          </TreeNode>
+        </Tree>
+    )
   }
-
-
-  return (
-     <Tree
-       defaultExpandAll
-       className="lh-tree-snapshot"
-       key={`${props.volume.id}`}
-      >
-        <TreeNode className="tree-start-wrap" title={StartPoint()} disabled key={`${props.volume.id}`}>
-          {children}
-        </TreeNode>
-      </Tree>
-  )
 }
-
 Snapshot.propTypes = {
   snapshotTree: PropTypes.array,
   loading: PropTypes.bool,

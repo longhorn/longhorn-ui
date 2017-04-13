@@ -33,6 +33,16 @@ class Snapshots extends React.Component {
       payload: this.props.volumeId,
     })
   }
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.loading !== this.props.loading) {
+      return true
+    }
+    // avoid unnecessary dom update
+    if (nextProps.snapshotTree === this.props.snapshotTree) {
+      return false
+    }
+    return true
+  }
   componentWillUnmount() {
     this.props.dispatch({ type: 'snapshotModal/setSnapshot', payload: [] })
   }
@@ -65,6 +75,7 @@ Snapshots.propTypes = {
   dispatch: PropTypes.func,
   volume: PropTypes.object,
   loading: PropTypes.bool,
+  snapshotTree: PropTypes.object,
 }
 
 export default Snapshots

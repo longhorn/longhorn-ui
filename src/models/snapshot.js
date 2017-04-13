@@ -1,10 +1,11 @@
 import { execAction, getVolume } from '../services/volume'
 
-let loopTree = (node, treeArry) => {
+let loopTree = (node, treeArry, treeLevelNodes) => {
   for (let i = 0; i < node.children.length; i += 1) {
     let item = node.children[i]
     node.childrenNode || (node.childrenNode = [])
     if (item === 'volume-head') {
+      node.isVolumeLine = true
       node.childrenNode.push('volume-head')
       continue
     }
@@ -13,18 +14,29 @@ let loopTree = (node, treeArry) => {
       ...selected,
     }
     node.childrenNode.push(child)
-    loopTree(child, treeArry)
+    loopTree(child, treeArry, treeLevelNodes)
   }
   if (node.childrenNode) {
     node.childrenNode.sort((a, b) => {
       if (a === 'volume-head') {
+        node.isVolumeLine = true
         return 1
       }
       if (b === 'volume-head') {
+        node.isVolumeLine = true
         return -1
+      }
+      if (a.isVolumeLine || b.isVolumeLine) {
+        node.isVolumeLine = true
       }
       return (new Date(a.created)).getTime() - (new Date(b.created)).getTime()
     })
+    treeLevelNodes.push(node.childrenNode.map(el => {
+      if (!el.name) {
+        return el
+      }
+      return el.name
+    }))
   }
 }
 let filterRemoved = (data) => {
@@ -66,6 +78,8 @@ export default (namespace) => {
     state: {
       volume: {},
       snapshotTree: [],
+      // record nodes name of every Level
+      treeLevelNodes: [],
       loading: false,
     },
     subscriptions: {
@@ -100,7 +114,7 @@ export default (namespace) => {
         const treeData = yield call(execAction, payload.url)
         yield put({ type: 'setLoading', payload: false })
         let actualData =
-                  filterRemoved(treeData.data)
+                  yield call(filterRemoved, treeData.data)
         let rootNodes = []
         for (let i = 0; i < actualData.length; i++) {
           let item = actualData[i]
@@ -113,8 +127,10 @@ export default (namespace) => {
         let rootNode = {
           children: rootNodes.map(el => el.name),
         }
+        let treeLevelNodes = []
         if (rootNodes.length) {
-          yield call(loopTree, rootNode, actualData)
+          yield call(loopTree, rootNode, actualData, treeLevelNodes)
+          yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
           yield put({ type: 'setSnapshot', payload: rootNode.childrenNode })
         } else {
           yield put({ type: 'setSnapshot', payload: [] })
@@ -138,6 +154,12 @@ export default (namespace) => {
         return {
           ...state,
           volume: action.payload,
+        }
+      },
+      setTreeLevelNodes(state, { payload }) {
+        return {
+          ...state,
+          treeLevelNodes: payload,
         }
       },
     },
