@@ -1,5 +1,5 @@
 NS = rancher
-VERSION ?= latest
+VERSION = $(shell ./scripts/version)
 
 REPO = longhorn-ui
 NAME = longhorn-ui
@@ -11,6 +11,7 @@ PORT = 8000
 
 build:
 	docker build -t $(NS)/$(REPO):$(VERSION) .
+	@echo Build $(NS)/$(REPO):$(VERSION) successful
 
 stop:
 	docker stop $(NAME)-$(INSTANCE)

@@ -11,8 +11,8 @@ Prerequisites:
 
 Setup:
 ```bash
-  git clone 'https://github.com/rancher/longhron-ui'
-  cd 'longhron-ui'
+  git clone 'https://github.com/rancher/longhorn-ui'
+  cd 'longhorn-ui'
   npm install
 ```
 Run development server pointed at some Longhron Manger API
