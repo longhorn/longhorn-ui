@@ -26,8 +26,8 @@ Compiling for distribution
 
 Build and run a docker image
 ```bash
-  docker build .
-  docker run -d -p 8000:8000 -e LONGHORN_MANAGER_IP=http://longhron:9500 THE_IMAGE_ID
+  make
+  make LONGHORN_MANAGER_IP=http://longhron:9500/ run
 ```
 
 License
