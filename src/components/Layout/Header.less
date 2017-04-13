@@ -1,0 +1,109 @@
+@import "../vars.less";
+
+.header {
+  box-shadow: @shadow-2;
+  position: relative;
+  justify-content: space-between;
+  height: 80px;
+  font-size: 14px;
+  color: white;
+  background-color: #0075a8;
+
+  :global a {
+    text-decoration: none !important;
+  }
+
+  :global .ant-menu {
+    background-color: #0075a8;
+
+    .ant-menu-item-selected {
+      border-bottom: 4px solid #108ee9;
+      background-color: #00558b;
+    }
+
+    .ant-menu-item:hover {
+      color: #78c9cf;
+      background: rgba(0,0,0,.15);
+      border-bottom: 4px solid #108ee9;
+    }
+
+    a {
+      color: white !important;
+    }
+  }
+
+  :global .ant-menu-horizontal {
+    border-bottom: 1px solid #0075a8;
+  }
+
+  :global .ant-menu-item {
+    height: 80px;
+    line-height: 80px;
+  }
+
+  .logoCol {
+    color: white;
+    background-color: #004572;
+  }
+
+  .menuCol {
+    color: white;
+    background-color: #0075a8;
+  }
+
+  .logoContainer {
+    margin-left: 0;
+    padding: 0 20px;
+    height: 80px;
+    background: white;
+    position: relative;
+  }
+
+  .logo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+
+  .popupMenu {
+    display: inline-block;
+    float: right;
+  }
+
+  .button {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: @transition-ease-in;
+
+    &:hover {
+      color: @primary-color;
+      background-color: fade(@primary-color, 15%);
+    }
+  }
+}
+
+.popovermenu {
+  width: 280px;
+  margin-left: 6px;
+
+  :global .ant-popover-inner-content {
+    padding: 0;
+
+    .ant-menu-inline .ant-menu-item,
+    .ant-menu-vertical .ant-menu-item {
+      border-right: 0;
+      height: 48px;
+      line-height: 48px;
+    }
+
+    .ant-menu-inline .ant-menu-item-selected,
+    .ant-menu-inline .ant-menu-selected {
+      border-right: 0;
+    }
+  }
+}

@@ -1,0 +1,182 @@
+
+:global {
+  .lh-snapshot-dropdown{
+    width: 80%;
+    margin-left: 20%;
+  }
+  .lh-tree-snapshot.ant-tree{
+    .tree-start-wrap>a{
+      padding-bottom: 0;
+    }
+    .ant-tree-treenode-disabled{
+      >a {
+        .tree-snapshot-icon{
+          background-color: #b4b4b4
+        }
+        .snapshot-name{
+          color: #a4a4a4
+        }
+        .snapshot-time{
+          color: #c4c4c4
+        }
+      }
+    }
+    .snapshot-current-desc{
+      height: 35px;
+      line-height: 35px;
+      button{
+        border: none;
+        padding: 0;
+        color: white;
+      }
+      i{
+        border-radius: 3px 0 0 3px;
+        font-size: 18px;
+        background-color: #28864f;
+        padding: 4px;
+        display: inline-block;
+      }
+      span{
+        border-radius:  0 3px 3px 0;
+        margin: 0;
+        padding: 4px;
+        background-color: #33ab65;
+        display: inline-block;
+        vertical-align: top;
+        padding-right: 10px;
+      }
+    }
+    .tree-snapshot-start-point{
+      width: 15px; 
+      height: 15px; 
+      margin-bottom: 2px;
+      display: inline-block; 
+      border-radius: 50%; 
+      background-color: hsl(209, 66%, 51%);
+    }
+    >li>.ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree{
+      margin-left: 40px;
+      margin-top: -42px;
+      >li:before{
+        width: 46px;
+      }
+    }
+    .tree-snapshot-icon{ 
+      position: relative; 
+      width: 30px; 
+      height: 30px; 
+      display: inline-block; 
+      border-radius: 50%; 
+      background-color: hsl(209, 66%, 51%);
+      .snapshot-icon{
+        line-height: 25px;
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        font-size: 20px;
+        color: white;
+      }
+    }
+
+    .tree-snapshot-desc{
+      line-height: 15px;
+      vertical-align: super;
+      margin-left: 10px;
+      font-size: 10px;
+      display: inline-block;
+      .snapshot-name{
+        font-size: 120%;
+      }
+      .snapshot-time{
+        color: #a4a4a4;
+      }
+    }
+    @treeNodeGap: 160px;
+    .ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree {
+      margin-top: -56px;
+      margin-left: @treeNodeGap;
+    }
+
+    .ant-tree-switcher.ant-tree-switcher.ant-tree-switcher.ant-tree-switcher {
+      display: none;
+    }
+
+    .ant-tree-title {
+      display: inline-block;
+      vertical-align: text-top;
+    }
+
+    li {
+      position: relative;
+      top: 0;
+      padding: 0;
+      min-width: 210px;
+      a {
+        position: relative;
+        top: 0;
+        z-index: 2;
+        background: white;
+        padding: 10px 5px;
+        &.ant-tree-node-selected{
+          background-color: #cfdfe9;
+        }
+      }
+    }
+
+    .ant-tree-child-tree {
+      position: relative;
+      top: 0;
+      > li{
+        &::before {
+          content: '';
+          display: block;
+          width: @treeNodeGap - 2px;
+          height: 2px;
+          border-top: 2px solid #ecf0f1;
+          position: absolute;
+          top: 26px;
+          z-index: 0;
+          right: 100%;
+        }
+        &:last-child>.ant-tree-child-tree:before{
+          content: '';
+          display: block;
+          width: 2px;
+          height: ~"calc(100% - 57px)";
+          border-left: 2px solid white;
+          position: absolute;
+          top: 28px;
+          left: -(2*@treeNodeGap - 2);
+          z-index: 1;
+        }
+      }
+      &:after {
+        content: '';
+        display: block;
+        width: 2px;
+        height: ~"calc(100% - 57px)";
+        border-left: 2px solid #ecf0f1;
+        position: absolute;
+        top: 28px;
+        left: -(@treeNodeGap - 20px);
+      }
+    }
+    >li>.ant-tree-child-tree{
+      >li{
+        &:last-child>.ant-tree-child-tree:before{
+          left: -(@treeNodeGap + 46);
+        }
+      }
+    }
+    >li>.ant-tree-child-tree{
+      &:after {
+        left: -(@treeNodeGap - 132px);
+      }
+    }
+  }
+}

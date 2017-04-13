@@ -1,0 +1,36 @@
+.resource {
+  .number {
+    display: flex;
+    justify-content: space-between;
+
+    .item {
+      text-align: center;
+      width: 100%;
+      position: relative;
+
+      &+.item {
+        &::before {
+          content: '';
+          display: block;
+          width: 1px;
+          position: absolute;
+          background: #f5f5f5;
+          top: 12px;
+        }
+      }
+
+      p {
+        color: #757575;
+
+        &:first-child {
+          font-size: 16px;
+        }
+
+        &:last-child {
+          font-size: 20px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}

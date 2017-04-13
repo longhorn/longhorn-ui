@@ -1,0 +1,71 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "semi": [
+      2,
+      "never"
+    ],
+    "allowForLoopAfterthoughts": 0,
+    "comma-dangle": [
+      2,
+      "always-multiline"
+    ],
+    "max-len": 0,
+    "react/forbid-prop-types": 0,
+    "react/jsx-first-prop-new-line": 0,
+    "import/prefer-default-export": 0,
+    "react/jsx-filename-extension": 0,
+    "import/first": 0,
+    "react/jsx-indent": 0,
+    "import/newline-after-import": 0,
+    "react/no-unused-prop-types": 0,
+    "react/self-closing-comp": 0,
+    "generator-star-spacing": 0,
+    "import/extensions": 0,
+    "react/jsx-closing-bracket-location": 0,
+    "react/no-string-refs": 0,
+    "react/no-find-dom-node": 0,
+    "arrow-parens": 0,
+    "react/prefer-stateless-function": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "no-unused-expressions": [
+      0,
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ],
+    no-plusplus: "off",
+    "no-continue": "off",
+    "arrow-body-style": [
+      0,
+      "never"
+    ],
+    "func-names": 0,
+    "prefer-const": 0,
+    "no-extend-native": 0,
+    "no-param-reassign": 0,
+    "no-restricted-syntax": 0,
+    "no-eval": 0,
+    "react/jsx-no-bind": 0,
+    "no-unused-vars": [
+      2,
+      {
+        "ignoreRestSiblings": true
+      }
+    ]
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "globals": {
+    "window": true,
+    "document": true
+  }
+}
