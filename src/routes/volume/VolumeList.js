@@ -7,19 +7,6 @@ import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 
 function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot }) {
-  const getStateWeight = (state) => {
-    switch (state) {
-      case 'healthy':
-        return 0
-      case 'faulted':
-        return 1
-      case 'detached':
-        return 2
-      default:
-        return 99
-    }
-  }
-  dataSource.sort((a, b) => getStateWeight(a.state) - getStateWeight(b.state))
   const volumeActionsProps = {
     showAttachHost,
     showRecurring,
