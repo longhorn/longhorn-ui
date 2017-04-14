@@ -75,7 +75,7 @@ Snapshots.propTypes = {
   dispatch: PropTypes.func,
   volume: PropTypes.object,
   loading: PropTypes.bool,
-  snapshotTree: PropTypes.object,
+  snapshotTree: PropTypes.array,
 }
 
 export default Snapshots

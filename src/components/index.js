@@ -4,6 +4,7 @@ import Search from './Search/Search'
 import Snapshot from './Snapshot/Snapshot'
 import Schedule from './Schedule/Schedule'
 import ModalBlur from './ModalBlur/ModalBlur'
+import Replica from './Replica/Replica'
 export {
   DropOption,
   Layout,
@@ -11,4 +12,5 @@ export {
   Snapshot,
   ModalBlur,
   Schedule,
- }
+  Replica,
+}

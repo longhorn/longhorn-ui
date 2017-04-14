@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import VolumeInfo from './VolumeInfo'
-import VolumeReplicas from './VolumeReplicas'
 import { Row, Col, Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import VolumeActions from '../VolumeActions'
@@ -9,6 +8,7 @@ import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Snapshots from '../Snapshots'
 import RecurringList from '../RecurringList'
+import { Replica } from '../../../components'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible } = volume
@@ -185,7 +185,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
         </Col>
         <Col md={16} xs={24} style={{ marginBottom: 16 }}>
           <Card title="Replica" bordered={false} {...bodyStyle}>
-            <VolumeReplicas {...replicasListProps} />
+            <Replica {...replicasListProps} />
           </Card>
         </Col>
         <Col xs={24} style={{ marginBottom: 16 }}>
