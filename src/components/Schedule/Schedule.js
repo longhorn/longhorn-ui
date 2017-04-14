@@ -17,11 +17,11 @@ class Schedule extends React.Component {
     const d = cron.split(' ')
     let scheduleType = ''
     const v = {
-      mins: d[0],
-      hour: d[1],
-      dom: d[2],
-      month: d[3],
-      dow: d[4],
+      mins: d[1],
+      hour: d[2],
+      dom: d[3],
+      month: d[4],
+      dow: d[5],
     }
     if (v.month !== '*') {
       scheduleType = 'year'
@@ -90,22 +90,22 @@ class Schedule extends React.Component {
     let cron = ''
     switch (state.scheduleType) {
       case 'minute':
-        cron = '* * * * *'
+        cron = '0 * * * * *'
         break
       case 'hour':
-        cron = `${state.mins} * * * *`
+        cron = `0 ${state.mins} * * * *`
         break
       case 'day':
-        cron = `${state.mins} ${state.hour} * * *`
+        cron = `0 ${state.mins} ${state.hour} * * *`
         break
       case 'week':
-        cron = `${state.mins} ${state.hour} * * ${state.dow}`
+        cron = `0 ${state.mins} ${state.hour} * * ${state.dow}`
         break
       case 'month':
-        cron = `${state.mins} ${state.hour} ${state.dom} * *`
+        cron = `0 ${state.mins} ${state.hour} ${state.dom} * *`
         break
       case 'year':
-        cron = `${state.mins} ${state.hour} ${state.dom} ${state.month} *`
+        cron = `0 ${state.mins} ${state.hour} ${state.dom} ${state.month} *`
         break
       default:
     }
