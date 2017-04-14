@@ -1,4 +1,4 @@
-
+import classnames from 'classnames'
 import React, { PropTypes } from 'react'
 import { Card, Modal, Spin } from 'antd'
 import style from './Replica.less'
@@ -6,6 +6,18 @@ import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
 class Replica extends React.Component {
+  state = {
+    start: false,
+    end: true,
+  }
+  onScroll = (event) => {
+    const { target } = event
+    this.setState({
+      start: target.scrollLeft !== 0,
+      end: target.scrollWidth - target.clientWidth !== target.scrollLeft,
+    })
+  }
+
   getReplicaShortName = (name) => {
     let tokens = name.split('-')
     return tokens.slice(tokens.length - 3, tokens.length).join('-')
@@ -28,6 +40,7 @@ class Replica extends React.Component {
 
   render() {
     const { dataSource, loading } = this.props
+    const { start, end } = this.state
     const replicas = dataSource.map((item) =>
       <div style={{ display: 'inline-block', padding: 20 }} key={item.name}>
         <Card bodyStyle={{ height: 240, padding: 0 }} >
@@ -57,11 +70,13 @@ class Replica extends React.Component {
       </div >
     )
     return (
-      <div className={style.replica}>
-        <Spin spinning={loading}>
-          {replicas}
-        </Spin>
-      </div>
+      <div onScroll={this.onScroll} className={classnames(style.replicaContainer, { [style.start]: start }, { [style.end]: end })}>
+        <div className={style.replica}>
+          <Spin spinning={loading}>
+            {replicas}
+          </Spin>
+        </div>
+      </div >
     )
   }
 }
