@@ -52,7 +52,7 @@ class Replica extends React.Component {
             <h3>{item.host}</h3>
             <p style={{ color: 'gray' }}>Host</p>
           </div>
-          <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'faulted'}>{item.running ? 'Running' : 'Stopped'}</span>
+          <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>{item.running ? 'Running' : 'Stopped'}</span>
           <span style={{ position: 'absolute', bottom: 18, right: 10 }}>
             <DropOption menuOptions={[
               { key: 'delete', name: 'Delete' },
@@ -62,7 +62,7 @@ class Replica extends React.Component {
           {!item.running && <div style={{
             height: '5px',
             width: '100%',
-            background: '#f15354',
+            background: 'rgba(15,15,15,.925)',
             position: 'absolute',
             bottom: 0,
           }} />}
