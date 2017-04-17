@@ -2,11 +2,11 @@ const getStateWeight = (state) => {
   switch (state) {
     case 'healthy':
       return 0
-    case 'faulted':
-      return 1
     case 'created':
-      return 2
+      return 1
     case 'degraded':
+      return 2
+    case 'faulted':
       return 3
     case 'detached':
       return 4

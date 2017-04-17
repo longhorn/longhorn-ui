@@ -1,0 +1,45 @@
+.replica {
+  white-space: nowrap;
+  overflow: scroll;
+  transform: translate3d(0, 0, 0);
+  position: relative;
+  top: 0;
+
+  :global {
+    .ant-carousel .slick-dots li.slick-active button {
+      background-color: black;
+    }
+  }
+}
+
+.replicaContainer.start {
+  &:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 140px;
+    height: 240px;
+    left: 0;
+    top: 93px;
+    margin: auto;
+    z-index: 1;
+    background-image: linear-gradient(to left,rgba(255,255,255,0.1) 0,rgba(255,255,255,1) 100%);
+    filter:blur(20px);
+  }
+}
+
+.replicaContainer.end {
+  &:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 140px;
+    height: 240px;
+    right: 0;
+    top: 93px;
+    margin: auto;
+    z-index: 1;
+    background-image: linear-gradient(90deg,rgba(255,255,255,0.1) 0,rgba(255,255,255,1) 100%);
+    filter:blur(20px);
+  }
+}
