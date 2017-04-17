@@ -6,7 +6,8 @@
   }
   .lh-tree-snapshot.ant-tree{
     .tree-start-wrap>a{
-      padding-bottom: 0;
+      height: 35px
+
     }
     .ant-tree-treenode-disabled{
       >a {
@@ -24,6 +25,7 @@
     .snapshot-current-desc{
       height: 35px;
       line-height: 35px;
+      padding-top: 2px;
       button{
         border: none;
         padding: 0;
@@ -56,7 +58,7 @@
     }
     >li>.ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree{
       margin-left: 40px;
-      margin-top: -42px;
+      margin-top: -44px;
       >li:before{
         width: 46px;
       }
@@ -108,7 +110,6 @@
 
     .ant-tree-title {
       display: inline-block;
-      vertical-align: text-top;
     }
 
     li {
@@ -122,6 +123,7 @@
         z-index: 2;
         background: white;
         padding: 10px 5px;
+        height: 56px;
         &.ant-tree-node-selected{
           background-color: #cfdfe9;
         }
