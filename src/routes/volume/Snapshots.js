@@ -33,8 +33,17 @@ class Snapshots extends React.Component {
       payload: this.props.volumeId,
     })
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.volume.state !== this.props.volume.state) {
+      this.props.dispatch({
+        type: 'snapshotModal/queryVolume',
+        payload: this.props.volumeId,
+      })
+    }
+  }
   shouldComponentUpdate(nextProps) {
-    if (nextProps.loading !== this.props.loading) {
+    if (nextProps.loading !== this.props.loading ||
+      nextProps.volume.state !== this.props.volume.state) {
       return true
     }
     // avoid unnecessary dom update
@@ -57,7 +66,7 @@ class Snapshots extends React.Component {
     return (
       <Spin spinning={this.props.loading}>
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
-          <Button icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
             Take Snapshot
           </Button>
           <div style={{ marginTop: '20px' }}>

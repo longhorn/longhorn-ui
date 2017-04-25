@@ -52,8 +52,8 @@ let filterRemoved = (data) => {
         let pChildArray = parentEntity.children
         let itemPos = pChildArray.findIndex(ele => ele === item.name)
         pChildArray = pChildArray.slice(0, itemPos)
-                        .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
-                          .concat(item.children)
+          .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
+          .concat(item.children)
         parentEntity.children = pChildArray
       }
       // change children parent
@@ -110,11 +110,15 @@ export default (namespace) => {
       *querySnapShot({
         payload,
       }, { call, put }) {
+        if (!payload.url) {
+          yield put({ type: 'setSnapshot', payload: [] })
+          return
+        }
         yield put({ type: 'setLoading', payload: true })
         const treeData = yield call(execAction, payload.url)
         yield put({ type: 'setLoading', payload: false })
         let actualData =
-                  yield call(filterRemoved, treeData.data)
+          yield call(filterRemoved, treeData.data)
         let rootNodes = []
         for (let i = 0; i < actualData.length; i++) {
           let item = actualData[i]

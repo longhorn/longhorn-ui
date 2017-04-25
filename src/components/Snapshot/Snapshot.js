@@ -6,8 +6,8 @@ const TreeNode = Tree.TreeNode
 
 function StartPoint() {
   return (
-      <div className="tree-snapshot-start-point">
-      </div>
+    <div className="tree-snapshot-start-point">
+    </div>
   )
 }
 function SnapshotIcon(props, snapshotProps) {
@@ -51,7 +51,7 @@ function SnapshotIcon(props, snapshotProps) {
           <p className="snapshot-name">{props.name.substr(0, 5)}</p>
           <p className="snapshot-time">{moment(new Date(props.created)).fromNow()}</p>
         </div>
-     </div>
+      </div>
     </Dropdown>
   )
 }
@@ -74,23 +74,23 @@ function CurrentPoint(props) {
     <Menu
       onClick={onClick}
     >
-      <Menu.Item key="1">
+      <Menu.Item key="1" disabled={!props.volume.actions || !props.volume.actions.snapshotCreate}>
         <span>Take Snapshot</span>
       </Menu.Item>
     </Menu>
   )
   return (
-     <Dropdown
-       overlay={menu}
-       trigger={['click']}
-       key={props.volume.id}
-     >
-        <div className="snapshot-current-desc">
-          <Button>
-            <Icon type="caret-right" />Live Volume
+    <Dropdown
+      overlay={menu}
+      trigger={['click']}
+      key={props.volume.id}
+    >
+      <div className="snapshot-current-desc">
+        <Button>
+          <Icon type="caret-right" />Live Volume
           </Button>
-        </div>
-      </Dropdown>
+      </div>
+    </Dropdown>
   )
 }
 CurrentPoint.propTypes = {
@@ -117,19 +117,19 @@ class Snapshot extends React.Component {
     let props = this.props
     let children = (<TreeNode key="1" title={CurrentPoint(props)} />)
     if (props.snapshotTree.length > 0) {
-       // let children = convertTree(props.snapshotTree, props)
+      // let children = convertTree(props.snapshotTree, props)
       children = loop(props.snapshotTree, props)
     }
     return (
-       <Tree
-         defaultExpandAll
-         className="lh-tree-snapshot"
-         autoExpandParent={false}
-        >
-          <TreeNode className="tree-start-wrap" title={StartPoint()} disabled key={`${props.volume.id}`}>
-            {children}
-          </TreeNode>
-        </Tree>
+      <Tree
+        defaultExpandAll
+        className="lh-tree-snapshot"
+        autoExpandParent={false}
+      >
+        <TreeNode className="tree-start-wrap" title={StartPoint()} disabled key={`${props.volume.id}`}>
+          {children}
+        </TreeNode>
+      </Tree>
     )
   }
 }
