@@ -25,6 +25,7 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
+      data.data.sort((a, b) => a.name.localeCompare(b.name))
       yield put({ type: 'queryHost', payload: { ...data } })
     },
   },
