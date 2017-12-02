@@ -40,6 +40,7 @@ const modal = ({
     title: 'Attach to host',
     visible,
     onCancel,
+    width: 1040,
     onOk: handleOk,
   }
 
@@ -59,7 +60,7 @@ const modal = ({
                 message: 'Please select a host to attach',
               },
             ],
-          })(<Select style={{ minWidth: '200px' }} size="large">
+          })(<Select style={{ width: '100%' }} size="large">
             {options}
           </Select>)}
         </FormItem>
