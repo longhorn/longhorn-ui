@@ -1,6 +1,9 @@
 import { execAction, getVolume } from '../services/volume'
 
 let loopTree = (node, treeArry, treeLevelNodes) => {
+  if (!node.children) {
+    return
+  }
   for (let i = 0; i < node.children.length; i += 1) {
     let item = node.children[i]
     node.childrenNode || (node.childrenNode = [])
@@ -115,10 +118,15 @@ export default (namespace) => {
           return
         }
         yield put({ type: 'setLoading', payload: true })
-        const treeData = yield call(execAction, payload.url)
+        const treeData = (yield call(execAction, payload.url)).data
+        treeData.forEach(el => {
+          const children = el.children
+          if (children) {
+            el.children = Object.keys(children)
+          }
+        })
         yield put({ type: 'setLoading', payload: false })
-        let actualData =
-          yield call(filterRemoved, treeData.data)
+        let actualData = filterRemoved(treeData)
         let rootNodes = []
         for (let i = 0; i < actualData.length; i++) {
           let item = actualData[i]
@@ -133,7 +141,7 @@ export default (namespace) => {
         }
         let treeLevelNodes = []
         if (rootNodes.length) {
-          yield call(loopTree, rootNode, actualData, treeLevelNodes)
+          loopTree(rootNode, actualData, treeLevelNodes)
           yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
           yield put({ type: 'setSnapshot', payload: rootNode.childrenNode })
         } else {
