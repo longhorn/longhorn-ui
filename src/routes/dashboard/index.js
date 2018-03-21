@@ -3,9 +3,10 @@ import { connect } from 'dva'
 import { Row, Col } from 'antd'
 import { NumberCard } from './components'
 
-function Dashboard({ host, volume }) {
+function Dashboard({ host, volume, loading }) {
   const hostNum = host.data.length
   const volumeNum = volume.data.length
+  const { host: hostLoading, volume: volumeLoading } = loading.models
 
   const numbers = [{
     icon: 'laptop',
@@ -13,12 +14,14 @@ function Dashboard({ host, volume }) {
     title: 'Hosts',
     number: hostNum,
     linkTo: '/host',
+    loading: hostLoading,
   }, {
     icon: 'database',
     color: '#d897eb',
     title: 'Volumes',
     number: volumeNum,
     linkTo: '/volume',
+    loading: volumeLoading,
   },
   ]
 
@@ -38,6 +41,7 @@ function Dashboard({ host, volume }) {
 Dashboard.propTypes = {
   host: PropTypes.object,
   volume: PropTypes.object,
+  loading: PropTypes.object,
 }
 
-export default connect(({ host, volume }) => ({ host, volume }))(Dashboard)
+export default connect(({ host, volume, loading }) => ({ host, volume, loading }))(Dashboard)
