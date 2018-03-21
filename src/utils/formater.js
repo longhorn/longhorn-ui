@@ -1,6 +1,6 @@
-function formatSi(inValue, increment = 1000, suffix = '', firstSuffix = null) {
-  const units = ['B', 'K', 'M', 'G', 'T', 'P']
-  let val = inValue
+function formatSi(val, increment = 1024) {
+  const units = ['Bi', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi']
+  val = Number(val)
   let exp = 0
   while (val >= increment && exp + 1 < units.length) {
     val /= increment
@@ -16,15 +16,9 @@ function formatSi(inValue, increment = 1000, suffix = '', firstSuffix = null) {
     out = Math.round(val)
   }
 
-  if (exp === 0 && firstSuffix) {
-    out += ` ${firstSuffix}`
-  } else {
-    out += ` ${units[exp]}${suffix}`
-  }
-
-  return out
+  return `${out} ${units[exp]}`
 }
 
-export function formatMib(value) {
-  return formatSi(value, 1024, 'B', 'B')
+export function formatMib(...args) {
+  return formatSi(...args)
 }
