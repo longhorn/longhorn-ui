@@ -6,11 +6,12 @@ export default {
   namespace: 'volume',
   state: {
     data: [],
-    selected: {},
+    selected: null,
     createVolumeModalVisible: false,
     attachHostModalVisible: false,
     recurringModalVisible: false,
     snapshotsModalVisible: false,
+    salvageModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -50,6 +51,13 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideAttachHostModal' })
       yield call(execAction, payload.url, { hostId: payload.host })
+      yield put({ type: 'query' })
+    },
+    *salvage({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideSalvageModal' })
+      yield call(execAction, payload.url, { names: payload.replicaNames })
       yield put({ type: 'query' })
     },
     *create({
@@ -120,6 +128,12 @@ export default {
     },
     hideSnapshotsModal(state) {
       return { ...state, snapshotsModalVisible: false }
+    },
+    showSalvageModal(state, action) {
+      return { ...state, ...action.payload, salvageModalVisible: true }
+    },
+    hideSalvageModal(state) {
+      return { ...state, salvageModalVisible: false }
     },
   },
 }

@@ -6,7 +6,7 @@ import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 
-function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot }) {
+function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage }) {
   const volumeActionsProps = {
     showAttachHost,
     showRecurring,
@@ -15,6 +15,7 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
     showBackups,
     deleteVolume,
     takeSnapshot,
+    showSalvage,
   }
   const columns = [
     {
@@ -111,7 +112,7 @@ list.propTypes = {
   showSnapshots: PropTypes.func,
   showBackups: PropTypes.func,
   takeSnapshot: PropTypes.func,
-
+  showSalvage: PropTypes.func,
 }
 
 export default list

@@ -43,7 +43,7 @@ class Replica extends React.Component {
             </span>
           </div>
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <h3>{item.host}</h3>
+            <h3>{item.host || 'N/A'}</h3>
             <p style={{ color: 'gray' }}>Host</p>
           </div>
           <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>
