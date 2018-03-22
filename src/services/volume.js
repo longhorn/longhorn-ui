@@ -23,7 +23,7 @@ export async function create(params) {
     data: {
       ...params,
       staleReplicaTimeout: 20,
-      size: `${params.size}G`,
+      size: `${params.size}Gi`,
       fromBackup: '',
     },
   })

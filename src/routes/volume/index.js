@@ -5,11 +5,12 @@ import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
 import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
+import Salvage from './Salvage'
 
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, data, createVolumeModalVisible, attachHostModalVisible } = this.props.volume
+    const { selected, data, createVolumeModalVisible, attachHostModalVisible, salvageModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const { field, keyword } = this.props.location.query
 
@@ -76,6 +77,14 @@ class Volume extends React.Component {
             keyword: record.name,
           },
         }))
+      },
+      showSalvage(record) {
+        dispatch({
+          type: 'volume/showSalvageModal',
+          payload: {
+            selected: record,
+          },
+        })
       },
     }
 
@@ -145,9 +154,29 @@ class Volume extends React.Component {
       },
     }
 
+    const salvageModalProps = {
+      item: selected,
+      visible: salvageModalVisible,
+      hosts,
+      onOk(replicaNames, url) {
+        dispatch({
+          type: 'volume/salvage',
+          payload: {
+            replicaNames,
+            url,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideSalvageModal',
+        })
+      },
+    }
+
     const createVolumeModalProps = {
       item: {
-        numberOfReplicas: 2,
+        numberOfReplicas: 3,
         size: 20,
         iops: 1000,
         frontend: 'iscsi',
@@ -176,6 +205,7 @@ class Volume extends React.Component {
         <VolumeList {...volumeListProps} />
         <CreateVolumeGen {...createVolumeModalProps} />
         <AttachHostGen {...attachHostModalProps} />
+        <Salvage {...salvageModalProps} />
       </div>
     )
   }

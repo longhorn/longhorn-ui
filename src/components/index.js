@@ -5,6 +5,8 @@ import Snapshot from './Snapshot/Snapshot'
 import Schedule from './Schedule/Schedule'
 import ModalBlur from './ModalBlur/ModalBlur'
 import Replica from './Replica/Replica'
+import ReplicaList from './Replica/ReplicaList'
+
 export {
   DropOption,
   Layout,
@@ -13,4 +15,5 @@ export {
   ModalBlur,
   Schedule,
   Replica,
+  ReplicaList,
 }

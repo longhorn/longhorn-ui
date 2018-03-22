@@ -1,22 +1,10 @@
-import classnames from 'classnames'
 import React, { PropTypes } from 'react'
-import { Card, Modal, Spin } from 'antd'
-import style from './Replica.less'
+import { Card, Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
 class Replica extends React.Component {
-  state = {
-    start: false,
-    end: true,
-  }
-  onScroll = (event) => {
-    const { target } = event
-    this.setState({
-      start: target.scrollLeft !== 0,
-      end: target.scrollWidth - target.clientWidth !== target.scrollLeft,
-    })
-  }
+  state = {}
 
   getReplicaShortName = (name) => {
     let tokens = name.split('-')
@@ -39,20 +27,28 @@ class Replica extends React.Component {
   }
 
   render() {
-    const { dataSource, loading } = this.props
-    const { start, end } = this.state
-    const replicas = dataSource.map((item) =>
+    const { item } = this.props
+    return (
       <div style={{ display: 'inline-block', padding: 20 }} key={item.name}>
         <Card bodyStyle={{ height: 240, padding: 0 }} >
           <div style={{ backgroundColor: item.running ? '#108eb9' : 'lightgrey', padding: 20 }}>
-            <img alt="replica" style={{ display: 'inline' }} width="70px" src={item.running ? '/disk-healthy.png' : '/disk-unhealthy.png'} />
-            <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15, color: 'white' }}>{this.getReplicaShortName(item.name)}</span>
+            <img
+              alt="replica"
+              style={{ display: 'inline' }}
+              width="70px"
+              src={item.running ? '/disk-healthy.png' : '/disk-unhealthy.png'}
+              />
+            <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15, color: 'white' }}>
+              {this.getReplicaShortName(item.name)}
+            </span>
           </div>
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <h3>{item.host}</h3>
+            <h3>{item.host || 'N/A'}</h3>
             <p style={{ color: 'gray' }}>Host</p>
           </div>
-          <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>{item.running ? 'Running' : 'Stopped'}</span>
+          <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>
+            {item.running ? 'Running' : 'Stopped'}
+          </span>
           <span style={{ position: 'absolute', bottom: 18, right: 10 }}>
             <DropOption menuOptions={[
               { key: 'delete', name: 'Delete' },
@@ -69,21 +65,11 @@ class Replica extends React.Component {
         </Card>
       </div >
     )
-    return (
-      <div onScroll={this.onScroll} className={classnames(style.replicaContainer, { [style.start]: start }, { [style.end]: end })}>
-        <div className={style.replica}>
-          <Spin spinning={loading}>
-            {replicas}
-          </Spin>
-        </div>
-      </div >
-    )
   }
 }
 
 Replica.propTypes = {
-  loading: PropTypes.bool,
-  dataSource: PropTypes.array,
+  item: PropTypes.object.isRequired,
   deleteReplica: PropTypes.func,
 }
 

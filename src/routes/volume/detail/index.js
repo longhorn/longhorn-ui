@@ -8,7 +8,7 @@ import styles from './index.less'
 import AttachHost from '../AttachHost'
 import Snapshots from '../Snapshots'
 import RecurringList from '../RecurringList'
-import { Replica } from '../../../components'
+import { ReplicaList } from '../../../components'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible } = volume
@@ -186,7 +186,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
         </Col>
         <Col md={16} xs={24} style={{ marginBottom: 16 }}>
           <Card title="Replica" bordered={false} {...bodyStyle}>
-            <Replica {...replicasListProps} />
+            <ReplicaList {...replicasListProps} />
           </Card>
         </Col>
         <Col xs={24} style={{ marginBottom: 16 }}>
