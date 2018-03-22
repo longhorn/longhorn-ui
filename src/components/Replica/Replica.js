@@ -26,21 +26,49 @@ class Replica extends React.Component {
     }
   }
 
+  get modeInfo() {
+    // Replica mode: RW (normal/healthy),
+    // WO(rebuilding, probably yellow),
+    // ERR (fault, can be treated the same with FailedAt set).
+    // It will only reports if engine is running.
+    const { item: { running, mode } } = this.props
+    const m = mode.toLowerCase();
+    const out = {
+      color: 'lightgrey',
+      text: '',
+    }
+    if (running) {
+      if (m === 'rw') {
+        out.color = '#108eb9'
+        out.text = 'Healthy'
+      } else if (m === 'wo') {
+        out.color = '#f1c40f'
+        out.text = 'Rebuilding...'
+      } else if (m === 'err') {
+        out.color = '#f15354'
+        out.text = 'Failt'
+      }
+    }
+    return out
+  }
   render() {
     const { item } = this.props
     return (
       <div style={{ display: 'inline-block', padding: 20 }} key={item.name}>
         <Card bodyStyle={{ height: 240, padding: 0 }} >
-          <div style={{ backgroundColor: item.running ? '#108eb9' : 'lightgrey', padding: 20 }}>
+          <div style={{ position: 'relative', backgroundColor: this.modeInfo.color, padding: 20, color: 'white' }}>
             <img
               alt="replica"
               style={{ display: 'inline' }}
               width="70px"
               src={item.running ? '/disk-healthy.png' : '/disk-unhealthy.png'}
               />
-            <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15, color: 'white' }}>
+            <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15 }}>
               {this.getReplicaShortName(item.name)}
             </span>
+            <p style={{ position: 'absolute', left: 112, bottom: 20, verticalAlign: '100%' }}>
+              {this.modeInfo.text}
+            </p>
           </div>
           <div style={{ textAlign: 'center', marginTop: 20 }}>
             <h3>{item.host || 'N/A'}</h3>
