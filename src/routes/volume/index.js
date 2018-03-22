@@ -176,7 +176,7 @@ class Volume extends React.Component {
 
     const createVolumeModalProps = {
       item: {
-        numberOfReplicas: 2,
+        numberOfReplicas: 3,
         size: 20,
         iops: 1000,
         frontend: 'iscsi',
