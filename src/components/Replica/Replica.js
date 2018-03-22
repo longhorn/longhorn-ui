@@ -32,7 +32,7 @@ class Replica extends React.Component {
     // ERR (fault, can be treated the same with FailedAt set).
     // It will only reports if engine is running.
     const { item: { running, mode } } = this.props
-    const m = mode.toLowerCase();
+    const m = mode.toLowerCase()
     const out = {
       color: 'lightgrey',
       text: '',
