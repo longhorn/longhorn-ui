@@ -107,13 +107,13 @@ const Routers = function ({ history, app }) {
         },
         {
           path: '*',
-          name: 'error',
+          name: 'notfound',
           getComponent(nextState, cb) {
             nprogress.start()
             require.ensure([], (require) => {
               nprogress.done()
-              cb(null, require('./routes/error/'))
-            }, 'error')
+              cb(null, require('./routes/notfound/'))
+            }, 'notfound')
           },
         },
       ],
