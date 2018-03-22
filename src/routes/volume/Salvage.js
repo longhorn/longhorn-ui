@@ -12,7 +12,7 @@ const getReplicaShortName = (name) => {
 
 const Replica = ({ item, toggleSelect, selected }) => {
   const cNames = classnames(style.replica, { [style.selected]: selected })
-  const failedAt = item.badTimestamp ? moment(new Date(item.badTimestamp).getTime()).fromNow() : 'N/A'
+  const failedAt = item.failedAt ? moment(new Date(item.failedAt).getTime()).fromNow() : 'N/A'
 
   return (
     <div onClick={() => toggleSelect(item.name)} className={cNames}>
