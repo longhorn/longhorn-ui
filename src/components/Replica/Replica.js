@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import { Card, Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
+import diskHealthyImage from '../../assets/images/disk-healthy.png'
+import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
 
 class Replica extends React.Component {
   state = {}
@@ -61,7 +63,7 @@ class Replica extends React.Component {
               alt="replica"
               style={{ display: 'inline' }}
               width="70px"
-              src={item.running ? '/disk-healthy.png' : '/disk-unhealthy.png'}
+              src={item.running ? diskHealthyImage : diskUnhealthyImage}
               />
             <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15 }}>
               {this.getReplicaShortName(item.name)}

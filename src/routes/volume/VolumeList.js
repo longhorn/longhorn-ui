@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
-import { Link } from 'dva/router'
+import { LinkTo } from '../../components'
+
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 
@@ -37,9 +38,9 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
       render: (text) => {
         return (
           <div>
-            <Link to={`/volume/${text}`}>
+            <LinkTo to={`/volume/${text}`}>
               {text}
-            </Link>
+            </LinkTo>
           </div>
         )
       },

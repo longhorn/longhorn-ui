@@ -1,18 +1,18 @@
 import React, { PropTypes } from 'react'
 import { Menu, Icon } from 'antd'
-import { Link } from 'dva/router'
+import { LinkTo } from '../../components'
 import { menu } from '../../utils'
 
 const topMenus = menu.map(item => item.key)
-const getMenus = function (menuArray, siderFold, parentPath = '/') {
+const getMenus = function (menuArray, siderFold) {
   return menuArray.map(item => {
-    const linkTo = parentPath + item.key
+    const linkTo = `/${item.key}`
     return (
       <Menu.Item key={linkTo}>
-        <Link to={linkTo}>
+        <LinkTo to={linkTo}>
           {item.icon ? <Icon type={item.icon} /> : ''}
           {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
-        </Link>
+        </LinkTo>
       </Menu.Item>
     )
   })
