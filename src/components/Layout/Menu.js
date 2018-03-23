@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Menu, Icon } from 'antd'
 import { LinkTo } from '../../components'
 import { menu } from '../../utils'
+import { getPrefix } from '../../utils/pathnamePrefix'
 
 const topMenus = menu.map(item => item.key)
 const getMenus = function (menuArray, siderFold) {
@@ -20,11 +21,13 @@ const getMenus = function (menuArray, siderFold) {
 
 function Menus({ location, isNavbar, switchMenuPopover }) {
   const menuItems = getMenus(menu, false)
+  const pathname = location.pathname.substr(getPrefix().length)
+  const activeClass = (pathname && pathname !== '/') ? `/${pathname.split('/').filter(item => item && item !== '/')[0]}` : '/dashboard'
   return (
     <Menu
       mode={isNavbar ? 'inline' : 'horizontal'}
       onSelect={switchMenuPopover}
-      selectedKeys={[location.pathname !== '/' ? `/${location.pathname.split('/')[1]}` : '/dashboard']}
+      selectedKeys={[activeClass]}
     >
       {menuItems}
     </Menu>

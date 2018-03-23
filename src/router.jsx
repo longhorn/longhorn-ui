@@ -15,7 +15,7 @@ const registerModel = (app, model) => {
 const Routers = function ({ history, app }) {
   const routes = [
     {
-      path: addPrefix('/'),
+      path: addPrefix('') || '/',
       component: App,
       getIndexRoute(nextState, cb) {
         nprogress.start()

@@ -5,7 +5,6 @@ import { classnames, config } from '../utils'
 import { Helmet } from 'react-helmet'
 import enUS from 'antd/lib/locale-provider/en_US'
 import { LocaleProvider } from 'antd'
-import '../components/skin.less'
 const { Header, Bread, styles } = Layout
 
 let blur = (bl) => {

@@ -1,58 +1,4 @@
-@import "./vars.less";
-@import "./tree.less";
-@import "./nprogress.less";
-@import "./modal.less";
-
-body {
-  height: 100%;
-  overflow-y: hidden;
-  background-color: #ecf0f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #e6e6e6;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
 :global {
-  .capitalize {
-    text-transform: capitalize;
-  }
-
-  .healthy {
-    color: #27ae60;
-  }
-
-  .detached {
-    color: gray;
-  }
-
-  .faulted {
-    color: #f15354;
-  }
-
-  .created {
-    color: blue;
-  }
-
-  .degraded {
-    color: #f1c40f;
-  }
-
-  .stopped {
-    color: rgba(15,15,15,.925);
-  }
-}
-
-:global {
-  .lh-blur {
-    filter: blur(1px);
-  }
-
   .ant-table-content {
     .ant-table {
       .ant-table-thead > tr > th {
@@ -66,7 +12,7 @@ body {
   .ant-table {
     .ant-table-thead > tr > th {
       text-align: center;
-      background: #108eb9;
+      background: @color-primary-light;
       color: white;
     }
 
@@ -121,40 +67,5 @@ body {
 
   .ant-select-dropdown-menu-item {
     padding: 12px 16px !important;
-  }
-
-  .margin-right {
-    margin-right: 16px;
-  }
-}
-@media (min-width: 1600px) {
-  .ant-col-xl-48 {
-    width: 20%;
-  }
-
-  .ant-col-xl-96 {
-    width: 40%;
-  }
-}
-@media (min-width: 1600px) {
-  .ant-col-xl-48 {
-    width: 20%;
-  }
-
-  .ant-col-xl-96 {
-    width: 40%;
-  }
-}
-@media (max-width: 767px) {
-  :global {
-    .ant-card {
-      .ant-card-head {
-        padding: 0 12px;
-      }
-
-      .ant-card-body {
-        padding: 12px;
-      }
-    }
   }
 }
