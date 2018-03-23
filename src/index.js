@@ -6,6 +6,9 @@ import './assets/iconfont/iconfont.svg'
 import './assets/iconfont/iconfont.ttf'
 import './assets/iconfont/iconfont.woff'
 
+// import global styles
+import './assets/styles/index.less'
+
 import app from './main'
 import './index.html'
 
