@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Row, Col, Popover, Icon } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'
+import longhornLogo from '../../assets/images/longhorn-logo.svg'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   const menusProps = {
@@ -15,7 +16,7 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
       <Row>
         <Col className={styles.logoCol} lg={4} md={5} sm={8} xs={12}>
           <div className={styles.logoContainer}>
-            <img className={styles.logo} src="/longhorn-logo.svg" alt="LONGHORN" />
+            <img className={styles.logo} src={longhornLogo} alt="LONGHORN" />
           </div>
         </Col>
         <Col lg={0} md={0} sm={16} xs={12}>

@@ -6,6 +6,7 @@ import Schedule from './Schedule/Schedule'
 import ModalBlur from './ModalBlur/ModalBlur'
 import Replica from './Replica/Replica'
 import ReplicaList from './Replica/ReplicaList'
+import LinkTo from './LinkTo/LinkTo'
 
 export {
   DropOption,
@@ -16,4 +17,5 @@ export {
   Schedule,
   Replica,
   ReplicaList,
+  LinkTo,
 }

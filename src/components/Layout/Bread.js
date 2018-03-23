@@ -3,6 +3,9 @@ import { Breadcrumb, Icon } from 'antd'
 import styles from './Bread.less'
 import { menu } from '../../utils'
 import { Link } from 'dva/router'
+import { getPrefix } from '../../utils/pathnamePrefix'
+
+const p = getPrefix()
 
 let pathSet = []
 const getPathSet = function (menuArray, parentPath) {
@@ -19,19 +22,25 @@ const getPathSet = function (menuArray, parentPath) {
     }
   })
 }
+
 getPathSet(menu)
 
 function Bread({ location }) {
   let pathNames = []
   const paths = {}
-  location.pathname.substr(1).split('/').forEach((item, key) => {
-    if (key > 0) {
-      pathNames.push((`${pathNames[key - 1]}-${item}`).hyphenToHump())
-    } else {
-      pathNames.push(item.length > 0 ? (`-${item}`).hyphenToHump() : 'Dashboard')
-    }
-    paths[key] = item
-  })
+
+  location.pathname
+    .replace(p, '')
+    .replace(/^\+/, '')
+    .split('/')
+    .forEach((item, key) => {
+      if (key > 0) {
+        pathNames.push((`${pathNames[key - 1]}-${item}`).hyphenToHump())
+      } else {
+        pathNames.push(item.length > 0 ? (`-${item}`).hyphenToHump() : 'Dashboard')
+      }
+      paths[key] = item
+    })
 
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {

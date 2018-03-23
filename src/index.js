@@ -1,3 +1,11 @@
+import './publicPath'
+
+// import assets
+import './assets/iconfont/iconfont.eot'
+import './assets/iconfont/iconfont.svg'
+import './assets/iconfont/iconfont.ttf'
+import './assets/iconfont/iconfont.woff'
+
 import app from './main'
 import './index.html'
 

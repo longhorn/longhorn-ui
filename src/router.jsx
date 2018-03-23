@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import nprogress from 'nprogress'
 import { Router } from 'dva/router'
 import App from './routes/app'
+import { addPrefix } from './utils/pathnamePrefix'
 
 const cached = {}
 const registerModel = (app, model) => {
@@ -14,7 +15,7 @@ const registerModel = (app, model) => {
 const Routers = function ({ history, app }) {
   const routes = [
     {
-      path: '/',
+      path: addPrefix('/'),
       component: App,
       getIndexRoute(nextState, cb) {
         nprogress.start()
@@ -107,13 +108,13 @@ const Routers = function ({ history, app }) {
         },
         {
           path: '*',
-          name: 'error',
+          name: 'notfound',
           getComponent(nextState, cb) {
             nprogress.start()
             require.ensure([], (require) => {
               nprogress.done()
-              cb(null, require('./routes/error/'))
-            }, 'error')
+              cb(null, require('./routes/notfound/'))
+            }, 'notfound')
           },
         },
       ],

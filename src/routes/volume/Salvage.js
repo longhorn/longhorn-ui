@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import { ModalBlur } from '../../components'
 import style from './Salvage.less'
 import moment from 'moment'
+import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
 
 const getReplicaShortName = (name) => {
   const ary = name.split('-')
@@ -21,7 +22,7 @@ const Replica = ({ item, toggleSelect, selected }) => {
           alt="replica"
           style={{ display: 'inline' }}
           width="50px"
-          src={item.running ? '/disk-healthy.png' : '/disk-unhealthy.png'}
+          src={diskUnhealthyImage}
           />
         <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15, color: 'white' }}>
           {getReplicaShortName(item.name)}
