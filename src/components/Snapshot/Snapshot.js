@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Tree, Icon, Menu, Dropdown, Button } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button, Popconfirm } from 'antd'
 import moment from 'moment'
+import './Snapshot.less'
 
 const TreeNode = Tree.TreeNode
 
@@ -11,7 +12,7 @@ function StartPoint() {
   )
 }
 function SnapshotIcon(props, snapshotProps) {
-  function onClick({ key }) {
+  function doAction(key) {
     snapshotProps.onAction({
       type: key,
       payload: {
@@ -20,13 +21,30 @@ function SnapshotIcon(props, snapshotProps) {
       },
     })
   }
+
+  function onClick({ key }) {
+    if (key === 'snapshotRevert') {
+      return
+    }
+    doAction(key)
+  }
+
+  const title = (
+    <div>
+      <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> Confirm snapshot revert? </h3>
+      <p style={{ marginTop: '20px' }}>Volume may not be mounted on the host when reverting,</p>
+      <p>otherwise it may cause filesystem error</p>
+    </div>
+  )
   const menu = (
     <Menu
       className="lh-snapshot-dropdown"
       onClick={onClick}
     >
-      <Menu.Item key="snapshotRevert">
-        <span>Revert</span>
+      <Menu.Item className="revert-menu-item" key="snapshotRevert">
+        <Popconfirm title={title} onConfirm={() => doAction('snapshotRevert')}>
+          <span className="snapshot-revert">Revert</span>
+        </Popconfirm>
       </Menu.Item>
       <Menu.Item key="snapshotBackup">
         <span>Backup</span>
