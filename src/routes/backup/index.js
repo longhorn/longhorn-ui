@@ -50,17 +50,20 @@ function Backup({ host, backup, loading, location, dispatch }) {
     field,
     keyword,
     backupVolumes,
-    onSearch(fieldsValue) {
-      fieldsValue.keyword.length ? dispatch(routerRedux.push({
-        pathname: '/backup',
-        query: {
-          ...location.query,
-          field: fieldsValue.field,
-          keyword: fieldsValue.keyword,
-        },
-      })) : dispatch(routerRedux.push({
-        pathname: '/backup',
-      }))
+    value: location.query.keyword,
+    onSearch(backupVolumeName) {
+      dispatch(
+        routerRedux.push(
+          {
+            pathname: '/backup',
+            query: {
+              ...location.query,
+              fileName: 'volumeName',
+              keyword: backupVolumeName,
+            },
+          }
+        )
+      )
     },
   }
 

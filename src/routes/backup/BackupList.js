@@ -1,9 +1,42 @@
 import React, { PropTypes } from 'react'
-import { Table, Modal } from 'antd'
+import { Table, Modal, Icon, message } from 'antd'
 import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+
 import moment from 'moment'
 const confirm = Modal.confirm
+
+const BackupUrl = ({ url = '' }) => {
+  const onCopy = (text, copySuccess) => { // eslint-disable-line no-unused-vars
+    if (copySuccess) {
+      message.success('Copyed', 1.5)
+    } else {
+      message.error('Copy failed', 1.5)
+    }
+  }
+
+  const maxLen = 45
+  return (
+    <div>
+      <h3> Backup URL: </h3>
+      <p style={{ marginTop: 20, marginLeft: -40, fontSize: '1.2em' }}>
+        {url.substr(0, maxLen)} {url.length > maxLen ? '...' : null}
+        <CopyToClipboard onCopy={onCopy} text={url}>
+          <Icon
+            className="color-link"
+            style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
+            type="copy"
+          />
+        </CopyToClipboard>
+      </p>
+    </div>
+  )
+}
+
+BackupUrl.propTypes = {
+  url: PropTypes.string,
+}
 
 class List extends React.Component {
   render() {
@@ -20,6 +53,11 @@ class List extends React.Component {
             onOk() {
               deleteBackup(record)
             },
+          })
+          break
+        case 'getUrl':
+          Modal.info({
+            content: <BackupUrl url={record.url} />,
           })
           break
         default:
@@ -81,6 +119,7 @@ class List extends React.Component {
             <DropOption menuOptions={[
               { key: 'delete', name: 'Delete' },
               { key: 'restore', name: 'Restore' },
+              { key: 'getUrl', name: 'Get URL' },
             ]} onMenuClick={e => handleMenuClick(record, e)}
             />
           )
