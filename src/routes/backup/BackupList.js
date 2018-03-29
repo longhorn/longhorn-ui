@@ -16,19 +16,21 @@ const BackupUrl = ({ url = '' }) => {
     }
   }
 
-  const maxLen = 45
   return (
     <div>
       <h3> Backup URL: </h3>
       <p style={{ marginTop: 20, marginLeft: -40, fontSize: '1.2em' }}>
-        {url.substr(0, maxLen)} {url.length > maxLen ? '...' : null}
-        <CopyToClipboard onCopy={onCopy} text={url}>
-          <Icon
-            className="color-link"
-            style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
-            type="copy"
-          />
-        </CopyToClipboard>
+        {url}
+        {
+          url ?
+          <CopyToClipboard onCopy={onCopy} text={url}>
+              <Icon
+                className="color-link"
+                style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
+                type="copy"
+              />
+          </CopyToClipboard> : 'URL no available'
+        }
       </p>
     </div>
   )
@@ -57,6 +59,7 @@ class List extends React.Component {
           break
         case 'getUrl':
           Modal.info({
+            width: '80%',
             content: <BackupUrl url={record.url} />,
           })
           break
