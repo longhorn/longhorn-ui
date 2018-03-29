@@ -18,6 +18,7 @@ const BackupFilter = ({
   return (
     <Row gutter={24}>
       <Col lg={6} md={12} sm={16} xs={24} style={{ marginBottom: 16 }}>
+        <span>Volume: </span>
         <Select
           showSearch
           style={{ width: 200 }}

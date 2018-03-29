@@ -58,7 +58,7 @@ function Backup({ host, backup, loading, location, dispatch }) {
             pathname: '/backup',
             query: {
               ...location.query,
-              fileName: 'volumeName',
+              field: 'volumeName',
               keyword: backupVolumeName,
             },
           }
