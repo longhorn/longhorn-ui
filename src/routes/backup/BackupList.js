@@ -59,7 +59,7 @@ class List extends React.Component {
           break
         case 'getUrl':
           Modal.info({
-            width: '80%',
+            width: '600',
             content: <BackupUrl url={record.url} />,
           })
           break

@@ -22,7 +22,7 @@ const BackupFilter = ({
         <Select
           showSearch
           style={{ width: 200 }}
-          placeholder="Choose a back volume"
+          placeholder="Choose a volume for backups"
           optionFilterProp="children"
           onChange={handleChange}
           value={value}
