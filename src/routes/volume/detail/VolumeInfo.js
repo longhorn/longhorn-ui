@@ -28,6 +28,10 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         {formatMib(selectedVolume.size)}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Base Image:</span>
+        {selectedVolume.baseImage}
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Created:</span>
         {moment(new Date(selectedVolume.created)).fromNow()}
       </div>
