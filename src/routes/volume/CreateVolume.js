@@ -79,6 +79,17 @@ const modal = ({
             ],
           })(<InputNumber min={2} />)}
         </FormItem>
+
+        <FormItem label="Base Image" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('baseImage', {
+            initialValue: item.baseImage,
+            rules: [
+              {
+                required: false,
+              },
+            ],
+          })(<Input />)}
+        </FormItem>
       </Form>
     </ModalBlur>
   )
