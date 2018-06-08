@@ -26,6 +26,11 @@ module.exports = [
     icon: 'copy',
   },
   {
+    key: 'engineimage',
+    name: 'Engine Image',
+    icon: 'api',
+  },
+  {
     key: 'setting',
     name: 'Setting',
     icon: 'setting',
