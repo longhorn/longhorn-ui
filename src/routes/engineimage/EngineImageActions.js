@@ -28,7 +28,6 @@ function actions({ selected, deleteEngineImage }) {
 
 actions.propTypes = {
   selected: PropTypes.object,
-  detach: PropTypes.func,
   deleteEngineImage: PropTypes.func,
 }
 

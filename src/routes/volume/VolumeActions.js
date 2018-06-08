@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, showAttachHost, detach, deleteVolume, showBackups, showSalvage }) {
+function actions({ selected, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -28,6 +28,9 @@ function actions({ selected, showAttachHost, detach, deleteVolume, showBackups, 
           },
         })
         break
+      case 'engineUpgrade':
+        showEngineUpgrade(record)
+        break
       case 'backups':
         showBackups(record)
         break
@@ -38,6 +41,7 @@ function actions({ selected, showAttachHost, detach, deleteVolume, showBackups, 
   const allActions = [
     { key: 'attach', name: 'Attach' },
     { key: 'detach', name: 'Detach' },
+    { key: 'engineUpgrade', name: 'Upgrade' },
     { key: 'salvage', name: 'Salvage' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups' }, { key: 'delete', name: 'Delete' }]
@@ -59,6 +63,7 @@ actions.propTypes = {
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,
+  showEngineUpgrade: PropTypes.func,
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,
   showBackups: PropTypes.func,

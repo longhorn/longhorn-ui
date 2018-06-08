@@ -5,13 +5,15 @@ import VolumeList from './VolumeList'
 import VolumeFilter from './VolumeFilter'
 import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
+import EngineUgrade from './EngineUpgrade'
 import Salvage from './Salvage'
 
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, data, createVolumeModalVisible, attachHostModalVisible, salvageModalVisible } = this.props.volume
+    const { selected, data, createVolumeModalVisible, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible } = this.props.volume
     const hosts = this.props.host.data
+    const engineImages = this.props.engineimage.data
     const { field, keyword } = this.props.location.query
 
     data.forEach(vol => {
@@ -31,6 +33,14 @@ class Volume extends React.Component {
             params: {
               name: '',
             },
+          },
+        })
+      },
+      showEngineUpgrade(record) {
+        dispatch({
+          type: 'volume/showEngineUpgradeModal',
+          payload: {
+            selected: record,
           },
         })
       },
@@ -154,6 +164,26 @@ class Volume extends React.Component {
       },
     }
 
+    const engineUpgradeModalProps = {
+      item: selected,
+      visible: engineUpgradeModalVisible,
+      engineImages,
+      onOk(image, url) {
+        dispatch({
+          type: 'volume/engineUpgrade',
+          payload: {
+            image,
+            url,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideEngineUpgradeModal',
+        })
+      },
+    }
+
     const salvageModalProps = {
       item: selected,
       visible: salvageModalVisible,
@@ -198,6 +228,7 @@ class Volume extends React.Component {
 
     const CreateVolumeGen = () => <CreateVolume {...createVolumeModalProps} />
     const AttachHostGen = () => <AttachHost {...attachHostModalProps} />
+    const EngineUpgradeGen = () => <EngineUgrade {...engineUpgradeModalProps} />
 
     return (
       <div className="content-inner" >
@@ -205,6 +236,7 @@ class Volume extends React.Component {
         <VolumeList {...volumeListProps} />
         <CreateVolumeGen {...createVolumeModalProps} />
         <AttachHostGen {...attachHostModalProps} />
+        <EngineUpgradeGen {...engineUpgradeModalProps} />
         <Salvage {...salvageModalProps} />
       </div>
     )
@@ -217,6 +249,7 @@ Volume.propTypes = {
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
   host: PropTypes.object,
+  engineimage: PropTypes.object,
 }
 
-export default connect(({ host, volume, loading }) => ({ host, volume, loading: loading.models.volume }))(Volume)
+export default connect(({ engineimage, host, volume, loading }) => ({ engineimage, host, volume, loading: loading.models.volume }))(Volume)

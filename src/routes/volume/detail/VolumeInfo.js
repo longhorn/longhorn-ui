@@ -32,6 +32,10 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         {selectedVolume.baseImage}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Engine Image:</span>
+        {selectedVolume.engineImage}
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Created:</span>
         {moment(new Date(selectedVolume.created)).fromNow()}
       </div>
