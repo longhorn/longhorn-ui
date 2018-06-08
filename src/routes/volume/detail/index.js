@@ -168,7 +168,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
 
   const bodyStyle = {
     bodyStyle: {
-      height: 320,
+      height: 360,
       background: '#fff',
     },
   }
