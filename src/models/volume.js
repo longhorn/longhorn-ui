@@ -9,6 +9,7 @@ export default {
     selected: null,
     createVolumeModalVisible: false,
     attachHostModalVisible: false,
+    engineUpgradeModalVisible: false,
     recurringModalVisible: false,
     snapshotsModalVisible: false,
     salvageModalVisible: false,
@@ -39,6 +40,13 @@ export default {
       }
       sortVolume(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })
+    },
+    *engineUpgrade({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideEngineUpgradeModal' })
+      yield call(execAction, payload.url, { image: payload.image })
+      yield put({ type: 'query' })
     },
     *detach({
       payload,
@@ -116,6 +124,12 @@ export default {
     },
     hideAttachHostModal(state) {
       return { ...state, attachHostModalVisible: false }
+    },
+    showEngineUpgradeModal(state, action) {
+      return { ...state, ...action.payload, engineUpgradeModalVisible: true }
+    },
+    hideEngineUpgradeModal(state) {
+      return { ...state, engineUpgradeModalVisible: false }
     },
     showRecurringModal(state, action) {
       return { ...state, ...action.payload, recurringModalVisible: true }

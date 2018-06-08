@@ -6,14 +6,16 @@ import { routerRedux } from 'dva/router'
 import VolumeActions from '../VolumeActions'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
+import EngineUpgrade from '../EngineUpgrade'
 import Snapshots from '../Snapshots'
 import RecurringList from '../RecurringList'
 import { ReplicaList } from '../../../components'
 
-function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible } = volume
+function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
+  const { data, attachHostModalVisible, engineUpgradeModalVisible } = volume
   const { backupStatus } = backup
   const hosts = host.data
+  const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
   if (!selectedVolume) {
     return (<div></div>)
@@ -114,6 +116,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
         },
       })
     },
+    showEngineUpgrade(record) {
+      dispatch({
+        type: 'volume/showEngineUpgradeModal',
+        payload: {
+          selected: record,
+        },
+      })
+    },
     showBackups(record) {
       dispatch(routerRedux.push({
         pathname: '/backup',
@@ -141,6 +151,26 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
     onCancel() {
       dispatch({
         type: 'volume/hideAttachHostModal',
+      })
+    },
+  }
+
+  const engineUpgradeModalProps = {
+    item: selectedVolume,
+    visible: engineUpgradeModalVisible,
+    engineImages,
+    onOk(image, url) {
+      dispatch({
+        type: 'volume/engineUpgrade',
+        payload: {
+          image,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideEngineUpgradeModal',
       })
     },
   }
@@ -201,6 +231,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, host, volume, volumeId,
         </Col>
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
+      {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
     </div >
   )
 }
@@ -211,9 +242,10 @@ VolumeDetail.propTypes = {
   dispatch: PropTypes.func,
   backup: PropTypes.object,
   host: PropTypes.object,
+  engineimage: PropTypes.object,
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
   snapshotModal: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, backup, host, volume, loading }, { params }) => ({ snapshotModal, backup, host, volume, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, engineimage, volume, loading }, { params }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)

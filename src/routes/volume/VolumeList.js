@@ -7,9 +7,10 @@ import { LinkTo } from '../../components'
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 
-function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage }) {
+function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage }) {
   const volumeActionsProps = {
     showAttachHost,
+    showEngineUpgrade,
     showRecurring,
     showSnapshots,
     detach,
@@ -48,6 +49,10 @@ function list({ loading, dataSource, showAttachHost, showRecurring, showSnapshot
       title: 'Host',
       dataIndex: 'host',
       key: 'host',
+    }, {
+      title: 'Engine Image',
+      dataIndex: 'engineImage',
+      key: 'engineImage',
     }, {
       title: 'Frontend',
       dataIndex: 'endpoint',
@@ -109,6 +114,7 @@ list.propTypes = {
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,
+  showEngineUpgrade: PropTypes.func,
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,
   showBackups: PropTypes.func,

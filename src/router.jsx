@@ -61,6 +61,7 @@ const Routers = function ({ history, app }) {
             require.ensure([], (require) => {
               nprogress.done()
               registerModel(app, require('./models/host'))
+              registerModel(app, require('./models/engineimage'))
               registerModel(app, require('./models/volume'))
               cb(null, require('./routes/volume/'))
             }, 'volume')
@@ -75,6 +76,7 @@ const Routers = function ({ history, app }) {
               nprogress.done()
               registerModel(app, require('./models/snapshot')('snapshotModal'))
               registerModel(app, require('./models/backup'))
+              registerModel(app, require('./models/engineimage'))
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
               cb(null, require('./routes/volume/detail'))
@@ -92,6 +94,18 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('./models/backup'))
               cb(null, require('./routes/backup/'))
             }, 'backup')
+          },
+        },
+        {
+          path: 'engineimage',
+          name: 'engineimage',
+          getComponent(nextState, cb) {
+            nprogress.start()
+            require.ensure([], (require) => {
+              nprogress.done()
+              registerModel(app, require('./models/engineimage'))
+              cb(null, require('./routes/engineimage/'))
+            }, 'engineimage')
           },
         },
         {
