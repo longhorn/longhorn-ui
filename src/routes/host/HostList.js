@@ -1,18 +1,25 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'antd'
 import styles from './HostList.less'
+import classnames from 'classnames'
+import HostActions from './HostActions'
 
-function list({ loading, dataSource, showReplicaModal }) {
+function list({ loading, dataSource, showReplicaModal, toggleScheduling }) {
+  const hostActionsProps = {
+    toggleScheduling,
+  }
   const columns = [
     {
       title: 'State',
-      dataIndex: 'state',
-      key: 'state',
+      dataIndex: 'status',
+      key: 'status',
       width: 100,
       className: styles.status,
-      render: () => {
+      render: (text) => {
         return (
-          <div>Activate</div>
+          <div className={classnames({ capitalize: true })}>
+          {text}
+          </div>
         )
       },
     }, {
@@ -32,6 +39,26 @@ function list({ loading, dataSource, showReplicaModal }) {
           <a onClick={e => showReplicaModal(record, e)}>
             {text ? text.length : 0} Replicas
           </a>
+        )
+      },
+    }, {
+      title: 'Allow Scheduling',
+      dataIndex: 'allowScheduling',
+      key: 'allowScheduling',
+      render: (text) => {
+        return (
+          <div>
+            {text ? 'True' : 'False'}
+          </div>
+        )
+      },
+    }, {
+      title: '',
+      key: 'operation',
+      width: 100,
+      render: (text, record) => {
+        return (
+          <HostActions {...hostActionsProps} selected={record} />
         )
       },
     },
@@ -59,6 +86,7 @@ list.propTypes = {
   dataSource: PropTypes.array,
   showAddDiskModal: PropTypes.func,
   showReplicaModal: PropTypes.func,
+  toggleScheduling: PropTypes.func,
 }
 
 export default list
