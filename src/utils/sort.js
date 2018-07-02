@@ -25,6 +25,10 @@ export function sortVolume(dataSource) {
   })
 }
 
+export function sortVolumeByName(dataSource) {
+  dataSource.sort((a, b) => a.name.localeCompare(b.name))
+}
+
 export function sortVolumeBackups(dataSource) {
   dataSource.sort((a, b) => {
     return new Date(b.created).getTime() - new Date(a.created).getTime()

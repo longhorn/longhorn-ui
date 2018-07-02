@@ -46,15 +46,15 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
         )
       },
     }, {
-      title: 'Host',
+      title: 'Attached Node',
       dataIndex: 'host',
       key: 'host',
     }, {
-      title: 'Engine Image',
-      dataIndex: 'engineImage',
-      key: 'engineImage',
-    }, {
       title: 'Frontend',
+      dataIndex: 'frontend',
+      key: 'frontend',
+    }, {
+      title: 'Endpoint',
       dataIndex: 'endpoint',
       key: 'endpoint',
     }, {
