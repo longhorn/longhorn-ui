@@ -41,8 +41,8 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'host',
-          name: 'host',
+          path: 'node',
+          name: 'node',
           getComponent(nextState, cb) {
             nprogress.start()
             require.ensure([], (require) => {

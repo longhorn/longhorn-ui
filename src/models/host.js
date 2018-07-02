@@ -1,4 +1,4 @@
-import { query } from '../services/host'
+import { query, toggleScheduling } from '../services/host'
 import { parse } from 'qs'
 
 export default {
@@ -27,6 +27,16 @@ export default {
       const data = yield call(query, parse(payload))
       data.data.sort((a, b) => a.name.localeCompare(b.name))
       yield put({ type: 'queryHost', payload: { ...data } })
+    },
+    *toggleScheduling({
+      payload,
+    }, { call, put }) {
+      const data = {
+        ...payload,
+        allowScheduling: !payload.allowScheduling,
+      }
+      yield call(toggleScheduling, data)
+      yield put({ type: 'query' })
     },
   },
   reducers: {

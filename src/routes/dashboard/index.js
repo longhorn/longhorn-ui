@@ -11,9 +11,9 @@ function Dashboard({ host, volume, loading }) {
   const numbers = [{
     icon: 'laptop',
     color: '#64ea91',
-    title: 'Hosts',
+    title: 'Nodes',
     number: hostNum,
-    linkTo: '/host',
+    linkTo: '/node',
     loading: hostLoading,
   }, {
     icon: 'database',

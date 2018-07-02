@@ -55,6 +55,12 @@ function Host({ host, volume, loading, dispatch }) {
         },
       })
     },
+    toggleScheduling(record) {
+      dispatch({
+        type: 'host/toggleScheduling',
+        payload: record,
+      })
+    },
   }
 
   const hostReplicaModalProps = {

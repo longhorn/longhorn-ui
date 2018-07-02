@@ -5,8 +5,8 @@ module.exports = [
     icon: 'bar-chart',
   },
   {
-    key: 'host',
-    name: 'Host',
+    key: 'node',
+    name: 'Node',
     icon: 'laptop',
   },
   {
