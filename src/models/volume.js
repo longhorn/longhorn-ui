@@ -1,5 +1,5 @@
 import { create, deleteVolume, query, execAction, recurringUpdate } from '../services/volume'
-import { sortVolume } from '../utils/sort'
+import { sortVolumeByName } from '../utils/sort'
 import { parse } from 'qs'
 
 export default {
@@ -38,7 +38,7 @@ export default {
         data.data = data.data.filter(item => item.controller && item.controller.hostId
           && payload.keyword.split(',').indexOf(item.controller.hostId) > -1)
       }
-      sortVolume(data.data)
+      sortVolumeByName(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })
     },
     *engineUpgrade({
