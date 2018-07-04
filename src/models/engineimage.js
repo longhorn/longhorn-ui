@@ -25,7 +25,7 @@ export default {
       if (payload && payload.field && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }
-      data.data.sort((a, b) => a.name.localeCompare(b.name))
+      data.data.sort((a, b) => a.image.localeCompare(b.image))
       yield put({ type: 'queryEngineimage', payload: { ...data } })
     },
     *create({

@@ -48,6 +48,12 @@ export default {
       yield call(execAction, payload.url, { image: payload.image })
       yield put({ type: 'query' })
     },
+    *rollback({
+      payload,
+    }, { call, put }) {
+      yield call(execAction, payload.url, { image: payload.image })
+      yield put({ type: 'query' })
+    },
     *detach({
       payload,
     }, { call, put }) {

@@ -16,12 +16,12 @@
   :global .ant-menu {
     background-color: #0075a8;
 
-    .ant-menu-item-selected {
+    .ant-menu-item-selected, .ant-menu-submenu-selected {
       border-bottom: 4px solid @color-primary-light;
       background-color: #00558b;
     }
 
-    .ant-menu-item:hover {
+    .ant-menu-item:hover, .ant-menu-submenu:hover {
       color: #78c9cf;
       background: rgba(0,0,0,.15);
       border-bottom: 4px solid @color-link;
@@ -30,13 +30,23 @@
     a {
       color: white !important;
     }
+
+    .ant-menu-submenu .ant-menu a {
+      color: @color-link !important;
+    }
+    .ant-menu-submenu .ant-menu .ant-menu-item-selected {
+      border-bottom: none;
+    }
+    .ant-menu-submenu .ant-menu .ant-menu-item:hover {
+      border-bottom: none; 
+    }
   }
 
   :global .ant-menu-horizontal {
     border-bottom: 1px solid #0075a8;
   }
 
-  :global .ant-menu-item {
+  :global .ant-menu-item, :global .ant-menu-submenu {
     height: 80px;
     line-height: 80px;
   }

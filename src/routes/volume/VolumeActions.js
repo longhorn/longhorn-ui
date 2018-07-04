@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage }) {
+function actions({ selected, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -34,7 +34,31 @@ function actions({ selected, showAttachHost, detach, showEngineUpgrade, deleteVo
       case 'backups':
         showBackups(record)
         break
+      case 'rollback':
+        confirm({
+          title: `Are you sure you want to rollback volume ${record.name} ?`,
+          onOk() {
+            rollback(record)
+          },
+        })
+        break
       default:
+    }
+  }
+
+  const toggleRollbackAndUpgradeAction = (currentActions) => {
+    if (selected.currentImage === selected.engineImage) {
+      const rollbackActionIndex = currentActions.findIndex(item => item.key === 'rollback')
+      if (rollbackActionIndex > -1) {
+        const upgradeAction = { key: 'engineUpgrade', name: 'Upgrade' }
+        currentActions[rollbackActionIndex] = upgradeAction
+      }
+      return
+    }
+    const upgradeActionIndex = currentActions.findIndex(item => item.key === 'engineUpgrade')
+    if (upgradeActionIndex > -1) {
+      const rollbackAction = { key: 'rollback', name: 'Rollback' }
+      currentActions[upgradeActionIndex] = rollbackAction
     }
   }
 
@@ -45,6 +69,7 @@ function actions({ selected, showAttachHost, detach, showEngineUpgrade, deleteVo
     { key: 'salvage', name: 'Salvage' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups' }, { key: 'delete', name: 'Delete' }]
+
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
       if (key === action.key) {
@@ -52,6 +77,7 @@ function actions({ selected, showAttachHost, detach, showEngineUpgrade, deleteVo
       }
     }
   })
+  toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
     />
@@ -69,6 +95,7 @@ actions.propTypes = {
   showBackups: PropTypes.func,
   takeSnapshot: PropTypes.func,
   showSalvage: PropTypes.func,
+  rollback: PropTypes.func,
 }
 
 export default actions

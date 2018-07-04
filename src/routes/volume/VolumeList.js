@@ -7,7 +7,7 @@ import { LinkTo } from '../../components'
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 
-function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage }) {
+function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback }) {
   const volumeActionsProps = {
     showAttachHost,
     showEngineUpgrade,
@@ -18,6 +18,7 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
     deleteVolume,
     takeSnapshot,
     showSalvage,
+    rollback,
   }
   const columns = [
     {
@@ -120,6 +121,7 @@ list.propTypes = {
   showBackups: PropTypes.func,
   takeSnapshot: PropTypes.func,
   showSalvage: PropTypes.func,
+  rollback: PropTypes.func,
 }
 
 export default list

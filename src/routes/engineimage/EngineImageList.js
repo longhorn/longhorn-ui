@@ -3,6 +3,7 @@ import { Table, Icon } from 'antd'
 import classnames from 'classnames'
 import moment from 'moment'
 import EngineImageActions from './EngineImageActions'
+import { LinkTo } from '../../components'
 
 function list({ loading, dataSource, deleteEngineImage }) {
   const engineImageActionsProps = {
@@ -11,6 +12,20 @@ function list({ loading, dataSource, deleteEngineImage }) {
 
   const columns = [
     {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      width: 300,
+      render: (text, record) => {
+        return (
+          <div>
+            <LinkTo to={`/engineimage/${record.id}`}>
+              {text}
+            </LinkTo>
+          </div>
+        )
+      },
+    }, {
       title: 'Status',
       dataIndex: 'state',
       key: 'state',
@@ -22,14 +37,6 @@ function list({ loading, dataSource, deleteEngineImage }) {
           </div>
         )
       },
-    }, {
-      title: 'Name',
-      dataIndex: 'id',
-      key: 'id',
-    }, {
-      title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
     }, {
       title: 'Default',
       dataIndex: 'default',

@@ -133,6 +133,15 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         },
       }))
     },
+    rollback(record) {
+      dispatch({
+        type: 'volume/rollback',
+        payload: {
+          image: record.currentImage,
+          url: record.actions.engineUpgrade,
+        },
+      })
+    },
   }
 
   const attachHostModalProps = {
