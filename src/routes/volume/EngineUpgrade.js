@@ -13,7 +13,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
+  items,
   visible,
   onCancel,
   onOk,
@@ -32,7 +32,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      onOk(data.image, item.actions.engineUpgrade)
+      onOk(data.image, items.map(item => item.actions.engineUpgrade))
     })
   }
 
@@ -43,18 +43,16 @@ const modal = ({
     width: 1040,
     onOk: handleOk,
   }
-
-  if (!item) {
+  if (!items || items.length === 0) {
     return null
   }
-  const options = engineImages.filter(engineImage => engineImage.image !== item.engineImage && engineImage.state === 'ready').map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
+  const options = engineImages.filter(engineImage => items.findIndex(item => item.engineImage === engineImage.image) === -1 && engineImage.state === 'ready').map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
 
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Engine Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('image', {
-            initialValue: item.image,
             rules: [
               {
                 required: true,
@@ -74,7 +72,7 @@ modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
-  item: PropTypes.object,
+  items: PropTypes.array,
   onOk: PropTypes.func,
   engineImages: PropTypes.array,
 }
