@@ -24,3 +24,10 @@ export async function deleteEngineImage(params) {
     method: 'delete',
   })
 }
+
+export async function getEngineImage(engineImageName) {
+  return request({
+    url: `/v1/engineimages/${engineImageName}`,
+    method: 'get',
+  })
+}

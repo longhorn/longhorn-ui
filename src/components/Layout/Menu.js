@@ -4,18 +4,38 @@ import { LinkTo } from '../../components'
 import { menu } from '../../utils'
 import { getPrefix } from '../../utils/pathnamePrefix'
 
+const SubMenu = Menu.SubMenu
 const topMenus = menu.map(item => item.key)
 const getMenus = function (menuArray, siderFold) {
   return menuArray.map(item => {
     const linkTo = `/${item.key}`
-    return (
-      <Menu.Item key={linkTo}>
-        <LinkTo to={linkTo}>
-          {item.icon ? <Icon type={item.icon} /> : ''}
-          {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
-        </LinkTo>
-      </Menu.Item>
-    )
+    let menus
+    let children = (item.child || []).filter(child => child.show === true)
+    if (children.length > 0) {
+      menus = (
+        <SubMenu key={linkTo}
+          title={
+            <LinkTo to={linkTo} style={{ display: 'block' }}>
+              {item.icon ? <Icon type={item.icon} /> : ''}
+              {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
+              <Icon type="down" />
+            </LinkTo>
+          }>
+        <Menu.Item key={linkTo} style={{ display: 'none' }} />
+        {getMenus(item.child, false)}
+        </SubMenu>
+      )
+    } else {
+      menus = (
+        <Menu.Item key={linkTo}>
+          <LinkTo to={linkTo}>
+            {item.icon ? <Icon type={item.icon} /> : ''}
+            {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
+          </LinkTo>
+        </Menu.Item>
+      )
+    }
+    return menus
   })
 }
 

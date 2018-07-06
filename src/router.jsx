@@ -109,6 +109,18 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'engineimage/:id',
+          name: 'engineimage/detail',
+          getComponent(nextState, cb) {
+            nprogress.start()
+            require.ensure([], (require) => {
+              nprogress.done()
+              registerModel(app, require('./models/engineimage'))
+              cb(null, require('./routes/engineimage/detail'))
+            }, 'engineimage-detail')
+          },
+        },
+        {
           path: 'setting',
           name: 'setting',
           getComponent(nextState, cb) {

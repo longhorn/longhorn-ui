@@ -47,7 +47,7 @@ const modal = ({
   if (!item) {
     return null
   }
-  const options = engineImages.filter(engineImage => engineImage.image !== item.engineImage).map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
+  const options = engineImages.filter(engineImage => engineImage.image !== item.engineImage && engineImage.state === 'ready').map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
 
   return (
     <ModalBlur {...modalOpts}>

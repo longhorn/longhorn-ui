@@ -96,6 +96,15 @@ class Volume extends React.Component {
           },
         })
       },
+      rollback(record) {
+        dispatch({
+          type: 'volume/rollback',
+          payload: {
+            image: record.currentImage,
+            url: record.actions.engineUpgrade,
+          },
+        })
+      },
     }
 
     const volumeFilterProps = {
