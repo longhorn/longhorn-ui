@@ -13,7 +13,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
+  items,
   visible,
   onCancel,
   onOk,
@@ -32,7 +32,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      onOk(data.host, item.actions.attach)
+      onOk(data.host, items.map(item => item.actions.attach))
     })
   }
 
@@ -45,7 +45,7 @@ const modal = ({
   }
 
   const options = hosts.map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
-  if (!item) {
+  if (!items || items.length === 0) {
     return null
   }
   return (
@@ -53,7 +53,6 @@ const modal = ({
       <Form layout="horizontal">
         <FormItem label="Host" hasFeedback {...formItemLayout}>
           {getFieldDecorator('host', {
-            initialValue: item.host,
             rules: [
               {
                 required: true,
@@ -73,7 +72,7 @@ modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
-  item: PropTypes.object,
+  items: PropTypes.array,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
 }

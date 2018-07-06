@@ -7,9 +7,12 @@ export default {
   state: {
     data: [],
     selected: null,
+    selectedRows: [],
     createVolumeModalVisible: false,
     attachHostModalVisible: false,
+    bulckAttachHostModalVisible: false,
     engineUpgradeModalVisible: false,
+    bulkEngineUpgradeModalVisible: false,
     recurringModalVisible: false,
     snapshotsModalVisible: false,
     salvageModalVisible: false,
@@ -111,6 +114,36 @@ export default {
       yield call(execAction, payload.url, payload.params)
       if (payload.callBack) { yield call(payload.callBack, '') }
     },
+    *bulkDelete({
+      payload,
+    }, { call, put }) {
+      yield payload.map(item => call(deleteVolume, item))
+      yield put({ type: 'query' })
+      yield put({ type: 'clearSelection' })
+    },
+    *bulkEngineUpgrade({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideBulkEngineUpgradeModal' })
+      yield payload.urls.map(url => call(execAction, url, { image: payload.image }))
+      yield put({ type: 'query' })
+      yield put({ type: 'clearSelection' })
+    },
+    *bulkDetach({
+      payload,
+    }, { call, put }) {
+      yield payload.map(url => call(execAction, url))
+      yield put({ type: 'query' })
+      yield put({ type: 'clearSelection' })
+    },
+    *bulkAttach({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideBulkAttachHostModal' })
+      yield payload.urls.map(url => call(execAction, url, { hostId: payload.host }))
+      yield put({ type: 'query' })
+      yield put({ type: 'clearSelection' })
+    },
   },
   reducers: {
     queryVolume(state, action) {
@@ -128,14 +161,26 @@ export default {
     showAttachHostModal(state, action) {
       return { ...state, ...action.payload, attachHostModalVisible: true }
     },
+    showBulkAttachHostModal(state, action) {
+      return { ...state, ...action.payload, bulkAttachHostModalVisible: true }
+    },
     hideAttachHostModal(state) {
       return { ...state, attachHostModalVisible: false }
+    },
+    hideBulkAttachHostModal(state) {
+      return { ...state, bulkAttachHostModalVisible: false }
     },
     showEngineUpgradeModal(state, action) {
       return { ...state, ...action.payload, engineUpgradeModalVisible: true }
     },
+    showBulkEngineUpgradeModal(state, action) {
+      return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true }
+    },
     hideEngineUpgradeModal(state) {
       return { ...state, engineUpgradeModalVisible: false }
+    },
+    hideBulkEngineUpgradeModal(state) {
+      return { ...state, bulkEngineUpgradeModalVisible: false }
     },
     showRecurringModal(state, action) {
       return { ...state, ...action.payload, recurringModalVisible: true }
@@ -154,6 +199,12 @@ export default {
     },
     hideSalvageModal(state) {
       return { ...state, salvageModalVisible: false }
+    },
+    changeSelection(state, action) {
+      return { ...state, ...action.payload }
+    },
+    clearSelection(state) {
+      return { ...state, selectedRows: [] }
     },
   },
 }

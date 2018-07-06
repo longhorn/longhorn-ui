@@ -7,15 +7,15 @@ import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import Salvage from './Salvage'
+import VolumeBulkActions from './VolumeBulkActions'
 
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, data, createVolumeModalVisible, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible } = this.props.volume
+    const { selected, selectedRows, data, createVolumeModalVisible, attachHostModalVisible, bulkAttachHostModalVisible, engineUpgradeModalVisible, bulkEngineUpgradeModalVisible, salvageModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, keyword } = this.props.location.query
-
     data.forEach(vol => {
       const found = hosts.find(h => vol.controller && h.id === vol.controller.hostId)
       if (found) {
@@ -105,6 +105,17 @@ class Volume extends React.Component {
           },
         })
       },
+      rowSelection: {
+        selectedRowKeys: selectedRows.map(item => item.id),
+        onChange(_, records) {
+          dispatch({
+            type: 'volume/changeSelection',
+            payload: {
+              selectedRows: records,
+            },
+          })
+        },
+      },
     }
 
     const volumeFilterProps = {
@@ -154,15 +165,15 @@ class Volume extends React.Component {
     }
 
     const attachHostModalProps = {
-      item: selected,
+      items: selected ? [selected] : [],
       visible: attachHostModalVisible,
       hosts,
-      onOk(selectedHost, url) {
+      onOk(selectedHost, urls) {
         dispatch({
           type: 'volume/attach',
           payload: {
             host: selectedHost,
-            url,
+            url: urls[0],
           },
         })
       },
@@ -173,16 +184,36 @@ class Volume extends React.Component {
       },
     }
 
+    const bulkAttachHostModalProps = {
+      items: selectedRows,
+      visible: bulkAttachHostModalVisible,
+      hosts,
+      onOk(selectedHost, urls) {
+        dispatch({
+          type: 'volume/bulkAttach',
+          payload: {
+            host: selectedHost,
+            urls,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideBulkAttachHostModal',
+        })
+      },
+    }
+
     const engineUpgradeModalProps = {
-      item: selected,
+      items: selected ? [selected] : [],
       visible: engineUpgradeModalVisible,
       engineImages,
-      onOk(image, url) {
+      onOk(image, urls) {
         dispatch({
           type: 'volume/engineUpgrade',
           payload: {
             image,
-            url,
+            url: urls[0],
           },
         })
       },
@@ -193,6 +224,25 @@ class Volume extends React.Component {
       },
     }
 
+    const bulkEngineUpgradeModalProps = {
+      items: selectedRows,
+      visible: bulkEngineUpgradeModalVisible,
+      engineImages,
+      onOk(image, urls) {
+        dispatch({
+          type: 'volume/bulkEngineUpgrade',
+          payload: {
+            image,
+            urls,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideBulkEngineUpgradeModal',
+        })
+      },
+    }
     const salvageModalProps = {
       item: selected,
       visible: salvageModalVisible,
@@ -235,17 +285,48 @@ class Volume extends React.Component {
       },
     }
 
+    const volumeBulkActionsProps = {
+      selectedRows,
+      bulkDeleteVolume() {
+        dispatch({
+          type: 'volume/bulkDelete',
+          payload: selectedRows,
+        })
+      },
+      showBulkEngineUpgrade() {
+        dispatch({
+          type: 'volume/showBulkEngineUpgradeModal',
+        })
+      },
+      showBulkAttachHost() {
+        dispatch({
+          type: 'volume/showBulkAttachHostModal',
+        })
+      },
+      bulkDetach(urls) {
+        dispatch({
+          type: 'volume/bulkDetach',
+          payload: urls,
+        })
+      },
+    }
+
     const CreateVolumeGen = () => <CreateVolume {...createVolumeModalProps} />
     const AttachHostGen = () => <AttachHost {...attachHostModalProps} />
+    const BulkAttachHostGen = () => <AttachHost {...bulkAttachHostModalProps} />
     const EngineUpgradeGen = () => <EngineUgrade {...engineUpgradeModalProps} />
+    const BulkEngineUpgradeGen = () => <EngineUgrade {...bulkEngineUpgradeModalProps} />
 
     return (
       <div className="content-inner" >
         <VolumeFilter {...volumeFilterProps} />
+        <VolumeBulkActions {...volumeBulkActionsProps} />
         <VolumeList {...volumeListProps} />
         <CreateVolumeGen {...createVolumeModalProps} />
         <AttachHostGen {...attachHostModalProps} />
+        <BulkAttachHostGen {...bulkAttachHostModalProps} />
         <EngineUpgradeGen {...engineUpgradeModalProps} />
+        <BulkEngineUpgradeGen {...bulkEngineUpgradeModalProps} />
         <Salvage {...salvageModalProps} />
       </div>
     )
