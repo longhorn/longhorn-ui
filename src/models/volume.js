@@ -141,6 +141,17 @@ export default {
       yield payload.urls.map(url => call(execAction, url, { hostId: payload.host }))
       yield put({ type: 'query' })
     },
+    *bulkBackup({
+      payload,
+    }, { put }) {
+      yield payload.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl } }))
+    },
+    *snapshotCreateThenBackup({
+      payload,
+    }, { call }) {
+      const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
+      yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
+    },
   },
   reducers: {
     queryVolume(state, action) {

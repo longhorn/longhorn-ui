@@ -148,6 +148,15 @@ export default (namespace) => {
           yield put({ type: 'setSnapshot', payload: [] })
         }
       },
+      *backup({
+        payload,
+      }, { call, put }) {
+        yield put({ type: 'setLoading', payload: true })
+        const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
+        yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
+        yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
+        yield put({ type: 'setLoading', payload: false })
+      },
     },
     reducers: {
       setSnapshot(state, action) {
