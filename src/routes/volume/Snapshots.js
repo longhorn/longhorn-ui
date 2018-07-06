@@ -7,6 +7,17 @@ class Snapshots extends React.Component {
   constructor(props) {
     super(props)
     this.onAction = (action) => {
+      if (action.type === 'backup') {
+        this.props.dispatch({
+          type: 'snapshotModal/backup',
+          payload: {
+            snapshotCreateUrl: this.props.volume.actions.snapshotCreate,
+            snapshotBackupUrl: this.props.volume.actions.snapshotBackup,
+            querySnapShotUrl: this.props.volume.actions.snapshotList,
+          },
+        })
+        return
+      }
       let actions
       if (action.type === 'snapshotDelete') {
         actions = [{
@@ -68,6 +79,10 @@ class Snapshots extends React.Component {
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
           <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
             Take Snapshot
+          </Button>
+          &nbsp;
+          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate} icon="scan" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
+            Create A Backup
           </Button>
           <div style={{ marginTop: '20px' }}>
             <SnapshotGen />

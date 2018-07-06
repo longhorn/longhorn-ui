@@ -309,6 +309,12 @@ class Volume extends React.Component {
           payload: urls,
         })
       },
+      bulkBackup(actions) {
+        dispatch({
+          type: 'volume/bulkBackup',
+          payload: actions,
+        })
+      },
     }
 
     const CreateVolumeGen = () => <CreateVolume {...createVolumeModalProps} />

@@ -4,7 +4,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach }) {
+function bulkActions({ selectedRows, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -24,16 +24,21 @@ function bulkActions({ selectedRows, bulkDeleteVolume, showBulkEngineUpgrade, sh
           },
         })
         break
+      case 'backup':
+        bulkBackup(selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }))
+        break
       default:
     }
   }
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = () => selectedRows.some(item => item.state.endsWith('ing') || item.currentImage !== item.engineImage)
+  const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'upgrade', name: 'Upgrade', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || !hasAction('attach') || hasDoingState() } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState() } },
+    { key: 'backup', name: 'Create A Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() } },
   ]
 
   return (
@@ -57,6 +62,7 @@ bulkActions.propTypes = {
   showBulkAttachHost: PropTypes.func,
   bulkDetach: PropTypes.func,
   showBulkSalvage: PropTypes.func,
+  bulkBackup: PropTypes.func,
 }
 
 export default bulkActions
