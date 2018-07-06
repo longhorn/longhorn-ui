@@ -43,6 +43,7 @@ export default {
       }
       sortVolumeByName(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })
+      yield put({ type: 'clearSelection' })
     },
     *engineUpgrade({
       payload,
@@ -119,7 +120,6 @@ export default {
     }, { call, put }) {
       yield payload.map(item => call(deleteVolume, item))
       yield put({ type: 'query' })
-      yield put({ type: 'clearSelection' })
     },
     *bulkEngineUpgrade({
       payload,
@@ -127,14 +127,12 @@ export default {
       yield put({ type: 'hideBulkEngineUpgradeModal' })
       yield payload.urls.map(url => call(execAction, url, { image: payload.image }))
       yield put({ type: 'query' })
-      yield put({ type: 'clearSelection' })
     },
     *bulkDetach({
       payload,
     }, { call, put }) {
       yield payload.map(url => call(execAction, url))
       yield put({ type: 'query' })
-      yield put({ type: 'clearSelection' })
     },
     *bulkAttach({
       payload,
@@ -142,7 +140,6 @@ export default {
       yield put({ type: 'hideBulkAttachHostModal' })
       yield payload.urls.map(url => call(execAction, url, { hostId: payload.host }))
       yield put({ type: 'query' })
-      yield put({ type: 'clearSelection' })
     },
   },
   reducers: {
