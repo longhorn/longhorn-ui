@@ -11,8 +11,8 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling }) {
   const columns = [
     {
       title: 'State',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'state',
+      key: 'state',
       width: 100,
       className: styles.status,
       render: (text) => {
