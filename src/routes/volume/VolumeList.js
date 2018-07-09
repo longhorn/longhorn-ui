@@ -22,9 +22,21 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
   }
   const columns = [
     {
-      title: 'Status',
+      title: 'State',
       dataIndex: 'state',
       key: 'state',
+      width: 100,
+      render: (text) => {
+        return (
+          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
+            {text.hyphenToHump()}
+          </div>
+        )
+      },
+    }, {
+      title: 'Robustness',
+      dataIndex: 'robustness',
+      key: 'robustness',
       width: 100,
       render: (text) => {
         return (
