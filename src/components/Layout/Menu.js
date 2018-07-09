@@ -15,13 +15,12 @@ const getMenus = function (menuArray, siderFold) {
       menus = (
         <SubMenu key={linkTo}
           title={
-            <LinkTo to={linkTo} style={{ display: 'block' }}>
+            <span>
               {item.icon ? <Icon type={item.icon} /> : ''}
               {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
               <Icon type="down" />
-            </LinkTo>
+            </span>
           }>
-        <Menu.Item key={linkTo} style={{ display: 'none' }} />
         {getMenus(item.child, false)}
         </SubMenu>
       )

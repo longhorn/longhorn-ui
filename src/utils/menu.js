@@ -32,6 +32,12 @@ module.exports = [
     child: [
       {
         show: true,
+        key: 'setting',
+        name: 'General',
+        icon: 'setting',
+      },
+      {
+        show: true,
         key: 'engineimage',
         name: 'Engine Image',
         icon: 'api',
