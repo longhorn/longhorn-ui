@@ -145,7 +145,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   }
 
   const attachHostModalProps = {
-    item: selectedVolume,
+    items: [selectedVolume],
     visible: attachHostModalVisible,
     hosts,
     onOk(selectedHost, url) {
@@ -165,7 +165,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   }
 
   const engineUpgradeModalProps = {
-    item: selectedVolume,
+    items: [selectedVolume],
     visible: engineUpgradeModalVisible,
     engineImages,
     onOk(image, url) {
