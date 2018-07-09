@@ -16,6 +16,12 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         </span>
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Robustness:</span>
+        <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true })}>
+          {selectedVolume.robustness.hyphenToHump()}
+        </span>
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> HOST:</span>
         {selectedVolume.host}
       </div>
