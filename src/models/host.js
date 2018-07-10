@@ -1,4 +1,5 @@
 import { query, toggleScheduling, updateDisk } from '../services/host'
+import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
 
 export default {
@@ -18,6 +19,7 @@ export default {
           payload: location.query,
         })
       })
+      wsChanges(dispatch, 'nodes', '1s')
     },
   },
   effects: {
@@ -26,6 +28,12 @@ export default {
     }, { call, put }) {
       const data = yield call(query, parse(payload))
       data.data.sort((a, b) => a.name.localeCompare(b.name))
+      yield put({ type: 'queryHost', payload: { ...data } })
+    },
+    *updateBackground({
+      payload,
+    }, { put }) {
+      const data = payload
       yield put({ type: 'queryHost', payload: { ...data } })
     },
     *toggleScheduling({

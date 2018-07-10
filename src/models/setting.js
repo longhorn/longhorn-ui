@@ -1,4 +1,5 @@
 import { query, update } from '../services/setting'
+import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
 
 export default {
@@ -15,6 +16,7 @@ export default {
           payload: location.query,
         })
       })
+      wsChanges(dispatch, 'settings', '1s')
     },
   },
   effects: {
@@ -35,6 +37,10 @@ export default {
       }
       yield put({ type: 'query' })
       yield put({ type: 'hideSaving' })
+    },
+    *updateBackground({ payload }, { put }) {
+      const data = payload
+      yield put({ type: 'querySetting', payload: { ...data } })
     },
   },
   reducers: {

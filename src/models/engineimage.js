@@ -1,4 +1,5 @@
 import { create, deleteEngineImage, query } from '../services/engineimage'
+import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
 
 export default {
@@ -15,6 +16,7 @@ export default {
           payload: location.query,
         })
       })
+      wsChanges(dispatch, 'engineimages', '1s')
     },
   },
   effects: {
@@ -22,6 +24,16 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
+      if (payload && payload.field && payload.keyword) {
+        data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword.trim()) > -1)
+      }
+      data.data.sort((a, b) => a.image.localeCompare(b.image))
+      yield put({ type: 'queryEngineimage', payload: { ...data } })
+    },
+    *updateBackground({
+      payload,
+    }, { put }) {
+      const data = payload
       if (payload && payload.field && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }
