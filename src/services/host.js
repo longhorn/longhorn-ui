@@ -15,3 +15,11 @@ export async function toggleScheduling(data) {
     data,
   })
 }
+
+export async function updateDisk(data, url) {
+  return request({
+    url,
+    method: 'post',
+    data,
+  })
+}

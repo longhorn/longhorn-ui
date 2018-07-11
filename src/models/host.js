@@ -1,4 +1,4 @@
-import { query, toggleScheduling } from '../services/host'
+import { query, toggleScheduling, updateDisk } from '../services/host'
 import { parse } from 'qs'
 
 export default {
@@ -36,6 +36,12 @@ export default {
         allowScheduling: !payload.allowScheduling,
       }
       yield call(toggleScheduling, data)
+      yield put({ type: 'query' })
+    },
+    *updateDisk({
+      payload,
+    }, { call, put }) {
+      yield call(updateDisk, { disks: payload.disks }, payload.url)
       yield put({ type: 'query' })
     },
   },
