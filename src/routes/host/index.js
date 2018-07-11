@@ -61,6 +61,15 @@ function Host({ host, volume, loading, dispatch }) {
         payload: record,
       })
     },
+    updateDisk(disks, url) {
+      dispatch({
+        type: 'host/updateDisk',
+        payload: {
+          disks,
+          url,
+        },
+      })
+    },
   }
 
   const hostReplicaModalProps = {

@@ -3,8 +3,10 @@ import { Table } from 'antd'
 import styles from './HostList.less'
 import classnames from 'classnames'
 import HostActions from './HostActions'
+import DiskActions from './DiskActions'
+import { formatMib } from '../../utils/formater'
 
-function list({ loading, dataSource, showReplicaModal, toggleScheduling }) {
+function list({ loading, dataSource, showReplicaModal, toggleScheduling, updateDisk }) {
   const hostActionsProps = {
     toggleScheduling,
   }
@@ -64,6 +66,85 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling }) {
     },
   ]
 
+  const disks = function (node) {
+    const formatSi = (val) => {
+      return formatMib(val)
+    }
+    const diskActionsProps = {
+      node,
+      updateDisk,
+    }
+
+    const diskColumns = [
+      {
+        title: 'Path',
+        dataIndex: 'path',
+        key: 'path',
+      },
+      {
+        title: 'Storage Available',
+        dataIndex: 'storageAvailable',
+        key: 'storageAvailable',
+        render: formatSi,
+      },
+      {
+        title: 'Storage Maximum',
+        dataIndex: 'storageMaximum',
+        key: 'storageMaximum',
+        render: formatSi,
+      },
+      {
+        title: 'Storage Reserved',
+        dataIndex: 'storageReserved',
+        key: 'storageReserved',
+        render: formatSi,
+      },
+      {
+        title: 'Storage Scheduled',
+        dataIndex: 'storageScheduled',
+        key: 'storageScheduled',
+        render: formatSi,
+      },
+      {
+        title: 'Allow Scheduling',
+        dataIndex: 'allowScheduling',
+        key: 'allowScheduling',
+        render: (text) => {
+          return (
+            <div>
+              {text ? 'True' : 'False'}
+            </div>
+          )
+        },
+      },
+      {
+        title: '',
+        key: 'opration',
+        width: 100,
+        render: (text, record) => {
+          return (
+            <DiskActions {...diskActionsProps} selected={record} />
+          )
+        },
+      },
+    ]
+    const data = Object.keys(node.disks).map(diskId => {
+      const disk = node.disks[diskId]
+      return {
+        id: diskId,
+        ...disk,
+      }
+    })
+    return (
+      <Table
+        columns={diskColumns}
+        dataSource={data}
+        pagination={false}
+        rowKey={disk => disk.id}
+      />
+    )
+  }
+
   const pagination = false
 
   return (
@@ -72,6 +153,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling }) {
         bordered={false}
         columns={columns}
         dataSource={dataSource}
+        expandedRowRender={disks}
         loading={loading}
         simple
         pagination={pagination}
@@ -87,6 +169,7 @@ list.propTypes = {
   showAddDiskModal: PropTypes.func,
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
+  updateDisk: PropTypes.func,
 }
 
 export default list
