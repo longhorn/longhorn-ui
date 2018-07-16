@@ -38,7 +38,7 @@ function bulkActions({ selectedRows, bulkDeleteVolume, showBulkEngineUpgrade, sh
     { key: 'upgrade', name: 'Upgrade', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || !hasAction('attach') || hasDoingState() } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState() } },
-    { key: 'backup', name: 'Create A Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() } },
+    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() } },
   ]
 
   return (

@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, InputNumber } from 'antd'
+import { Form, Input, InputNumber, Select } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
+const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
@@ -11,6 +12,12 @@ const formItemLayout = {
     span: 15,
   },
 }
+
+const frontends = [
+  { label: 'Block Device', value: 'blockdev' },
+  { label: 'iSCSI', value: 'iscsi' },
+]
+
 
 const modal = ({
   item,
@@ -89,6 +96,19 @@ const modal = ({
               },
             ],
           })(<Input />)}
+        </FormItem>
+        <FormItem label="Frontend" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('frontend', {
+            initialValue: frontends[0].value,
+            rules: [
+              {
+                required: true,
+                message: 'Please select a frontend',
+              },
+            ],
+          })(<Select>
+          { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
+          </Select>)}
         </FormItem>
       </Form>
     </ModalBlur>

@@ -22,11 +22,15 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         </span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> HOST:</span>
+        <span className={styles.label}> Attached Node:</span>
         {selectedVolume.host}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>
+        {selectedVolume.frontend}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Endpoint:</span>
         {selectedVolume.endpoint}
       </div>
       <div className={styles.row}>

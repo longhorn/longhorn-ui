@@ -148,12 +148,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     items: [selectedVolume],
     visible: attachHostModalVisible,
     hosts,
-    onOk(selectedHost, url) {
+    onOk(selectedHost, urls) {
       dispatch({
         type: 'volume/attach',
         payload: {
           host: selectedHost,
-          url,
+          url: urls[0],
         },
       })
     },
@@ -168,12 +168,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     items: [selectedVolume],
     visible: engineUpgradeModalVisible,
     engineImages,
-    onOk(image, url) {
+    onOk(image, urls) {
       dispatch({
         type: 'volume/engineUpgrade',
         payload: {
           image,
-          url,
+          url: urls[0],
         },
       })
     },

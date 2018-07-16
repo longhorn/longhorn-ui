@@ -82,7 +82,7 @@ class Snapshots extends React.Component {
           </Button>
           &nbsp;
           <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate} icon="scan" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
-            Create A Backup
+            Create Backup
           </Button>
           <div style={{ marginTop: '20px' }}>
             <SnapshotGen />
