@@ -9,6 +9,7 @@ export default {
     backupStatus: {},
     currentItem: {},
     restoreBackupModalVisible: false,
+    restoreBackupModalKey: Math.random(),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -77,7 +78,7 @@ export default {
       }
     },
     showRestoreBackupModal(state, action) {
-      return { ...state, ...action.payload, restoreBackupModalVisible: true }
+      return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
     },
     hideRestoreBackupModal(state) {
       return { ...state, restoreBackupModalVisible: false }

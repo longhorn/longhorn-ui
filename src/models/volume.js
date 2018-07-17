@@ -10,12 +10,17 @@ export default {
     selectedRows: [],
     createVolumeModalVisible: false,
     attachHostModalVisible: false,
-    bulckAttachHostModalVisible: false,
+    bulkAttachHostModalVisible: false,
     engineUpgradeModalVisible: false,
     bulkEngineUpgradeModalVisible: false,
     recurringModalVisible: false,
     snapshotsModalVisible: false,
     salvageModalVisible: false,
+    createVolumeModalKey: Math.random(),
+    attachHostModalKey: Math.random(),
+    bulkAttachHostModalKey: Math.random(),
+    engineUpgradeModaKey: Math.random(),
+    bulkEngineUpgradeModalKey: Math.random(),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -161,16 +166,16 @@ export default {
       }
     },
     showCreateVolumeModal(state, action) {
-      return { ...state, ...action.payload, createVolumeModalVisible: true }
+      return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }
     },
     hideCreateVolumeModal(state) {
       return { ...state, createVolumeModalVisible: false }
     },
     showAttachHostModal(state, action) {
-      return { ...state, ...action.payload, attachHostModalVisible: true }
+      return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }
     },
     showBulkAttachHostModal(state, action) {
-      return { ...state, ...action.payload, bulkAttachHostModalVisible: true }
+      return { ...state, ...action.payload, bulkAttachHostModalVisible: true, bulkAttachHostModalKey: Math.random() }
     },
     hideAttachHostModal(state) {
       return { ...state, attachHostModalVisible: false }
@@ -179,10 +184,10 @@ export default {
       return { ...state, bulkAttachHostModalVisible: false }
     },
     showEngineUpgradeModal(state, action) {
-      return { ...state, ...action.payload, engineUpgradeModalVisible: true }
+      return { ...state, ...action.payload, engineUpgradeModalVisible: true, engineUpgradeModaKey: Math.random() }
     },
     showBulkEngineUpgradeModal(state, action) {
-      return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true }
+      return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true, bulkEngineUpgradeModalKey: Math.random() }
     },
     hideEngineUpgradeModal(state) {
       return { ...state, engineUpgradeModalVisible: false }

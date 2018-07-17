@@ -8,7 +8,7 @@ import CreateEngineImage from './CreateEngineImage'
 class EngineImage extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { data, createEngineImageModalVisible } = this.props.engineimage
+    const { data, createEngineImageModalVisible, createEngineImageModalKey } = this.props.engineimage
     const { field, keyword } = this.props.location.query
 
     const engineImageListProps = {
@@ -79,13 +79,11 @@ class EngineImage extends React.Component {
       },
     }
 
-    const CreateEngineImageGen = () => <CreateEngineImage {...createEngineImageModalProps} />
-
     return (
       <div className="content-inner" >
         <EngineImageFilter {...engineImageFilterProps} />
         <EngineImageList {...engineImageListProps} />
-        <CreateEngineImageGen {...createEngineImageModalProps} />
+        <CreateEngineImage key={createEngineImageModalKey} {...createEngineImageModalProps} />
       </div>
     )
   }
