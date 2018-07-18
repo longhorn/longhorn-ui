@@ -48,7 +48,7 @@ class Replica extends React.Component {
         out.text = 'Rebuilding...'
       } else if (m === 'err') {
         out.color = '#f15354'
-        out.text = 'Failt'
+        out.text = 'Failed'
       }
     }
     return out
