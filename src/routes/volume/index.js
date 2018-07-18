@@ -12,7 +12,7 @@ import VolumeBulkActions from './VolumeBulkActions'
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, data, createVolumeModalVisible, attachHostModalVisible, bulkAttachHostModalVisible, engineUpgradeModalVisible, bulkEngineUpgradeModalVisible, salvageModalVisible } = this.props.volume
+    const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, keyword } = this.props.location.query
@@ -317,22 +317,16 @@ class Volume extends React.Component {
       },
     }
 
-    const CreateVolumeGen = () => <CreateVolume {...createVolumeModalProps} />
-    const AttachHostGen = () => <AttachHost {...attachHostModalProps} />
-    const BulkAttachHostGen = () => <AttachHost {...bulkAttachHostModalProps} />
-    const EngineUpgradeGen = () => <EngineUgrade {...engineUpgradeModalProps} />
-    const BulkEngineUpgradeGen = () => <EngineUgrade {...bulkEngineUpgradeModalProps} />
-
     return (
       <div className="content-inner" >
         <VolumeFilter {...volumeFilterProps} />
         <VolumeBulkActions {...volumeBulkActionsProps} />
         <VolumeList {...volumeListProps} />
-        <CreateVolumeGen {...createVolumeModalProps} />
-        <AttachHostGen {...attachHostModalProps} />
-        <BulkAttachHostGen {...bulkAttachHostModalProps} />
-        <EngineUpgradeGen {...engineUpgradeModalProps} />
-        <BulkEngineUpgradeGen {...bulkEngineUpgradeModalProps} />
+        <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
+        <AttachHost key={attachHostModalKey} {...attachHostModalProps} />
+        <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} />
+        <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} />
+        <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} />
         <Salvage {...salvageModalProps} />
       </div>
     )

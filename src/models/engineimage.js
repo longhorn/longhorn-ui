@@ -6,6 +6,7 @@ export default {
   state: {
     data: [],
     createEngineImageModalVisible: false,
+    createEngineImageModalKey: Math.random(),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -50,7 +51,7 @@ export default {
       }
     },
     showCreateEngineImageModal(state, action) {
-      return { ...state, ...action.payload, createEngineImageModalVisible: true }
+      return { ...state, ...action.payload, createEngineImageModalVisible: true, createEngineImageModalKey: Math.random() }
     },
     hideCreateEngineImageModal(state) {
       return { ...state, createEngineImageModalVisible: false }

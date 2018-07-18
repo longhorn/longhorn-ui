@@ -6,7 +6,7 @@ import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
 
 function Backup({ host, backup, loading, location, dispatch }) {
-  const { data, backupVolumes, restoreBackupModalVisible, currentItem } = backup
+  const { data, backupVolumes, restoreBackupModalVisible, restoreBackupModalKey, currentItem } = backup
   const { field, keyword } = location.query
   const hosts = host.data
   const backupVolumesProps = {
@@ -84,14 +84,11 @@ function Backup({ host, backup, loading, location, dispatch }) {
     },
   }
 
-  const RestoreBackupGen = () =>
-    <RestoreBackup {...restoreBackupModalProps} />
-
   return (
     <div className="content-inner" >
       <BackupFilter {...backupFilterProps} />
       <BackupList {...backupVolumesProps} />
-      <RestoreBackupGen />
+      <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
     </div >
   )
 }
