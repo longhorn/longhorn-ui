@@ -17,6 +17,34 @@ function list({ dataSource, deleteReplica }) {
       default:
     }
   }
+  const statusMap = {
+    healthy: { className: 'healthy', label: 'Healthy' },
+    rebuilding: { className: 'rebuilding', label: 'Rebuilding' },
+    err: { className: 'error', label: 'Error' },
+    unknown: { className: 'unknown', label: 'Unknown' },
+    failed: { className: 'failed', label: 'Failed' },
+  }
+  const parseStatus = (replica) => {
+    let s
+    if (replica.running) {
+      switch (replica.mode) {
+        case 'rw':
+          s = statusMap.healthy
+          break
+        case 'wo':
+          s = statusMap.rebuilding
+          break
+        case 'err':
+          s = statusMap.err
+          break
+        default:
+          s = statusMap.unknown
+      }
+    } else {
+      s = statusMap.failed
+    }
+    return s
+  }
   const columns = [
     {
       title: 'Status',
@@ -24,9 +52,10 @@ function list({ dataSource, deleteReplica }) {
       key: 'running',
       width: 100,
       className: 'active',
-      render: (text) => {
+      render: (text, record) => {
+        let status = parseStatus(record)
         return (
-          <div className={text ? 'healthy' : 'faulted'}>{text ? 'Running' : 'Error'}</div>
+          <div className={status.className}>{status.label}</div>
         )
       },
     }, {
