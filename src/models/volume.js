@@ -1,4 +1,5 @@
 import { create, deleteVolume, query, execAction, recurringUpdate } from '../services/volume'
+import { wsChanges } from '../utils/websocket'
 import { sortVolumeByName } from '../utils/sort'
 import { parse } from 'qs'
 
@@ -32,6 +33,7 @@ export default {
           })
         }
       })
+      wsChanges(dispatch, 'volumes', '1s')
     },
   },
   effects: {
@@ -49,6 +51,20 @@ export default {
       sortVolumeByName(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })
       yield put({ type: 'clearSelection' })
+    },
+    *updateBackground({
+      payload,
+    }, { put }) {
+      const data = payload
+      if (payload && payload.field === 'id' && payload.keyword) {
+        data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
+      }
+      if (payload && payload.field === 'host' && payload.keyword) {
+        data.data = data.data.filter(item => item.controller && item.controller.hostId
+          && payload.keyword.split(',').indexOf(item.controller.hostId) > -1)
+      }
+      sortVolumeByName(data.data)
+      yield put({ type: 'queryVolume', payload: { ...data } })
     },
     *engineUpgrade({
       payload,
