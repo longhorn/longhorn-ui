@@ -22,6 +22,12 @@ export default {
     }
   },
   "proxy": {
+    "/v1/ws/**": {
+      "target": endpoint,
+      "changeOrigin": false,
+      "ws": true,
+      "secure": false
+    },
     "/v1/": {
       "target": endpoint,
       "changeOrigin": false
