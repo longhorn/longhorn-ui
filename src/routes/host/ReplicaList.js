@@ -23,6 +23,7 @@ function list({ dataSource, deleteReplica }) {
     err: { className: 'error', label: 'Error' },
     unknown: { className: 'unknown', label: 'Unknown' },
     failed: { className: 'failed', label: 'Failed' },
+    stopped: { className: 'stopped', label: 'Stopped' },
   }
   const parseStatus = (replica) => {
     let s
@@ -41,6 +42,8 @@ function list({ dataSource, deleteReplica }) {
         default:
           s = statusMap.unknown
       }
+    } else if (replica.failedAt === '') {
+      s = statusMap.stopped
     } else {
       s = statusMap.failed
     }
