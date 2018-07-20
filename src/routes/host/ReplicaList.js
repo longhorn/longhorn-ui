@@ -27,7 +27,8 @@ function list({ dataSource, deleteReplica }) {
   const parseStatus = (replica) => {
     let s
     if (replica.running) {
-      switch (replica.mode) {
+      const m = replica.mode.toLowerCase()
+      switch (m) {
         case 'rw':
           s = statusMap.healthy
           break
