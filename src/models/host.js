@@ -30,12 +30,6 @@ export default {
       data.data.sort((a, b) => a.name.localeCompare(b.name))
       yield put({ type: 'queryHost', payload: { ...data } })
     },
-    *updateBackground({
-      payload,
-    }, { put }) {
-      const data = payload
-      yield put({ type: 'queryHost', payload: { ...data } })
-    },
     *toggleScheduling({
       payload,
     }, { call, put }) {
@@ -58,6 +52,13 @@ export default {
       return {
         ...state,
         ...action.payload,
+      }
+    },
+    updateBackground(state, action) {
+      const data = action.payload
+      return {
+        ...state,
+        ...data,
       }
     },
     showModal(state, action) {

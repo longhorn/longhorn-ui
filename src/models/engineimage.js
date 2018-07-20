@@ -31,16 +31,6 @@ export default {
       data.data.sort((a, b) => a.image.localeCompare(b.image))
       yield put({ type: 'queryEngineimage', payload: { ...data } })
     },
-    *updateBackground({
-      payload,
-    }, { put }) {
-      const data = payload
-      if (payload && payload.field && payload.keyword) {
-        data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword.trim()) > -1)
-      }
-      data.data.sort((a, b) => a.image.localeCompare(b.image))
-      yield put({ type: 'queryEngineimage', payload: { ...data } })
-    },
     *create({
       payload,
     }, { call, put }) {
@@ -60,6 +50,17 @@ export default {
       return {
         ...state,
         ...action.payload,
+      }
+    },
+    updateBackground(state, action) {
+      const data = action.payload
+      if (data && data.field && data.keyword) {
+        data.data = data.data.filter(item => item[data.field].indexOf(data.keyword.trim()) > -1)
+      }
+      data.data.sort((a, b) => a.image.localeCompare(b.image))
+      return {
+        ...state,
+        ...data,
       }
     },
     showCreateEngineImageModal(state, action) {
