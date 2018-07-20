@@ -56,6 +56,7 @@ export default {
     },
     updateBackground(state, action) {
       const data = action.payload
+      data.data = data.data || []
       return {
         ...state,
         ...data,

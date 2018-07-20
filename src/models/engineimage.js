@@ -54,6 +54,7 @@ export default {
     },
     updateBackground(state, action) {
       const data = action.payload
+      data.data = data.data || []
       if (data && data.field && data.keyword) {
         data.data = data.data.filter(item => item[data.field].indexOf(data.keyword.trim()) > -1)
       }
