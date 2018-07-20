@@ -52,20 +52,6 @@ export default {
       yield put({ type: 'queryVolume', payload: { ...data } })
       yield put({ type: 'clearSelection' })
     },
-    *updateBackground({
-      payload,
-    }, { put }) {
-      const data = payload
-      if (payload && payload.field === 'id' && payload.keyword) {
-        data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
-      }
-      if (payload && payload.field === 'host' && payload.keyword) {
-        data.data = data.data.filter(item => item.controller && item.controller.hostId
-          && payload.keyword.split(',').indexOf(item.controller.hostId) > -1)
-      }
-      sortVolumeByName(data.data)
-      yield put({ type: 'queryVolume', payload: { ...data } })
-    },
     *engineUpgrade({
       payload,
     }, { call, put }) {
@@ -179,6 +165,21 @@ export default {
       return {
         ...state,
         ...action.payload,
+      }
+    },
+    updateBackground(state, action) {
+      const data = action.payload
+      if (data && data.field === 'id' && data.keyword) {
+        data.data = data.data.filter(item => item[data.field].indexOf(data.keyword) > -1)
+      }
+      if (data && data.field === 'host' && data.keyword) {
+        data.data = data.data.filter(item => item.controller && item.controller.hostId
+          && data.keyword.split(',').indexOf(item.controller.hostId) > -1)
+      }
+      sortVolumeByName(data.data)
+      return {
+        ...state,
+        ...data,
       }
     },
     showCreateVolumeModal(state, action) {

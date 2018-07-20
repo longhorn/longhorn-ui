@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Table } from 'antd'
+import { Table, Icon } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { LinkTo } from '../../components'
@@ -20,16 +20,19 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
     showSalvage,
     rollback,
   }
+  const needToWait = (state, replicas) => {
+    return state === '' || state.endsWith('ing') || replicas.findIndex(item => item.mode.toLowerCase() === 'wo') > -1
+  }
   const columns = [
     {
       title: 'State',
       dataIndex: 'state',
       key: 'state',
       width: 100,
-      render: (text) => {
+      render: (text, record) => {
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
-            {text.hyphenToHump()}
+            {text.hyphenToHump()} {needToWait(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
       },
