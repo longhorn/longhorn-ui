@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Row, Col } from 'antd'
+import { Row, Col, Alert } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib } from '../../../utils/formater'
@@ -7,8 +7,21 @@ import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
 
 function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus }) {
+  let errorMsg = null
+  if (!selectedVolume.conditions.scheduled.status) {
+    errorMsg = (
+      <Alert
+        message="Scheduling Failure"
+        description={selectedVolume.conditions.scheduled.reason.replace(/([A-Z])/g, ' $1')}
+        type="warning"
+        className="ant-alert-error"
+        showIcon
+      />
+    )
+  }
   return (
     <div>
+      {errorMsg}
       <div className={styles.row}>
         <span className={styles.label}> Status:</span>
         <span className={classnames({ [selectedVolume.state.toLowerCase()]: true, capitalize: true })}>

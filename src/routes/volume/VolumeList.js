@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Table, Icon } from 'antd'
+import { Table, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { LinkTo } from '../../components'
@@ -52,11 +52,11 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      render: (text) => {
+      render: (text, record) => {
         return (
           <div>
             <LinkTo to={`/volume/${text}`}>
-              {text}
+              {record.conditions.scheduled.status ? null : <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip>} {text}
             </LinkTo>
           </div>
         )
