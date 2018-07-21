@@ -169,6 +169,7 @@ export default {
     },
     updateBackground(state, action) {
       const data = action.payload
+      data.data = data.data || []
       if (data && data.field === 'id' && data.keyword) {
         data.data = data.data.filter(item => item[data.field].indexOf(data.keyword) > -1)
       }
