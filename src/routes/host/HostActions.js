@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, toggleScheduling }) {
+function actions({ selected, toggleScheduling, showEditDisksModal }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'toggleScheduling':
@@ -14,11 +14,20 @@ function actions({ selected, toggleScheduling }) {
           },
         })
         break
+      case 'editDisks':
+        showEditDisksModal(record)
+        break
       default:
     }
   }
 
   const availableActions = [{ key: 'toggleScheduling', name: selected.allowScheduling ? 'Disable' : 'Enable' }]
+  if (selected.state === 'up') {
+    availableActions.push({
+      key: 'editDisks',
+      name: 'Edit Disks',
+    })
+  }
   return (
     <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
     />
@@ -28,6 +37,7 @@ function actions({ selected, toggleScheduling }) {
 actions.propTypes = {
   selected: PropTypes.object,
   toggleScheduling: PropTypes.func,
+  showEditDisksModal: PropTypes.func,
 }
 
 export default actions

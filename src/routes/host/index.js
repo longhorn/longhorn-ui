@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import HostList from './HostList'
 import AddDisk from './AddDisk'
+import EditDisk from './EditDisk'
 import HostReplica from './HostReplica'
 
 function Host({ host, volume, loading, dispatch }) {
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible } = host
   const volumeList = volume.data
 
   data.forEach(agent => {
@@ -35,6 +36,25 @@ function Host({ host, volume, loading, dispatch }) {
     onCancel() {
       dispatch({
         type: 'host/hideAddDiskModal',
+      })
+    },
+  }
+  const editDiskModalProps = {
+    visible: editDisksModalVisible,
+    node: selected,
+    onOk(disks, disableSchedulingDisks) {
+      dispatch({
+        type: 'host/updateDisk',
+        payload: {
+          disks,
+          disableSchedulingDisks,
+          url: selected.actions.diskUpdate,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'host/hideEditDisksModal',
       })
     },
   }
@@ -70,6 +90,14 @@ function Host({ host, volume, loading, dispatch }) {
         },
       })
     },
+    showEditDisksModal(record) {
+      dispatch({
+        type: 'host/showEditDisksModal',
+        payload: {
+          selected: record,
+        },
+      })
+    },
   }
 
   const hostReplicaModalProps = {
@@ -100,6 +128,7 @@ function Host({ host, volume, loading, dispatch }) {
       <HostList {...hostListProps} />
       {modalVisible && <AddDisk {...addDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
+      {editDisksModalVisible && <EditDisk {...editDiskModalProps} />}
     </div>
   )
 }

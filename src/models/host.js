@@ -10,6 +10,7 @@ export default {
     modalVisible: false,
     addDiskModalVisible: false,
     replicaModalVisible: false,
+    editDisksModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -43,6 +44,10 @@ export default {
     *updateDisk({
       payload,
     }, { call, put }) {
+      yield put({ type: 'hideEditDisksModal' })
+      if (payload.disableSchedulingDisks) {
+        yield call(updateDisk, { disks: payload.disableSchedulingDisks }, payload.url)
+      }
       yield call(updateDisk, { disks: payload.disks }, payload.url)
       yield put({ type: 'query' })
     },
@@ -79,6 +84,12 @@ export default {
     },
     hideReplicaModal(state) {
       return { ...state, replicaModalVisible: false }
+    },
+    showEditDisksModal(state, action) {
+      return { ...state, ...action.payload, editDisksModalVisible: true }
+    },
+    hideEditDisksModal(state) {
+      return { ...state, editDisksModalVisible: false }
     },
   },
 }

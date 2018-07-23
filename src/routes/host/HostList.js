@@ -6,9 +6,10 @@ import HostActions from './HostActions'
 import DiskActions from './DiskActions'
 import { formatMib } from '../../utils/formater'
 
-function list({ loading, dataSource, showReplicaModal, toggleScheduling, updateDisk }) {
+function list({ loading, dataSource, showReplicaModal, toggleScheduling, updateDisk, showEditDisksModal }) {
   const hostActionsProps = {
     toggleScheduling,
+    showEditDisksModal,
   }
   const columns = [
     {
@@ -170,6 +171,7 @@ list.propTypes = {
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
   updateDisk: PropTypes.func,
+  showEditDisksModal: PropTypes.func,
 }
 
 export default list
