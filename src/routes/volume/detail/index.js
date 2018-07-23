@@ -49,6 +49,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   const backupStatusProps = {
     selectedVolume,
     backupStatus,
+    snapshotModal,
     clearBackupStatus() {
       dispatch({
         type: 'backup/updateBackupStatus',

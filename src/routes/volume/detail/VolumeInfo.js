@@ -6,7 +6,7 @@ import { formatMib } from '../../../utils/formater'
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
 
-function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus }) {
+function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotModal: { snapshotTree } }) {
   let errorMsg = null
   if (selectedVolume.conditions.scheduled.status.toLowerCase() === 'false') {
     errorMsg = (
@@ -18,6 +18,13 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         showIcon
       />
     )
+  }
+  const computedVolumeTotalSize = () => {
+    let total = Number(selectedVolume.size)
+    snapshotTree.forEach(item => {
+      total += Number(item.size)
+    })
+    return total
   }
   return (
     <div>
@@ -51,6 +58,10 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         {formatMib(selectedVolume.size)}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}>Actual Size:</span>
+        {formatMib(computedVolumeTotalSize())}
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Base Image:</span>
         {selectedVolume.baseImage}
       </div>
@@ -81,6 +92,7 @@ VolumeInfo.propTypes = {
   selectedVolume: PropTypes.object,
   queryBackupStatus: PropTypes.func,
   clearBackupStatus: PropTypes.func,
+  snapshotModal: PropTypes.object,
 }
 
 export default VolumeInfo
