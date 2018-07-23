@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Tree, Icon, Menu, Dropdown, Button, Popconfirm } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip } from 'antd'
+import { formatMib } from '../../utils/formater'
 import moment from 'moment'
 import './Snapshot.less'
 
@@ -61,15 +62,22 @@ function SnapshotIcon(props, snapshotProps) {
       trigger={props.removed ? [] : ['click']}
       key={props.name}
     >
-      <div>
-        <div className="tree-snapshot-icon">
-          <Icon className="snapshot-icon" type="camera" />
+      <Tooltip placement="top" autoAdjustOverflow="false" title={<div>
+        <p className="snapshot-name">Name: {props.name}</p>
+        <p className="snapshot-created">Created: {props.created}</p>
+        <p className="snapshot-name">Size: {formatMib(props.size)}</p>
+        <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
+      </div>}>
+        <div>
+          <div className="tree-snapshot-icon">
+            <Icon className="snapshot-icon" type="camera" />
+          </div>
+          <div className="tree-snapshot-desc">
+            <p className="snapshot-name">{props.name.substr(0, 5)}</p>
+            <p className="snapshot-time">{moment(new Date(props.created)).fromNow()}</p>
+          </div>
         </div>
-        <div className="tree-snapshot-desc">
-          <p className="snapshot-name">{props.name.substr(0, 5)}</p>
-          <p className="snapshot-time">{moment(new Date(props.created)).fromNow()}</p>
-        </div>
-      </div>
+      </Tooltip>
     </Dropdown>
   )
 }
@@ -77,6 +85,8 @@ SnapshotIcon.propTypes = {
   removed: PropTypes.bool,
   name: PropTypes.string,
   created: PropTypes.string,
+  size: PropTypes.string,
+  usercreated: PropTypes.string,
 }
 
 function CurrentPoint(props) {
