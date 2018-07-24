@@ -3,12 +3,13 @@ import { Row, Col, Alert } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib } from '../../../utils/formater'
+import { isSchedulingFailure } from '../helper/index'
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
 
 function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotModal: { snapshotTree } }) {
   let errorMsg = null
-  if (selectedVolume.conditions.scheduled.status.toLowerCase() === 'false') {
+  if (isSchedulingFailure(selectedVolume)) {
     errorMsg = (
       <Alert
         message="Scheduling Failure"
