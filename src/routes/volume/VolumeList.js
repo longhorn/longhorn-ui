@@ -6,6 +6,7 @@ import { LinkTo } from '../../components'
 
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
+import { isSchedulingFailure } from './helper/index'
 
 function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
   const volumeActionsProps = {
@@ -56,7 +57,7 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
         return (
           <div>
             <LinkTo to={`/volume/${text}`}>
-              {record.conditions.scheduled.status.toLowerCase() === 'false' ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
+              {isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
           </div>
         )
