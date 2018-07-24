@@ -8,7 +8,7 @@ import LatestBackup from './LatestBackup'
 
 function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus }) {
   let errorMsg = null
-  if (!selectedVolume.conditions.scheduled.status) {
+  if (selectedVolume.conditions.scheduled.status.toLowerCase() === 'false') {
     errorMsg = (
       <Alert
         message="Scheduling Failure"
