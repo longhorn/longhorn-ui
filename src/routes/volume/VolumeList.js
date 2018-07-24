@@ -56,7 +56,7 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
         return (
           <div>
             <LinkTo to={`/volume/${text}`}>
-              {record.conditions.scheduled.status ? null : <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip>} {text}
+              {record.conditions.scheduled.status.toLowerCase() === 'false' ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
           </div>
         )
