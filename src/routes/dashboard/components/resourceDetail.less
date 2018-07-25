@@ -1,0 +1,37 @@
+.resourceDetailContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .resourceDetail {
+    border: 1px solid #ebedf0;
+    border-radius: 4px;
+    .resourceDetailBody{
+      .detailItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0px;
+        margin: 0 24px;
+        border-bottom: 1px solid #ebedf0;
+        &:last-child {
+          border-bottom: none; 
+        }
+        .label {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+    .total {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background-color: #f5f7f7;
+    }
+  }
+  .badge {
+    height: 16px;
+    width: 16px;
+    border-radius: 100%;
+    margin-right: 10px;
+  }
+}
