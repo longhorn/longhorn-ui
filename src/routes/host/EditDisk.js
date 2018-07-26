@@ -27,7 +27,7 @@ const modal = ({
         return
       }
 
-      const strorageKeys = ['storageMaximum', 'storageReserved', 'storageAvailable', 'storageScheduled']
+      const storageKeys = ['storageMaximum', 'storageReserved', 'storageAvailable', 'storageScheduled']
 
       const deletedDiskIds = Object.keys(values.disks).filter(id => values.disks[id].deleted)
       const allowSchedulingDiskIds = Object.keys(node.disks).filter(id => node.disks[id].allowScheduling)
@@ -35,12 +35,12 @@ const modal = ({
       const updatedDisks = Object.keys(values.disks).filter(k => values.disks[k].deleted !== true).map(k => {
         const disk = { ...values.disks[k] }
         const originDisk = node.disks[k]
-        strorageKeys.forEach(sk => {
+        storageKeys.forEach(sk => {
           disk[sk] = gibToByte(disk[sk])
         })
 
         if (originDisk) {
-          strorageKeys.forEach(sk => {
+          storageKeys.forEach(sk => {
             if (!isStorageChanged(originDisk[sk], disk[sk])) {
               disk[sk] = originDisk[sk]
             }

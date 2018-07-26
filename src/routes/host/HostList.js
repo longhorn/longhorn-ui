@@ -1,15 +1,13 @@
 import React, { PropTypes } from 'react'
-import { Table } from 'antd'
+import { Table, Button, Tooltip } from 'antd'
 import styles from './HostList.less'
 import classnames from 'classnames'
 import HostActions from './HostActions'
-import DiskActions from './DiskActions'
 import { formatMib } from '../../utils/formater'
 
-function list({ loading, dataSource, showReplicaModal, toggleScheduling, updateDisk, showEditDisksModal }) {
+function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal }) {
   const hostActionsProps = {
     toggleScheduling,
-    showEditDisksModal,
   }
   const columns = [
     {
@@ -71,11 +69,6 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, updateD
     const formatSi = (val) => {
       return formatMib(val)
     }
-    const diskActionsProps = {
-      node,
-      updateDisk,
-    }
-
     const diskColumns = [
       {
         title: 'Path',
@@ -119,14 +112,9 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, updateD
         },
       },
       {
-        title: '',
-        key: 'opration',
+        title: (<Tooltip placement="top" title="Edit Disks"> <Button shape="circle" icon="edit" onClick={() => showEditDisksModal(node)} /> </Tooltip>),
+        key: 'operation',
         width: 100,
-        render: (text, record) => {
-          return (
-            <DiskActions {...diskActionsProps} selected={record} />
-          )
-        },
       },
     ]
     const data = Object.keys(node.disks).map(diskId => {
@@ -170,7 +158,6 @@ list.propTypes = {
   showAddDiskModal: PropTypes.func,
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
-  updateDisk: PropTypes.func,
   showEditDisksModal: PropTypes.func,
 }
 

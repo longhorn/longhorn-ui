@@ -10,7 +10,7 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
       case 'path':
         return (
           <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks[${rowIndex}][${dataIndex}]`, {
+            {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               rules: [{
                 required: true,
                 message: 'Please Input Path!',
@@ -26,7 +26,7 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
       case 'storageScheduled':
         return (
           <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks[${rowIndex}][${dataIndex}]`, {
+            {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               initialValue: parseFloat(formatMib(value)),
             })(<span>
               <InputNumber min={1} defaultValue={parseFloat(formatMib(value), 10)} disabled /> Gi
@@ -36,7 +36,7 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
       case 'storageReserved':
         return (
           <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks[${rowIndex}][${dataIndex}]`, {
+            {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               initialValue: parseFloat(formatMib(value), 10),
             })(<span>
               <InputNumber min={1} defaultValue={parseFloat(formatMib(value), 10)} disabled={disabled} /> Gi
@@ -46,16 +46,15 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
       case 'allowScheduling':
         return (
           <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks[${rowIndex}][${dataIndex}]`, {
+            {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               initialValue: value,
             })(<Checkbox defaultChecked={value} disabled={disabled} />)}
           </FormItem>
         )
-
       default:
         return (
           <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks[${rowIndex}][${dataIndex}]`, {
+            {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               initialValue: value,
             })(<Input disabled={disabled} />)}
           </FormItem>
