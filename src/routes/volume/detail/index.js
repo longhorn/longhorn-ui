@@ -10,6 +10,7 @@ import EngineUpgrade from '../EngineUpgrade'
 import Snapshots from '../Snapshots'
 import RecurringList from '../RecurringList'
 import { ReplicaList } from '../../../components'
+import { genAttachHostModalProps, getEngineUpgradeModalProps } from '../helper'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible } = volume
@@ -145,45 +146,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
   }
 
-  const attachHostModalProps = {
-    items: [selectedVolume],
-    visible: attachHostModalVisible,
-    hosts,
-    onOk(selectedHost, urls) {
-      dispatch({
-        type: 'volume/attach',
-        payload: {
-          host: selectedHost,
-          url: urls[0],
-        },
-      })
-    },
-    onCancel() {
-      dispatch({
-        type: 'volume/hideAttachHostModal',
-      })
-    },
-  }
+  const attachHostModalProps = genAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
 
-  const engineUpgradeModalProps = {
-    items: [selectedVolume],
-    visible: engineUpgradeModalVisible,
-    engineImages,
-    onOk(image, urls) {
-      dispatch({
-        type: 'volume/engineUpgrade',
-        payload: {
-          image,
-          url: urls[0],
-        },
-      })
-    },
-    onCancel() {
-      dispatch({
-        type: 'volume/hideEngineUpgradeModal',
-      })
-    },
-  }
+  const engineUpgradeModalProps = getEngineUpgradeModalProps([selectedVolume], engineImages, engineUpgradeModalVisible, dispatch)
 
   const recurringListProps = {
     dataSource: selectedVolume.recurringJobs || [],

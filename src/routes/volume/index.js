@@ -8,6 +8,7 @@ import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import Salvage from './Salvage'
 import VolumeBulkActions from './VolumeBulkActions'
+import { genAttachHostModalProps, getEngineUpgradeModalProps } from './helper'
 
 class Volume extends React.Component {
   render() {
@@ -164,25 +165,7 @@ class Volume extends React.Component {
       },
     }
 
-    const attachHostModalProps = {
-      items: selected ? [selected] : [],
-      visible: attachHostModalVisible,
-      hosts,
-      onOk(selectedHost, urls) {
-        dispatch({
-          type: 'volume/attach',
-          payload: {
-            host: selectedHost,
-            url: urls[0],
-          },
-        })
-      },
-      onCancel() {
-        dispatch({
-          type: 'volume/hideAttachHostModal',
-        })
-      },
-    }
+    const attachHostModalProps = genAttachHostModalProps(selected ? [selected] : [], hosts, attachHostModalVisible, dispatch)
 
     const bulkAttachHostModalProps = {
       items: selectedRows,
@@ -204,25 +187,7 @@ class Volume extends React.Component {
       },
     }
 
-    const engineUpgradeModalProps = {
-      items: selected ? [selected] : [],
-      visible: engineUpgradeModalVisible,
-      engineImages,
-      onOk(image, urls) {
-        dispatch({
-          type: 'volume/engineUpgrade',
-          payload: {
-            image,
-            url: urls[0],
-          },
-        })
-      },
-      onCancel() {
-        dispatch({
-          type: 'volume/hideEngineUpgradeModal',
-        })
-      },
-    }
+    const engineUpgradeModalProps = getEngineUpgradeModalProps(selected ? [selected] : [], engineImages, engineUpgradeModalVisible, dispatch)
 
     const bulkEngineUpgradeModalProps = {
       items: selectedRows,
