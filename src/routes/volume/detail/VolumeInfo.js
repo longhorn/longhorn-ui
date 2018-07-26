@@ -20,8 +20,8 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
       />
     )
   }
-  const computedVolumeTotalSize = () => {
-    let total = Number(selectedVolume.size)
+  const computeActualSize = () => {
+    let total = 0
     snapshotTree.forEach(item => {
       total += Number(item.size)
     })
@@ -60,7 +60,7 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
-        {formatMib(computedVolumeTotalSize())}
+        {formatMib(computeActualSize())}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Base Image:</span>
