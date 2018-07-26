@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, Form, Table } from 'antd'
+import { Button, Form, Table, Tooltip, Checkbox } from 'antd'
 import EditableDiskCell from './EditableDiskCell'
 import styles from './EditableDiskTable.less'
 const FormItem = Form.Item
@@ -10,6 +10,7 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props)
     const disks = Object.keys(props.node.disks).map(item => ({ ...props.node.disks[item], id: item }))
+    this.originDisk = props.node.disks
     this.state = { data: disks }
 
     this.columns = [
@@ -19,7 +20,7 @@ class EditableTable extends React.Component {
         key: 'path',
         width: '27%',
         render: (text, record) => {
-          return this.renderColumns(text, 'path', record.id, record)
+          return this.renderColumns(text, 'path', record.id, record.deleted || !!this.originDisk[record.id])
         },
       },
       {
@@ -28,7 +29,7 @@ class EditableTable extends React.Component {
         key: 'storageAvailable',
         width: '13%',
         render: (text, record) => {
-          return this.renderColumns(text, 'storageAvailable', record.id, record)
+          return this.renderColumns(text, 'storageAvailable', record.id, record.deleted)
         },
       },
       {
@@ -37,7 +38,7 @@ class EditableTable extends React.Component {
         key: 'storageMaximum',
         width: '13%',
         render: (text, record) => {
-          return this.renderColumns(text, 'storageMaximum', record.id, record)
+          return this.renderColumns(text, 'storageMaximum', record.id, record.deleted)
         },
       },
       {
@@ -46,7 +47,7 @@ class EditableTable extends React.Component {
         key: 'storageReserved',
         width: '13%',
         render: (text, record) => {
-          return this.renderColumns(text, 'storageReserved', record.id, record)
+          return this.renderColumns(text, 'storageReserved', record.id, record.deleted)
         },
       },
       {
@@ -55,7 +56,7 @@ class EditableTable extends React.Component {
         key: 'storageScheduled',
         width: '13%',
         render: (text, record) => {
-          return this.renderColumns(text, 'storageScheduled', record.id, record)
+          return this.renderColumns(text, 'storageScheduled', record.id, record.deleted)
         },
       },
       {
@@ -64,31 +65,37 @@ class EditableTable extends React.Component {
         key: 'allowScheduling',
         width: '13%',
         render: (text, record) => {
-          return this.renderColumns(text, 'allowScheduling', record.id, record)
+          return this.renderColumns(text, 'allowScheduling', record.id, record.deleted)
         },
       },
       {
         title: '',
-        key: 'opration',
+        key: 'operation',
         width: '8%',
         render: (text, record) => {
           const { getFieldDecorator, getFieldsValue } = this.props.form
-          if ((!this.props.node.storageScheduled && !record.allowScheduling) || !getFieldsValue().disks[record.id].allowScheduling) {
-            if (getFieldsValue().disks[record.id].allowScheduling) {
-              return null
-            }
-            return (
-              <div style={{ position: 'relative' }}>
-                <div className={record.deleted ? styles.lineThrough : ''}></div>
-                  <FormItem style={{ margin: 0 }}>
-                    {getFieldDecorator(`disks[${record.id}]['deleted']`, {
-                      initialValue: !!record.deleted,
-                    })(record.deleted ? <Button icon="rollback" shape="circle" onClick={() => this.onRestore(record.id)} /> : <Button icon="delete" shape="circle" onClick={() => this.onRemove(record.id)} />)}
-                  </FormItem>
-              </div>
-            )
+          const canBeRemoved = () => {
+            return record.storageScheduled === 0 && getFieldsValue().disks[record.id].allowScheduling === false
           }
-          return null
+          const genActionButton = () => {
+            if (record.deleted) {
+              return <Button icon="rollback" shape="circle" onClick={() => this.onRestore(record.id)} />
+            } else if (canBeRemoved()) {
+              return <Button icon="delete" shape="circle" onClick={() => this.onRemove(record.id)} />
+            }
+            return <Tooltip placement="top" title="Only the disk with disabled scheduling and no storage scheduled can be deleted"><Button disabled icon="delete" shape="circle" /> </Tooltip>
+          }
+          return (
+            <div style={{ position: 'relative' }}>
+              <div className={record.deleted ? styles.lineThrough : ''}></div>
+                <FormItem style={{ margin: 0 }}>
+                  {getFieldDecorator(`disks['${record.id}']['deleted']`, {
+                    initialValue: !!record.deleted,
+                  })(<Checkbox style={{ display: 'none' }} />)}
+                  {genActionButton()}
+                </FormItem>
+            </div>
+          )
         },
       },
     ]
@@ -103,7 +110,7 @@ class EditableTable extends React.Component {
 
   onAdd() {
     uuid++
-    const disk = { id: `new_disk_${uuid}`, path: '', storageAvailable: '', storageMaximum: '', storageReserved: '', storageScheduled: '', allowScheduling: false }
+    const disk = { id: `new_disk_${uuid}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false }
     const newData = [...this.state.data]
     newData.push(disk)
     this.setState({ data: newData })
@@ -139,9 +146,9 @@ class EditableTable extends React.Component {
     this.setState({ data: this.state.data.filter(item => item.id !== id) })
   }
 
-  renderColumns(text, column, rowIndex, record) {
+  renderColumns(text, column, rowIndex, disabled) {
     return (
-      <EditableDiskCell form={this.props.form} value={text} dataIndex={column} rowIndex={rowIndex} disabled={record.deleted} />
+      <EditableDiskCell form={this.props.form} value={text} dataIndex={column} rowIndex={rowIndex} disabled={disabled} />
     )
   }
 
