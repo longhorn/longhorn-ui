@@ -18,7 +18,7 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
               initialValue: value,
             })(<Input
               type="text"
-              placeholder="A Linux directaory path like “/foo/bar”" disabled={disabled} />)}
+              placeholder="Path mounted by the disk, e.g. /mnt/disk1" disabled={disabled} />)}
           </FormItem>
         )
       case 'storageAvailable':
@@ -29,7 +29,7 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
             {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               initialValue: parseFloat(formatMib(value)),
             })(<span>
-              <InputNumber min={1} defaultValue={parseFloat(formatMib(value), 10)} disabled /> Gi
+              <InputNumber min={0} defaultValue={parseFloat(formatMib(value), 10)} disabled /> Gi
             </span>)}
           </FormItem>
         )
