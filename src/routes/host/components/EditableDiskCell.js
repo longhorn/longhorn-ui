@@ -39,7 +39,7 @@ const EditableDiskCell = ({ form, value, dataIndex, rowIndex, disabled }) => {
             {getFieldDecorator(`disks['${rowIndex}']['${dataIndex}']`, {
               initialValue: parseFloat(formatMib(value), 10),
             })(<span>
-              <InputNumber min={1} defaultValue={parseFloat(formatMib(value), 10)} disabled={disabled} /> Gi
+              <InputNumber min={0} defaultValue={parseFloat(formatMib(value), 10)} disabled={disabled} /> Gi
             </span>)}
           </FormItem>
         )
