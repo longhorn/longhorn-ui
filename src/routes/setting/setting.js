@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Button, Spin } from 'antd'
+import { Form, Input, Button, Spin, Icon } from 'antd'
 import styles from './setting.less'
 const FormItem = Form.Item
 
@@ -17,10 +17,23 @@ const form = ({
     const fields = getFieldsValue()
     onSubmit(fields)
   }
-  const settings = data.map((item) => <FormItem key={item.id}>
+
+  const parseSettingRules = (setting) => {
+    const definition = setting.definition
+    const rules = []
+    if (definition.required) {
+      rules.push({ required: true })
+    }
+    return rules
+  }
+
+  const settings = data.map((item) => <FormItem key={item.id} label={<span style={{ fontSize: '14px' }}>{item.definition.displayName}</span>} >
     {getFieldDecorator(item.name, {
-      initialValue: item.value,
-    })(<Input addonBefore={item.name.humpToSpace()} />)}
+      rules: parseSettingRules(item),
+      initialValue: item.value || item.definition.default,
+    })(<Input disabled={item.definition.readOnly} />)
+    }
+    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '80%', fontWeight: 400 }}>{item.definition.required ? 'Required. ' : ''} {item.definition.description}</small>
   </FormItem>)
 
   return (
