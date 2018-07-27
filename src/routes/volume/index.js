@@ -26,6 +26,7 @@ class Volume extends React.Component {
     const volumeListProps = {
       dataSource: data,
       loading,
+      engineImages,
       takeSnapshot(record) {
         dispatch({
           type: 'volume/actions',
@@ -252,6 +253,7 @@ class Volume extends React.Component {
 
     const volumeBulkActionsProps = {
       selectedRows,
+      engineImages,
       bulkDeleteVolume() {
         dispatch({
           type: 'volume/bulkDelete',

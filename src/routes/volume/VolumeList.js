@@ -8,8 +8,9 @@ import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure } from './helper/index'
 
-function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
   const volumeActionsProps = {
+    engineImages,
     showAttachHost,
     showEngineUpgrade,
     showRecurring,
@@ -129,6 +130,7 @@ function list({ loading, dataSource, showAttachHost, showEngineUpgrade, showRecu
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  engineImages: PropTypes.array,
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,
