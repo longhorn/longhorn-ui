@@ -70,6 +70,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   }
 
   const volumeActionsProps = {
+    engineImages,
     takeSnapshot(record) {
       dispatch({
         type: 'snapshotModal/snapshotAction',

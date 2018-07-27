@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Dropdown, Button, Icon, Menu } from 'antd'
 
 const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps }) => {
-  const menu = menuOptions.map(item => <Menu.Item key={item.key}>{item.name}</Menu.Item>)
+  const menu = menuOptions.map(item => <Menu.Item key={item.key} disabled={!!item.disabled}>{item.name}</Menu.Item>)
   return (<Dropdown
     overlay={<Menu onClick={onMenuClick}>{menu}</Menu>}
     {...dropdownProps}
