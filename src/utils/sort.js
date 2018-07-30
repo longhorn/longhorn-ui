@@ -35,3 +35,12 @@ export function sortVolumeBackups(dataSource) {
   })
 }
 
+export function sortTable(a, b, prop) {
+  if (a[prop] < b[prop]) {
+    return -1
+  }
+  if (a[prop] > b[prop]) {
+    return 1
+  }
+  return 0
+}
