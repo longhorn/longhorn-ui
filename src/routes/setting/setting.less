@@ -2,4 +2,23 @@
   :global .ant-input-group-addon {
     text-transform: capitalize
   }
+  .fieldset {
+    border: 1px solid #f2f4f5;
+    position: relative;
+    margin: 24px 0px;
+    padding: 16px 16px 0 16px;
+    > .fieldsetLabel {
+      position: absolute;
+      transform: translateY(-120%);
+      text-transform: capitalize;
+      display: inline-block;
+      padding: 0 24px;
+      white-space: nowrap;
+      text-align: center;
+      font-weight: 500;
+      color: rgba(0,0,0,.85);
+      font-size: 16px;
+      background-color: #ffffff;
+    }
+  }
 }

@@ -64,17 +64,36 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         )
       },
     }, {
-      title: 'Attached Node',
-      dataIndex: 'host',
-      key: 'host',
-    }, {
       title: 'Frontend',
       dataIndex: 'frontend',
       key: 'frontend',
     }, {
-      title: 'Endpoint',
-      dataIndex: 'endpoint',
-      key: 'endpoint',
+      title: 'Attached Node & Endpoint',
+      children: [
+        {
+          title: 'Attached Node',
+          key: 'host',
+          render: (text, record) => {
+            return (<div>
+              {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId}</div>)}
+            </div>)
+          },
+        },
+        {
+          title: 'Endpoint',
+          key: 'endpoint',
+          render: (text, record) => {
+            return (<div>
+              {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}><span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span></div>)}
+            </div>)
+          },
+        },
+      ],
+      render: (text, record) => {
+        return (<div>
+          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId} <span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span></div>)}
+        </div>)
+      },
     }, {
       title: 'Size',
       dataIndex: 'size',
