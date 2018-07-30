@@ -42,7 +42,7 @@ const form = ({
       initialValue: setting.value || setting.definition.default,
     })(genInputItem(setting))
     }
-    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '80%', fontWeight: 400 }}>{setting.definition.required ? 'Required. ' : ''} {setting.definition.description}</small>
+    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required ? 'Required. ' : ''} {setting.definition.description}</small>
   </FormItem>
   const getCategoryWeight = (category) => {
     switch (category) {
