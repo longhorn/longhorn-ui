@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Button, Spin, Icon } from 'antd'
+import { Form, Input, InputNumber, Button, Spin, Icon } from 'antd'
 import styles from './setting.less'
 const FormItem = Form.Item
 
@@ -17,7 +17,6 @@ const form = ({
     const fields = getFieldsValue()
     onSubmit(fields)
   }
-
   const parseSettingRules = (setting) => {
     const definition = setting.definition
     const rules = []
@@ -26,15 +25,57 @@ const form = ({
     }
     return rules
   }
-
-  const settings = data.map((item) => <FormItem key={item.id} label={<span style={{ fontSize: '14px' }}>{item.definition.displayName}</span>} >
-    {getFieldDecorator(item.name, {
-      rules: parseSettingRules(item),
-      initialValue: item.value || item.definition.default,
-    })(<Input disabled={item.definition.readOnly} />)
+  const genInputItem = (setting) => {
+    let formItem
+    switch (setting.definition.type) {
+      case 'int' :
+        formItem = <InputNumber style={{ width: '100%' }} disabled={setting.definition.readOnly} />
+        break
+      default:
+        formItem = <Input disabled={setting.definition.readOnly} />
     }
-    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '80%', fontWeight: 400 }}>{item.definition.required ? 'Required. ' : ''} {item.definition.description}</small>
-  </FormItem>)
+    return formItem
+  }
+  const genFormItem = (setting) => <FormItem key={setting.id} label={<span style={{ fontSize: '14px' }}>{setting.definition.displayName}</span>} >
+    {getFieldDecorator(setting.name, {
+      rules: parseSettingRules(setting),
+      initialValue: setting.value || setting.definition.default,
+    })(genInputItem(setting))
+    }
+    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '80%', fontWeight: 400 }}>{setting.definition.required ? 'Required. ' : ''} {setting.definition.description}</small>
+  </FormItem>
+  const getCategoryWeight = (category) => {
+    switch (category) {
+      case 'general':
+        return 0
+      case 'backup':
+        return 1
+      case 'scheduling':
+        return 2
+      default:
+        return category
+    }
+  }
+  const settingsGrouped = data.reduce((result, item) => {
+    const r = result[item.definition.category]
+    if (r) {
+      r.push(item)
+    } else {
+      result[item.definition.category] = [item]
+    }
+    return result
+  }, {})
+  const settings = Object.keys(settingsGrouped).sort((a, b) => {
+    const categoryA = getCategoryWeight(a)
+    const categoryB = getCategoryWeight(b)
+    if (categoryA < categoryB) {
+      return -1
+    }
+    if (categoryA > categoryB) {
+      return 1
+    }
+    return 0
+  }).map(item => <div key={item}> <div className={styles.fieldset}><span className={styles.fieldsetLabel}>{item}</span> { settingsGrouped[item].map(setting => genFormItem(setting))}</div></div>)
 
   return (
     <Spin spinning={loading}>
