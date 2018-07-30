@@ -7,6 +7,7 @@ import { LinkTo } from '../../components'
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure } from './helper/index'
+import { sortTable } from '../../utils/sort'
 
 function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
   const volumeActionsProps = {
@@ -31,6 +32,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'state',
       key: 'state',
       width: 100,
+      sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
@@ -43,6 +45,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'robustness',
       key: 'robustness',
       width: 100,
+      sorter: (a, b) => sortTable(a, b, 'robustness'),
       render: (text) => {
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
@@ -54,6 +57,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
           <div>
@@ -84,20 +88,16 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           key: 'endpoint',
           render: (text, record) => {
             return (<div>
-              {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}><span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span></div>)}
+              {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.endpoint ? <span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span> : null}</div>)}
             </div>)
           },
         },
       ],
-      render: (text, record) => {
-        return (<div>
-          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId} <span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span></div>)}
-        </div>)
-      },
     }, {
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
+      sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text) => {
         return (
           <div>
@@ -109,6 +109,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
+      sorter: (a, b) => sortTable(a, b, 'created'),
       render: (text) => {
         return (
           <div>

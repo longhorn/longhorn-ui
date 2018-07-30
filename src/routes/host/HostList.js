@@ -4,6 +4,7 @@ import styles from './HostList.less'
 import classnames from 'classnames'
 import HostActions from './HostActions'
 import { formatMib } from '../../utils/formater'
+import { sortTable } from '../../utils/sort'
 
 function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal }) {
   const hostActionsProps = {
@@ -16,6 +17,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       key: 'state',
       width: 100,
       className: styles.status,
+      sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text) => {
         return (
           <div className={classnames({ capitalize: true })}>
@@ -27,10 +29,12 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => sortTable(a, b, 'name'),
     }, {
       title: 'Agent Address',
       dataIndex: 'address',
       key: 'address',
+      sorter: (a, b) => sortTable(a, b, 'address'),
     }, {
       title: 'Replicas',
       dataIndex: 'replicas',
@@ -46,6 +50,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'Allow Scheduling',
       dataIndex: 'allowScheduling',
       key: 'allowScheduling',
+      sorter: (a, b) => sortTable(a, b, 'allowScheduling'),
       render: (text) => {
         return (
           <div>

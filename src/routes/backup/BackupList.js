@@ -3,6 +3,7 @@ import { Table, Modal, Icon, message } from 'antd'
 import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { sortTable } from '../../utils/sort'
 
 import moment from 'moment'
 const confirm = Modal.confirm
@@ -72,6 +73,7 @@ class List extends React.Component {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
+        sorter: (a, b) => sortTable(a, b, 'id'),
       }, {
         title: 'Volume',
         dataIndex: 'volumeName',
@@ -80,10 +82,12 @@ class List extends React.Component {
         title: 'Snaphost Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
+        sorter: (a, b) => sortTable(a, b, 'snapshotName'),
       }, {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
+        sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text) => {
           return (
             <div>
@@ -95,6 +99,7 @@ class List extends React.Component {
         title: 'Timestamp',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
+        sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (
             <div>
@@ -106,6 +111,7 @@ class List extends React.Component {
         title: 'Created',
         dataIndex: 'created',
         key: 'created',
+        sorter: (a, b) => sortTable(a, b, 'created'),
         render: (text) => {
           return (
             <div>

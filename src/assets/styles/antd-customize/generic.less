@@ -8,9 +8,13 @@
       }
     }
   }
-
+  .ant-table-column-sorter-up, .ant-table-column-sorter-down {
+    height: 8px !important;
+    line-height: 8px !important;
+    width: 16px !important;
+  }
   .ant-table {
-    .ant-table-thead > tr > th {
+    .ant-table-thead > tr > th, .ant-table-thead > tr > th.ant-table-column-sort {
       text-align: center;
       background: @color-primary-light;
       color: white;
@@ -27,6 +31,12 @@
 
       .ant-table-body > table {
         padding: 0;
+      }
+    }
+    .ant-table-column-sorter {
+      height: 16px;
+      .anticon-caret-up, .anticon-caret-down {
+        font-size: 16px !important;
       }
     }
   }
