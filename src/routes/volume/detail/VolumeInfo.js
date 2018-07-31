@@ -43,16 +43,12 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         </span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Attached Node:</span>
-        {selectedVolume.host}
-      </div>
-      <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>
         {selectedVolume.frontend}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Endpoint:</span>
-        {selectedVolume.endpoint}
+        <span className={styles.label}> Attached Node &amp; Endpoint :</span>
+        {selectedVolume.controllers.filter(item => item.hostId !== '' && item.endpoint !== '').map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId} <br /> <span style={{ backgroundColor: '#f2f4f5' }}> {item.endpoint} </span></div>)}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Size:</span>
