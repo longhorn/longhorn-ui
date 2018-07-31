@@ -77,11 +77,11 @@ class Snapshots extends React.Component {
     return (
       <Spin spinning={this.props.loading}>
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
-          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
             Take Snapshot
           </Button>
           &nbsp;
-          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate} icon="scan" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
+          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
             Create Backup
           </Button>
           <div style={{ marginTop: '20px' }}>
@@ -100,6 +100,7 @@ Snapshots.propTypes = {
   volume: PropTypes.object,
   loading: PropTypes.bool,
   snapshotTree: PropTypes.array,
+  state: PropTypes.bool,
 }
 
 export default Snapshots
