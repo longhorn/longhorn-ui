@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
-import { Table, Button, Tooltip } from 'antd'
+import { Table, Tooltip } from 'antd'
 import styles from './HostList.less'
 import classnames from 'classnames'
 import HostActions from './HostActions'
-import { formatMib } from '../../utils/formater'
 import { sortTable } from '../../utils/sort'
+import DiskList from './DiskList'
+import IconEdit from './components/IconEdit'
 
 function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal }) {
   const hostActionsProps = {
@@ -29,16 +30,21 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: 400,
+      className: styles.name,
       sorter: (a, b) => sortTable(a, b, 'name'),
     }, {
       title: 'Agent Address',
       dataIndex: 'address',
       key: 'address',
+      width: 250,
+      className: styles.agentAddress,
       sorter: (a, b) => sortTable(a, b, 'address'),
     }, {
       title: 'Replicas',
       dataIndex: 'replicas',
       key: 'replicas',
+      className: styles.replicas,
       render: (text, record) => {
         return (
           <a onClick={e => showReplicaModal(record, e)}>
@@ -47,81 +53,30 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
         )
       },
     }, {
-      title: 'Allow Scheduling',
+      title: 'Scheduling',
       dataIndex: 'allowScheduling',
       key: 'allowScheduling',
+      width: 226,
+      className: styles.allowScheduling,
       sorter: (a, b) => sortTable(a, b, 'allowScheduling'),
-      render: (text) => {
+      render: (text, record) => {
         return (
-          <div>
-            {text ? 'True' : 'False'}
-          </div>
+          <HostActions {...hostActionsProps} selected={record} />
         )
       },
     }, {
       title: '',
       key: 'operation',
-      width: 100,
+      width: 50,
       render: (text, record) => {
         return (
-          <HostActions {...hostActionsProps} selected={record} />
+          <Tooltip placement="top" title="Edit Disks"> <a shape="circle" icon="edit" onClick={() => showEditDisksModal(record)} ><IconEdit width={12} height={12} /></a> </Tooltip>
         )
       },
     },
   ]
 
   const disks = function (node) {
-    const formatSi = (val) => {
-      return formatMib(val)
-    }
-    const diskColumns = [
-      {
-        title: 'Path',
-        dataIndex: 'path',
-        key: 'path',
-      },
-      {
-        title: 'Storage Available',
-        dataIndex: 'storageAvailable',
-        key: 'storageAvailable',
-        render: formatSi,
-      },
-      {
-        title: 'Storage Maximum',
-        dataIndex: 'storageMaximum',
-        key: 'storageMaximum',
-        render: formatSi,
-      },
-      {
-        title: 'Storage Reserved',
-        dataIndex: 'storageReserved',
-        key: 'storageReserved',
-        render: formatSi,
-      },
-      {
-        title: 'Storage Scheduled',
-        dataIndex: 'storageScheduled',
-        key: 'storageScheduled',
-        render: formatSi,
-      },
-      {
-        title: 'Allow Scheduling',
-        dataIndex: 'allowScheduling',
-        key: 'allowScheduling',
-        render: (text) => {
-          return (
-            <div>
-              {text ? 'True' : 'False'}
-            </div>
-          )
-        },
-      },
-      {
-        title: (<Tooltip placement="top" title="Edit Disks"> <Button shape="circle" icon="edit" onClick={() => showEditDisksModal(node)} /> </Tooltip>),
-        key: 'operation',
-        width: 100,
-      },
-    ]
     const data = Object.keys(node.disks).map(diskId => {
       const disk = node.disks[diskId]
       return {
@@ -130,12 +85,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       }
     })
     return (
-      <Table
-        columns={diskColumns}
-        dataSource={data}
-        pagination={false}
-        rowKey={disk => disk.id}
-      />
+     <DiskList disks={data} />
     )
   }
 
@@ -144,6 +94,8 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
   return (
     <div>
       <Table
+        className={styles.table}
+        defaultExpandAllRows
         bordered={false}
         columns={columns}
         dataSource={dataSource}

@@ -1,27 +1,15 @@
 import React, { PropTypes } from 'react'
-import { Modal } from 'antd'
-import { DropOption } from '../../components'
-const confirm = Modal.confirm
+import { Radio } from 'antd'
+import styles from './HostActions.less'
 
 function actions({ selected, toggleScheduling }) {
-  const handleMenuClick = (event, record) => {
-    switch (event.key) {
-      case 'toggleScheduling':
-        confirm({
-          title: `Are you sure you want to ${record.allowScheduling ? 'disable' : 'enable'} scheduling for ${record.name}`,
-          onOk() {
-            toggleScheduling(record)
-          },
-        })
-        break
-      default:
-    }
-  }
-
-  const availableActions = [{ key: 'toggleScheduling', name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling' }]
   return (
-    <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
-    />
+    <div style={{ paddingRight: '10px' }}>
+    <Radio.Group value={selected.allowScheduling} buttonStyle="solid" onChange={() => toggleScheduling(selected)} size="large">
+      <Radio.Button value className={selected.allowScheduling ? styles.radioButtonChecked : styles.radioButton}>Enabled</Radio.Button>
+      <Radio.Button value={false} className={selected.allowScheduling ? styles.radioButton : styles.radioButtonChecked} >Disabled</Radio.Button>
+    </Radio.Group>
+    </div>
   )
 }
 

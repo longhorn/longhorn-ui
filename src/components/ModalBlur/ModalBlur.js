@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
-import { Modal } from 'antd'
+import { Modal, Button } from 'antd'
+import './ModalBlur.less'
 
 class ModalBlur extends React.Component {
   componentDidMount() {
@@ -19,14 +20,14 @@ class ModalBlur extends React.Component {
       payload: nextProps.visible,
     })
   }
-  onCancel() {
+  onCancel = () => {
     this.props.dispatch({
       type: 'app/changeBlur',
       payload: false,
     })
     this.props.onCancel && this.props.onCancel()
   }
-  onOk() {
+  onOk = () => {
     this.props.dispatch({
       type: 'app/changeBlur',
       payload: false,
@@ -35,7 +36,12 @@ class ModalBlur extends React.Component {
   }
   render() {
     return (
-      <Modal {...this.props} onOk={this.onOk.bind(this)} onCancel={this.onCancel.bind(this)}></Modal>
+      <Modal {...this.props} footer={[
+        <Button key="cancel" onClick={this.onCancel}>Cancel</Button>,
+        <Button key="ok" type="success" onClick={this.onOk}>
+          {this.props.okText ? this.props.okText : 'OK'}
+        </Button>,
+      ]}></Modal>
     )
   }
 }
@@ -45,6 +51,7 @@ ModalBlur.propTypes = {
   dispatch: PropTypes.func,
   onCancel: PropTypes.func,
   onOk: PropTypes.func,
+  okText: PropTypes.string,
 }
 
 export default connect(({ app }) => ({ app }))(ModalBlur)

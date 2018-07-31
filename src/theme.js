@@ -9,6 +9,7 @@ module.exports = () => {
     '@menu-dark-bg': '#3e3e3e',
     '@primary-color': '#00558b',
     '@text-color': '#666',
+    '@font-size-base': '15px',
     '@font-family': '"AvenirNext-Regular", "Helvetica Neue", "lucida grande", "PingFangHK-Light", "STHeiti", "Heiti SC", "Hiragino Sans GB", "Microsoft JhengHei", "Microsoft Yahei", SimHei, "WenQuanYi Micro Hei", "Droid Sans", "Roboto", Helvetica, Tahoma, Arial, "sans-serif"',
   }
 }

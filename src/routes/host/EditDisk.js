@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Form } from 'antd'
 import { ModalBlur } from '../../components'
-import EditableDiskTable from './components/EditableDiskTable'
+import EditableDiskList from './components/EditableDiskList'
 import { formatMib } from '../../utils/formater'
 
 const modal = ({
@@ -61,21 +61,22 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Edit Disk',
+    title: 'Disks',
     visible,
     onCancel,
     onOk: handleOk,
-    width: 1000,
+    width: 1300,
+    okText: 'Save',
   }
 
-  const EditableDiskTableProps = {
+  const EditableDiskListProps = {
     form,
     node,
   }
 
   return (
     <ModalBlur {...modalOpts}>
-      <EditableDiskTable {...EditableDiskTableProps} />
+      <EditableDiskList {...EditableDiskListProps} />
     </ModalBlur>
   )
 }
