@@ -84,6 +84,7 @@ export default (namespace) => {
       // record nodes name of every Level
       treeLevelNodes: [],
       loading: false,
+      state: false,
     },
     subscriptions: {
 
@@ -115,10 +116,18 @@ export default (namespace) => {
       }, { call, put }) {
         if (!payload.url) {
           yield put({ type: 'setSnapshot', payload: [] })
+          yield put({ type: 'setSnapshotState', payload: true })
           return
         }
         yield put({ type: 'setLoading', payload: true })
-        const treeData = (yield call(execAction, payload.url)).data
+        const snapshots = yield call(execAction, payload.url)
+        let treeData = []
+        if (snapshots) {
+          treeData = snapshots.data
+          yield put({ type: 'setSnapshotState', payload: true })
+        } else {
+          yield put({ type: 'setSnapshotState', payload: false })
+        }
         treeData.forEach(el => {
           const children = el.children
           if (children) {
@@ -181,6 +190,12 @@ export default (namespace) => {
         return {
           ...state,
           treeLevelNodes: payload,
+        }
+      },
+      setSnapshotState(state, action) {
+        return {
+          ...state,
+          state: action.payload,
         }
       },
     },

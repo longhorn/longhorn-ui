@@ -7,7 +7,7 @@ import { isSchedulingFailure } from '../helper/index'
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
 
-function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotModal: { snapshotTree } }) {
+function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotModal: { snapshotTree, state } }) {
   let errorMsg = null
   if (isSchedulingFailure(selectedVolume)) {
     errorMsg = (
@@ -56,7 +56,7 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
-        {formatMib(computeActualSize())}
+        {state ? formatMib(computeActualSize()) : 'Unknown'}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Base Image:</span>

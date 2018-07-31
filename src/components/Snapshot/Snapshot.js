@@ -102,7 +102,7 @@ function CurrentPoint(props) {
     <Menu
       onClick={onClick}
     >
-      <Menu.Item key="1" disabled={!props.volume.actions || !props.volume.actions.snapshotCreate}>
+      <Menu.Item key="1" disabled={!props.volume.actions || !props.volume.actions.snapshotCreate || !props.state}>
         <span>Take Snapshot</span>
       </Menu.Item>
     </Menu>
@@ -124,6 +124,7 @@ function CurrentPoint(props) {
 CurrentPoint.propTypes = {
   onAction: PropTypes.func,
   volume: PropTypes.object,
+  state: PropTypes.bool,
 }
 
 const loop = (data, props) => data.map((item) => {
@@ -165,6 +166,7 @@ Snapshot.propTypes = {
   snapshotTree: PropTypes.array,
   loading: PropTypes.bool,
   volume: PropTypes.object,
+  state: PropTypes.bool,
 }
 
 export default Snapshot
