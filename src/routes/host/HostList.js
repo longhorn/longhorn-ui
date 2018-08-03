@@ -48,7 +48,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       render: (text, record) => {
         return (
           <a onClick={e => showReplicaModal(record, e)}>
-            {text ? text.length : 0} Replicas
+            {text ? text.length : 0} {text && text.length > 1 ? 'Replicas' : 'Replica'}
           </a>
         )
       },

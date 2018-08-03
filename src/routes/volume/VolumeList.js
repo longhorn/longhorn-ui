@@ -6,7 +6,7 @@ import { LinkTo } from '../../components'
 
 import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
-import { isSchedulingFailure } from './helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from './helper/index'
 import { sortTable } from '../../utils/sort'
 
 function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
@@ -23,33 +23,30 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     showSalvage,
     rollback,
   }
-  const needToWait = (state, replicas) => {
-    return state === '' || state.endsWith('ing') || replicas.findIndex(item => item.mode.toLowerCase() === 'wo') > -1
-  }
   const columns = [
     {
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 100,
+      width: 130,
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
-            {text.hyphenToHump()} {needToWait(text, record.replicas) ? <Icon type="loading" /> : null}
+            {text.hyphenToHump()} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
       },
     }, {
-      title: 'Robustness',
+      title: 'Health',
       dataIndex: 'robustness',
       key: 'robustness',
-      width: 100,
+      width: 120,
       sorter: (a, b) => sortTable(a, b, 'robustness'),
       render: (text) => {
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
-            {text.hyphenToHump()}
+            {getHealthState(text)}
           </div>
         )
       },
@@ -71,28 +68,27 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Frontend',
       dataIndex: 'frontend',
       key: 'frontend',
+      width: 110,
+      render: (text) => {
+        return (frontends.find(item => item.value === text) || '').label
+      },
     }, {
-      title: 'Attached Node & Endpoint',
-      children: [
-        {
-          title: 'Attached Node',
-          key: 'host',
-          render: (text, record) => {
-            return (<div>
-              {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId}</div>)}
-            </div>)
-          },
-        },
-        {
-          title: 'Endpoint',
-          key: 'endpoint',
-          render: (text, record) => {
-            return (<div>
-              {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.endpoint ? <span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span> : null}</div>)}
-            </div>)
-          },
-        },
-      ],
+      title: 'Attached Node',
+      key: 'host',
+      render: (text, record) => {
+        return (<div>
+          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', height: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
+        </div>)
+      },
+    },
+    {
+      title: 'Endpoint',
+      key: 'endpoint',
+      render: (text, record) => {
+        return (<div>
+          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', height: '22px' }} key={item.hostId}>{item.endpoint ? <span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span> : <span>&nbsp;</span>}</div>)}
+        </div>)
+      },
     }, {
       title: 'Size',
       dataIndex: 'size',
