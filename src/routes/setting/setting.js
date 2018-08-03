@@ -20,7 +20,7 @@ const form = ({
   const parseSettingRules = (setting) => {
     const definition = setting.definition
     const rules = []
-    if (definition.required) {
+    if (definition.required && !definition.readOnly) {
       rules.push({ required: true })
     }
     return rules
@@ -32,7 +32,7 @@ const form = ({
         formItem = <InputNumber style={{ width: '100%' }} disabled={setting.definition.readOnly} />
         break
       default:
-        formItem = <Input disabled={setting.definition.readOnly} />
+        formItem = <Input readOnly={setting.definition.readOnly} />
     }
     return formItem
   }
@@ -42,7 +42,7 @@ const form = ({
       initialValue: setting.value || setting.definition.default,
     })(genInputItem(setting))
     }
-    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required ? 'Required. ' : ''} {setting.definition.description}</small>
+    <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}{setting.definition.description}</small>
   </FormItem>
   const getCategoryWeight = (category) => {
     switch (category) {

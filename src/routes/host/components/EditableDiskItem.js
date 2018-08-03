@@ -40,7 +40,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
               initialValue: disk.path,
             })(<Input
               type="text"
-              placeholder="Path mounted by the disk, e.g. /mnt/disk1" disabled={disk.deleted || !isNew} />)}
+              placeholder="Path mounted by the disk, e.g. /mnt/disk1" readOnly={disk.deleted || !isNew} />)}
           </FormItem>
         </div>
       </div>
@@ -53,7 +53,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
             {getFieldDecorator(`disks['${disk.id}']['storageAvailable']`, {
               initialValue: parseFloat(formatMib(disk.storageAvailable)),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageAvailable), 10)} disabled />
+              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageAvailable), 10)} readOnly />
             </span>)}
           </FormItem>
         </div>
@@ -67,7 +67,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
             {getFieldDecorator(`disks['${disk.id}']['storageMaximum']`, {
               initialValue: parseFloat(formatMib(disk.storageMaximum)),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageMaximum), 10)} disabled />
+              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageMaximum), 10)} readOnly />
             </span>)}
           </FormItem>
         </div>
@@ -81,7 +81,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
             {getFieldDecorator(`disks['${disk.id}']['storageReserved']`, {
               initialValue: parseFloat(formatMib(disk.storageReserved)),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageReserved), 10)} disabled={disk.deleted} />
+              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageReserved), 10)} readOnly={disk.deleted} />
             </span>)}
           </FormItem>
         </div>
@@ -95,7 +95,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
             {getFieldDecorator(`disks['${disk.id}']['storageScheduled']`, {
               initialValue: parseFloat(formatMib(disk.storageScheduled)),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageScheduled), 10)} disabled />
+              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageScheduled), 10)} readOnly />
             </span>)}
           </FormItem>
         </div>
