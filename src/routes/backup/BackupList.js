@@ -96,22 +96,10 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Timestamp',
+        title: 'SnapshotCreated',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
-        render: (text) => {
-          return (
-            <div>
-              {moment(new Date(text)).fromNow()}
-            </div>
-          )
-        },
-      }, {
-        title: 'Created',
-        dataIndex: 'created',
-        key: 'created',
-        sorter: (a, b) => sortTable(a, b, 'created'),
         render: (text) => {
           return (
             <div>

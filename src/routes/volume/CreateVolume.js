@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Form, Input, InputNumber, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { frontends } from './helper/index'
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -12,12 +13,6 @@ const formItemLayout = {
     span: 15,
   },
 }
-
-const frontends = [
-  { label: 'Block Device', value: 'blockdev' },
-  { label: 'iSCSI', value: 'iscsi' },
-]
-
 
 const modal = ({
   item,

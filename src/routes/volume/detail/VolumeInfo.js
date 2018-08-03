@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
-import { Row, Col, Alert } from 'antd'
+import { Row, Col, Alert, Icon } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib } from '../../../utils/formater'
-import { isSchedulingFailure } from '../helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from '../helper/index'
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
 
@@ -31,20 +31,20 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
     <div>
       {errorMsg}
       <div className={styles.row}>
-        <span className={styles.label}> Status:</span>
+        <span className={styles.label}> State:</span>
         <span className={classnames({ [selectedVolume.state.toLowerCase()]: true, capitalize: true })}>
-          {selectedVolume.state.hyphenToHump()}
+          {selectedVolume.state.hyphenToHump()} {needToWaitDone(selectedVolume.state, selectedVolume.replicas) ? <Icon type="loading" /> : null}
         </span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Robustness:</span>
+        <span className={styles.label}> Health:</span>
         <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true })}>
-          {selectedVolume.robustness.hyphenToHump()}
+          {getHealthState(selectedVolume.robustness)}
         </span>
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>
-        {selectedVolume.frontend}
+        {(frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Attached Node &amp; Endpoint :</span>

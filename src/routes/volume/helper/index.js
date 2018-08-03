@@ -47,3 +47,16 @@ export function getEngineUpgradeModalProps(volumes, engineImages, visible, dispa
     },
   }
 }
+
+export function getHealthState(state) {
+  return state.toLowerCase() === 'unknown' ? '' : state.hyphenToHump()
+}
+
+export function needToWaitDone(state, replicas) {
+  return state === '' || state.endsWith('ing') || replicas.findIndex(item => item.mode.toLowerCase() === 'wo') > -1
+}
+
+export const frontends = [
+  { label: 'Block Device', value: 'blockdev' },
+  { label: 'iSCSI', value: 'iscsi' },
+]

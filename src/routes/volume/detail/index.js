@@ -186,12 +186,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
           <VolumeActions {...volumeActionsProps} selected={selectedVolume} />
         </Col>
         <Col md={8} xs={24} className={styles.col}>
-          <Card title="Volume Detail" bordered={false} {...bodyStyle}>
+          <Card title="Volume Details" bordered={false} {...bodyStyle}>
             <VolumeInfo {...backupStatusProps} />
           </Card>
         </Col>
         <Col md={16} xs={24} style={{ marginBottom: 16 }}>
-          <Card title="Replica" bordered={false} {...bodyStyle}>
+          <Card title="Replicas" bordered={false} {...bodyStyle}>
             <ReplicaList {...replicasListProps} />
           </Card>
         </Col>
