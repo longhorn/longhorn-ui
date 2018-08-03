@@ -37,10 +37,10 @@ class StorageInput extends React.Component {
   }
 
   render() {
-    const { disabled } = this.props
+    const { readOnly } = this.props
     const state = this.state
     return (
-      <Input size="large" addonAfter="Gi" onChange={this.handleValueChange} value={state.value} disabled={disabled} />
+      <Input size="large" addonAfter="Gi" onChange={this.handleValueChange} value={state.value} readOnly={readOnly} />
     )
   }
 }
@@ -49,7 +49,7 @@ StorageInput.propTypes = {
   value: PropTypes.number,
   defaultValue: PropTypes.number,
   min: PropTypes.number,
-  disabled: PropTypes.bool,
+  readOnly: PropTypes.bool,
   onChange: PropTypes.func,
 }
 
