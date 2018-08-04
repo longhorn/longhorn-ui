@@ -8,7 +8,6 @@ import HostReplica from './HostReplica'
 function Host({ host, volume, loading, dispatch }) {
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible } = host
   const volumeList = volume.data
-
   data.forEach(agent => {
     const replicas = []
     volumeList.forEach(vol => {
@@ -23,7 +22,12 @@ function Host({ host, volume, loading, dispatch }) {
     })
     agent.replicas = replicas
   })
-
+  const getSelected = () => {
+    if (!selected.id) {
+      return {}
+    }
+    return data.find(item => item.id === selected.id) || {}
+  }
   const addDiskModalProps = {
     item: {},
     visible: addDiskModalVisible,
@@ -101,7 +105,7 @@ function Host({ host, volume, loading, dispatch }) {
   }
 
   const hostReplicaModalProps = {
-    selected,
+    selected: getSelected(selected.id),
     visible: replicaModalVisible,
     onCancel() {
       dispatch({
