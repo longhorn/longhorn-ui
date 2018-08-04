@@ -84,6 +84,10 @@ class List extends React.Component {
         key: 'snapshotName',
         sorter: (a, b) => sortTable(a, b, 'snapshotName'),
       }, {
+        title: 'Base Image',
+        dataIndex: 'labels.ranchervm-base-image',
+        key: 'baseImage',
+      }, {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
