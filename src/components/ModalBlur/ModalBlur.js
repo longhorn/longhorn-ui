@@ -36,12 +36,12 @@ class ModalBlur extends React.Component {
   }
   render() {
     return (
-      <Modal {...this.props} footer={[
+      <Modal footer={[
         <Button key="cancel" onClick={this.onCancel}>Cancel</Button>,
         <Button key="ok" type="success" onClick={this.onOk}>
           {this.props.okText ? this.props.okText : 'OK'}
         </Button>,
-      ]}></Modal>
+      ]} {...this.props}></Modal>
     )
   }
 }
