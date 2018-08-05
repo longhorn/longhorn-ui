@@ -6,6 +6,7 @@ import HostActions from './HostActions'
 import { sortTable } from '../../utils/sort'
 import DiskList from './DiskList'
 import IconEdit from './components/IconEdit'
+import StorageInfo from './components/StorageInfo'
 
 function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal }) {
   const hostActionsProps = {
@@ -16,7 +17,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 100,
+      width: 80,
       className: styles.status,
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text) => {
@@ -37,13 +38,14 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'Agent Address',
       dataIndex: 'address',
       key: 'address',
-      width: 250,
+      width: 180,
       className: styles.agentAddress,
       sorter: (a, b) => sortTable(a, b, 'address'),
     }, {
       title: 'Replicas',
       dataIndex: 'replicas',
       key: 'replicas',
+      width: 120,
       className: styles.replicas,
       render: (text, record) => {
         return (
@@ -53,10 +55,25 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
         )
       },
     }, {
+      title: '',
+      dataIndex: 'disks',
+      key: 'disks',
+      render: (disks) => {
+        const diskObjs = Object.values(disks)
+        const storage = {
+          storageAvailable: diskObjs.reduce((total, d) => total + d.storageAvailable, 0),
+          storageMaximum: diskObjs.reduce((total, d) => total + d.storageMaximum, 0),
+          storageReserved: diskObjs.reduce((total, d) => total + d.storageReserved, 0),
+          storageScheduled: diskObjs.reduce((total, d) => total + d.storageScheduled, 0),
+        }
+
+        return <StorageInfo storage={storage} />
+      },
+    }, {
       title: 'Scheduling',
       dataIndex: 'allowScheduling',
       key: 'allowScheduling',
-      width: 226,
+      width: 220,
       className: styles.allowScheduling,
       sorter: (a, b) => sortTable(a, b, 'allowScheduling'),
       render: (text, record) => {
