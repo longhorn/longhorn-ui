@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-import { formatMib } from '../../utils/formater'
 import styles from './DiskList.less'
+import StorageInfo from './components/StorageInfo'
 
 function diskList({ disks }) {
   return (
@@ -13,23 +13,8 @@ function diskList({ disks }) {
             <span className={styles.pathValue}>{d.path}</span>
           </div>
           <div className={styles.storageInfo}>
-            <div className={styles.storage}>
-              <div className={styles.storageValue}>{formatMib(d.storageAvailable)}</div>
-              <div className={styles.storageLabel}>Available</div>
-            </div>
-            <div className={styles.storage}>
-              <div className={styles.storageValue}>{formatMib(d.storageMaximum)}</div>
-              <div className={styles.storageLabel}>Maximum</div>
-            </div>
-            <div className={styles.storage}>
-              <div className={styles.storageValue}>{formatMib(d.storageReserved)}</div>
-              <div className={styles.storageLabel}>Reserved</div>
-            </div>
-            <div className={styles.storage}>
-              <div className={styles.storageValue}>{formatMib(d.storageScheduled)}</div>
-              <div className={styles.storageLabel}>Scheduled</div>
-            </div>
-            <div className={styles.storage}>
+            <StorageInfo storage={d} />
+            <div className={styles.scheduling}>
               <div className={styles.schedulingValue}>{d.allowScheduling ? 'Enabled' : 'Disabled'}</div>
               <div className={styles.schedulingLabel}>Scheduling</div>
             </div>
