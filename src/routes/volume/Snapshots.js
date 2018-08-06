@@ -2,12 +2,14 @@ import React, { PropTypes } from 'react'
 import { Button, Spin } from 'antd'
 
 import { Snapshot } from '../../components'
+import { backupProgressModal } from '../../utils/backup'
 
 class Snapshots extends React.Component {
   constructor(props) {
     super(props)
     this.onAction = (action) => {
       if (action.type === 'backup') {
+        backupProgressModal(props.volumeId)
         this.props.dispatch({
           type: 'snapshotModal/backup',
           payload: {

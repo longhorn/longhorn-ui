@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip } from 'antd'
+import { backupProgressModal } from '../../utils/backup'
 import { formatMib } from '../../utils/formater'
 import moment from 'moment'
 import './Snapshot.less'
@@ -26,6 +27,9 @@ function SnapshotIcon(props, snapshotProps) {
   function onClick({ key }) {
     if (key === 'snapshotRevert') {
       return
+    }
+    if (key === 'snapshotBackup') {
+      backupProgressModal(snapshotProps.volume.name)
     }
     doAction(key)
   }
