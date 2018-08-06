@@ -49,13 +49,21 @@ class EditableDiskList extends React.Component {
     this.setState({ data: this.state.data.filter(item => item.id !== id) })
   }
 
+  validatePath = (rule, value, callback) => {
+    if (value && Object.values(this.props.form.getFieldsValue().disks).filter(d => d.path.trim() === value.trim()).length > 1) {
+      callback('This directory already exists')
+    } else {
+      callback()
+    }
+  }
+
   render() {
     const data = this.state.data
     const originDisks = this.originDisks
     const { form } = this.props
     return (
       <Form>
-        {data.map(d => (<EditableDiskItem key={d.id} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} />))}
+        {data.map(d => (<EditableDiskItem key={d.id} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} />))}
         <div style={{ textAlign: 'right', margin: '20px 20px' }}>
           <Button style={{ backgroundColor: '#eef0f1' }} onClick={() => this.onAdd()}> Add Disk </Button>
         </div>

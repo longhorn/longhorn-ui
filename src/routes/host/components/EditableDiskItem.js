@@ -10,7 +10,7 @@ import classnames from 'classnames'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 
-function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
+function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath = f => f }) {
   const { getFieldDecorator, getFieldsValue } = form
   const canBeRemoved = () => {
     return disk.storageScheduled === 0 && getFieldsValue().disks[disk.id].allowScheduling === false
@@ -36,6 +36,8 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove }) {
               rules: [{
                 required: true,
                 message: 'Please Input Path!',
+              }, {
+                validator: validatePath,
               }],
               initialValue: disk.path,
             })(<Input
@@ -140,6 +142,7 @@ EditableDiskItem.propTypes = {
   isNew: PropTypes.bool,
   onRemove: PropTypes.func,
   onRestore: PropTypes.func,
+  validatePath: PropTypes.func,
 }
 
 export default EditableDiskItem
