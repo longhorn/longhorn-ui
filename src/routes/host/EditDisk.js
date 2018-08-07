@@ -22,7 +22,7 @@ const modal = ({
     const isStorageChanged = (origValue, inputValue) => {
       return formatMib(origValue) !== formatMib(inputValue)
     }
-    validateFields((errors, values) => {
+    validateFields({ force: true }, (errors, values) => {
       if (errors) {
         return
       }

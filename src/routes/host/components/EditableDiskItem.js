@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
 import styles from './EditableDiskItem.less'
-import { Input, Radio, Checkbox, Form, Tooltip } from 'antd'
+import { Radio, Checkbox, Form, Tooltip } from 'antd'
 import StorageInput from './StorageInput'
 import IconRemove from './IconRemove'
 import IconRestore from './IconRestore'
 import { formatMib } from '../../../utils/formater'
 import classnames from 'classnames'
+import PathInput from './PathInput'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
@@ -40,8 +41,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
                 validator: validatePath,
               }],
               initialValue: disk.path,
-            })(<Input
-              type="text"
+            })(<PathInput
               placeholder="Path mounted by the disk, e.g. /mnt/disk1" readOnly={disk.deleted || !isNew} />)}
           </FormItem>
         </div>
