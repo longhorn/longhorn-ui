@@ -1,3 +1,5 @@
+import ReconnectingWebSocket from 'reconnecting-websocket'
+
 function constructWebsocketURL(type, period) {
   let loc = window.location
 
@@ -13,11 +15,15 @@ function constructWebsocketURL(type, period) {
 
 export function wsChanges(dispatch, type, period) {
   let url = constructWebsocketURL(type, period)
-  const ws = new WebSocket(url)
-  ws.onmessage = function (msg) {
+  const options = {
+    connectionTimeout: 10000,
+    maxRetries: 10,
+  }
+  const rws = new ReconnectingWebSocket(url, [], options)
+  rws.addEventListener('message', (msg) => {
     dispatch({
       type: 'updateBackground',
       payload: JSON.parse(msg.data),
     })
-  }
+  })
 }
