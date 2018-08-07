@@ -11,6 +11,7 @@ export default {
     addDiskModalVisible: false,
     replicaModalVisible: false,
     editDisksModalVisible: false,
+    socketStatus: 'closed',
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -90,6 +91,9 @@ export default {
     },
     hideEditDisksModal(state) {
       return { ...state, editDisksModalVisible: false }
+    },
+    updateSocketStatus(state, action) {
+      return { ...state, socketStatus: action.payload }
     },
   },
 }

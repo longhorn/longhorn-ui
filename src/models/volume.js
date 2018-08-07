@@ -22,6 +22,7 @@ export default {
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
+    socketStatus: 'closed',
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -236,6 +237,9 @@ export default {
     },
     clearSelection(state) {
       return { ...state, selectedRows: [] }
+    },
+    updateSocketStatus(state, action) {
+      return { ...state, socketStatus: action.payload }
     },
   },
 }

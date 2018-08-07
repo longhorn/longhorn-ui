@@ -8,6 +8,7 @@ export default {
     data: [],
     createEngineImageModalVisible: false,
     createEngineImageModalKey: Math.random(),
+    socketStatus: 'closed',
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -69,6 +70,9 @@ export default {
     },
     hideCreateEngineImageModal(state) {
       return { ...state, createEngineImageModalVisible: false }
+    },
+    updateSocketStatus(state, action) {
+      return { ...state, socketStatus: action.payload }
     },
   },
 }

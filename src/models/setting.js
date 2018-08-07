@@ -7,6 +7,7 @@ export default {
   state: {
     data: [],
     saving: false,
+    socketStatus: 'closed',
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -61,6 +62,9 @@ export default {
         ...state,
         saving: false,
       }
+    },
+    updateSocketStatus(state, action) {
+      return { ...state, socketStatus: action.payload }
     },
   },
 }

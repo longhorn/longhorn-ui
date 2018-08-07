@@ -10,7 +10,7 @@ PORT = 8000
 .PHONY: build push shell run start stop rm release
 
 build:
-	docker build -t $(NS)/$(REPO):$(VERSION) .
+	docker build -t $(NS)/$(REPO):$(VERSION) --build-arg VERSION=$(VERSION) .
 	@echo Build $(NS)/$(REPO):$(VERSION) successful
 
 stop:

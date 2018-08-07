@@ -5,7 +5,7 @@ import { classnames, config } from '../utils'
 import { Helmet } from 'react-helmet'
 import enUS from 'antd/lib/locale-provider/en_US'
 import { LocaleProvider } from 'antd'
-const { Header, Bread, styles } = Layout
+const { Header, Bread, Footer, styles } = Layout
 
 let blur = (bl) => {
   return bl ? 'lh-blur' : ''
@@ -38,6 +38,7 @@ const App = ({ children, dispatch, location, app }) => {
                 {children}
               </div>
             </div>
+            <Footer />
           </div>
         </div>
       </div>
