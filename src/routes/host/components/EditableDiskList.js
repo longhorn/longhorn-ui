@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Form, Button } from 'antd'
 import EditableDiskItem from './EditableDiskItem'
+import { formatPath } from '../helper/index'
 
 let uuid = 0
 
@@ -46,11 +47,13 @@ class EditableDiskList extends React.Component {
   }
 
   remove = (id) => {
-    this.setState({ data: this.state.data.filter(item => item.id !== id) })
+    this.setState({ data: this.state.data.filter(item => item.id !== id) }, () => {
+      this.props.form.validateFields({ force: true })
+    })
   }
 
   validatePath = (rule, value, callback) => {
-    if (value && Object.values(this.props.form.getFieldsValue().disks).filter(d => d.path.trim() === value.trim()).length > 1) {
+    if (value && Object.values(this.props.form.getFieldsValue().disks).filter(d => formatPath(d.path) === formatPath(value)).length > 1) {
       callback('This directory already exists')
     } else {
       callback()
