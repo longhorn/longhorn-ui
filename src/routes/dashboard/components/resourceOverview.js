@@ -3,7 +3,7 @@ import { Spin, Card, Row, Col } from 'antd'
 import { formatMib } from '../../../utils/formater'
 import ResourceChart from './resourceChart'
 import ResourceDetail from './resourceDetail'
-import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
+import { nodeStatusColorMap, healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
 
 function ResourceOverview({ host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f }) {
   const { host: hostLoading, volume: volumeLoading } = loading.models
@@ -142,7 +142,7 @@ function ResourceOverview({ host, volume, loading, onVolumeClick = f => f, onNod
     clickable: true,
   }
 
-  const nodeInfoColors = ['#27AE5F', '#F1C40F', '#F15354', '#dee1e3']
+  const nodeInfoColors = [nodeStatusColorMap.schedulable, nodeStatusColorMap.unschedulable, nodeStatusColorMap.down, nodeStatusColorMap.disabled]
   const nodeInfoData = [
     { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable },
     { key: 'unschedulable', name: 'Unschedulable', value: nodeInfo.unschedulable },

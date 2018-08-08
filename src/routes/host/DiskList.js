@@ -3,12 +3,23 @@ import styles from './DiskList.less'
 import StorageInfo from './components/StorageInfo'
 
 function diskList({ disks }) {
+  const getDiskStatus = (d) => {
+    if (d.allowScheduling === false) {
+      return (<span className={styles.disabled}>Disabled</span>)
+    }
+    const status = d.conditions.Schedulable.status.toLowerCase() === 'true'
+    if (status) {
+      return (<span className={styles.schedulable}>Schedulable</span>)
+    }
+    return (<span className={styles.unschedulable}>Unschedulable</span>)
+  }
   return (
     <div className={styles.diskList}>
       <div className={styles.title}>Disks</div>
       {disks.map(d => (
         <div key={d.id} className={styles.diskItem}>
           <div className={styles.path}>
+            <span>{getDiskStatus(d)}</span>
             <span className={styles.pathLabel}>Path: &nbsp;</span>
             <span className={styles.pathValue}>{d.path}</span>
           </div>

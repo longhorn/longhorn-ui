@@ -7,6 +7,7 @@ import { sortTable } from '../../utils/sort'
 import DiskList from './DiskList'
 import IconEdit from './components/IconEdit'
 import StorageInfo from './components/StorageInfo'
+import { getNodeStatus, nodeStatusColorMap } from '../../utils/filter'
 
 function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal }) {
   const hostActionsProps = {
@@ -17,13 +18,14 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'Status',
       dataIndex: 'conditions.Ready.status',
       key: 'status',
-      width: 80,
+      width: 120,
       className: styles.status,
       sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
-      render: (text) => {
+      render: (text, record) => {
+        const status = getNodeStatus(record)
         return (
-          <div className={classnames({ capitalize: true })}>
-          {text === 'True' ? 'up' : 'down'}
+          <div className={classnames({ capitalize: true })} style={{ color: nodeStatusColorMap[status.key] }}>
+          {status.name}
           </div>
         )
       },
