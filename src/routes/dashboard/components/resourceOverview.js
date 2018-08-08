@@ -102,6 +102,7 @@ function ResourceOverview({ host, volume, loading, onVolumeClick = f => f, onNod
     colors: storageSpaceInfoColors,
     data: storageSpaceInfoData,
     loading: hostLoading,
+    empty: 'No Storage',
   }
   const storageSpaceDetailProps = {
     data: storageSpaceInfoDetails,
@@ -163,6 +164,7 @@ function ResourceOverview({ host, volume, loading, onVolumeClick = f => f, onNod
     loading: hostLoading,
     onClick: onNodeClick,
     clickable: true,
+    empty: 'No Node',
   }
   const nodeInfoDetailProps = {
     data: nodeDetails,
