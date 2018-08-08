@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, InputNumber, Button, Spin, Icon } from 'antd'
+import { Form, Input, Button, Spin, Icon } from 'antd'
 import styles from './setting.less'
 const FormItem = Form.Item
 
@@ -26,15 +26,7 @@ const form = ({
     return rules
   }
   const genInputItem = (setting) => {
-    let formItem
-    switch (setting.definition.type) {
-      case 'int' :
-        formItem = <InputNumber style={{ width: '100%' }} disabled={setting.definition.readOnly} />
-        break
-      default:
-        formItem = <Input readOnly={setting.definition.readOnly} />
-    }
-    return formItem
+    return (<Input readOnly={setting.definition.readOnly} />)
   }
   const genFormItem = (setting) => <FormItem key={setting.id} label={<span style={{ fontSize: '14px' }}>{setting.definition.displayName}</span>} >
     {getFieldDecorator(setting.name, {
