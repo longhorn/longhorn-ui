@@ -14,7 +14,20 @@ const getStateWeight = (state) => {
       return 99
   }
 }
-
+const getPropValue = (obj, prop) => {
+  const props = prop.split('.')
+  if (props.length > 1) {
+    let value = obj
+    for (let i = 0; i < props.length; i++) {
+      value = value[props[i]]
+      if (value === undefined) {
+        break
+      }
+    }
+    return value
+  }
+  return obj[prop]
+}
 export function sortVolume(dataSource) {
   dataSource.sort((a, b) => {
     const status = getStateWeight(a.state) - getStateWeight(b.state)
@@ -36,10 +49,12 @@ export function sortVolumeBackups(dataSource) {
 }
 
 export function sortTable(a, b, prop) {
-  if (a[prop] < b[prop]) {
+  const valueA = getPropValue(a, prop)
+  const valueB = getPropValue(b, prop)
+  if (valueA < valueB) {
     return -1
   }
-  if (a[prop] > b[prop]) {
+  if (valueA > valueB) {
     return 1
   }
   return 0
