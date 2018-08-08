@@ -15,15 +15,15 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
   const columns = [
     {
       title: 'State',
-      dataIndex: 'state',
+      dataIndex: 'conditions.Ready.status',
       key: 'state',
       width: 80,
       className: styles.status,
-      sorter: (a, b) => sortTable(a, b, 'state'),
+      sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
       render: (text) => {
         return (
           <div className={classnames({ capitalize: true })}>
-          {text}
+          {text === 'True' ? 'up' : 'down'}
           </div>
         )
       },
