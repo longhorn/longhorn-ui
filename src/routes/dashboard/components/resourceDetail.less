@@ -7,18 +7,25 @@
     border-radius: 4px;
     .resourceDetailBody{
       .detailItem {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px 0px;
-        margin: 0 24px;
-        border-bottom: 1px solid #ebedf0;
-        &:last-child {
+        .detailContent {
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 1px solid #ebedf0;
+          padding: 12px 0px; 
+        }
+        padding: 0px 24px;
+        &:last-child >  .detailContent{
           border-bottom: none; 
         }
         .label {
           display: flex;
           align-items: center;
-          cursor: pointer;
+        }
+      }
+      .clickable {
+        cursor: pointer;
+        &:hover {
+          background-color: #ebf2f6;
         }
       }
     }
