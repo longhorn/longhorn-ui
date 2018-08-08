@@ -16,10 +16,10 @@ export function faultedVolume(data) { return data.filter((item) => item.state ==
 
 // Schedulable (green)
 // a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, and ANY of THOSE disk.state == Schedulable).
-export function schedulableNode(data) { return data.filter(node => node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.state === 'schedulable'))) }
+export function schedulableNode(data) { return data.filter(node => node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.conditions.Schedulable.status.toLowerCase() === 'true'))) }
 // Unschedulable (yellow)
 // a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, but ALL of THOSE disks.State == Unschedulable).
-export function unschedulableNode(data) { return data.filter(node => node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === true && d.state === 'unscheduable')) }
+export function unschedulableNode(data) { return data.filter(node => node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === true && d.conditions.Schedulable.status.toLowerCase() === 'false')) }
 // Scheduling disabled (grey)
 // a. Node.Status == UP, and (either node.AllowScheduling == false, or ALL of the disk.AllowScheduling == false)
 export function schedulingDisabledNode(data) { return data.filter(node => node.conditions.Ready.status.toLowerCase() === 'true' && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))) }

@@ -18,7 +18,7 @@ const HostFilter = ({
   }
   return (
     <Row gutter={24}>
-      <Col lg={6} md={8} sm={16} xs={24} style={{ marginBottom: 16 }}>
+      <Col lg={{ offset: 18, span: 6 }} md={{ offset: 16, span: 8 }} sm={{ offset: 8, span: 16 }} xs={24} style={{ marginBottom: 16 }}>
         <Filter {...searchGroupProps} />
       </Col>
     </Row>

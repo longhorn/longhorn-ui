@@ -151,7 +151,7 @@ function Host({ host, volume, loading, dispatch, location }) {
     stateOption: [
       { value: 'schedulable', name: 'Schedulable' },
       { value: 'unschedulable', name: 'Unschedulable' },
-      { value: 'schedulingDisabled', name: 'Scheduling Disabled' },
+      { value: 'schedulingDisabled', name: 'Disabled' },
       { value: 'down', name: 'Down' },
     ],
     fieldOption: [

@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
+import { Row, Col, Button } from 'antd'
 import VolumeList from './VolumeList'
-import VolumeFilter from './VolumeFilter'
 import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import Salvage from './Salvage'
+import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import { genAttachHostModalProps, getEngineUpgradeModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume } from '../../utils/filter'
@@ -165,16 +166,6 @@ class Volume extends React.Component {
           },
         }))
       },
-      onAdd: () => {
-        dispatch({
-          type: 'volume/showCreateVolumeModal',
-        })
-        this.setState({
-          CreateVolumeGen(createVolumeModalProps) {
-            return <CreateVolume {...createVolumeModalProps} />
-          },
-        })
-      },
     }
 
     const attachHostModalProps = genAttachHostModalProps(selected ? [selected] : [], hosts, attachHostModalVisible, dispatch)
@@ -294,11 +285,28 @@ class Volume extends React.Component {
         })
       },
     }
+    const addVolume = () => {
+      dispatch({
+        type: 'volume/showCreateVolumeModal',
+      })
+      this.setState({
+        CreateVolumeGen() {
+          return <CreateVolume {...createVolumeModalProps} />
+        },
+      })
+    }
 
     return (
       <div className="content-inner" >
-        <VolumeFilter {...volumeFilterProps} />
-        <VolumeBulkActions {...volumeBulkActionsProps} />
+        <Row gutter={24}>
+          <Col lg={18} md={16} sm={24} xs={24}>
+            <VolumeBulkActions {...volumeBulkActionsProps} />
+          </Col>
+          <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
+            <Filter {...volumeFilterProps} />
+          </Col>
+        </Row>
+        <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
         <VolumeList {...volumeListProps} />
         <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
         <AttachHost key={attachHostModalKey} {...attachHostModalProps} />
