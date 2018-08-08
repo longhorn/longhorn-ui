@@ -13,24 +13,24 @@ function StorageInfo({ storage }) {
   return (
     <div className={styles.storageInfo}>
       <div className={styles.storage}>
-        <div className={styles.storageValue}>{formatMib(storage.storageAvailable)}</div>
-        <div className={styles.storageLabel}>Available</div>
+        <div className={styles.storageValue}>{formatMib(computeSchedulableSpace())}</div>
+        <div className={styles.storageLabel}>Schedulable</div>
       </div>
       <div className={styles.storage}>
-        <div className={styles.storageValue}>{formatMib(storage.storageMaximum)}</div>
-        <div className={styles.storageLabel}>Maximum</div>
+        <div className={styles.storageValue}>{formatMib(storage.storageAvailable)}</div>
+        <div className={styles.storageLabel}>Available</div>
       </div>
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(storage.storageReserved)}</div>
         <div className={styles.storageLabel}>Reserved</div>
       </div>
       <div className={styles.storage}>
-        <div className={styles.storageValue}>{formatMib(storage.storageScheduled)}</div>
-        <div className={styles.storageLabel}>Scheduled</div>
+        <div className={styles.storageValue}>{formatMib(storage.storageMaximum)}</div>
+        <div className={styles.storageLabel}>Maximum</div>
       </div>
       <div className={styles.storage}>
-        <div className={styles.storageValue}>{formatMib(computeSchedulableSpace())}</div>
-        <div className={styles.storageLabel}>Schedulable</div>
+        <div className={styles.storageValue}>{formatMib(storage.storageScheduled)}</div>
+        <div className={styles.storageLabel}>Scheduled</div>
       </div>
     </div>
   )
