@@ -3,6 +3,13 @@ import { formatMib } from '../../../utils/formater'
 import styles from './StorageInfo.less'
 
 function StorageInfo({ storage }) {
+  const computeSchedulableSpace = () => {
+    const space = storage.storageAvailable - storage.storageReserved
+    if (space < 0) {
+      return 0
+    }
+    return space
+  }
   return (
     <div className={styles.storageInfo}>
       <div className={styles.storage}>
@@ -20,6 +27,10 @@ function StorageInfo({ storage }) {
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(storage.storageScheduled)}</div>
         <div className={styles.storageLabel}>Scheduled</div>
+      </div>
+      <div className={styles.storage}>
+        <div className={styles.storageValue}>{formatMib(computeSchedulableSpace())}</div>
+        <div className={styles.storageLabel}>Schedulable</div>
       </div>
     </div>
   )

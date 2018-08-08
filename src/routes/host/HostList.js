@@ -14,9 +14,9 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
   }
   const columns = [
     {
-      title: 'State',
+      title: 'Status',
       dataIndex: 'conditions.Ready.status',
-      key: 'state',
+      key: 'status',
       width: 80,
       className: styles.status,
       sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
