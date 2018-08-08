@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { PieChart, Pie, Cell, Label } from 'recharts'
 import styles from './resourceChart.less'
 
-function ResourceChart({ title, subTitle, data = [], colors = [], width = 300, height = 300 }) {
-  const chartOption = { outerRadius: '100%', innerRadius: '85%', startAngle: 225, endAngle: -45, paddingAngle: 0 }
+function ResourceChart({ title, subTitle, data = [], colors = [], width = 300, height = 300, onClick = f => f }) {
+  const chartOption = { outerRadius: '100%', innerRadius: '85%', startAngle: 225, endAngle: -45, paddingAngle: 0, onMouseDown: onClick }
   if (data.every(item => item.value === 0)) {
     return (
       <div className={styles.resourceChart}>
@@ -54,6 +54,7 @@ ResourceChart.propTypes = {
   data: PropTypes.array,
   width: PropTypes.number,
   height: PropTypes.number,
+  onClick: PropTypes.func,
 }
 
 export default ResourceChart

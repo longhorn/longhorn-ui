@@ -3,8 +3,9 @@ import { Spin, Card, Row, Col } from 'antd'
 import { formatMib } from '../../../utils/formater'
 import ResourceChart from './resourceChart'
 import ResourceDetail from './resourceDetail'
+import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
 
-function ResourceOverview({ host, volume, loading }) {
+function ResourceOverview({ host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f }) {
   const { host: hostLoading, volume: volumeLoading } = loading.models
   // Total storage (everything)
   // a. Total Storage = sum(node.MaximumStorage)
@@ -65,38 +66,20 @@ function ResourceOverview({ host, volume, loading }) {
   }
   const volumeInfo = {
     total: volume.data.length,
-    // Healthy (green)
-    // a. Volume.State == attached && volume.Robustness == Healthy
-    healthy: volume.data.filter(item => item.state === 'attached' && item.robustness === 'healthy').length,
-    // In Progress (blue)
-    // a. (Volume.State != attached and volume.State != detached) or (volume.State == attached && volume.Robustness != Healthy && volume.Robustness != Degraded)
-    inProgress: volume.data.filter(item => (item.state !== 'attached' && item.state !== 'detached') || (item.state === 'attached' && item.robustness !== 'healthy' && item.robustness !== 'degraded')).length,
-    // Degraded (yellow)
-    // a. Volume.State == attached && volume.Robustness == Degraded
-    degraded: volume.data.filter(item => item.state === 'attached' && item.robustness === 'degraded').length,
-    // Detached (grey)
-    // a. Volume.State == detached && volume.Robustness != Fault
-    detached: volume.data.filter((item) => item.state === 'detached' && item.robustness !== 'faulted').length,
-    // Fault (red)
-    // a. Volume.State == detached && volume.Robustness == Fault
-    faulted: volume.data.filter((item) => item.state === 'detached' && item.robustness === 'faulted').length,
+    healthy: healthyVolume(volume.data).length,
+    inProgress: inProgressVolume(volume.data).length,
+    degraded: degradedVolume(volume.data).length,
+    detached: detachedVolume(volume.data).length,
+    faulted: faultedVolume(volume.data).length,
   }
 
   const nodeInfo = {
     // Total. The total number of nodes.
     total: host.data.length,
-    // Schedulable (green)
-    // a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, and ANY of THOSE disk.state == Schedulable).
-    schedulable: host.data.filter(node => node.state === 'up' && node.allowScheduling === true && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.state === 'schedulable'))).length,
-    // Unschedulable (yellow)
-    // a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, but ALL of THOSE disks.State == Unschedulable).
-    unschedulable: host.data.filter(node => node.state === 'up' && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === true && d.state === 'unscheduable')).length,
-    // Scheduling disabled (grey)
-    // a. Node.Status == UP, and (either node.AllowScheduling == false, or ALL of the disk.AllowScheduling == false)
-    schedulingDisabled: host.data.filter(node => node.state === 'up' && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))).length,
-    // Down (red)
-    // Node.Status == Down.
-    down: host.data.filter(item => item.state === 'down').length,
+    schedulable: schedulableNode(host.data).length,
+    unschedulable: unschedulableNode(host.data).length,
+    schedulingDisabled: schedulingDisabledNode(host.data).length,
+    down: downNode(host.data).length,
   }
 
   const storageSpaceInfoColors = ['#27AE5F', '#78C9CF', '#F1C40F', '#dee1e3']
@@ -127,18 +110,18 @@ function ResourceOverview({ host, volume, loading }) {
 
   const volumeInfoColors = ['#27AE5F', '#78C9CF', '#F1C40F', '#F15354', '#dee1e3']
   const volumeInfoData = [
-    { name: 'Healthy', value: volumeInfo.healthy },
-    { name: 'In Progress', value: volumeInfo.inProgress },
-    { name: 'Degraded', value: volumeInfo.degraded },
-    { name: 'Faulted', value: volumeInfo.faulted },
-    { name: 'Detached', value: volumeInfo.detached },
+    { key: 'healthy', name: 'Healthy', value: volumeInfo.healthy },
+    { key: 'inProgress', name: 'In Progress', value: volumeInfo.inProgress },
+    { key: 'degraded', name: 'Degraded', value: volumeInfo.degraded },
+    { key: 'faulted', name: 'Faulted', value: volumeInfo.faulted },
+    { key: 'detached', name: 'Detached', value: volumeInfo.detached },
   ]
   const volumeDetails = [
-    { name: 'Healthy', value: volumeInfo.healthy, color: volumeInfoColors[0] },
-    { name: 'In Progress', value: volumeInfo.inProgress, color: volumeInfoColors[1] },
-    { name: 'Degraded', value: volumeInfo.degraded, color: volumeInfoColors[2] },
-    { name: 'Fault', value: volumeInfo.faulted, color: volumeInfoColors[3] },
-    { name: 'Detached', value: volumeInfo.detached, color: volumeInfoColors[4] },
+    { key: 'healthy', name: 'Healthy', value: volumeInfo.healthy, color: volumeInfoColors[0] },
+    { key: 'inProgress', name: 'In Progress', value: volumeInfo.inProgress, color: volumeInfoColors[1] },
+    { key: 'degraded', name: 'Degraded', value: volumeInfo.degraded, color: volumeInfoColors[2] },
+    { key: 'faulted', name: 'Fault', value: volumeInfo.faulted, color: volumeInfoColors[3] },
+    { key: 'detached', name: 'Detached', value: volumeInfo.detached, color: volumeInfoColors[4] },
   ]
   const volumeInfoTotal = { name: 'Total', value: volumeInfo.total }
   const volumeInfoChartProps = {
@@ -147,24 +130,26 @@ function ResourceOverview({ host, volume, loading }) {
     colors: volumeInfoColors,
     data: volumeInfoData,
     loading: volumeLoading,
+    onClick: onVolumeClick,
   }
   const volumeInfoDetailProps = {
     data: volumeDetails,
     total: volumeInfoTotal,
+    onClick: onVolumeClick,
   }
 
   const nodeInfoColors = ['#27AE5F', '#F1C40F', '#dee1e3', '#F15354']
   const nodeInfoData = [
-    { name: 'Schedulable', value: nodeInfo.schedulable },
-    { name: 'Unschedulable', value: nodeInfo.unschedulable },
-    { name: 'Disabled', value: nodeInfo.schedulingDisabled },
-    { name: 'Down', value: nodeInfo.down },
+    { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable },
+    { key: 'unschedulable', name: 'Unschedulable', value: nodeInfo.unschedulable },
+    { key: 'schedulingDisabled', name: 'Scheduling Disabled', value: nodeInfo.schedulingDisabled },
+    { key: 'down', name: 'Down', value: nodeInfo.down },
   ]
   const nodeDetails = [
-    { name: 'Schedulable', value: nodeInfo.schedulable, color: nodeInfoColors[0] },
-    { name: 'Unschedulable', value: nodeInfo.unschedulable, color: nodeInfoColors[1] },
-    { name: 'Scheduling disabled', value: nodeInfo.schedulingDisabled, color: nodeInfoColors[2] },
-    { name: 'Down', value: nodeInfo.down, color: nodeInfoColors[3] },
+    { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable, color: nodeInfoColors[0] },
+    { key: 'unschedulable', name: 'Unschedulable', value: nodeInfo.unschedulable, color: nodeInfoColors[1] },
+    { key: 'schedulingDisabled', name: 'Scheduling Disabled', value: nodeInfo.schedulingDisabled, color: nodeInfoColors[2] },
+    { key: 'down', name: 'Down', value: nodeInfo.down, color: nodeInfoColors[3] },
   ]
   const nodeInfoTotal = { name: 'Total', value: nodeInfo.total }
   const nodeInfoChartProps = {
@@ -173,10 +158,12 @@ function ResourceOverview({ host, volume, loading }) {
     colors: nodeInfoColors,
     data: nodeInfoData,
     loading: hostLoading,
+    onClick: onNodeClick,
   }
   const nodeInfoDetailProps = {
     data: nodeDetails,
     total: nodeInfoTotal,
+    onClick: onNodeClick,
   }
   return (
     <Card bordered={false}>
@@ -204,6 +191,8 @@ ResourceOverview.propTypes = {
   host: PropTypes.object,
   volume: PropTypes.object,
   loading: PropTypes.object,
+  onVolumeClick: PropTypes.func,
+  onNodeClick: PropTypes.func,
 }
 
 export default ResourceOverview

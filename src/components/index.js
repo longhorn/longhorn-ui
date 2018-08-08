@@ -7,6 +7,7 @@ import ModalBlur from './ModalBlur/ModalBlur'
 import Replica from './Replica/Replica'
 import ReplicaList from './Replica/ReplicaList'
 import LinkTo from './LinkTo/LinkTo'
+import Filter from './Filter/Filter'
 
 export {
   DropOption,
@@ -18,4 +19,5 @@ export {
   Replica,
   ReplicaList,
   LinkTo,
+  Filter,
 }

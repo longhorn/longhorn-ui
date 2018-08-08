@@ -9,6 +9,7 @@ import EngineUgrade from './EngineUpgrade'
 import Salvage from './Salvage'
 import VolumeBulkActions from './VolumeBulkActions'
 import { genAttachHostModalProps, getEngineUpgradeModalProps } from './helper'
+import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume } from '../../utils/filter'
 
 class Volume extends React.Component {
   render() {
@@ -16,15 +17,29 @@ class Volume extends React.Component {
     const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
-    const { field, keyword } = this.props.location.query
+    const { field, value, stateValue } = this.props.location.query
+    const volumeFilterMap = {
+      healthy: healthyVolume,
+      inProgress: inProgressVolume,
+      degraded: degradedVolume,
+      detached: detachedVolume,
+      faulted: faultedVolume,
+    }
+
     data.forEach(vol => {
       const found = hosts.find(h => vol.controller && h.id === vol.controller.hostId)
       if (found) {
         vol.host = found.name
       }
     })
+    let volumes = data
+    if (field && field === 'status' && volumeFilterMap[stateValue]) {
+      volumes = volumeFilterMap[stateValue](data)
+    } else if (field && value && field !== 'status') {
+      volumes = filterVolume(data, field, value)
+    }
     const volumeListProps = {
-      dataSource: data,
+      dataSource: volumes,
       loading,
       engineImages,
       takeSnapshot(record) {
@@ -121,36 +136,32 @@ class Volume extends React.Component {
     }
 
     const volumeFilterProps = {
-      hosts,
-      field,
       location,
-      keyword,
-      onSearch(fieldsValue) {
-        fieldsValue.keyword.length ? dispatch(routerRedux.push({
+      stateOption: [
+        { value: 'healthy', name: 'Healthy' },
+        { value: 'inProgress', name: 'In Progress' },
+        { value: 'degraded', name: 'Degraded' },
+        { value: 'faulted', name: 'Fault' },
+        { value: 'detached', name: 'Detached' },
+      ],
+      fieldOption: [
+        { value: 'name', name: 'Name' },
+        { value: 'node', name: 'Node' },
+        { value: 'status', name: 'Status' },
+      ],
+      onSearch(filter) {
+        const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
+        filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
           pathname: '/volume',
           query: {
             ...location.query,
-            field: fieldsValue.field,
-            keyword: fieldsValue.keyword,
+            field: filterField,
+            value: filterValue,
+            stateValue: filterStateValue,
           },
         })) : dispatch(routerRedux.push({
           pathname: '/volume',
           query: {
-          },
-        }))
-      },
-      onSelect(selectedHost) {
-        selectedHost ? dispatch(routerRedux.push({
-          pathname: '/volume',
-          query: {
-            ...location.query,
-            host: selectedHost,
-          },
-        })) : dispatch(routerRedux.push({
-          pathname: '/volume',
-          query: {
-            field: location.query.field,
-            keyword: location.query.keyword,
           },
         }))
       },

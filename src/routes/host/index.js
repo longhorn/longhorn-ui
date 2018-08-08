@@ -1,12 +1,16 @@
 import React, { PropTypes } from 'react'
+import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import HostList from './HostList'
 import AddDisk from './AddDisk'
 import EditDisk from './EditDisk'
 import HostReplica from './HostReplica'
+import HostFilter from './HostFilter'
+import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../utils/filter'
 
-function Host({ host, volume, loading, dispatch }) {
+function Host({ host, volume, loading, dispatch, location }) {
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible } = host
+  const { field, value, stateValue } = location.query
   const volumeList = volume.data
   data.forEach(agent => {
     const replicas = []
@@ -28,6 +32,21 @@ function Host({ host, volume, loading, dispatch }) {
     }
     return data.find(item => item.id === selected.id) || {}
   }
+
+  const nodeFilterMap = {
+    schedulable: schedulableNode,
+    unschedulable: unschedulableNode,
+    schedulingDisabled: schedulingDisabledNode,
+    down: downNode,
+  }
+
+  let nodes = data
+  if (field && field === 'status' && nodeFilterMap[stateValue]) {
+    nodes = nodeFilterMap[stateValue](data)
+  } else if (field && value && field !== 'status') {
+    nodes = filterNode(data, field, value)
+  }
+
   const addDiskModalProps = {
     item: {},
     visible: addDiskModalVisible,
@@ -64,7 +83,7 @@ function Host({ host, volume, loading, dispatch }) {
   }
 
   const hostListProps = {
-    dataSource: data,
+    dataSource: nodes,
     loading,
     showAddDiskModal() {
       dispatch({
@@ -127,8 +146,39 @@ function Host({ host, volume, loading, dispatch }) {
     },
   }
 
+  const HostFilterProps = {
+    location,
+    stateOption: [
+      { value: 'schedulable', name: 'Schedulable' },
+      { value: 'unschedulable', name: 'Unschedulable' },
+      { value: 'schedulingDisabled', name: 'Scheduling Disabled' },
+      { value: 'down', name: 'Down' },
+    ],
+    fieldOption: [
+      { value: 'name', name: 'Name' },
+      { value: 'status', name: 'Status' },
+    ],
+    onSearch(filter) {
+      const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
+      filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
+        pathname: '/node',
+        query: {
+          ...location.query,
+          field: filterField,
+          value: filterValue,
+          stateValue: filterStateValue,
+        },
+      })) : dispatch(routerRedux.push({
+        pathname: '/node',
+        query: {
+        },
+      }))
+    },
+  }
+
   return (
     <div className="content-inner">
+      <HostFilter {...HostFilterProps} />
       <HostList {...hostListProps} />
       {modalVisible && <AddDisk {...addDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
