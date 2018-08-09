@@ -7,7 +7,7 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = 'name', value = '', stateValue = '' } = props.location.query
+    const { field = props.defaultField || 'name', value = '', stateValue = '' } = props.location.query
     this.state = {
       field,
       stateValue,
@@ -80,6 +80,7 @@ Filter.propTypes = {
   location: PropTypes.object,
   stateOption: PropTypes.array,
   fieldOption: PropTypes.array,
+  defaultField: PropTypes.string,
 }
 
 export default Filter
