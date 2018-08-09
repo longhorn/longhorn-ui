@@ -75,7 +75,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       title: 'Scheduling',
       dataIndex: 'allowScheduling',
       key: 'allowScheduling',
-      width: 220,
+      width: 211,
       className: styles.allowScheduling,
       sorter: (a, b) => sortTable(a, b, 'allowScheduling'),
       render: (text, record) => {
@@ -89,7 +89,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       width: 50,
       render: (text, record) => {
         return (
-          <Tooltip placement="top" title="Edit Disks"> <a shape="circle" icon="edit" onClick={() => showEditDisksModal(record)} ><IconEdit width={12} height={12} /></a> </Tooltip>
+          <Tooltip placement="top" title="Edit Disks"> <a style={{ display: 'block', width: '34px' }} shape="circle" icon="edit" onClick={() => showEditDisksModal(record)} ><IconEdit width={12} height={12} /></a> </Tooltip>
         )
       },
     },

@@ -4,7 +4,7 @@ import styles from './HostActions.less'
 
 function actions({ selected, toggleScheduling }) {
   return (
-    <div style={{ paddingRight: '10px' }}>
+    <div style={{ paddingRight: '10px', width: '194px' }}>
     <Radio.Group value={selected.allowScheduling} buttonStyle="solid" onChange={() => toggleScheduling(selected)} size="large">
       <Radio.Button value className={selected.allowScheduling ? styles.radioButtonChecked : styles.radioButton}>Enabled</Radio.Button>
       <Radio.Button value={false} className={selected.allowScheduling ? styles.radioButton : styles.radioButtonChecked} >Disabled</Radio.Button>
