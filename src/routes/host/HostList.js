@@ -9,7 +9,7 @@ import IconEdit from './components/IconEdit'
 import StorageInfo from './components/StorageInfo'
 import { getNodeStatus, nodeStatusColorMap } from '../../utils/filter'
 
-function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal }) {
+function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal }) {
   const hostActionsProps = {
     toggleScheduling,
   }
@@ -94,7 +94,6 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       },
     },
   ]
-
   const disks = function (node) {
     const data = Object.keys(node.disks).map(diskId => {
       const disk = node.disks[diskId]
@@ -104,7 +103,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       }
     })
     return (
-     <DiskList disks={data} node={node} />
+     <DiskList disks={data} node={node} showDiskReplicaModal={showDiskReplicaModal} />
     )
   }
 
@@ -135,6 +134,7 @@ list.propTypes = {
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
+  showDiskReplicaModal: PropTypes.func,
 }
 
 export default list

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import styles from './DiskList.less'
 import StorageInfo from './components/StorageInfo'
 
-function diskList({ disks, node }) {
+function diskList({ disks, node, showDiskReplicaModal }) {
   const getDiskStatus = (d) => {
     if (node.allowScheduling === false || d.allowScheduling === false) {
       return (<span className={styles.disabled}>Disabled</span>)
@@ -19,11 +19,16 @@ function diskList({ disks, node }) {
       {disks.map(d => (
         <div key={d.id} className={styles.diskItem}>
           <div className={styles.path}>
-            <span>{getDiskStatus(d)}</span>
+            {getDiskStatus(d)}
             <span className={styles.pathLabel}>Path: &nbsp;</span>
             <span className={styles.pathValue}>{d.path}</span>
           </div>
           <div className={styles.storageInfo}>
+            <div className={styles.replicas}>
+              <a onClick={() => showDiskReplicaModal(d)}>
+              {d.replicas ? d.replicas.length : 0} {d.replicas && d.replicas.length > 1 ? 'Replicas' : 'Replica'}
+              </a>
+            </div>
             <StorageInfo storage={d} />
             <div className={styles.scheduling}>
               <div className={styles.schedulingValue}>{d.allowScheduling ? 'Enabled' : 'Disabled'}</div>
@@ -38,6 +43,7 @@ function diskList({ disks, node }) {
 diskList.propTypes = {
   disks: PropTypes.array,
   node: PropTypes.object,
+  showDiskReplicaModal: PropTypes.func,
 }
 
 export default diskList

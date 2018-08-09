@@ -7,10 +7,12 @@ export default {
   state: {
     data: [],
     selected: {},
+    selectedDiskID: '',
     modalVisible: false,
     addDiskModalVisible: false,
     replicaModalVisible: false,
     editDisksModalVisible: false,
+    diskReplicaModalVisible: false,
     socketStatus: 'closed',
   },
   subscriptions: {
@@ -91,6 +93,12 @@ export default {
     },
     hideEditDisksModal(state) {
       return { ...state, editDisksModalVisible: false }
+    },
+    showDiskReplicaModal(state, action) {
+      return { ...state, ...action.payload, diskReplicaModalVisible: true }
+    },
+    hideDiskReplicaModal(state) {
+      return { ...state, diskReplicaModalVisible: false }
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
