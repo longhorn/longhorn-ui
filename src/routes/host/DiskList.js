@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import styles from './DiskList.less'
 import StorageInfo from './components/StorageInfo'
 
-function diskList({ disks }) {
+function diskList({ disks, node }) {
   const getDiskStatus = (d) => {
-    if (d.allowScheduling === false) {
+    if (node.allowScheduling === false || d.allowScheduling === false) {
       return (<span className={styles.disabled}>Disabled</span>)
     }
     const status = d.conditions.Schedulable.status.toLowerCase() === 'true'
@@ -37,6 +37,7 @@ function diskList({ disks }) {
 }
 diskList.propTypes = {
   disks: PropTypes.array,
+  node: PropTypes.object,
 }
 
 export default diskList
