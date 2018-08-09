@@ -147,7 +147,7 @@ class Volume extends React.Component {
       ],
       fieldOption: [
         { value: 'name', name: 'Name' },
-        { value: 'node', name: 'Node' },
+        { value: 'host', name: 'Node' },
         { value: 'status', name: 'Status' },
       ],
       onSearch(filter) {
