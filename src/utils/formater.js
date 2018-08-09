@@ -22,3 +22,14 @@ function formatSi(val, increment = 1024) {
 export function formatMib(...args) {
   return formatSi(...args)
 }
+
+export function utcStrToDate(utcStr) {
+  const reg = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) \+\d{4} UTC$/
+  const results = utcStr.match(reg)
+  if (results && results.length === 3) {
+    const d = results[1].split('-').map(item => parseInt(item, 10))
+    const t = results[2].split(':').map(item => parseInt(item, 10))
+    return new Date(Date.UTC(d[0], d[1] - 1, d[2], t[0], t[1], t[2]))
+  }
+  return 'Invalid UTC Date'
+}

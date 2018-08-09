@@ -4,7 +4,7 @@ import moment from 'moment'
 import classnames from 'classnames'
 import { LinkTo } from '../../components'
 
-import { formatMib } from '../../utils/formater'
+import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from './helper/index'
 import { sortTable } from '../../utils/sort'
@@ -109,7 +109,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       render: (text) => {
         return (
           <div>
-            {moment(new Date(text)).fromNow()}
+            {moment(utcStrToDate(text)).fromNow()}
           </div>
         )
       },
