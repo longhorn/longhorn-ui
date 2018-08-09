@@ -9,7 +9,7 @@ import HostFilter from './HostFilter'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../utils/filter'
 
 function Host({ host, volume, loading, dispatch, location }) {
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, selectedDiskID } = host
   const { field, value, stateValue } = location.query
   const volumeList = volume.data
   data.forEach(agent => {
@@ -25,12 +25,24 @@ function Host({ host, volume, loading, dispatch, location }) {
       }
     })
     agent.replicas = replicas
+    Object.keys(agent.disks).forEach(id => {
+      agent.disks[id].replicas = replicas.filter(r => r.diskID === id)
+    })
   })
   const getSelected = () => {
     if (!selected.id) {
       return {}
     }
     return data.find(item => item.id === selected.id) || {}
+  }
+  const getSelectedDisk = (diskID) => {
+    if (diskID) {
+      const node = data.find(n => n.disks[diskID])
+      if (node) {
+        return { ...node.disks[diskID], name: node.disks[diskID].path }
+      }
+    }
+    return {}
   }
 
   const nodeFilterMap = {
@@ -98,6 +110,14 @@ function Host({ host, volume, loading, dispatch, location }) {
         },
       })
     },
+    showDiskReplicaModal(disk) {
+      dispatch({
+        type: 'host/showDiskReplicaModal',
+        payload: {
+          selectedDiskID: disk.id,
+        },
+      })
+    },
     toggleScheduling(record) {
       dispatch({
         type: 'host/toggleScheduling',
@@ -145,7 +165,28 @@ function Host({ host, volume, loading, dispatch, location }) {
       })
     },
   }
-
+  const diskReplicaModalProps = {
+    selected: getSelectedDisk(selectedDiskID),
+    visible: diskReplicaModalVisible,
+    onCancel() {
+      dispatch({
+        type: 'host/hideDiskReplicaModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+    deleteReplica(name, url) {
+      dispatch({
+        type: 'volume/deleteReplica',
+        payload: {
+          name,
+          url,
+        },
+      })
+    },
+  }
   const HostFilterProps = {
     location,
     stateOption: [
@@ -183,6 +224,7 @@ function Host({ host, volume, loading, dispatch, location }) {
       {modalVisible && <AddDisk {...addDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
       {editDisksModalVisible && <EditDisk {...editDiskModalProps} />}
+      {diskReplicaModalVisible && <HostReplica {...diskReplicaModalProps} />}
     </div>
   )
 }

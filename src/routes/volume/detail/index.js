@@ -30,6 +30,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       const targetHost = hosts.find(h => h.id === replica.hostId)
       if (targetHost) {
         replica.host = targetHost.name
+        replica.path = targetHost.disks[replica.diskID] && targetHost.disks[replica.diskID].path
       }
     })
   }

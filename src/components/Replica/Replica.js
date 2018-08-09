@@ -57,7 +57,7 @@ class Replica extends React.Component {
     const { item } = this.props
     return (
       <div style={{ display: 'inline-block', padding: 20 }} key={item.name}>
-        <Card bodyStyle={{ height: 240, padding: 0 }} >
+        <Card bodyStyle={{ height: 280, padding: 0 }} >
           <div style={{ position: 'relative', backgroundColor: this.modeInfo.color, padding: 20, color: 'white' }}>
             <img
               alt="replica"
@@ -75,6 +75,10 @@ class Replica extends React.Component {
           <div style={{ textAlign: 'center', marginTop: 20 }}>
             <h3>{item.host || 'N/A'}</h3>
             <p style={{ color: 'gray' }}>Host</p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <h3>{item.path || 'N/A'}</h3>
+            <p style={{ color: 'gray' }}>Path</p>
           </div>
           <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>
             {item.running ? 'Running' : 'Stopped'}
