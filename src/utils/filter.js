@@ -48,13 +48,21 @@ export function schedulingDisabledNode(data) { return data.filter(node => isDisa
 // Node.Status == Down.
 export function downNode(data) { return data.filter(node => isDown(node)) }
 
+function filterData(data, field, value) {
+  return data.filter(item => (item[field] || '').toLowerCase().indexOf(value.toLowerCase()) > -1)
+}
+
 export function filterVolume(data, field, value) {
   if (field === 'host') {
     return data.filter(item => item.controllers.some(c => c.hostId.indexOf(value) > -1))
   }
-  return data.filter(item => (item[field] || '').indexOf(value) > -1)
+  return filterData(data, field, value)
 }
 
 export function filterNode(data, field, value) {
-  return data.filter(item => (item[field] || '').indexOf(value) > -1)
+  return filterData(data, field, value)
+}
+
+export function filterEngineImage(data, field, value) {
+  return filterData(data, field, value)
 }
