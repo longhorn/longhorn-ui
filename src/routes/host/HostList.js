@@ -104,7 +104,7 @@ function list({ loading, dataSource, showReplicaModal, toggleScheduling, showEdi
       }
     })
     return (
-     <DiskList disks={data} />
+     <DiskList disks={data} node={node} />
     )
   }
 
