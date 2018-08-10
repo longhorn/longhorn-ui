@@ -11,11 +11,15 @@ class ResourceChart extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { activeIndex } = nextProps
+    this.setState({ activeIndex })
+  }
+
   onPieEnter= (data, index) => {
     if (this.props.clickable) {
       this.setState({
         activeIndex: index,
-        activeData: data,
       })
     }
   }
@@ -24,7 +28,6 @@ class ResourceChart extends React.Component {
     if (this.props.clickable) {
       this.setState({
         activeIndex: -1,
-        activeData: {},
       })
     }
   }
@@ -48,7 +51,8 @@ class ResourceChart extends React.Component {
 
   render() {
     const { title, subTitle, data = [], colors = [], width = 300, height = 300, onClick = f => f, clickable = false, empty = 'No Data' } = this.props
-    const chartOption = { outerRadius: '96%', innerRadius: '82%', startAngle: 225, endAngle: -45, paddingAngle: 0, onMouseDown: onClick, onMouseEnter: this.onPieEnter, onMouseOut: this.onPieOut }
+    const backChartOption = { outerRadius: '96%', innerRadius: '82%', startAngle: 225, endAngle: -45, paddingAngle: 0, onMouseDown: onClick, activeIndex: this.state.activeIndex, activeShape: this.renderActiveShape }
+    const chartOption = { outerRadius: '96%', innerRadius: '82%', startAngle: 225, endAngle: -45, paddingAngle: 0, onMouseDown: onClick, onMouseEnter: this.onPieEnter, onMouseLeave: this.onPieOut }
     if (data.every(item => item.value === 0)) {
       return (
         <div className={styles.resourceChart}>
@@ -71,7 +75,16 @@ class ResourceChart extends React.Component {
     return (
       <div className={styles.resourceChart}>
         <PieChart width={width} height={width} style={{ position: 'absolute' }} >
-          {this.state.activeIndex > -1 ? this.renderActiveShape(this.state.activeData) : null}
+          <Pie dataKey="value"
+            data={data}
+            cx={width / 2}
+            cy={height / 2}
+            {...backChartOption}
+          >
+            {
+              data.map((entry, index) => <Cell strokeWidth={0} key={entry.name} fill={colors[index % colors.length]} />)
+            }
+          </Pie>
         </PieChart>
         <PieChart width={width} height={width}>
           <Pie dataKey="value"
@@ -106,6 +119,7 @@ ResourceChart.propTypes = {
   onClick: PropTypes.func,
   clickable: PropTypes.bool,
   empty: PropTypes.string,
+  activeIndex: PropTypes.number,
 }
 
 export default ResourceChart
