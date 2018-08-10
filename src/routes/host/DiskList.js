@@ -18,17 +18,19 @@ function diskList({ disks, node, showDiskReplicaModal }) {
       <div className={styles.title}>Disks</div>
       {disks.map(d => (
         <div key={d.id} className={styles.diskItem}>
-          <div className={styles.path}>
-            {getDiskStatus(d)}
-            <span className={styles.pathLabel}>Path: &nbsp;</span>
-            <span className={styles.pathValue}>{d.path}</span>
-          </div>
-          <div className={styles.storageInfo}>
+          <div className={styles.leftPart}>
+            <div className={styles.path}>
+              {getDiskStatus(d)}
+              <span className={styles.pathLabel}>Path: &nbsp;</span>
+              <span className={styles.pathValue}>{d.path}</span>
+            </div>
             <div className={styles.replicas}>
               <a onClick={() => showDiskReplicaModal(d)}>
               {d.replicas ? d.replicas.length : 0} {d.replicas && d.replicas.length > 1 ? 'Replicas' : 'Replica'}
               </a>
             </div>
+          </div>
+          <div className={styles.storageInfo}>
             <StorageInfo storage={d} />
             <div className={styles.scheduling}>
               <div className={styles.schedulingValue}>{d.allowScheduling ? 'Enabled' : 'Disabled'}</div>
