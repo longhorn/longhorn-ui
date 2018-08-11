@@ -43,6 +43,10 @@ class EngineImage extends React.Component {
         dispatch({
           type: 'engineimage/hideCreateEngineImageModal',
         })
+        dispatch({
+          type: 'app/changeBlur',
+          payload: false,
+        })
       },
     }
 
