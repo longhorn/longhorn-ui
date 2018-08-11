@@ -6,12 +6,15 @@ NAME = longhorn-ui
 INSTANCE = default
 LONHORN_MANAGER_IP = http://localhost:9500
 PORT = 8000
+IMAGE = $(NS)/$(REPO):$(VERSION)
 
 .PHONY: build push shell run start stop rm release
 
 build:
-	docker build -t $(NS)/$(REPO):$(VERSION) --build-arg VERSION=$(VERSION) .
-	@echo Build $(NS)/$(REPO):$(VERSION) successful
+	docker build -t $(IMAGE) --build-arg VERSION=$(VERSION) .
+	@echo Build $(IMAGE) successful
+	@mkdir -p bin
+	@echo $(IMAGE) > bin/latest_image
 
 stop:
 	docker stop $(NAME)-$(INSTANCE)
