@@ -22,6 +22,10 @@ export function genAttachHostModalProps(volumes, hosts, visible, dispatch) {
       dispatch({
         type: 'volume/hideAttachHostModal',
       })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
     },
   }
 }
@@ -43,6 +47,10 @@ export function getEngineUpgradeModalProps(volumes, engineImages, visible, dispa
     onCancel() {
       dispatch({
         type: 'volume/hideEngineUpgradeModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
       })
     },
   }

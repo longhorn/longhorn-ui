@@ -187,6 +187,10 @@ class Volume extends React.Component {
         dispatch({
           type: 'volume/hideBulkAttachHostModal',
         })
+        dispatch({
+          type: 'app/changeBlur',
+          payload: false,
+        })
       },
     }
 
@@ -209,6 +213,10 @@ class Volume extends React.Component {
         dispatch({
           type: 'volume/hideBulkEngineUpgradeModal',
         })
+        dispatch({
+          type: 'app/changeBlur',
+          payload: false,
+        })
       },
     }
     const salvageModalProps = {
@@ -227,6 +235,10 @@ class Volume extends React.Component {
       onCancel() {
         dispatch({
           type: 'volume/hideSalvageModal',
+        })
+        dispatch({
+          type: 'app/changeBlur',
+          payload: false,
         })
       },
     }
@@ -249,6 +261,10 @@ class Volume extends React.Component {
       onCancel() {
         dispatch({
           type: 'volume/hideCreateVolumeModal',
+        })
+        dispatch({
+          type: 'app/changeBlur',
+          payload: false,
         })
       },
     }

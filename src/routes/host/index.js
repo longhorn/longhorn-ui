@@ -72,6 +72,10 @@ function Host({ host, volume, loading, dispatch, location }) {
       dispatch({
         type: 'host/hideAddDiskModal',
       })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
     },
   }
   const editDiskModalProps = {
@@ -90,6 +94,10 @@ function Host({ host, volume, loading, dispatch, location }) {
     onCancel() {
       dispatch({
         type: 'host/hideEditDisksModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
       })
     },
   }
