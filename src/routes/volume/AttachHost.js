@@ -44,7 +44,7 @@ const modal = ({
     onOk: handleOk,
   }
 
-  const options = hosts.map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
+  const options = hosts.filter(host => host.conditions && host.conditions.Ready.status.toLowerCase() === 'true').map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
   if (!items || items.length === 0) {
     return null
   }
