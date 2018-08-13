@@ -8,10 +8,12 @@ import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../utils/filter'
 
-function Host({ host, volume, loading, dispatch, location }) {
+function Host({ host, volume, setting, loading, dispatch, location }) {
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, selectedDiskID } = host
   const { field, value, stateValue } = location.query
   const volumeList = volume.data
+  const storageOverProvisioningPercentage = setting.data.find(item => item.id === 'storage-over-provisioning-percentage')
+  const minimalSchedulingQuotaWarning = setting.data.find(item => item.id === 'minimal-scheduling-quota-warning') || { value: '90' }
   data.forEach(agent => {
     const replicas = []
     volumeList.forEach(vol => {
@@ -104,6 +106,8 @@ function Host({ host, volume, loading, dispatch, location }) {
 
   const hostListProps = {
     dataSource: nodes,
+    storageOverProvisioningPercentage: (storageOverProvisioningPercentage && Number(storageOverProvisioningPercentage.value)) || 0,
+    minimalSchedulingQuotaWarning: (minimalSchedulingQuotaWarning && Number(minimalSchedulingQuotaWarning.value)) || 90,
     loading,
     showAddDiskModal() {
       dispatch({
@@ -240,9 +244,10 @@ function Host({ host, volume, loading, dispatch, location }) {
 Host.propTypes = {
   host: PropTypes.object,
   volume: PropTypes.object,
+  setting: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
 }
 
-export default connect(({ volume, host, loading }) => ({ volume, host, loading: loading.models.host }))(Host)
+export default connect(({ volume, host, setting, loading }) => ({ volume, host, setting, loading: loading.models.host }))(Host)

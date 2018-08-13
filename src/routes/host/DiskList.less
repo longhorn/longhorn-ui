@@ -1,62 +1,54 @@
-.diskList {
-  .title {
-    font-size: 18px;
-    font-weight: 500;
-    text-align: left;
-  }
-  .diskItem {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #efefef;
-    padding-right: 66px;
-    .leftPart {
-      width: 820px;
-      min-width: 820px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+:global {
+  .diskList {
+    margin: 0 -8px 0 -8px;
+    .content {
+      border-left: 1px solid #d9dbde;
+      border-right: 1px solid #d9dbde;
+      border-bottom: 1px solid #d9dbde;
+      padding: 0 10px;
     }
-    .replicas {
-      width: 120px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
+    .status, .path, .allocated, .replicas, .used, .size {
+      text-align: left; 
     }
-    .path {
-      .pathLabel{
-        color: #b4b4b4;
-      }
-      .schedulable {
-        color: #27AE5F;
-        display: inline-block;
-        width: 120px;
-        text-align: left;
-      }
-      .unschedulable {
-        color: #F1C40F;
-        display: inline-block;
-        width: 120px;
-        text-align: left;
-      }
-      .disabled {
-        color: #dee1e3;
-        display: inline-block;
-        width: 120px;
-        text-align: left; 
-      }
+    .error {
+      display: inline-block;
+      color: #F15354;
+      border: 1px solid #F15354;
+      background-color: rgba(241,83,84,.05);
+      padding: 0 4px;
     }
-    .storageInfo {
-      display: flex;
-      .scheduling {
-        border-left: 1px solid #efefef;
-        padding: 0px 0px 0px 53px;
-        margin: 16px 0px 16px 53px;
-        width: 142px;
-      }
-      .schedulingLabel {
-        padding: 5px 0px 0px 0px;
-        color: #b4b4b4;
-      }
+
+    .disabled {
+      display: inline-block;
+      color: #dee1e3;
+      border: 1px solid #dee1e3;
+      background-color: rgba(222,225,227,.05);
+      padding: 0 4px;
+    }
+    .schedulable {
+      display: inline-block;
+      color: #27AE5F;
+      border: 1px solid #27AE5F;
+      background-color: rgba(39,174,95,.05);
+      padding: 0 4px;
+    }
+    .unschedulable {
+      display: inline-block;
+      color: #F1C40F;
+      border: 1px solid #F1C40F;
+      background-color: rgba(241,196,15,.05);
+      padding: 0 4px;
+    }
+    .pathLabel {
+      color: #99a3a8
+    }
+    .title {
+      text-align: left;
+      padding: 8px 20px;
+      background-color: #d1d4d7;
+    }
+    .secondLabel {
+      font-size: 13px;
     }
   }
 }

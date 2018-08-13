@@ -161,7 +161,7 @@ class ResourceOverview extends React.Component {
       },
     }
 
-    const nodeInfoColors = [nodeStatusColorMap.schedulable, nodeStatusColorMap.unschedulable, nodeStatusColorMap.down, nodeStatusColorMap.disabled]
+    const nodeInfoColors = [nodeStatusColorMap.schedulable.color, nodeStatusColorMap.unschedulable.color, nodeStatusColorMap.down.color, nodeStatusColorMap.disabled.color]
     const nodeInfoData = [
       { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable },
       { key: 'unschedulable', name: 'Unschedulable', value: nodeInfo.unschedulable },
