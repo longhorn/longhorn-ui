@@ -49,6 +49,7 @@ const Routers = function ({ history, app }) {
               nprogress.done()
               registerModel(app, require('./models/host'))
               registerModel(app, require('./models/volume'))
+              registerModel(app, require('./models/setting'))
               cb(null, require('./routes/host/'))
             }, 'host')
           },

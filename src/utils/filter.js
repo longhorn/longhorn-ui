@@ -19,11 +19,11 @@ const isUnschedulable = (node) => node.conditions && node.conditions.Ready.statu
 const isDisabled = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'true' && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))
 const isDown = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'false'
 export const nodeStatusColorMap = {
-  schedulable: '#27AE5F',
-  unschedulable: '#F1C40F',
-  down: '#F15354',
-  disabled: '#dee1e3',
-  unknown: '',
+  schedulable: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
+  unschedulable: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
+  down: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
+  disabled: { color: '#dee1e3', bg: 'rgba(222,225,227,.05)' },
+  unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
 }
 export function getNodeStatus(node) {
   const p = [{ key: 'down', name: 'Down', determine: isDown }, { key: 'disabled', name: 'Disabled', determine: isDisabled }, { key: 'unschedulable', name: 'Unschedulable', determine: isUnschedulable }, { key: 'schedulable', name: 'Schedulable', determine: isSchedulable }]

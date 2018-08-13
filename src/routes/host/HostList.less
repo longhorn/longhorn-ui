@@ -1,7 +1,7 @@
 .status {
   color: #27ae60;
 }
-.status, .name, .agentAddress, .replicas, .allowScheduling {
+.status, .name, .allocated, .replicas, .used, .size {
   text-align: left !important; 
 }
 .allowScheduling {
@@ -9,4 +9,12 @@
 }
 a {
   color: #108ee9;
+}
+.secondLabel {
+  font-size: 13px;
+}
+:global {
+  .ant-progress-status-active .ant-progress-bg {
+    background-color: #F1C40F;
+  }
 }
