@@ -14,10 +14,10 @@ export function detachedVolume(data) { return data.filter((item) => item.state =
 // a. Volume.State == detached && volume.Robustness == Fault
 export function faultedVolume(data) { return data.filter((item) => item.state === 'detached' && item.robustness === 'faulted') }
 
-const isSchedulable = (node) => node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.conditions.Schedulable.status.toLowerCase() === 'true'))
-const isUnschedulable = (node) => node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === true && d.conditions.Schedulable.status.toLowerCase() === 'false')
-const isDisabled = (node) => node.conditions.Ready.status.toLowerCase() === 'true' && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))
-const isDown = (node) => node.conditions.Ready.status.toLowerCase() === 'false'
+const isSchedulable = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.conditions && d.conditions.Schedulable.status.toLowerCase() === 'true'))
+const isUnschedulable = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === true && d.conditions && d.conditions.Schedulable.status.toLowerCase() === 'false')
+const isDisabled = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'true' && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))
+const isDown = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'false'
 export const nodeStatusColorMap = {
   schedulable: '#27AE5F',
   unschedulable: '#F1C40F',
