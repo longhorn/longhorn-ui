@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Form } from 'antd'
 import { ModalBlur } from '../../components'
 import EditableDiskList from './components/EditableDiskList'
-import { formatMib } from '../../utils/formater'
+import { byteToGi, giToByte } from './helper/index'
 
 const modal = ({
   form,
@@ -16,11 +16,8 @@ const modal = ({
   }
   function handleOk() {
     const { validateFields } = form
-    const gibToByte = (value) => {
-      return parseFloat(value, 10) * 1024 * 1024 * 1024
-    }
     const isStorageChanged = (origValue, inputValue) => {
-      return formatMib(origValue) !== formatMib(inputValue)
+      return byteToGi(origValue) !== byteToGi(inputValue)
     }
     validateFields({ force: true }, (errors, values) => {
       if (errors) {
@@ -36,7 +33,7 @@ const modal = ({
         const disk = { ...values.disks[k] }
         const originDisk = node.disks[k]
         storageKeys.forEach(sk => {
-          disk[sk] = gibToByte(disk[sk])
+          disk[sk] = giToByte(disk[sk])
         })
 
         if (originDisk) {

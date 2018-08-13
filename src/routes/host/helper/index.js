@@ -5,3 +5,13 @@ export function formatPath(p = '') {
   }
   return `${path}/`
 }
+
+export function byteToGi(value) {
+  const val = Number(value)
+  return Math.round((val / (1024 * 1024 * 1024)) * 100) / 100
+}
+
+export function giToByte(value) {
+  const val = Number(value)
+  return val * 1024 * 1024 * 1024
+}
