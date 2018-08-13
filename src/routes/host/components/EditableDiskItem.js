@@ -4,9 +4,9 @@ import { Radio, Checkbox, Form, Tooltip } from 'antd'
 import StorageInput from './StorageInput'
 import IconRemove from './IconRemove'
 import IconRestore from './IconRestore'
-import { formatMib } from '../../../utils/formater'
 import classnames from 'classnames'
 import PathInput from './PathInput'
+import { byteToGi } from '../helper/index'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
@@ -53,9 +53,9 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         <div className={styles.control}>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['storageAvailable']`, {
-              initialValue: parseFloat(formatMib(disk.storageAvailable)),
+              initialValue: byteToGi(disk.storageAvailable),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageAvailable), 10)} readOnly />
+              <StorageInput min={0} defaultValue={byteToGi(disk.storageAvailable)} readOnly />
             </span>)}
           </FormItem>
         </div>
@@ -67,9 +67,9 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         <div className={styles.control}>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['storageMaximum']`, {
-              initialValue: parseFloat(formatMib(disk.storageMaximum)),
+              initialValue: byteToGi(disk.storageMaximum),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageMaximum), 10)} readOnly />
+              <StorageInput min={0} defaultValue={byteToGi(disk.storageMaximum)} readOnly />
             </span>)}
           </FormItem>
         </div>
@@ -81,9 +81,9 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         <div className={styles.control}>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['storageReserved']`, {
-              initialValue: parseFloat(formatMib(disk.storageReserved)),
+              initialValue: byteToGi(disk.storageReserved),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageReserved), 10)} readOnly={disk.deleted} />
+              <StorageInput min={0} defaultValue={byteToGi(disk.storageReserved)} readOnly={disk.deleted} />
             </span>)}
           </FormItem>
         </div>
@@ -95,9 +95,9 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         <div className={styles.control}>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['storageScheduled']`, {
-              initialValue: parseFloat(formatMib(disk.storageScheduled)),
+              initialValue: byteToGi(disk.storageScheduled),
             })(<span>
-              <StorageInput min={0} defaultValue={parseFloat(formatMib(disk.storageScheduled), 10)} readOnly />
+              <StorageInput min={0} defaultValue={byteToGi(disk.storageScheduled)} readOnly />
             </span>)}
           </FormItem>
         </div>
