@@ -9,6 +9,8 @@ import HostFilter from './HostFilter'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../utils/filter'
 
 function Host({ host, volume, setting, loading, dispatch, location }) {
+  let hostList = null
+  let hostFilter = null
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, selectedDiskID } = host
   const { field, value, stateValue } = location.query
   const volumeList = volume.data
@@ -109,6 +111,9 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     storageOverProvisioningPercentage: (storageOverProvisioningPercentage && Number(storageOverProvisioningPercentage.value)) || 0,
     minimalSchedulingQuotaWarning: (minimalSchedulingQuotaWarning && Number(minimalSchedulingQuotaWarning.value)) || 90,
     loading,
+    onAllExpandedOrCollapsed(isAllExpanded) {
+      hostFilter && hostFilter.toggleExpand(isAllExpanded)
+    },
     showAddDiskModal() {
       dispatch({
         type: 'host/showAddDiskModal',
@@ -211,6 +216,12 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       { value: 'name', name: 'Name' },
       { value: 'status', name: 'Status' },
     ],
+    expandAll() {
+      hostList && hostList.expandAll()
+    },
+    collapseAll() {
+      hostList && hostList.collapseAll()
+    },
     onSearch(filter) {
       const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
       filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
@@ -231,8 +242,8 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 
   return (
     <div className="content-inner">
-      <HostFilter {...HostFilterProps} />
-      <HostList {...hostListProps} />
+      <HostFilter ref={(component) => { hostFilter = component }} {...HostFilterProps} />
+      <HostList ref={(component) => { hostList = component }} {...hostListProps} />
       {modalVisible && <AddDisk {...addDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
       {editDisksModalVisible && <EditDisk {...editDiskModalProps} />}
