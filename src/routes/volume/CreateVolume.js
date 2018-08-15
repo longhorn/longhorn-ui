@@ -65,9 +65,23 @@ const modal = ({
               {
                 required: true,
                 message: 'Please input volume size',
+              }, {
+                validator: (rule, value, callback) => {
+                  if (value === '') {
+                    callback()
+                    return
+                  }
+                  const v = Number(value)
+                  if (v <= 0) {
+                    callback('The value must be greater than 0')
+                  } else {
+                    callback()
+                  }
+                },
               },
             ],
-          })(<span><InputNumber min={1} defaultValue={item.size} />Gi</span>)}
+          })(<InputNumber />)}
+          <span>Gi</span>
         </FormItem>
 
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
