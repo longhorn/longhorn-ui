@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
+import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
-import { ResourceOverview } from './components'
+import { ResourceOverview, EventLogs } from './components'
 
-function Dashboard({ host, volume, loading, dispatch, location }) {
+function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
   const resourceOverviewProps = {
     host,
     volume,
@@ -29,9 +30,15 @@ function Dashboard({ host, volume, loading, dispatch, location }) {
       }))
     },
   }
+  const eventLogsProps = {
+    data: eventlog.data,
+  }
   return (
     <div>
-      <ResourceOverview {...resourceOverviewProps} />
+      <Card bordered={false}>
+        <ResourceOverview {...resourceOverviewProps} />
+        <EventLogs {...eventLogsProps} />
+      </Card>
     </div>
   )
 }
@@ -39,9 +46,10 @@ function Dashboard({ host, volume, loading, dispatch, location }) {
 Dashboard.propTypes = {
   host: PropTypes.object,
   volume: PropTypes.object,
+  eventlog: PropTypes.object,
   loading: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
 }
 
-export default connect(({ host, volume, loading }) => ({ host, volume, loading }))(Dashboard)
+export default connect(({ host, volume, eventlog, loading }) => ({ host, volume, eventlog, loading }))(Dashboard)

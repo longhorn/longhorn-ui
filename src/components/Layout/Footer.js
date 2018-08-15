@@ -5,7 +5,7 @@ import styles from './Footer.less'
 import { config } from '../../utils'
 import { getStatusIcon } from '../../utils/websocket'
 
-function Footer({ host, volume, setting, engineimage }) {
+function Footer({ host, volume, setting, engineimage, eventlog }) {
   const version = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueTitle = '*Summarize%20your%20issue%20here*'
   const issueBody = `*Describe%20your%20issue%20here*%0A%0A---%0AVersion%3A%20\`${version}\``
@@ -26,6 +26,7 @@ function Footer({ host, volume, setting, engineimage }) {
           {getStatusIcon(host)}
           {getStatusIcon(setting)}
           {getStatusIcon(engineimage)}
+          {getStatusIcon(eventlog)}
         </Col>
       </Row>
     </div>
@@ -37,6 +38,7 @@ Footer.propTypes = {
   volume: PropTypes.object,
   setting: PropTypes.object,
   engineimage: PropTypes.object,
+  eventlog: PropTypes.object,
 }
 
-export default connect(({ host, volume, setting, engineimage }) => ({ host, volume, setting, engineimage }))(Footer)
+export default connect(({ host, volume, setting, engineimage, eventlog }) => ({ host, volume, setting, engineimage, eventlog }))(Footer)
