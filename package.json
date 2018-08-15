@@ -23,6 +23,7 @@
     "react-countup": "1.3.0",
     "react-dom": "^15.4.2",
     "react-helmet": "^5.0.0",
+    "react-resize-detector": "1.1.0",
     "recharts": "^1.1.0",
     "reconnecting-websocket": "^v3.2.2"
   },

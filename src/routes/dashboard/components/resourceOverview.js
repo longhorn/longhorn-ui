@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react'
-import { Spin, Card, Row, Col } from 'antd'
+import { Spin } from 'antd'
 import { formatMib } from '../../../utils/formater'
 import ResourceChart from './resourceChart'
 import ResourceDetail from './resourceDetail'
+import ReactResizeDetector from 'react-resize-detector'
+import styles from './resourceOverview.less'
 import { nodeStatusColorMap, healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
 
 class ResourceOverview extends React.Component {
@@ -11,9 +13,18 @@ class ResourceOverview extends React.Component {
     this.state = {
       volumeActiveIndex: -1,
       nodeActiveIndex: -1,
+      resourceWidth: 300,
     }
   }
-
+  handleResize = (width) => {
+    const rw = Math.min((width / 3) - 60, 440)
+    if (rw > 300) {
+      this.setState({
+        ...this.state,
+        resourceWidth: rw,
+      })
+    }
+  }
   render() {
     const { host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f } = this.props
     const { host: hostLoading, volume: volumeLoading } = loading.models
@@ -115,10 +126,12 @@ class ResourceOverview extends React.Component {
       data: storageSpaceInfoData,
       loading: hostLoading,
       empty: 'No Storage',
+      width: this.state.resourceWidth,
     }
     this.storageSpaceDetailProps = {
       data: storageSpaceInfoDetails,
       total: storageSpaceInfoTotal,
+      width: this.state.resourceWidth,
     }
 
     const volumeInfoColors = ['#27AE5F', '#F1C40F', '#78C9CF', '#F15354', '#dee1e3']
@@ -147,12 +160,14 @@ class ResourceOverview extends React.Component {
       clickable: true,
       empty: 'No Volume',
       activeIndex: this.state.volumeActiveIndex,
+      width: this.state.resourceWidth,
     }
     this.volumeInfoDetailProps = {
       data: volumeDetails,
       total: volumeInfoTotal,
       onClick: onVolumeClick,
       clickable: true,
+      width: this.state.resourceWidth,
       onMouseEnter: (d, index) => {
         this.setState({ ...this.state, volumeActiveIndex: index })
       },
@@ -185,12 +200,14 @@ class ResourceOverview extends React.Component {
       clickable: true,
       empty: 'No Node',
       activeIndex: this.state.nodeActiveIndex,
+      width: this.state.resourceWidth,
     }
     this.nodeInfoDetailProps = {
       data: nodeDetails,
       total: nodeInfoTotal,
       onClick: onNodeClick,
       clickable: true,
+      width: this.state.resourceWidth,
       onMouseEnter: (d, index) => {
         this.setState({ ...this.state, nodeActiveIndex: index })
       },
@@ -199,24 +216,23 @@ class ResourceOverview extends React.Component {
       },
     }
     return (
-      <Card bordered={false}>
         <Spin spinning={this.hostLoading || this.volumeLoading}>
-          <Row gutter={24}>
-            <Col lg={8} md={8}>
+          <div className={styles.overview}>
+            <div>
               <ResourceChart {...this.volumeInfoChartProps} />
               <ResourceDetail {...this.volumeInfoDetailProps} />
-            </Col>
-            <Col lg={8} md={8}>
+            </div>
+            <div>
             <ResourceChart {...this.storageSpaceChartProps} />
             <ResourceDetail {...this.storageSpaceDetailProps} />
-            </Col>
-            <Col lg={8} md={8}>
+            </div>
+            <div>
             <ResourceChart {...this.nodeInfoChartProps} />
             <ResourceDetail {...this.nodeInfoDetailProps} />
-            </Col>
-          </Row>
+            </div>
+            <ReactResizeDetector handleWidth onResize={this.handleResize} />
+          </div>
         </Spin>
-      </Card>
     )
   }
 }

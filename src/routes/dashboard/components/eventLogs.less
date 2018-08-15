@@ -1,15 +1,55 @@
-.date {
-  text-align: left!important;
-}
-
-.text {
-  text-align: left!important;
-}
-
-.error {
-  color: #f44;
-}
-
-.info {
-  color: #0075a8;
+:global {
+  .eventLogs {
+    margin-top: 50px;
+    background-color: #ffffff;
+    .rowStriped {
+      > td:first-child {
+       border-left: 1px solid #f4f4f4; 
+      }
+      > td:last-child {
+        border-right: 1px solid #f4f4f4;  
+      }
+      background: #fafafa;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #3d3d3d;
+    }
+    .content {
+      margin: 0 -8px;
+    }
+    .date, .text {
+      text-align: left !important;
+    }
+    .seenTime {
+      min-width: 180px;
+    }
+    .count {
+      min-width: 60px;
+    }
+    .eventType {
+      min-width: 60px;
+    }
+    .kind {
+      min-width: 50px;
+    }
+    .error {
+      color: #f44;
+    }
+    
+    .info {
+      color: #0075a8;
+    }
+    .ant-table-tbody > tr:first-child > td {
+      border-top: 1px solid #f4f4f4; 
+    }
+    .ant-table .ant-table-thead > tr > th,
+    .ant-table .ant-table-thead > tr > th.ant-table-column-sort {
+      background: transparent;
+      color: #666;
+      text-align: left;
+      padding: 8px 8px;
+    }
+  }
 }

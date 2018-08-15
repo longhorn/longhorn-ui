@@ -50,7 +50,7 @@ class ResourceChart extends React.Component {
   }
 
   render() {
-    const { title, subTitle, data = [], colors = [], width = 300, height = 300, onClick = f => f, clickable = false, empty = 'No Data' } = this.props
+    const { title, subTitle, data = [], colors = [], width = 300, onClick = f => f, clickable = false, empty = 'No Data' } = this.props
     const backChartOption = { outerRadius: '96%', innerRadius: '82%', startAngle: 225, endAngle: -45, paddingAngle: 0, onMouseDown: onClick, activeIndex: this.state.activeIndex, activeShape: this.renderActiveShape }
     const chartOption = { outerRadius: '96%', innerRadius: '82%', startAngle: 225, endAngle: -45, paddingAngle: 0, onMouseDown: onClick, onMouseEnter: this.onPieEnter, onMouseLeave: this.onPieOut }
     if (data.every(item => item.value === 0)) {
@@ -60,7 +60,7 @@ class ResourceChart extends React.Component {
           <Pie dataKey="value"
             data={[{ name: 'empty data', value: 1 }]}
             cx={width / 2}
-            cy={height / 2}
+            cy={width / 2}
             {...chartOption}
           >
             <Cell fill="#dee1e3" />
@@ -78,7 +78,7 @@ class ResourceChart extends React.Component {
           <Pie dataKey="value"
             data={data}
             cx={width / 2}
-            cy={height / 2}
+            cy={width / 2}
             {...backChartOption}
           >
             {
@@ -90,7 +90,7 @@ class ResourceChart extends React.Component {
           <Pie dataKey="value"
             data={data}
             cx={width / 2}
-            cy={height / 2}
+            cy={width / 2}
             {...chartOption}
           >
             {
@@ -115,7 +115,6 @@ ResourceChart.propTypes = {
   colors: PropTypes.array,
   data: PropTypes.array,
   width: PropTypes.number,
-  height: PropTypes.number,
   onClick: PropTypes.func,
   clickable: PropTypes.bool,
   empty: PropTypes.string,
