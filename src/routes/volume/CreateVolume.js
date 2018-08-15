@@ -78,8 +78,26 @@ const modal = ({
                 required: true,
                 message: 'Please input the number of replicas',
               },
+              {
+                validator: (rule, value, callback) => {
+                  if (value === '') {
+                    callback()
+                    return
+                  }
+                  if (!/^[1-9]\d*$/.test(value)) {
+                    callback('The value must be a positive integer')
+                    return
+                  }
+                  const v = Number(value)
+                  if (v < 2 || v > 10) {
+                    callback('The value must be greater than or equal to 2 or less than or equal to 10')
+                  } else {
+                    callback()
+                  }
+                },
+              },
             ],
-          })(<InputNumber min={2} />)}
+          })(<InputNumber />)}
         </FormItem>
 
         <FormItem label="Base Image" hasFeedback {...formItemLayout}>
