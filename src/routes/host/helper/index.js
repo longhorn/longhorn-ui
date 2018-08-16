@@ -13,7 +13,7 @@ export function byteToGi(value) {
 
 export function giToByte(value) {
   const val = Number(value)
-  return val * 1024 * 1024 * 1024
+  return Math.round(val * 1024 * 1024 * 1024)
 }
 
 export function getStorageProgressStatus(minimalSchedulingQuotaWarning, percent) {
