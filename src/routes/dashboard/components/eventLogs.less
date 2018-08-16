@@ -28,18 +28,23 @@
     .count {
       min-width: 60px;
     }
-    .eventType {
-      min-width: 60px;
+    .eventType, .kind, .name {
+      min-width: 80px;
     }
-    .kind {
-      min-width: 50px;
+    .reason {
+      min-width: 70px;
+    }
+    .subobject {
+      min-width: 90px;
     }
     .error {
       color: #f44;
     }
-    
     .info {
       color: #0075a8;
+    }
+    .highlight {
+      color: #F15354;
     }
     .ant-table-tbody > tr:first-child > td {
       border-top: 1px solid #f4f4f4; 
@@ -50,6 +55,17 @@
       color: #666;
       text-align: left;
       padding: 8px 8px;
+    }
+  }
+  .filter-dropdown {
+    display: flex;
+    background-color: #ffffff;
+    padding: 8px 8px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    width: 300px;
+    input {
+      margin-right: 8px;
+      width: 160px;
     }
   }
 }

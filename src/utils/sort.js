@@ -14,7 +14,7 @@ const getStateWeight = (state) => {
       return 99
   }
 }
-const getPropValue = (obj, prop) => {
+export const getPropValue = (obj, prop) => {
   const props = prop.split('.')
   if (props.length > 1) {
     let value = obj
@@ -27,6 +27,16 @@ const getPropValue = (obj, prop) => {
     return value
   }
   return obj[prop]
+}
+const isoStrToDate = (isoStr) => {
+  const reg = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})Z$/
+  const results = isoStr.match(reg)
+  if (results && results.length === 3) {
+    const d = results[1].split('-').map(item => parseInt(item, 10))
+    const t = results[2].split(':').map(item => parseInt(item, 10))
+    return new Date(Date.UTC(d[0], d[1] - 1, d[2], t[0], t[1], t[2]))
+  }
+  return 'Invalid ISO Date'
 }
 export function sortVolume(dataSource) {
   dataSource.sort((a, b) => {
@@ -51,6 +61,18 @@ export function sortVolumeBackups(dataSource) {
 export function sortTable(a, b, prop) {
   const valueA = getPropValue(a, prop)
   const valueB = getPropValue(b, prop)
+  if (valueA < valueB) {
+    return -1
+  }
+  if (valueA > valueB) {
+    return 1
+  }
+  return 0
+}
+
+export function sortTableByISODate(a, b, prop) {
+  const valueA = isoStrToDate(getPropValue(a, prop))
+  const valueB = isoStrToDate(getPropValue(b, prop))
   if (valueA < valueB) {
     return -1
   }
