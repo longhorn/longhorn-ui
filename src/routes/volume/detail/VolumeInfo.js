@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Row, Col, Alert, Icon } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
-import { formatMib } from '../../../utils/formater'
+import { formatMib, utcStrToDate } from '../../../utils/formater'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from '../helper/index'
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
@@ -68,7 +68,7 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Created:</span>
-        {moment(new Date(selectedVolume.created)).fromNow()}
+        {moment(utcStrToDate(selectedVolume.created)).fromNow()}
       </div>
       <div className={styles.row}>
         <Row>
