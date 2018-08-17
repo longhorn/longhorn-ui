@@ -177,7 +177,7 @@ class List extends React.Component {
           const total = computeSize(record)
           return (
             <div>
-              <div>{formatMib(total)}</div>
+              <div>{formatMib(total < 0 ? 0 : total)}</div>
               <div className={styles.secondLabel} style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} Reserved` : null}</div>
             </div>
           )
