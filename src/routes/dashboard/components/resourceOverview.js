@@ -65,11 +65,12 @@ class ResourceOverview extends React.Component {
     // Available (green)
     // a. AvailableForSchedulingStorage = sum(enabledNodes.enabledDisks.AvailableStorage - enabledNodes.enabledDisks.ReservedStorage)
     const computeSchedulableSpace = () => {
-      return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
+      const result = host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((availabeSpace, currentDisk) => {
           return availabeSpace + (currentDisk.storageAvailable - currentDisk.storageReserved)
         }, 0)
       }, 0)
+      return result < 0 ? 0 : result
     }
     // Used (blue)
     // a. UsedStorage = sum(enabledNodes.enabledDisk.MaximumStorage - enabledNodes.enabledDisks.AvailableStorage)
