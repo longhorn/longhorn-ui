@@ -64,7 +64,7 @@ class EventLogs extends React.Component {
     const getSourceText = (source) => {
       return source ? Object.values(source).join(', ') : ''
     }
-    return data.map(item => ({ ...item, sourceText: getSourceText(item.source), nameText: item.involvedObject ? item.involvedObject.name : '' }))
+    return data.map(item => ({ ...item, sourceText: getSourceText(item.source), nameText: item.involvedObject ? item.involvedObject.name : '' })).sort((a, b) => sortTableByISODate(b, a, 'lastTimestamp'))
   }
   wrapValue = (value, searchText) => {
     if (value) {
@@ -235,7 +235,6 @@ class EventLogs extends React.Component {
         title: 'Message',
         dataIndex: 'message',
         className: 'text',
-        sorter: (a, b) => sortTable(a, b, 'message'),
       },
     ]
     return (
