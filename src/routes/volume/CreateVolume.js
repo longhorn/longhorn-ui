@@ -67,13 +67,14 @@ const modal = ({
                 message: 'Please input volume size',
               }, {
                 validator: (rule, value, callback) => {
-                  if (value === '') {
+                  if (value === '' || typeof value !== 'number') {
                     callback()
                     return
                   }
-                  const v = Number(value)
-                  if (v <= 0) {
-                    callback('The value must be greater than 0')
+                  if (value < 1 || value > 65536) {
+                    callback('The value should be between 1 and 65535')
+                  } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
+                    callback('This value should have at most two decimal places')
                   } else {
                     callback()
                   }
@@ -94,17 +95,14 @@ const modal = ({
               },
               {
                 validator: (rule, value, callback) => {
-                  if (value === '') {
+                  if (value === '' || typeof value !== 'number') {
                     callback()
                     return
                   }
-                  if (!/^[1-9]\d*$/.test(value)) {
+                  if (value < 2 || value > 10) {
+                    callback('The value should be between 2 and 10')
+                  } else if (!/^\d+$/.test(value)) {
                     callback('The value must be a positive integer')
-                    return
-                  }
-                  const v = Number(value)
-                  if (v < 2 || v > 10) {
-                    callback('The value must be greater than or equal to 2 or less than or equal to 10')
                   } else {
                     callback()
                   }
