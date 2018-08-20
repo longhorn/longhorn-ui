@@ -17,13 +17,14 @@ const Replica = ({ item, toggleSelect, selected }) => {
 
   return (
     <div onClick={() => toggleSelect(item.name)} className={cNames}>
-      <div style={{ backgroundColor: item.running ? '#108eb9' : 'lightgrey', padding: 20 }}>
-        <img
-          alt="replica"
-          style={{ display: 'inline' }}
-          width="50px"
-          src={diskUnhealthyImage}
-          />
+      <div className={style.header} style={{ backgroundColor: item.running ? '#108eb9' : 'lightgrey', padding: 14 }}>
+        <div>
+          <img
+            alt="replica"
+            className={style.icon}
+            src={diskUnhealthyImage}
+            />
+        </div>
         <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15, color: 'white' }}>
           {getReplicaShortName(item.name)}
         </span>
@@ -90,6 +91,7 @@ class Salvage extends React.Component {
     const handleOk = () => {
       if (this.selectedReplicaNames.length > 0) {
         onOk(this.selectedReplicaNames, item.actions.salvage)
+        this.setState({ ...this.state, selectedReplicaMap: {} })
         return true
       }
       this.setState({
@@ -99,10 +101,15 @@ class Salvage extends React.Component {
       return false
     }
 
+    const handleCancel = () => {
+      onCancel()
+      this.setState({ ...this.state, showErrorMessage: false, selectedReplicaMap: {} })
+    }
+
     const modalOpts = {
       title: 'Select one or more replicas to salvage',
       visible,
-      onCancel,
+      onCancel: handleCancel,
       width: 1040,
       onOk: handleOk,
     }
