@@ -86,7 +86,7 @@ class Snapshots extends React.Component {
           </Tooltip>
           &nbsp;
           <Tooltip placement="top" title="Create a new snapshot and then create a backup of the snapshot.">
-          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
+          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
             Create Backup
           </Button>
           </Tooltip>
