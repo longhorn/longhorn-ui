@@ -33,3 +33,14 @@ export function utcStrToDate(utcStr) {
   }
   return 'Invalid UTC Date'
 }
+
+export function isoStrToDate(isoStr) {
+  const reg = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})([.]\d{3})?Z$/
+  const results = isoStr.match(reg)
+  if (results && results.length === 4) {
+    const d = results[1].split('-').map(item => parseInt(item, 10))
+    const t = results[2].split(':').map(item => parseInt(item, 10))
+    return new Date(Date.UTC(d[0], d[1] - 1, d[2], t[0], t[1], t[2]))
+  }
+  return 'Invalid ISO Date'
+}

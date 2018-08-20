@@ -1,6 +1,6 @@
 import { create, deleteVolume, query, execAction, recurringUpdate } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
-import { sortVolumeByName } from '../utils/sort'
+import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
 
 export default {
@@ -49,7 +49,7 @@ export default {
         data.data = data.data.filter(item => item.controller && item.controller.hostId
           && payload.keyword.split(',').indexOf(item.controller.hostId) > -1)
       }
-      sortVolumeByName(data.data)
+      sortVolume(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })
       yield put({ type: 'clearSelection' })
     },
@@ -178,7 +178,7 @@ export default {
         data.data = data.data.filter(item => item.controller && item.controller.hostId
           && data.keyword.split(',').indexOf(item.controller.hostId) > -1)
       }
-      sortVolumeByName(data.data)
+      sortVolume(data.data)
       return {
         ...state,
         ...data,

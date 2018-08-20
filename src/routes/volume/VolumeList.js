@@ -7,7 +7,7 @@ import { LinkTo } from '../../components'
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from './helper/index'
-import { sortTable } from '../../utils/sort'
+import { sortTable, sortTableByUTCDate } from '../../utils/sort'
 
 function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
   const volumeActionsProps = {
@@ -105,7 +105,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
-      sorter: (a, b) => sortTable(a, b, 'created'),
+      sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
           <div>
