@@ -177,6 +177,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     bodyStyle: {
       height: 360,
       background: '#fff',
+      overflowY: 'auto',
     },
   }
 
