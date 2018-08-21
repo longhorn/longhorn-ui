@@ -11,10 +11,10 @@ const getReplicaShortName = (name) => {
   return ary.slice(len - 3, len).join('-')
 }
 
-const Replica = ({ item, toggleSelect, selected }) => {
+const Replica = ({ item, toggleSelect, selected, hosts }) => {
   const cNames = classnames(style.replica, { [style.selected]: selected })
   const failedAt = item.failedAt ? moment(new Date(item.failedAt).getTime()).fromNow() : 'N/A'
-
+  const host = hosts.find(h => h.id === item.hostId)
   return (
     <div onClick={() => toggleSelect(item.name)} className={cNames}>
       <div className={style.header} style={{ backgroundColor: item.running ? '#108eb9' : 'lightgrey', padding: 14 }}>
@@ -30,7 +30,7 @@ const Replica = ({ item, toggleSelect, selected }) => {
         </span>
       </div>
       <div style={{ textAlign: 'center', marginTop: 15 }}>
-        <h3>{item.host || 'N/A'}</h3>
+        <h3>{(host && host.name) || 'N/A'}</h3>
         <p style={{ color: 'gray' }}>Host</p>
       </div>
       <div style={{ textAlign: 'center', marginTop: 10 }} className="faulted">
@@ -44,6 +44,7 @@ Replica.propTypes = {
   item: PropTypes.object.isRequired,
   toggleSelect: PropTypes.func.isRequired,
   selected: PropTypes.bool.isRequired,
+  hosts: PropTypes.array,
 }
 
 class Salvage extends React.Component {
@@ -82,6 +83,7 @@ class Salvage extends React.Component {
 
   render() {
     const {
+      hosts,
       item,
       visible,
       onCancel,
@@ -124,6 +126,7 @@ class Salvage extends React.Component {
         toggleSelect={this.toggleSelect}
         key={r.name}
         item={r}
+        hosts={hosts}
       />
     ))
 
@@ -154,6 +157,7 @@ Salvage.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  hosts: PropTypes.array,
 }
 
 export default Salvage
