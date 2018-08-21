@@ -54,7 +54,8 @@ class Replica extends React.Component {
     return out
   }
   render() {
-    const { item } = this.props
+    const { item, hosts } = this.props
+    const host = hosts.find(h => h.id === item.hostId)
     return (
       <div style={{ display: 'inline-block', padding: 20 }} key={item.name}>
         <Card bodyStyle={{ height: 280, padding: 0 }} >
@@ -73,11 +74,11 @@ class Replica extends React.Component {
             </p>
           </div>
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <h3>{item.host || 'N/A'}</h3>
+            <h3>{(host && host.name) || 'N/A'}</h3>
             <p style={{ color: 'gray' }}>Host</p>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h3>{item.path || 'N/A'}</h3>
+            <h3>{(host && host.disks && host.disks[item.diskID] && host.disks[item.diskID].path) || 'N/A'}</h3>
             <p style={{ color: 'gray' }}>Path</p>
           </div>
           <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>
@@ -105,6 +106,7 @@ class Replica extends React.Component {
 Replica.propTypes = {
   item: PropTypes.object.isRequired,
   deleteReplica: PropTypes.func,
+  hosts: PropTypes.array,
 }
 
 export default Replica

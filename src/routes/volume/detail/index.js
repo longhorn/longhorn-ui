@@ -9,11 +9,12 @@ import AttachHost from '../AttachHost'
 import EngineUpgrade from '../EngineUpgrade'
 import Snapshots from '../Snapshots'
 import RecurringList from '../RecurringList'
+import Salvage from '../Salvage'
 import { ReplicaList } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps } from '../helper'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible } = volume
   const { backupStatus } = backup
   const hosts = host.data
   const engineImages = engineimage.data
@@ -25,17 +26,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   if (found) {
     selectedVolume.host = found.name
   }
-  if (selectedVolume.replicas) {
-    selectedVolume.replicas.forEach(replica => {
-      const targetHost = hosts.find(h => h.id === replica.hostId)
-      if (targetHost) {
-        replica.host = targetHost.name
-        replica.path = targetHost.disks[replica.diskID] && targetHost.disks[replica.diskID].path
-      }
-    })
-  }
   const replicasListProps = {
     dataSource: selectedVolume.replicas || [],
+    hosts,
     deleteReplica(name) {
       dispatch({
         type: 'volume/deleteReplica',
@@ -137,6 +130,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         },
       }))
     },
+    showSalvage(record) {
+      dispatch({
+        type: 'volume/showSalvageModal',
+        payload: {
+          selected: record,
+        },
+      })
+    },
     rollback(record) {
       dispatch({
         type: 'volume/rollback',
@@ -171,6 +172,30 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     volume: selectedVolume,
     volumeId,
     dispatch,
+  }
+
+  const salvageModalProps = {
+    item: selectedVolume,
+    visible: salvageModalVisible,
+    hosts,
+    onOk(replicaNames, url) {
+      dispatch({
+        type: 'volume/salvage',
+        payload: {
+          replicaNames,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideSalvageModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
   }
 
   const bodyStyle = {
@@ -209,6 +234,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
+      <Salvage {...salvageModalProps} />
     </div >
   )
 }
