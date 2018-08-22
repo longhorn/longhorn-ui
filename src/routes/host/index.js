@@ -11,7 +11,7 @@ import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode,
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
   let hostFilter = null
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, selectedDiskID } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, selectedDiskID, sorter } = host
   const { field, value, stateValue } = location.query
   const volumeList = volume.data
   const storageOverProvisioningPercentage = setting.data.find(item => item.id === 'storage-over-provisioning-percentage')
@@ -111,6 +111,13 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     storageOverProvisioningPercentage: (storageOverProvisioningPercentage && Number(storageOverProvisioningPercentage.value)) || 0,
     minimalSchedulingQuotaWarning: (minimalSchedulingQuotaWarning && Number(minimalSchedulingQuotaWarning.value)) || 90,
     loading,
+    onSorterChange(s) {
+      dispatch({
+        type: 'host/updateSorter',
+        payload: { field: s.field, order: s.order, columnKey: s.columnKey },
+      })
+    },
+    sorter,
     onAllExpandedOrCollapsed(isAllExpanded) {
       hostFilter && hostFilter.toggleExpand(isAllExpanded)
     },

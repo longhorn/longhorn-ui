@@ -6,12 +6,19 @@ import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
 
 function Backup({ host, backup, loading, location, dispatch }) {
-  const { data, backupVolumes, restoreBackupModalVisible, restoreBackupModalKey, currentItem } = backup
+  const { data, backupVolumes, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter } = backup
   const { field, keyword } = location.query
   const hosts = host.data
   const backupVolumesProps = {
     backup: data,
     loading,
+    onSorterChange(s) {
+      dispatch({
+        type: 'backup/updateSorter',
+        payload: { field: s.field, order: s.order, columnKey: s.columnKey },
+      })
+    },
+    sorter,
     queryBackups(name, url) {
       dispatch({
         type: 'backup/query',

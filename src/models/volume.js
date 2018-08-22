@@ -2,6 +2,7 @@ import { create, deleteVolume, query, execAction, recurringUpdate } from '../ser
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
+import { getSorter, saveSorter } from '../utils/store'
 
 export default {
   namespace: 'volume',
@@ -23,6 +24,7 @@ export default {
     engineUpgradeModaKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
     socketStatus: 'closed',
+    sorter: getSorter('volumeList.sorter'),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -240,6 +242,10 @@ export default {
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
+    },
+    updateSorter(state, action) {
+      saveSorter('volumeList.sorter', action.payload)
+      return { ...state, sorter: action.payload }
     },
   },
 }

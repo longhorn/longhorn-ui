@@ -1,12 +1,14 @@
 import { query } from '../services/eventlog'
 import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
+import { getSorter, saveSorter } from '../utils/store'
 
 export default {
   namespace: 'eventlog',
   state: {
     data: [],
     socketStatus: 'closed',
+    sorter: getSorter('eventlogList.sorter'),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -40,6 +42,10 @@ export default {
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
+    },
+    updateSorter(state, action) {
+      saveSorter('eventlogList.sorter', action.payload)
+      return { ...state, sorter: action.payload }
     },
   },
 }

@@ -5,6 +5,7 @@ import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
 
 function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
+  const { data: eventlogs, sorter } = eventlog
   const resourceOverviewProps = {
     host,
     volume,
@@ -31,7 +32,14 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     },
   }
   const eventLogsProps = {
-    data: eventlog.data,
+    data: eventlogs,
+    onSorterChange(s) {
+      dispatch({
+        type: 'eventlog/updateSorter',
+        payload: { field: s.field, order: s.order, columnKey: s.columnKey },
+      })
+    },
+    sorter,
   }
   return (
     <div>

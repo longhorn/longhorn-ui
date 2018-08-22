@@ -8,12 +8,14 @@ import HostActions from './HostActions'
 import { getNodeStatus, nodeStatusColorMap } from '../../utils/filter'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
+import { setSortOrder } from '../../utils/store'
 
 class List extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       expandedRowKeys: [],
+      sorterOrderChanged: false,
     }
   }
   onExpand = (expanded, record) => {
@@ -47,7 +49,7 @@ class List extends React.Component {
     })
   }
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
@@ -206,6 +208,10 @@ class List extends React.Component {
       )
     }
     const pagination = false
+    const onChange = (p, f, s) => {
+      onSorterChange(s)
+    }
+    setSortOrder(columns, sorter)
     return (
       <div>
         <Table
@@ -217,6 +223,7 @@ class List extends React.Component {
           expandedRowKeys={this.state.expandedRowKeys}
           onExpandedRowsChange={this.onExpandedRowsChange}
           loading={loading}
+          onChange={onChange}
           simple
           pagination={pagination}
           rowKey={record => record.id}
@@ -237,6 +244,8 @@ List.propTypes = {
   showEditDisksModal: PropTypes.func,
   showDiskReplicaModal: PropTypes.func,
   onAllExpandedOrCollapsed: PropTypes.func,
+  sorter: PropTypes.object,
+  onSorterChange: PropTypes.func,
 }
 
 export default List

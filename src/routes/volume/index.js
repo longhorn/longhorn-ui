@@ -15,7 +15,7 @@ import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faulte
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible } = this.props.volume
+    const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, sorter } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue } = this.props.location.query
@@ -43,6 +43,13 @@ class Volume extends React.Component {
       dataSource: volumes,
       loading,
       engineImages,
+      onSorterChange(s) {
+        dispatch({
+          type: 'volume/updateSorter',
+          payload: { field: s.field, order: s.order, columnKey: s.columnKey },
+        })
+      },
+      sorter,
       takeSnapshot(record) {
         dispatch({
           type: 'volume/actions',

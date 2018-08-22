@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Table, Input, Button, Icon } from 'antd'
 import { sortTable, sortTableByISODate } from '../../../utils/sort'
+import { setSortOrder } from '../../../utils/store'
 import './eventLogs.less'
 
 class EventLogs extends React.Component {
@@ -91,7 +92,7 @@ class EventLogs extends React.Component {
   }
 
   render() {
-    const { data } = this.props
+    const { data, sorter, onSorterChange = f => f } = this.props
     const rowClassName = (record, index) => {
       if (index % 2 === 0) {
         return 'rowStriped'
@@ -113,6 +114,7 @@ class EventLogs extends React.Component {
       {
         title: 'Last Seen',
         dataIndex: 'lastTimestamp',
+        key: 'lastTimestamp',
         className: 'date',
         sorter: (a, b) => sortTableByISODate(a, b, 'lastTimestamp'),
         render(text) {
@@ -121,6 +123,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'First Seen',
         dataIndex: 'firstTimestamp',
+        key: 'firstTimestamp',
         className: 'date',
         sorter: (a, b) => sortTableByISODate(a, b, 'firstTimestamp'),
         render(text) {
@@ -129,6 +132,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Count',
         dataIndex: 'count',
+        key: 'count',
         className: 'text',
         sorter: (a, b) => sortTable(a, b, 'count'),
         render(text) {
@@ -137,6 +141,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Name',
         dataIndex: 'nameText',
+        key: 'nameText',
         className: 'name',
         filterIcon: <Icon type="filter" style={{ color: this.state.searchField === 'nameText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
         filterDropdown: (
@@ -173,6 +178,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Kind',
         dataIndex: 'involvedObject.kind',
+        key: 'involvedObject.kind',
         className: 'text',
         filters: filtersKind,
         sorter: (a, b) => sortTable(a, b, 'involvedObject.kind'),
@@ -183,6 +189,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Subobject',
         dataIndex: 'involvedObject.fieldPath',
+        key: 'involvedObject.fieldPath',
         className: 'text',
         sorter: (a, b) => sortTable(a, b, 'involvedObject.fieldPath'),
         render: (text) => {
@@ -191,6 +198,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Type',
         dataIndex: 'eventType',
+        key: 'eventType',
         className: 'text',
         width: 70,
         filters: filtersEventType,
@@ -202,6 +210,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Reason',
         dataIndex: 'reason',
+        key: 'reason',
         className: 'reason',
         sorter: (a, b) => sortTable(a, b, 'reason'),
         render: (text) => {
@@ -210,6 +219,7 @@ class EventLogs extends React.Component {
       }, {
         title: 'Source',
         dataIndex: 'sourceText',
+        key: 'sourceText',
         className: 'text',
         filterIcon: <Icon type="filter" style={{ color: this.state.searchField === 'sourceText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
         filterDropdown: (
@@ -237,11 +247,19 @@ class EventLogs extends React.Component {
         className: 'text',
       },
     ]
+    const onChange = (p, f, s) => {
+      onSorterChange(s)
+    }
+    setSortOrder(columns, sorter)
     return (
       <div className="eventLogs">
         <div className="title">Event Log</div>
         <div className="content">
-         <Table columns={columns} rowClassName={rowClassName} rowKey={(record, key) => key} dataSource={this.state.data} />
+         <Table columns={columns}
+           onChange={onChange}
+           rowClassName={rowClassName}
+           rowKey={(record, key) => key}
+           dataSource={this.state.data} />
          </div>
        </div>
     )
@@ -250,6 +268,8 @@ class EventLogs extends React.Component {
 
 EventLogs.propTypes = {
   data: PropTypes.array,
+  sorter: PropTypes.object,
+  onSorterChange: PropTypes.func,
 }
 
 export default EventLogs
