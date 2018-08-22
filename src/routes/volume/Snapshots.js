@@ -45,6 +45,12 @@ class Snapshots extends React.Component {
       type: 'snapshotModal/queryVolume',
       payload: this.props.volumeId,
     })
+    this.props.dispatch({
+      type: 'snapshotModal/startPolling',
+      payload: {
+        querySnapShotUrl: this.props.volume.actions.snapshotList,
+      },
+    })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.volume.state !== this.props.volume.state) {
@@ -63,10 +69,38 @@ class Snapshots extends React.Component {
     if (nextProps.snapshotTree === this.props.snapshotTree) {
       return false
     }
-    return true
+    if (nextProps.snapshotTree.length !== this.props.snapshotTree.length) {
+      return true
+    }
+    const result = this.isSameTree(nextProps.snapshotTree, this.props.snapshotTree)
+    return !result
   }
   componentWillUnmount() {
     this.props.dispatch({ type: 'snapshotModal/setSnapshot', payload: [] })
+    this.props.dispatch({
+      type: 'snapshotModal/stopPolling',
+    })
+  }
+  isSameTree = (p, q) => {
+    if (p === q) {
+      return true
+    }
+    if (p.length !== q.length) {
+      return false
+    }
+    const len = p.length
+    for (let i = 0; i < len; i++) {
+      let pNode = p[i]
+      let qNode = q[i]
+      if (pNode.id !== qNode.id) {
+        return false
+      }
+      const isSame = this.isSameTree(pNode.childrenNode, qNode.childrenNode)
+      if (!isSame) {
+        return false
+      }
+    }
+    return true
   }
   render() {
     if (!this.props.volume) {

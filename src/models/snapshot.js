@@ -1,4 +1,5 @@
 import { execAction, getVolume } from '../services/volume'
+import { delay } from 'dva/saga'
 
 let loopTree = (node, treeArry, treeLevelNodes) => {
   if (!node.children) {
@@ -85,6 +86,7 @@ export default (namespace) => {
       treeLevelNodes: [],
       loading: false,
       state: false,
+      enablePolling: false,
     },
     subscriptions: {
 
@@ -166,6 +168,56 @@ export default (namespace) => {
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
       },
+      *polling({
+        payload,
+      }, { call, put, select }) {
+        const running = true
+        while (running) {
+          yield delay(20000)
+          const enablePolling = yield select(state => state.snapshotModal.enablePolling)
+          if (!enablePolling) {
+            break
+          }
+          const snapshots = yield call(execAction, payload.url)
+          let treeData = []
+          if (snapshots) {
+            treeData = snapshots.data
+          }
+          treeData.forEach(el => {
+            const children = el.children
+            if (children) {
+              el.children = Object.keys(children)
+            }
+          })
+          let actualData = filterRemoved(treeData)
+          let rootNodes = []
+          for (let i = 0; i < actualData.length; i++) {
+            let item = actualData[i]
+            if (item.parent === '') {
+              rootNodes.push({
+                ...item,
+              })
+            }
+          }
+          let rootNode = {
+            children: rootNodes.map(el => el.name),
+          }
+          let treeLevelNodes = []
+          if (rootNodes.length) {
+            loopTree(rootNode, actualData, treeLevelNodes)
+            yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
+            yield put({ type: 'setSnapshot', payload: rootNode.childrenNode })
+          } else {
+            yield put({ type: 'setSnapshot', payload: [] })
+          }
+        }
+      },
+      *startPolling({
+        payload,
+      }, { put }) {
+        yield put({ type: 'setEnablePolling', payload: true })
+        yield put({ type: 'polling', payload: { url: payload.querySnapShotUrl } })
+      },
     },
     reducers: {
       setSnapshot(state, action) {
@@ -196,6 +248,18 @@ export default (namespace) => {
         return {
           ...state,
           state: action.payload,
+        }
+      },
+      setEnablePolling(state, action) {
+        return {
+          ...state,
+          enablePolling: action.payload,
+        }
+      },
+      stopPolling(state) {
+        return {
+          ...state,
+          enablePolling: false,
         }
       },
     },
