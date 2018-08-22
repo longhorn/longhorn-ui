@@ -1,6 +1,7 @@
 import { query, execAction, restore, deleteBackup } from '../services/backup'
 import { parse } from 'qs'
 import { sortVolumeBackups } from '../utils/sort'
+import { getSorter, saveSorter } from '../utils/store'
 
 export default {
   namespace: 'backup',
@@ -10,6 +11,7 @@ export default {
     currentItem: {},
     restoreBackupModalVisible: false,
     restoreBackupModalKey: Math.random(),
+    sorter: getSorter('backupList.sorter'),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -82,6 +84,10 @@ export default {
     },
     hideRestoreBackupModal(state) {
       return { ...state, restoreBackupModalVisible: false }
+    },
+    updateSorter(state, action) {
+      saveSorter('backupList.sorter', action.payload)
+      return { ...state, sorter: action.payload }
     },
   },
 }

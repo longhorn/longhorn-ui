@@ -4,7 +4,7 @@ import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { sortTable } from '../../utils/sort'
-
+import { setSortOrder } from '../../utils/store'
 import moment from 'moment'
 const confirm = Modal.confirm
 
@@ -43,7 +43,7 @@ BackupUrl.propTypes = {
 
 class List extends React.Component {
   render() {
-    const { backup, loading, showRestoreBackup, deleteBackup } = this.props
+    const { backup, loading, showRestoreBackup, deleteBackup, sorter, onSorterChange = f => f } = this.props
     const dataSource = backup || []
     const handleMenuClick = (record, event) => {
       switch (event.key) {
@@ -129,7 +129,10 @@ class List extends React.Component {
     ]
 
     const pagination = false
-
+    const onChange = (p, f, s) => {
+      onSorterChange(s)
+    }
+    setSortOrder(columns, sorter)
     const locale = {
       emptyText: backup ? 'No Data' : 'Please select a volume first',
     }
@@ -140,6 +143,7 @@ class List extends React.Component {
           locale={locale}
           bordered={false}
           columns={columns}
+          onChange={onChange}
           loading={loading}
           dataSource={dataSource}
           simple
@@ -156,6 +160,8 @@ List.propTypes = {
   showRestoreBackup: PropTypes.func,
   deleteBackup: PropTypes.func,
   loading: PropTypes.bool,
+  sorter: PropTypes.object,
+  onSorterChange: PropTypes.func,
 }
 
 export default List

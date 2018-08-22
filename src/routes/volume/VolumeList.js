@@ -8,8 +8,9 @@ import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from './helper/index'
 import { sortTable, sortTableByUTCDate } from '../../utils/sort'
+import { setSortOrder } from '../../utils/store'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection, sorter, onSorterChange = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -126,13 +127,17 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
   ]
 
   const pagination = false
-
+  const onChange = (p, f, s) => {
+    onSorterChange(s)
+  }
+  setSortOrder(columns, sorter)
   return (
     <div>
       <Table
         rowSelection={rowSelection}
         bordered={false}
         columns={columns}
+        onChange={onChange}
         dataSource={dataSource}
         loading={loading}
         simple
@@ -158,6 +163,8 @@ list.propTypes = {
   showSalvage: PropTypes.func,
   rollback: PropTypes.func,
   rowSelection: PropTypes.object,
+  sorter: PropTypes.object,
+  onSorterChange: PropTypes.func,
 }
 
 export default list

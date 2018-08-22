@@ -1,6 +1,7 @@
 import { query, toggleScheduling, updateDisk } from '../services/host'
 import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
+import { getSorter, saveSorter } from '../utils/store'
 
 export default {
   namespace: 'host',
@@ -14,6 +15,7 @@ export default {
     editDisksModalVisible: false,
     diskReplicaModalVisible: false,
     socketStatus: 'closed',
+    sorter: getSorter('nodeList.sorter'),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -102,6 +104,10 @@ export default {
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
+    },
+    updateSorter(state, action) {
+      saveSorter('nodeList.sorter', action.payload)
+      return { ...state, sorter: action.payload }
     },
   },
 }
