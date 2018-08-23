@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
-import { Button, Spin, Tooltip } from 'antd'
+import { Button, Spin, Tooltip, Card } from 'antd'
 
-import { Snapshot } from '../../components'
-import { backupProgressModal } from '../../utils/backup'
+import { Snapshot } from '../../../components'
+import { backupProgressModal } from '../../../utils/backup'
+import styles from './index.less'
 
 class Snapshots extends React.Component {
   constructor(props) {
@@ -112,22 +113,28 @@ class Snapshots extends React.Component {
     }
     return (
       <Spin spinning={this.props.loading}>
-        <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
+      <Card title={<div className={styles.header}>
+        <div>Snapshots</div>
+        <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
-            <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
-              Take Snapshot
-            </Button>
-          </Tooltip>
-          &nbsp;
-          <Tooltip placement="top" title="Create a new snapshot and then create a backup of the snapshot.">
-          <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
-            Create Backup
-          </Button>
-          </Tooltip>
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+                Take Snapshot
+              </Button>
+            </Tooltip>
+            &nbsp;
+            <Tooltip placement="top" title="Create a new snapshot and then create a backup of the snapshot.">
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
+                Create Backup
+              </Button>
+            </Tooltip>
+        </div>
+        </div>} bordered={false} >
+        <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
           <div style={{ marginTop: '20px' }}>
             <SnapshotGen />
           </div>
         </div>
+        </Card>
       </Spin>
     )
   }

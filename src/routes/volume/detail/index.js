@@ -7,8 +7,8 @@ import VolumeActions from '../VolumeActions'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import EngineUpgrade from '../EngineUpgrade'
-import Snapshots from '../Snapshots'
-import RecurringList from '../RecurringList'
+import Snapshots from '../detail/Snapshots'
+import RecurringList from '../detail/RecurringList'
 import Salvage from '../Salvage'
 import { ReplicaList } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps } from '../helper'
@@ -223,14 +223,10 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
           </Card>
         </Col>
         <Col xs={24} style={{ marginBottom: 16 }}>
-          <Card title="Snapshots" bordered={false}>
-            <Snapshots {...snapshotsProp} />
-          </Card>
+          <Snapshots {...snapshotsProp} />
         </Col>
         <Col xs={24}>
-          <Card title="Recurring Snapshot and Backup" bordered={false}>
-            <RecurringList {...recurringListProps} />
-          </Card>
+          <RecurringList {...recurringListProps} />
         </Col>
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
