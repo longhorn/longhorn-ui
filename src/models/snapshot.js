@@ -76,6 +76,7 @@ let filterRemoved = (data) => {
   }
   return filteredData
 }
+
 export default (namespace) => {
   return {
     namespace,
@@ -178,7 +179,26 @@ export default (namespace) => {
           if (!enablePolling) {
             break
           }
-          const snapshots = yield call(execAction, payload.url)
+          const volume = yield select(state => state.snapshotModal.volume)
+          if (!volume.actions.snapshotList) {
+            continue
+          }
+          const loading = yield select(state => state.snapshotModal.loading)
+          if (loading) {
+            continue
+          }
+          let snapshots
+          for (let i = 0; i < 3; i++) {
+            snapshots = yield call(execAction, volume.actions.snapshotList, {}, i !== 2)
+            if (snapshots === undefined) {
+              continue
+            } else {
+              break
+            }
+          }
+          if (snapshots === undefined) {
+            continue
+          }
           let treeData = []
           if (snapshots) {
             treeData = snapshots.data
