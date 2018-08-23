@@ -8,11 +8,12 @@ export async function query(params) {
   })
 }
 
-export async function execAction(url, params) {
+export async function execAction(url, params, silence = false) {
   return request({
     url,
     method: 'post',
     data: params,
+    silence,
   })
 }
 

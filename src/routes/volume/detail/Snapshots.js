@@ -86,6 +86,9 @@ class Snapshots extends React.Component {
     if (p === q) {
       return true
     }
+    if (typeof p !== typeof q) {
+      return false
+    }
     if (p.length !== q.length) {
       return false
     }
