@@ -66,7 +66,7 @@ function SnapshotIcon(props, snapshotProps) {
       trigger={props.removed ? [] : ['click']}
       key={props.name}
     >
-      <Tooltip placement="top" autoAdjustOverflow={false} title={<div>
+      <Tooltip placement="right" autoAdjustOverflow={false} title={<div>
         <p className="snapshot-name">Name: {props.name}</p>
         <p className="snapshot-created">Created: {props.created}</p>
         <p className="snapshot-name">Size: {formatMib(props.size)}</p>
