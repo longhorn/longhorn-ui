@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
-import { Table, Button, Select, InputNumber } from 'antd'
-import { Schedule } from '../../components'
-import IconRemove from '../../components/Icon/IconRemove'
-import IconRestore from '../../components/Icon/IconRestore'
-import styles from './RecurringList.less'
+import { Table, Button, Select, InputNumber, Card } from 'antd'
+import { Schedule } from '../../../components'
+import IconRemove from '../../../components/Icon/IconRemove'
+import IconRestore from '../../../components/Icon/IconRestore'
+import styles from './index.less'
 
 const Option = Select.Option
 
@@ -210,29 +210,33 @@ class RecurringList extends React.Component {
     const { dataSource } = this.state
     const { loading } = this.props
     return (
-      <div>
-        <Table
-          bordered={false}
-          columns={columns}
-          dataSource={dataSource}
-          simple
-          pagination={pagination}
-          rowKey={record => record.name}
-        />
-        <div className={styles.new}>
-            {this.state.editing && <Button onClick={this.onNewRecurring} icon="plus">New</Button>}
-        </div>
-        <div className={styles.actions}>
-          {(this.state.editing || loading) &&
+      <Card title={<div className={styles.header}>
+          <div>Recurring Snapshot and Backup</div>
           <div>
-            <Button loading={loading} onClick={this.onCancel} >Cancel</Button>
-            &nbsp;&nbsp;<Button loading={loading} onClick={this.onSave} type="success">Save</Button>
-          </div>}
-          <div>
-            {!this.state.editing && !loading && <Button onClick={this.onEdit} type="success">Edit</Button>}
+            {!this.state.editing && !loading && <Button onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
+          </div>
+        </div>} bordered={false}>
+        <div>
+          <Table
+            bordered={false}
+            columns={columns}
+            dataSource={dataSource}
+            simple
+            pagination={pagination}
+            rowKey={record => record.name}
+          />
+          <div className={styles.new}>
+              {this.state.editing && <Button onClick={this.onNewRecurring} icon="plus">New</Button>}
+          </div>
+          <div className={styles.actions}>
+            {(this.state.editing || loading) &&
+            <div>
+              <Button loading={loading} onClick={this.onCancel} >Cancel</Button>
+              &nbsp;&nbsp;<Button loading={loading} onClick={this.onSave} type="success">Save</Button>
+            </div>}
           </div>
         </div>
-      </div>
+      </Card>
     )
   }
 }
