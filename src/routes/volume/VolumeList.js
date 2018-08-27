@@ -58,7 +58,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
-          <div>
+          <div style={{ minWidth: '58px' }}>
             <LinkTo to={`/volume/${text}`}>
               {isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
@@ -77,8 +77,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Attached Node',
       key: 'host',
       render: (text, record) => {
-        return (<div>
-          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', height: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
+        return (<div style={{ minWidth: '106px' }}>
+          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
         </div>)
       },
     },
@@ -87,7 +87,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       key: 'endpoint',
       render: (text, record) => {
         return (<div>
-          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', height: '22px' }} key={item.hostId}>{item.endpoint ? <span style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</span> : <span>&nbsp;</span>}</div>)}
+          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.endpoint ? <div style={{ backgroundColor: '#f2f4f5', padding: '2px 5px' }}>{item.endpoint}</div> : <span>&nbsp;</span>}</div>)}
         </div>)
       },
     }, {
@@ -97,7 +97,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text) => {
         return (
-          <div>
+          <div style={{ minWidth: '46px' }}>
             {formatMib(text)}
           </div>
         )
@@ -109,7 +109,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
-          <div>
+          <div style={{ minWidth: '72px' }}>
             {moment(utcStrToDate(text)).fromNow()}
           </div>
         )
@@ -117,7 +117,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     }, {
       title: '',
       key: 'operation',
-      width: 100,
+      width: 62,
       render: (text, record) => {
         return (
           <VolumeActions {...volumeActionsProps} selected={record} />
