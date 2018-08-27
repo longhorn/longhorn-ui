@@ -14,9 +14,10 @@ function actions({ selected, toggleScheduling, showEditDisksModal }) {
       default:
     }
   }
-  const availableActions = [
-    { key: 'editDisk', name: 'Edit Disks' },
-  ]
+  const availableActions = []
+  if (selected.status.key !== 'down') {
+    availableActions.push({ key: 'editDisk', name: 'Edit Disks' })
+  }
   if (selected.conditions && selected.conditions.Ready.status.toLowerCase() === 'true' && Object.values(selected.disks).some(d => d.allowScheduling === true)) {
     if (selected.allowScheduling) {
       availableActions.push({ key: 'disableScheduling', name: 'Disable Scheduling' })
