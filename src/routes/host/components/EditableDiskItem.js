@@ -22,7 +22,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
     } else if (canBeRemoved()) {
       return (<a onClick={() => onRemove(disk.id)} ><IconRemove /></a>)
     }
-    return <Tooltip placement="top" title="Only the disk with disabled scheduling and no storage scheduled can be deleted"><IconRemove disabled /></Tooltip>
+    return <Tooltip placement="top" title="Only the disk with disabled scheduling and no storage scheduled can be deleted"><span><IconRemove disabled /></span></Tooltip>
   }
 
   return (
