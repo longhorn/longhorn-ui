@@ -6,7 +6,7 @@ import AddDisk from './AddDisk'
 import EditDisk from './EditDisk'
 import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
-import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../utils/filter'
+import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus } from '../../utils/filter'
 
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
@@ -32,6 +32,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     Object.keys(agent.disks).forEach(id => {
       agent.disks[id].replicas = replicas.filter(r => r.diskID === id)
     })
+    agent.status = getNodeStatus(agent)
   })
   const getSelected = () => {
     if (!selected.id) {

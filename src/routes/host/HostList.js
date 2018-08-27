@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { sortTable } from '../../utils/sort'
 import DiskList from './DiskList'
 import HostActions from './HostActions'
-import { getNodeStatus, nodeStatusColorMap } from '../../utils/filter'
+import { nodeStatusColorMap } from '../../utils/filter'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
 import { setSortOrder } from '../../utils/store'
@@ -83,7 +83,7 @@ class List extends React.Component {
         className: styles.status,
         sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
         render: (text, record) => {
-          const status = getNodeStatus(record)
+          const status = record.status
           const colorMap = nodeStatusColorMap[status.key] || { color: '', bg: '' }
           return (
             <div style={{ padding: '0 0 0 30px' }}>
