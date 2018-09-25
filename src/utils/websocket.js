@@ -4,6 +4,7 @@ import wsClosed from '../assets/images/ws-closed.svg'
 import wsConnecting from '../assets/images/ws-connecting.svg'
 import wsError from '../assets/images/ws-error.svg'
 import wsOpen from '../assets/images/ws-open.svg'
+import { getPrefix } from './pathnamePrefix'
 
 export function constructWebsocketURL(type, period) {
   let loc = window.location
@@ -13,9 +14,12 @@ export function constructWebsocketURL(type, period) {
     proto = 'wss:'
   }
 
-  let host = loc.host
+  let prefix = getPrefix()
+  if (prefix === '') {
+    prefix = '/'
+  }
 
-  return `${proto}//${host}/v1/ws/${period}/${type}`
+  return `${proto}//${loc.host}${prefix}v1/ws/${period}/${type}`
 }
 
 export function wsChanges(dispatch, type, period) {

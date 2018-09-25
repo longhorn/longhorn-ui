@@ -1,8 +1,10 @@
 import React from 'react'
 import { Modal } from 'antd'
+import { getPrefix } from './pathnamePrefix'
 
 export function backupProgressModal(volumeName) {
-  const href = `/backup?field=volumeName&keyword=${volumeName}`
+  const prefix = getPrefix()
+  const href = `${prefix}/backup?field=volumeName&keyword=${volumeName}`
   Modal.info({
     title: 'Backup In Progress',
     content: (
