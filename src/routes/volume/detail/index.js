@@ -26,16 +26,15 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   if (found) {
     selectedVolume.host = found.name
   }
-  const replicasListProps = {
+  selectedVolume.replicas.forEach(replica => { replica.volState = selectedVolume.state })
+  const replicaListProps = {
     dataSource: selectedVolume.replicas || [],
     hosts,
-    deleteReplica(name) {
+    deleteReplicas(replicas) {
+      replicas.forEach(replica => { replica.removeUrl = selectedVolume.actions.replicaRemove })
       dispatch({
-        type: 'volume/deleteReplica',
-        payload: {
-          name,
-          url: selectedVolume.actions.replicaRemove,
-        },
+        type: 'volume/deleteReplicas',
+        replicas,
       })
     },
     loading,
@@ -219,7 +218,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         </Col>
         <Col md={16} xs={24} style={{ marginBottom: 16 }}>
           <Card title="Replicas" bordered={false} {...bodyStyle}>
-            <ReplicaList {...replicasListProps} />
+            <ReplicaList {...replicaListProps} />
           </Card>
         </Col>
         <Col xs={24} style={{ marginBottom: 16 }}>

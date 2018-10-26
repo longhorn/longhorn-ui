@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { DropOption } from '../../components'
 
-function actions({ selected, toggleScheduling, showEditDisksModal }) {
+function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'editDisk':
@@ -11,22 +11,57 @@ function actions({ selected, toggleScheduling, showEditDisksModal }) {
       case 'enableScheduling':
         toggleScheduling(record)
         break
+      case 'deleteHost':
+        deleteHost(record)
+        break
       default:
     }
   }
-  const availableActions = []
+  const menuOptions = []
+
+  menuOptions.push({
+    key: 'editDisk',
+    name: 'Edit Disks',
+    disabled: selected.status.key === 'down',
+    tooltip: selected.status.key === 'down' ? 'Node must not be down' : '',
+  })
+
+  let toggleSchedulingTooltip = ''
+  if (!selected.conditions || !selected.conditions.Ready) {
+    toggleSchedulingTooltip = 'Node missing ready condition'
+  } else if (selected.conditions.Ready.status.toLowerCase() !== 'true') {
+    toggleSchedulingTooltip = 'Node must be ready'
+  } else if (!Object.values(selected.disks).some(d => d.allowScheduling === true)) {
+    toggleSchedulingTooltip = 'No disks enabled for scheduling'
+    selected.allowScheduling = false
+  }
+  menuOptions.push({
+    key: selected.allowScheduling ? 'disableScheduling' : 'enableScheduling',
+    name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling',
+    disabled: toggleSchedulingTooltip !== '',
+    tooltip: toggleSchedulingTooltip,
+  })
+
+  let removeNodeTooltip = ''
   if (selected.status.key !== 'down') {
-    availableActions.push({ key: 'editDisk', name: 'Edit Disks' })
+    removeNodeTooltip = 'Kubernetes node must be deleted first'
+  } else if (selected.replicas.length > 0) {
+    removeNodeTooltip = 'Replicas on this node must be deleted first'
   }
-  if (selected.conditions && selected.conditions.Ready.status.toLowerCase() === 'true' && Object.values(selected.disks).some(d => d.allowScheduling === true)) {
-    if (selected.allowScheduling) {
-      availableActions.push({ key: 'disableScheduling', name: 'Disable Scheduling' })
-    } else {
-      availableActions.push({ key: 'enableScheduling', name: 'Enable Scheduling' })
-    }
-  }
+  menuOptions.push({
+    key: 'deleteHost',
+    name: 'Remove Node',
+    disabled: removeNodeTooltip !== '',
+    tooltip: removeNodeTooltip,
+  })
+
+  const tooltipProps = { placement: 'left' }
   return (
-    <DropOption buttonStyle={{ padding: '0 0' }} menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
+    <DropOption
+      buttonStyle={{ padding: '0 0' }}
+      menuOptions={menuOptions}
+      tooltipProps={tooltipProps}
+      onMenuClick={(e) => handleMenuClick(e, selected)}
     />
   )
 }
@@ -35,6 +70,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
+  deleteHost: PropTypes.func,
 }
 
 export default actions

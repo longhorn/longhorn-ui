@@ -101,10 +101,10 @@ export default {
       yield call(deleteVolume, payload)
       yield put({ type: 'query' })
     },
-    *deleteReplica({
-      payload,
+    *deleteReplicas({
+      replicas,
     }, { call, put }) {
-      yield call(execAction, payload.url, { name: payload.name })
+      yield replicas.map(replica => call(execAction, replica.removeUrl, { name: replica.name }))
       yield put({ type: 'query' })
     },
     *recurringUpdate({

@@ -3,14 +3,14 @@ import { Table, Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function list({ dataSource, deleteReplica }) {
+function list({ dataSource, deleteReplicas, rowSelection }) {
   const handleMenuClick = (record, event) => {
     switch (event.key) {
       case 'delete':
         confirm({
           title: `Are you sure you want to delete replica ${record.name} ?`,
           onOk() {
-            deleteReplica(record.name, record.removeUrl)
+            deleteReplicas([record])
           },
         })
         break
@@ -71,9 +71,13 @@ function list({ dataSource, deleteReplica }) {
       key: 'operation',
       width: 100,
       render: (text, record) => {
+        let deleteTooltip = ''
+        if (record.volState !== 'detached' && record.volState !== 'attached') {
+          deleteTooltip = `Replica belongs to volume currently ${record.volState}. Volume must be attached or detached.`
+        }
         return (
           <DropOption menuOptions={[
-            { key: 'delete', name: 'Delete' },
+            { key: 'delete', name: 'Delete', disabled: deleteTooltip !== '', tooltip: deleteTooltip },
           ]} onMenuClick={e => handleMenuClick(record, e)}
           />
         )
@@ -81,7 +85,7 @@ function list({ dataSource, deleteReplica }) {
     },
   ]
 
-  const pagination = false
+  const pagination = true
 
   return (
     <div>
@@ -90,8 +94,10 @@ function list({ dataSource, deleteReplica }) {
         columns={columns}
         dataSource={dataSource}
         simple
+        size="small"
         pagination={pagination}
         rowKey={record => record.name}
+        rowSelection={rowSelection}
       />
     </div>
   )
@@ -99,7 +105,8 @@ function list({ dataSource, deleteReplica }) {
 
 list.propTypes = {
   dataSource: PropTypes.array,
-  deleteReplica: PropTypes.func,
+  deleteReplicas: PropTypes.func,
+  rowSelection: PropTypes.object,
 }
 
 export default list

@@ -11,7 +11,8 @@ import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode,
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
   let hostFilter = null
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, selectedDiskID, sorter } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible } = host
+  const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
   const { field, value, stateValue } = location.query
   const volumeList = volume.data
   const storageOverProvisioningPercentage = setting.data.find(item => item.id === 'storage-over-provisioning-percentage')
@@ -23,6 +24,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         vol.replicas.forEach(replica => {
           if (agent.id === replica.hostId) {
             replica.removeUrl = vol.actions.replicaRemove
+            replica.volState = vol.state
             replicas.push(replica)
           }
         })
@@ -149,6 +151,12 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         payload: record,
       })
     },
+    deleteHost(record) {
+      dispatch({
+        type: 'host/deleteHost',
+        payload: record,
+      })
+    },
     updateDisk(disks, url) {
       dispatch({
         type: 'host/updateDisk',
@@ -172,23 +180,45 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     selected: getSelected(selected.id),
     visible: replicaModalVisible,
     onCancel() {
-      dispatch({
-        type: 'host/hideReplicaModal',
-      })
+      dispatch({ type: 'host/hideReplicaModal' })
+      dispatch({ type: 'host/clearReplicaSelection' })
+      dispatch({ type: 'host/disableReplicaModalDelete' })
       dispatch({
         type: 'app/changeBlur',
         payload: false,
       })
     },
-    deleteReplica(name, url) {
+    deleteReplicas(replicas) {
       dispatch({
-        type: 'volume/deleteReplica',
-        payload: {
-          name,
-          url,
-        },
+        type: 'host/deleteReplicas',
+        replicas,
       })
     },
+    selectedRows: selectedReplicaRows,
+    selectedRowKeys: selectedReplicaRowKeys,
+    rowSelection: {
+      selectedRowKeys: selectedReplicaRowKeys,
+      onChange: (selectedRowKeys, selectedRows) => {
+        if (selectedRowKeys.length === 0) {
+          dispatch({ type: 'host/disableReplicaModalDelete' })
+        } else {
+          dispatch({ type: 'host/enableReplicaModalDelete' })
+        }
+        dispatch({
+          type: 'host/changeReplicaSelection',
+          payload: {
+            selectedReplicaRowKeys: selectedRowKeys,
+            selectedReplicaRows: selectedRows,
+          },
+        })
+      },
+      getCheckboxProps: record => ({
+        disabled: record.volState !== 'detached' && record.volState !== 'attached',
+        name: record.name,
+      }),
+    },
+    replicaModalDeleteDisabled,
+    replicaModalDeleteLoading,
   }
   const diskReplicaModalProps = {
     selected: getSelectedDisk(selectedDiskID),
@@ -200,15 +230,6 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       dispatch({
         type: 'app/changeBlur',
         payload: false,
-      })
-    },
-    deleteReplica(name, url) {
-      dispatch({
-        type: 'volume/deleteReplica',
-        payload: {
-          name,
-          url,
-        },
       })
     },
   }
