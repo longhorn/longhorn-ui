@@ -23,3 +23,10 @@ export async function updateDisk(data, url) {
     data,
   })
 }
+
+export async function deleteHost(data) {
+  return request({
+    url: data.links.self,
+    method: 'delete',
+  })
+}

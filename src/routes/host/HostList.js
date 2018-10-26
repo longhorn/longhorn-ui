@@ -49,10 +49,11 @@ class List extends React.Component {
     })
   }
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
+      deleteHost,
     }
     const computeTotalAllocated = (record) => {
       const max = Object.values(record.disks).reduce((total, item) => total + item.storageMaximum, 0)
@@ -84,13 +85,16 @@ class List extends React.Component {
         sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
         render: (text, record) => {
           const status = record.status
+          const message = record.conditions.Ready.message
           const colorMap = nodeStatusColorMap[status.key] || { color: '', bg: '' }
           return (
-            <div style={{ padding: '0 0 0 30px' }}>
-              <div className={classnames({ capitalize: true })} style={{ display: 'inline-block', padding: '0 4px', color: colorMap.color, border: `1px solid ${colorMap.color}`, backgroundColor: colorMap.bg }}>
-              {status.name}
+            <Tooltip title={`${message}`}>
+              <div style={{ padding: '0 0 0 30px' }}>
+                <div className={classnames({ capitalize: true })} style={{ display: 'inline-block', padding: '0 4px', color: colorMap.color, border: `1px solid ${colorMap.color}`, backgroundColor: colorMap.bg }}>
+                {status.name}
+                </div>
               </div>
-            </div>
+            </Tooltip>
           )
         },
       }, {
@@ -242,6 +246,7 @@ List.propTypes = {
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
+  deleteHost: PropTypes.func,
   showDiskReplicaModal: PropTypes.func,
   onAllExpandedOrCollapsed: PropTypes.func,
   sorter: PropTypes.object,

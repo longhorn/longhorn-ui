@@ -14,13 +14,13 @@ class Replica extends React.Component {
   }
 
   handleMenuClick = (record, event) => {
-    const { deleteReplica } = this.props
+    const { deleteReplicas } = this.props
     switch (event.key) {
       case 'delete':
         confirm({
           title: `Are you sure you want to delete replica ${record.name} ?`,
           onOk() {
-            deleteReplica(record.name)
+            deleteReplicas([record])
           },
         })
         break
@@ -32,30 +32,32 @@ class Replica extends React.Component {
     // Replica mode: RW (normal/healthy),
     // WO(rebuilding, probably yellow),
     // ERR (fault, can be treated the same with FailedAt set).
-    // It will only reports if engine is running.
-    const { item: { running, mode } } = this.props
+    const { item: { mode, failedAt } } = this.props
     const m = mode.toLowerCase()
     const out = {
       color: 'lightgrey',
       text: '',
     }
-    if (running) {
-      if (m === 'rw') {
-        out.color = '#108eb9'
-        out.text = 'Healthy'
-      } else if (m === 'wo') {
-        out.color = '#f1c40f'
-        out.text = 'Rebuilding...'
-      } else if (m === 'err') {
-        out.color = '#f15354'
-        out.text = 'Failed'
-      }
+    if (m === 'rw') {
+      out.color = '#108eb9'
+      out.text = 'Healthy'
+    } else if (m === 'wo') {
+      out.color = '#f1c40f'
+      out.text = 'Rebuilding...'
+    } else if (m === 'err' || failedAt !== '') {
+      out.color = '#f15354'
+      out.text = 'Failed'
     }
     return out
   }
   render() {
     const { item, hosts } = this.props
     const host = hosts.find(h => h.id === item.hostId)
+    let deleteTooltip = ''
+    if (item.volState !== 'detached' && item.volState !== 'attached') {
+      deleteTooltip = `Replica belongs to volume currently ${item.volState}. Volume must be attached or detached.`
+    }
+
     return (
       <div style={{ display: 'inline-block', padding: '4px 20px' }} key={item.name}>
         <Card bodyStyle={{ height: 280, padding: 0 }} >
@@ -86,7 +88,7 @@ class Replica extends React.Component {
           </span>
           <span style={{ position: 'absolute', bottom: 18, right: 10 }}>
             <DropOption menuOptions={[
-              { key: 'delete', name: 'Delete' },
+              { key: 'delete', name: 'Delete', disabled: deleteTooltip !== '', tooltip: deleteTooltip },
             ]} onMenuClick={e => this.handleMenuClick(item, e)}
             />
           </span>
@@ -105,7 +107,7 @@ class Replica extends React.Component {
 
 Replica.propTypes = {
   item: PropTypes.object.isRequired,
-  deleteReplica: PropTypes.func,
+  deleteReplicas: PropTypes.func,
   hosts: PropTypes.array,
 }
 

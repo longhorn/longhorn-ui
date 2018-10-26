@@ -1,8 +1,15 @@
 import React, { PropTypes } from 'react'
-import { Dropdown, Button, Icon, Menu } from 'antd'
+import { Dropdown, Button, Icon, Menu, Tooltip } from 'antd'
 
-const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps }) => {
-  const menu = menuOptions.map(item => <Menu.Item key={item.key} disabled={!!item.disabled}>{item.name}</Menu.Item>)
+const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps, tooltipProps }) => {
+  const menu = menuOptions.map(item => {
+    const tooltip = item.tooltip !== undefined ? item.tooltip : ''
+    return (
+      <Menu.Item key={item.key} disabled={!!item.disabled}>
+        <Tooltip title={tooltip} {...tooltipProps}>{item.name}</Tooltip>
+      </Menu.Item>
+    )
+  })
   return (<Dropdown
     overlay={<Menu onClick={onMenuClick}>{menu}</Menu>}
     {...dropdownProps}
@@ -19,6 +26,7 @@ DropOption.propTypes = {
   menuOptions: PropTypes.array.isRequired,
   buttonStyle: PropTypes.object,
   dropdownProps: PropTypes.object,
+  tooltipProps: PropTypes.object,
 }
 
 export default DropOption

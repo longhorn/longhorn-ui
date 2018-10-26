@@ -1,4 +1,5 @@
-import { query, toggleScheduling, updateDisk } from '../services/host'
+import { query, toggleScheduling, updateDisk, deleteHost } from '../services/host'
+import { execAction } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
@@ -9,9 +10,13 @@ export default {
     data: [],
     selected: {},
     selectedDiskID: '',
+    selectedReplicaRows: [],
+    selectedReplicaRowKeys: [],
     modalVisible: false,
     addDiskModalVisible: false,
     replicaModalVisible: false,
+    replicaModalDeleteDisabled: true,
+    replicaModalDeleteLoading: false,
     editDisksModalVisible: false,
     diskReplicaModalVisible: false,
     socketStatus: 'closed',
@@ -56,6 +61,23 @@ export default {
       yield call(updateDisk, { disks: payload.disks }, payload.url)
       yield put({ type: 'query' })
     },
+    *deleteHost({
+      payload,
+    }, { call, put }) {
+      const data = {
+        ...payload,
+      }
+      yield call(deleteHost, data)
+      yield put({ type: 'query' })
+    },
+    *deleteReplicas({
+      replicas,
+    }, { call, put }) {
+      yield put({ type: 'replicaModalDeleteLoading' })
+      yield replicas.map(replica => call(execAction, replica.removeUrl, { name: replica.name }))
+      yield put({ type: 'replicaModalDeleteLoaded' })
+      yield put({ type: 'clearReplicaSelection' })
+    },
   },
   reducers: {
     queryHost(state, action) {
@@ -90,6 +112,18 @@ export default {
     hideReplicaModal(state) {
       return { ...state, replicaModalVisible: false }
     },
+    enableReplicaModalDelete(state) {
+      return { ...state, replicaModalDeleteDisabled: false }
+    },
+    disableReplicaModalDelete(state) {
+      return { ...state, replicaModalDeleteDisabled: true }
+    },
+    replicaModalDeleteLoading(state) {
+      return { ...state, replicaModalDeleteLoading: true }
+    },
+    replicaModalDeleteLoaded(state) {
+      return { ...state, replicaModalDeleteLoading: false }
+    },
     showEditDisksModal(state, action) {
       return { ...state, ...action.payload, editDisksModalVisible: true }
     },
@@ -108,6 +142,12 @@ export default {
     updateSorter(state, action) {
       saveSorter('nodeList.sorter', action.payload)
       return { ...state, sorter: action.payload }
+    },
+    changeReplicaSelection(state, action) {
+      return { ...state, ...action.payload }
+    },
+    clearReplicaSelection(state) {
+      return { ...state, selectedReplicaRows: [], selectedReplicaRowKeys: [] }
     },
   },
 }
