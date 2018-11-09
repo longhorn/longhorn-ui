@@ -40,8 +40,8 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
     <div className={styles.footer}>
       <Row type="flex" justify="space-between">
         <Col>
-          <a>{currentVersion}</a>
           {upgrade}
+          <a>{currentVersion}</a>
           <a target="blank" href="https://github.com/rancher/longhorn#longhorn">Documentation</a>
           <a target="blank" href={issueHref}>File an Issue</a>
           <a target="blank" href="https://forums.rancher.com">Forums</a>
