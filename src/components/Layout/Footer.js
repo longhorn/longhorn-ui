@@ -5,6 +5,7 @@ import styles from './Footer.less'
 import { config } from '../../utils'
 import { getStatusIcon } from '../../utils/websocket'
 import upgradeIcon from '../../assets/images/upgrade.svg'
+import semver from 'semver'
 
 function Footer({ host, volume, setting, engineimage, eventlog }) {
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
@@ -28,7 +29,7 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
     }
   })
   let upgrade = ''
-  if (checkUpgrade && latestVersion !== '' && latestVersion !== currentVersion) {
+  if (checkUpgrade && currentVersion !== 'dev' && latestVersion !== '' && semver.lt(currentVersion, latestVersion)) {
     const upgradeTooltip = `Longhorn ${latestVersion} is now available!`
     upgrade = (
       <Tooltip placement="topLeft" title={upgradeTooltip}>
