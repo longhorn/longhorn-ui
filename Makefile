@@ -1,12 +1,11 @@
-NS = rancher
 VERSION = $(shell ./scripts/version)
 
-REPO = longhorn-ui
+REPO = rancher
 NAME = longhorn-ui
 INSTANCE = default
 LONHORN_MANAGER_IP = http://localhost:9500
 PORT = 8000
-IMAGE = $(NS)/$(REPO):$(VERSION)
+IMAGE = $(REPO)/$(NAME):$(VERSION)
 
 .PHONY: build push shell run start stop rm release
 
@@ -20,6 +19,6 @@ stop:
 	docker stop $(NAME)-$(INSTANCE)
 
 run:
-	docker run -d --name $(NAME)-$(INSTANCE) -p $(PORT):8000 -e LONGHORN_MANAGER_IP=$(LONGHORN_MANAGER_IP) $(NS)/$(REPO):$(VERSION)
+	docker run -d --name $(NAME)-$(INSTANCE) -p $(PORT):8000 -e LONGHORN_MANAGER_IP=$(LONGHORN_MANAGER_IP) $(REPO)/$(NAME):$(VERSION)
 
 default: build
