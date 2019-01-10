@@ -121,6 +121,8 @@ export default (namespace) => {
       state: false,
       enablePolling: false,
       showRemoved: false,
+      // raw snapshots data
+      data: [],
     },
     subscriptions: {
 
@@ -151,6 +153,7 @@ export default (namespace) => {
         payload,
       }, { call, put }) {
         if (!payload.url) {
+          yield put({ type: 'setSnapshotData', payload: [] })
           yield put({ type: 'setSnapshot', payload: [] })
           yield put({ type: 'setSnapshotWithRemoved', payload: [] })
           yield put({ type: 'setSnapshotState', payload: true })
@@ -165,8 +168,9 @@ export default (namespace) => {
         } else {
           yield put({ type: 'setSnapshotState', payload: false })
         }
+        yield put({ type: 'setSnapshotData', payload: treeData })
         const { rootNode, treeLevelNodes } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)), filterRemoved)
-        const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(treeData)
+        const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)))
         yield put({ type: 'setLoading', payload: false })
         yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
         yield put({ type: 'setSnapshot', payload: rootNode.childrenNode || [] })
@@ -216,8 +220,9 @@ export default (namespace) => {
           if (snapshots) {
             treeData = snapshots.data
           }
+          yield put({ type: 'setSnapshotData', payload: treeData })
           const { rootNode, treeLevelNodes } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)), filterRemoved)
-          const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(treeData)
+          const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)))
           yield put({ type: 'setLoading', payload: false })
           yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
           yield put({ type: 'setSnapshot', payload: rootNode.childrenNode || [] })
@@ -291,6 +296,12 @@ export default (namespace) => {
         return {
           ...state,
           showRemoved: action.payload,
+        }
+      },
+      setSnapshotData(state, action) {
+        return {
+          ...state,
+          data: action.payload,
         }
       },
     },
