@@ -92,3 +92,7 @@ export const frontends = [
   { label: 'Block Device', value: 'blockdev' },
   { label: 'iSCSI', value: 'iscsi' },
 ]
+
+export function disabledSnapshotAction(volume, modelState) {
+  return !volume.actions || !volume.actions.snapshotCreate || !modelState || volume.migrationNodeID !== '' || volume.currentImage !== volume.engineImage
+}

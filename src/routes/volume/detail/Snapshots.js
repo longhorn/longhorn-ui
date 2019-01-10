@@ -4,6 +4,7 @@ import { Button, Spin, Tooltip, Card, Switch } from 'antd'
 import { Snapshot } from '../../../components'
 import { backupProgressModal } from '../../../utils/backup'
 import styles from './index.less'
+import { disabledSnapshotAction } from '../helper/index'
 
 class Snapshots extends React.Component {
   constructor(props) {
@@ -70,7 +71,11 @@ class Snapshots extends React.Component {
   }
   shouldComponentUpdate(nextProps) {
     if (nextProps.loading !== this.props.loading ||
-      nextProps.volume.state !== this.props.volume.state) {
+      nextProps.volume.state !== this.props.volume.state ||
+      nextProps.volume.migrationNodeID !== this.props.volume.migrationNodeID ||
+      nextProps.volume.currentImage !== this.props.volume.currentImage ||
+      nextProps.volume.engineImage !== this.props.volume.engineImage
+    ) {
       return true
     }
     // avoid unnecessary dom update
@@ -142,7 +147,8 @@ class Snapshots extends React.Component {
         <div>Snapshots</div>
         <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state)}
+                icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
                 Take Snapshot
               </Button>
             </Tooltip>
