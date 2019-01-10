@@ -77,17 +77,50 @@ let filterRemoved = (data) => {
   return filteredData
 }
 
+const genSnapshotsTreeData = (snapshots, filter = (d) => [...d]) => {
+  snapshots.forEach(el => {
+    const children = el.children
+    if (children) {
+      el.children = Object.keys(children)
+    }
+  })
+  let actualData = filter(snapshots)
+  let rootNodes = []
+  for (let i = 0; i < actualData.length; i++) {
+    let item = actualData[i]
+    if (item.parent === '') {
+      rootNodes.push({
+        ...item,
+      })
+    }
+  }
+  let rootNode = {
+    children: rootNodes.map(el => el.name),
+  }
+  let treeLevelNodes = []
+  if (rootNodes.length) {
+    loopTree(rootNode, actualData, treeLevelNodes)
+  }
+  return {
+    rootNode,
+    treeLevelNodes,
+  }
+}
+
 export default (namespace) => {
   return {
     namespace,
     state: {
       volume: {},
+      snapshotTreeWithRemoved: [],
       snapshotTree: [],
       // record nodes name of every Level
       treeLevelNodes: [],
+      treeLevelNodesWithReomoved: [],
       loading: false,
       state: false,
       enablePolling: false,
+      showRemoved: false,
     },
     subscriptions: {
 
@@ -119,6 +152,7 @@ export default (namespace) => {
       }, { call, put }) {
         if (!payload.url) {
           yield put({ type: 'setSnapshot', payload: [] })
+          yield put({ type: 'setSnapshotWithRemoved', payload: [] })
           yield put({ type: 'setSnapshotState', payload: true })
           return
         }
@@ -131,34 +165,13 @@ export default (namespace) => {
         } else {
           yield put({ type: 'setSnapshotState', payload: false })
         }
-        treeData.forEach(el => {
-          const children = el.children
-          if (children) {
-            el.children = Object.keys(children)
-          }
-        })
+        const { rootNode, treeLevelNodes } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)), filterRemoved)
+        const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(treeData)
         yield put({ type: 'setLoading', payload: false })
-        let actualData = filterRemoved(treeData)
-        let rootNodes = []
-        for (let i = 0; i < actualData.length; i++) {
-          let item = actualData[i]
-          if (item.parent === '') {
-            rootNodes.push({
-              ...item,
-            })
-          }
-        }
-        let rootNode = {
-          children: rootNodes.map(el => el.name),
-        }
-        let treeLevelNodes = []
-        if (rootNodes.length) {
-          loopTree(rootNode, actualData, treeLevelNodes)
-          yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
-          yield put({ type: 'setSnapshot', payload: rootNode.childrenNode })
-        } else {
-          yield put({ type: 'setSnapshot', payload: [] })
-        }
+        yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
+        yield put({ type: 'setSnapshot', payload: rootNode.childrenNode || [] })
+        yield put({ type: 'setTreeLevelNodesWithRemoved', payload: treeLevelNodesWithRemoved })
+        yield put({ type: 'setSnapshotWithRemoved', payload: rootNodeWithRemoved.childrenNode || [] })
       },
       *backup({
         payload,
@@ -203,33 +216,13 @@ export default (namespace) => {
           if (snapshots) {
             treeData = snapshots.data
           }
-          treeData.forEach(el => {
-            const children = el.children
-            if (children) {
-              el.children = Object.keys(children)
-            }
-          })
-          let actualData = filterRemoved(treeData)
-          let rootNodes = []
-          for (let i = 0; i < actualData.length; i++) {
-            let item = actualData[i]
-            if (item.parent === '') {
-              rootNodes.push({
-                ...item,
-              })
-            }
-          }
-          let rootNode = {
-            children: rootNodes.map(el => el.name),
-          }
-          let treeLevelNodes = []
-          if (rootNodes.length) {
-            loopTree(rootNode, actualData, treeLevelNodes)
-            yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
-            yield put({ type: 'setSnapshot', payload: rootNode.childrenNode })
-          } else {
-            yield put({ type: 'setSnapshot', payload: [] })
-          }
+          const { rootNode, treeLevelNodes } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)), filterRemoved)
+          const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(treeData)
+          yield put({ type: 'setLoading', payload: false })
+          yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
+          yield put({ type: 'setSnapshot', payload: rootNode.childrenNode || [] })
+          yield put({ type: 'setTreeLevelNodesWithRemoved', payload: treeLevelNodesWithRemoved })
+          yield put({ type: 'setSnapshotWithRemoved', payload: rootNodeWithRemoved.childrenNode || [] })
         }
       },
       *startPolling({
@@ -244,6 +237,12 @@ export default (namespace) => {
         return {
           ...state,
           snapshotTree: action.payload,
+        }
+      },
+      setSnapshotWithRemoved(state, action) {
+        return {
+          ...state,
+          snapshotTreeWithRemoved: action.payload,
         }
       },
       setLoading(state, action) {
@@ -264,6 +263,12 @@ export default (namespace) => {
           treeLevelNodes: payload,
         }
       },
+      setTreeLevelNodesWithRemoved(state, { payload }) {
+        return {
+          ...state,
+          treeLevelNodesWithRemoved: payload,
+        }
+      },
       setSnapshotState(state, action) {
         return {
           ...state,
@@ -280,6 +285,12 @@ export default (namespace) => {
         return {
           ...state,
           enablePolling: false,
+        }
+      },
+      setShowRemoved(state, action) {
+        return {
+          ...state,
+          showRemoved: action.payload,
         }
       },
     },

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, Spin, Tooltip, Card } from 'antd'
+import { Button, Spin, Tooltip, Card, Switch } from 'antd'
 
 import { Snapshot } from '../../../components'
 import { backupProgressModal } from '../../../utils/backup'
@@ -18,6 +18,13 @@ class Snapshots extends React.Component {
             snapshotBackupUrl: this.props.volume.actions.snapshotBackup,
             querySnapShotUrl: this.props.volume.actions.snapshotList,
           },
+        })
+        return
+      }
+      if (action.type === 'toggleShowRemoved') {
+        this.props.dispatch({
+          type: 'snapshotModal/setShowRemoved',
+          payload: !this.props.showRemoved,
         })
         return
       }
@@ -67,13 +74,22 @@ class Snapshots extends React.Component {
       return true
     }
     // avoid unnecessary dom update
-    if (nextProps.snapshotTree === this.props.snapshotTree) {
-      return false
-    }
-    if (nextProps.snapshotTree.length !== this.props.snapshotTree.length) {
+    if (nextProps.showRemoved !== this.props.showRemoved) {
       return true
     }
-    const result = this.isSameTree(nextProps.snapshotTree, this.props.snapshotTree)
+    if (nextProps.showRemoved === false && nextProps.snapshotTree === this.props.snapshotTree) {
+      return false
+    }
+    if (nextProps.showRemoved === false && nextProps.snapshotTree.length !== this.props.snapshotTree.length) {
+      return true
+    }
+    if (nextProps.showRemoved === true && nextProps.snapshotTreeWithRemoved === this.props.snapshotTreeWithRemoved) {
+      return false
+    }
+    if (nextProps.showRemoved === true && nextProps.snapshotTreeWithRemoved.length !== this.props.snapshotTreeWithRemoved.length) {
+      return true
+    }
+    const result = nextProps.showRemoved ? this.isSameTree(nextProps.snapshotTreeWithRemoved, this.props.snapshotTreeWithRemoved) : this.isSameTree(nextProps.snapshotTree, this.props.snapshotTree)
     return !result
   }
   componentWillUnmount() {
@@ -110,14 +126,20 @@ class Snapshots extends React.Component {
     if (!this.props.volume) {
       return null
     }
+    const treeProps = {
+      loading: this.props.loading,
+      volume: this.props.volume,
+      state: this.props.state,
+      snapshotTree: this.props.showRemoved ? this.props.snapshotTreeWithRemoved : this.props.snapshotTree,
+    }
     // Must regenerate tree, or there are some bugs when update tree
     const SnapshotGen = () => {
-      return (<Snapshot {...this.props} onAction={this.onAction} />)
+      return (<Snapshot {...treeProps} onAction={this.onAction} />)
     }
     return (
       <Spin spinning={this.props.loading}>
       <Card title={<div className={styles.header}>
-        <div>Snapshots</div>
+        <div>Snapshots: Show Removed Snapshots <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} /></div>
         <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
               <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
@@ -150,7 +172,9 @@ Snapshots.propTypes = {
   volume: PropTypes.object,
   loading: PropTypes.bool,
   snapshotTree: PropTypes.array,
+  snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
+  showRemoved: PropTypes.bool,
 }
 
 export default Snapshots
