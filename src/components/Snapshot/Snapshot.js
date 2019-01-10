@@ -3,6 +3,7 @@ import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip } from 'antd'
 import { backupProgressModal } from '../../utils/backup'
 import { formatMib } from '../../utils/formater'
 import moment from 'moment'
+import { disabledSnapshotAction } from '../../routes/volume/helper/index'
 import './Snapshot.less'
 
 const TreeNode = Tree.TreeNode
@@ -106,7 +107,7 @@ function CurrentPoint(props) {
     <Menu
       onClick={onClick}
     >
-      <Menu.Item key="1" disabled={!props.volume.actions || !props.volume.actions.snapshotCreate || !props.state}>
+      <Menu.Item key="1" disabled={disabledSnapshotAction(props.volume, props.state)}>
         <span>Take Snapshot</span>
       </Menu.Item>
     </Menu>
