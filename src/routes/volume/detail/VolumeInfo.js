@@ -7,8 +7,9 @@ import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from '
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
 
-function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotModal: { snapshotTree, state } }) {
+function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotData, snapshotModalState }) {
   let errorMsg = null
+  const state = snapshotModalState
   if (isSchedulingFailure(selectedVolume)) {
     errorMsg = (
       <Alert
@@ -22,7 +23,7 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
   }
   const computeActualSize = () => {
     let total = 0
-    snapshotTree.forEach(item => {
+    snapshotData.forEach(item => {
       total += Number(item.size)
     })
     return total
@@ -90,6 +91,8 @@ VolumeInfo.propTypes = {
   queryBackupStatus: PropTypes.func,
   clearBackupStatus: PropTypes.func,
   snapshotModal: PropTypes.object,
+  snapshotData: PropTypes.array,
+  snapshotModalState: PropTypes.bool,
 }
 
 export default VolumeInfo

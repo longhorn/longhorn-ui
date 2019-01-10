@@ -16,6 +16,7 @@ import { genAttachHostModalProps, getEngineUpgradeModalProps } from '../helper'
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible } = volume
   const { backupStatus } = backup
+  const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
@@ -43,7 +44,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   const backupStatusProps = {
     selectedVolume,
     backupStatus,
-    snapshotModal,
+    snapshotData,
+    snapshotModalState,
     clearBackupStatus() {
       dispatch({
         type: 'backup/updateBackupStatus',

@@ -139,7 +139,7 @@ class Snapshots extends React.Component {
     return (
       <Spin spinning={this.props.loading}>
       <Card title={<div className={styles.header}>
-        <div>Snapshots: Show Removed Snapshots <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} /></div>
+        <div>Snapshots</div>
         <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
               <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
@@ -154,6 +154,9 @@ class Snapshots extends React.Component {
             </Tooltip>
         </div>
         </div>} bordered={false} >
+        <div style={{ float: 'right', fontSize: '14px' }}>
+          Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
+        </div>
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
           <div style={{ marginTop: '20px' }}>
             <SnapshotGen />
