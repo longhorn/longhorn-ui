@@ -7,14 +7,15 @@ import VolumeActions from '../VolumeActions'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import EngineUpgrade from '../EngineUpgrade'
+import UpdateReplicaCount from '../UpdateReplicaCount'
 import Snapshots from '../detail/Snapshots'
 import RecurringList from '../detail/RecurringList'
 import Salvage from '../Salvage'
 import { ReplicaList } from '../../../components'
-import { genAttachHostModalProps, getEngineUpgradeModalProps } from '../helper'
+import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from '../helper'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible } = volume
   const { backupStatus } = backup
   const hosts = host.data
   const engineImages = engineimage.data
@@ -146,6 +147,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         },
       })
     },
+    showUpdateReplicaCount(record) {
+      dispatch({
+        type: 'volume/showUpdateReplicaCountModal',
+        payload: {
+          selected: record,
+        },
+      })
+    },
   }
 
   const attachHostModalProps = genAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -205,6 +214,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
   }
 
+  const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selectedVolume, updateReplicaCountModalVisible, dispatch)
+
   return (
     <div >
       <Row gutter={24}>
@@ -230,6 +241,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
+      {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
       <Salvage {...salvageModalProps} />
     </div >
   )

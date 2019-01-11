@@ -10,7 +10,7 @@ import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from '
 import { sortTable, sortTableByUTCDate } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, rollback, rowSelection, sorter, onSorterChange = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, onSorterChange = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -23,6 +23,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     takeSnapshot,
     showSalvage,
     rollback,
+    showUpdateReplicaCount,
   }
   const columns = [
     {
@@ -161,6 +162,7 @@ list.propTypes = {
   showBackups: PropTypes.func,
   takeSnapshot: PropTypes.func,
   showSalvage: PropTypes.func,
+  showUpdateReplicaCount: PropTypes.func,
   rollback: PropTypes.func,
   rowSelection: PropTypes.object,
   sorter: PropTypes.object,

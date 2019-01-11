@@ -15,6 +15,7 @@ export default {
     bulkAttachHostModalVisible: false,
     engineUpgradeModalVisible: false,
     bulkEngineUpgradeModalVisible: false,
+    updateReplicaCountModalVisible: false,
     recurringModalVisible: false,
     snapshotsModalVisible: false,
     salvageModalVisible: false,
@@ -23,6 +24,7 @@ export default {
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
+    updateReplicaCountModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
   },
@@ -124,6 +126,13 @@ export default {
     }, { call }) {
       yield call(execAction, payload.url, payload.params)
       if (payload.callBack) { yield call(payload.callBack, '') }
+    },
+    *replicaCountUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateReplicaCountModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
     },
     *bulkDelete({
       payload,
@@ -233,6 +242,12 @@ export default {
     },
     hideSalvageModal(state) {
       return { ...state, salvageModalVisible: false }
+    },
+    showUpdateReplicaCountModal(state, action) {
+      return { ...state, ...action.payload, updateReplicaCountModalVisible: true, updateReplicaCountModalKey: Math.random() }
+    },
+    hideUpdateReplicaCountModal(state) {
+      return { ...state, updateReplicaCountModalVisible: false }
     },
     changeSelection(state, action) {
       return { ...state, ...action.payload }
