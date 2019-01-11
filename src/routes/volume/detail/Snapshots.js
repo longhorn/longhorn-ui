@@ -136,6 +136,7 @@ class Snapshots extends React.Component {
       volume: this.props.volume,
       state: this.props.state,
       snapshotTree: this.props.showRemoved ? this.props.snapshotTreeWithRemoved : this.props.snapshotTree,
+      volumeHead: this.props.volumeHead,
     }
     // Must regenerate tree, or there are some bugs when update tree
     const SnapshotGen = () => {
@@ -184,6 +185,7 @@ Snapshots.propTypes = {
   snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
   showRemoved: PropTypes.bool,
+  volumeHead: PropTypes.object,
 }
 
 export default Snapshots

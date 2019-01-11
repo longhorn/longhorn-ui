@@ -8,12 +8,28 @@ import './Snapshot.less'
 
 const TreeNode = Tree.TreeNode
 
-function StartPoint() {
+function StartPoint(props) {
   return (
+    props ?
+    (<Tooltip placement="right" autoAdjustOverflow={false} title={<div>
+      <p className="snapshot-name">Name: {props.name}</p>
+      <p className="snapshot-created">Created: {props.created}</p>
+      <p className="snapshot-name">Size: {formatMib(props.size)}</p>
+      <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
+    </div>}>
     <div className="tree-snapshot-start-point">
     </div>
+    </Tooltip>) : (<div className="tree-snapshot-start-point"></div>)
   )
 }
+StartPoint.propTypes = {
+  removed: PropTypes.bool,
+  name: PropTypes.string,
+  created: PropTypes.string,
+  size: PropTypes.string,
+  usercreated: PropTypes.string,
+}
+
 function SnapshotIcon(props, snapshotProps) {
   function doAction(key) {
     snapshotProps.onAction({
@@ -160,7 +176,7 @@ class Snapshot extends React.Component {
         className="lh-tree-snapshot"
         autoExpandParent={false}
       >
-        <TreeNode className="tree-start-wrap" title={StartPoint()} disabled key={`${props.volume.id}`}>
+        <TreeNode className="tree-start-wrap" title={StartPoint(props.volumeHead)} key={`${props.volume.id}`}>
           {children}
         </TreeNode>
       </Tree>
@@ -172,6 +188,7 @@ Snapshot.propTypes = {
   loading: PropTypes.bool,
   volume: PropTypes.object,
   state: PropTypes.bool,
+  volumeHead: PropTypes.object,
 }
 
 export default Snapshot
