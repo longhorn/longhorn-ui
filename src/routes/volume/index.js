@@ -6,16 +6,17 @@ import VolumeList from './VolumeList'
 import CreateVolume from './CreateVolume'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
+import UpdateReplicaCount from './UpdateReplicaCount'
 import Salvage from './Salvage'
 import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
-import { genAttachHostModalProps, getEngineUpgradeModalProps } from './helper'
+import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume } from '../../utils/filter'
 
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, sorter } = this.props.volume
+    const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue } = this.props.location.query
@@ -116,6 +117,14 @@ class Volume extends React.Component {
       showSalvage(record) {
         dispatch({
           type: 'volume/showSalvageModal',
+          payload: {
+            selected: record,
+          },
+        })
+      },
+      showUpdateReplicaCount(record) {
+        dispatch({
+          type: 'volume/showUpdateReplicaCountModal',
           payload: {
             selected: record,
           },
@@ -319,6 +328,8 @@ class Volume extends React.Component {
       })
     }
 
+    const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
+
     return (
       <div className="content-inner" >
         <Row gutter={24}>
@@ -337,6 +348,7 @@ class Volume extends React.Component {
         <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} />
         <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} />
         <Salvage {...salvageModalProps} />
+        <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} />
       </div>
     )
   }

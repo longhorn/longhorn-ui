@@ -56,6 +56,30 @@ export function getEngineUpgradeModalProps(volumes, engineImages, visible, dispa
   }
 }
 
+export function getUpdateReplicaCountModalProps(volume, visible, dispatch) {
+  return {
+    item: volume,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/replicaCountUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateReplicaCountModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? '' : state.hyphenToHump()
 }
