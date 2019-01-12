@@ -8,7 +8,14 @@ import './Snapshot.less'
 
 const TreeNode = Tree.TreeNode
 
-function StartPoint(props) {
+function StartPoint() {
+  return (
+    <div className="tree-snapshot-start-point">
+    </div>
+  )
+}
+
+function VolumeHead(props) {
   return (
     props ?
     (<Tooltip placement="right" autoAdjustOverflow={false} title={<div>
@@ -17,12 +24,19 @@ function StartPoint(props) {
       <p className="snapshot-name">Size: {formatMib(props.size)}</p>
       <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
     </div>}>
-    <div className="tree-snapshot-start-point">
+    <div className="snapshot-current-desc">
+      <Button>
+        <Icon type="caret-right" />Volume Head
+        </Button>
     </div>
-    </Tooltip>) : (<div className="tree-snapshot-start-point"></div>)
+    </Tooltip>) : (<div className="snapshot-current-desc">
+        <Button>
+          <Icon type="caret-right" />Volume Head
+          </Button>
+      </div>)
   )
 }
-StartPoint.propTypes = {
+VolumeHead.propTypes = {
   removed: PropTypes.bool,
   name: PropTypes.string,
   created: PropTypes.string,
@@ -134,11 +148,7 @@ function CurrentPoint(props) {
       trigger={['click']}
       key={props.volume.id}
     >
-      <div className="snapshot-current-desc">
-        <Button>
-          <Icon type="caret-right" />Live Volume
-          </Button>
-      </div>
+    {VolumeHead(props.volumeHead)}
     </Dropdown>
   )
 }
@@ -146,6 +156,7 @@ CurrentPoint.propTypes = {
   onAction: PropTypes.func,
   volume: PropTypes.object,
   state: PropTypes.bool,
+  volumeHead: PropTypes.object,
 }
 
 const loop = (data, props) => data.map((item) => {
@@ -176,7 +187,7 @@ class Snapshot extends React.Component {
         className="lh-tree-snapshot"
         autoExpandParent={false}
       >
-        <TreeNode className="tree-start-wrap" title={StartPoint(props.volumeHead)} key={`${props.volume.id}`}>
+        <TreeNode className="tree-start-wrap" title={StartPoint()} key={`${props.volume.id}`}>
           {children}
         </TreeNode>
       </Tree>

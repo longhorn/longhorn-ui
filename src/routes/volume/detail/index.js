@@ -182,7 +182,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     volume: selectedVolume,
     volumeId,
     dispatch,
-    volumeHead: snapshotData.find(d => !!d.children['volume-head']),
+    volumeHead: snapshotData.find(d => d.name === 'volume-head'),
   }
 
   const salvageModalProps = {
