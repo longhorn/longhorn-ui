@@ -8,7 +8,12 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
-        bulkDeleteVolume(selectedRows)
+        confirm({
+          title: `Are you sure you want to delete volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
+          onOk() {
+            bulkDeleteVolume(selectedRows)
+          },
+        })
         break
       case 'upgrade':
         showBulkEngineUpgrade(selectedRows)
