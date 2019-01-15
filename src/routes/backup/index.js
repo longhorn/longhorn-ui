@@ -5,10 +5,13 @@ import { routerRedux } from 'dva/router'
 import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
 
-function Backup({ host, backup, loading, location, dispatch }) {
+function Backup({ host, backup, setting, loading, location, dispatch }) {
   const { data, backupVolumes, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter } = backup
   const { field, keyword } = location.query
   const hosts = host.data
+  const settings = setting.data
+  const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
+  const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
   const backupVolumesProps = {
     backup: data,
     loading,
@@ -35,7 +38,7 @@ function Backup({ host, backup, loading, location, dispatch }) {
           currentItem: {
             backupName: item.name,
             fromBackup: item.url,
-            numberOfReplicas: 2,
+            numberOfReplicas: defaultNumberOfReplicas,
           },
         },
       })
@@ -106,6 +109,7 @@ Backup.propTypes = {
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
   host: PropTypes.object,
+  setting: PropTypes.object,
 }
 
-export default connect(({ host, backup, loading }) => ({ host, backup, loading: loading.models.backup }))(Backup)
+export default connect(({ host, backup, setting, loading }) => ({ host, backup, setting, loading: loading.models.backup }))(Backup)

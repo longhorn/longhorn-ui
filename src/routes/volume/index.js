@@ -259,9 +259,12 @@ class Volume extends React.Component {
       },
     }
 
+    const settings = this.props.setting.data
+    const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
+    const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
     const createVolumeModalProps = {
       item: {
-        numberOfReplicas: 3,
+        numberOfReplicas: defaultNumberOfReplicas,
         size: 20,
         iops: 1000,
         frontend: 'iscsi',
@@ -361,6 +364,7 @@ Volume.propTypes = {
   loading: PropTypes.bool,
   host: PropTypes.object,
   engineimage: PropTypes.object,
+  setting: PropTypes.object,
 }
 
-export default connect(({ engineimage, host, volume, loading }) => ({ engineimage, host, volume, loading: loading.models.volume }))(Volume)
+export default connect(({ engineimage, host, volume, setting, loading }) => ({ engineimage, host, volume, setting, loading: loading.models.volume }))(Volume)
