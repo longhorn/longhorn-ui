@@ -96,3 +96,7 @@ export const frontends = [
 export function disabledSnapshotAction(volume, modelState) {
   return !volume.actions || !volume.actions.snapshotCreate || !modelState || volume.migrationNodeID !== '' || volume.currentImage !== volume.engineImage
 }
+
+export function extractImageVersion(image) {
+  return image.substr(image.lastIndexOf(':') + 1, image.length)
+}

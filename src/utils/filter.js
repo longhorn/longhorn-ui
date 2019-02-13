@@ -52,9 +52,56 @@ function filterData(data, field, value) {
   return data.filter(item => (item[field] || '').toLowerCase().indexOf(value.toLowerCase()) > -1)
 }
 
+export function isVolumeImageUpgradable(volume, defaultImage) {
+  const state = volume.robustness.toLowerCase() === 'unknown' ? '' : volume.robustness.hyphenToHump()
+  return volume.currentImage !== '' && defaultImage && defaultImage.image !== volume.currentImage && state === 'healthy'
+}
+
+export function isVolumeReplicaNotRedundancy(volume) {
+  const volumeNodeReplicas = volume.replicas.filter(item => item.mode === 'RW' || item.mode === '').reduce((total, current) => {
+    const replicas = total[current.hostId] || []
+    replicas.push(current)
+    total[current.hostId] = replicas
+    return total
+  }, {})
+  return Object.keys(volumeNodeReplicas).length === 1
+}
+
+export function isVolumeRelicaLimited(volume) {
+  const volumeNodeReplicas = volume.replicas.filter(item => item.mode === 'RW' || item.mode === '').reduce((total, current) => {
+    const replicas = total[current.hostId] || []
+    replicas.push(current)
+    total[current.hostId] = replicas
+    return total
+  }, {})
+  const keyLen = Object.keys(volumeNodeReplicas).length
+  const replicaLen = volume.replicas.length
+  return keyLen > 0 && replicaLen > 0 && keyLen < replicaLen
+}
+
+export function isVolumeRelicaRedundancy(volume) {
+  const volumeNodeReplicas = volume.replicas.filter(item => item.mode === 'RW' || item.mode === '').reduce((total, current) => {
+    const replicas = total[current.hostId] || []
+    replicas.push(current)
+    total[current.hostId] = replicas
+    return total
+  }, {})
+  return Object.keys(volumeNodeReplicas).length === volume.replicas.length
+}
+
 export function filterVolume(data, field, value) {
   if (field === 'host') {
     return data.filter(item => item.controllers.some(c => c.hostId.indexOf(value) > -1))
+  }
+  if (field === 'replicaNodeRedundancy') {
+    if (value === 'no') {
+      return data.filter(item => isVolumeReplicaNotRedundancy(item))
+    } else if (value === 'yes') {
+      return data.filter(item => isVolumeRelicaRedundancy(item))
+    } else if (value === 'limited') {
+      return data.filter(item => isVolumeRelicaLimited(item))
+    }
+    return data
   }
   return filterData(data, field, value)
 }

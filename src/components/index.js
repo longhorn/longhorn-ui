@@ -8,6 +8,8 @@ import Replica from './Replica/Replica'
 import ReplicaList from './Replica/ReplicaList'
 import LinkTo from './LinkTo/LinkTo'
 import Filter from './Filter/Filter'
+import EngineImageUpgradeTooltip from './Tooltip/EngineImageUpgradeTooltip'
+import ReplicaHATooltip from './Tooltip/ReplicaHATooltip'
 
 export {
   DropOption,
@@ -20,4 +22,6 @@ export {
   ReplicaList,
   LinkTo,
   Filter,
+  EngineImageUpgradeTooltip,
+  ReplicaHATooltip,
 }

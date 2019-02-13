@@ -7,11 +7,13 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '' } = props.location.query
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '' } = props.location.query
     this.state = {
       field,
       stateValue,
       value,
+      nodeRedundancyValue,
+      engineImageUpgradableValue,
     }
   }
 
@@ -28,29 +30,18 @@ class Filter extends React.Component {
   handleValueChange = (value) => {
     this.setState({ ...this.state, value })
   }
-
+  handleNodeRedundancyValueChange = (nodeRedundancyValue) => {
+    this.setState({ ...this.state, nodeRedundancyValue })
+  }
+  handleEngineImageUpgradableValueChange = (engineImageUpgradableValue) => {
+    this.setState({ ...this.state, engineImageUpgradableValue })
+  }
   handleFieldChange = (field) => {
     this.setState({ ...this.state, field })
   }
 
   render() {
-    return (
-      <Form>
-      <Input.Group compact className={styles.filter}>
-       <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
-         {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-       </Select>
-      {this.state.field === 'status' && this.props.stateOption ? (
-        <Select key="status"
-          style={{ width: '100%' }}
-          size="large"
-          allowClear
-          defaultValue={this.state.stateValue}
-          onChange={this.handleStatusChange}
-      >
-        {this.props.stateOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-      </Select>
-      ) : (
+    let valueForm = (
       <Select
         key="value"
         style={{ width: '100%' }}
@@ -66,7 +57,47 @@ class Filter extends React.Component {
         onChange={this.handleValueChange}
       >
       </Select>
-      )}
+      )
+
+    if (this.state.field === 'status' && this.props.stateOption) {
+      valueForm = (<Select key="status"
+        style={{ width: '100%' }}
+        size="large"
+        allowClear
+        defaultValue={this.state.stateValue}
+        onChange={this.handleStatusChange}
+      >
+      {this.props.stateOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+      </Select>)
+    } else if (this.state.field === 'replicaNodeRedundancy' && this.props.replicaNodeRedundancyOption) {
+      valueForm = (<Select key="replicaNodeRedundancy"
+        style={{ width: '100%' }}
+        size="large"
+        allowClear
+        defaultValue={this.state.nodeRedundancyValue}
+        onChange={this.handleNodeRedundancyValueChange}
+    >
+    {this.props.replicaNodeRedundancyOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+    </Select>)
+    } else if (this.state.field === 'engineImageUpgradable' && this.props.engineImageUpgradableOption) {
+      valueForm = (<Select key="engineImageUpgradable"
+        style={{ width: '100%' }}
+        size="large"
+        allowClear
+        defaultValue={this.state.engineImageUpgradableValue}
+        onChange={this.handleEngineImageUpgradableValueChange}
+    >
+    {this.props.engineImageUpgradableOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+    </Select>)
+    }
+
+    return (
+      <Form>
+      <Input.Group compact className={styles.filter}>
+       <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
+         {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+       </Select>
+      { valueForm }
         <Button size="large" htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
       </Input.Group>
       </Form>
@@ -81,6 +112,8 @@ Filter.propTypes = {
   stateOption: PropTypes.array,
   fieldOption: PropTypes.array,
   defaultField: PropTypes.string,
+  replicaNodeRedundancyOption: PropTypes.array,
+  engineImageUpgradableOption: PropTypes.array,
 }
 
 export default Filter

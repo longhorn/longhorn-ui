@@ -37,6 +37,8 @@ VolumeFilter.propTypes = {
   location: PropTypes.object,
   stateOption: PropTypes.array,
   fieldOption: PropTypes.array,
+  nodeRedundancyOption: PropTypes.array,
+  engineImageUpgradableOption: PropTypes.array,
 }
 
 export default VolumeFilter

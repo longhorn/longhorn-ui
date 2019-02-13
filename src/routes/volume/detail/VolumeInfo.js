@@ -3,11 +3,13 @@ import { Row, Col, Alert, Icon } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib, utcStrToDate } from '../../../utils/formater'
-import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from '../helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from '../helper/index'
 import styles from './VolumeInfo.less'
 import LatestBackup from './LatestBackup'
+import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
+import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
-function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotData, snapshotModalState }) {
+function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotData, snapshotModalState, engineImages }) {
   let errorMsg = null
   const state = snapshotModalState
   if (isSchedulingFailure(selectedVolume)) {
@@ -28,19 +30,34 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
     })
     return total
   }
+  const defaultImage = engineImages.find(image => image.default === true)
+  const healthState = getHealthState(selectedVolume.robustness)
+  let upgrade = ''
+  let ha = ''
+  if (isVolumeImageUpgradable(selectedVolume, defaultImage)) {
+    const currentVersion = extractImageVersion(selectedVolume.currentImage)
+    const latestVersion = extractImageVersion(defaultImage.image)
+    upgrade = (<EngineImageUpgradeTooltip currentVersion={currentVersion} latestVersion={latestVersion} />)
+  }
+  if (isVolumeReplicaNotRedundancy(selectedVolume)) {
+    ha = (<ReplicaHATooltip type="danger" />)
+  } else if (isVolumeRelicaLimited(selectedVolume)) {
+    ha = (<ReplicaHATooltip type="warning" />)
+  }
+
   return (
     <div>
       {errorMsg}
       <div className={styles.row}>
         <span className={styles.label}> State:</span>
-        <span className={classnames({ [selectedVolume.state.toLowerCase()]: true, capitalize: true })}>
-          {selectedVolume.state.hyphenToHump()} {needToWaitDone(selectedVolume.state, selectedVolume.replicas) ? <Icon type="loading" /> : null}
+        <span className={classnames({ [selectedVolume.state.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
+          {upgrade} {selectedVolume.state.hyphenToHump()} {needToWaitDone(selectedVolume.state, selectedVolume.replicas) ? <Icon type="loading" /> : null}
         </span>
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Health:</span>
-        <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true })}>
-          {getHealthState(selectedVolume.robustness)}
+        <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
+          {ha} {healthState}
         </span>
       </div>
       <div className={styles.row}>
@@ -93,6 +110,7 @@ VolumeInfo.propTypes = {
   snapshotModal: PropTypes.object,
   snapshotData: PropTypes.array,
   snapshotModalState: PropTypes.bool,
+  engineImages: PropTypes.array,
 }
 
 export default VolumeInfo
