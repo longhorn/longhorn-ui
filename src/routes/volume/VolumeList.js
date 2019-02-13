@@ -2,13 +2,15 @@ import React, { PropTypes } from 'react'
 import { Table, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
-import { LinkTo } from '../../components'
+import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
 
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
-import { isSchedulingFailure, getHealthState, needToWaitDone, frontends } from './helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from './helper/index'
 import { sortTable, sortTableByUTCDate } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import style from './VolumeList.less'
+import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
 
 function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, onSorterChange = f => f }) {
   const volumeActionsProps = {
@@ -25,6 +27,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     rollback,
     showUpdateReplicaCount,
   }
+  const defaultImage = engineImages.find(image => image.default === true)
   const columns = [
     {
       title: 'State',
@@ -33,9 +36,15 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       width: 130,
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
+        let upgrade = null
+        if (isVolumeImageUpgradable(record, defaultImage)) {
+          const currentVersion = extractImageVersion(record.currentImage)
+          const latestVersion = extractImageVersion(defaultImage.image)
+          upgrade = (<EngineImageUpgradeTooltip currentVersion={currentVersion} latestVersion={latestVersion} />)
+        }
         return (
-          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
-            {text.hyphenToHump()} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
+          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)}>
+            {upgrade} {text.hyphenToHump()} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
       },
@@ -43,12 +52,20 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Health',
       dataIndex: 'robustness',
       key: 'robustness',
-      width: 120,
+      width: 140,
       sorter: (a, b) => sortTable(a, b, 'robustness'),
-      render: (text) => {
+      render: (text, record) => {
+        const state = getHealthState(text)
+        let ha = null
+        if (isVolumeReplicaNotRedundancy(record)) {
+          ha = (<ReplicaHATooltip type="danger" />)
+        } else if (isVolumeRelicaLimited(record)) {
+          ha = (<ReplicaHATooltip type="warning" />)
+        }
+
         return (
-          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
-            {getHealthState(text)}
+          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)}>
+            {ha} {state}
           </div>
         )
       },

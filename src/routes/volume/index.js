@@ -11,7 +11,7 @@ import Salvage from './Salvage'
 import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
-import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume } from '../../utils/filter'
+import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable } from '../../utils/filter'
 
 class Volume extends React.Component {
   render() {
@@ -19,7 +19,7 @@ class Volume extends React.Component {
     const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
-    const { field, value, stateValue } = this.props.location.query
+    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = this.props.location.query
     const volumeFilterMap = {
       healthy: healthyVolume,
       inProgress: inProgressVolume,
@@ -27,7 +27,6 @@ class Volume extends React.Component {
       detached: detachedVolume,
       faulted: faultedVolume,
     }
-
     data.forEach(vol => {
       const found = hosts.find(h => vol.controller && h.id === vol.controller.hostId)
       if (found) {
@@ -36,9 +35,18 @@ class Volume extends React.Component {
     })
     let volumes = data
     if (field && field === 'status' && volumeFilterMap[stateValue]) {
-      volumes = volumeFilterMap[stateValue](data)
-    } else if (field && value && field !== 'status') {
-      volumes = filterVolume(data, field, value)
+      volumes = volumeFilterMap[stateValue](volumes)
+    } else if (field && field === 'engineImageUpgradable') {
+      const defaultImage = engineImages.find(image => image.default === true)
+      if (engineImageUpgradableValue === 'yes') {
+        volumes = volumes.filter(item => isVolumeImageUpgradable(item, defaultImage))
+      } else if (engineImageUpgradableValue === 'no') {
+        volumes = volumes.filter(item => !isVolumeImageUpgradable(item, defaultImage))
+      }
+    } else if (field && field === 'replicaNodeRedundancy' && nodeRedundancyValue) {
+      volumes = filterVolume(volumes, field, nodeRedundancyValue)
+    } else if (field && value && field !== 'status' && field !== 'engineImageUpgradable' && field !== 'replicaNodeRedundancy') {
+      volumes = filterVolume(volumes, field, value)
     }
     const volumeListProps = {
       dataSource: volumes,
@@ -161,20 +169,33 @@ class Volume extends React.Component {
         { value: 'faulted', name: 'Fault' },
         { value: 'detached', name: 'Detached' },
       ],
+      replicaNodeRedundancyOption: [
+        { value: 'yes', name: 'Yes' },
+        { value: 'limited', name: 'Limited' },
+        { value: 'no', name: 'No' },
+      ],
+      engineImageUpgradableOption: [
+        { value: 'yes', name: 'Yes' },
+        { value: 'no', name: 'No' },
+      ],
       fieldOption: [
         { value: 'name', name: 'Name' },
         { value: 'host', name: 'Node' },
         { value: 'status', name: 'Status' },
+        { value: 'replicaNodeRedundancy', name: 'Node redundancy' },
+        { value: 'engineImageUpgradable', name: 'Engine image upgradable' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
-        filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
+        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
+        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue) ? dispatch(routerRedux.push({
           pathname: '/volume',
           query: {
             ...location.query,
             field: filterField,
             value: filterValue,
             stateValue: filterStateValue,
+            nodeRedundancyValue: redundancyValue,
+            engineImageUpgradableValue: imageUpgradableValue,
           },
         })) : dispatch(routerRedux.push({
           pathname: '/volume',
