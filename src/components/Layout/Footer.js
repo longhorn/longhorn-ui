@@ -44,6 +44,7 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
           {upgrade}
           <a>{currentVersion}</a>
           <a target="blank" href="https://github.com/rancher/longhorn#longhorn">Documentation</a>
+          <a target="blank" href="/v1/supportbundle">Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
           <a target="blank" href="https://forums.rancher.com">Forums</a>
           <a target="blank" href="https://slack.rancher.io">Slack</a>
