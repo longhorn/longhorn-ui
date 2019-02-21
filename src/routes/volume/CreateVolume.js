@@ -99,8 +99,8 @@ const modal = ({
                     callback()
                     return
                   }
-                  if (value < 2 || value > 10) {
-                    callback('The value should be between 2 and 10')
+                  if (value < 1 || value > 10) {
+                    callback('The value should be between 1 and 10')
                   } else if (!/^\d+$/.test(value)) {
                     callback('The value must be a positive integer')
                   } else {
