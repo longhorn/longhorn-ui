@@ -97,8 +97,8 @@ const form = ({
   }).map(item => <div key={item}> <div className={styles.fieldset}><span className={styles.fieldsetLabel}>{item}</span> { settingsGrouped[item].map(setting => genFormItem(setting))}</div></div>)
 
   return (
-    <Spin spinning={loading}>
-      {loading ? <div></div> : <Form layout="horizontal" className={styles.setting}>
+    <Spin spinning={saving}>
+      {<Form layout="horizontal" className={styles.setting}>
         {settings}
         <FormItem style={{ textAlign: 'center' }}>
           <Button
