@@ -16,7 +16,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (location.pathname === '/backup') {
+        if (location.pathname.endsWith('/backup')) {
           dispatch({
             type: 'query',
             payload: location.query,
