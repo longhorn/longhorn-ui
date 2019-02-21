@@ -52,41 +52,50 @@ function filterData(data, field, value) {
   return data.filter(item => (item[field] || '').toLowerCase().indexOf(value.toLowerCase()) > -1)
 }
 
+function validReplicas(replicas) {
+  return replicas.filter(item => item.failedAt === '' && (item.mode === 'RW' || item.mode === ''))
+}
+
 export function isVolumeImageUpgradable(volume, defaultImage) {
   const state = volume.robustness.toLowerCase() === 'unknown' ? '' : volume.robustness.hyphenToHump()
   return volume.currentImage !== '' && defaultImage && defaultImage.image !== volume.currentImage && state === 'healthy'
 }
 
 export function isVolumeReplicaNotRedundancy(volume) {
-  const volumeNodeReplicas = volume.replicas.filter(item => item.mode === 'RW' || item.mode === '').reduce((total, current) => {
+  const numberOfReplicas = volume.numberOfReplicas
+  const totalReplicas = validReplicas(volume.replicas)
+  const volumeNodeReplicas = totalReplicas.reduce((total, current) => {
     const replicas = total[current.hostId] || []
     replicas.push(current)
     total[current.hostId] = replicas
     return total
   }, {})
-  return Object.keys(volumeNodeReplicas).length === 1
+  return Object.keys(volumeNodeReplicas).length === 1 && numberOfReplicas > 1 && totalReplicas.every(item => item.hostId !== '')
 }
 
 export function isVolumeRelicaLimited(volume) {
-  const volumeNodeReplicas = volume.replicas.filter(item => item.mode === 'RW' || item.mode === '').reduce((total, current) => {
+  const numberOfReplicas = volume.numberOfReplicas
+  const totalReplicas = validReplicas(volume.replicas)
+  const volumeNodeReplicas = totalReplicas.reduce((total, current) => {
     const replicas = total[current.hostId] || []
     replicas.push(current)
     total[current.hostId] = replicas
     return total
   }, {})
   const keyLen = Object.keys(volumeNodeReplicas).length
-  const replicaLen = volume.replicas.length
-  return keyLen > 0 && replicaLen > 0 && keyLen < replicaLen
+  return keyLen > 0 && numberOfReplicas > 0 && keyLen < numberOfReplicas && totalReplicas.every(item => item.hostId !== '')
 }
 
 export function isVolumeRelicaRedundancy(volume) {
-  const volumeNodeReplicas = volume.replicas.filter(item => item.mode === 'RW' || item.mode === '').reduce((total, current) => {
+  const numberOfReplicas = volume.numberOfReplicas
+  const totalReplicas = validReplicas(volume.replicas)
+  const volumeNodeReplicas = totalReplicas.reduce((total, current) => {
     const replicas = total[current.hostId] || []
     replicas.push(current)
     total[current.hostId] = replicas
     return total
   }, {})
-  return Object.keys(volumeNodeReplicas).length === volume.replicas.length
+  return Object.keys(volumeNodeReplicas).length === numberOfReplicas
 }
 
 export function filterVolume(data, field, value) {
