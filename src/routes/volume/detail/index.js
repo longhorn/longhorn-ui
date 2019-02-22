@@ -13,6 +13,7 @@ import RecurringList from '../detail/RecurringList'
 import Salvage from '../Salvage'
 import { ReplicaList } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from '../helper'
+import { addPrefix } from '../../../utils/pathnamePrefix'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible } = volume
@@ -126,7 +127,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
     showBackups(record) {
       dispatch(routerRedux.push({
-        pathname: '/backup',
+        pathname: addPrefix('/backup'),
         query: {
           field: 'volumeName',
           keyword: record.name,
