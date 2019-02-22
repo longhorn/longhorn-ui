@@ -7,6 +7,7 @@ import EditDisk from './EditDisk'
 import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus } from '../../utils/filter'
+import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
@@ -254,7 +255,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     onSearch(filter) {
       const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
       filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
-        pathname: '/node',
+        pathname: addPrefix('/node'),
         query: {
           ...location.query,
           field: filterField,
@@ -262,7 +263,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
           stateValue: filterStateValue,
         },
       })) : dispatch(routerRedux.push({
-        pathname: '/node',
+        pathname: addPrefix('/node'),
         query: {
         },
       }))

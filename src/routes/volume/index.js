@@ -12,6 +12,7 @@ import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable } from '../../utils/filter'
+import { addPrefix } from '../../utils/pathnamePrefix'
 
 class Volume extends React.Component {
   render() {
@@ -88,7 +89,7 @@ class Volume extends React.Component {
       },
       showSnapshots: (record) => {
         dispatch(routerRedux.push({
-          pathname: `/volume/${record.name}/snapshots`,
+          pathname: addPrefix(`/volume/${record.name}/snapshots`),
         }))
       },
       showRecurring(record) {
@@ -115,7 +116,7 @@ class Volume extends React.Component {
       },
       showBackups(record) {
         dispatch(routerRedux.push({
-          pathname: '/backup',
+          pathname: addPrefix('/backup'),
           query: {
             field: 'volumeName',
             keyword: record.name,
@@ -188,7 +189,7 @@ class Volume extends React.Component {
       onSearch(filter) {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
         filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue) ? dispatch(routerRedux.push({
-          pathname: '/volume',
+          pathname: addPrefix('/volume'),
           query: {
             ...location.query,
             field: filterField,
@@ -198,7 +199,7 @@ class Volume extends React.Component {
             engineImageUpgradableValue: imageUpgradableValue,
           },
         })) : dispatch(routerRedux.push({
-          pathname: '/volume',
+          pathname: addPrefix('/volume'),
           query: {
           },
         }))
