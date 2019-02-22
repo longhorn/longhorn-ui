@@ -12,6 +12,7 @@ import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable } from '../../utils/filter'
+import { addPrefix } from '../../utils/pathnamePrefix'
 
 class Volume extends React.Component {
   render() {
@@ -115,7 +116,7 @@ class Volume extends React.Component {
       },
       showBackups(record) {
         dispatch(routerRedux.push({
-          pathname: '/backup',
+          pathname: addPrefix('/backup'),
           query: {
             field: 'volumeName',
             keyword: record.name,
