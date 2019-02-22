@@ -57,8 +57,9 @@ function validReplicas(replicas) {
 }
 
 export function isVolumeImageUpgradable(volume, defaultImage) {
-  const state = volume.robustness.toLowerCase() === 'unknown' ? '' : volume.robustness.hyphenToHump()
-  return volume.currentImage !== '' && defaultImage && defaultImage.image !== volume.currentImage && state === 'healthy'
+  const robustness = volume.robustness.toLowerCase() === 'unknown' ? '' : volume.robustness.hyphenToHump()
+  const state = volume.state.toLowerCase()
+  return volume.currentImage !== '' && defaultImage && defaultImage.image !== volume.currentImage && ((state === 'attached' && robustness === 'healthy') || (state === 'detached' && robustness !== 'faulted'))
 }
 
 export function isVolumeReplicaNotRedundancy(volume) {
