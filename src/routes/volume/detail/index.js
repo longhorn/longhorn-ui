@@ -92,7 +92,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
     showSnapshots(record) {
       dispatch(routerRedux.push({
-        pathname: `/volume/${record.name}/snapshots`,
+        pathname: addPrefix(`/volume/${record.name}/snapshots`),
       }))
     },
     showRecurring(record) {

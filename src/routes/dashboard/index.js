@@ -3,6 +3,7 @@ import { connect } from 'dva'
 import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
+import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
   const { data: eventlogs, sorter } = eventlog
@@ -12,7 +13,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     loading,
     onVolumeClick(v) {
       dispatch(routerRedux.push({
-        pathname: '/volume',
+        pathname: addPrefix('/volume'),
         query: {
           ...location.query,
           field: 'status',
@@ -22,7 +23,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     },
     onNodeClick(n) {
       dispatch(routerRedux.push({
-        pathname: '/node',
+        pathname: addPrefix('/node'),
         query: {
           ...location.query,
           field: 'status',

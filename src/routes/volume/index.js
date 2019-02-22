@@ -89,7 +89,7 @@ class Volume extends React.Component {
       },
       showSnapshots: (record) => {
         dispatch(routerRedux.push({
-          pathname: `/volume/${record.name}/snapshots`,
+          pathname: addPrefix(`/volume/${record.name}/snapshots`),
         }))
       },
       showRecurring(record) {
@@ -189,7 +189,7 @@ class Volume extends React.Component {
       onSearch(filter) {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
         filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue) ? dispatch(routerRedux.push({
-          pathname: '/volume',
+          pathname: addPrefix('/volume'),
           query: {
             ...location.query,
             field: filterField,
@@ -199,7 +199,7 @@ class Volume extends React.Component {
             engineImageUpgradableValue: imageUpgradableValue,
           },
         })) : dispatch(routerRedux.push({
-          pathname: '/volume',
+          pathname: addPrefix('/volume'),
           query: {
           },
         }))

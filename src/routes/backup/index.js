@@ -4,6 +4,7 @@ import BackupFilter from './BackupFilter'
 import { routerRedux } from 'dva/router'
 import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
+import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Backup({ host, backup, setting, loading, location, dispatch }) {
   const { data, backupVolumes, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter } = backup
@@ -65,7 +66,7 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
       dispatch(
         routerRedux.push(
           {
-            pathname: '/backup',
+            pathname: addPrefix('/backup'),
             query: {
               ...location.query,
               field: 'volumeName',
