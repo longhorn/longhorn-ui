@@ -98,7 +98,7 @@ class Filter extends React.Component {
          {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
        </Select>
       { valueForm }
-        <Button size="large" htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
+        <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
       </Input.Group>
       </Form>
     )
