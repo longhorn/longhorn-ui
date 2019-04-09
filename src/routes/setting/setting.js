@@ -11,7 +11,6 @@ const form = ({
   data,
   saving,
   onSubmit,
-  loading,
 }) => {
   const handleOnSubmit = () => {
     const fields = getFieldsValue()
