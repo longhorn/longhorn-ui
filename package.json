@@ -9,7 +9,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "antd": "2.9.0",
+    "antd": "2.13.11",
     "axios": "^0.16.0",
     "babel-runtime": "^6.9.2",
     "classnames": "^2.2.5",
@@ -26,7 +26,8 @@
     "react-resize-detector": "1.1.0",
     "recharts": "^1.1.0",
     "reconnecting-websocket": "^v3.2.2",
-    "semver": "^5.6.0"
+    "semver": "^5.6.0",
+    "jquery": "^1.8.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
