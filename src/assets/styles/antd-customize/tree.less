@@ -34,13 +34,13 @@
         border-radius: 3px 0 0 3px;
         font-size: 22px;
         background-color: #28864f;
-        padding: 4px;
+        padding: 3.5px;
         display: inline-block;
       }
       span{
         border-radius:  0 3px 3px 0;
         margin: 0;
-        padding: 4px;
+        padding: 6px;
         background-color: #33ab65;
         display: inline-block;
         vertical-align: top;
@@ -133,6 +133,7 @@
       position: relative;
       top: 0;
       > li{
+        margin-top: 5px;
         &::before {
           content: '';
           display: block;
@@ -140,9 +141,9 @@
           height: 2px;
           border-top: 2px solid #ecf0f1;
           position: absolute;
-          top: 26px;
+          top: 20px;
           z-index: 0;
-          right: 100%;
+          right: 99%;
         }
         &:last-child>.ant-tree-child-tree:before{
           content: '';
