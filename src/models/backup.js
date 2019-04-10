@@ -1,12 +1,14 @@
 import { query, execAction, restore, deleteBackup } from '../services/backup'
 import { parse } from 'qs'
-import { sortVolumeBackups } from '../utils/sort'
+import { sortVolumeBackups, sortTable } from '../utils/sort'
 import { getSorter, saveSorter } from '../utils/store'
 
 export default {
   namespace: 'backup',
   state: {
     backupVolumes: [],
+    backupVolumesForSelect: [],
+    filterText: 'all',
     backupStatus: {},
     currentItem: {},
     restoreBackupModalVisible: false,
@@ -16,12 +18,10 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (location.pathname.endsWith('/backup')) {
-          dispatch({
-            type: 'query',
-            payload: location.query,
-          })
-        }
+        dispatch({
+          type: 'query',
+          payload: location.query,
+        })
       })
     },
   },
@@ -32,7 +32,8 @@ export default {
       const data = yield call(query, parse(payload))
       const filter = payload && payload.field && payload.keyword
       if (data && data.status === 200) {
-        yield put({ type: 'queryBackup', payload: { backupVolumes: data.data } })
+        data.data.sort((a, b) => sortTable(a, b, 'name'))
+        yield put({ type: 'queryBackup', payload: { backupVolumes: data.data, backupVolumesForSelect: data.data } })
         if (filter) {
           const found = data.data.find(b => b.name === payload.keyword)
           if (found) {
@@ -88,6 +89,20 @@ export default {
     updateSorter(state, action) {
       saveSorter('backupList.sorter', action.payload)
       return { ...state, sorter: action.payload }
+    },
+    filterBackupVolumes(state, action) {
+      if (action.payload) {
+        let key = action.payload.field
+        let value = action.payload.value
+        state.backupVolumes = []
+        state.backupVolumesForSelect.find((item) => {
+          if (item[key].indexOf(value) !== -1) {
+            state.backupVolumes.push(item)
+          }
+          return null
+        })
+      }
+      return { ...state, filterText: action.payload }
     },
   },
 }

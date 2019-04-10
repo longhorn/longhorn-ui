@@ -1,20 +1,15 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
-import BackupFilter from './BackupFilter'
 import { routerRedux } from 'dva/router'
-import RestoreBackup from './RestoreBackup'
-import BackupList from './BackupList'
+import BackupVolumeList from './BackupVolumeList'
 import { addPrefix } from '../../utils/pathnamePrefix'
+import { Filter } from '../../components/index'
+import { Row, Col } from 'antd'
 
-function Backup({ host, backup, setting, loading, location, dispatch }) {
-  const { data, backupVolumes, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter } = backup
-  const { field, keyword } = location.query
-  const hosts = host.data
-  const settings = setting.data
-  const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
-  const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+function Backup({ backup, loading, dispatch, location }) {
+  const { backupVolumes, sorter } = backup
   const backupVolumesProps = {
-    backup: data,
+    backup: backupVolumes,
     loading,
     onSorterChange(s) {
       dispatch({
@@ -22,84 +17,46 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
         payload: { field: s.field, order: s.order, columnKey: s.columnKey },
       })
     },
-    sorter,
-    queryBackups(name, url) {
-      dispatch({
-        type: 'backup/query',
-        payload: {
-          url,
-          name,
-        },
-      })
-    },
-    showRestoreBackup(item) {
-      dispatch({
-        type: 'backup/showRestoreBackupModal',
-        payload: {
-          currentItem: {
-            backupName: item.name,
-            fromBackup: item.url,
-            numberOfReplicas: defaultNumberOfReplicas,
-          },
-        },
-      })
-    },
-    deleteBackup(record, listUrl) {
-      dispatch({
-        type: 'backup/delete',
-        payload: {
-          volumeName: record.volumeName,
-          name: record.name,
-          listUrl,
-          ...location.query,
-        },
-      })
-    },
-  }
-
-  const backupFilterProps = {
-    field,
-    keyword,
-    backupVolumes,
-    value: location.query.keyword,
-    onSearch(backupVolumeName) {
+    linkToBackup(id) {
       dispatch(
         routerRedux.push(
           {
-            pathname: addPrefix('/backup'),
+            pathname: addPrefix(`/backup/${id}`),
             query: {
               ...location.query,
               field: 'volumeName',
-              keyword: backupVolumeName,
+              keyword: id,
             },
           }
         )
       )
     },
+    sorter,
   }
 
-  const restoreBackupModalProps = {
-    item: currentItem,
-    hosts,
-    visible: restoreBackupModalVisible,
-    onOk(selectedBackup) {
+  const volumeFilterProps = {
+    location,
+    fieldOption: [
+      { value: 'name', name: 'Name' },
+      { value: 'baseImage', name: 'Base Image' },
+    ],
+    onSearch(filter) {
       dispatch({
-        type: 'backup/restore',
-        payload: selectedBackup,
-      })
-    },
-    onCancel() {
-      dispatch({
-        type: 'backup/hideRestoreBackupModal',
+        type: 'backup/filterBackupVolumes',
+        payload: filter,
       })
     },
   }
 
   return (
     <div className="content-inner" >
-      <BackupFilter {...backupFilterProps} />
-      <BackupList {...backupVolumesProps} />
-      <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
+      <Row gutter={24}>
+        <Col lg={18} md={16} sm={24} xs={24}></Col>
+        <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
+          <Filter {...volumeFilterProps} />
+        </Col>
+      </Row>
+      <BackupVolumeList {...backupVolumesProps} />
     </div >
   )
 }
