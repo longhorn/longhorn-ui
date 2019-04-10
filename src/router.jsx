@@ -105,6 +105,20 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'backup/:id',
+          name: 'backup/detail',
+          getComponent(nextState, cb) {
+            nprogress.start()
+            require.ensure([], (require) => {
+              nprogress.done()
+              registerModel(app, require('./models/host'))
+              registerModel(app, require('./models/backup'))
+              registerModel(app, require('./models/setting'))
+              cb(null, require('./routes/backup/BackupDetail'))
+            }, 'backup-detail')
+          },
+        },
+        {
           path: 'engineimage',
           name: 'engineimage',
           getComponent(nextState, cb) {
