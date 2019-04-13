@@ -98,6 +98,51 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
           </Col>
         </Row>
       </div>
+      { selectedVolume.kubernetesStatus ?
+        <div>
+          <div className={styles.row}>
+            <span className={styles.label}> Last time bound with PVC:</span>
+            {selectedVolume.kubernetesStatus.lastPVCRefAt ? moment(new Date(selectedVolume.kubernetesStatus.lastPVCRefAt)).fromNow() : ''}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Last time used by Pod:</span>
+            {selectedVolume.kubernetesStatus.lastPodRefAt ? moment(new Date(selectedVolume.kubernetesStatus.lastPodRefAt)).fromNow() : ''}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Namespace:</span>
+            {selectedVolume.kubernetesStatus.namespace}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> PVC Name:</span>
+            {selectedVolume.kubernetesStatus.pvcName}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> PV Name:</span>
+            {selectedVolume.kubernetesStatus.pvName}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> PV Status:</span>
+            {selectedVolume.kubernetesStatus.pvStatus}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Pod Name:</span>
+            {selectedVolume.kubernetesStatus.podName}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Pod Status:</span>
+            {selectedVolume.kubernetesStatus.podStatus}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Workload Name:</span>
+            {selectedVolume.kubernetesStatus.workloadName}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Workload Type:</span>
+            {selectedVolume.kubernetesStatus.workloadType}
+          </div>
+        </div>
+        : ''
+      }
     </div>
   )
 }

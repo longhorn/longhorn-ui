@@ -1,4 +1,4 @@
-import { create, deleteVolume, query, execAction, recurringUpdate } from '../services/volume'
+import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
@@ -10,7 +10,13 @@ export default {
     data: [],
     selected: null,
     selectedRows: [],
+    selectPVCaction: [],
     createVolumeModalVisible: false,
+    createPVCModalVisible: false,
+    createPVModalVisible: false,
+    createPVCAllModalVisible: false,
+    createPVAndPVCSingleVisible: false,
+    createPVAndPVCVisible: false,
     attachHostModalVisible: false,
     bulkAttachHostModalVisible: false,
     engineUpgradeModalVisible: false,
@@ -19,7 +25,17 @@ export default {
     recurringModalVisible: false,
     snapshotsModalVisible: false,
     salvageModalVisible: false,
+    nameSpaceDisabled: false,
+    defaultPvOrPvcName: '',
+    defaultNamespace: '',
+    defaultPVName: '',
+    defaultPVCName: '',
+    createPVAndPVCModalSingleKey: Math.random(),
+    createPVCAllModalKey: Math.random(),
     createVolumeModalKey: Math.random(),
+    createPVAndPVCModalKey: Math.random(),
+    createPVCModalKey: Math.random(),
+    createPVModalKey: Math.random(),
     attachHostModalKey: Math.random(),
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
@@ -165,6 +181,62 @@ export default {
     }, { put }) {
       yield payload.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl } }))
     },
+    *createPV({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreatePVModal' })
+      yield payload.action.map(item => call(createVolumePV, payload.params, item))
+      yield put({ type: 'query' })
+    },
+    *createAllPV({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreatePVModal' })
+      yield payload.map(item => call(createVolumePV, { pvName: item.name }, item.actions.pvCreate))
+      yield put({ type: 'query' })
+    },
+    *createAllPVC({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreatePVCAllModal' })
+      yield payload.action.map(item => call(createVolumeAllPVC, payload.params.namespace, item.name, item.actions.pvcCreate))
+      yield put({ type: 'query' })
+    },
+    *createPVAndPVC({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreatePVAndPVCModal' })
+      const pvAction = []
+      payload.action.forEach((item) => {
+        if (!item.kubernetesStatus.pvName) {
+          pvAction.push(item)
+        }
+      })
+      yield pvAction.map(item => call(createVolumePV, { pvName: item.name }, item.actions.pvCreate))
+      if (payload.params.namespace) {
+        yield payload.action.map(item => call(createVolumeAllPVC, payload.params.namespace, item.name, item.actions.pvcCreate))
+      }
+      yield put({ type: 'query' })
+    },
+    *createPVAndPVCSingle({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreatePVCAndPVSingleModal' })
+      if (!payload.action.kubernetesStatus.pvName) {
+        yield call(createVolumePV, { pvName: payload.params.pvName }, payload.action.actions.pvCreate)
+      }
+      if (payload.params.namespace) {
+        yield call(createVolumePVC, { pvcName: payload.params.pvcName, namespace: payload.params.namespace }, payload.action.actions.pvcCreate)
+      }
+      yield put({ type: 'query' })
+    },
+    *createPVC({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreatePVCModal' })
+      yield payload.action.map(item => call(createVolumePVC, payload.params, item))
+      yield put({ type: 'query' })
+    },
     *snapshotCreateThenBackup({
       payload,
     }, { call }) {
@@ -198,8 +270,43 @@ export default {
     showCreateVolumeModal(state, action) {
       return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }
     },
+    showCreatePVCModal(state, action) {
+      return { ...state, defaultPvOrPvcName: action.item.name, selectPVCaction: action.payload, createPVCModalVisible: true, createPVCModalKey: Math.random() }
+    },
+    showCreatePVModal(state, action) {
+      return { ...state, defaultPvOrPvcName: action.item.name, selectPVCaction: action.payload, createPVModalVisible: true, createPVModalKey: Math.random() }
+    },
+    showCreatePVCAllModal(state, action) {
+      return { ...state, createPVCAllModalVisible: true, selectPVCaction: action.payload, createPVCAllModalKey: Math.random() }
+    },
+    showCreatePVAndPVCModal(state, action) {
+      return { ...state, createPVAndPVCVisible: true, selectPVCaction: action.payload, createPVAndPVCModalKey: Math.random() }
+    },
+    showCreatePVCAndPVSingleModal(state, action) {
+      action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
+      action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
+      return { ...state, nameSpaceDisabled: false, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
+    },
+    changeCheckbox(state) {
+      return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled }
+    },
+    hideCreatePVCAndPVSingleModal(state) {
+      return { ...state, createPVAndPVCSingleVisible: false, createPVAndPVCModalSingleKey: Math.random() }
+    },
+    hideCreatePVAndPVCModal(state) {
+      return { ...state, createPVAndPVCVisible: false, createPVAndPVCModalKey: Math.random() }
+    },
+    hideCreatePVCAllModal(state) {
+      return { ...state, createPVCAllModalVisible: false, createPVCAllModalKey: Math.random() }
+    },
     hideCreateVolumeModal(state) {
       return { ...state, createVolumeModalVisible: false }
+    },
+    hideCreatePVCModal(state) {
+      return { ...state, createPVCModalVisible: false }
+    },
+    hideCreatePVModal(state) {
+      return { ...state, createPVModalVisible: false }
     },
     showAttachHostModal(state, action) {
       return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }

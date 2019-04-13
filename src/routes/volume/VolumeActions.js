@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, createPVAndPVC }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -45,10 +45,12 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'updateReplicaCount':
         showUpdateReplicaCount(record)
         break
+      case 'pvAndpvcCreate':
+        createPVAndPVC(record)
+        break
       default:
     }
   }
-
   const toggleRollbackAndUpgradeAction = (currentActions) => {
     if (selected.currentImage === selected.engineImage) {
       const rollbackActionIndex = currentActions.findIndex(item => item.key === 'rollback')
@@ -81,6 +83,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       }
     }
   })
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC' })
   toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
@@ -102,6 +105,7 @@ actions.propTypes = {
   showSalvage: PropTypes.func,
   rollback: PropTypes.func,
   showUpdateReplicaCount: PropTypes.func,
+  createPVAndPVC: PropTypes.func,
 }
 
 export default actions

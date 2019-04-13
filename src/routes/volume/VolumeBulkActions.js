@@ -4,7 +4,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, createPVAndPVC }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -32,12 +32,18 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       case 'backup':
         bulkBackup(selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }))
         break
+      case 'createPVAndPVC':
+        createPVAndPVC(selectedRows)
+        break
       default:
     }
   }
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
+  /*
+  * PV/PVC decides whether to disable it
+  */
   const hasMoreOptions = () => engineImages.findIndex(engineImage => engineImage.state === 'ready' && selectedRows.findIndex(item => item.engineImage === engineImage.image) === -1) === -1
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
@@ -45,6 +51,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState(['attaching']) } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() } },
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() } },
+    { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 } },
   ]
 
   return (
@@ -70,6 +77,7 @@ bulkActions.propTypes = {
   bulkDetach: PropTypes.func,
   showBulkSalvage: PropTypes.func,
   bulkBackup: PropTypes.func,
+  createPVAndPVC: PropTypes.func,
 }
 
 export default bulkActions

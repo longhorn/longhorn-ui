@@ -51,3 +51,30 @@ export async function getVolume(volumeName) {
     method: 'get',
   })
 }
+
+export async function createVolumePV(data, url) {
+  return request({
+    url,
+    method: 'post',
+    data,
+  })
+}
+
+export async function createVolumePVC(data, url) {
+  return request({
+    url,
+    method: 'post',
+    data,
+  })
+}
+
+export async function createVolumeAllPVC(namespace, pvcName, url) {
+  return request({
+    url,
+    method: 'post',
+    data: {
+      namespace,
+      pvcName,
+    },
+  })
+}
