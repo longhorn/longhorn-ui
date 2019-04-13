@@ -4,6 +4,8 @@ import { routerRedux } from 'dva/router'
 import { Row, Col, Button } from 'antd'
 import VolumeList from './VolumeList'
 import CreateVolume from './CreateVolume'
+import CreatePVAndPVC from './CreatePVAndPVC'
+import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import UpdateReplicaCount from './UpdateReplicaCount'
@@ -17,7 +19,7 @@ import { addPrefix } from '../../utils/pathnamePrefix'
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, data, createVolumeModalVisible, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter } = this.props.volume
+    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, defaultNamespace, nameSpaceDisabled } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = this.props.location.query
@@ -146,6 +148,12 @@ class Volume extends React.Component {
             image: record.currentImage,
             url: record.actions.engineUpgrade,
           },
+        })
+      },
+      createPVAndPVC(actions) {
+        dispatch({
+          type: 'volume/showCreatePVCAndPVSingleModal',
+          payload: actions,
         })
       },
       rowSelection: {
@@ -310,6 +318,59 @@ class Volume extends React.Component {
       },
     }
 
+    const createPVAndPVCProps = {
+      item: defaultNamespace,
+      visible: createPVAndPVCVisible,
+      nameSpaceDisabled,
+      onOk(params) {
+        dispatch({
+          type: 'volume/createPVAndPVC',
+          payload: {
+            action: selectPVCaction,
+            params,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideCreatePVAndPVCModal',
+        })
+      },
+      onChange() {
+        dispatch({
+          type: 'volume/changeCheckbox',
+        })
+      },
+    }
+
+    const createPVAndPVCSingleProps = {
+      item: {
+        defaultPVName,
+        defaultPVCName,
+      },
+      visible: createPVAndPVCSingleVisible,
+      nameSpaceDisabled,
+      onOk(params) {
+        dispatch({
+          type: 'volume/createPVAndPVCSingle',
+          payload: {
+            action: selectPVCaction,
+            params,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideCreatePVCAndPVSingleModal',
+        })
+      },
+      onChange() {
+        dispatch({
+          type: 'volume/changeCheckbox',
+        })
+      },
+    }
+
     const volumeBulkActionsProps = {
       selectedRows,
       engineImages,
@@ -341,7 +402,14 @@ class Volume extends React.Component {
           payload: actions,
         })
       },
+      createPVAndPVC(actions) {
+        dispatch({
+          type: 'volume/showCreatePVAndPVCModal',
+          payload: actions,
+        })
+      },
     }
+
     const addVolume = () => {
       dispatch({
         type: 'volume/showCreateVolumeModal',
@@ -368,6 +436,8 @@ class Volume extends React.Component {
         <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
         <VolumeList {...volumeListProps} />
         <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
+        <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} />
+        <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />
         <AttachHost key={attachHostModalKey} {...attachHostModalProps} />
         <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} />
         <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} />

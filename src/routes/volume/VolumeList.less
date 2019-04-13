@@ -1,6 +1,7 @@
 .volumeState {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .volumeFilterDropdown {
   padding: 8px;
@@ -11,4 +12,23 @@
 .filterTitle {
   color: #666;
   font-size: 15px;
+}
+.workloadContainer {
+  margin-top: 10px;
+  border-radius: 4px;
+  padding: 5px 7px 5px;
+  position: relative;
+  display: inline-block;
+  .pod {
+    position: absolute;
+    right: 0px;
+    top: -20px;
+    left: 50%;
+    text-align: center;
+    transform: translateX(-50%); 
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+  }
 }
