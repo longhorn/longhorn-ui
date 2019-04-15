@@ -29,8 +29,10 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
         break
     }
   })
+  let versionTag = false
+  semver.valid(currentVersion) && semver.valid(latestVersion) ? versionTag = semver.lt(currentVersion, latestVersion) : versionTag = false
   let upgrade = ''
-  if (checkUpgrade && currentVersion !== 'dev' && latestVersion !== '' && semver.lt(currentVersion, latestVersion)) {
+  if (checkUpgrade && currentVersion !== 'dev' && latestVersion !== '' && versionTag) {
     const upgradeTooltip = `Longhorn ${latestVersion} is now available!`
     upgrade = (
       <Tooltip placement="topLeft" title={upgradeTooltip}>
