@@ -7,7 +7,7 @@ import { Filter } from '../../components/index'
 import { Row, Col } from 'antd'
 
 function Backup({ backup, loading, dispatch, location }) {
-  const { backupVolumes, sorter } = backup
+  const { backupVolumes, sorter, restoreBackupFilterKey } = backup
   const backupVolumesProps = {
     backup: backupVolumes,
     loading,
@@ -53,7 +53,7 @@ function Backup({ backup, loading, dispatch, location }) {
       <Row gutter={24}>
         <Col lg={18} md={16} sm={24} xs={24}></Col>
         <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
-          <Filter {...volumeFilterProps} />
+          <Filter key={restoreBackupFilterKey} {...volumeFilterProps} />
         </Col>
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
