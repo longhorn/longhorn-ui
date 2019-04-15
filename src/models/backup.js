@@ -12,6 +12,7 @@ export default {
     backupStatus: {},
     currentItem: {},
     restoreBackupModalVisible: false,
+    restoreBackupFilterKey: Math.random(),
     restoreBackupModalKey: Math.random(),
     sorter: getSorter('backupList.sorter'),
   },
@@ -72,6 +73,7 @@ export default {
       return {
         ...state,
         ...action.payload,
+        restoreBackupFilterKey: Math.random(),
       }
     },
     updateBackupStatus(state, action) {
