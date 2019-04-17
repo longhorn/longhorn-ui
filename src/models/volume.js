@@ -11,12 +11,14 @@ export default {
     selected: null,
     selectedRows: [],
     selectPVCaction: [],
+    WorkloadDetailModalItem: {},
     createVolumeModalVisible: false,
     createPVCModalVisible: false,
     createPVModalVisible: false,
     createPVCAllModalVisible: false,
     createPVAndPVCSingleVisible: false,
     createPVAndPVCVisible: false,
+    WorkloadDetailModalVisible: false,
     attachHostModalVisible: false,
     bulkAttachHostModalVisible: false,
     engineUpgradeModalVisible: false,
@@ -31,6 +33,7 @@ export default {
     defaultPVName: '',
     defaultPVCName: '',
     createPVAndPVCModalSingleKey: Math.random(),
+    WorkloadDetailModalKey: Math.random(),
     createPVCAllModalKey: Math.random(),
     createVolumeModalKey: Math.random(),
     createPVAndPVCModalKey: Math.random(),
@@ -307,6 +310,12 @@ export default {
     },
     hideCreatePVModal(state) {
       return { ...state, createPVModalVisible: false }
+    },
+    showWorkloadDetailModal(state, action) {
+      return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: Math.random() }
+    },
+    hideWorkloadDetailModal(state) {
+      return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
     },
     showAttachHostModal(state, action) {
       return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }

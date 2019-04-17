@@ -14,7 +14,7 @@ import IconNoRelation from '../../components/Icon/IconNoRelation'
 import IconRelation from '../../components/Icon/IconRelation'
 import IconPassRelation from '../../components/Icon/IconPassRelation'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, onSorterChange = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, onSorterChange = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -29,24 +29,19 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     rollback,
     showUpdateReplicaCount,
     createPVAndPVC,
+    showWorkloadsStatusDetail,
   }
   /**
    *add dataSource kubernetesStatus fields
    */
   dataSource.forEach((ele) => {
-    ele.PodName = ele.kubernetesStatus.podName ? ele.kubernetesStatus.podName : ''
-    ele.WorkloadName = ele.kubernetesStatus.workloadName ? ele.kubernetesStatus.workloadName : ''
-    ele.namespace = ele.kubernetesStatus.namespace ? ele.kubernetesStatus.namespace : ''
-    ele.workloadType = ele.kubernetesStatus.workloadType ? ele.kubernetesStatus.workloadType : ''
-    if (ele.WorkloadName && ele.PodName) {
-      ele.WorloadNameAndPodName = {
-        WorkloadName: ele.WorkloadName,
-        PodName: ele.PodName,
-        workloadType: ele.workloadType,
-        lastPodRefAt: ele.kubernetesStatus.lastPodRefAt,
-      }
+    ele.WorloadNameAndPodName = {
+      podList: ele.kubernetesStatus.workloadsStatus ? ele.kubernetesStatus.workloadsStatus : [],
+      lastPodRefAt: ele.kubernetesStatus.lastPodRefAt ? ele.kubernetesStatus.lastPodRefAt : '',
     }
+    ele.WorloadName = ele.WorloadNameAndPodName.podList[0] ? ele.WorloadNameAndPodName.podList[0].workloadName : ''
   })
+
   const defaultImage = engineImages.find(image => image.default === true)
   const columns = [
     {
@@ -94,7 +89,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'id',
       key: 'id',
       width: 200,
-      sorter: (a, b) => sortTable(a, b, 'id'),
+      sorter: (a, b) => sortTable(a, b, 'WorloadName'),
       render: (text, record) => {
         return (
           <div style={{ minWidth: '58px', maxWidth: '200px' }}>
@@ -106,21 +101,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
-      title: 'Workload/Pod',
-      dataIndex: 'WorloadNameAndPodName',
-      key: 'WorloadNameAndPodName',
-      width: 260,
-      render: (text) => {
-        const ele = text ? (
-        <Tooltip placement="top" title={<div>{text.lastPodRefAt ? <div>Last time used by Pod : {moment(new Date(text.lastPodRefAt)).fromNow()}</div> : ''}<div>{text.lastPodRefAt ? 'Last' : ''} Workload Name : {text.WorkloadName}</div><div>{text.lastPodRefAt ? 'Last' : ''} Pod Name : {text.WorkloadName}</div></div>}>
-          <div className={style.workloadContainer} style={text.lastPodRefAt ? { background: 'rgba(241, 196, 15, 0.1)' } : {}}>
-            <div>{text.PodName}</div>
-          </div>
-        </Tooltip>) : ''
-        return ele
-      },
-    },
-    {
       title: 'Attached Node',
       key: 'host',
       width: 150,
@@ -128,6 +108,26 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         return (<div style={{ minWidth: '106px' }}>
           {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
         </div>)
+      },
+    },
+    {
+      title: 'Workload/Pod',
+      dataIndex: 'WorloadNameAndPodName',
+      key: 'WorloadNameAndPodName',
+      sorter: (a, b) => sortTable(a, b, 'id'),
+      width: 260,
+      render: (text) => {
+        const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div><div>Click for details</div></div> : 'Click for details'
+        const ele = text.podList.length ? text.podList.map((item, index) => {
+          return <div key={index}>{item.podName}</div>
+        }) : ''
+        return (
+          <Tooltip placement="top" title={title} >
+            <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
+              {ele}
+            </a>
+          </Tooltip>
+        )
       },
     },
     {
@@ -246,6 +246,7 @@ list.propTypes = {
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
   createPVAndPVC: PropTypes.func,
+  showWorkloadsStatusDetail: PropTypes.func,
 }
 
 export default list

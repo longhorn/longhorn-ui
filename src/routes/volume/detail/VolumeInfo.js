@@ -44,6 +44,31 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
   } else if (isVolumeRelicaLimited(selectedVolume)) {
     ha = (<ReplicaHATooltip type="warning" />)
   }
+  let podList = ''
+  if (selectedVolume.kubernetesStatus.workloadsStatus) {
+    podList = selectedVolume.kubernetesStatus.workloadsStatus.map((item, index) => {
+      return (
+        <div key={index} style={{ border: '1px solid #f4f4f4', marginBottom: '10px' }}>
+          <div className={styles.row}>
+            <span className={styles.label}>{selectedVolume.kubernetesStatus.lastPodRefAt ? 'Last ' : ''} Pod Name:</span>
+            {item.podName}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Pod Status:</span>
+            {item.podStatus}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}>{selectedVolume.kubernetesStatus.lastPodRefAt ? 'Last ' : ''} Workload Name:</span>
+            {item.workloadName}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Workload Type:</span>
+            {item.workloadType}
+          </div>
+        </div>
+      )
+    })
+  }
 
   return (
     <div>
@@ -124,22 +149,7 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
             <span className={styles.label}> PV Status:</span>
             {selectedVolume.kubernetesStatus.pvStatus}
           </div>
-          <div className={styles.row}>
-            <span className={styles.label}> Pod Name:</span>
-            {selectedVolume.kubernetesStatus.podName}
-          </div>
-          <div className={styles.row}>
-            <span className={styles.label}> Pod Status:</span>
-            {selectedVolume.kubernetesStatus.podStatus}
-          </div>
-          <div className={styles.row}>
-            <span className={styles.label}> Workload Name:</span>
-            {selectedVolume.kubernetesStatus.workloadName}
-          </div>
-          <div className={styles.row}>
-            <span className={styles.label}> Workload Type:</span>
-            {selectedVolume.kubernetesStatus.workloadType}
-          </div>
+          {podList}
         </div>
         : ''
       }
