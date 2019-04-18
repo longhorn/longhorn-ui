@@ -6,15 +6,16 @@ import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../compo
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
-import { sortTable, sortTableByUTCDate } from '../../utils/sort'
+import { sortTable, sortTableByUTCDate, sortTableByISODate } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
 import IconNoRelation from '../../components/Icon/IconNoRelation'
 import IconRelation from '../../components/Icon/IconRelation'
 import IconPassRelation from '../../components/Icon/IconPassRelation'
+import IconBackup from '../../components/Icon/IconBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, onSorterChange = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -30,6 +31,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     showUpdateReplicaCount,
     createPVAndPVC,
     showWorkloadsStatusDetail,
+    showSnapshotDetail,
   }
   /**
    *add dataSource kubernetesStatus fields
@@ -89,7 +91,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'id',
       key: 'id',
       width: 200,
-      sorter: (a, b) => sortTable(a, b, 'WorloadName'),
+      sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
           <div style={{ minWidth: '58px', maxWidth: '200px' }}>
@@ -111,11 +113,25 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
+      title: 'Size',
+      dataIndex: 'size',
+      key: 'size',
+      width: 100,
+      sorter: (a, b) => sortTable(a, b, 'size'),
+      render: (text) => {
+        return (
+          <div style={{ minWidth: '46px' }}>
+            {formatMib(text)}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Workload/Pod',
       dataIndex: 'WorloadNameAndPodName',
       key: 'WorloadNameAndPodName',
-      sorter: (a, b) => sortTable(a, b, 'id'),
-      width: 260,
+      sorter: (a, b) => sortTable(a, b, 'WorloadName'),
+      width: 330,
       render: (text) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div><div>Click for details</div></div> : 'Click for details'
         const ele = text.podList.length ? text.podList.map((item, index) => {
@@ -137,11 +153,11 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       width: 120,
       render: (text) => {
         let title = (<div>
-          <div style={{ display: 'flex' }}><div>PV Name</div><div style={{ margin: '0px 4px' }}> : </div><div >{text.pvName}</div></div>
-          <div style={{ display: 'flex' }}><div>PV Status</div><div style={{ margin: '0px 4px' }}> : </div><div >{text.pvStatus}</div></div>
-          { text.lastPVCRefAt ? <div style={{ display: 'flex' }}><div >Last time bound with PVC</div><div style={{ margin: '0px 4px' }}> : </div><div >{moment(new Date(text.lastPVCRefAt)).fromNow()}</div></div> : ''}
-          { text.namespace ? <div style={{ display: 'flex' }}><div>{ text.lastPVCRefAt ? 'Last' : ''} Namespace</div><div style={{ margin: '0px 4px' }}> : </div><div >{text.namespace}</div></div> : ''}
-          { text.pvcName ? <div style={{ display: 'flex' }}><div>{ text.lastPVCRefAt ? 'Last' : ''} PVC Name</div><div style={{ margin: '0px 4px' }}> : </div><div >{text.pvcName}</div></div> : ''}
+          <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
+          <div><span>PV Status</span><span>: </span><span >{text.pvStatus}</span></div>
+          { text.lastPVCRefAt ? <div><span >Last time bound with PVC</span><span> : </span><span >{moment(new Date(text.lastPVCRefAt)).fromNow()}</span></div> : ''}
+          { text.namespace ? <div><span>{ text.lastPVCRefAt ? 'Last' : ''} Namespace</span><span>: </span><span >{text.namespace}</span></div> : ''}
+          { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last' : ''} PVC Name</span><span>: </span><span >{text.pvcName}</span></div> : ''}
         </div>)
         let content = (() => {
           if (!text.pvName) {
@@ -168,19 +184,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
-      width: 100,
-      sorter: (a, b) => sortTable(a, b, 'size'),
-      render: (text) => {
-        return (
-          <div style={{ minWidth: '46px' }}>
-            {formatMib(text)}
-          </div>
-        )
-      },
-    }, {
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
@@ -193,7 +196,46 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           </div>
         )
       },
-    }, {
+    },
+    {
+      title: 'Schedule',
+      key: 'recurringJobs',
+      width: 80,
+      render: (text) => {
+        let fill = text.recurringJobs ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
+        if (text.recurringJobs) {
+          text.recurringJobs.forEach((ele) => {
+            if (ele.task === 'backup') {
+              fill = '#00C1DE'
+            }
+          })
+        }
+        const title = text.recurringJobs ? 'Click for details' : ''
+        return (
+          <Tooltip placement="top" title={title} >
+            <div onClick={() => { showSnapshotDetail(text.recurringJobs) }} style={{ minWidth: '110px', cursor: 'pointer' }}>
+              <IconBackup fill={fill} width={30} height={30} />
+            </div>
+          </Tooltip>
+        )
+      },
+    },
+    {
+      title: 'Last Backup At',
+      dataIndex: 'lastBackupAt',
+      key: 'lastBackupAt',
+      width: 200,
+      sorter: (a, b) => sortTableByISODate(a, b, 'lastBackupAt'),
+      render: (text) => {
+        let lastTime = text ? moment(text).fromNow() : ''
+        return (
+          <div style={{ minWidth: '80px' }}>
+            {lastTime}
+          </div>
+        )
+      },
+    },
+    {
       title: '',
       key: 'operation',
       width: 62,
@@ -247,6 +289,7 @@ list.propTypes = {
   onSorterChange: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
+  showSnapshotDetail: PropTypes.func,
 }
 
 export default list
