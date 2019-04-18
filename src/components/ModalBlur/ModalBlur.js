@@ -34,12 +34,13 @@ class ModalBlur extends React.Component {
     })
     this.props.onOk && this.props.onOk()
   }
+  width = this.props.width ? this.props.width : 'auto'
   render() {
     let item = this.props.hasOnCancel ? '' : <Button key="cancel" onClick={this.onCancel}>Cancel</Button>
     return (
       <Modal footer={[
         item,
-        <Button key="ok" type="success" onClick={this.onOk}>
+        <Button width={this.width} key="ok" type="success" onClick={this.onOk}>
           {this.props.okText ? this.props.okText : 'OK'}
         </Button>,
       ]} {...this.props}></Modal>
@@ -54,6 +55,7 @@ ModalBlur.propTypes = {
   onOk: PropTypes.func,
   okText: PropTypes.string,
   hasOnCancel: PropTypes.bool,
+  width: PropTypes.number,
 }
 
 export default connect(({ app }) => ({ app }))(ModalBlur)

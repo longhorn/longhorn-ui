@@ -3,6 +3,7 @@ import DropOption from './DropOption/DropOption'
 import Search from './Search/Search'
 import Snapshot from './Snapshot/Snapshot'
 import Schedule from './Schedule/Schedule'
+import ScheduleText from './ScheduleText/Schedule'
 import ModalBlur from './ModalBlur/ModalBlur'
 import Replica from './Replica/Replica'
 import ReplicaList from './Replica/ReplicaList'
@@ -24,4 +25,5 @@ export {
   Filter,
   EngineImageUpgradeTooltip,
   ReplicaHATooltip,
+  ScheduleText,
 }

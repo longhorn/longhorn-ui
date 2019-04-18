@@ -1,15 +1,14 @@
 import React, { PropTypes } from 'react'
-import { Row, Col, Alert, Icon } from 'antd'
+import { Alert, Icon } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib, utcStrToDate } from '../../../utils/formater'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from '../helper/index'
 import styles from './VolumeInfo.less'
-import LatestBackup from './LatestBackup'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
-function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBackupStatus, snapshotData, snapshotModalState, engineImages }) {
+function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineImages }) {
   let errorMsg = null
   const state = snapshotModalState
   if (isSchedulingFailure(selectedVolume)) {
@@ -114,14 +113,12 @@ function VolumeInfo({ clearBackupStatus, backupStatus, selectedVolume, queryBack
         {moment(utcStrToDate(selectedVolume.created)).fromNow()}
       </div>
       <div className={styles.row}>
-        <Row>
-          <Col xs={10}>
-            <span className={styles.label}> Latest Backup:</span>
-          </Col>
-          <Col xs={14}>
-            <LatestBackup clearBackupStatus={clearBackupStatus} backupStatus={backupStatus} queryBackupStatus={queryBackupStatus} />
-          </Col>
-        </Row>
+        <span className={styles.label}> Last Backup:</span>
+        {selectedVolume.lastBackup}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Last Backup At:</span>
+        {selectedVolume.lastBackupAt ? moment(selectedVolume.lastBackupAt).fromNow() : ''}
       </div>
       { selectedVolume.kubernetesStatus ?
         <div>

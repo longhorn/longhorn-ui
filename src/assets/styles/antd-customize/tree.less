@@ -58,7 +58,7 @@
       margin-left: 40px;
       margin-top: -44px;
       >li:before{
-        width: 46px;
+        width: 56px;
       }
     }
     .tree-snapshot-icon{
@@ -68,6 +68,7 @@
       display: inline-block;
       border-radius: 50%;
       background-color: hsl(209, 66%, 51%);
+      z-index: 2;
       .snapshot-icon{
         line-height: 25px;
         width: 25px;
@@ -110,6 +111,9 @@
       display: inline-block;
     }
 
+    .ant-tree-node-content-wrapper {
+      z-index: 2;
+    }
     li {
       position: relative;
       top: 0;

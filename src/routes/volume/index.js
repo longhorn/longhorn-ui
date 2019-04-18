@@ -7,6 +7,7 @@ import CreateVolume from './CreateVolume'
 import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import WorkloadDetailModal from './WorkloadDetailModal'
+import SnapshotDetailModal from './SnapshotDetailModal'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import UpdateReplicaCount from './UpdateReplicaCount'
@@ -20,7 +21,7 @@ import { addPrefix } from '../../utils/pathnamePrefix'
 class Volume extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, WorkloadDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, defaultNamespace, nameSpaceDisabled } = this.props.volume
+    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, defaultNamespace, nameSpaceDisabled } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = this.props.location.query
@@ -164,6 +165,14 @@ class Volume extends React.Component {
           payload: record,
         })
       },
+      showSnapshotDetail(record) {
+        if (record) {
+          dispatch({
+            type: 'volume/showSnapshotDetailModal',
+            payload: record,
+          })
+        }
+      },
       rowSelection: {
         selectedRowKeys: selectedRows.map(item => item.id),
         onChange(_, records) {
@@ -305,6 +314,17 @@ class Volume extends React.Component {
       },
       onCancel() {
         dispatch({ type: 'volume/hideWorkloadDetailModal' })
+      },
+    }
+
+    const SnapshotDetailModalProps = {
+      visible: SnapshotDetailModalVisible,
+      item: SnapshotDetailModalItem,
+      onOk() {
+        dispatch({ type: 'volume/hideSnapshotDetailModal' })
+      },
+      onCancel() {
+        dispatch({ type: 'volume/hideSnapshotDetailModal' })
       },
     }
 
@@ -455,6 +475,7 @@ class Volume extends React.Component {
         <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
         <VolumeList {...volumeListProps} />
         <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
+        <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} />
         <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
         <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} />
         <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />
