@@ -211,7 +211,7 @@ class RecurringList extends React.Component {
     const { loading } = this.props
     return (
       <Card title={<div className={styles.header}>
-          <div>Recurring Snapshot and Backup</div>
+          <div>Recurring Snapshot and Backup Schedule</div>
           <div>
             {!this.state.editing && !loading && <Button onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
           </div>

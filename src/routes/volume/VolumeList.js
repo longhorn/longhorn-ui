@@ -86,7 +86,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           </div>
         )
       },
-    }, {
+    },
+    {
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
@@ -100,16 +101,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
             </LinkTo>
           </div>
         )
-      },
-    },
-    {
-      title: 'Attached Node',
-      key: 'host',
-      width: 150,
-      render: (text, record) => {
-        return (<div style={{ minWidth: '106px' }}>
-          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
-        </div>)
       },
     },
     {
@@ -127,22 +118,16 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
-      title: 'Workload/Pod',
-      dataIndex: 'WorloadNameAndPodName',
-      key: 'WorloadNameAndPodName',
-      sorter: (a, b) => sortTable(a, b, 'WorloadName'),
-      width: 330,
+      title: 'Created',
+      dataIndex: 'created',
+      key: 'created',
+      width: 200,
+      sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
-        const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div><div>Click for details</div></div> : 'Click for details'
-        const ele = text.podList.length ? text.podList.map((item, index) => {
-          return <div key={index}>{item.podName}</div>
-        }) : ''
         return (
-          <Tooltip placement="top" title={title} >
-            <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
-              {ele}
-            </a>
-          </Tooltip>
+          <div style={{ minWidth: '80px' }}>
+            {moment(utcStrToDate(text)).fromNow()}
+          </div>
         )
       },
     },
@@ -184,33 +169,50 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
-      title: 'Created',
-      dataIndex: 'created',
-      key: 'created',
-      width: 200,
-      sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
+      title: 'Pod',
+      dataIndex: 'WorloadNameAndPodName',
+      key: 'WorloadNameAndPodName',
+      sorter: (a, b) => sortTable(a, b, 'WorloadName'),
+      width: 330,
       render: (text) => {
+        const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
+        const ele = text.podList.length ? text.podList.map((item, index) => {
+          return <div key={index}>{item.podName}</div>
+        }) : ''
         return (
-          <div style={{ minWidth: '80px' }}>
-            {moment(utcStrToDate(text)).fromNow()}
-          </div>
+          <Tooltip placement="top" title={title} >
+            <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
+              {ele}
+            </a>
+          </Tooltip>
         )
       },
     },
     {
-      title: 'Schedule',
+      title: 'Attached Node',
+      key: 'host',
+      width: 150,
+      render: (text, record) => {
+        return (<div style={{ minWidth: '106px' }}>
+          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
+        </div>)
+      },
+    },
+    {
+      title: <div><div>Schedule</div></div>,
       key: 'recurringJobs',
       width: 80,
       render: (text) => {
-        let fill = text.recurringJobs ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
-        if (text.recurringJobs) {
+        let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
+        let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
+        if (text.recurringJobs && text.recurringJobs.length) {
           text.recurringJobs.forEach((ele) => {
             if (ele.task === 'backup') {
               fill = '#00C1DE'
+              title = 'Recurring backup scheduled'
             }
           })
         }
-        const title = text.recurringJobs ? 'Click for details' : ''
         return (
           <Tooltip placement="top" title={title} >
             <div onClick={() => { showSnapshotDetail(text.recurringJobs) }} style={{ minWidth: '110px', cursor: 'pointer' }}>
