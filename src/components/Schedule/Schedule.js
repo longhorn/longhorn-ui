@@ -123,7 +123,7 @@ class Schedule extends React.Component {
     const { scheduleType, mins, hour, dom, month, dow } = this.state
     const { editing } = this.props
     return (
-      <div style={{ textAlign: 'left' }}>
+      <div style={{ textAlign: 'center' }}>
         <span style={{ marginRight: '10px' }}>
           Every
         </span>

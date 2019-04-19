@@ -30,6 +30,7 @@ export default {
     snapshotsModalVisible: false,
     salvageModalVisible: false,
     nameSpaceDisabled: false,
+    pvNameDisabled: false,
     defaultPvOrPvcName: '',
     defaultNamespace: '',
     defaultPVName: '',
@@ -291,13 +292,14 @@ export default {
     showCreatePVCAndPVSingleModal(state, action) {
       action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
       action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
-      return { ...state, nameSpaceDisabled: false, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
+      action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : false
+      return { ...state, nameSpaceDisabled: false, pvNameDisabled: state.pvNameDisabled, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
     },
     changeCheckbox(state) {
       return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled }
     },
     hideCreatePVCAndPVSingleModal(state) {
-      return { ...state, createPVAndPVCSingleVisible: false, createPVAndPVCModalSingleKey: Math.random() }
+      return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, createPVAndPVCModalSingleKey: Math.random() }
     },
     hideCreatePVAndPVCModal(state) {
       return { ...state, createPVAndPVCVisible: false, createPVAndPVCModalKey: Math.random() }

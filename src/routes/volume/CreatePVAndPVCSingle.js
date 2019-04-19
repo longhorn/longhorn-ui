@@ -62,7 +62,7 @@ const modal = ({
                 message: 'Please input pvName',
               },
             ],
-          })(<Input />)}
+          })(<Input disabled={item.pvNameDisabled} />)}
         </FormItem>
         <FormItem label="Create PVC" hasFeedback {...formItemLayout}>
           <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>

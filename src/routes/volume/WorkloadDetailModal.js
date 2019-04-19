@@ -26,7 +26,7 @@ const modal = ({
           <div> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Name</b> : {ele.workloadName}</div>
           <div style={{ marginTop: '10px' }}> <b>Workload Type</b> : {ele.workloadType}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Name</b> : {ele.podName}</div>
-          <div style={{ marginTop: '10px' }}> <b>Pod Status</b> : {ele.podStatus}</div>
+          {!item.lastPodRefAt ? <div style={{ marginTop: '10px' }}> <b>Pod Status</b> : {ele.podStatus}</div> : ''}
         </Card>
       )
     })

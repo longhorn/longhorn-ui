@@ -83,7 +83,8 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       }
     }
   })
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC' })
+
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: selected.kubernetesStatus.pvcName })
   toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
