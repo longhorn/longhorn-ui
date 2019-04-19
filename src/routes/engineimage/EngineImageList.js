@@ -41,16 +41,27 @@ function list({ loading, dataSource, deleteEngineImage }) {
       title: 'Default',
       dataIndex: 'default',
       key: 'default',
-      width: 100,
+      width: 200,
       render: (defualt) => {
         return (
           defualt ? <Icon type="star" /> : <div></div>
         )
       },
     }, {
+      title: 'Reference Count',
+      dataIndex: 'refCount',
+      key: 'refCount',
+      width: 200,
+      render: (text) => {
+        return (
+          <div>{text}</div>
+        )
+      },
+    }, {
       title: 'Build Date',
       dataIndex: 'buildDate',
       key: 'buildDate',
+      width: 200,
       render: (text) => {
         return (
           <div>
