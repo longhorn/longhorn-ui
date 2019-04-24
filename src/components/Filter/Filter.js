@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Select, Input, Button, Form } from 'antd'
 import styles from './Filter.less'
 
@@ -47,7 +48,7 @@ class Filter extends React.Component {
         style={{ width: '100%' }}
         allowClear
         size="large"
-        mode="combobox"
+        mode="AutoComplete"
         value={this.state.value}
         defaultValue={this.state.value}
         notFoundContent=""

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import styles from './Search.less'
 import { Form, Input, Select, Button } from 'antd'
 
@@ -48,7 +49,7 @@ class Search extends React.Component {
           <Select size={size}
             allowClear={allowClear}
             style={{ width: '100%' }}
-            mode="combobox"
+            mode="AutoComplete"
             onChange={this.handleInputChange}
             filterOption={false}
             onKeyPress={this.handleSearch} defaultValue={keyword}

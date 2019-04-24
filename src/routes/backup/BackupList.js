@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Table, Modal, Icon, message } from 'antd'
 import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
@@ -82,6 +83,7 @@ class List extends React.Component {
         title: 'Snaphost Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
+        align: 'center',
         sorter: (a, b) => sortTable(a, b, 'snapshotName'),
       }, {
         title: 'Base Image',

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col, Button } from 'antd'
 import { Filter } from '../../components/index'
 import styles from './HostFilter.less'

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Table, Input, Button, Icon } from 'antd'
 import { sortTable, sortTableByISODate } from '../../../utils/sort'
 import { setSortOrder } from '../../../utils/store'

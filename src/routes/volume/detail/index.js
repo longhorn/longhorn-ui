@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import VolumeInfo from './VolumeInfo'
 import { Row, Col, Card } from 'antd'
@@ -264,4 +265,4 @@ VolumeDetail.propTypes = {
   snapshotModal: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, backup, host, engineimage, volume, loading }, { params }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: params.id }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, engineimage, volume, loading }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id }))(VolumeDetail)

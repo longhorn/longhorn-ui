@@ -1,4 +1,3 @@
-
 class Store {
   constructor(storage, namespace = '') {
     this.storage = storage

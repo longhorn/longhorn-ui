@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Table } from 'antd'
 import { formatMib } from '../../utils/formater'
 import { sortTable } from '../../utils/sort'
@@ -58,6 +59,7 @@ class List extends React.Component {
         title: 'Created At',
         dataIndex: 'created',
         key: 'created',
+        align: 'center',
         sorter: (a, b) => sortTable(a, b, 'created'),
         render: (text) => {
           return (

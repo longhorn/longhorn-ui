@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Form, Input } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item

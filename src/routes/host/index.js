@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import HostList from './HostList'
@@ -14,6 +15,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostFilter = null
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible } = host
   const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
+  location.query = location.query ? location.query : {}
   const { field, value, stateValue } = location.query
   const volumeList = volume.data
   const storageOverProvisioningPercentage = setting.data.find(item => item.id === 'storage-over-provisioning-percentage')

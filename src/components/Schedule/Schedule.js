@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Select, TimePicker } from 'antd'
 import moment from 'moment'
 const Option = Select.Option

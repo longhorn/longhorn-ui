@@ -2,7 +2,7 @@ export default {
   namespace: 'app',
   state: {
     menuPopoverVisible: false,
-    isNavbar: document.body.clientWidth < 769,
+    isNavbar: document.body.clientWidth < 768,
     blur: false,
   },
   subscriptions: {
@@ -17,7 +17,7 @@ export default {
     *changeNavbar({
       payload,
     }, { put }) {
-      if (document.body.clientWidth < 992) {
+      if (document.body.clientWidth < 768) {
         yield put({ type: 'showNavbar' })
       } else {
         yield put({ type: 'hideNavbar' })

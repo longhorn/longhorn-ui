@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Table, Icon } from 'antd'
 import classnames from 'classnames'
 import moment from 'moment'

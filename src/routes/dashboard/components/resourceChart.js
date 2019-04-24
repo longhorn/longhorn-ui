@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell, Label, Sector } from 'recharts'
 import classnames from 'classnames'
 import styles from './resourceChart.less'
