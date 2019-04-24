@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Spin } from 'antd'
 import { formatMib } from '../../../utils/formater'
 import ResourceChart from './resourceChart'

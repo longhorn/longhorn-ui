@@ -1,177 +1,135 @@
-import React, { PropTypes } from 'react'
-import nprogress from 'nprogress'
-import { Router } from 'dva/router'
-import App from './routes/app'
-import { addPrefix } from './utils/pathnamePrefix'
-
-const cached = {}
-const registerModel = (app, model) => {
-  if (!cached[model.namespace]) {
-    app.model(model)
-    cached[model.namespace] = 1
-  }
-}
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Router, Switch, Route } from 'dva/router'
+import dynamic from 'dva/dynamic'
+import notfound from './routes/notfound/'
+import dashboardComponent from './routes/dashboard/'
+import volumeComponent from './routes/volume/'
 
 const Routers = function ({ history, app }) {
-  const routes = [
-    {
-      path: addPrefix('') || '/',
-      component: App,
-      getIndexRoute(nextState, cb) {
-        nprogress.start()
-        require.ensure([], (require) => {
-          nprogress.done()
-          registerModel(app, require('./models/host'))
-          registerModel(app, require('./models/volume'))
-          registerModel(app, require('./models/setting'))
-          registerModel(app, require('./models/eventlog'))
-          cb(null, { component: require('./routes/dashboard/') })
-        }, 'dashboard')
-      },
-      childRoutes: [
-        {
-          path: 'dashboard',
-          name: 'dashboard',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/volume'))
-              registerModel(app, require('./models/setting'))
-              registerModel(app, require('./models/eventlog'))
-              cb(null, require('./routes/dashboard/'))
-            }, 'dashboard')
-          },
-        },
-        {
-          path: 'node',
-          name: 'node',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/volume'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/host/'))
-            }, 'host')
-          },
-        },
-        {
-          path: 'volume',
-          name: 'volume',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/engineimage'))
-              registerModel(app, require('./models/volume'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/volume/'))
-            }, 'volume')
-          },
-        },
-        {
-          path: 'volume/:id',
-          name: 'volume/detail',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/snapshot')('snapshotModal'))
-              registerModel(app, require('./models/backup'))
-              registerModel(app, require('./models/engineimage'))
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/volume'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/volume/detail'))
-            }, 'volume-detail')
-          },
-        },
-        {
-          path: 'backup',
-          name: 'backup',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/backup'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/backup/'))
-            }, 'backup')
-          },
-        },
-        {
-          path: 'backup/:id',
-          name: 'backup/detail',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/host'))
-              registerModel(app, require('./models/backup'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/backup/BackupDetail'))
-            }, 'backup-detail')
-          },
-        },
-        {
-          path: 'engineimage',
-          name: 'engineimage',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/engineimage'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/engineimage/'))
-            }, 'engineimage')
-          },
-        },
-        {
-          path: 'engineimage/:id',
-          name: 'engineimage/detail',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/engineimage'))
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/engineimage/detail'))
-            }, 'engineimage-detail')
-          },
-        },
-        {
-          path: 'setting',
-          name: 'setting',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              registerModel(app, require('./models/setting'))
-              cb(null, require('./routes/setting/'))
-            }, 'setting')
-          },
-        },
-        {
-          path: '*',
-          name: 'notfound',
-          getComponent(nextState, cb) {
-            nprogress.start()
-            require.ensure([], (require) => {
-              nprogress.done()
-              cb(null, require('./routes/notfound/'))
-            }, 'notfound')
-          },
-        },
-      ],
-    },
-  ]
+  const App = dynamic({
+    app,
+    models: () => [
+      import('./models/host.js'),
+      import('./models/volume.js'),
+      import('./models/setting.js'),
+      import('./models/eventlog.js'),
+      import('./models/engineimage.js'),
+      import('./models/backup.js'),
+    ],
+    component: () => import('./routes/app.js'),
+  })
 
-  return <Router history={history} routes={routes} />
+  const dashboard = dynamic({
+    app,
+    models: () => [
+      import('./models/host.js'),
+      import('./models/volume.js'),
+      import('./models/setting.js'),
+      import('./models/eventlog.js'),
+    ],
+    component: () => dashboardComponent,
+  })
+
+  const node = dynamic({
+    app,
+    models: [
+      import('./models/host.js'),
+      import('./models/volume.js'),
+      import('./models/setting.js'),
+    ],
+    component: () => import('./routes/host/'),
+  })
+
+  const volume = dynamic({
+    app,
+    models: [
+      import('./models/host.js'),
+      import('./models/engineimage.js'),
+      import('./models/volume.js'),
+      import('./models/setting.js'),
+    ],
+    component: () => volumeComponent,
+  })
+
+  const volumeDetail = dynamic({
+    app,
+    models: [
+      import('./models/host.js'),
+      import('./models/engineimage.js'),
+      import('./models/volume.js'),
+      import('./models/setting.js'),
+      import('./models/backup.js'),
+    ],
+    component: () => import('./routes/volume/detail'),
+  })
+
+  const backup = dynamic({
+    app,
+    models: [
+      import('./models/host.js'),
+      import('./models/backup.js'),
+      import('./models/setting.js'),
+    ],
+    component: () => import('./routes/backup/'),
+  })
+
+  const backupDetail = dynamic({
+    app,
+    models: [
+      import('./models/host.js'),
+      import('./models/backup.js'),
+      import('./models/setting.js'),
+    ],
+    component: () => import('./routes/backup/BackupDetail'),
+  })
+
+  const setting = dynamic({
+    app,
+    models: [
+      import('./models/setting.js'),
+    ],
+    component: () => import('./routes/setting/'),
+  })
+
+  const engineimage = dynamic({
+    app,
+    models: [
+      import('./models/setting.js'),
+      import('./models/engineimage.js'),
+    ],
+    component: () => import('./routes/engineimage/'),
+  })
+
+  const engineimageDetail = dynamic({
+    app,
+    models: [
+      import('./models/setting.js'),
+      import('./models/engineimage.js'),
+    ],
+    component: () => import('./routes/engineimage/detail'),
+  })
+
+  return (
+    <Router history={history}>
+      <Switch>
+        <App path="/" component={App} >
+         <Switch>
+          <Route path="/dashboard" component={dashboard} />
+          <Route exact path="/node" component={node} />
+          <Route exact path="/volume" component={volume} />
+          <Route exact path="/volume/:id" component={volumeDetail} />
+          <Route exact path="/backup" component={backup} />
+          <Route exact path="/backup/:id" component={backupDetail} />
+          <Route exact path="/setting" component={setting} />
+          <Route exact path="/engineimage" component={engineimage} />
+          <Route exact path="/engineimage/:id" component={engineimageDetail} />
+          <Route component={notfound} />
+         </Switch>
+        </App>
+      </Switch>
+    </Router>
+  )
 }
 
 Routers.propTypes = {

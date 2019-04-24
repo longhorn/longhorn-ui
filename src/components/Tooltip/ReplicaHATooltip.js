@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Tooltip } from 'antd'
 import highAvailabilityRed from '../../assets/images/high-availability-red.svg'
 import highAvailabilityYellow from '../../assets/images/high-availability-yellow.svg'

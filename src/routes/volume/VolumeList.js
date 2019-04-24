@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Table, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
@@ -95,7 +96,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
-          <div style={{ minWidth: '58px', maxWidth: '200px' }}>
+          <div style={{ maxWidth: '200px' }}>
             <LinkTo to={`/volume/${text}`}>
               {isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
@@ -111,7 +112,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text) => {
         return (
-          <div style={{ minWidth: '46px' }}>
+          <div>
             {formatMib(text)}
           </div>
         )
@@ -125,14 +126,14 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
-          <div style={{ minWidth: '80px' }}>
+          <div>
             {moment(utcStrToDate(text)).fromNow()}
           </div>
         )
       },
     },
     {
-      title: 'PV/PVC',
+      title: <div>PV/PVC</div>,
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
       width: 120,
@@ -203,9 +204,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     {
       title: 'Attached Node',
       key: 'host',
-      width: 150,
       render: (text, record) => {
-        return (<div style={{ minWidth: '106px' }}>
+        return (<div>
           {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
         </div>)
       },
@@ -213,7 +213,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     {
       title: <div><div>Schedule</div></div>,
       key: 'recurringJobs',
-      width: 80,
       render: (text) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
         let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
@@ -227,7 +226,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         }
         return (
           <Tooltip placement="top" title={title} >
-            <div onClick={() => { showSnapshotDetail(text.recurringJobs) }} style={{ minWidth: '110px', cursor: 'pointer' }}>
+            <div onClick={() => { showSnapshotDetail(text.recurringJobs) }} style={{ cursor: 'pointer' }}>
               <IconBackup fill={fill} width={30} height={30} />
             </div>
           </Tooltip>
@@ -238,6 +237,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
+      width: 220,
       sorter: (a, b) => sortTableByISODate(a, b, 'lastBackupAt'),
       render: (text) => {
         let lastTime = text ? moment(text).fromNow() : ''
@@ -266,7 +266,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
   }
   setSortOrder(columns, sorter)
   return (
-    <div>
+    <div style={{ overflow: 'hidden' }}>
       <Table
         rowSelection={rowSelection}
         bordered={false}

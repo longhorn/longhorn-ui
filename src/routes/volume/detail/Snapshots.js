@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Spin, Tooltip, Card, Switch } from 'antd'
 
 import { Snapshot } from '../../../components'
@@ -103,6 +104,7 @@ class Snapshots extends React.Component {
       type: 'snapshotModal/stopPolling',
     })
   }
+
   isSameTree = (p, q) => {
     if (p === q) {
       return true

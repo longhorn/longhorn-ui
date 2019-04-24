@@ -1,9 +1,10 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Card, Modal } from 'antd'
 import { DropOption } from '../../components'
-const confirm = Modal.confirm
 import diskHealthyImage from '../../assets/images/disk-healthy.png'
 import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
+const confirm = Modal.confirm
 
 class Replica extends React.Component {
   state = {}

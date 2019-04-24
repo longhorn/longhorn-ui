@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Form, Input, Button, Spin, Icon, Checkbox } from 'antd'
 import styles from './setting.less'
 const FormItem = Form.Item

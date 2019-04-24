@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Alert, Icon } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'

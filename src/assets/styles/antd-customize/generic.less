@@ -24,11 +24,15 @@
       background: @color-primary-light;
       color: white;
     }
-
+    .ant-table-thead > tr > th.ant-table-column-has-actions.ant-table-column-has-sorters:hover {
+      background: #108eb9 !important;
+    }
     .ant-table-tbody > tr > td {
       text-align: center;
     }
-
+    .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+      background: #ebf2f6 !important;
+    }
     &.ant-table-small {
       .ant-table-thead > tr > th {
         background: #108eb9;
@@ -38,8 +42,13 @@
         padding: 0;
       }
     }
+    .ant-table-column-sorters {
+      display: flex !important;
+      justify-content: center !important;
+    }
     .ant-table-column-sorter {
-      height: 16px;
+      display : inline !important;
+      text-align: center;
       .anticon-caret-up, .anticon-caret-down {
         font-size: 16px !important;
       }

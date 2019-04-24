@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Card } from 'antd'
 import { routerRedux } from 'dva/router'

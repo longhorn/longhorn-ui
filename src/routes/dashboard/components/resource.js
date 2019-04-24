@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import styles from './resource.less'
 import CountUp from 'react-countup'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'

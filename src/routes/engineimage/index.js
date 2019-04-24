@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import { Row, Col, Button } from 'antd'
@@ -12,6 +13,7 @@ class EngineImage extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
     const { data, createEngineImageModalVisible, createEngineImageModalKey } = this.props.engineimage
+    this.props.location.query = this.props.location.query ? this.props.location.query : {}
     const { field, value } = this.props.location.query
     let engineimages = data
     if (field && value) {

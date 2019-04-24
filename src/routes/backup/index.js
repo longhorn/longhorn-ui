@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import BackupVolumeList from './BackupVolumeList'
@@ -7,6 +8,7 @@ import { Filter } from '../../components/index'
 import { Row, Col } from 'antd'
 
 function Backup({ backup, loading, dispatch, location }) {
+  location.query = location.query ? location.query : {}
   const { backupVolumes, sorter, restoreBackupFilterKey } = backup
   const backupVolumesProps = {
     backup: backupVolumes,

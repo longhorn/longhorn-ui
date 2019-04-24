@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Icon, Card } from 'antd'
 import { LinkTo } from '../../../components'
 import styles from './numberCard.less'

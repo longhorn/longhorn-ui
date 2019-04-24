@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip } from 'antd'
 import { backupProgressModal } from '../../utils/backup'
 import { formatMib } from '../../utils/formater'

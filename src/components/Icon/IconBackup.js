@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 
 function IconBackup({ width = 18, height = 18, fill = '#00C1DE' }) {
   return (

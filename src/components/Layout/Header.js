@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col, Popover, Icon } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'

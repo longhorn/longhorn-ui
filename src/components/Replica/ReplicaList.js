@@ -1,5 +1,6 @@
 import classnames from 'classnames'
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import style from './Replica.less'
 import { Spin } from 'antd'
 import Replica from './Replica'

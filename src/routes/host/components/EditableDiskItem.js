@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import styles from './EditableDiskItem.less'
 import { Radio, Checkbox, Form, Tooltip } from 'antd'
 import StorageInput from './StorageInput'

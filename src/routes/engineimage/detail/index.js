@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col, Card } from 'antd'
 import EngineImageInfo from './EngineImageInfo'
 import { connect } from 'dva'
@@ -35,4 +36,4 @@ EngineImageDetail.propTypes = {
   engineimageId: PropTypes.string,
 }
 
-export default connect(({ engineimage }, { params }) => ({ engineimage, engineimageId: params.id }))(EngineImageDetail)
+export default connect(({ engineimage }, { match }) => ({ engineimage, engineimageId: match.params.id }))(EngineImageDetail)

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Table, Progress, Tooltip } from 'antd'
 import styles from './HostList.less'
 import classnames from 'classnames'
@@ -101,11 +102,12 @@ class List extends React.Component {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
+        width: 300,
         className: styles.name,
         sorter: (a, b) => sortTable(a, b, 'name'),
         render: (text, record) => {
           return (
-            <div>
+            <div style={{ textAlign: 'center' }}>
               <div>{text}</div>
               <div className={styles.secondLabel} style={{ color: '#b9b9b9' }}>{record.address}</div>
             </div>
@@ -120,7 +122,7 @@ class List extends React.Component {
         sorter: (a, b) => a.replicas.length - b.replicas.length,
         render: (text, record) => {
           return (
-            <a onClick={e => showReplicaModal(record, e)}>
+            <a style={{ textAlign: 'center', display: 'block', paddingRight: '20px' }} onClick={e => showReplicaModal(record, e)}>
               {text ? text.length : 0}
             </a>
           )
