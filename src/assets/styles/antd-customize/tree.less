@@ -24,7 +24,7 @@
     .snapshot-current-desc{
       height: 35px;
       line-height: 35px;
-      padding-top: 2px;
+      padding-top: 11px;
       button{
         border: none;
         padding: 0;
@@ -34,7 +34,7 @@
         border-radius: 3px 0 0 3px;
         font-size: 22px;
         background-color: #28864f;
-        padding: 3.5px;
+        padding: 5px 3.5px 3.4px;
         display: inline-block;
       }
       span{
@@ -76,7 +76,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 0;
+        top: 2px;
         bottom: 0;
         margin: auto;
         font-size: 20px;
@@ -92,6 +92,8 @@
       display: inline-block;
       .snapshot-name{
         font-size: 120%;
+        padding-top: 13px;
+        margin-bottom: 0px;
       }
       .snapshot-time{
         color: #a4a4a4;
@@ -113,6 +115,8 @@
 
     .ant-tree-node-content-wrapper {
       z-index: 2;
+      position: relative;
+      display: inline !important;
     }
     li {
       position: relative;
@@ -135,7 +139,10 @@
       position: relative;
       top: 0;
       > li{
-        margin-top: 7px;
+        margin-top: 0px;
+        &:first-child {
+          padding-top: 0px !important;
+        } 
         &::before {
           content: '';
           display: block;
@@ -143,7 +150,7 @@
           height: 2px;
           border-top: 2px solid #ecf0f1;
           position: absolute;
-          top: 21px;
+          top: 28px;
           z-index: 0;
           right: 99%;
         }
