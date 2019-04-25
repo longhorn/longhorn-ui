@@ -47,7 +47,7 @@ let filterRemoved = (data) => {
   let filteredData = []
   for (let i = 0; i < data.length; i += 1) {
     let item = data[i]
-    if (item.removed) {
+    if (item.removed || (!item.usercreated && item.name !== 'volume-head')) {
       let parent = item.parent
       // change parent children
       if (parent !== '') {
@@ -84,6 +84,7 @@ const genSnapshotsTreeData = (snapshots, filter = (d) => [...d]) => {
       el.children = Object.keys(children)
     }
   })
+
   let actualData = filter(snapshots)
   let rootNodes = []
   for (let i = 0; i < actualData.length; i++) {

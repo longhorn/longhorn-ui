@@ -54,7 +54,6 @@ function SnapshotIcon(props, snapshotProps) {
       },
     })
   }
-
   function onClick({ key }) {
     if (key === 'snapshotRevert') {
       return
@@ -77,14 +76,18 @@ function SnapshotIcon(props, snapshotProps) {
       className="lh-snapshot-dropdown"
       onClick={onClick}
     >
-      <Menu.Item className="revert-menu-item" key="snapshotRevert">
-        <Popconfirm title={title} onConfirm={() => doAction('snapshotRevert')}>
-          <span className="snapshot-revert">Revert</span>
-        </Popconfirm>
-      </Menu.Item>
-      <Menu.Item key="snapshotBackup">
-        <span>Backup</span>
-      </Menu.Item>
+      { props.usercreated ?
+        <Menu.Item className="revert-menu-item" key="snapshotRevert">
+          <Popconfirm title={title} onConfirm={() => doAction('snapshotRevert')}>
+            <span className="snapshot-revert">Revert</span>
+          </Popconfirm>
+        </Menu.Item> : ''
+      }
+      { props.usercreated ?
+        <Menu.Item key="snapshotBackup">
+          <span>Backup</span>
+        </Menu.Item> : ''
+      }
       <Menu.Item key="snapshotDelete">
         <span>Delete</span>
       </Menu.Item>
@@ -102,9 +105,10 @@ function SnapshotIcon(props, snapshotProps) {
         <p className="snapshot-created">Created: {props.created}</p>
         <p className="snapshot-name">Size: {formatMib(props.size)}</p>
         <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
+        <p className="snapshot-name">Removed: {props.removed ? 'True' : 'False'}</p>
       </div>}>
         <div>
-          <div className="tree-snapshot-icon">
+          <div className="tree-snapshot-icon" style={{ background: props.usercreated ? '#3085d5' : 'rgb(241, 196, 15)' }} >
             <Icon className="snapshot-icon" type="camera" />
           </div>
           <div className="tree-snapshot-desc">
