@@ -3,8 +3,16 @@ import PropTypes from 'prop-types'
 import { Router, Switch, Route } from 'dva/router'
 import dynamic from 'dva/dynamic'
 import notfound from './routes/notfound/'
+import appComponent from './routes/app.js'
 import dashboardComponent from './routes/dashboard/'
 import volumeComponent from './routes/volume/'
+import nodeComponent from './routes/host/'
+import volumeDetailComponent from './routes/volume/detail'
+import backupComponent from './routes/backup/'
+import backupDetailComponent from './routes/backup/BackupDetail'
+import settingComponent from './routes/setting/'
+import engineimageComponent from './routes/engineimage/'
+import engineimageDetailComponent from './routes/engineimage/detail'
 
 const Routers = function ({ history, app }) {
   const App = dynamic({
@@ -17,7 +25,7 @@ const Routers = function ({ history, app }) {
       import('./models/engineimage.js'),
       import('./models/backup.js'),
     ],
-    component: () => import('./routes/app.js'),
+    component: () => appComponent,
   })
 
   const dashboard = dynamic({
@@ -38,7 +46,7 @@ const Routers = function ({ history, app }) {
       import('./models/volume.js'),
       import('./models/setting.js'),
     ],
-    component: () => import('./routes/host/'),
+    component: () => nodeComponent,
   })
 
   const volume = dynamic({
@@ -61,7 +69,7 @@ const Routers = function ({ history, app }) {
       import('./models/setting.js'),
       import('./models/backup.js'),
     ],
-    component: () => import('./routes/volume/detail'),
+    component: () => volumeDetailComponent,
   })
 
   const backup = dynamic({
@@ -71,7 +79,7 @@ const Routers = function ({ history, app }) {
       import('./models/backup.js'),
       import('./models/setting.js'),
     ],
-    component: () => import('./routes/backup/'),
+    component: () => backupComponent,
   })
 
   const backupDetail = dynamic({
@@ -81,7 +89,7 @@ const Routers = function ({ history, app }) {
       import('./models/backup.js'),
       import('./models/setting.js'),
     ],
-    component: () => import('./routes/backup/BackupDetail'),
+    component: () => backupDetailComponent,
   })
 
   const setting = dynamic({
@@ -89,7 +97,7 @@ const Routers = function ({ history, app }) {
     models: [
       import('./models/setting.js'),
     ],
-    component: () => import('./routes/setting/'),
+    component: () => settingComponent,
   })
 
   const engineimage = dynamic({
@@ -98,7 +106,7 @@ const Routers = function ({ history, app }) {
       import('./models/setting.js'),
       import('./models/engineimage.js'),
     ],
-    component: () => import('./routes/engineimage/'),
+    component: () => engineimageComponent,
   })
 
   const engineimageDetail = dynamic({
@@ -107,7 +115,7 @@ const Routers = function ({ history, app }) {
       import('./models/setting.js'),
       import('./models/engineimage.js'),
     ],
-    component: () => import('./routes/engineimage/detail'),
+    component: () => engineimageDetailComponent,
   })
 
   return (
