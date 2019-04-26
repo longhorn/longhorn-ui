@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import { Row, Col, Button } from 'antd'
+import queryString from 'query-string'
 import VolumeList from './VolumeList'
 import CreateVolume from './CreateVolume'
 import CreatePVAndPVC from './CreatePVAndPVC'
@@ -25,8 +26,7 @@ class Volume extends React.Component {
     const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
-    this.props.location.query = this.props.location.query ? this.props.location.query : {}
-    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = this.props.location.query
+    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = queryString.parse(this.props.location.search)
     const volumeFilterMap = {
       healthy: healthyVolume,
       inProgress: inProgressVolume,
@@ -124,7 +124,7 @@ class Volume extends React.Component {
         dispatch(routerRedux.push({
           pathname: addPrefix(`/backup/${record.name}`),
           query: {
-            ...location.query,
+            ...queryString.parse(this.props.location.search),
             field: 'volumeName',
             keyword: record.name,
           },
@@ -217,18 +217,17 @@ class Volume extends React.Component {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
         filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue) ? dispatch(routerRedux.push({
           pathname: addPrefix('/volume'),
-          query: {
-            ...location.query,
+          search: queryString.stringify({
+            ...queryString.parse(location.search),
             field: filterField,
             value: filterValue,
             stateValue: filterStateValue,
             nodeRedundancyValue: redundancyValue,
             engineImageUpgradableValue: imageUpgradableValue,
-          },
+          }),
         })) : dispatch(routerRedux.push({
           pathname: addPrefix('/volume'),
-          query: {
-          },
+          search: queryString.stringify({}),
         }))
       },
     }

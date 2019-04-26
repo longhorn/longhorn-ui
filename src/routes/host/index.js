@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
+import queryString from 'query-string'
 import HostList from './HostList'
 import AddDisk from './AddDisk'
 import EditDisk from './EditDisk'
@@ -15,8 +16,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostFilter = null
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible } = host
   const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
-  location.query = location.query ? location.query : {}
-  const { field, value, stateValue } = location.query
+  const { field, value, stateValue } = queryString.parse(location.search)
   const volumeList = volume.data
   const storageOverProvisioningPercentage = setting.data.find(item => item.id === 'storage-over-provisioning-percentage')
   const minimalSchedulingQuotaWarning = setting.data.find(item => item.id === 'minimal-scheduling-quota-warning') || { value: '90' }
@@ -258,16 +258,15 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
       filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
         pathname: addPrefix('/node'),
-        query: {
-          ...location.query,
+        search: queryString.stringify({
+          ...queryString.parse(location.search),
           field: filterField,
           value: filterValue,
           stateValue: filterStateValue,
-        },
+        }),
       })) : dispatch(routerRedux.push({
         pathname: addPrefix('/node'),
-        query: {
-        },
+        search: queryString.stringify({}),
       }))
     },
   }

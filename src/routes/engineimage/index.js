@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
+import queryString from 'query-string'
 import { Row, Col, Button } from 'antd'
 import { Filter } from '../../components/index'
 import EngineImageList from './EngineImageList'
@@ -14,7 +15,7 @@ class EngineImage extends React.Component {
     const { dispatch, loading, location } = this.props
     const { data, createEngineImageModalVisible, createEngineImageModalKey } = this.props.engineimage
     this.props.location.query = this.props.location.query ? this.props.location.query : {}
-    const { field, value } = this.props.location.query
+    const { field, value } = queryString.parse(location.serach)
     let engineimages = data
     if (field && value) {
       engineimages = filterEngineImage(data, field, value)
@@ -63,15 +64,14 @@ class EngineImage extends React.Component {
         const { field: filterField, value: filterValue } = filter
         filterField && filterValue ? dispatch(routerRedux.push({
           pathname: addPrefix('/engineimage'),
-          query: {
-            ...location.query,
+          search: queryString.stringify({
+            ...queryString.parse(location.search),
             field: filterField,
-            value: filterValue,
-          },
+            keyword: filterValue,
+          }),
         })) : dispatch(routerRedux.push({
           pathname: addPrefix('/engineimage'),
-          query: {
-          },
+          search: queryString.stringify({}),
         }))
       },
     }
