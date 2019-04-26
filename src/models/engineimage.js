@@ -1,6 +1,7 @@
 import { create, deleteEngineImage, query } from '../services/engineimage'
 import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
+import queryString from 'query-string'
 
 export default {
   namespace: 'engineimage',
@@ -15,7 +16,7 @@ export default {
       history.listen(location => {
         dispatch({
           type: 'query',
-          payload: location.query,
+          payload: queryString.parse(location.search),
         })
       })
       wsChanges(dispatch, 'engineimages', '1s')

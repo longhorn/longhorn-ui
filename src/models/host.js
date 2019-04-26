@@ -3,6 +3,7 @@ import { execAction } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
+import queryString from 'query-string'
 
 export default {
   namespace: 'host',
@@ -27,7 +28,7 @@ export default {
       history.listen(location => {
         dispatch({
           type: 'query',
-          payload: location.query,
+          payload: queryString.parse(location.search),
         })
       })
       wsChanges(dispatch, 'nodes', '1s')

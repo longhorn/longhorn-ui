@@ -3,6 +3,7 @@ import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
+import queryString from 'query-string'
 
 export default {
   namespace: 'volume',
@@ -57,7 +58,7 @@ export default {
         if (!location.pathname.endsWith('/backup')) {
           dispatch({
             type: 'query',
-            payload: location.query,
+            payload: queryString.parse(location.search),
           })
         }
       })

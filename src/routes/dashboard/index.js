@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
+import queryString from 'query-string'
 import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
@@ -15,21 +16,21 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     onVolumeClick(v) {
       dispatch(routerRedux.push({
         pathname: addPrefix('/volume'),
-        query: {
-          ...location.query,
+        search: queryString.stringify({
+          ...queryString.parse(location.search),
           field: 'status',
           stateValue: v.key,
-        },
+        }),
       }))
     },
     onNodeClick(n) {
       dispatch(routerRedux.push({
         pathname: addPrefix('/node'),
-        query: {
-          ...location.query,
+        search: queryString.stringify({
+          ...queryString.parse(location.search),
           field: 'status',
           stateValue: n.key,
-        },
+        }),
       }))
     },
   }

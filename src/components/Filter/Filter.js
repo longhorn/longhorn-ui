@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Select, Input, Button, Form } from 'antd'
+import queryString from 'query-string'
 import styles from './Filter.less'
 
 const Option = Select.Option
@@ -8,13 +9,14 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '' } = props.location.query
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '' } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
       value,
       nodeRedundancyValue,
       engineImageUpgradableValue,
+      keyword: value,
     }
   }
 
@@ -28,8 +30,9 @@ class Filter extends React.Component {
     this.setState({ ...this.state, stateValue })
   }
 
-  handleValueChange = (value) => {
-    this.setState({ ...this.state, value })
+  handleValueChange = (event) => {
+    event.persist()
+    this.setState({ ...this.state, value: event.target.value })
   }
   handleNodeRedundancyValueChange = (nodeRedundancyValue) => {
     this.setState({ ...this.state, nodeRedundancyValue })
@@ -43,21 +46,14 @@ class Filter extends React.Component {
 
   render() {
     let valueForm = (
-      <Select
-        key="value"
+      <Input
         style={{ width: '100%' }}
         allowClear
-        size="large"
-        mode="AutoComplete"
+        size="small"
         value={this.state.value}
         defaultValue={this.state.value}
-        notFoundContent=""
-        defaultActiveFirstOption={false}
-        showArrow={false}
-        filterOption={false}
         onChange={this.handleValueChange}
-      >
-      </Select>
+      />
       )
 
     if (this.state.field === 'status' && this.props.stateOption) {
