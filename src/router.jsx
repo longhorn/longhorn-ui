@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Router, Switch, Route } from 'dva/router'
+import { Router, Switch, Route, Redirect } from 'dva/router'
 import dynamic from 'dva/dynamic'
+import nprogress from 'nprogress'
 import notfound from './routes/notfound/'
 import appComponent from './routes/app.js'
 import dashboardComponent from './routes/dashboard/'
@@ -123,7 +124,8 @@ const Routers = function ({ history, app }) {
       <Switch>
         <App path="/" component={App} >
          <Switch>
-          <Route path="/dashboard" component={dashboard} />
+          <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
+          <Route exact path="/dashboard" component={dashboard} />
           <Route exact path="/node" component={node} />
           <Route exact path="/volume" component={volume} />
           <Route exact path="/volume/:id" component={volumeDetail} />

@@ -255,7 +255,7 @@ class EventLogs extends React.Component {
     return (
       <div className="eventLogs">
         <div className="title">Event Log</div>
-        <div className="content">
+        <div className="content" style={{ overflow: 'hidden' }}>
          <Table columns={columns}
            onChange={onChange}
            rowClassName={rowClassName}

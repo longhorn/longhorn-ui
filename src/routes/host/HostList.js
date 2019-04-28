@@ -219,7 +219,7 @@ class List extends React.Component {
     }
     setSortOrder(columns, sorter)
     return (
-      <div>
+      <div style={{ overflow: 'hidden' }}>
         <Table
           bordered={false}
           columns={columns}

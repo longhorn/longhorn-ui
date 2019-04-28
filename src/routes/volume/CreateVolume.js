@@ -8,10 +8,10 @@ const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
-    span: 7,
+    span: 8,
   },
   wrapperCol: {
-    span: 15,
+    span: 14,
   },
 }
 
