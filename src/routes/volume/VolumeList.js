@@ -6,7 +6,7 @@ import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../compo
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
-import { sortTable, sortTableByUTCDate, sortTableByISODate } from '../../utils/sort'
+import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
@@ -141,7 +141,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
           <div><span>PV Status</span><span>: </span><span >{text.pvStatus}</span></div>
           { text.lastPVCRefAt ? <div><span >Last time bound with PVC</span><span> : </span><span >{moment(new Date(text.lastPVCRefAt)).fromNow()}</span></div> : ''}
-          { text.namespace ? <div><span>{ text.lastPVCRefAt ? 'Last' : ''} Namespace</span><span>: </span><span >{text.namespace}</span></div> : ''}
           { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last' : ''} PVC Name</span><span>: </span><span >{text.pvcName}</span></div> : ''}
         </div>)
         let content = (() => {
@@ -165,6 +164,20 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
               {content}
             </div>
           </Tooltip>
+        )
+      },
+    },
+    {
+      title: 'Namespace',
+      dataIndex: 'kubernetesStatus',
+      key: 'namespace',
+      width: 170,
+      sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
+      render: (text) => {
+        return (
+            <div>
+              {text.namespace}
+            </div>
         )
       },
     },
