@@ -293,7 +293,7 @@ export default {
     showCreatePVCAndPVSingleModal(state, action) {
       action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
       action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
-      action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : false
+      action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : state.pvNameDisabled = false
       return { ...state, nameSpaceDisabled: false, pvNameDisabled: state.pvNameDisabled, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
     },
     changeCheckbox(state) {

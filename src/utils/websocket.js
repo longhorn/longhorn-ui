@@ -27,12 +27,12 @@ export function wsChanges(dispatch, type, period) {
   const options = {}
   const rws = new ReconnectingWebSocket(url, [], options)
   dispatch({ type: 'updateSocketStatus', payload: 'connecting' })
-  var recentWrite = true
-  var expectError = false
-  var brokenPipeDetector = window.setInterval(() => {
-    if (rws.readyState == rws.OPEN) {
+  let recentWrite = true
+  let expectError = false
+  window.setInterval(() => {
+    if (rws.readyState === rws.OPEN) {
       if (!recentWrite) {
-        rws.close(1000, '', {delay: 0})
+        rws.close(1000, '', { delay: 0 })
         expectError = true
       }
       recentWrite = !recentWrite

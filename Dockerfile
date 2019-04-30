@@ -1,4 +1,4 @@
-FROM luissalgadofreire/nginx-node:6.x
+FROM luissalgadofreire/nginx-node:8.x
 MAINTAINER logan@rancher.com
 
 COPY package.json /tmp/package.json

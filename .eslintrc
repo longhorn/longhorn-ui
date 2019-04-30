@@ -11,11 +11,18 @@
       "always-multiline"
     ],
     "max-len": 0,
+    "indent" : "off",
+    "jsx-a11y/href-no-hash": "off",
     "react/forbid-prop-types": 0,
     "react/jsx-first-prop-new-line": 0,
     "import/prefer-default-export": 0,
     "react/jsx-filename-extension": 0,
+    "react/require-default-props": 0,
+    "react/no-array-index-key": 0,
+    "jsx-a11y/alt-text": 0,
+    "jsx-a11y/img-has-alt": 0,
     "import/first": 0,
+    "spaced-comment": 0,
     "react/jsx-indent": 0,
     "import/newline-after-import": 0,
     "react/no-unused-prop-types": 0,
@@ -29,12 +36,9 @@
     "react/prefer-stateless-function": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "no-unused-expressions": [
-      0,
-      {
-        "allowShortCircuit": true,
-        "allowTernary": true
-      }
+      0
     ],
+    "jsx-a11y/anchor-has-content": ["error", { "components": [""] }],
     no-plusplus: "off",
     "no-continue": "off",
     "arrow-body-style": [
@@ -49,7 +53,7 @@
     "no-eval": 0,
     "react/jsx-no-bind": 0,
     "no-unused-vars": [
-      2,
+      0,
       {
         "ignoreRestSiblings": true
       }
@@ -61,6 +65,7 @@
     "ecmaVersion": 8,
     "ecmaFeatures": {
       "jsx": true,
+      "es6": true,
       "experimentalObjectRestSpread": true
     }
   },

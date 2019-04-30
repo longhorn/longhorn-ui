@@ -175,7 +175,6 @@ class Snapshots extends React.Component {
       </Spin>
     )
   }
-
 }
 
 Snapshots.propTypes = {
