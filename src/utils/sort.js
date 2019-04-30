@@ -59,6 +59,18 @@ export function sortTable(a, b, prop) {
   return 0
 }
 
+export function sortTableObject(a, b, prop, propin) {
+  const valueA = getPropValue(a, prop)[propin]
+  const valueB = getPropValue(b, prop)[propin]
+  if (valueA < valueB) {
+    return -1
+  }
+  if (valueA > valueB) {
+    return 1
+  }
+  return 0
+}
+
 export function sortTableByISODate(a, b, prop) {
   const valueA = isoStrToDate(getPropValue(a, prop))
   const valueB = isoStrToDate(getPropValue(b, prop))
