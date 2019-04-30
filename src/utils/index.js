@@ -3,6 +3,8 @@ import config from './config'
 import menu from './menu'
 import request from './request'
 
+/* eslint no-extend-native: ["error", { "exceptions": ["String","Date"] }]*/
+
 String.prototype.hyphenToHump = function () {
   return this.replace(/-(\w)/g, (...args) => {
     return args[1].toUpperCase()

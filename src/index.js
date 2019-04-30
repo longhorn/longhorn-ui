@@ -10,12 +10,12 @@ import './assets/iconfont/iconfont.woff'
 import './assets/styles/index.less'
 
 import app from './main'
-import './index.html'
+
 import routerConfig from './router'
 
 // 2. Model
-app.model(require('./models/app'))
-app.model(require('./models/snapshot')('snapshotModal'))
+app.model(require('./models/app').default)
+app.model(require('./models/snapshot').default('snapshotModal'))
 
 // 3. Router
 app.router(routerConfig)

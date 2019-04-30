@@ -49,7 +49,6 @@ Replica.propTypes = {
 }
 
 class Salvage extends React.Component {
-
   state = {
     selectedReplicaMap: {},
     showErrorMessage: false,

@@ -9,7 +9,6 @@ import styles from './index.less'
 const Option = Select.Option
 
 class RecurringList extends React.Component {
-
   state = {
     dataSource: this.props.dataSource.map(item => ({ ...item })),
     editing: false,
@@ -31,8 +30,10 @@ class RecurringList extends React.Component {
     if (record.isNew) {
       this.state.dataSource.splice(index, 1)
     } else {
-      this.state.dataSource[index].deleted = true
-      this.state.dataSource[index].editing = false
+      let dataSource = this.state.dataSource
+      dataSource[index].deleted = true
+      dataSource[index].editing = false
+      this.setState({ dataSource })
     }
     const dataSource = this.state.dataSource
     this.setState({
