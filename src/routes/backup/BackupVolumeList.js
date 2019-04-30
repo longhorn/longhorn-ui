@@ -42,6 +42,19 @@ class List extends React.Component {
           )
         },
       }, {
+        title: ' Last Backup At',
+        dataIndex: 'lastBackupAt',
+        key: 'lastBackupAt',
+        sorter: (a, b) => sortTable(a, b, 'lastBackupAt'),
+        render: (text) => {
+          return (
+            <div>
+              {text ? moment(new Date(text)).fromNow() : ''}
+            </div>
+          )
+        },
+      },
+      {
         title: 'Created At',
         dataIndex: 'created',
         key: 'created',
