@@ -15,11 +15,11 @@ class Schedule extends React.Component {
     monthArr: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { cron } = this.props
     this.setState(this.parseCron(cron))
   }
-  componentWillReceiveProps(nextProp) {
+  UNSAFE_componentWillReceiveProps(nextProp) {
     const { cron } = nextProp
     this.setState(this.parseCron(cron))
   }

@@ -9,7 +9,7 @@ export default (modelGenerate) => (Component) => {
       this.namespace = this.props.id
       this.ConnectedComponent = function () {}
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       app.model(modelGenerate(this.namespace))
       this.ConnectedComponent = connect((state) => ({ ...state[this.namespace] }))(Component)
     }

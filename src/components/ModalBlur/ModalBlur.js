@@ -12,7 +12,7 @@ class ModalBlur extends React.Component {
         payload: this.props.visible,
       })
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.visible === nextProps.visible) {
       return
     }
