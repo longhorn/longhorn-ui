@@ -14,7 +14,7 @@ class RecurringList extends React.Component {
     editing: false,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { dataSource } = this.state
     dataSource.forEach((data) => { data.editing = false })
   }

@@ -8,7 +8,7 @@ class LatestBackup extends React.Component {
     progress: 0,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { queryBackupStatus, backupStatus } = this.props
 
     this.state.updateProgress = setInterval(() => {

@@ -1,5 +1,9 @@
 {
-  "extends": "airbnb",
+  "settings": {
+    "react": {
+      "version": "16.4.1"
+    }
+  },
   "rules": {
     "semi": [
       2,
@@ -12,7 +16,6 @@
     ],
     "max-len": 0,
     "indent" : "off",
-    "jsx-a11y/href-no-hash": "off",
     "react/forbid-prop-types": 0,
     "react/jsx-first-prop-new-line": 0,
     "import/prefer-default-export": 0,
@@ -29,16 +32,41 @@
     "react/self-closing-comp": 0,
     "generator-star-spacing": 0,
     "import/extensions": 0,
+    "react/jsx-wrap-multilines": 0,
+    "lines-between-class-members": 0,
+    "import/named": 0,
+    "prefer-destructuring": 0,
+    "react/destructuring-assignment": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "no-else-return": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "react/jsx-closing-tag-location": 0,
+    "react/jsx-tag-spacing": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "react/jsx-curly-brace-presence": 0,
+    "object-curly-newline": 0,
+    "react/jsx-max-props-per-line": 0,
+    "import/order": 0,
+    "operator-linebreak": 0,
+    "react/no-access-state-in-setstate": 0,
+    "import/no-useless-path-segments": 0,
+    "react/no-unused-state": 0,
+    "react/sort-comp": 0,
+    "no-restricted-globals": 0,
+    "no-multiple-empty-lines": 0,
+    "implicit-arrow-linebreak": 0,
     "react/jsx-closing-bracket-location": 0,
     "react/no-string-refs": 0,
     "react/no-find-dom-node": 0,
     "arrow-parens": 0,
     "react/prefer-stateless-function": 0,
+    "eslint-disable-next-line": 0,
     "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/href-no-hash": [0], 
+    "react-app/react/react-in-jsx-scope": [0],
     "no-unused-expressions": [
       0
     ],
-    "jsx-a11y/anchor-has-content": ["error", { "components": [""] }],
     no-plusplus: "off",
     "no-continue": "off",
     "arrow-body-style": [

@@ -12,7 +12,7 @@ class ResourceChart extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { activeIndex } = nextProps
     this.setState({ activeIndex })
   }
