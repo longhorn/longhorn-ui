@@ -50,7 +50,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 130,
+      width: 100,
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         let upgrade = null
@@ -69,7 +69,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Health',
       dataIndex: 'robustness',
       key: 'robustness',
-      width: 140,
+      width: 110,
       sorter: (a, b) => sortTable(a, b, 'robustness'),
       render: (text, record) => {
         const state = getHealthState(text)
@@ -91,7 +91,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      width: 200,
+      width: 140,
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
@@ -107,7 +107,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 100,
+      width: 80,
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text) => {
         return (
@@ -121,7 +121,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
-      width: 200,
+      width: 140,
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
@@ -171,11 +171,10 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Namespace',
       dataIndex: 'kubernetesStatus',
       key: 'namespace',
-      width: 170,
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
-            <div>
+            <div style={{ minWidth: 100 }}>
               {text.namespace}
             </div>
         )
@@ -186,7 +185,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'WorloadNameAndPodName',
       key: 'WorloadNameAndPodName',
       sorter: (a, b) => sortTable(a, b, 'WorloadName'),
-      width: 330,
+      width: 200,
       render: (text) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
         const ele = text.podList.length ? text.podList.map((item, index) => {
@@ -239,12 +238,11 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
-      width: 200,
       sorter: (a, b) => sortTableByISODate(a, b, 'lastBackupAt'),
       render: (text) => {
         let lastTime = text ? moment(text).fromNow() : ''
         return (
-          <div style={{ minWidth: '80px' }}>
+          <div style={{ minWidth: '130px' }}>
             {lastTime}
           </div>
         )
