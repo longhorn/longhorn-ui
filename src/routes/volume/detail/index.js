@@ -36,10 +36,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     hosts,
     deleteReplicas(replicas) {
       replicas.forEach(replica => { replica.removeUrl = selectedVolume.actions.replicaRemove })
-      dispatch({
-        type: 'volume/deleteReplicas',
-        replicas,
-      })
+      if(selectedVolume.actions.replicaRemove) {
+        dispatch({
+          type: 'volume/deleteReplicas',
+          replicas,
+        })
+      }
     },
     loading,
   }
