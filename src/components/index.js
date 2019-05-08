@@ -11,6 +11,7 @@ import LinkTo from './LinkTo/LinkTo'
 import Filter from './Filter/Filter'
 import EngineImageUpgradeTooltip from './Tooltip/EngineImageUpgradeTooltip'
 import ReplicaHATooltip from './Tooltip/ReplicaHATooltip'
+import ReactCron from './ReactCron/ReactCron'
 
 export {
   DropOption,
@@ -26,4 +27,5 @@ export {
   EngineImageUpgradeTooltip,
   ReplicaHATooltip,
   ScheduleText,
+  ReactCron,
 }

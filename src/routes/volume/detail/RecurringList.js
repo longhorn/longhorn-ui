@@ -1,17 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Button, Select, InputNumber, Card } from 'antd'
-import { Schedule } from '../../../components'
+import { ReactCron } from  '../../../components'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
+import { ModalBlur } from '../../../components'
 import styles from './index.less'
+import prettyCron from '../../../utils/prettycron'
 
 const Option = Select.Option
 
 class RecurringList extends React.Component {
-  state = {
-    dataSource: this.props.dataSource.map(item => ({ ...item })),
-    editing: false,
+  constructor(props) {
+    super(props)
+    this.state = {
+      dataSource: this.props.dataSource.map(item => ({ ...item })),
+      editing: false,
+      currentRecord: {},
+      currentCron: '0 0 * * *',
+      modalOpts: {
+        title: 'Create PV/PVC',
+        visible: false,
+      },
+      ReactCronKey: Math.random(),
+    }
   }
 
   UNSAFE_componentWillMount() {
@@ -144,6 +156,59 @@ class RecurringList extends React.Component {
     return isChanged
   }
 
+
+  editCron = (record) => {
+    this.setState({
+      ...this.state,
+      currentRecord: record,
+      modalOpts: {
+        visible: true,
+      },
+      ReactCronKey: Math.random(),
+    })
+  }
+
+  onCronCancel = () => {
+    this.setState({
+      ...this.state,
+      modalOpts: {
+        visible: false,
+      },
+      currentRecord: {},
+      currentCron: '0 0 * * *',
+    })
+  }
+
+  onOk = () => {
+    const found = this.state.dataSource.find(data => data.name === this.state.currentRecord.name)
+    if (found) {
+      found.cron = this.state.currentCron
+      const dataSource = this.state.dataSource
+      this.setState({
+        ...this.state,
+        dataSource,
+        modalOpts: {
+          visible: false,
+        },
+        currentCron: '0 0 * * *',
+      })
+    }else{
+      this.setState({
+        ...this.state,
+        modalOpts: {
+          visible: false,
+        },
+        currentCron: '0 0 * * *',
+      })
+    }
+  }
+  changeCron = ( cron ) => {
+    this.setState({
+      ...this.state,
+      currentCron: cron,
+    })
+  }
+
   render() {
     const columns = [
       {
@@ -167,11 +232,21 @@ class RecurringList extends React.Component {
         },
       }, {
         title: 'Schedule',
-        dataIndex: 'schedule',
         key: 'schedule',
-        render: (text, record) => {
+        render: (text) => {
           return (
-            <Schedule cron={record.cron} editing={this.state.editing && !record.deleted} onChange={(newCron) => this.onScheduleChange(record, newCron)} />
+            <span>{prettyCron.toString(text.cron)}</span>
+          )
+        },
+      },
+      {
+        title: 'Edit Cron',
+        key: 'cron',
+        render: (record) => {
+          return (
+            <div>
+              <Button type="default" disabled={!this.state.editing} onClick={() => {this.editCron(record)}} >Edit</Button>
+            </div>
           )
         },
       },
@@ -238,6 +313,9 @@ class RecurringList extends React.Component {
             </div>}
           </div>
         </div>
+        <ModalBlur {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
+          <ReactCron key={this.state.ReactCronKey} changeCron={this.changeCron}/>
+        </ModalBlur>
       </Card>
     )
   }

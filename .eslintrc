@@ -52,6 +52,7 @@
     "import/no-useless-path-segments": 0,
     "react/no-unused-state": 0,
     "react/sort-comp": 0,
+    "react/no-direct-mutation-state": 0,
     "no-restricted-globals": 0,
     "no-multiple-empty-lines": 0,
     "implicit-arrow-linebreak": 0,
@@ -63,6 +64,7 @@
     "eslint-disable-next-line": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "jsx-a11y/href-no-hash": [0], 
+    "no-cond-assign": 0,
     "react-app/react/react-in-jsx-scope": [0],
     "no-unused-expressions": [
       0

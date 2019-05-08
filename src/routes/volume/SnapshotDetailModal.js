@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ModalBlur, ScheduleText } from '../../components'
+import { ModalBlur } from '../../components'
 import { Card } from 'antd'
 import IconBackup from '../../components/Icon/IconBackup'
+import prettyCron from '../../utils/prettycron'
 
 const modal = ({
   visible,
@@ -29,7 +30,7 @@ const modal = ({
       return (
         <Card key={index} style={{ width: 380, margin: '5px' }}>
           <div style={{ minHeight: '30px', display: 'flex', alignItems: 'center', marginBottom: '5px' }}><b style={{ marginRight: '10px' }}>Type: </b> <span style={{ marginRight: '4px' }}>{ele.task}</span> <IconBackup fill={fill} /></div>
-          <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Schedule: </b><ScheduleText cron={ele.cron} /></div>
+          <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Schedule: </b>{prettyCron.toString(ele.cron)}</div>
           <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Retain: </b>{ele.retain}</div>
         </Card>
       )
