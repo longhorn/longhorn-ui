@@ -55,7 +55,7 @@ class Replica extends React.Component {
     const { item, hosts } = this.props
     const host = hosts.find(h => h.id === item.hostId)
     let deleteTooltip = ''
-    if (item.volState == 'detached' && item.volState !== 'attached') {
+    if (item.volState === 'detached' && item.volState !== 'attached') {
       deleteTooltip = `Replica belongs to volume currently ${item.volState}. Volume must be attached or detached.`
     }
     return (
