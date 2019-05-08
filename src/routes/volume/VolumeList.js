@@ -11,9 +11,6 @@ import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate } fr
 import { setSortOrder } from '../../utils/store'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
-import IconNoRelation from '../../components/Icon/IconNoRelation'
-import IconRelation from '../../components/Icon/IconRelation'
-import IconPassRelation from '../../components/Icon/IconPassRelation'
 import IconBackup from '../../components/Icon/IconBackup'
 
 function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange = f => f }) {
@@ -136,7 +133,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: <div>PV/PVC</div>,
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
-      width: 120,
+      width: 220,
       render: (text) => {
         let title = (<div>
           <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
@@ -149,13 +146,13 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
             return ''
           }
           if (text.pvName && !text.pvcName && !text.namespace) {
-            return <IconNoRelation width={30} height={30} />
+            return <div>Available</div>
           }
           if (text.pvName && text.pvcName && text.namespace && !text.lastPVCRefAt) {
-            return <IconRelation width={30} height={30} />
+            return <div>Bound</div>
           }
           if (text.pvName && text.pvcName && text.namespace && text.lastPVCRefAt) {
-            return <IconPassRelation width={30} height={30} />
+            return <div>Released</div>
           }
           return ''
         })()
