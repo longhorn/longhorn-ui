@@ -23,7 +23,21 @@ class RecurringList extends React.Component {
         visible: false,
       },
       ReactCronKey: Math.random(),
+      Faulted: false,
     }
+  }
+
+  componentDidMount() {
+    let Faulted = true
+    this.props.dataSourceReplicas.forEach((item)=>{
+      if(!item.failedAt) {
+        Faulted = false
+      }
+    })
+    this.setState({
+      ...this.state,
+      Faulted,
+    })
   }
 
   UNSAFE_componentWillMount() {
@@ -290,7 +304,7 @@ class RecurringList extends React.Component {
       <Card title={<div className={styles.header}>
           <div>Recurring Snapshot and Backup Schedule</div>
           <div>
-            {!this.state.editing && !loading && <Button onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
+            {!this.state.editing && !loading && <Button disabled={this.state.Faulted} onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
           </div>
         </div>} bordered={false}>
         <div>

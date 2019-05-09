@@ -52,35 +52,31 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         let upgrade = null
+        const state = getHealthState(record.robustness)
         if (isVolumeImageUpgradable(record, defaultImage)) {
           const currentVersion = extractImageVersion(record.currentImage)
           const latestVersion = extractImageVersion(defaultImage.image)
           upgrade = (<EngineImageUpgradeTooltip currentVersion={currentVersion} latestVersion={latestVersion} />)
         }
-        return (
-          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)}>
-            {upgrade} {text.hyphenToHump()} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
-          </div>
-        )
-      },
-    }, {
-      title: 'Health',
-      dataIndex: 'robustness',
-      key: 'robustness',
-      width: 110,
-      sorter: (a, b) => sortTable(a, b, 'robustness'),
-      render: (text, record) => {
-        const state = getHealthState(text)
         let ha = null
         if (isVolumeReplicaNotRedundancy(record)) {
           ha = (<ReplicaHATooltip type="danger" />)
         } else if (isVolumeRelicaLimited(record)) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
-
+        let stateText = (() => {
+          if(text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{display: 'flex'}}>{ha}{state}</div>
+          } else if(text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{display: 'flex'}}>{ha}{state}</div>
+          } else if(text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{display: 'flex'}}>{ha}{state}</div>
+          }
+          return text.hyphenToHump()
+        })()
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)}>
-            {ha} {state}
+            {upgrade} {stateText} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
       },
@@ -89,7 +85,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      width: 140,
+      width: 200,
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
@@ -133,7 +129,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: <div>PV/PVC</div>,
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
-      width: 220,
+      width: 140,
       render: (text) => {
         let title = (<div>
           <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
@@ -179,12 +175,12 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
-      title: 'Pod',
+      title: 'Attached To',
       dataIndex: 'WorloadNameAndPodName',
       key: 'WorloadNameAndPodName',
       sorter: (a, b) => sortTable(a, b, 'WorloadName'),
       width: 200,
-      render: (text) => {
+      render: (text, record) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
         const ele = text.podList.length ? text.podList.map((item, index) => {
           return <div key={index}>{item.podName}</div>
@@ -193,18 +189,10 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           <Tooltip placement="top" title={title} >
             <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
               {ele}
+              <div>{record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>)}</div>
             </a>
           </Tooltip>
         )
-      },
-    },
-    {
-      title: 'Attached Node',
-      key: 'host',
-      render: (text, record) => {
-        return (<div>
-          {record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px', minHeight: '22px' }} key={item.hostId}>{item.hostId ? <span>{item.hostId}</span> : <span>&nbsp;</span>}</div>)}
-        </div>)
       },
     },
     {

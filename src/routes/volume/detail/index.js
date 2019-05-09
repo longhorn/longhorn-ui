@@ -169,6 +169,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   const engineUpgradeModalProps = getEngineUpgradeModalProps([selectedVolume], engineImages, engineUpgradeModalVisible, dispatch)
 
   const recurringListProps = {
+    dataSourceReplicas: selectedVolume.replicas || [],
     dataSource: selectedVolume.recurringJobs || [],
     loading,
     onOk(recurring) {
