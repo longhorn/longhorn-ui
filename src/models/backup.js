@@ -19,10 +19,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.query,
-        })
+        if(history.location.pathname.indexOf('backup')> -1){
+          dispatch({
+            type: 'query',
+            payload: location.query,
+          })
+        }
       })
     },
   },
