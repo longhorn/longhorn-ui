@@ -23,5 +23,6 @@ export default {
   "html": {
     "template": "./src/index.ejs"
   },
+  "publicPath": "/",
   "es5ImcompatibleVersions": true,
 }
