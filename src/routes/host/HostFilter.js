@@ -36,10 +36,10 @@ class HostFilter extends React.Component {
     }
     return (
       <Row gutter={24}>
-        <Col lg={18} md={16} sm={24} xs={24}>
+        <Col lg={16} md={14} sm={24} xs={24}>
           <Button size="large" className={styles.expandOrCollapseButton} onClick={() => this.toggleExpand()}>{this.state.isAllExpanded ? 'Collapse' : 'Expand'} All</Button>
         </Col>
-        <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
+        <Col lg={8} md={10} sm={24} xs={24} style={{ marginBottom: 16 }}>
           <Filter {...searchGroupProps} />
         </Col>
       </Row>
