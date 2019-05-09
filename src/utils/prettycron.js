@@ -20,11 +20,8 @@
 //  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////////////////
-
-if (typeof require !== 'undefined') {
-    var moment = require('moment')
-    var later = require('meteor-later')
-  }
+import moment from 'moment'
+import later from 'meteor-later'
   
   (function() {
   
