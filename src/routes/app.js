@@ -22,7 +22,7 @@ const App = ({ children, dispatch, location, app }) => {
       dispatch({ type: 'app/switchMenuPopver' })
     },
   }
-
+  
   return (
     <LocaleProvider locale={enUS}>
       <div className={blur(app.blur)}>
@@ -39,7 +39,7 @@ const App = ({ children, dispatch, location, app }) => {
                 {children}
               </div>
             </div>
-            <Footer />
+            <Footer/>
           </div>
         </div>
       </div>

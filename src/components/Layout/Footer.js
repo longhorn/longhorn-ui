@@ -7,9 +7,10 @@ import { config } from '../../utils'
 import { getStatusIcon } from '../../utils/websocket'
 import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
-import { addPrefix } from '../../utils/pathnamePrefix'
+import BundlesModel from './BundlesModel'
 
-function Footer({ host, volume, setting, engineimage, eventlog }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch }) {
+  const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueTitle = '*Summarize%20your%20issue%20here*'
   const issueBody = `*Describe%20your%20issue%20here*%0A%0A---%0AVersion%3A%20\`${currentVersion}\``
@@ -41,6 +42,35 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
       </Tooltip>
     )
   }
+
+  const createBundlesrops = {
+    item: {},
+    visible: bundlesropsVisible,
+    okText,
+    modalButtonDisabled,
+    onOk(data) {
+      dispatch({
+        type: 'app/changeOkText',
+        payload: data,
+      })
+      dispatch({
+        type: 'app/supportbundles',
+        payload: data,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'app/hideBundlesModel',
+      })
+    },
+  }
+
+  const showBundlesModel = () => {
+    dispatch({
+      type: 'app/showBundlesModel',
+    })
+  }
+
   return (
     <div className={styles.footer}>
       <Row type="flex" justify="space-between">
@@ -48,7 +78,7 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
           {upgrade}
           <a>{currentVersion}</a>
           <a target="blank" href="https://github.com/rancher/longhorn#longhorn">Documentation</a>
-          <a target="blank" href={addPrefix('/v1/supportbundle')}>Generate Support Bundle</a>
+          <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
           <a target="blank" href="https://forums.rancher.com">Forums</a>
           <a target="blank" href="https://slack.rancher.io">Slack</a>
@@ -60,6 +90,7 @@ function Footer({ host, volume, setting, engineimage, eventlog }) {
           {getStatusIcon(engineimage)}
           {getStatusIcon(eventlog)}
         </Col>
+        <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
       </Row>
     </div>
   )
@@ -73,4 +104,4 @@ Footer.propTypes = {
   eventlog: PropTypes.object,
 }
 
-export default connect(({ host, volume, setting, engineimage, eventlog }) => ({ host, volume, setting, engineimage, eventlog }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog }) => ({ app, host, volume, setting, engineimage, eventlog }))(Footer)
