@@ -1,9 +1,21 @@
+import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
+import { message } from 'antd'
+
+message.config({
+  top: 60,
+  duration: 5,
+})
+
 export default {
   namespace: 'app',
   state: {
     menuPopoverVisible: false,
     isNavbar: document.body.clientWidth < 768,
+    bundlesropsVisible: false,
     blur: false,
+    bundlesropsKey: Math.random(),
+    okText: 'ok',
+    modalButtonDisabled : true,
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -21,6 +33,31 @@ export default {
         yield put({ type: 'showNavbar' })
       } else {
         yield put({ type: 'hideNavbar' })
+      }
+    },
+    *supportbundles({
+      payload,
+    }, { call, put }) {
+      const data = yield call(getSupportbundles, payload)
+      if(data.status === 200){
+        let dataStepTwo = {}
+        function timeout(ms) {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve()
+            }, ms, 'done')
+          })
+        }
+        while(dataStepTwo.state !== 'ReadyForDownload') {
+          yield call(timeout, 1000)
+          dataStepTwo = yield call(getSupportbundlesStepTwo, data.nodeID, {name:data.name})
+        }
+        if(dataStepTwo.state === 'ReadyForDownload'){
+          window.location.href=`${dataStepTwo.links.self}/${data.name}/download`
+        }else{
+          message.error('Download failed support bundle creation is still in progress')
+        }
+        yield put({ type: 'hideBundlesModel' })
       }
     },
     *switchMenuPopver({
@@ -48,6 +85,28 @@ export default {
       return {
         ...state,
         isNavbar: false,
+      }
+    },
+    showBundlesModel(state) {
+      return {
+        ...state,
+        bundlesropsVisible: true,
+      }
+    },
+    hideBundlesModel(state) {
+      return {
+        ...state,
+        bundlesropsVisible: false,
+        bundlesropsKey: Math.random(),
+        modalButtonDisabled: true,
+        okText: 'ok',
+      }
+    },
+    changeOkText(state) {
+      return {
+        ...state,
+        okText: 'Generating...',
+        modalButtonDisabled: false,
       }
     },
     handleSwitchMenuPopver(state) {
