@@ -2,6 +2,7 @@ import { create, deleteVolume, query, execAction, recurringUpdate, createVolumeP
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
+import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 
@@ -129,6 +130,12 @@ export default {
     }, { call, put }) {
       yield call(deleteVolume, payload)
       yield put({ type: 'query' })
+    },
+    *deleteAndRedirect({
+      payload,
+    }, { call, put }) {
+      yield call(deleteVolume, payload)
+      yield put(routerRedux.push('/volume')) 
     },
     *deleteReplicas({
       replicas,

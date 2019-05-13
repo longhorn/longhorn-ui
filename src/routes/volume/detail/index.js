@@ -11,13 +11,15 @@ import EngineUpgrade from '../EngineUpgrade'
 import UpdateReplicaCount from '../UpdateReplicaCount'
 import Snapshots from '../detail/Snapshots'
 import RecurringList from '../detail/RecurringList'
+import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
+import ChangeVolumeModal from '../ChangeVolumeModal'
 import Salvage from '../Salvage'
 import { ReplicaList } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from '../helper'
 import { addPrefix } from '../../../utils/pathnamePrefix'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
@@ -108,7 +110,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
     deleteVolume(record) {
       dispatch({
-        type: 'volume/delete',
+        type: 'volume/deleteAndRedirect',
         payload: record,
       })
     },
@@ -162,6 +164,18 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         },
       })
     },
+    createPVAndPVC(actions) {
+      dispatch({
+        type: 'volume/showCreatePVCAndPVSingleModal',
+        payload: actions,
+      })
+    },
+    changeVolume(record) {
+      dispatch({
+        type: 'volume/showChangeVolumeModal',
+        payload: record.actions.activate,
+      })
+    },
   }
 
   const attachHostModalProps = genAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -169,6 +183,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   const engineUpgradeModalProps = getEngineUpgradeModalProps([selectedVolume], engineImages, engineUpgradeModalVisible, dispatch)
 
   const recurringListProps = {
+    selectedVolume,
     dataSourceReplicas: selectedVolume.replicas || [],
     dataSource: selectedVolume.recurringJobs || [],
     loading,
@@ -225,6 +240,55 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
 
   const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selectedVolume, updateReplicaCountModalVisible, dispatch)
 
+  const createPVAndPVCSingleProps = {
+    item: {
+      defaultPVName,
+      defaultPVCName,
+      pvNameDisabled,
+    },
+    visible: createPVAndPVCSingleVisible,
+    nameSpaceDisabled,
+    onOk(params) {
+      dispatch({
+        type: 'volume/createPVAndPVCSingle',
+        payload: {
+          action: selectPVCaction,
+          params,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideCreatePVCAndPVSingleModal',
+      })
+    },
+    onChange() {
+      dispatch({
+        type: 'volume/changeCheckbox',
+      })
+    },
+  }
+
+  const changeVolumeModalProps = {
+    item: {
+      frontend: 'iscsi',
+    },
+    hosts,
+    visible: changeVolumeModalVisible,
+    onOk(newVolume) {
+      let data = Object.assign(newVolume, {url: changeVolumeActivate})
+      dispatch({
+        type: 'volume/volumeActivate',
+        payload: data,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideChangeVolumeModal',
+      })
+    },
+  }
+
   return (
     <div >
       <Row gutter={24}>
@@ -252,6 +316,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
       {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
       <Salvage {...salvageModalProps} />
+      <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps}/>
+      <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />
     </div >
   )
 }
