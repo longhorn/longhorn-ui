@@ -34,6 +34,9 @@ class RecurringList extends React.Component {
         Faulted = false
       }
     })
+    if(this.props.selectedVolume.standby) {
+      Faulted = this.props.selectedVolume.standby
+    } 
     this.setState({
       ...this.state,
       Faulted,

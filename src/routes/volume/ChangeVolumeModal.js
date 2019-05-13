@@ -39,7 +39,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Disaster Recovery Volume volume to Normal volume',
+    title: 'Activate Disaster Recovery Volume',
     visible,
     onCancel,
     onOk: handleOk,
