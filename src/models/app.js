@@ -15,7 +15,7 @@ export default {
     blur: false,
     bundlesropsKey: Math.random(),
     okText: 'ok',
-    modalButtonDisabled : true,
+    modalButtonDisabled : false,
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -98,7 +98,7 @@ export default {
         ...state,
         bundlesropsVisible: false,
         bundlesropsKey: Math.random(),
-        modalButtonDisabled: true,
+        modalButtonDisabled: false,
         okText: 'ok',
       }
     },
@@ -106,7 +106,7 @@ export default {
       return {
         ...state,
         okText: 'Generating...',
-        modalButtonDisabled: false,
+        modalButtonDisabled: true,
       }
     },
     handleSwitchMenuPopver(state) {

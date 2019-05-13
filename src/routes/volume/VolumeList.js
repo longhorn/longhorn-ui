@@ -12,8 +12,9 @@ import { setSortOrder } from '../../utils/store'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
 import IconBackup from '../../components/Icon/IconBackup'
+import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -30,6 +31,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     createPVAndPVC,
     showWorkloadsStatusDetail,
     showSnapshotDetail,
+    changeVolume,
   }
   /**
    *add dataSource kubernetesStatus fields
@@ -89,9 +91,9 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
-          <div style={{ maxWidth: '200px' }}>
-            <LinkTo to={`/volume/${text}`}>
-              {isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
+          <div style={{ maxWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LinkTo style={{ display: 'flex', alignItems: 'center' }} to={`/volume/${text}`}>
+              {record.standby ? <Tooltip title={'Disaster Recovery Volume'}><div style={{marginRight: '5px', display: 'flex', alignItems: 'center'}}><IconStandBackup/></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
           </div>
         )

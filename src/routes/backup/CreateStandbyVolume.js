@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select } from 'antd'
+import { Form, Input, InputNumber } from 'antd'
 import { ModalBlur } from '../../components'
-import { frontends } from './helper/index'
+import { formatMib } from '../../utils/formater'
 const FormItem = Form.Item
-const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
@@ -39,7 +38,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create Volume',
+    title: 'Create Disaster Recovery Volume',
     visible,
     onCancel,
     onOk: handleOk,
@@ -61,7 +60,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Size" hasFeedback {...formItemLayout}>
           {getFieldDecorator('size', {
-            initialValue: item.size,
+            initialValue: formatMib(item.size),
             rules: [
               {
                 required: true,
@@ -72,8 +71,8 @@ const modal = ({
                     callback()
                     return
                   }
-                  if (value < 0 || value > 65536) {
-                    callback('The value should be between 0 and 65535')
+                  if (value < 1 || value > 65536) {
+                    callback('The value should be between 1 and 65535')
                   } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
                     callback('This value should have at most two decimal places')
                   } else {
@@ -82,8 +81,7 @@ const modal = ({
                 },
               },
             ],
-          })(<InputNumber />)}
-          <span>Gi</span>
+          })(<Input disabled={true}/>)}
         </FormItem>
 
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
@@ -121,21 +119,21 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input />)}
+          })(<Input disabled={true}/>)}
         </FormItem>
-        <FormItem label="Frontend" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('frontend', {
-            initialValue: frontends[0].value,
-            rules: [
-              {
-                required: true,
-                message: 'Please select a frontend',
-              },
-            ],
-          })(<Select>
-          { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
-          </Select>)}
-        </FormItem>
+        <div style={{display: 'none'}}>
+          <FormItem label="Backup Url" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('fromBackup', {
+              initialValue: item.fromBackup,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input Backup Url',
+                },
+              ],
+            })(<Input disabled={true}/>)}
+          </FormItem>
+        </div>
       </Form>
     </ModalBlur>
   )

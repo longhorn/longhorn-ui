@@ -28,9 +28,11 @@ export default {
     }, { call, put }) {
       const data = yield call(query, parse(payload))
       if (payload && payload.field && payload.keyword) {
-        data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword.trim()) > -1)
+        data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }
-      data.data.sort((a, b) => a.image.localeCompare(b.image))
+      if(data.data){
+        data.data.sort((a, b) => a.image.localeCompare(b.image))
+      }
       yield put({ type: 'queryEngineimage', payload: { ...data } })
     },
     *create({

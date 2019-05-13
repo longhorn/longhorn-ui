@@ -3,13 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import BackupVolumeList from './BackupVolumeList'
+import queryString from 'query-string'
 import { addPrefix } from '../../utils/pathnamePrefix'
+import CreateStandbyVolume from './CreateStandbyVolume'
 import { Filter } from '../../components/index'
 import { Row, Col } from 'antd'
 
-function Backup({ backup, loading, dispatch, location }) {
-  location.query = location.query ? location.query : {}
-  const { backupVolumes, sorter, restoreBackupFilterKey } = backup
+function Backup({ backup, loading, setting, dispatch, location }) {
+  location.search = location.search ? location.search : {}
+  const { backupVolumes, sorter, restoreBackupFilterKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size } = backup
   const backupVolumesProps = {
     backup: backupVolumes,
     loading,
@@ -24,14 +26,20 @@ function Backup({ backup, loading, dispatch, location }) {
         routerRedux.push(
           {
             pathname: addPrefix(`/backup/${id}`),
-            query: {
-              ...location.query,
+            search: queryString.stringify({
+              ...queryString.parse(location.search),
               field: 'volumeName',
               keyword: id,
-            },
+            }),
           }
         )
       )
+    },
+    Create(record) {
+      dispatch({
+        type: 'backup/CreateStandVolume',
+        payload: record,
+      })
     },
     sorter,
   }
@@ -50,6 +58,33 @@ function Backup({ backup, loading, dispatch, location }) {
     },
   }
 
+  const settings = setting.data
+  const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
+  const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+  const createVolumeStandModalProps = {
+    item: {
+      numberOfReplicas: defaultNumberOfReplicas,
+      size,
+      iops: 1000,
+      baseImage,
+      fromBackup: lastBackupUrl,
+    },
+    visible: createVolumeStandModalVisible,
+    onOk(newVolume) {
+      let data = Object.assign(newVolume, { standby: true, frontend: '' })
+      data.size = data.size.replace(/\s/ig,'')
+      dispatch({
+        type: 'backup/createVolume',
+        payload: data,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'backup/hideCreateVolumeStandModalVisible',
+      })
+    },
+  }
+
   return (
     <div className="content-inner" >
       <Row gutter={24}>
@@ -59,6 +94,7 @@ function Backup({ backup, loading, dispatch, location }) {
         </Col>
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
+      <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
     </div >
   )
 }
