@@ -2,12 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'antd'
 import { formatMib } from '../../utils/formater'
+import { DropOption } from '../../components'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import moment from 'moment'
 
 
 class List extends React.Component {
+
+  handleMenuClick = (record, e) => {
+    if(e.key === 'recovery') {
+      this.props.Create(record)
+    }
+  }
+
   render() {
     const { backup, loading, sorter, linkToBackup, onSorterChange = f => f } = this.props
     const dataSource = backup || []
@@ -68,6 +76,18 @@ class List extends React.Component {
             </div>
           )
         },
+      },{
+        title: '',
+        key: 'operation',
+        width: 100,
+        render: (text, record) => {
+          return (
+            <DropOption menuOptions={[
+              { key: 'recovery', name: !record.lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: !record.lastBackupName },
+            ]} onMenuClick={e => this.handleMenuClick(record, e)}
+            />
+          )
+        },
       },
     ]
 
@@ -104,6 +124,7 @@ List.propTypes = {
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
   linkToBackup: PropTypes.func,
+  Create: PropTypes.func,
 }
 
 export default List

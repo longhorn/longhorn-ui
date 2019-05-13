@@ -78,3 +78,11 @@ export async function createVolumeAllPVC(namespace, pvcName, url) {
     },
   })
 }
+
+export async function volumeActivate(data, url) {
+  return request({
+    url,
+    method: 'post',
+    data,
+  })
+}

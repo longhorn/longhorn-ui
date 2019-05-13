@@ -8,6 +8,14 @@ export async function query(params) {
   })
 }
 
+export async function createVolume(params) {
+  return request({
+    url: '/v1/volumes',
+    method: 'post',
+    data: params,
+  })
+}
+
 export async function execAction(url, params) {
   return request({
     url,

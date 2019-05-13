@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, createPVAndPVC }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, createPVAndPVC, changeVolume }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -49,6 +49,9 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'pvAndpvcCreate':
         createPVAndPVC(record)
         break
+      case 'changeVolume':
+        changeVolume(record)
+        break
       default:
     }
   }
@@ -75,7 +78,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1 },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' },
   ]
-  const availableActions = [{ key: 'backups', name: 'Backups' }, { key: 'delete', name: 'Delete' }]
+  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby }, { key: 'delete', name: 'Delete', disabled: selected.standby }]
 
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
@@ -85,7 +88,10 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   })
 
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: selected.kubernetesStatus.pvcName })
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: selected.kubernetesStatus.pvcName || selected.standby } )
+  if(selected.standby) {
+    availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby || (selected.state !== 'detached' && selected.state !== 'detaching')})
+  }
   toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
@@ -108,6 +114,7 @@ actions.propTypes = {
   rollback: PropTypes.func,
   showUpdateReplicaCount: PropTypes.func,
   createPVAndPVC: PropTypes.func,
+  changeVolume: PropTypes.func,
 }
 
 export default actions

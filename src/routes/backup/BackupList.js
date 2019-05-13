@@ -140,7 +140,7 @@ class List extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{overflow: 'hidden'}}>
         <Table
           locale={locale}
           bordered={false}

@@ -1,4 +1,4 @@
-import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC } from '../services/volume'
+import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
@@ -32,10 +32,13 @@ export default {
     salvageModalVisible: false,
     nameSpaceDisabled: false,
     pvNameDisabled: false,
+    changeVolumeModalVisible: false,
+    changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
     defaultPVName: '',
     defaultPVCName: '',
+    changeVolumeModalKey: Math.random(),
     createPVAndPVCModalSingleKey: Math.random(),
     WorkloadDetailModalKey: Math.random(),
     SnapshotDetailModalKey: Math.random(),
@@ -143,6 +146,13 @@ export default {
         data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
       })
       yield call(recurringUpdate, data, payload.url)
+      yield put({ type: 'query' })
+    },
+    *volumeActivate({
+      payload,
+    }, { call, put }) {
+      yield call(volumeActivate, {frontend: payload.frontend}, payload.url)
+      yield put({ type: 'hideChangeVolumeModal' })
       yield put({ type: 'query' })
     },
     *actions({
@@ -274,6 +284,12 @@ export default {
         ...state,
         ...data,
       }
+    },
+    showChangeVolumeModal(state, aciton) {
+      return { ...state, changeVolumeActivate: aciton.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
+    },
+    hideChangeVolumeModal(state) {
+      return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
     },
     showCreateVolumeModal(state, action) {
       return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }

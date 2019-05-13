@@ -1,7 +1,9 @@
-import { query, execAction, restore, deleteBackup } from '../services/backup'
+import { query, execAction, restore, deleteBackup, createVolume } from '../services/backup'
 import { parse } from 'qs'
+import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
 import { getSorter, saveSorter } from '../utils/store'
+import { routerRedux } from 'dva/router'
 
 export default {
   namespace: 'backup',
@@ -11,9 +13,14 @@ export default {
     filterText: 'all',
     backupStatus: {},
     currentItem: {},
+    lastBackupUrl: '',
+    baseImage: '',
+    size: '',
     restoreBackupModalVisible: false,
+    createVolumeStandModalVisible: false,
     restoreBackupFilterKey: Math.random(),
     restoreBackupModalKey: Math.random(),
+    createVolumeStandModalKey: Math.random(),
     sorter: getSorter('backupList.sorter'),
   },
   subscriptions: {
@@ -22,7 +29,7 @@ export default {
         if(history.location.pathname.indexOf('backup')> -1){
           dispatch({
             type: 'query',
-            payload: location.query,
+            payload: queryString.parse(location.search),
           })
         }
       })
@@ -69,6 +76,21 @@ export default {
       yield call(deleteBackup, payload)
       yield put({ type: 'query', payload })
     },
+    *createVolume({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreateVolumeStandModalVisible' })
+      yield call(createVolume, payload)
+      yield put(routerRedux.push('/volume')) 
+    },
+    *CreateStandVolume({
+      payload,
+    }, {call, put}) {
+      const data = yield call(execAction, payload.actions.backupList)
+      const found = data.data.find(b => b.name === payload.lastBackupName)
+      yield put({ type: 'initModalUrl', found, payload})
+      yield put({ type: 'showCreateVolumeStandModalVisible' })
+    },
   },
   reducers: {
     queryBackup(state, action) {
@@ -84,6 +106,17 @@ export default {
         backupStatus: action.payload.backupStatus,
       }
     },
+    /** createVolumeStandModalVisible */
+    showCreateVolumeStandModalVisible(state) {
+      return { ...state, createVolumeStandModalVisible: true, createVolumeStandModalKey: Math.random() }
+    },
+    hideCreateVolumeStandModalVisible(state) {
+      return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: Math.random() }
+    },
+    initModalUrl(state, action) {
+      return { ...state, lastBackupUrl: action.found.url, baseImage: action.payload.baseImage, size: action.found.volumeSize }
+    },
+    /** createVolumeStandModalVisible end*/
     showRestoreBackupModal(state, action) {
       return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
     },
