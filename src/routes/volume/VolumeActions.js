@@ -88,7 +88,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   })
 
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: selected.kubernetesStatus.pvcName || selected.standby } )
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.standby } )
   if(selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby || (selected.state !== 'detached' && selected.state !== 'detaching')})
   }

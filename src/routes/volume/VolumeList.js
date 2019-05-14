@@ -264,6 +264,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         simple
         pagination={pagination}
         rowKey={record => record.id}
+        scroll={{ y: 570 }}
       />
     </div>
   )
