@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input } from 'antd'
+import { Form, Input, Progress } from 'antd'
 import { ModalBlur } from '../index'
 const FormItem = Form.Item
 const { TextArea } = Input
@@ -19,6 +19,7 @@ const modal = ({
   onOk,
   okText,
   modalButtonDisabled,
+  progressPercentage,
   form: {
     getFieldDecorator,
     validateFields,
@@ -49,18 +50,25 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <Form layout="horizontal">
-        <FormItem label="Issue URL" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('issueURL', {
-            initialValue: '',
-          })(<Input />)}
-        </FormItem>
-        <FormItem label="Description" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('description', {
-            initialValue: '',
-          })(<TextArea autosize={{ minRows: 6, maxRows: 10 }}/>)}
-        </FormItem>
-      </Form>
+      <div style={{ position: 'relative'}}>
+        <Form layout="horizontal">
+          <FormItem label="Issue URL" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('issueURL', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem label="Description" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('description', {
+              initialValue: '',
+            })(<TextArea autosize={{ minRows: 6, maxRows: 10 }}/>)}
+          </FormItem>
+        </Form>
+        { progressPercentage > 0 ?
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', top: 0, let: 0, right:0, bottom: 0, background: 'rgba(256, 256, 256, 0.9)'}}>
+          <Progress type="circle" strokeWidth={5}  percent={progressPercentage} />
+        </div> : ''
+        }
+      </div>
     </ModalBlur>
   )
 }
