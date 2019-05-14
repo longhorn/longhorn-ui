@@ -81,7 +81,7 @@ class List extends React.Component {
         title: <span style={{ display: 'inline-block', padding: '0 0 0 30px' }}>Status</span>,
         dataIndex: 'conditions.Ready.status',
         key: 'status',
-        width: 160,
+        width: 210,
         className: styles.status,
         sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
         render: (text, record) => {
@@ -233,7 +233,6 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{ y: 570 }}
         />
       </div>
     )

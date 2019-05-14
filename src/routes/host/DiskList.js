@@ -30,9 +30,10 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
     {
       key: 'path',
       dataIndex: 'path',
+      width: 360,
       render: (text) => {
         return (
-          <div className="path">
+          <div className="path" style={{textAlign: 'center'}}>
             <span className="pathLabel">Path: &nbsp;</span>
             <span>{text}</span>
           </div>

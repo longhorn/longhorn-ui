@@ -74,25 +74,37 @@ class List extends React.Component {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
+        width: 300,
         sorter: (a, b) => sortTable(a, b, 'id'),
       }, {
         title: 'Volume',
         dataIndex: 'volumeName',
         key: 'volumeName',
+        width: 200,
       }, {
         title: 'Snaphost Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
         align: 'center',
+        width: 300,
         sorter: (a, b) => sortTable(a, b, 'snapshotName'),
       }, {
         title: 'Base Image',
+        width: 300,
         dataIndex: 'labels.ranchervm-base-image',
         key: 'baseImage',
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
       }, {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
+        width: 120,
         sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text) => {
           return (
@@ -105,6 +117,7 @@ class List extends React.Component {
         title: 'SnapshotCreated',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
+        width: 220,
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (
@@ -114,7 +127,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: '',
+        title: 'Operation',
         key: 'operation',
         width: 100,
         render: (text, record) => {
@@ -151,7 +164,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{ y: 570 }}
+          scroll={{x: 1540, y: 570 }}
         />
       </div>
     )
