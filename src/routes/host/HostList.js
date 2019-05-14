@@ -233,6 +233,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
+          scroll={{ y: 570 }}
         />
       </div>
     )
