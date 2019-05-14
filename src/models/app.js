@@ -13,6 +13,7 @@ export default {
     isNavbar: document.body.clientWidth < 768,
     bundlesropsVisible: false,
     blur: false,
+    progressPercentage: 0,
     bundlesropsKey: Math.random(),
     okText: 'ok',
     modalButtonDisabled : false,
@@ -51,6 +52,7 @@ export default {
         while(dataStepTwo.state !== 'ReadyForDownload') {
           yield call(timeout, 1000)
           dataStepTwo = yield call(getSupportbundlesStepTwo, data.nodeID, {name:data.name})
+          yield put({type: 'startProgressPercentage', payload: dataStepTwo.progressPercentage})
         }
         if(dataStepTwo.state === 'ReadyForDownload'){
           window.location.href=`${dataStepTwo.links.self}/${data.name}/download`
@@ -100,6 +102,7 @@ export default {
         bundlesropsKey: Math.random(),
         modalButtonDisabled: false,
         okText: 'ok',
+        progressPercentage: 0,
       }
     },
     changeOkText(state) {
@@ -113,6 +116,12 @@ export default {
       return {
         ...state,
         menuPopoverVisible: !state.menuPopoverVisible,
+      }
+    },
+    startProgressPercentage(state, action) {
+      return {
+        ...state,
+        progressPercentage: action.payload,
       }
     },
   },

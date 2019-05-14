@@ -10,7 +10,7 @@ import semver from 'semver'
 import BundlesModel from './BundlesModel'
 
 function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch }) {
-  const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled } = app
+  const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueTitle = '*Summarize%20your%20issue%20here*'
   const issueBody = `*Describe%20your%20issue%20here*%0A%0A---%0AVersion%3A%20\`${currentVersion}\``
@@ -48,6 +48,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
     visible: bundlesropsVisible,
     okText,
     modalButtonDisabled,
+    progressPercentage,
     onOk(data) {
       dispatch({
         type: 'app/changeOkText',
