@@ -36,12 +36,21 @@ class List extends React.Component {
         },
       }, {
         title: 'Base Image',
-        dataIndex: 'labels.ranchervm-base-image',
+        dataIndex: 'baseImage',
         key: 'baseImage',
+        width: 200,
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
       }, {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
+        width: 100,
         sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text) => {
           return (
@@ -54,6 +63,7 @@ class List extends React.Component {
         title: ' Last Backup At',
         dataIndex: 'lastBackupAt',
         key: 'lastBackupAt',
+        width: 200,
         sorter: (a, b) => sortTable(a, b, 'lastBackupAt'),
         render: (text) => {
           return (
@@ -68,6 +78,7 @@ class List extends React.Component {
         dataIndex: 'created',
         key: 'created',
         align: 'center',
+        width: 200,
         sorter: (a, b) => sortTable(a, b, 'created'),
         render: (text) => {
           return (
@@ -77,9 +88,9 @@ class List extends React.Component {
           )
         },
       },{
-        title: '',
+        title: 'Operation',
         key: 'operation',
-        width: 100,
+        width: 120,
         render: (text, record) => {
           return (
             <DropOption menuOptions={[
@@ -112,7 +123,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{ y: 570 }}
+          scroll={{x: 1020, y: 570 }}
         />
       </div>
     )

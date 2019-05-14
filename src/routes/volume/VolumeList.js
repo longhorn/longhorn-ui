@@ -50,7 +50,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 100,
+      width: 140,
+      fixed: 'left',
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         let upgrade = null
@@ -88,6 +89,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'id',
       key: 'id',
       width: 200,
+      fixed: 'left',
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
@@ -103,7 +105,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 80,
+      width: 150,
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text) => {
         return (
@@ -117,7 +119,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
-      width: 140,
+      width: 200,
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
@@ -167,6 +169,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Namespace',
       dataIndex: 'kubernetesStatus',
       key: 'namespace',
+      width: 200,
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
@@ -181,7 +184,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       dataIndex: 'WorloadNameAndPodName',
       key: 'WorloadNameAndPodName',
       sorter: (a, b) => sortTable(a, b, 'WorloadName'),
-      width: 200,
       render: (text, record) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
         const ele = text.podList.length ? text.podList.map((item, index) => {
@@ -200,6 +202,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     {
       title: <div><div>Schedule</div></div>,
       key: 'recurringJobs',
+      width: 135,
       render: (text) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
         let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
@@ -236,9 +239,10 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       },
     },
     {
-      title: '',
+      title: 'Operation',
       key: 'operation',
-      width: 62,
+      width: 120,
+      fixed : 'right',
       render: (text, record) => {
         return (
           <VolumeActions {...volumeActionsProps} selected={record} />
@@ -264,7 +268,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         simple
         pagination={pagination}
         rowKey={record => record.id}
-        scroll={{ y: 570 }}
+        scroll={{ x: 1850, y: 570 }}
       />
     </div>
   )
