@@ -48,7 +48,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   */
   const hasMoreOptions = () => engineImages.findIndex(engineImage => engineImage.state === 'ready' && selectedRows.findIndex(item => item.engineImage === engineImage.image) === -1) === -1
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 || isHasStandy() } },
+    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || !hasAction('attach') || hasDoingState() } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState(['attaching']) } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() } },

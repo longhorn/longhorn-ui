@@ -36,6 +36,12 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
   /**
    *add dataSource kubernetesStatus fields
    */
+  const volumeRestoring = (volume) => {
+    if(volume.controllers && volume.controllers[0]){
+      return volume.standby === true && ((volume.lastBackup !== '' && volume.lastBackup !== volume.controllers[0].lastRestoredBackup) || (volume.lastBackup === '' && volume.controllers[0].requestedBackupRestore !== volume.controllers[0].lastRestoredBackup ))
+    }
+  }
+
   dataSource.forEach((ele) => {
     ele.WorloadNameAndPodName = {
       podList: ele.kubernetesStatus.workloadsStatus ? ele.kubernetesStatus.workloadsStatus : [],
@@ -93,7 +99,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         return (
           <div style={{ maxWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <LinkTo style={{ display: 'flex', alignItems: 'center' }} to={`/volume/${text}`}>
-              {record.standby ? <Tooltip title={'Disaster Recovery Volume'}><div style={{marginRight: '5px', display: 'flex', alignItems: 'center'}}><IconStandBackup/></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
+              {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume' }><div style={{marginRight: '5px', display: 'flex', alignItems: 'center'}}><IconStandBackup fill={ volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'}/></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
           </div>
         )
