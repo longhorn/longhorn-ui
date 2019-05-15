@@ -124,11 +124,11 @@ class Volume extends React.Component {
       showBackups(record) {
         dispatch(routerRedux.push({
           pathname: addPrefix(`/backup/${record.name}`),
-          query: {
-            ...queryString.parse(this.props.location.search),
+          search: queryString.stringify({
+            ...queryString.parse(location.search),
             field: 'volumeName',
             keyword: record.name,
-          },
+          }),
         }))
       },
       showSalvage(record) {

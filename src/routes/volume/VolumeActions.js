@@ -78,7 +78,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1 },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' },
   ]
-  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby }, { key: 'delete', name: 'Delete', disabled: selected.standby }]
+  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby }, { key: 'delete', name: 'Delete' }]
 
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
@@ -90,7 +90,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
 
   availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.standby } )
   if(selected.standby) {
-    availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby || (selected.state !== 'detached' && selected.state !== 'detaching')})
+    availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
   toggleRollbackAndUpgradeAction(availableActions)
   return (

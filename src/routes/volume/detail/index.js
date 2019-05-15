@@ -5,6 +5,7 @@ import VolumeInfo from './VolumeInfo'
 import { Row, Col, Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import VolumeActions from '../VolumeActions'
+import queryString from 'query-string'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import EngineUpgrade from '../EngineUpgrade'
@@ -132,11 +133,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
     showBackups(record) {
       dispatch(routerRedux.push({
-        pathname: addPrefix('/backup'),
-        query: {
+        pathname: addPrefix(`/backup/${record.name}`),
+        search: queryString.stringify({
           field: 'volumeName',
           keyword: record.name,
-        },
+        }),
       }))
     },
     showSalvage(record) {
