@@ -15,7 +15,7 @@ export default {
     blur: false,
     progressPercentage: 0,
     bundlesropsKey: Math.random(),
-    okText: 'ok',
+    okText: 'OK',
     modalButtonDisabled : false,
   },
   subscriptions: {
@@ -101,7 +101,7 @@ export default {
         bundlesropsVisible: false,
         bundlesropsKey: Math.random(),
         modalButtonDisabled: false,
-        okText: 'ok',
+        okText: 'OK',
         progressPercentage: 0,
       }
     },
