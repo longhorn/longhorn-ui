@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
 import style from './VolumeBulkActions.less'
+import { backupProgressModal } from '../../utils/backup'
 
 const confirm = Modal.confirm
 
@@ -31,6 +32,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         })
         break
       case 'backup':
+        backupProgressModal()
         bulkBackup(selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }))
         break
       case 'createPVAndPVC':
