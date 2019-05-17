@@ -143,7 +143,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
           <div><span>PV Status</span><span>: </span><span >{text.pvStatus}</span></div>
           { text.lastPVCRefAt ? <div><span >Last time bound with PVC</span><span> : </span><span >{moment(new Date(text.lastPVCRefAt)).fromNow()}</span></div> : ''}
-          { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last' : ''} PVC Name</span><span>: </span><span >{text.pvcName}</span></div> : ''}
+          { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span >{text.pvcName}</span></div> : ''}
         </div>)
         let content = (() => {
           if (!text.pvName) {
@@ -177,9 +177,11 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
-            <div style={{ minWidth: 100 }}>
-              {text.namespace}
+          <Tooltip placement="top" title={ text.lastPVCRefAt ? 'Last Namespace' : ''}>
+            <div style={text.lastPVCRefAt ? { background: 'rgba(241, 196, 15, 0.1)', minWidth: 100 } : { minWidth: 100 }}>
+              <div>{ text.namespace }</div>
             </div>
+          </Tooltip>
         )
       },
     },
