@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
+import queryString from 'query-string'
 
 function Backup({ host, backup, setting, loading, location, dispatch }) {
   const { data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter } = backup
@@ -48,7 +49,7 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
           volumeName: record.volumeName,
           name: record.name,
           listUrl,
-          ...location.query,
+          ...queryString.parse(location.search),
         },
       })
     },
