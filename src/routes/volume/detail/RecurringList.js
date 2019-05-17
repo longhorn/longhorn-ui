@@ -178,10 +178,14 @@ class RecurringList extends React.Component {
     this.setState({
       ...this.state,
       currentRecord: record,
-      modalOpts: {
-        visible: true,
-      },
-      ReactCronKey: Math.random(),
+    },() =>{
+      this.setState({
+        ...this.state,
+        modalOpts: {
+          visible: true,
+        },
+        ReactCronKey: Math.random(),
+      })
     })
   }
 
@@ -331,7 +335,7 @@ class RecurringList extends React.Component {
           </div>
         </div>
         <ModalBlur {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
-          <ReactCron key={this.state.ReactCronKey} changeCron={this.changeCron}/>
+          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} changeCron={this.changeCron}/>
         </ModalBlur>
       </Card>
     )
