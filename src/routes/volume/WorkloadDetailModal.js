@@ -25,9 +25,9 @@ const modal = ({
         <Card key={index} style={{ width: 260, margin: '5px' }}>
           <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {moment(new Date(item.lastPodRefAt)).fromNow()}</div> : ''}</div>
           <div> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Name</b> : {ele.workloadName}</div>
-          <div style={{ marginTop: '10px' }}> <b>Workload Type</b> : {ele.workloadType}</div>
+          <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Type</b> : {ele.workloadType}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Name</b> : {ele.podName}</div>
-          {!item.lastPodRefAt ? <div style={{ marginTop: '10px' }}> <b>Pod Status</b> : {ele.podStatus}</div> : ''}
+          {!item.lastPodRefAt ? <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Status</b> : {ele.podStatus}</div> : ''}
         </Card>
       )
     })
