@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, Modal } from 'antd'
+import { Card, Modal, Tooltip } from 'antd'
 import { DropOption } from '../../components'
 import diskHealthyImage from '../../assets/images/disk-healthy.png'
 import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
@@ -77,11 +77,12 @@ class Replica extends React.Component {
           </div>
           <div style={{ textAlign: 'center', marginTop: 20 }}>
             <h3>{(host && host.name) || 'N/A'}</h3>
-            <p style={{ color: 'gray' }}>Host</p>
+            <p style={{ color: 'gray' }}>Node</p>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h3>{(host && host.disks && host.disks[item.diskID] && host.disks[item.diskID].path) || 'N/A'}</h3>
-            <p style={{ color: 'gray' }}>Path</p>
+            <Tooltip title={(item && item.dataPath) || 'N/A'}>
+              <h3>{(host && host.disks && host.disks[item.diskID] && host.disks[item.diskID].path) || 'N/A'}</h3>
+            </Tooltip>
           </div>
           <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>
             {item.running ? 'Running' : 'Stopped'}
