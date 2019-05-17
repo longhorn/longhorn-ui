@@ -14,6 +14,7 @@ class ReactCron extends React.Component {
     this.state = {
       prettyCronText: '',
       secondText: '*',
+      cornText: '',
       second:{
         cronEvery: '1',
         incrementStart: 3,
@@ -82,10 +83,11 @@ class ReactCron extends React.Component {
     }
   }
   componentDidMount() {
-    let cornText = `${this.state.minutesText} ${this.state.hourText} ${this.state.dayText} ${this.state.monthText} ${this.state.weekText}`
-    let prettyCronText = prettyCron.toString(`${this.state.minutesText} ${this.state.hourText} ${this.state.dayText} ${this.state.monthText} ${this.state.weekText}`)
+    let cornText = this.props.cron ? this.props.cron : `${this.state.minutesText} ${this.state.hourText} ${this.state.dayText} ${this.state.monthText} ${this.state.weekText}`
+    let prettyCronText = prettyCron.toString(cornText)
     this.setState({
       ...this.state,
+      cornText,
       prettyCronText,
     }, () => {
       this.props.changeCron(cornText)
@@ -97,6 +99,7 @@ class ReactCron extends React.Component {
     let prettyCronText = prettyCron.toString(`${this.state.minutesText} ${this.state.hourText} ${this.state.dayText} ${this.state.monthText} ${this.state.weekText}`)
     this.setState({
       ...this.state,
+      cornText,
       prettyCronText,
     }, () => {
       this.props.changeCron(cornText)
@@ -619,6 +622,7 @@ class ReactCron extends React.Component {
     if(e.target.value) {
       this.setState({
         ...this.state,
+        cornText: e.target.value,
         prettyCronText: prettyCron.toString(e.target.value),
       }, () => {
         this.props.changeCron(e.target.value)
@@ -670,8 +674,16 @@ class ReactCron extends React.Component {
     return (
       <div>
         <Tabs onChange={this.callback} type="card">
+          <TabPane tab="Cron" key="Cron">
+            <div style={{minHeight: '160px'}}>
+              <div style={{width: '60%', display: 'flex', alignItems: 'center'}}>
+                <label style={{fontSize: '18px', marginRight: '10px'}}>Cron</label>
+                <Input placeholder="Cron" value={this.state.cornText} defaultValue={this.state.cornText} onChange={this.CronInputChange} />
+              </div>
+            </div>
+          </TabPane>
           <TabPane tab="Minutes" key="Minutes">
-            <RadioGroup defaultValue={1} onChange={this.minutesOnChange}>
+            <RadioGroup onChange={this.minutesOnChange}>
               <Row>
                 <Col className={style.cronClo} span={24}>
                   <Radio value={1}>Every minutes</Radio>
@@ -712,7 +724,7 @@ class ReactCron extends React.Component {
             </RadioGroup>
           </TabPane>
           <TabPane tab="Hours" key="Hours">
-            <RadioGroup defaultValue={1} onChange={this.hourOnChange}>
+            <RadioGroup onChange={this.hourOnChange}>
               <Row>
                 <Col className={style.cronClo} span={24}>
                   <Radio value={1}>Every hour</Radio>
@@ -753,7 +765,7 @@ class ReactCron extends React.Component {
             </RadioGroup>
           </TabPane>
           <TabPane tab="Day" key="Day">
-            <RadioGroup defaultValue={1} onChange={this.dayOnChange}>
+            <RadioGroup onChange={this.dayOnChange}>
               <Row>
                 <Col className={style.cronClo} span={24}>
                   <Radio value={1}>Every day</Radio>
@@ -864,7 +876,7 @@ class ReactCron extends React.Component {
             </RadioGroup>
           </TabPane>
           <TabPane tab="Month" key="Month">
-            <RadioGroup defaultValue={1} onChange={this.monthOnChange}>
+            <RadioGroup onChange={this.monthOnChange}>
               <Row>
                 <Col className={style.cronClo} span={24}>
                   <Radio value={1}>Every month</Radio>
@@ -903,14 +915,6 @@ class ReactCron extends React.Component {
                 </Col>
               </Row>
             </RadioGroup>
-          </TabPane>
-          <TabPane tab="Cron" key="Cron">
-            <div style={{minHeight: '160px'}}>
-              <div style={{width: '60%', display: 'flex', alignItems: 'center'}}>
-                <label style={{fontSize: '18px', marginRight: '10px'}}>Cron</label>
-                <Input placeholder="Cron" defaultValue={'* * * * *'} onChange={this.CronInputChange} />
-              </div>
-            </div>
           </TabPane>
         </Tabs>
         <div style={{padding: '10px', background: '#ebf2f6'}}>
