@@ -4,6 +4,7 @@ import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
 import { getSorter, saveSorter } from '../utils/store'
 import { routerRedux } from 'dva/router'
+import { addPrefix } from '../utils/pathnamePrefix'
 
 export default {
   namespace: 'backup',
@@ -81,7 +82,9 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideCreateVolumeStandModalVisible' })
       yield call(createVolume, payload)
-      yield put(routerRedux.push('/volume')) 
+      yield put(routerRedux.push({
+        pathname: addPrefix('/volume'),
+      })) 
     },
     *CreateStandVolume({
       payload,
