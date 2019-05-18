@@ -108,7 +108,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           Scheduling
         </div>
         <div className={styles.control} style={{ width: '210px' }}>
-          <FormItem style={{ margin: 0 }}>
+          <FormItem style={{ margin: "3px 0px 0px 0px" }}>
             {getFieldDecorator(`disks['${disk.id}']['allowScheduling']`, {
               initialValue: disk.allowScheduling,
             })(
