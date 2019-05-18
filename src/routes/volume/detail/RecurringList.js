@@ -5,8 +5,8 @@ import { ReactCron } from  '../../../components'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
 import { ModalBlur } from '../../../components'
+import { Schedule } from '../../../components'
 import styles from './index.less'
-import prettyCron from '../../../utils/prettycron'
 
 const Option = Select.Option
 
@@ -254,20 +254,9 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
-        render: (text) => {
+        render: (text, record) => {
           return (
-            <span>{prettyCron.toString(text.cron)}</span>
-          )
-        },
-      },
-      {
-        title: 'Edit Cron',
-        key: 'cron',
-        render: (record) => {
-          return (
-            <div>
-              <Button type="default" disabled={!this.state.editing} onClick={() => {this.editCron(record)}} >Edit</Button>
-            </div>
+            <Schedule cron={record.cron} editing={this.state.editing && !record.deleted} onChange={(newCron) => this.onScheduleChange(record, newCron)} />
           )
         },
       },
