@@ -5,6 +5,7 @@ import { parse } from 'qs'
 import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
+import { addPrefix } from '../utils/pathnamePrefix'
 
 export default {
   namespace: 'volume',
@@ -135,7 +136,9 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteVolume, payload)
-      yield put(routerRedux.push('/volume')) 
+      yield put(routerRedux.push({
+        pathname: addPrefix('/volume'),
+      }))
     },
     *deleteReplicas({
       replicas,
