@@ -1,5 +1,6 @@
 import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
 import { message } from 'antd'
+import { addPrefix } from '../utils/pathnamePrefix'
 
 message.config({
   top: 60,
@@ -55,7 +56,12 @@ export default {
           yield put({type: 'startProgressPercentage', payload: dataStepTwo.progressPercentage})
         }
         if(dataStepTwo.state === 'ReadyForDownload'){
-          window.location.href=`${dataStepTwo.links.self}/${data.name}/download`
+          let path = addPrefix('')
+          if(path) {
+            window.location.href = `v1/supportbundles/${data.id}/${data.name}/download`
+          }else{
+            window.location.href = `${dataStepTwo.links.self}/${data.name}/download`
+          }
         }else{
           message.error('Download failed support bundle creation is still in progress')
         }
