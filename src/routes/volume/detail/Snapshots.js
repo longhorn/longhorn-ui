@@ -144,20 +144,21 @@ class Snapshots extends React.Component {
     const SnapshotGen = () => {
       return (<Snapshot {...treeProps} onAction={this.onAction} />)
     }
+
     return (
       <Spin spinning={this.props.loading}>
       <Card title={<div className={styles.header}>
         <div>Snapshots</div>
         <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
-              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state)}
+              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby}
                 icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
                 Take Snapshot
               </Button>
             </Tooltip>
             &nbsp;
             <Tooltip placement="top" title="Create a new snapshot and then create a backup of the snapshot.">
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
                 Create Backup
               </Button>
             </Tooltip>

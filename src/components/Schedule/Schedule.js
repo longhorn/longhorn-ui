@@ -128,7 +128,7 @@ class Schedule extends React.Component {
         <span style={{ marginRight: '10px' }}>
           Every
         </span>
-        <Select disabled={!editing} value={scheduleType} style={{ width: 90 }} onChange={(value) => this.onChange(value, 'scheduleType')}>
+        <Select disabled={!editing} value={scheduleType} style={{ width: 120 }} onChange={(value) => this.onChange(value, 'scheduleType')}>
           <Option value="minute">minute</Option>
           <Option value="hour">hour</Option>
           <Option value="day">day</Option>
