@@ -82,7 +82,7 @@ class List extends React.Component {
         key: 'volumeName',
         width: 200,
       }, {
-        title: 'Snaphost Name',
+        title: 'Snapshot Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
         align: 'center',
