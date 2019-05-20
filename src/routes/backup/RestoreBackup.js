@@ -66,7 +66,7 @@ const modal = ({
                 message: 'Please input the number of replicas',
               },
             ],
-          })(<InputNumber min={2} />)}
+          })(<InputNumber min={1} />)}
         </FormItem>
       </Form>
     </ModalBlur>
