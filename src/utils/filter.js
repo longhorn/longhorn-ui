@@ -113,6 +113,9 @@ export function filterVolume(data, field, value) {
     }
     return data
   }
+  if (field === 'namespace') {
+    return data.filter(item => item.kubernetesStatus.namespace.indexOf(value) > -1)
+  }
   return filterData(data, field, value)
 }
 

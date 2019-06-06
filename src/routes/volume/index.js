@@ -51,6 +51,8 @@ class Volume extends React.Component {
       } else if (engineImageUpgradableValue === 'no') {
         volumes = volumes.filter(item => !isVolumeImageUpgradable(item, defaultImage))
       }
+    } else if (field && field === 'namespace' && value) {
+      volumes = filterVolume(volumes, field, value)
     } else if (field && field === 'replicaNodeRedundancy' && nodeRedundancyValue) {
       volumes = filterVolume(volumes, field, nodeRedundancyValue)
     } else if (field && value && field !== 'status' && field !== 'engineImageUpgradable' && field !== 'replicaNodeRedundancy') {
@@ -217,6 +219,7 @@ class Volume extends React.Component {
         { value: 'name', name: 'Name' },
         { value: 'host', name: 'Node' },
         { value: 'status', name: 'Status' },
+        { value: 'namespace', name: 'Namespace' },
         { value: 'replicaNodeRedundancy', name: 'Node redundancy' },
         { value: 'engineImageUpgradable', name: 'Engine image upgradable' },
       ],
