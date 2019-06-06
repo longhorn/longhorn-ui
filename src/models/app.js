@@ -58,7 +58,7 @@ export default {
         if(dataStepTwo.state === 'ReadyForDownload'){
           let path = addPrefix('')
           if(path) {
-            window.location.href = `v1/supportbundles/${data.id}/${data.name}/download`
+            window.location.href = `${path}v1/supportbundles/${data.id}/${data.name}/download`
           }else{
             window.location.href = `${dataStepTwo.links.self}/${data.name}/download`
           }
