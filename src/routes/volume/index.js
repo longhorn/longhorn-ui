@@ -497,10 +497,10 @@ class Volume extends React.Component {
     return (
       <div className="content-inner" >
         <Row gutter={24}>
-          <Col lg={18} md={16} sm={24} xs={24}>
+          <Col lg={17} md={15} sm={24} xs={24}>
             <VolumeBulkActions {...volumeBulkActionsProps} />
           </Col>
-          <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
+          <Col lg={7} md={9} sm={24} xs={24} style={{ marginBottom: 16 }}>
             <Filter {...volumeFilterProps} />
           </Col>
         </Row>
