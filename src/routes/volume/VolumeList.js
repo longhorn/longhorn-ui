@@ -56,7 +56,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 120,
+      width: '130px',
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         let upgrade = null
@@ -93,7 +93,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      width: 220,
+      width: '15.2%',
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
@@ -109,7 +109,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 90,
+      width: '6.25%',
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text) => {
         return (
@@ -123,7 +123,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
-      width: 140,
+      width: '9.72%',
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
@@ -137,7 +137,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: <div>PV/PVC</div>,
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
-      width: 110,
+      width: '7.63%',
       render: (text) => {
         let title = (<div>
           <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
@@ -173,7 +173,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Namespace',
       dataIndex: 'kubernetesStatus',
       key: 'namespace',
-      width: 140,
+      width: '9.72%',
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
@@ -189,7 +189,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Attached To',
       dataIndex: 'WorloadNameAndPodName',
       key: 'WorloadNameAndPodName',
-      width: 180,
+      width: '12.5%',
       sorter: (a, b) => sortTable(a, b, 'WorloadName'),
       render: (text, record) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
@@ -209,7 +209,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     {
       title: <div><div>Schedule</div></div>,
       key: 'recurringJobs',
-      width: 135,
+      width: '9.375%',
       render: (text) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
         let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
@@ -234,12 +234,11 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
-      width: 160,
       sorter: (a, b) => sortTableByISODate(a, b, 'lastBackupAt'),
       render: (text) => {
         let lastTime = text ? moment(text).fromNow() : ''
         return (
-          <div style={{ minWidth: '130px' }}>
+          <div>
             {lastTime}
           </div>
         )
@@ -248,7 +247,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     {
       title: 'Operation',
       key: 'operation',
-      width: 120,
+      width: '110px',
+      fixed: 'right',
       render: (text, record) => {
         return (
           <VolumeActions {...volumeActionsProps} selected={record} />
