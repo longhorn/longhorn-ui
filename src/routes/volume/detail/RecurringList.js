@@ -5,7 +5,7 @@ import { ReactCron } from '../../../components'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
 import { ModalBlur } from '../../../components'
-import { Schedule } from '../../../components'
+import prettyCron from '../../../utils/prettycron'
 import styles from './index.less'
 
 const Option = Select.Option
@@ -24,6 +24,7 @@ class RecurringList extends React.Component {
       },
       ReactCronKey: Math.random(),
       Faulted: false,
+      modulerCronDisabled: false,
     }
   }
 
@@ -229,10 +230,18 @@ class RecurringList extends React.Component {
     }
   }
 
-  changeCron = (cron) => {
+  changeCron = ( cron ) => {
     this.setState({
       ...this.state,
       currentCron: cron,
+      modulerCronDisabled: false,
+    })
+  }
+
+  saveDisabled = ( ) => {
+    this.setState({
+      ...this.state,
+      modulerCronDisabled: true,
     })
   }
 
@@ -258,9 +267,20 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
-        render: (text, record) => {
+        render: (text) => {
           return (
-            <Schedule cron={record.cron} editing={this.state.editing && !record.deleted} onChange={(newCron) => this.onScheduleChange(record, newCron)} />
+            <span>{prettyCron.toString(text.cron)}</span>
+          )
+        },
+      },
+      {
+        title: 'Edit Cron',
+        key: 'cron',
+        render: (record) => {
+          return (
+            <div>
+              <Button type="default" disabled={!this.state.editing} onClick={() => {this.editCron(record)}} >Edit</Button>
+            </div>
           )
         },
       },
@@ -326,8 +346,8 @@ class RecurringList extends React.Component {
             </div>}
           </div>
         </div>
-        <ModalBlur {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
-          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} changeCron={this.changeCron} />
+        <ModalBlur disabled={this.state.modulerCronDisabled} {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
+          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} saveDisabled={this.saveDisabled} changeCron={this.changeCron}/>
         </ModalBlur>
       </Card>
     )

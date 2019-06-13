@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tabs, Row, Col, Radio, InputNumber, Select, Input } from 'antd'
 import prettyCron from '../../utils/prettycron'
+import cronValidate from '../../utils/cronValidate'
 import PropTypes from 'prop-types'
 import style from './ReactCron.less'
 
@@ -15,6 +16,7 @@ class ReactCron extends React.Component {
       prettyCronText: '',
       secondText: '*',
       cornText: '',
+      cornFormat: false,
       second:{
         cronEvery: '1',
         incrementStart: 3,
@@ -90,7 +92,19 @@ class ReactCron extends React.Component {
       cornText,
       prettyCronText,
     }, () => {
-      this.props.changeCron(cornText)
+      if( !cronValidate(cornText) ) {
+        this.setState({
+          ...this.state,
+          cornFormat: true,
+        })
+        this.props.saveDisabled()
+      } else {
+        this.setState({
+          ...this.state,
+          cornFormat: false,
+        })
+        this.props.changeCron(cornText)
+      }
     })
   }
 
@@ -102,7 +116,19 @@ class ReactCron extends React.Component {
       cornText,
       prettyCronText,
     }, () => {
-      this.props.changeCron(cornText)
+      if( !cronValidate(cornText) ) {
+        this.setState({
+          ...this.state,
+          cornFormat: true,
+        })
+        this.props.saveDisabled()
+      } else {
+        this.setState({
+          ...this.state,
+          cornFormat: false,
+        })
+        this.props.changeCron(cornText)
+      }
     })
   }
   /*second*/
@@ -186,7 +212,7 @@ class ReactCron extends React.Component {
         })
         break
       case '2':
-        minutes = this.state.minutes.incrementStart+'/'+this.state.minutes.incrementIncrement
+        minutes = this.state.minutes.incrementIncrement + '/' + this.state.minutes.incrementStart
         this.setState({
           ...this.state,
           minutesText: minutes,
@@ -212,7 +238,7 @@ class ReactCron extends React.Component {
         })
         break
       case '4':
-        minutes = this.state.minutes.rangeStart+'-'+this.state.minutes.rangeEnd
+        minutes = this.state.minutes.rangeStart + '-' + this.state.minutes.rangeEnd
         this.setState({
           ...this.state,
           minutesText: minutes,
@@ -255,7 +281,7 @@ class ReactCron extends React.Component {
         })
         break
       case '2':
-        hour = this.state.hour.incrementStart+'/'+this.state.hour.incrementIncrement
+        hour = this.state.hour.incrementIncrement + '/' + this.state.hour.incrementStart
         this.setState({
           ...this.state,
           hourText: hour,
@@ -281,7 +307,7 @@ class ReactCron extends React.Component {
         })
         break
       case '4':
-        hour = this.state.hour.rangeStart+'-'+this.state.hour.rangeEnd
+        hour = this.state.hour.rangeStart + '-' + this.state.hour.rangeEnd
         this.setState({
           ...this.state,
           hourText: hour,
@@ -503,7 +529,7 @@ class ReactCron extends React.Component {
         })
         break
       case '2':
-        month = this.state.month.incrementStart+'/'+this.state.month.incrementIncrement
+        month = this.state.month.incrementIncrement + '/' + this.state.month.incrementStart
         this.setState({
           ...this.state,
           monthText: month,
@@ -529,7 +555,7 @@ class ReactCron extends React.Component {
         })
         break
       case '4':
-        month = this.state.month.rangeStart+'-'+this.state.month.rangeEnd
+        month = this.state.month.rangeStart + '-' + this.state.month.rangeEnd
         this.setState({
           ...this.state,
           monthText: month,
@@ -570,7 +596,7 @@ class ReactCron extends React.Component {
         })
         break
       case '2':
-        year = this.state.year.incrementStart+'/'+this.state.year.incrementIncrement
+        year = this.state.year.incrementStart + '/' + this.state.year.incrementIncrement
         this.setState({
           ...this.state,
           yearText: year,
@@ -592,7 +618,7 @@ class ReactCron extends React.Component {
         })
         break
       case '4':
-        year = this.state.year.rangeStart+'-'+this.state.year.rangeEnd
+        year = this.state.year.rangeStart + '-' + this.state.year.rangeEnd
         this.setState({
           ...this.state,
           yearText: year,
@@ -625,7 +651,19 @@ class ReactCron extends React.Component {
         cornText: e.target.value,
         prettyCronText: prettyCron.toString(e.target.value),
       }, () => {
-        this.props.changeCron(e.target.value)
+        if( !cronValidate(e.target.value) ) {
+          this.setState({
+            ...this.state,
+            cornFormat: true,
+          })
+          this.props.saveDisabled()
+        } else {
+          this.setState({
+            ...this.state,
+            cornFormat: false,
+          })
+          this.props.changeCron(e.target.value)
+        }
       })
     }
   }
@@ -850,13 +888,13 @@ class ReactCron extends React.Component {
                     day(s) before the end of the month
                   </Radio>
                 </Col> */}
-                <Col className={style.cronClo} span={24}>
+                {/* <Col className={style.cronClo} span={24}>
                   <Radio value={10}>
                     Nearest weekday (Monday to Friday) to the
                     <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '10')} defaultValue={this.state.day.cronDaysNearestWeekday} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysNearestWeekday: val, dayText: this.state.day.cronEvery === '10' ? `${val}W` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
                     of the month
                   </Radio>
-                </Col>
+                </Col> */}
                 {/* <Col span={24}>
                   <Radio value={11}>
                     On the
@@ -917,9 +955,14 @@ class ReactCron extends React.Component {
             </RadioGroup>
           </TabPane>
         </Tabs>
-        <div style={{padding: '10px', background: '#ebf2f6'}}>
-          <span>{this.state.prettyCronText}</span>
-        </div>
+        { this.state.cornFormat ? 
+          <div style={{padding: '10px', background: 'rgba(212, 75, 10, 0.2)'}}>
+            <span>Cron expression format error</span>
+          </div> : 
+          <div style={{padding: '10px', background: '#ebf2f6'}}>
+            <span>{this.state.prettyCronText}</span>
+          </div>
+        }
       </div>
     )
   }
