@@ -18,104 +18,51 @@ import { addPrefix } from './utils/pathnamePrefix'
 const Routers = function ({ history, app }) {
   const App = dynamic({
     app,
-    models: () => [
-      import('./models/host.js'),
-      import('./models/volume.js'),
-      import('./models/setting.js'),
-      import('./models/eventlog.js'),
-      import('./models/engineimage.js'),
-      import('./models/backup.js'),
-    ],
     component: () => appComponent,
   })
 
   const dashboard = dynamic({
     app,
-    models: () => [
-      import('./models/host.js'),
-      import('./models/volume.js'),
-      import('./models/setting.js'),
-      import('./models/eventlog.js'),
-    ],
     component: () => dashboardComponent,
   })
 
   const node = dynamic({
     app,
-    models: [
-      import('./models/host.js'),
-      import('./models/volume.js'),
-      import('./models/setting.js'),
-    ],
     component: () => nodeComponent,
   })
 
   const volume = dynamic({
     app,
-    models: [
-      import('./models/host.js'),
-      import('./models/engineimage.js'),
-      import('./models/volume.js'),
-      import('./models/setting.js'),
-    ],
     component: () => volumeComponent,
   })
 
   const volumeDetail = dynamic({
     app,
-    models: [
-      import('./models/host.js'),
-      import('./models/engineimage.js'),
-      import('./models/volume.js'),
-      import('./models/setting.js'),
-      import('./models/backup.js'),
-    ],
     component: () => volumeDetailComponent,
   })
 
   const backup = dynamic({
     app,
-    models: [
-      import('./models/host.js'),
-      import('./models/backup.js'),
-      import('./models/setting.js'),
-    ],
     component: () => backupComponent,
   })
 
   const backupDetail = dynamic({
     app,
-    models: [
-      import('./models/host.js'),
-      import('./models/backup.js'),
-      import('./models/setting.js'),
-    ],
     component: () => backupDetailComponent,
   })
 
   const setting = dynamic({
     app,
-    models: [
-      import('./models/setting.js'),
-    ],
     component: () => settingComponent,
   })
 
   const engineimage = dynamic({
     app,
-    models: [
-      import('./models/setting.js'),
-      import('./models/engineimage.js'),
-    ],
     component: () => engineimageComponent,
   })
 
   const engineimageDetail = dynamic({
     app,
-    models: [
-      import('./models/setting.js'),
-      import('./models/engineimage.js'),
-    ],
     component: () => engineimageDetailComponent,
   })
 
