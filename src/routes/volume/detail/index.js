@@ -291,7 +291,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   }
 
   return (
-    <div >
+    <div style={{overflowY: 'auto', overflowX: 'hidden', height: '100%'}}>
       <Row gutter={24}>
         <Col md={{ offset: 16, span: 8 }} style={{ marginBottom: 16, textAlign: 'right' }}>
           <VolumeActions {...volumeActionsProps} selected={selectedVolume} />
