@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange, height = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -32,6 +32,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     showWorkloadsStatusDetail,
     showSnapshotDetail,
     changeVolume,
+    height,
   }
   /**
    *add dataSource kubernetesStatus fields
@@ -262,8 +263,9 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     onSorterChange(s)
   }
   setSortOrder(columns, sorter)
+
   return (
-    <div style={{ overflow: 'hidden' }}>
+    <div id='volumeTable' style={{ flex: 1 , height: '1px', overflow: 'hidden'}}>
       <Table
         rowSelection={rowSelection}
         bordered={false}
@@ -274,7 +276,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         simple
         pagination={pagination}
         rowKey={record => record.id}
-        scroll={{ x: 1440, y: 570 }}
+        height= {'100%'}
+        scroll={{ x: 1440, y: height }}
       />
     </div>
   )
