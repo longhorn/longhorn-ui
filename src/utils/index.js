@@ -1,7 +1,11 @@
-import classnames from 'classnames'
-import config from './config'
-import menu from './menu'
-import request from './request'
+// import classnames from 'classnames'
+// import config from './config'
+// import menu from './menu'
+// import request from './request'
+let request = require('./request').default
+let menu = require('./menu')
+let config = require('./config')
+let classnames = require('classnames')
 
 /* eslint no-extend-native: ["error", { "exceptions": ["String","Date"] }]*/
 

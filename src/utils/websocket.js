@@ -1,3 +1,4 @@
+import React from 'react'
 import { Tooltip } from 'antd'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import wsClosed from '../assets/images/ws-closed.svg'
