@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var ManifestPlugin = require("webpack-manifest-plugin");
+const ManifestPlugin = require("webpack-manifest-plugin");
 const theme = require("./src/theme");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
@@ -75,7 +75,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {
@@ -87,6 +86,7 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
+          'css-hot-loader',
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
@@ -119,7 +119,16 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          'css-hot-loader',
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: true,
+                // if hmr does not work, this is a forceful method.
+              reloadAll: true,
+              modifyVars: theme()
+            },
+          },
           {
             loader: "css-loader",
             options: {
@@ -176,7 +185,8 @@ module.exports = {
     new ProgressBarPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[name].css"
+      filename: "[name].css",
+      chunkFilename: '[id].css'
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.ejs"),
