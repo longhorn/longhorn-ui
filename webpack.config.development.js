@@ -12,7 +12,6 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 
-// console.log('主题变量\r\n', theme);
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "index.js"),
@@ -88,7 +87,15 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: true,
+                // if hmr does not work, this is a forceful method.
+              reloadAll: true,
+              modifyVars: theme()
+            },
+          },
           {
             loader: "css-loader",
             options: {
@@ -103,7 +110,7 @@ module.exports = {
             options: {
               sourceMap: true,
               javascriptEnabled: true,
-              modifyVars: theme
+              modifyVars: theme()
             }
           }
         ],
@@ -125,7 +132,7 @@ module.exports = {
             options: {
               sourceMap: true,
               javascriptEnabled: true,
-              modifyVars: theme
+              modifyVars: theme()
             }
           }
         ],

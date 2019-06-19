@@ -77,7 +77,7 @@ module.exports = {
             options: {
               // sourceMap: true,
               javascriptEnabled: true,
-              modifyVars: theme
+              modifyVars: theme()
             }
           }
         ],
@@ -99,7 +99,7 @@ module.exports = {
             options: {
               // sourceMap: true,
               javascriptEnabled: true,
-              modifyVars: theme
+              modifyVars: theme()
             }
           }
         ],
