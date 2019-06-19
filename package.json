@@ -71,6 +71,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^5.1.1",
     "cross-port-killer": "^1.0.1",
+    "css-hot-loader": "^1.4.4",
     "css-loader": "^2.1.1",
     "cssnano": "^4.1.10",
     "es5-imcompatible-versions": "^0.1.34",
