@@ -8,17 +8,14 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ManifestPlugin = require("webpack-manifest-plugin");
 
 const os = require("os");
-// 构造出共享进程池
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
 const theme = require("./src/theme");
 
-// console.log('主题变量\r\n', theme);
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "index.js"),
@@ -44,7 +41,6 @@ module.exports = {
         test: /\.js$/,
         include: [path.resolve(__dirname, "src")],
         exclude: /node_modules/,
-        // 把对 .js 文件的处理转交给 id 为 babel 的 HappyPack 实例
         use: ["happypack/loader?id=babel"]
       },
       {
@@ -161,9 +157,9 @@ module.exports = {
       filename: "[name].css"
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "index.ejs"), // 模板
+      template: path.resolve(__dirname, "src", "index.ejs"),
       filename: "index.html",
-      hash: true // 防止缓存
+      hash: true
     }),
     new CleanWebpackPlugin(["dist"]),
     new CopyWebpackPlugin([
@@ -179,9 +175,7 @@ module.exports = {
     }),
     new HappyPack({
       id: "babel",
-      // 如何处理 .js 文件，用法和 Loader 配置中一样
       loaders: ["babel-loader?cacheDirectory"],
-      // 使用共享进程池中的子进程去处理任务
       threadPool: happyThreadPool
     }),
     new webpack.HashedModuleIdsPlugin()

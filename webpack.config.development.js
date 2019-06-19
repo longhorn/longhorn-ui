@@ -17,8 +17,8 @@ module.exports = {
   entry: path.resolve(__dirname, "src", "index.js"),
   devServer: {
     // contentBase: path.resolve(__dirname, 'dist'),
-    host: "0.0.0.0", // 主机地址
-    port: 8080, // 端口号
+    host: "0.0.0.0",
+    port: 8080,
     open: false,
     hot: true,
     quiet: true,
@@ -179,9 +179,9 @@ module.exports = {
       filename: "[name].css"
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "index.ejs"), // 模板
+      template: path.resolve(__dirname, "src", "index.ejs"),
       filename: "index.html",
-      hash: true // 防止缓存
+      hash: true
     }),
     new CleanWebpackPlugin(["dist"]),
     new CopyWebpackPlugin([
@@ -189,7 +189,7 @@ module.exports = {
         from: path.resolve(__dirname, "public")
       }
     ]),
-    new webpack.HotModuleReplacementPlugin(), // 调用webpack的热更新插件
+    new webpack.HotModuleReplacementPlugin(),
     new ManifestPlugin()
   ]
 };
