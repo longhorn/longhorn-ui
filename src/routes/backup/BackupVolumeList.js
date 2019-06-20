@@ -9,6 +9,25 @@ import moment from 'moment'
 
 
 class List extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      height: 300,
+    }
+  }
+
+  componentDidMount() {
+    let height = document.getElementById('backTable').offsetHeight - 72
+    this.setState({
+      height,
+    })
+    window.onresize = () => {
+      height = document.getElementById('backTable').offsetHeight - 72
+      this.setState({
+        height,
+      })
+    }
+  }
 
   handleMenuClick = (record, e) => {
     if(e.key === 'recovery') {
@@ -112,7 +131,7 @@ class List extends React.Component {
     }
 
     return (
-      <div>
+      <div id='backTable' style={{overflow: 'hidden', flex: 1}}>
         <Table
           locale={locale}
           bordered={false}
@@ -123,7 +142,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{x: 1020, y: 570 }}
+          scroll={{x: 1020, y: this.state.height }}
         />
       </div>
     )

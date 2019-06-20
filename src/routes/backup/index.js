@@ -86,7 +86,7 @@ function Backup({ backup, loading, setting, dispatch, location }) {
   }
 
   return (
-    <div className="content-inner" >
+    <div className="content-inner" style={{display: 'flex', flexDirection: 'column', overflow: 'visible !important'}}>
       <Row gutter={24}>
         <Col lg={18} md={16} sm={24} xs={24}></Col>
         <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
