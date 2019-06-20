@@ -73,7 +73,7 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
   }
 
   return (
-    <div className="content-inner" >
+    <div className="content-inner" style={{display: 'flex', flexDirection: 'column', overflow: 'visible !important'}}>
       <BackupList {...backupVolumesProps} />
       <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
     </div >

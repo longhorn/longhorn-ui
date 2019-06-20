@@ -43,6 +43,26 @@ BackupUrl.propTypes = {
 }
 
 class List extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      height: 300,
+    }
+  }
+
+  componentDidMount() {
+    let height = document.getElementById('backDetailTable').offsetHeight - 72
+    this.setState({
+      height,
+    })
+    window.onresize = () => {
+      height = document.getElementById('backDetailTable').offsetHeight - 72
+      this.setState({
+        height,
+      })
+    }
+  }
+
   render() {
     const { backup, loading, showRestoreBackup, deleteBackup, sorter, onSorterChange = f => f } = this.props
     const dataSource = backup || []
@@ -153,7 +173,7 @@ class List extends React.Component {
     }
 
     return (
-      <div style={{overflow: 'hidden'}}>
+      <div id='backDetailTable' style={{overflow: 'hidden', flex: 1}}>
         <Table
           locale={locale}
           bordered={false}
@@ -164,7 +184,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{x: 1540, y: 570 }}
+          scroll={{x: 1540, y: this.state.height }}
         />
       </div>
     )
