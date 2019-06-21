@@ -9,6 +9,7 @@ class Search extends React.Component {
     options: [],
     selectValue: (this.props.select && this.props.selectProps) ? this.props.selectProps.defaultValue : '',
   }
+
   handleSearch = () => {
     const data = {
       keyword: this.state.value,
@@ -18,6 +19,7 @@ class Search extends React.Component {
     }
     if (this.props.onSearch) this.props.onSearch(data)
   }
+
   handleInputChange = value => {
     let options = []
     const setting = this.props.selectOptions.find(s => s.value === this.state.selectValue)
@@ -30,6 +32,7 @@ class Search extends React.Component {
       options,
     })
   }
+
   handeleSelectChange = value => {
     this.setState({
       ...this.state,
@@ -52,7 +55,8 @@ class Search extends React.Component {
             mode="AutoComplete"
             onChange={this.handleInputChange}
             filterOption={false}
-            onKeyPress={this.handleSearch} defaultValue={keyword}
+            onKeyPress={this.handleSearch}
+            defaultValue={keyword}
           >
             {this.state.options}
           </Select>

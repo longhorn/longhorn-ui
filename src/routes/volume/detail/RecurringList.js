@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Button, Select, InputNumber, Card } from 'antd'
-import { ReactCron } from  '../../../components'
+import { ReactCron } from '../../../components'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
 import { ModalBlur } from '../../../components'
@@ -29,14 +29,14 @@ class RecurringList extends React.Component {
 
   componentDidMount() {
     let Faulted = true
-    this.props.dataSourceReplicas.forEach((item)=>{
-      if(!item.failedAt) {
+    this.props.dataSourceReplicas.forEach((item) => {
+      if (!item.failedAt) {
         Faulted = false
       }
     })
-    if(this.props.selectedVolume.standby) {
+    if (this.props.selectedVolume.standby) {
       Faulted = this.props.selectedVolume.standby
-    } 
+    }
     this.setState({
       ...this.state,
       Faulted,
@@ -47,6 +47,7 @@ class RecurringList extends React.Component {
     const { dataSource } = this.state
     dataSource.forEach((data) => { data.editing = false })
   }
+
   onNewRecurring = () => {
     this.state.dataSource.push({ retain: 20, name: `c-${Math.random().toString(36).substr(2, 6)}`, editing: true, cron: '0 0 * * *', task: 'snapshot', isNew: true })
     this.setState({
@@ -77,6 +78,7 @@ class RecurringList extends React.Component {
       editing: true,
     })
   }
+
   onCancel = () => {
     const dataSource = this.props.dataSource.map(item => ({ ...item }))
     this.setState({
@@ -84,6 +86,7 @@ class RecurringList extends React.Component {
       editing: false,
     })
   }
+
   onRestore = (record) => {
     const found = this.state.dataSource.find(data => data.name === record.name)
     if (found) {
@@ -94,6 +97,7 @@ class RecurringList extends React.Component {
       })
     }
   }
+
   onScheduleChange = (record, newCron) => {
     const found = this.state.dataSource.find(data => data.name === record.name)
     if (found) {
@@ -178,7 +182,8 @@ class RecurringList extends React.Component {
     this.setState({
       ...this.state,
       currentRecord: record,
-    },() =>{
+    },
+    () => {
       this.setState({
         ...this.state,
         modalOpts: {
@@ -213,7 +218,7 @@ class RecurringList extends React.Component {
         },
         currentCron: '0 0 * * *',
       })
-    }else{
+    } else {
       this.setState({
         ...this.state,
         modalOpts: {
@@ -223,7 +228,8 @@ class RecurringList extends React.Component {
       })
     }
   }
-  changeCron = ( cron ) => {
+
+  changeCron = (cron) => {
     this.setState({
       ...this.state,
       currentCron: cron,
@@ -239,14 +245,12 @@ class RecurringList extends React.Component {
         width: 120,
         render: (text, record) => {
           return (
-            this.state.editing ?
-              <div>
+            this.state.editing ? <div>
                 <Select disabled={record.deleted} onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 100 }}>
                   <Option value="snapshot">Snapshot</Option>
                   <Option value="backup">Backup</Option>
                 </Select>
-              </div> :
-              <div className="capitalize">
+              </div> : <div className="capitalize">
                 {text}
               </div>
           )
@@ -267,16 +271,15 @@ class RecurringList extends React.Component {
         width: 120,
         render: (text, record) => {
           return (
-            this.state.editing ?
-              <div>
+            this.state.editing ? <div>
                 <InputNumber disabled={record.deleted} min={1} value={text} onChange={(value) => this.onRetainChange(record, value)} />
-              </div> :
-              <div>
+              </div> : <div>
                 {text}
               </div>
           )
         },
-      }, {
+      },
+      {
         title: '',
         key: 'operation',
         width: 100,
@@ -302,7 +305,8 @@ class RecurringList extends React.Component {
           <div>
             {!this.state.editing && !loading && <Button disabled={this.state.Faulted} onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
           </div>
-        </div>} bordered={false}>
+        </div>}
+        bordered={false}>
         <div>
           <Table
             bordered={false}
@@ -316,15 +320,14 @@ class RecurringList extends React.Component {
               {this.state.editing && <Button onClick={this.onNewRecurring} icon="plus">New</Button>}
           </div>
           <div className={styles.actions}>
-            {(this.state.editing || loading) &&
-            <div>
-              <Button loading={loading} onClick={this.onCancel} >Cancel</Button>
+            {(this.state.editing || loading) && <div>
+              <Button loading={loading} onClick={this.onCancel}>Cancel</Button>
               &nbsp;&nbsp;<Button loading={loading} onClick={this.onSave} type="success">Save</Button>
             </div>}
           </div>
         </div>
         <ModalBlur {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
-          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} changeCron={this.changeCron}/>
+          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} changeCron={this.changeCron} />
         </ModalBlur>
       </Card>
     )
@@ -335,6 +338,8 @@ RecurringList.propTypes = {
   dataSource: PropTypes.array,
   onOk: PropTypes.func,
   loading: PropTypes.bool,
+  dataSourceReplicas: PropTypes.array,
+  selectedVolume: PropTypes.object,
 }
 
 export default RecurringList

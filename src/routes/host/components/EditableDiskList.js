@@ -13,6 +13,7 @@ class EditableDiskList extends React.Component {
     this.originDisks = props.node.disks
     this.state = { data: disks }
   }
+
   onAdd = () => {
     uuid++
     const disk = { id: `new_disk_${uuid}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false }

@@ -79,7 +79,8 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
         return (
           <DropOption menuOptions={[
             { key: 'delete', name: 'Delete', disabled: deleteTooltip !== '', tooltip: deleteTooltip },
-          ]} onMenuClick={e => handleMenuClick(record, e)}
+          ]}
+            onMenuClick={e => handleMenuClick(record, e)}
           />
         )
       },

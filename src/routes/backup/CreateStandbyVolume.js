@@ -81,7 +81,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Input disabled={true}/>)}
+          })(<Input disabled={true} />)}
         </FormItem>
 
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
@@ -119,9 +119,9 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input disabled={true}/>)}
+          })(<Input disabled={true} />)}
         </FormItem>
-        <div style={{display: 'none'}}>
+        <div style={{ display: 'none' }}>
           <FormItem label="Backup Url" hasFeedback {...formItemLayout}>
             {getFieldDecorator('fromBackup', {
               initialValue: item.fromBackup,
@@ -131,7 +131,7 @@ const modal = ({
                   message: 'Please input Backup Url',
                 },
               ],
-            })(<Input disabled={true}/>)}
+            })(<Input disabled={true} />)}
           </FormItem>
         </div>
       </Form>

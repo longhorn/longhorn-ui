@@ -1,3 +1,4 @@
 src/**/*-test.js
 src/utils/websocket.js
 src/utils/prettycron.js
+src/components/ReactCron/ReactCron.js

@@ -161,7 +161,7 @@ export default {
     *volumeActivate({
       payload,
     }, { call, put }) {
-      yield call(volumeActivate, {frontend: payload.frontend}, payload.url)
+      yield call(volumeActivate, { frontend: payload.frontend }, payload.url)
       yield put({ type: 'hideChangeVolumeModal' })
       yield put({ type: 'query' })
     },

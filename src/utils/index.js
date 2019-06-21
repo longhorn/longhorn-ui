@@ -7,8 +7,6 @@ let menu = require('./menu')
 let config = require('./config')
 let classnames = require('classnames')
 
-/* eslint no-extend-native: ["error", { "exceptions": ["String","Date"] }]*/
-
 String.prototype.hyphenToHump = function () {
   return this.replace(/-(\w)/g, (...args) => {
     return args[1].toUpperCase()

@@ -16,6 +16,7 @@ const getStateWeight = (state) => {
       return 99
   }
 }
+
 export const getPropValue = (obj, prop) => {
   const props = prop.split('.')
   if (props.length > 1) {

@@ -21,8 +21,7 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
           </div>
         </Col>
         <Col lg={0} md={0} sm={16} xs={12}>
-          {isNavbar ?
-            <div className={styles.popupMenu}>
+          {isNavbar ? <div className={styles.popupMenu}>
               <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} visible={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
                 <div className={styles.button}>
                   <Icon type="bars" />

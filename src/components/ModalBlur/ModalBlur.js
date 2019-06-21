@@ -12,6 +12,7 @@ class ModalBlur extends React.Component {
         payload: this.props.visible,
       })
   }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.visible === nextProps.visible) {
       return
@@ -21,6 +22,7 @@ class ModalBlur extends React.Component {
       payload: nextProps.visible,
     })
   }
+
   onCancel = () => {
     this.props.dispatch({
       type: 'app/changeBlur',
@@ -28,6 +30,7 @@ class ModalBlur extends React.Component {
     })
     this.props.onCancel && this.props.onCancel()
   }
+
   onOk = () => {
     this.props.dispatch({
       type: 'app/changeBlur',
@@ -35,7 +38,9 @@ class ModalBlur extends React.Component {
     })
     this.props.onOk && this.props.onOk()
   }
+
   width = this.props.width ? this.props.width : 'auto'
+
   render() {
     let item = this.props.hasOnCancel ? '' : <Button key="cancel" onClick={this.onCancel}>Cancel</Button>
     return (
@@ -44,7 +49,9 @@ class ModalBlur extends React.Component {
         <Button loading={this.props.disabled} disabled={this.props.disabled} width={this.width} key="ok" type="success" onClick={this.onOk}>
           {this.props.okText ? this.props.okText : 'OK'}
         </Button>,
-      ]} {...this.props}></Modal>
+      ]}
+        {...this.props}>
+      </Modal>
     )
   }
 }

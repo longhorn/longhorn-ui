@@ -21,6 +21,7 @@ class EventLogs extends React.Component {
       },
     }
   }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { searchField, searchText } = this.state
     const data = this.parseData(nextProps.data)
@@ -30,12 +31,15 @@ class EventLogs extends React.Component {
       this.setState({ ...this.state, data })
     }
   }
+
   onSearchNameChange = (e) => {
     this.setState({ ...this.state, searchInput: { ...this.state.searchInput, nameText: e.target.value } })
   }
+
   onSearchSourceChange = (e) => {
     this.setState({ ...this.state, searchInput: { ...this.state.searchInput, sourceText: e.target.value } })
   }
+
   onSearch = (searchField) => {
     const data = this.parseData(this.props.data)
     const searchText = this.state.searchInput[searchField]
@@ -49,6 +53,7 @@ class EventLogs extends React.Component {
       searchText,
     })
   }
+
   onReset = () => {
     const { data } = this.props
     this.setState({
@@ -62,12 +67,14 @@ class EventLogs extends React.Component {
       },
     })
   }
+
   parseData = (data) => {
     const getSourceText = (source) => {
       return source ? Object.values(source).join(', ') : ''
     }
     return data.map(item => ({ ...item, sourceText: getSourceText(item.source), nameText: item.involvedObject ? item.involvedObject.name : '' })).sort((a, b) => sortTableByISODate(b, a, 'lastTimestamp'))
   }
+
   wrapValue = (value, searchText) => {
     if (value) {
       return value.split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i')).map((fragment, i) => (
@@ -77,6 +84,7 @@ class EventLogs extends React.Component {
     }
     return value
   }
+
   filterData = (data, field, searchText) => {
     if (searchText.trim() === '') {
       return data
@@ -101,16 +109,16 @@ class EventLogs extends React.Component {
       return ''
     }
     const filtersEventType = Array.from(data.filter(item => item.eventType !== '')
-                            .reduce((results, item) => {
-                              results.add(item.eventType)
-                              return results
-                            }, new Set()))
-                            .map(item => ({ text: item, value: item }))
+      .reduce((results, item) => {
+        results.add(item.eventType)
+        return results
+      }, new Set()))
+      .map(item => ({ text: item, value: item }))
     const filtersKind = Array.from(data.filter(item => item.involvedObject && item.involvedObject.kind !== '')
-                        .reduce((results, item) => {
-                          results.add(item.involvedObject.kind)
-                          return results
-                        }, new Set())).map(item => ({ text: item, value: item }))
+      .reduce((results, item) => {
+        results.add(item.involvedObject.kind)
+        return results
+      }, new Set())).map(item => ({ text: item, value: item }))
     const columns = [
       {
         title: 'Last Seen',

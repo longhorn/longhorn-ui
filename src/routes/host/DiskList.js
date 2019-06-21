@@ -33,7 +33,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       width: 360,
       render: (text) => {
         return (
-          <div className="path" style={{textAlign: 'center'}}>
+          <div className="path" style={{ textAlign: 'center' }}>
             <span className="pathLabel">Path: &nbsp;</span>
             <span>{text}</span>
           </div>
@@ -69,7 +69,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
               <Progress strokeWidth={14} status={getStorageProgressStatus(minimalSchedulingQuotaWarning, p)} percent={p > 100 ? 100 : p} showInfo={false} />
             </Tooltip>
             </div>
-            <div className="secondLabel">
+            <div className="secondLabel" style={{ textAlign: 'center' }}>
               {byteToGi(allocated)} / {byteToGi(total)} Gi
             </div>
           </div>
@@ -90,7 +90,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
                 <Progress strokeWidth={14} status={getStorageProgressStatus(minimalSchedulingQuotaWarning, p)} percent={p > 100 ? 100 : p} showInfo={false} />
               </Tooltip>
             </div>
-            <div className="secondLabel">
+            <div className="secondLabel" style={{ textAlign: 'center' }}>
               {byteToGi(used)} / {byteToGi(total)} Gi
             </div>
           </div>

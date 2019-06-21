@@ -45,7 +45,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     sorter,
   }
   return (
-    <div style={{overflow: 'auto', height: '100%'}}>
+    <div style={{ overflow: 'auto', height: '100%' }}>
       <Card bordered={false}>
         <ResourceOverview {...resourceOverviewProps} />
         <EventLogs {...eventLogsProps} />

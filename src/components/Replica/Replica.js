@@ -51,6 +51,7 @@ class Replica extends React.Component {
     }
     return out
   }
+
   render() {
     const { item, hosts } = this.props
     const host = hosts.find(h => h.id === item.hostId)
@@ -60,7 +61,7 @@ class Replica extends React.Component {
     }
     return (
       <div style={{ display: 'inline-block', padding: '4px 20px' }} key={item.name}>
-        <Card bodyStyle={{ height: 280, padding: 0 }} >
+        <Card bodyStyle={{ height: 280, padding: 0 }}>
           <div style={{ position: 'relative', backgroundColor: this.modeInfo.color, padding: 20, color: 'white' }}>
             <img
               alt="replica"
@@ -90,7 +91,8 @@ class Replica extends React.Component {
           <span style={{ position: 'absolute', bottom: 18, right: 10 }}>
             <DropOption menuOptions={[
               { key: 'delete', name: 'Delete', disabled: deleteTooltip !== '', tooltip: deleteTooltip },
-            ]} onMenuClick={e => this.handleMenuClick(item, e)}
+            ]}
+              onMenuClick={e => this.handleMenuClick(item, e)}
             />
           </span>
           {!item.running && <div style={{
@@ -101,7 +103,7 @@ class Replica extends React.Component {
             bottom: 0,
           }} />}
         </Card>
-      </div >
+      </div>
     )
   }
 }

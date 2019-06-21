@@ -3,10 +3,12 @@ class Store {
     this.storage = storage
     this.namespacePrefix = namespace
   }
+
   get(key, optionalDefaultValue) {
     let data = this.storage.getItem(this.namespacePrefix + key)
     return this.deserialize(data, optionalDefaultValue)
   }
+
   set(key, value) {
     if (value === undefined) {
       return this.storage.removeItem(this.namespacePrefix + key)
@@ -14,15 +16,19 @@ class Store {
     this.storage.setItem(this.namespacePrefix + key, this.serialize(value))
     return value
   }
+
   remove(key) {
     this.storage.remove(this.namespacePrefix + key)
   }
+
   clearAll() {
     this.storage.clear()
   }
+
   serialize = (obj) => {
     return JSON.stringify(obj)
   }
+
   deserialize = (strVal, defaultVal) => {
     if (!strVal) {
       return defaultVal
@@ -35,6 +41,7 @@ class Store {
     }
     return (val !== undefined ? val : defaultVal)
   }
+
   hasNamespace(namespace) {
     return (this.namespace === namespace)
   }

@@ -22,7 +22,8 @@ function actions({ selected, deleteEngineImage }) {
   const availableActions = [{ key: 'delete', name: 'Delete' }]
 
   return (
-    <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
+    <DropOption menuOptions={availableActions}
+      onMenuClick={(e) => handleMenuClick(e, selected)}
     />
   )
 }

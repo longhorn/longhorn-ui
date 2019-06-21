@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Progress, Tooltip } from 'antd'
-import styles from './HostList.less'
 import classnames from 'classnames'
+import styles from './HostList.less'
 import { sortTable } from '../../utils/sort'
 import DiskList from './DiskList'
 import HostActions from './HostActions'
@@ -19,6 +19,7 @@ class List extends React.Component {
       sorterOrderChanged: false,
     }
   }
+
   onExpand = (expanded, record) => {
     if (expanded) {
       this.setState({
@@ -30,6 +31,7 @@ class List extends React.Component {
       })
     }
   }
+
   onExpandedRowsChange = (expandedRows) => {
     const { onAllExpandedOrCollapsed = f => f, dataSource } = this.props
     if (expandedRows.length === dataSource.length) {
@@ -38,17 +40,20 @@ class List extends React.Component {
       onAllExpandedOrCollapsed(false)
     }
   }
+
   collapseAll = () => {
     this.setState({
       expandedRowKeys: [],
     })
   }
+
   expandAll = () => {
     const { dataSource } = this.props
     this.setState({
       expandedRowKeys: dataSource.map(item => item.id),
     })
   }
+
   render() {
     const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange = f => f } = this.props
     const hostActionsProps = {

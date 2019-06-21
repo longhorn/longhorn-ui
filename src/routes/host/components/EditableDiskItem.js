@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from './EditableDiskItem.less'
+import classnames from 'classnames'
 import { Radio, Checkbox, Form, Tooltip } from 'antd'
+import styles from './EditableDiskItem.less'
 import StorageInput from './StorageInput'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
-import classnames from 'classnames'
 import PathInput from './PathInput'
 import { byteToGi } from '../helper/index'
 
@@ -19,9 +19,9 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
   }
   const genActionButton = () => {
     if (disk.deleted) {
-      return (<a onClick={() => onRestore(disk.id)} ><IconRestore /></a>)
+      return (<a onClick={() => onRestore(disk.id)}><IconRestore /></a>)
     } else if (canBeRemoved()) {
-      return (<a onClick={() => onRemove(disk.id)} ><IconRemove /></a>)
+      return (<a onClick={() => onRemove(disk.id)}><IconRemove /></a>)
     }
     return <Tooltip placement="top" title="Only the disk with disabled scheduling and no storage scheduled can be deleted"><span><IconRemove disabled /></span></Tooltip>
   }
@@ -43,7 +43,8 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               }],
               initialValue: disk.path,
             })(<PathInput
-              placeholder="Path mounted by the disk, e.g. /mnt/disk1" readOnly={disk.deleted || !isNew} />)}
+              placeholder="Path mounted by the disk, e.g. /mnt/disk1"
+              readOnly={disk.deleted || !isNew} />)}
           </FormItem>
         </div>
       </div>
@@ -108,11 +109,11 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           Scheduling
         </div>
         <div className={styles.control} style={{ width: '210px' }}>
-          <FormItem style={{ margin: "3px 0px 0px 0px" }}>
+          <FormItem style={{ margin: '3px 0px 0px 0px' }}>
             {getFieldDecorator(`disks['${disk.id}']['allowScheduling']`, {
               initialValue: disk.allowScheduling,
             })(
-              <RadioGroup disabled={disk.deleted} >
+              <RadioGroup disabled={disk.deleted}>
                 <Radio value>Enable</Radio>
                 <Radio value={false}>Disable</Radio>
               </RadioGroup>

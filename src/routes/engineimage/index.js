@@ -88,7 +88,7 @@ class EngineImage extends React.Component {
     }
 
     return (
-      <div className="content-inner" >
+      <div className="content-inner">
         <Row gutter={24}>
           <Col lg={{ offset: 18, span: 6 }} md={{ offset: 16, span: 8 }} sm={24} xs={24} style={{ marginBottom: 16 }}>
             <Filter {...engineImageFilterProps} />

@@ -71,7 +71,7 @@ const Routers = function ({ history, app }) {
   return (
     <Router history={history}>
       <Switch>
-        <App path={path} component={App} >
+        <App path={path} component={App}>
          <Switch>
           <Route exact path={path} render={() => <Redirect to={`${path}dashboard`} />} />
           <Route exact path={`${path}dashboard`} component={dashboard} />

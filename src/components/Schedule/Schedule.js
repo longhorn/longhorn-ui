@@ -13,14 +13,17 @@ class Schedule extends React.Component {
     month: '',
     dow: '',
   }
+
   UNSAFE_componentWillMount() {
     const { cron } = this.props
     this.setState(this.parseCron(cron))
   }
+
   UNSAFE_componentWillReceiveProps(nextProp) {
     const { cron } = nextProp
     this.setState(this.parseCron(cron))
   }
+
   onChange = (value, field) => {
     let [mins, hour] = [value, '']
     if (field === 'time' && value.indexOf(':') > -1) {
@@ -92,6 +95,7 @@ class Schedule extends React.Component {
     this.setState(state)
     this.props.onChange(cron)
   }
+
   parseCron = (cron) => {
     const d = cron.split(' ')
     let scheduleType = ''
@@ -120,6 +124,7 @@ class Schedule extends React.Component {
       ...v,
     }
   }
+
   render() {
     const { scheduleType, mins, hour, dom, month, dow } = this.state
     const { editing } = this.props
@@ -137,21 +142,18 @@ class Schedule extends React.Component {
           <Option value="year">year</Option>
         </Select>
 
-        {scheduleType === 'hour' &&
-          <span>
+        {scheduleType === 'hour' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
             <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(mins, 'mm')} format={'mm'} />
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>minutes past the hour</span>
           </span>}
 
-        {scheduleType === 'day' &&
-          <span>
+        {scheduleType === 'day' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
             <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
-        {scheduleType === 'week' &&
-          <span>
+        {scheduleType === 'week' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>on</span>
             <Select onChange={(value) => this.onChange(value, 'dow')} disabled={!editing} value={dow} style={{ width: 90 }}>
               <Option value="0">Sunday</Option>
@@ -166,8 +168,7 @@ class Schedule extends React.Component {
             <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
-        {scheduleType === 'month' &&
-          <span>
+        {scheduleType === 'month' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>on the</span>
             <Select onChange={(value) => this.onChange(value, 'dom')} disabled={!editing} value={dom} style={{ width: 90 }}>
               <Option value="1">1st</Option>
@@ -206,8 +207,7 @@ class Schedule extends React.Component {
             <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
-        {scheduleType === 'year' &&
-          <span>
+        {scheduleType === 'year' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>on the</span>
             <Select onChange={(value) => this.onChange(value, 'dom')} disabled={!editing} value={dom} style={{ width: 90 }}>
               <Option value="1">1st</Option>

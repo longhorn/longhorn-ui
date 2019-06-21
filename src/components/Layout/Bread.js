@@ -57,9 +57,7 @@ function Bread({ location }) {
           ? <Icon type={pathSet[item].icon} />
           : ''}
         {
-          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ?
-            <span>{pathSet[item].name}</span> :
-            <Link to={pathSet[item].path}>
+          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{pathSet[item].name}</span> : <Link to={pathSet[item].path}>
               {pathSet[item].name}
             </Link>
         }

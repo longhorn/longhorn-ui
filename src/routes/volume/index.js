@@ -42,6 +42,10 @@ class Volume extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    window.onresize = null
+  }
+
   render() {
     const { dispatch, loading, location } = this.props
     const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate } = this.props.volume
@@ -396,10 +400,10 @@ class Volume extends React.Component {
       hosts,
       visible: changeVolumeModalVisible,
       onOk(newVolume) {
-        let data = Object.assign(newVolume, {url: changeVolumeActivate})
+        let volumeData = Object.assign(newVolume, { url: changeVolumeActivate })
         dispatch({
           type: 'volume/volumeActivate',
-          payload: data,
+          payload: volumeData,
         })
       },
       onCancel() {
@@ -516,7 +520,7 @@ class Volume extends React.Component {
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
 
     return (
-      <div className="content-inner" style={{display: 'flex', flexDirection: 'column', overflow: 'visible !important'}}>
+      <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
         <Row gutter={24}>
           <Col lg={17} md={15} sm={24} xs={24}>
             <VolumeBulkActions {...volumeBulkActionsProps} />
@@ -529,7 +533,7 @@ class Volume extends React.Component {
         <VolumeList {...volumeListProps} />
         <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
         <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} />
-        <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps}/>
+        <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
         <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
         <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} />
         <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />

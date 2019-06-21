@@ -9,20 +9,23 @@ function ResourceDetail({ data, total, width = 300, onClick = f => f, onMouseEnt
       <div className={styles.resourceDetail} style={{ width: `${width}px` }}>
         <div className={styles.resourceDetailBody}>
         {data.map((d, index) => (
-          <div key={d.name} className={classnames(styles.detailItem, { [styles.clickable]: clickable })} onMouseEnter={e => onMouseEnter(d, index, e)} onMouseLeave={e => onMouseLeave(d, index, e)} >
+          <div key={d.name} className={classnames(styles.detailItem, { [styles.clickable]: clickable })} onMouseEnter={e => onMouseEnter(d, index, e)} onMouseLeave={e => onMouseLeave(d, index, e)}>
             <div className={styles.detailContent} onClick={() => onClick(d)}>
-              <div className={styles.label}><div className={styles.badge} style={{ backgroundColor: d.color }}></div>{d.name}</div>
+              <div className={styles.label}>
+              <div className={styles.badge} style={{ backgroundColor: d.color }}></div>
+              {d.name}
+              </div>
               <div>{d.value}</div>
             </div>
           </div>
         ))}
         </div>
         {total ? (
-        <div className={styles.total} >
+        <div className={styles.total}>
           <div>{total.name}</div>
           <div>{total.value}</div>
         </div>
-      ) : null}
+        ) : null}
       </div>
     </div>
   )

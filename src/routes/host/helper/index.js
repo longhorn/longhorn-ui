@@ -25,4 +25,3 @@ export function getStorageProgressStatus(minimalSchedulingQuotaWarning, percent)
   }
   return 'success'
 }
-

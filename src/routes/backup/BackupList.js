@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Modal, Icon, message } from 'antd'
+import moment from 'moment'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
-import moment from 'moment'
+
 const confirm = Modal.confirm
 
 const BackupUrl = ({ url = '' }) => {
@@ -24,13 +25,12 @@ const BackupUrl = ({ url = '' }) => {
       <p style={{ marginTop: 20, marginLeft: -40, fontSize: '1.2em' }}>
         {url}
         {
-          url ?
-          <CopyToClipboard onCopy={onCopy} text={url}>
-              <Icon
-                className="color-link"
-                style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
-                type="copy"
-              />
+          url ? <CopyToClipboard onCopy={onCopy} text={url}>
+            <Icon
+              className="color-link"
+              style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
+              type="copy"
+            />
           </CopyToClipboard> : 'URL no available'
         }
       </p>
@@ -61,6 +61,10 @@ class List extends React.Component {
         height,
       })
     }
+  }
+
+  componentWillUnmount() {
+    window.onresize = null
   }
 
   render() {
@@ -156,7 +160,8 @@ class List extends React.Component {
               { key: 'delete', name: 'Delete' },
               { key: 'restore', name: 'Restore' },
               { key: 'getUrl', name: 'Get URL' },
-            ]} onMenuClick={e => handleMenuClick(record, e)}
+            ]}
+              onMenuClick={e => handleMenuClick(record, e)}
             />
           )
         },
@@ -173,7 +178,7 @@ class List extends React.Component {
     }
 
     return (
-      <div id='backDetailTable' style={{overflow: 'hidden', flex: 1}}>
+      <div id="backDetailTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
           locale={locale}
           bordered={false}
@@ -184,7 +189,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{x: 1540, y: this.state.height }}
+          scroll={{ x: 1540, y: this.state.height }}
         />
       </div>
     )

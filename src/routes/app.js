@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
+import { Helmet } from 'react-helmet'
+import { LocaleProvider } from 'antd'
+import enUS from 'antd/lib/locale-provider/en_US'
 import { Layout } from '../components'
 import { classnames, config } from '../utils'
-import { Helmet } from 'react-helmet'
-import enUS from 'antd/lib/locale-provider/en_US'
-import { LocaleProvider } from 'antd'
+
 const { Header, Bread, Footer, styles } = Layout
 
 let blur = (bl) => {
@@ -22,7 +23,7 @@ const App = ({ children, dispatch, location, app }) => {
       dispatch({ type: 'app/switchMenuPopver' })
     },
   }
-  
+
   return (
     <LocaleProvider locale={enUS}>
       <div className={blur(app.blur)}>
@@ -39,7 +40,7 @@ const App = ({ children, dispatch, location, app }) => {
                 {children}
               </div>
             </div>
-            <Footer/>
+            <Footer />
           </div>
         </div>
       </div>

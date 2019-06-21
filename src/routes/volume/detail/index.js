@@ -1,17 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
-import VolumeInfo from './VolumeInfo'
 import { Row, Col, Card } from 'antd'
 import { routerRedux } from 'dva/router'
-import VolumeActions from '../VolumeActions'
 import queryString from 'query-string'
+import VolumeActions from '../VolumeActions'
+import VolumeInfo from './VolumeInfo'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import EngineUpgrade from '../EngineUpgrade'
 import UpdateReplicaCount from '../UpdateReplicaCount'
-import Snapshots from '../detail/Snapshots'
-import RecurringList from '../detail/RecurringList'
+import Snapshots from './Snapshots'
+import RecurringList from './RecurringList'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import Salvage from '../Salvage'
@@ -39,7 +39,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     hosts,
     deleteReplicas(replicas) {
       replicas.forEach(replica => { replica.removeUrl = selectedVolume.actions.replicaRemove })
-      if(selectedVolume.actions.replicaRemove) {
+      if (selectedVolume.actions.replicaRemove) {
         dispatch({
           type: 'volume/deleteReplicas',
           replicas,
@@ -277,10 +277,10 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     hosts,
     visible: changeVolumeModalVisible,
     onOk(newVolume) {
-      let data = Object.assign(newVolume, {url: changeVolumeActivate})
+      let volumeData = Object.assign(newVolume, { url: changeVolumeActivate })
       dispatch({
         type: 'volume/volumeActivate',
-        payload: data,
+        payload: volumeData,
       })
     },
     onCancel() {
@@ -291,7 +291,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   }
 
   return (
-    <div style={{overflowY: 'auto', overflowX: 'hidden', height: '100%'}}>
+    <div style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
       <Row gutter={24}>
         <Col md={{ offset: 16, span: 8 }} style={{ marginBottom: 16, textAlign: 'right' }}>
           <VolumeActions {...volumeActionsProps} selected={selectedVolume} />
@@ -317,9 +317,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
       {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
       <Salvage {...salvageModalProps} />
-      <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps}/>
+      <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
       <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />
-    </div >
+    </div>
   )
 }
 

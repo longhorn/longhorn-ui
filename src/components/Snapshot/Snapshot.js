@@ -18,8 +18,9 @@ function StartPoint() {
 
 function VolumeHead(props) {
   return (
-    props ?
-    (<Tooltip placement="right" autoAdjustOverflow={false} title={<div>
+    props ? (<Tooltip placement="right"
+      autoAdjustOverflow={false}
+      title={<div>
       <p className="snapshot-name">Name: {props.name}</p>
       <p className="snapshot-created">Created: {props.created}</p>
       <p className="snapshot-name">Size: {formatMib(props.size)}</p>
@@ -77,15 +78,13 @@ function SnapshotIcon(props, snapshotProps) {
       className="lh-snapshot-dropdown"
       onClick={onClick}
     >
-      { props.usercreated ?
-        <Menu.Item className="revert-menu-item" key="snapshotRevert">
+      { props.usercreated ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
           <Popconfirm title={title} onConfirm={() => doAction('snapshotRevert')}>
             <span className="snapshot-revert">Revert</span>
           </Popconfirm>
         </Menu.Item> : ''
       }
-      { props.usercreated ?
-        <Menu.Item key="snapshotBackup">
+      { props.usercreated ? <Menu.Item key="snapshotBackup">
           <span>Backup</span>
         </Menu.Item> : ''
       }
@@ -101,7 +100,9 @@ function SnapshotIcon(props, snapshotProps) {
       trigger={props.removed ? [] : ['click']}
       key={props.name}
     >
-      <Tooltip placement="right" autoAdjustOverflow={false} title={<div>
+      <Tooltip placement="right"
+        autoAdjustOverflow={false}
+        title={<div>
         <p className="snapshot-name">Name: {props.name}</p>
         <p className="snapshot-created">Created: {props.created}</p>
         <p className="snapshot-name">Size: {formatMib(props.size)}</p>
@@ -109,7 +110,7 @@ function SnapshotIcon(props, snapshotProps) {
         <p className="snapshot-name">Removed: {props.removed ? 'True' : 'False'}</p>
       </div>}>
         <div>
-          <div className="tree-snapshot-icon" style={{ background: props.usercreated ? '#3085d5' : 'rgb(241, 196, 15)' }} >
+          <div className="tree-snapshot-icon" style={{ background: props.usercreated ? '#3085d5' : 'rgb(241, 196, 15)' }}>
             <Icon className="snapshot-icon" type="camera" />
           </div>
           <div className="tree-snapshot-desc">

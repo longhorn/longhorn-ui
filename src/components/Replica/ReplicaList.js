@@ -31,7 +31,7 @@ class ReplicaList extends React.Component {
             {replicas}
           </Spin>
         </div>
-      </div >
+      </div>
     )
   }
 }

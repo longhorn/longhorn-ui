@@ -30,7 +30,7 @@ export default {
       if (payload && payload.field && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }
-      if(data.data){
+      if (data.data) {
         data.data.sort((a, b) => a.image.localeCompare(b.image))
       }
       yield put({ type: 'queryEngineimage', payload: { ...data } })

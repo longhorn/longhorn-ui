@@ -49,14 +49,14 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
     okText,
     modalButtonDisabled,
     progressPercentage,
-    onOk(data) {
+    onOk(datas) {
       dispatch({
         type: 'app/changeOkText',
-        payload: data,
+        payload: datas,
       })
       dispatch({
         type: 'app/supportbundles',
-        payload: data,
+        payload: datas,
       })
     },
     onCancel() {
@@ -103,6 +103,8 @@ Footer.propTypes = {
   setting: PropTypes.object,
   engineimage: PropTypes.object,
   eventlog: PropTypes.object,
+  app: PropTypes.object,
+  dispatch: PropTypes.func,
 }
 
 export default connect(({ app, host, volume, setting, engineimage, eventlog }) => ({ app, host, volume, setting, engineimage, eventlog }))(Footer)

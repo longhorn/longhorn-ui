@@ -16,7 +16,6 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
   visible,
   onCancel,
   onOk,

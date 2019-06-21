@@ -19,6 +19,7 @@ class Schedule extends React.Component {
     const { cron } = this.props
     this.setState(this.parseCron(cron))
   }
+
   UNSAFE_componentWillReceiveProps(nextProp) {
     const { cron } = nextProp
     this.setState(this.parseCron(cron))
@@ -56,6 +57,7 @@ class Schedule extends React.Component {
       ...v,
     }
   }
+
   render() {
     const { scheduleType, mins, hour, dom, month, dow } = this.state
     return (
@@ -66,23 +68,20 @@ class Schedule extends React.Component {
         <span>
           { scheduleType }
         </span>
-        {scheduleType === 'hour' &&
-          <span>
+        {scheduleType === 'hour' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(mins, 'mm').format('HH:mm') }</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>minutes past the hour</span>
           </span>
         }
 
-        {scheduleType === 'day' &&
-          <span>
+        {scheduleType === 'day' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
           </span>
         }
 
-        {scheduleType === 'week' &&
-          <span>
+        {scheduleType === 'week' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>on</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{dow}</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
@@ -90,8 +89,7 @@ class Schedule extends React.Component {
           </span>
         }
 
-        {scheduleType === 'month' &&
-          <span>
+        {scheduleType === 'month' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>on the</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{dom}</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
@@ -99,8 +97,7 @@ class Schedule extends React.Component {
           </span>
         }
 
-        {scheduleType === 'year' &&
-          <span>
+        {scheduleType === 'year' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>on the</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{month}</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>of</span>
