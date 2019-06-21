@@ -53,8 +53,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
             <span className={styles.label}>{selectedVolume.kubernetesStatus.lastPodRefAt ? 'Last ' : ''} Pod Name:</span>
             {item.podName}
           </div>
-          {!selectedVolume.kubernetesStatus.lastPodRefAt ?
-            <div className={styles.row}>
+          {!selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Pod Status:</span>
               {item.podStatus}
             </div> : ''
@@ -123,16 +122,13 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
         <span className={styles.label}> Last Backup At:</span>
         {selectedVolume.lastBackupAt ? moment(selectedVolume.lastBackupAt).fromNow() : ''}
       </div>
-      { selectedVolume.kubernetesStatus ?
-        <div>
-          { selectedVolume.kubernetesStatus.lastPVCRefAt ? 
-            <div className={styles.row}>
+      { selectedVolume.kubernetesStatus ? <div>
+          { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
               {selectedVolume.kubernetesStatus.lastPVCRefAt ? moment(new Date(selectedVolume.kubernetesStatus.lastPVCRefAt)).fromNow() : ''}
             </div> : ''
           }
-          {selectedVolume.kubernetesStatus.lastPodRefAt ? 
-            <div className={styles.row}>
+          {selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time used by Pod:</span>
               {selectedVolume.kubernetesStatus.lastPodRefAt ? moment(new Date(selectedVolume.kubernetesStatus.lastPodRefAt)).fromNow() : ''}
             </div> : ''

@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'antd'
+import moment from 'moment'
 import { formatMib } from '../../utils/formater'
 import { DropOption } from '../../components'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
-import moment from 'moment'
 
 
 class List extends React.Component {
@@ -29,8 +29,12 @@ class List extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    window.onresize = null
+  }
+
   handleMenuClick = (record, e) => {
-    if(e.key === 'recovery') {
+    if (e.key === 'recovery') {
       this.props.Create(record)
     }
   }
@@ -48,7 +52,9 @@ class List extends React.Component {
         sorter: (a, b) => sortTable(a, b, 'id'),
         render: (text) => {
           return (
-            <a onClick={() => linkToBackup(text)}>
+            <a
+              onClick={() => linkToBackup(text)}
+            >
               {text}
             </a>
           )
@@ -106,7 +112,8 @@ class List extends React.Component {
             </div>
           )
         },
-      },{
+      },
+      {
         title: 'Operation',
         key: 'operation',
         width: 120,
@@ -114,7 +121,8 @@ class List extends React.Component {
           return (
             <DropOption menuOptions={[
               { key: 'recovery', name: !record.lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: !record.lastBackupName },
-            ]} onMenuClick={e => this.handleMenuClick(record, e)}
+            ]}
+              onMenuClick={e => this.handleMenuClick(record, e)}
             />
           )
         },
@@ -131,7 +139,7 @@ class List extends React.Component {
     }
 
     return (
-      <div id='backTable' style={{overflow: 'hidden', flex: 1}}>
+      <div id="backTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
           locale={locale}
           bordered={false}
@@ -142,7 +150,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{x: 1020, y: this.state.height }}
+          scroll={{ x: 1020, y: this.state.height }}
         />
       </div>
     )

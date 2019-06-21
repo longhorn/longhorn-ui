@@ -8,12 +8,12 @@ function actions({ node, selected, updateDisk }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'togglingScheduling':
-        {
-          const updateDisks = Object.keys(node.disks)
+      {
+        const updateDisks = Object.keys(node.disks)
           .map(id => ({ ...node.disks[id], allowScheduling: id === record.id ? !record.allowScheduling : node.disks[id].allowScheduling }))
-          updateDisk(updateDisks, node.actions.diskUpdate)
-          break
-        }
+        updateDisk(updateDisks, node.actions.diskUpdate)
+        break
+      }
       case 'delete':
         confirm({
           title: `Are you sure you want to delete disk which mounted on ${record.path}`,
@@ -37,7 +37,8 @@ function actions({ node, selected, updateDisk }) {
     availableActions.push(deleteAction)
   }
   return (
-    <DropOption menuOptions={availableActions} onMenuClick={(e) => handleMenuClick(e, selected)}
+    <DropOption menuOptions={availableActions}
+      onMenuClick={(e) => handleMenuClick(e, selected)}
     />
   )
 }

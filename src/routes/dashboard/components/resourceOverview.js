@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Spin } from 'antd'
+import ReactResizeDetector from 'react-resize-detector'
 import { formatMib } from '../../../utils/formater'
 import ResourceChart from './resourceChart'
 import ResourceDetail from './resourceDetail'
-import ReactResizeDetector from 'react-resize-detector'
 import styles from './resourceOverview.less'
 import { nodeStatusColorMap, healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
 
@@ -17,6 +17,7 @@ class ResourceOverview extends React.Component {
       resourceWidth: 300,
     }
   }
+
   handleResize = (width) => {
     const rw = Math.min((width / 3) - 60, 440)
     if (rw > 300) {
@@ -26,6 +27,7 @@ class ResourceOverview extends React.Component {
       })
     }
   }
+
   render() {
     const { host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f } = this.props
     const { host: hostLoading, volume: volumeLoading } = loading.models

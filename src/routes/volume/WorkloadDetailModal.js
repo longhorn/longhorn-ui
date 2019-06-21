@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ModalBlur } from '../../components'
 import { Card } from 'antd'
 import moment from 'moment'
+import { ModalBlur } from '../../components'
 
 const modal = ({
   visible,

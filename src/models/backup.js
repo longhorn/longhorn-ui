@@ -27,7 +27,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if(history.location.pathname.indexOf('backup')> -1){
+        if (history.location.pathname.indexOf('backup') > -1) {
           dispatch({
             type: 'query',
             payload: queryString.parse(location.search),
@@ -84,14 +84,14 @@ export default {
       yield call(createVolume, payload)
       yield put(routerRedux.push({
         pathname: addPrefix('/volume'),
-      })) 
+      }))
     },
     *CreateStandVolume({
       payload,
-    }, {call, put}) {
+    }, { call, put }) {
       const data = yield call(execAction, payload.actions.backupList)
       const found = data.data.find(b => b.name === payload.lastBackupName)
-      yield put({ type: 'initModalUrl', found, payload})
+      yield put({ type: 'initModalUrl', found, payload })
       yield put({ type: 'showCreateVolumeStandModalVisible' })
     },
   },
@@ -119,7 +119,6 @@ export default {
     initModalUrl(state, action) {
       return { ...state, lastBackupUrl: action.found.url, baseImage: action.payload.baseImage, size: action.found.volumeSize }
     },
-    /** createVolumeStandModalVisible end*/
     showRestoreBackupModal(state, action) {
       return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
     },

@@ -38,8 +38,8 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
    *add dataSource kubernetesStatus fields
    */
   const volumeRestoring = (volume) => {
-    if(volume.controllers && volume.controllers[0]){
-      return volume.standby === true && ((volume.lastBackup !== '' && volume.lastBackup !== volume.controllers[0].lastRestoredBackup) || (volume.lastBackup === '' && volume.controllers[0].requestedBackupRestore !== volume.controllers[0].lastRestoredBackup ))
+    if (volume.controllers && volume.controllers[0]) {
+      return volume.standby === true && ((volume.lastBackup !== '' && volume.lastBackup !== volume.controllers[0].lastRestoredBackup) || (volume.lastBackup === '' && volume.controllers[0].requestedBackupRestore !== volume.controllers[0].lastRestoredBackup))
     }
   }
 
@@ -74,12 +74,12 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           ha = (<ReplicaHATooltip type="warning" />)
         }
         let stateText = (() => {
-          if(text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{display: 'flex'}}>{ha}{state}</div>
-          } else if(text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{display: 'flex'}}>{ha}{state}</div>
-          } else if(text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{display: 'flex'}}>{ha}{state}</div>
+          if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex' }}>{ha}{state}</div>
+          } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex' }}>{ha}{state}</div>
+          } else if (text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex' }}>{ha}{state}</div>
           }
           return text.hyphenToHump()
         })()
@@ -100,7 +100,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         return (
           <div style={{ maxWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <LinkTo style={{ display: 'flex', alignItems: 'center' }} to={`/volume/${text}`}>
-              {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume' }><div style={{marginRight: '5px', display: 'flex', alignItems: 'center'}}><IconStandBackup fill={ volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'}/></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
+              {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume'}><div style={{ marginRight: '5px', display: 'flex', alignItems: 'center' }}><IconStandBackup fill={volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'} /></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
           </div>
         )
@@ -141,10 +141,10 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       width: '7.63%',
       render: (text) => {
         let title = (<div>
-          <div><span>PV Name</span><span>: </span><span >{text.pvName}</span></div>
-          <div><span>PV Status</span><span>: </span><span >{text.pvStatus}</span></div>
-          { text.lastPVCRefAt ? <div><span >Last time bound with PVC</span><span> : </span><span >{moment(new Date(text.lastPVCRefAt)).fromNow()}</span></div> : ''}
-          { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span >{text.pvcName}</span></div> : ''}
+          <div><span>PV Name</span><span>: </span><span>{text.pvName}</span></div>
+          <div><span>PV Status</span><span>: </span><span>{text.pvStatus}</span></div>
+          { text.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{moment(new Date(text.lastPVCRefAt)).fromNow()}</span></div> : ''}
+          { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{text.pvcName}</span></div> : ''}
         </div>)
         let content = (() => {
           if (!text.pvName) {
@@ -178,7 +178,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
-          <Tooltip placement="top" title={ text.lastPVCRefAt ? 'Last Namespace' : ''}>
+          <Tooltip placement="top" title={text.lastPVCRefAt ? 'Last Namespace' : ''}>
             <div style={text.lastPVCRefAt ? { background: 'rgba(241, 196, 15, 0.1)', minWidth: 100 } : { minWidth: 100 }}>
               <div>{ text.namespace }</div>
             </div>
@@ -198,7 +198,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           return <div key={index}>{item.podName}</div>
         }) : ''
         return (
-          <Tooltip placement="top" title={title} >
+          <Tooltip placement="top" title={title}>
             <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
               {ele}
               <div>{record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>)}</div>
@@ -223,7 +223,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           })
         }
         return (
-          <Tooltip placement="top" title={title} >
+          <Tooltip placement="top" title={title}>
             <div onClick={() => { showSnapshotDetail(text.recurringJobs) }} style={{ cursor: 'pointer' }}>
               <IconBackup fill={fill} width={30} height={30} />
             </div>
@@ -265,7 +265,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
   setSortOrder(columns, sorter)
 
   return (
-    <div id='volumeTable' style={{ flex: 1 , height: '1px', overflow: 'hidden'}}>
+    <div id="volumeTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
         rowSelection={rowSelection}
         bordered={false}
@@ -276,7 +276,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         simple
         pagination={pagination}
         rowKey={record => record.id}
-        height= {'100%'}
+        height={'100%'}
         scroll={{ x: 1440, y: height }}
       />
     </div>
@@ -304,6 +304,8 @@ list.propTypes = {
   createPVAndPVC: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
   showSnapshotDetail: PropTypes.func,
+  height: PropTypes.number,
+  changeVolume: PropTypes.func,
 }
 
 export default list

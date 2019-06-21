@@ -34,12 +34,15 @@ class Filter extends React.Component {
     event.persist()
     this.setState({ ...this.state, value: event.target.value })
   }
+
   handleNodeRedundancyValueChange = (nodeRedundancyValue) => {
     this.setState({ ...this.state, nodeRedundancyValue })
   }
+
   handleEngineImageUpgradableValueChange = (engineImageUpgradableValue) => {
     this.setState({ ...this.state, engineImageUpgradableValue })
   }
+
   handleFieldChange = (field) => {
     this.setState({ ...this.state, field })
   }
@@ -54,7 +57,7 @@ class Filter extends React.Component {
         defaultValue={this.state.value}
         onChange={this.handleValueChange}
       />
-      )
+    )
 
     if (this.state.field === 'status' && this.props.stateOption) {
       valueForm = (<Select key="status"

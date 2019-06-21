@@ -50,7 +50,7 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <div style={{ position: 'relative'}}>
+      <div style={{ position: 'relative' }}>
         <Form layout="horizontal">
           <FormItem label="Issue URL" hasFeedback {...formItemLayout}>
             {getFieldDecorator('issueURL', {
@@ -60,12 +60,11 @@ const modal = ({
           <FormItem label="Description" hasFeedback {...formItemLayout}>
             {getFieldDecorator('description', {
               initialValue: '',
-            })(<TextArea autosize={{ minRows: 6, maxRows: 10 }}/>)}
+            })(<TextArea autosize={{ minRows: 6, maxRows: 10 }} />)}
           </FormItem>
         </Form>
-        { progressPercentage > 0 ?
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', top: 0, let: 0, right:0, bottom: 0, background: 'rgba(256, 256, 256, 0.9)'}}>
-          <Progress type="circle" strokeWidth={5}  percent={progressPercentage} />
+        { progressPercentage > 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', top: 0, let: 0, right: 0, bottom: 0, background: 'rgba(256, 256, 256, 0.9)' }}>
+          <Progress type="circle" strokeWidth={5} percent={progressPercentage} />
         </div> : ''
         }
       </div>
@@ -85,6 +84,7 @@ modal.propTypes = {
   defaultBool: PropTypes.bool,
   okText: PropTypes.string,
   modalButtonDisabled: PropTypes.bool,
+  progressPercentage: PropTypes.number,
 }
 
 export default Form.create()(modal)

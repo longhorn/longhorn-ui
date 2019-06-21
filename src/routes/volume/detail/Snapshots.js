@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Spin, Tooltip, Card, Switch } from 'antd'
-
 import { Snapshot } from '../../../components'
 import { backupProgressModal } from '../../../utils/backup'
 import styles from './index.less'
@@ -50,6 +49,7 @@ class Snapshots extends React.Component {
       })
     }
   }
+
   UNSAFE_componentWillMount() {
     this.props.dispatch({
       type: 'snapshotModal/queryVolume',
@@ -62,6 +62,7 @@ class Snapshots extends React.Component {
       },
     })
   }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.volume.state !== this.props.volume.state) {
       this.props.dispatch({
@@ -70,13 +71,9 @@ class Snapshots extends React.Component {
       })
     }
   }
+
   shouldComponentUpdate(nextProps) {
-    if (nextProps.loading !== this.props.loading ||
-      nextProps.volume.state !== this.props.volume.state ||
-      nextProps.volume.migrationNodeID !== this.props.volume.migrationNodeID ||
-      nextProps.volume.currentImage !== this.props.volume.currentImage ||
-      nextProps.volume.engineImage !== this.props.volume.engineImage
-    ) {
+    if (nextProps.loading !== this.props.loading || nextProps.volume.state !== this.props.volume.state || nextProps.volume.migrationNodeID !== this.props.volume.migrationNodeID || nextProps.volume.currentImage !== this.props.volume.currentImage || nextProps.volume.engineImage !== this.props.volume.engineImage) {
       return true
     }
     // avoid unnecessary dom update
@@ -98,6 +95,7 @@ class Snapshots extends React.Component {
     const result = nextProps.showRemoved ? this.isSameTree(nextProps.snapshotTreeWithRemoved, this.props.snapshotTreeWithRemoved) : this.isSameTree(nextProps.snapshotTree, this.props.snapshotTree)
     return !result
   }
+
   componentWillUnmount() {
     this.props.dispatch({ type: 'snapshotModal/setSnapshot', payload: [] })
     this.props.dispatch({
@@ -129,6 +127,7 @@ class Snapshots extends React.Component {
     }
     return true
   }
+
   render() {
     if (!this.props.volume) {
       return null
@@ -152,18 +151,21 @@ class Snapshots extends React.Component {
         <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
               <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby}
-                icon="scan" onClick={() => { this.onAction({ type: 'snapshotCreate' }) }} type="primary" >
+                icon="scan"
+                onClick={() => { this.onAction({ type: 'snapshotCreate' }) }}
+                type="primary">
                 Take Snapshot
               </Button>
             </Tooltip>
             &nbsp;
             <Tooltip placement="top" title="Create a new snapshot and then create a backup of the snapshot.">
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary" >
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
                 Create Backup
               </Button>
             </Tooltip>
         </div>
-        </div>} bordered={false} >
+        </div>}
+        bordered={false}>
         <div style={{ float: 'right', fontSize: '14px' }}>
           Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>

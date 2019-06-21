@@ -75,7 +75,7 @@ class ResourceChart extends React.Component {
     }
     return (
       <div className={styles.resourceChart}>
-        <PieChart width={width} height={width} style={{ position: 'absolute' }} >
+        <PieChart width={width} height={width} style={{ position: 'absolute' }}>
           <Pie dataKey="value"
             data={data}
             cx={width / 2}

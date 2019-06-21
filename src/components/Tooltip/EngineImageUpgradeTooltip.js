@@ -4,7 +4,8 @@ import { Tooltip } from 'antd'
 import upgradeIcon from '../../assets/images/upgrade.svg'
 
 export default function EngineImageUpgradeTooltip({ currentVersion, latestVersion }) {
-  return (<Tooltip placement="topLeft" title={<div>
+  return (<Tooltip placement="topLeft"
+    title={<div>
     <p>Current engine image: { currentVersion }</p>
     <p>Engine image { latestVersion } is now available!</p>
   </div>}>

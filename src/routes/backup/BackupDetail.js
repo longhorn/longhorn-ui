@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
+import queryString from 'query-string'
 import RestoreBackup from './RestoreBackup'
 import BackupList from './BackupList'
-import queryString from 'query-string'
 
 function Backup({ host, backup, setting, loading, location, dispatch }) {
   const { data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter } = backup
@@ -73,10 +73,10 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
   }
 
   return (
-    <div className="content-inner" style={{display: 'flex', flexDirection: 'column', overflow: 'visible !important'}}>
+    <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <BackupList {...backupVolumesProps} />
       <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
-    </div >
+    </div>
   )
 }
 
@@ -89,4 +89,8 @@ Backup.propTypes = {
   setting: PropTypes.object,
 }
 
-export default connect(({ host, backup, setting, loading }) => ({ host, backup, setting, loading: loading.models.backup }))(Backup)
+export default connect(({
+  host, backup, setting, loading,
+}) => ({
+  host, backup, setting, loading: loading.models.backup,
+}))(Backup)

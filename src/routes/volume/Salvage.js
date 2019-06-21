@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import moment from 'moment'
 import { ModalBlur } from '../../components'
 import style from './Salvage.less'
-import moment from 'moment'
 import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
 
 const getReplicaShortName = (name) => {
@@ -69,6 +69,7 @@ class Salvage extends React.Component {
   }
 
   timer = null
+
   clearErrorMessage = () => {
     if (this.timer) {
       clearTimeout(this.timer)
@@ -141,10 +142,7 @@ class Salvage extends React.Component {
              replicas selected
           </p>
           {
-            this.state.showErrorMessage &&
-            this.selectedReplicaNames.length === 0 ?
-            <p className="faulted">Plase select at least one replica.</p>
-            : null
+            this.state.showErrorMessage && this.selectedReplicaNames.length === 0 ? <p className="faulted">Plase select at least one replica.</p> : null
           }
         </div>
       </ModalBlur>

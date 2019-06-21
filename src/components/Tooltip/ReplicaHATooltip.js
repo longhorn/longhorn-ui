@@ -16,7 +16,8 @@ export default function ReplicaHATooltip({ type = 'warning' }) {
   }
 
   return (
-  <Tooltip placement="topLeft" title={
+  <Tooltip placement="topLeft"
+    title={
     <div>
     { content }
     </div>

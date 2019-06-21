@@ -2,12 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import BackupVolumeList from './BackupVolumeList'
+import { Row, Col } from 'antd'
 import queryString from 'query-string'
+import BackupVolumeList from './BackupVolumeList'
 import { addPrefix } from '../../utils/pathnamePrefix'
 import CreateStandbyVolume from './CreateStandbyVolume'
 import { Filter } from '../../components/index'
-import { Row, Col } from 'antd'
+
 
 function Backup({ backup, loading, setting, dispatch, location }) {
   location.search = location.search ? location.search : {}
@@ -72,7 +73,7 @@ function Backup({ backup, loading, setting, dispatch, location }) {
     visible: createVolumeStandModalVisible,
     onOk(newVolume) {
       let data = Object.assign(newVolume, { standby: true, frontend: '' })
-      data.size = data.size.replace(/\s/ig,'')
+      data.size = data.size.replace(/\s/ig, '')
       dispatch({
         type: 'backup/createVolume',
         payload: data,
@@ -86,7 +87,7 @@ function Backup({ backup, loading, setting, dispatch, location }) {
   }
 
   return (
-    <div className="content-inner" style={{display: 'flex', flexDirection: 'column', overflow: 'visible !important'}}>
+    <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <Row gutter={24}>
         <Col lg={18} md={16} sm={24} xs={24}></Col>
         <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
@@ -95,7 +96,7 @@ function Backup({ backup, loading, setting, dispatch, location }) {
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
       <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
-    </div >
+    </div>
   )
 }
 

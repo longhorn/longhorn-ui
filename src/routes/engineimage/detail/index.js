@@ -1,8 +1,8 @@
 import React from 'react'
+import { connect } from 'dva'
 import PropTypes from 'prop-types'
 import { Row, Col, Card } from 'antd'
 import EngineImageInfo from './EngineImageInfo'
-import { connect } from 'dva'
 
 function EngineImageDetail({ engineimage, engineimageId }) {
   const selectedEngineImage = engineimage.data.find(item => item.id === engineimageId)

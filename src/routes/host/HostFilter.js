@@ -11,6 +11,7 @@ class HostFilter extends React.Component {
       isAllExpanded: false,
     }
   }
+
   toggleExpand = (isAllExpanded) => {
     if (isAllExpanded !== undefined) {
       this.setState({ isAllExpanded })
@@ -24,6 +25,7 @@ class HostFilter extends React.Component {
     }
     this.setState({ isAllExpanded: !this.state.isAllExpanded })
   }
+
   render() {
     const { location, onSearch, stateOption, fieldOption } = this.props
     const searchGroupProps = {

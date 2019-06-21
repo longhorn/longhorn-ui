@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from './resource.less'
 import CountUp from 'react-countup'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
+import styles from './resource.less'
 
 const countUpProps = {
   start: 0,
@@ -32,19 +32,23 @@ function Resource({ total, used, data }) {
     <div className={styles.number}>
       <div className={styles.item}>
         <p>Used</p>
-        <p><CountUp
-          end={used}
-          suffix="GB"
-          {...countUpProps}
-        /></p>
+        <p>
+          <CountUp
+            end={used}
+            suffix="GB"
+            {...countUpProps}
+          />
+        </p>
       </div>
       <div className={styles.item}>
         <p>Total</p>
-        <p><CountUp
-          end={total}
-          suffix="GB"
-          {...countUpProps}
-        /></p>
+        <p>
+          <CountUp
+            end={total}
+            suffix="GB"
+            {...countUpProps}
+          />
+        </p>
       </div>
     </div>
   </div>)

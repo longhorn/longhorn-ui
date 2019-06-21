@@ -6,8 +6,8 @@ const FormItem = Form.Item
 
 const form = ({
   form: {
-  getFieldDecorator,
-  getFieldsValue,
+    getFieldDecorator,
+    getFieldsValue,
   },
   data,
   saving,
@@ -52,7 +52,7 @@ const form = ({
         break
     }
     return (
-      <FormItem key={setting.id} label={<span style={{ fontSize: '14px' }}>{setting.definition.displayName}</span>} >
+      <FormItem key={setting.id} label={<span style={{ fontSize: '14px' }}>{setting.definition.displayName}</span>}>
         {getFieldDecorator(setting.name, {
           rules: parseSettingRules(setting),
           initialValue,
