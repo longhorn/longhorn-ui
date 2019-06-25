@@ -129,8 +129,8 @@ function SnapshotIcon(props, snapshotProps) {
         <div>
           <div className="tree-snapshot-icon" style={{ background: props.usercreated ? '#3085d5' : 'rgb(241, 196, 15)' }}>
             <Icon className="snapshot-icon" type="camera" />
-            { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-25px', left: '-25px' }}>
-                <Progress type="circle" percent={backupStatusObject.progress} width={80} />
+            { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-5px', left: '-5px' }}>
+                <Progress type="circle" percent={backupStatusObject.progress} width={40} />
               </div> : ''
             }
           </div>
