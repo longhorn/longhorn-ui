@@ -73,6 +73,18 @@ class Snapshots extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    let flag = nextProps.volume.backupStatus.some((item) => {
+      return item.progress <= 100
+    })
+    let nowProps = this.props.volume.backupStatus.filter((item) => {
+      return !item.backupError
+    })
+    let flagNow = nowProps.every((item) => {
+      return item.progress === 100
+    })
+    if (flag && !flagNow) {
+      return true
+    }
     if (nextProps.loading !== this.props.loading || nextProps.volume.state !== this.props.volume.state || nextProps.volume.migrationNodeID !== this.props.volume.migrationNodeID || nextProps.volume.currentImage !== this.props.volume.currentImage || nextProps.volume.engineImage !== this.props.volume.engineImage) {
       return true
     }

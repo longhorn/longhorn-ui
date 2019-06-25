@@ -3,6 +3,9 @@
     width: 80%;
     margin-left: 20%;
   }
+  .ant-tree-child-tree:after {
+    display: none !important;
+  }
   .lh-tree-snapshot.ant-tree{
     .tree-start-wrap>a{
       height: 35px
@@ -59,10 +62,12 @@
       display: inline-block;
       border-radius: 50%;
       background-color: hsl(209, 66%, 51%);
+      float: left;
+      margin-top: 3px;
     }
     >li>.ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree{
       margin-left: 40px;
-      margin-top: -44px;
+      margin-top: -12px;
       >li:before{
         width: 56px;
       }
@@ -107,7 +112,8 @@
     }
     @treeNodeGap: 160px;
     .ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree {
-      margin-top: -56px;
+      position: absolute;
+      top: 0px;
       margin-left: @treeNodeGap;
     }
 
@@ -126,7 +132,6 @@
     }
     li {
       position: relative;
-      top: 1px;
       min-width: 210px;
       a {
         position: relative;
@@ -143,10 +148,11 @@
 
     .ant-tree-child-tree {
       position: relative;
-      top: 0;
+      top: 0px;
       > li{
         margin-top: 0px;
         &:first-child {
+          height: 160px;
           padding-top: 0px !important;
         } 
         &::before {

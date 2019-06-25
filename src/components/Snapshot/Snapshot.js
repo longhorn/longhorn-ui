@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip, Progress } from 'antd'
 import { backupProgressModal } from '../../utils/backup'
 import { formatMib } from '../../utils/formater'
 import moment from 'moment'
@@ -93,6 +93,17 @@ function SnapshotIcon(props, snapshotProps) {
       </Menu.Item>
     </Menu>
   )
+  const backupStatusList = snapshotProps.volume.backupStatus
+  let backupStatusObject = null
+
+  if (backupStatusList && backupStatusList.length > 0) {
+    backupStatusObject = backupStatusList.filter((item) => {
+      return item.snapshot === props.name
+    })
+    backupStatusObject = backupStatusObject[0] ? backupStatusObject[0] : null
+  }
+  let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError ? <p className="snapshot-name">Error: {backupStatusObject.backupError}</p> : ''
+
   return (
     <Dropdown
       placement="bottomRight"
@@ -108,10 +119,20 @@ function SnapshotIcon(props, snapshotProps) {
         <p className="snapshot-name">Size: {formatMib(props.size)}</p>
         <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
         <p className="snapshot-name">Removed: {props.removed ? 'True' : 'False'}</p>
+        {
+          backupStatusObject ? <div><p className="snapshot-name">Snapshot: {backupStatusObject.snapshot}</p>
+            <p className="snapshot-created">Progress: {backupStatusObject.progress}%</p>
+            <p className="snapshot-created">Backup URL: {backupStatusObject.backupURL}</p>
+            {backupStatusErrorMsg}</div> : ''
+        }
       </div>}>
         <div>
           <div className="tree-snapshot-icon" style={{ background: props.usercreated ? '#3085d5' : 'rgb(241, 196, 15)' }}>
             <Icon className="snapshot-icon" type="camera" />
+            { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-25px', left: '-25px' }}>
+                <Progress type="circle" percent={backupStatusObject.progress} width={80} />
+              </div> : ''
+            }
           </div>
           <div className="tree-snapshot-desc">
             <p className="snapshot-name">{props.name.substr(0, 5)}</p>
@@ -187,6 +208,7 @@ class Snapshot extends React.Component {
       // let children = convertTree(props.snapshotTree, props)
       children = loop(props.snapshotTree, props)
     }
+
     return (
       <Tree
         defaultExpandAll
