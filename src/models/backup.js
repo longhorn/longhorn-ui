@@ -27,7 +27,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (history.location.pathname.indexOf('backup') > -1) {
+        if (history.location.pathname.slice(0, 7).indexOf('backup') > -1) {
           dispatch({
             type: 'query',
             payload: queryString.parse(location.search),
