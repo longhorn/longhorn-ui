@@ -30,12 +30,12 @@ class Volume extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('volumeTable').offsetHeight - 76
+    let height = document.getElementById('volumeTable').offsetHeight - 79
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('volumeTable').offsetHeight - 76
+      height = document.getElementById('volumeTable').offsetHeight - 79
       this.setState({
         height,
       })

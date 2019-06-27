@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Progress, Tooltip } from 'antd'
+import { Table, Progress, Tooltip, Tag } from 'antd'
 import classnames from 'classnames'
 import styles from './HostList.less'
 import { sortTable } from '../../utils/sort'
@@ -195,7 +195,35 @@ class List extends React.Component {
             </div>
           )
         },
-      }, {
+      },
+      {
+        title: 'Tags',
+        key: 'tags',
+        width: 100,
+        className: styles.size,
+        render: (text, record) => {
+          let forMap = (tag, index) => {
+            return (
+              <span style={{ marginBottom: '6px' }} key={index}>
+                <Tag color="rgb(39, 174, 95)">
+                  {tag}
+                </Tag>
+              </span>
+            )
+          }
+          let tagChild = ''
+          if (record.tags) {
+            tagChild = record.tags.map(forMap)
+          }
+
+          return (
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', alignItems: 'center' }}>
+              {tagChild}
+            </div>
+          )
+        },
+      },
+      {
         title: '',
         key: 'operation',
         width: 48,
