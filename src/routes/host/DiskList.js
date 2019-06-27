@@ -119,7 +119,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
         let forMap = (tag, index) => {
           return (
             <span style={{ marginBottom: '6px' }} key={index}>
-              <Tag>
+              <Tag color="#108eb9">
                 {tag}
               </Tag>
             </span>

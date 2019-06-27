@@ -71,21 +71,29 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
     })
   }
 
-  let forMap = (tag, index) => {
+  let forMapNode = (tag, index) => {
     return (
-      <Tag key={index}>
+      <Tag key={index} color="rgb(39, 174, 95)">
+        {tag}
+      </Tag>
+    )
+  }
+
+  let forMapDisk = (tag, index) => {
+    return (
+      <Tag key={index} color="#108eb9">
         {tag}
       </Tag>
     )
   }
   let tagDiskChild = ''
   if (selectedVolume.diskSelector) {
-    tagDiskChild = selectedVolume.diskSelector.map(forMap)
+    tagDiskChild = selectedVolume.diskSelector.map(forMapDisk)
   }
 
   let tagNodeChild = ''
   if (selectedVolume.diskSelector) {
-    tagNodeChild = selectedVolume.nodeSelector.map(forMap)
+    tagNodeChild = selectedVolume.nodeSelector.map(forMapNode)
   }
 
   return (
