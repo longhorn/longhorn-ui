@@ -77,7 +77,7 @@ class EditableDiskList extends React.Component {
         <div style={{ display: 'flex' }}>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Configure Node Schedudling
+              Node Scheduling
             </div>
             <div className={styles.control} style={{ width: '210px' }}>
               <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -94,7 +94,7 @@ class EditableDiskList extends React.Component {
           </div>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Configure Node Tags
+              Node Tags
             </div>
             <div className={styles.control} style={{ width: '700px', height: '40px', lineHeight: '40px' }}>
               <div>

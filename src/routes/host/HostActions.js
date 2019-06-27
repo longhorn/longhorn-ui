@@ -22,7 +22,7 @@ function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost })
 
   menuOptions.push({
     key: 'editDisk',
-    name: 'Edit Disks',
+    name: 'Edit node and disks',
     disabled: selected.status.key === 'down',
     tooltip: selected.status.key === 'down' ? 'Node must not be down' : '',
   })

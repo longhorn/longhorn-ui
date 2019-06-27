@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Progress, Tooltip } from 'antd'
+import { Table, Progress, Tooltip, Tag } from 'antd'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
 import './DiskList.less'
@@ -104,9 +104,35 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
         const reserved = record.storageReserved
         const total = record.storageMaximum - record.storageReserved
         return (
-          <div className="size">
+          <div className="size" style={{ textAlign: 'center' }}>
             <div>{formatMib(total)}</div>
             <div className="secondLabel" style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} Reserved` : null}</div>
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Tags',
+      key: 'tags',
+      width: 100,
+      render: (text, record) => {
+        let forMap = (tag, index) => {
+          return (
+            <span style={{ marginBottom: '6px' }} key={index}>
+              <Tag>
+                {tag}
+              </Tag>
+            </span>
+          )
+        }
+        let tagChild = ''
+        if (record.tags) {
+          tagChild = record.tags.map(forMap)
+        }
+
+        return (
+          <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', alignItems: 'center' }}>
+            {tagChild}
           </div>
         )
       },

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Alert, Icon } from 'antd'
+import { Alert, Icon, Tag } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib, utcStrToDate } from '../../../utils/formater'
@@ -71,6 +71,23 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
     })
   }
 
+  let forMap = (tag, index) => {
+    return (
+      <Tag key={index}>
+        {tag}
+      </Tag>
+    )
+  }
+  let tagDiskChild = ''
+  if (selectedVolume.diskSelector) {
+    tagDiskChild = selectedVolume.diskSelector.map(forMap)
+  }
+
+  let tagNodeChild = ''
+  if (selectedVolume.diskSelector) {
+    tagNodeChild = selectedVolume.nodeSelector.map(forMap)
+  }
+
   return (
     <div>
       {errorMsg}
@@ -113,6 +130,14 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       <div className={styles.row}>
         <span className={styles.label}> Created:</span>
         {moment(utcStrToDate(selectedVolume.created)).fromNow()}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Node Tags:</span>
+        {tagNodeChild}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Disk Tags:</span>
+        {tagDiskChild}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Last Backup:</span>
