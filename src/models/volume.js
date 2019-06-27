@@ -1,4 +1,4 @@
-import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate } from '../services/volume'
+import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
@@ -16,6 +16,9 @@ export default {
     selectPVCaction: [],
     WorkloadDetailModalItem: {},
     SnapshotDetailModalItem: [],
+    nodeTags: [],
+    diskTags: [],
+    tagsLoading: true,
     createVolumeModalVisible: false,
     createPVCModalVisible: false,
     createPVModalVisible: false,
@@ -125,6 +128,18 @@ export default {
       yield put({ type: 'hideCreateVolumeModal' })
       yield call(create, payload)
       yield put({ type: 'query' })
+    },
+    *showCreateVolumeModalBefore({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'showCreateVolumeModal' })
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
+      if (nodeTags.status === 200 && diskTags.status === 200) {
+        yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
+      } else {
+        yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
+      }
     },
     *delete({
       payload,
@@ -304,6 +319,9 @@ export default {
     showCreateVolumeModal(state, action) {
       return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }
     },
+    changeTagsLoading(state, action) {
+      return { ...state, ...action.payload }
+    },
     showCreatePVCModal(state, action) {
       return { ...state, defaultPvOrPvcName: action.item.name, selectPVCaction: action.payload, createPVCModalVisible: true, createPVCModalKey: Math.random() }
     },
@@ -335,7 +353,7 @@ export default {
       return { ...state, createPVCAllModalVisible: false, createPVCAllModalKey: Math.random() }
     },
     hideCreateVolumeModal(state) {
-      return { ...state, createVolumeModalVisible: false }
+      return { ...state, createVolumeModalVisible: false, tagsLoading: true }
     },
     hideCreatePVCModal(state) {
       return { ...state, createPVCModalVisible: false }
