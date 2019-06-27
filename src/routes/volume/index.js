@@ -48,7 +48,7 @@ class Volume extends React.Component {
 
   render() {
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate } = this.props.volume
+    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = queryString.parse(this.props.location.search)
@@ -373,7 +373,12 @@ class Volume extends React.Component {
         size: 20,
         iops: 1000,
         frontend: 'iscsi',
+        diskSelector: [],
+        nodeSelector: [],
       },
+      nodeTags,
+      diskTags,
+      tagsLoading,
       hosts,
       visible: createVolumeModalVisible,
       onOk(newVolume) {
@@ -508,7 +513,7 @@ class Volume extends React.Component {
 
     const addVolume = () => {
       dispatch({
-        type: 'volume/showCreateVolumeModal',
+        type: 'volume/showCreateVolumeModalBefore',
       })
       this.setState({
         CreateVolumeGen() {

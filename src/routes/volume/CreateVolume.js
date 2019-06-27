@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select } from 'antd'
+import { Form, Input, InputNumber, Select, Spin } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 const FormItem = Form.Item
@@ -20,6 +20,9 @@ const modal = ({
   visible,
   onCancel,
   onOk,
+  nodeTags,
+  diskTags,
+  tagsLoading,
   form: {
     getFieldDecorator,
     validateFields,
@@ -136,6 +139,24 @@ const modal = ({
           { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
           </Select>)}
         </FormItem>
+        <Spin spinning={tagsLoading}>
+          <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('nodeSelector', {
+              initialValue: [],
+            })(<Select mode="tags">
+            { nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
+        <Spin spinning={tagsLoading}>
+          <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('diskSelector', {
+              initialValue: [],
+            })(<Select mode="tags">
+            { diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
       </Form>
     </ModalBlur>
   )
@@ -148,6 +169,9 @@ modal.propTypes = {
   item: PropTypes.object,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  nodeTags: PropTypes.array,
+  diskTags: PropTypes.array,
+  tagsLoading: PropTypes.bool,
 }
 
 export default Form.create()(modal)

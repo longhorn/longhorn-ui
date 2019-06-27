@@ -86,3 +86,17 @@ export async function volumeActivate(data, url) {
     data,
   })
 }
+
+export async function getNodeTags() {
+  return request({
+    url: '/v1/nodetags',
+    method: 'get',
+  })
+}
+
+export async function getDiskTags() {
+  return request({
+    url: '/v1/disktags',
+    method: 'get',
+  })
+}
