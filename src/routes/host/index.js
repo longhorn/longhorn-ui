@@ -91,12 +91,13 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   const editDiskModalProps = {
     visible: editDisksModalVisible,
     node: selected,
-    onOk(disks, disableSchedulingDisks) {
+    onOk(disks, disableSchedulingDisks, updateNode) {
       dispatch({
         type: 'host/updateDisk',
         payload: {
           disks,
           disableSchedulingDisks,
+          updateNode,
           url: selected.actions.diskUpdate,
         },
       })

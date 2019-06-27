@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import { Radio, Checkbox, Form, Tooltip } from 'antd'
 import styles from './EditableDiskItem.less'
 import StorageInput from './StorageInput'
+import DistTag from './TagComponent.js'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
 import PathInput from './PathInput'
@@ -27,7 +28,12 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
   }
 
   return (
-    <div className={classnames(styles.ediableDisk, { [styles.rowDeleted]: disk.deleted })}>
+    <div style={{ position: 'relative' }} className={classnames(styles.ediableDisk, { [styles.rowDeleted]: disk.deleted })}>
+      <div style={{ position: 'absolute', left: 30, top: 15 }}>
+        {getFieldDecorator(`disks['${disk.id}']['tags']`, {
+          initialValue: disk.tags,
+        })(<DistTag tags={disk.tags} changeTags={(tags) => { form.setFieldsValue({ [`disks['${disk.id}']['tags']`]: tags }) }} />)}
+      </div>
       <div className={styles.formItem} style={{ width: '450px' }}>
         <div className={styles.label}>
           Path
@@ -104,6 +110,18 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           </FormItem>
         </div>
       </div>
+      {/* <div className={styles.formItem}>
+        <div className={styles.label}>
+          Disk Tags
+        </div>
+        <div className={styles.control} style={{ width: '100px' }}>
+          <FormItem style={{ margin: '3px 0px 0px 0px' }}>
+          {getFieldDecorator(`disks['${disk.id}']['tag']`, {
+            initialValue: disk.tags ? disk.tags.join(',') : '',
+          })(<Input type="text" size="large" />)}
+          </FormItem>
+        </div>
+      </div> */}
       <div className={styles.formItem}>
         <div className={styles.label}>
           Scheduling

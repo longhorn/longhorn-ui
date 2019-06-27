@@ -27,21 +27,21 @@ function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost })
     tooltip: selected.status.key === 'down' ? 'Node must not be down' : '',
   })
 
-  let toggleSchedulingTooltip = ''
-  if (!selected.conditions || !selected.conditions.Ready) {
-    toggleSchedulingTooltip = 'Node missing ready condition'
-  } else if (selected.conditions.Ready.status.toLowerCase() !== 'true') {
-    toggleSchedulingTooltip = 'Node must be ready'
-  } else if (!Object.values(selected.disks).some(d => d.allowScheduling === true)) {
-    toggleSchedulingTooltip = 'No disks enabled for scheduling'
-    selected.allowScheduling = false
-  }
-  menuOptions.push({
-    key: selected.allowScheduling ? 'disableScheduling' : 'enableScheduling',
-    name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling',
-    disabled: toggleSchedulingTooltip !== '',
-    tooltip: toggleSchedulingTooltip,
-  })
+  // let toggleSchedulingTooltip = ''
+  // if (!selected.conditions || !selected.conditions.Ready) {
+  //   toggleSchedulingTooltip = 'Node missing ready condition'
+  // } else if (selected.conditions.Ready.status.toLowerCase() !== 'true') {
+  //   toggleSchedulingTooltip = 'Node must be ready'
+  // } else if (!Object.values(selected.disks).some(d => d.allowScheduling === true)) {
+  //   toggleSchedulingTooltip = 'No disks enabled for scheduling'
+  //   selected.allowScheduling = false
+  // }
+  // menuOptions.push({
+  //   key: selected.allowScheduling ? 'disableScheduling' : 'enableScheduling',
+  //   name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling',
+  //   disabled: toggleSchedulingTooltip !== '',
+  //   tooltip: toggleSchedulingTooltip,
+  // })
 
   let removeNodeTooltip = ''
   if (selected.status.key !== 'down') {

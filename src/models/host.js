@@ -61,6 +61,7 @@ export default {
       if (payload.disableSchedulingDisks) {
         yield call(updateDisk, { disks: payload.disableSchedulingDisks }, payload.url)
       }
+      yield call(toggleScheduling, payload.updateNode)
       yield call(updateDisk, { disks: payload.disks }, payload.url)
       yield put({ type: 'query' })
     },

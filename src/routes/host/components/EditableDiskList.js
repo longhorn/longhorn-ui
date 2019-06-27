@@ -1,9 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Button } from 'antd'
+import { Form, Button, Radio } from 'antd'
+import styles from './EditableDiskItem.less'
 import EditableDiskItem from './EditableDiskItem'
 import { formatPath } from '../helper/index'
+import DistTag from './TagComponent.js'
 
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
 let uuid = 0
 
 class EditableDiskList extends React.Component {
@@ -65,11 +69,44 @@ class EditableDiskList extends React.Component {
   render() {
     const data = this.state.data
     const originDisks = this.originDisks
-    const { form } = this.props
+    const { form, node } = this.props
+    const { getFieldDecorator } = form
+
     return (
       <Form>
+        <div style={{ display: 'flex' }}>
+          <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
+            <div className={styles.label}>
+              Configure Node Schedudling
+            </div>
+            <div className={styles.control} style={{ width: '210px' }}>
+              <FormItem style={{ margin: '3px 0px 0px 0px' }}>
+                {getFieldDecorator('nodeAllowScheduling', {
+                  initialValue: node.allowScheduling,
+                })(
+                  <RadioGroup>
+                    <Radio value>Enable</Radio>
+                    <Radio value={false}>Disable</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+            </div>
+          </div>
+          <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
+            <div className={styles.label}>
+              Configure Node Tags
+            </div>
+            <div className={styles.control} style={{ width: '700px', height: '40px', lineHeight: '40px' }}>
+              <div>
+                {getFieldDecorator('tags', {
+                  initialValue: node.tags,
+                })(<DistTag nodeBoolean={true} tags={node.tags} changeTags={(tags) => { form.setFieldsValue({ tags }) }} />)}
+              </div>
+            </div>
+          </div>
+        </div>
         {data.map(d => (<EditableDiskItem key={d.id} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} />))}
-        <div style={{ textAlign: 'right', margin: '20px 20px' }}>
+        <div style={{ textAlign: 'right' }}>
           <Button style={{ backgroundColor: '#eef0f1' }} onClick={() => this.onAdd()}> Add Disk </Button>
         </div>
       </Form>

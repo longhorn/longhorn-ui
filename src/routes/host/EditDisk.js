@@ -24,7 +24,6 @@ const modal = ({
       if (errors) {
         return
       }
-
       const storageKeys = ['storageMaximum', 'storageReserved', 'storageAvailable', 'storageScheduled']
 
       const deletedDiskIds = Object.keys(values.disks).filter(id => values.disks[id].deleted)
@@ -32,6 +31,7 @@ const modal = ({
       const disabledSchedulingDiskIds = deletedDiskIds.filter(id => allowSchedulingDiskIds.indexOf(id) > -1)
       const updatedDisks = Object.keys(values.disks).filter(k => values.disks[k].deleted !== true).map(k => {
         const disk = { ...values.disks[k] }
+        // disk.tags = ['ssd']
         const originDisk = node.disks[k]
         storageKeys.forEach(sk => {
           disk[sk] = giToByte(disk[sk])
@@ -46,20 +46,20 @@ const modal = ({
         }
         return disk
       })
-
+      let updateNode = Object.assign({}, node, { tags: values.tags, allowScheduling: values.nodeAllowScheduling })
       if (disabledSchedulingDiskIds.length > 0) {
         const disabledSchedulingDisks = Object.keys(node.disks).map(id => {
           return { ...node.disks[id], allowScheduling: disabledSchedulingDiskIds.indexOf(id) > -1 ? false : node.disks[id].allowScheduling }
         })
-        onOk(updatedDisks, disabledSchedulingDisks)
+        onOk(updatedDisks, disabledSchedulingDisks, updateNode)
       } else {
-        onOk(updatedDisks)
+        onOk(updatedDisks, false, updateNode)
       }
     })
   }
 
   const modalOpts = {
-    title: 'Disks',
+    title: 'Edit Node and Disks',
     visible,
     onCancel,
     onOk: handleOk,
