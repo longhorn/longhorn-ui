@@ -52,14 +52,15 @@ const form = ({
         break
     }
     return (
-      <FormItem key={setting.id} label={<span style={{ fontSize: '14px' }}>{setting.definition.displayName}</span>}>
+      <FormItem key={setting.id}>
+        <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
         {getFieldDecorator(setting.name, {
           rules: parseSettingRules(setting),
           initialValue,
           valuePropName,
         })(genInputItem(setting))
         }
-        <Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}{setting.definition.description}</small>
+        <div><Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}{setting.definition.description}</small></div>
       </FormItem>
     )
   }
@@ -98,7 +99,7 @@ const form = ({
 
   return (
     <Spin spinning={saving}>
-      {<Form layout="horizontal" className={styles.setting}>
+      {<Form className={styles.setting}>
         {settings}
         <FormItem style={{ textAlign: 'center' }}>
           <Button
