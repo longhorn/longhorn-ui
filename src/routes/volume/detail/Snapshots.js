@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Spin, Tooltip, Card, Switch } from 'antd'
+import { Button, Tooltip, Card, Switch } from 'antd'
 import { Snapshot } from '../../../components'
 import { backupProgressModal } from '../../../utils/backup'
 import styles from './index.less'
@@ -72,42 +72,6 @@ class Snapshots extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    let flag = nextProps.volume.backupStatus.some((item) => {
-      return item.progress <= 100
-    })
-    let nowProps = this.props.volume.backupStatus.filter((item) => {
-      return !item.backupError
-    })
-    let flagNow = nowProps.every((item) => {
-      return item.progress === 100
-    })
-    if (flag && !flagNow) {
-      return true
-    }
-    if (nextProps.loading !== this.props.loading || nextProps.volume.state !== this.props.volume.state || nextProps.volume.migrationNodeID !== this.props.volume.migrationNodeID || nextProps.volume.currentImage !== this.props.volume.currentImage || nextProps.volume.engineImage !== this.props.volume.engineImage) {
-      return true
-    }
-    // avoid unnecessary dom update
-    if (nextProps.showRemoved !== this.props.showRemoved) {
-      return true
-    }
-    if (nextProps.showRemoved === false && nextProps.snapshotTree === this.props.snapshotTree) {
-      return false
-    }
-    if (nextProps.showRemoved === false && nextProps.snapshotTree.length !== this.props.snapshotTree.length) {
-      return true
-    }
-    if (nextProps.showRemoved === true && nextProps.snapshotTreeWithRemoved === this.props.snapshotTreeWithRemoved) {
-      return false
-    }
-    if (nextProps.showRemoved === true && nextProps.snapshotTreeWithRemoved.length !== this.props.snapshotTreeWithRemoved.length) {
-      return true
-    }
-    const result = nextProps.showRemoved ? this.isSameTree(nextProps.snapshotTreeWithRemoved, this.props.snapshotTreeWithRemoved) : this.isSameTree(nextProps.snapshotTree, this.props.snapshotTree)
-    return !result
-  }
-
   componentWillUnmount() {
     this.props.dispatch({ type: 'snapshotModal/setSnapshot', payload: [] })
     this.props.dispatch({
@@ -151,13 +115,8 @@ class Snapshots extends React.Component {
       snapshotTree: this.props.showRemoved ? this.props.snapshotTreeWithRemoved : this.props.snapshotTree,
       volumeHead: this.props.volumeHead,
     }
-    // Must regenerate tree, or there are some bugs when update tree
-    const SnapshotGen = () => {
-      return (<Snapshot {...treeProps} onAction={this.onAction} />)
-    }
 
     return (
-      <Spin spinning={this.props.loading}>
       <Card title={<div className={styles.header}>
         <div>Snapshots</div>
         <div>
@@ -183,11 +142,10 @@ class Snapshots extends React.Component {
         </div>
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
           <div style={{ marginTop: '20px' }}>
-            <SnapshotGen />
+            <Snapshot {...treeProps} onAction={this.onAction} />
           </div>
         </div>
-        </Card>
-      </Spin>
+      </Card>
     )
   }
 }
