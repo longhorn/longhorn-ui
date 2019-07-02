@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip, Progress } from 'antd'
+import { Tree, Icon, Menu, Dropdown, Button, Popconfirm, Tooltip, Progress, Spin } from 'antd'
 import { backupProgressModal } from '../../utils/backup'
 import { formatMib } from '../../utils/formater'
 import moment from 'moment'
@@ -201,24 +201,40 @@ const loop = (data, props) => data.map((item) => {
 })
 
 class Snapshot extends React.Component {
+  state = {
+    key: Math.random(),
+    loadingState: true,
+    loading: true,
+  }
+
   render() {
     let props = this.props
     let children = (<TreeNode key="1" title={CurrentPoint(props)} />)
     if (props.snapshotTree.length > 0) {
-      // let children = convertTree(props.snapshotTree, props)
       children = loop(props.snapshotTree, props)
+      if (props.loading || this.state.loadingState !== props.loading) {
+        this.state.loadingState = props.loading
+        this.state.loading = true
+        setTimeout(() => {
+          this.state.loading = false
+          this.state.key = Math.random()
+        }, 0)
+      }
     }
 
     return (
-      <Tree
-        defaultExpandAll
-        className="lh-tree-snapshot"
-        autoExpandParent={false}
-      >
-        <TreeNode className="tree-start-wrap" title={StartPoint()} key={`${props.volume.id}`}>
-          {children}
-        </TreeNode>
-      </Tree>
+      <Spin spinning={this.state.loading}>
+        <Tree
+          defaultExpandAll
+          className="lh-tree-snapshot"
+          autoExpandParent={false}
+          key={this.state.key}
+        >
+          <TreeNode className="tree-start-wrap" title={StartPoint()} key={`${props.volume.id}`}>
+            {children}
+          </TreeNode>
+        </Tree>
+      </Spin>
     )
   }
 }
