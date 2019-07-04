@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tabs, Row, Col, Radio, InputNumber, Select, Input } from 'antd'
+import { Tabs, Row, Col, Radio, InputNumber, Select, Input, Steps, Button, message } from 'antd'
 import prettyCron from '../../utils/prettycron'
 import cronValidate from '../../utils/cronValidate'
 import PropTypes from 'prop-types'
@@ -8,6 +8,25 @@ import style from './ReactCron.less'
 const TabPane = Tabs.TabPane
 const RadioGroup = Radio.Group
 const Option = Select.Option
+const { Step } = Steps
+const steps = [
+  {
+    title: 'Minutes',
+    content: 'minutes',
+  },
+  {
+    title: 'Hour',
+    content: 'hour',
+  },
+  {
+    title: 'Day',
+    content: 'day',
+  },
+  {
+    title: 'Month',
+    content: 'month',
+  },
+];
 
 class ReactCron extends React.Component {
   constructor(props) {
@@ -17,6 +36,8 @@ class ReactCron extends React.Component {
       secondText: '*',
       cornText: '',
       cornFormat: false,
+      current: 0,
+      activeKey: 'Cron',
       second:{
         cronEvery: '1',
         incrementStart: 3,
@@ -778,7 +799,22 @@ class ReactCron extends React.Component {
     }
   }
 
+  next() {
+    const current = this.state.current + 1;
+    this.setState({ current });
+  }
+
+  prev() {
+    const current = this.state.current - 1;
+    this.setState({ current });
+  }
+
+  activeKeyChange(key) {
+    this.setState({activeKey: key})
+  }
+
   render() {
+    const { current } = this.state
     const children = []
     for (let i = 0; i < 60; i++) {
       children.push(<Option key={i}>{i}</Option>)
@@ -821,7 +857,7 @@ class ReactCron extends React.Component {
     }
     return (
       <div>
-        <Tabs onChange={this.callback} type="card">
+        <Tabs activeKey={this.state.activeKey} onChange={(key) => this.activeKeyChange(key)} type="card">
           <TabPane tab="Cron" key="Cron">
             <div style={{minHeight: '160px'}}>
               <div style={{width: '60%', display: 'flex', alignItems: 'center'}}>
@@ -830,239 +866,273 @@ class ReactCron extends React.Component {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Minutes" key="Minutes">
-            <RadioGroup onChange={this.minutesOnChange} value={this.state.minutesValue}>
-              <Row>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={1}>Every minutes</Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={2}>
-                    Every
-                    <InputNumber className={style.cronInput} min={1} max={60} disabled={!(this.state.minutes.cronEvery === '2')} defaultValue={this.state.minutes.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { incrementStart: val, minutesText: this.state.minutes.cronEvery === '2' ? `${this.state.minutes.incrementIncrement}/${val}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                    minutes(s) starting at minutes
-                    <InputNumber className={style.cronInput} min={1} max={59} disabled={!(this.state.minutes.cronEvery === '2')} defaultValue={this.state.minutes.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { incrementIncrement: val, minutesText: this.state.minutes.cronEvery === '2' ? `${val}/${this.state.minutes.incrementStart}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                  </Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={3}>
-                    Specific minutes (choose one or many)
-                  </Radio>
-                  <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="Please select"
-                      disabled={!(this.state.minutes.cronEvery === '3')}
-                      onChange={this.minutesMultipleChange}
-                    >
-                      {children}
-                    </Select>
-                  </div>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={4}>
-                    Every minutes between
-                    <InputNumber className={style.cronInput} min={0} max={this.state.minutes.rangeEnd} defaultValue={this.state.minutes.rangeStart} disabled={!(this.state.minutes.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { rangeStart: val, minutesText: this.state.minutes.cronEvery === '4' ? `${val}-${this.state.minutes.rangeEnd}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                    and
-                    <InputNumber className={style.cronInput} min={this.state.minutes.rangeStart} max={59} defaultValue={this.state.minutes.rangeEnd} disabled={!(this.state.minutes.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { rangeEnd: val, minutesText: this.state.minutes.cronEvery === '4' ? `${this.state.minutes.rangeStart}-${val}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                  </Radio>
-                </Col>
-              </Row>
-            </RadioGroup>
-          </TabPane>
-          <TabPane tab="Hours" key="Hours">
-            <RadioGroup onChange={this.hourOnChange} value={this.state.hourValue}>
-              <Row>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={1}>Every hour</Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={2}>
-                    Every
-                    <InputNumber className={style.cronInput} min={0} max={23} disabled={!(this.state.hour.cronEvery === '2')} defaultValue={this.state.hour.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { incrementStart: val, hourText: this.state.hour.cronEvery === '2' ? `${this.state.hour.incrementIncrement}/${val}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                    hour(s) starting at hour
-                    <InputNumber className={style.cronInput} min={0} max={23} disabled={!(this.state.hour.cronEvery === '2')} defaultValue={this.state.hour.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { incrementIncrement: val, hourText: this.state.hour.cronEvery === '2' ? `${val}/${this.state.hour.incrementStart}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                  </Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={3}>
-                    Specific hour (choose one or many)z
-                  </Radio>
-                  <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="Please select"
-                      disabled={!(this.state.hour.cronEvery === '3')}
-                      onChange={this.hourMultipleChange}
-                    >
-                      {childrenHour}
-                    </Select>
-                  </div>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={4}>
-                    Every hour between
-                    <InputNumber className={style.cronInput} min={0} max={this.state.hour.rangeEnd} defaultValue={this.state.hour.rangeStart} disabled={!(this.state.hour.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { rangeStart: val, hourText: this.state.hour.cronEvery === '4' ? `${val}-${this.state.hour.rangeEnd}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                    and
-                    <InputNumber className={style.cronInput} min={this.state.hour.rangeStart} max={23} defaultValue={this.state.hour.rangeEnd} disabled={!(this.state.hour.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { rangeEnd: val, hourText: this.state.hour.cronEvery === '4' ? `${this.state.hour.rangeStart}-${val}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
-                  </Radio>
-                </Col>
-              </Row>
-            </RadioGroup>
-          </TabPane>
-          <TabPane tab="Day" key="Day">
-            <RadioGroup onChange={this.dayOnChange} value={this.state.dayValue}>
-              <Row>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={1}>Every day</Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={2}>
-                    Every
-                    <InputNumber className={style.cronInput} min={1} max={7} disabled={!(this.state.day.cronEvery === '2')} defaultValue={this.state.day.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.week, { incrementIncrement: val, weekText: this.state.day.cronEvery === '2' ? `${val}/${this.state.week.incrementStart}` : this.state.weekText }); this.setState({...this.state, weekText: data.weekText, week: data }, () => { this.prettyCronfun() })}}></InputNumber>
-                    day(s) starting on
-                    <Select className={style.cronInput} defaultValue="1" disabled={!(this.state.day.cronEvery === '2')} style={{ width: 120 }} onChange={this.weekChange}>
-                      {childrenWeekAry}
-                    </Select>
-                  </Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={3}>
-                    Every
-                    <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '3')} defaultValue={this.state.day.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.day, { incrementIncrement: val, dayText: this.state.day.cronEvery === '3' ? `${this.state.day.incrementStart}/${val}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
-                    day(s) starting at the
-                    <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '3')} defaultValue={this.state.day.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.day, { incrementStart: val, dayText: this.state.day.cronEvery === '3' ? `${val}/${this.state.day.incrementIncrement}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
-                  </Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={4}>
-                    Specific day of week (choose one or many)
-                  </Radio>
-                  <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="Please select"
-                      onChange={this.weekSpeChange}
-                      disabled={!(this.state.day.cronEvery === '4')}
-                    >
-                      {childrenSpeWeekAry}
-                    </Select>
-                  </div>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={5}>
-                    Specific day of month (choose one or many)
-                  </Radio>
-                  <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="Please select"
-                      onChange={this.daySpeChange}
-                      disabled={!(this.state.day.cronEvery === '5')}
-                    >
-                      {childrenSpeMonthAry}
-                    </Select>
-                  </div>
-                </Col>
-                {/* <Col span={24}>
-                  <Radio value={6}>
-                    On the last day of the month
-                  </Radio>
-                </Col>
-                <Col span={24}>
-                  <Radio value={7}>
-                    On the last weekday of the month
-                  </Radio>
-                </Col> */}
-                {/* <Col span={24}>
-                  <Radio value={8}>
-                    On the last
-                    <Select
-                        defaultValue="1L" 
-                        disabled={!(this.state.day.cronEvery === '8')} 
-                        style={{ width: 180 }} 
-                        onChange={this.dayLaChange}
-                      >
-                        {childrenLAWeekAry}
-                    </Select>
-                    of the month
-                  </Radio>
-                </Col> */}
-                {/* <Col span={24}>
-                  <Radio value={9}>
-                    <InputNumber min={1} max={31} disabled={!(this.state.day.cronEvery === '9')} defaultValue={this.state.day.cronDaysBeforeEomMinus} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysBeforeEomMinus: val, dayText: this.state.day.cronEvery === '9' ? `L-${val}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
-                    day(s) before the end of the month
-                  </Radio>
-                </Col> */}
-                {/* <Col className={style.cronClo} span={24}>
-                  <Radio value={10}>
-                    Nearest weekday (Monday to Friday) to the
-                    <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '10')} defaultValue={this.state.day.cronDaysNearestWeekday} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysNearestWeekday: val, dayText: this.state.day.cronEvery === '10' ? `${val}W` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
-                    of the month
-                  </Radio>
-                </Col> */}
-                {/* <Col span={24}>
-                  <Radio value={11}>
-                    On the
-                    <InputNumber min={1} max={5} disabled={!(this.state.day.cronEvery === '11')} defaultValue={this.state.week.cronNthDayDay} onChange={(val)=>{let data = Object.assign({}, this.state.week, { cronNthDayNth: val, weekText: this.state.day.cronEvery === '11' ? `${this.state.week.cronNthDayDay}#${val}` : this.state.weekText }); this.setState({...this.state, dayText: '?', week: data, weekText: data.weekText }, () => { this.prettyCronfun() })}}></InputNumber>
-                    <Select 
-                      defaultValue={this.state.week.cronNthDayDay}
-                      disabled={!(this.state.day.cronEvery === '11')}
-                      onChange={this.weekLaChange}
-                      style={{ width: 180 }}
-                    >
-                      {childrenWeekAry}
-                    </Select>
-                    of the month
-                  </Radio>
-                </Col> */}
-              </Row>
-            </RadioGroup>
-          </TabPane>
-          <TabPane tab="Month" key="Month">
-            <RadioGroup onChange={this.monthOnChange} value={this.state.monthValue}>
-              <Row>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={1}>Every month</Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={2}>
-                    Every
-                    <InputNumber className={style.cronInput} min={1} max={12} disabled={!(this.state.month.cronEvery === '2')} defaultValue={this.state.month.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.month, { incrementStart: val, monthText: this.state.month.cronEvery === '2' ? `${this.state.month.incrementIncrement}/${val}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
-                    month(s) starting at month
-                    <InputNumber className={style.cronInput} min={1} max={12} disabled={!(this.state.month.cronEvery === '2')} defaultValue={this.state.month.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.month, { incrementIncrement: val, monthText: this.state.month.cronEvery === '2' ? `${val}/${this.state.month.incrementStart}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
-                  </Radio>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={3}>
-                    Specific month (choose one or many)
-                  </Radio>
-                  <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="Please select"
-                      disabled={!(this.state.month.cronEvery === '3')}
-                      onChange={this.monthMultipleChange}
-                    >
-                      {childrenMonth}
-                    </Select>
-                  </div>
-                </Col>
-                <Col className={style.cronClo} span={24}>
-                  <Radio value={4}>
-                    Every month between
-                    <InputNumber className={style.cronInput} min={1} max={this.state.month.rangeEnd} defaultValue={this.state.month.rangeStart} disabled={!(this.state.month.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.month, { rangeStart: val, monthText: this.state.month.cronEvery === '4' ? `${val}-${this.state.month.rangeEnd}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
-                    and
-                    <InputNumber className={style.cronInput} min={this.state.month.rangeStart} max={12} defaultValue={this.state.month.rangeEnd} disabled={!(this.state.month.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.month, { rangeEnd: val, monthText: this.state.month.cronEvery === '4' ? `${this.state.month.rangeStart}-${val}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
-                  </Radio>
-                </Col>
-              </Row>
-            </RadioGroup>
+          <TabPane tab="Generate Cron" key="generateCron">
+            <div style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', left: 0 }}>
+                <Steps direction="vertical" size="small" current={current}>
+                  {steps.map(item => (
+                    <Step key={item.title} title={item.title} />
+                  ))}
+                </Steps>
+              </div>
+              <div className="steps-content">{ 
+                steps[current].content == 'minutes' ? 
+                <div style={{padding: '20px 0px 10px 20px', marginLeft: '110px', marginTop: '20px', background: '#fafafa', border: '1px dashed #e9e9e9'}}>
+                  <RadioGroup onChange={this.minutesOnChange} value={this.state.minutesValue}>
+                    <Row>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={1}>Every minutes</Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={2}>
+                          Every
+                          <InputNumber className={style.cronInput} min={1} max={60} disabled={!(this.state.minutes.cronEvery === '2')} defaultValue={this.state.minutes.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { incrementStart: val, minutesText: this.state.minutes.cronEvery === '2' ? `${this.state.minutes.incrementIncrement}/${val}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                          minutes(s) starting at minutes
+                          <InputNumber className={style.cronInput} min={1} max={59} disabled={!(this.state.minutes.cronEvery === '2')} defaultValue={this.state.minutes.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { incrementIncrement: val, minutesText: this.state.minutes.cronEvery === '2' ? `${val}/${this.state.minutes.incrementStart}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                        </Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={3}>
+                          Specific minutes (choose one or many)
+                        </Radio>
+                        <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
+                          <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="Please select"
+                            disabled={!(this.state.minutes.cronEvery === '3')}
+                            onChange={this.minutesMultipleChange}
+                          >
+                            {children}
+                          </Select>
+                        </div>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={4}>
+                          Every minutes between
+                          <InputNumber className={style.cronInput} min={0} max={this.state.minutes.rangeEnd} defaultValue={this.state.minutes.rangeStart} disabled={!(this.state.minutes.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { rangeStart: val, minutesText: this.state.minutes.cronEvery === '4' ? `${val}-${this.state.minutes.rangeEnd}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                          and
+                          <InputNumber className={style.cronInput} min={this.state.minutes.rangeStart} max={59} defaultValue={this.state.minutes.rangeEnd} disabled={!(this.state.minutes.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.minutes, { rangeEnd: val, minutesText: this.state.minutes.cronEvery === '4' ? `${this.state.minutes.rangeStart}-${val}` : this.state.minutesText }); this.setState({...this.state, minutesText: data.minutesText, minutes: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                        </Radio>
+                      </Col>
+                    </Row>
+                  </RadioGroup>
+                </div> : ''}
+                {steps[current].content == 'hour' ? 
+                <div style={{padding: '20px 0px 10px 20px', marginLeft: '110px', marginTop: '20px', background: '#fafafa', border: '1px dashed #e9e9e9'}}>
+                  <RadioGroup onChange={this.hourOnChange} value={this.state.hourValue}>
+                    <Row>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={1}>Every hour</Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={2}>
+                          Every
+                          <InputNumber className={style.cronInput} min={0} max={23} disabled={!(this.state.hour.cronEvery === '2')} defaultValue={this.state.hour.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { incrementStart: val, hourText: this.state.hour.cronEvery === '2' ? `${this.state.hour.incrementIncrement}/${val}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                          hour(s) starting at hour
+                          <InputNumber className={style.cronInput} min={0} max={23} disabled={!(this.state.hour.cronEvery === '2')} defaultValue={this.state.hour.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { incrementIncrement: val, hourText: this.state.hour.cronEvery === '2' ? `${val}/${this.state.hour.incrementStart}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                        </Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={3}>
+                          Specific hour (choose one or many)z
+                        </Radio>
+                        <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
+                          <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="Please select"
+                            disabled={!(this.state.hour.cronEvery === '3')}
+                            onChange={this.hourMultipleChange}
+                          >
+                            {childrenHour}
+                          </Select>
+                        </div>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={4}>
+                          Every hour between
+                          <InputNumber className={style.cronInput} min={0} max={this.state.hour.rangeEnd} defaultValue={this.state.hour.rangeStart} disabled={!(this.state.hour.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { rangeStart: val, hourText: this.state.hour.cronEvery === '4' ? `${val}-${this.state.hour.rangeEnd}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                          and
+                          <InputNumber className={style.cronInput} min={this.state.hour.rangeStart} max={23} defaultValue={this.state.hour.rangeEnd} disabled={!(this.state.hour.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.hour, { rangeEnd: val, hourText: this.state.hour.cronEvery === '4' ? `${this.state.hour.rangeStart}-${val}` : this.state.hourText }); this.setState({...this.state, hourText: data.hourText, hour: data },() => { this.prettyCronfun() })}} ></InputNumber>
+                        </Radio>
+                      </Col>
+                    </Row>
+                  </RadioGroup>
+                </div> : ''}
+                {steps[current].content == 'day' ? 
+                <div style={{padding: '20px 0px 10px 20px', marginLeft: '110px', marginTop: '20px', background: '#fafafa', border: '1px dashed #e9e9e9'}}>
+                  <RadioGroup onChange={this.dayOnChange} value={this.state.dayValue}>
+                    <Row>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={1}>Every day</Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={2}>
+                          Every
+                          <InputNumber className={style.cronInput} min={1} max={7} disabled={!(this.state.day.cronEvery === '2')} defaultValue={this.state.day.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.week, { incrementIncrement: val, weekText: this.state.day.cronEvery === '2' ? `${val}/${this.state.week.incrementStart}` : this.state.weekText }); this.setState({...this.state, weekText: data.weekText, week: data }, () => { this.prettyCronfun() })}}></InputNumber>
+                          day(s) starting on
+                          <Select className={style.cronInput} defaultValue="1" disabled={!(this.state.day.cronEvery === '2')} style={{ width: 120 }} onChange={this.weekChange}>
+                            {childrenWeekAry}
+                          </Select>
+                        </Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={3}>
+                          Every
+                          <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '3')} defaultValue={this.state.day.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.day, { incrementIncrement: val, dayText: this.state.day.cronEvery === '3' ? `${this.state.day.incrementStart}/${val}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
+                          day(s) starting at the
+                          <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '3')} defaultValue={this.state.day.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.day, { incrementStart: val, dayText: this.state.day.cronEvery === '3' ? `${val}/${this.state.day.incrementIncrement}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
+                        </Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={4}>
+                          Specific day of week (choose one or many)
+                        </Radio>
+                        <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
+                          <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="Please select"
+                            onChange={this.weekSpeChange}
+                            disabled={!(this.state.day.cronEvery === '4')}
+                          >
+                            {childrenSpeWeekAry}
+                          </Select>
+                        </div>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={5}>
+                          Specific day of month (choose one or many)
+                        </Radio>
+                        <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
+                          <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="Please select"
+                            onChange={this.daySpeChange}
+                            disabled={!(this.state.day.cronEvery === '5')}
+                          >
+                            {childrenSpeMonthAry}
+                          </Select>
+                        </div>
+                      </Col>
+                      {/* <Col span={24}>
+                        <Radio value={6}>
+                          On the last day of the month
+                        </Radio>
+                      </Col>
+                      <Col span={24}>
+                        <Radio value={7}>
+                          On the last weekday of the month
+                        </Radio>
+                      </Col> */}
+                      {/* <Col span={24}>
+                        <Radio value={8}>
+                          On the last
+                          <Select
+                              defaultValue="1L" 
+                              disabled={!(this.state.day.cronEvery === '8')} 
+                              style={{ width: 180 }} 
+                              onChange={this.dayLaChange}
+                            >
+                              {childrenLAWeekAry}
+                          </Select>
+                          of the month
+                        </Radio>
+                      </Col> */}
+                      {/* <Col span={24}>
+                        <Radio value={9}>
+                          <InputNumber min={1} max={31} disabled={!(this.state.day.cronEvery === '9')} defaultValue={this.state.day.cronDaysBeforeEomMinus} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysBeforeEomMinus: val, dayText: this.state.day.cronEvery === '9' ? `L-${val}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
+                          day(s) before the end of the month
+                        </Radio>
+                      </Col> */}
+                      {/* <Col className={style.cronClo} span={24}>
+                        <Radio value={10}>
+                          Nearest weekday (Monday to Friday) to the
+                          <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '10')} defaultValue={this.state.day.cronDaysNearestWeekday} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysNearestWeekday: val, dayText: this.state.day.cronEvery === '10' ? `${val}W` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
+                          of the month
+                        </Radio>
+                      </Col> */}
+                      {/* <Col span={24}>
+                        <Radio value={11}>
+                          On the
+                          <InputNumber min={1} max={5} disabled={!(this.state.day.cronEvery === '11')} defaultValue={this.state.week.cronNthDayDay} onChange={(val)=>{let data = Object.assign({}, this.state.week, { cronNthDayNth: val, weekText: this.state.day.cronEvery === '11' ? `${this.state.week.cronNthDayDay}#${val}` : this.state.weekText }); this.setState({...this.state, dayText: '?', week: data, weekText: data.weekText }, () => { this.prettyCronfun() })}}></InputNumber>
+                          <Select 
+                            defaultValue={this.state.week.cronNthDayDay}
+                            disabled={!(this.state.day.cronEvery === '11')}
+                            onChange={this.weekLaChange}
+                            style={{ width: 180 }}
+                          >
+                            {childrenWeekAry}
+                          </Select>
+                          of the month
+                        </Radio>
+                      </Col> */}
+                    </Row>
+                  </RadioGroup>
+                </div> : ''}
+                {steps[current].content == 'month' ? 
+                <div style={{padding: '20px 0px 10px 20px', marginLeft: '110px', marginTop: '20px', background: '#fafafa', border: '1px dashed #e9e9e9'}}>
+                  <RadioGroup onChange={this.monthOnChange} value={this.state.monthValue}>
+                    <Row>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={1}>Every month</Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={2}>
+                          Every
+                          <InputNumber className={style.cronInput} min={1} max={12} disabled={!(this.state.month.cronEvery === '2')} defaultValue={this.state.month.incrementStart} onChange={(val)=>{let data = Object.assign({}, this.state.month, { incrementStart: val, monthText: this.state.month.cronEvery === '2' ? `${this.state.month.incrementIncrement}/${val}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
+                          month(s) starting at month
+                          <InputNumber className={style.cronInput} min={1} max={12} disabled={!(this.state.month.cronEvery === '2')} defaultValue={this.state.month.incrementIncrement} onChange={(val)=>{let data = Object.assign({}, this.state.month, { incrementIncrement: val, monthText: this.state.month.cronEvery === '2' ? `${val}/${this.state.month.incrementStart}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
+                        </Radio>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={3}>
+                          Specific month (choose one or many)
+                        </Radio>
+                        <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
+                          <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="Please select"
+                            disabled={!(this.state.month.cronEvery === '3')}
+                            onChange={this.monthMultipleChange}
+                          >
+                            {childrenMonth}
+                          </Select>
+                        </div>
+                      </Col>
+                      <Col className={style.cronClo} span={24}>
+                        <Radio value={4}>
+                          Every month between
+                          <InputNumber className={style.cronInput} min={1} max={this.state.month.rangeEnd} defaultValue={this.state.month.rangeStart} disabled={!(this.state.month.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.month, { rangeStart: val, monthText: this.state.month.cronEvery === '4' ? `${val}-${this.state.month.rangeEnd}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
+                          and
+                          <InputNumber className={style.cronInput} min={this.state.month.rangeStart} max={12} defaultValue={this.state.month.rangeEnd} disabled={!(this.state.month.cronEvery === '4')} onChange={(val)=>{let data = Object.assign({}, this.state.month, { rangeEnd: val, monthText: this.state.month.cronEvery === '4' ? `${this.state.month.rangeStart}-${val}` : this.state.monthText }); this.setState({...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() })}} ></InputNumber>
+                        </Radio>
+                      </Col>
+                    </Row>
+                  </RadioGroup>
+                </div> : ''}
+                </div>
+              <div style={{margin: '20px', textAlign: 'right'}}>
+                {current > 0 && (
+                  <Button style={{ marginRight: 8 }} onClick={() => this.prev()}>
+                    Previous
+                  </Button>
+                )}
+                {current < steps.length - 1 && (
+                  <Button type="primary" onClick={() => this.next()}>
+                    Next
+                  </Button>
+                )}
+                {current === steps.length - 1 && (
+                  <Button type="primary" onClick={() => {this.setState({activeKey: 'Cron'})}} >
+                    Done
+                  </Button>
+                )}
+              </div>
+            </div>
           </TabPane>
         </Tabs>
         { this.state.cornFormat ? 

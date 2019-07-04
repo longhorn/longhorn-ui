@@ -28,7 +28,7 @@ const modal = ({
     CardItem = item.map((ele, index) => {
       let fill = ele.task === 'backup' ? '#00C1DE' : 'rgb(241, 196, 15)'
       return (
-        <Card key={index} style={{ width: 380, margin: '5px' }}>
+        <Card key={index} style={{ width: 520, margin: '5px' }}>
           <div style={{ minHeight: '30px', display: 'flex', alignItems: 'center', marginBottom: '5px' }}><b style={{ marginRight: '10px' }}>Type: </b> <span style={{ marginRight: '4px' }}>{ele.task}</span> <IconBackup fill={fill} /></div>
           <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Schedule: </b>{prettyCron.toString(ele.cron)}</div>
           <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Retain: </b>{ele.retain}</div>
@@ -39,8 +39,8 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <div style={{ width: '100%', overflow: 'auto' }}>
-        <div style={{ display: 'flex', width: 'fit-content' }}>
+      <div style={{ width: '100%', overflow: 'auto', height: '230px' }}>
+        <div style={{ display: 'flex', width: 'fit-content', flexDirection: 'column' }}>
           {CardItem}
         </div>
       </div>

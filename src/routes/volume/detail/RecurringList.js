@@ -230,7 +230,7 @@ class RecurringList extends React.Component {
     }
   }
 
-  changeCron = ( cron ) => {
+  changeCron = (cron) => {
     this.setState({
       ...this.state,
       currentCron: cron,
@@ -238,7 +238,7 @@ class RecurringList extends React.Component {
     })
   }
 
-  saveDisabled = ( ) => {
+  saveDisabled = () => {
     this.setState({
       ...this.state,
       modulerCronDisabled: true,
@@ -279,7 +279,7 @@ class RecurringList extends React.Component {
         render: (record) => {
           return (
             <div>
-              <Button type="default" disabled={!this.state.editing} onClick={() => {this.editCron(record)}} >Edit</Button>
+              <Button type="default" disabled={!this.state.editing} onClick={() => { this.editCron(record) }}>Edit</Button>
             </div>
           )
         },
@@ -347,7 +347,7 @@ class RecurringList extends React.Component {
           </div>
         </div>
         <ModalBlur disabled={this.state.modulerCronDisabled} {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
-          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} saveDisabled={this.saveDisabled} changeCron={this.changeCron}/>
+          <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} saveDisabled={this.saveDisabled} changeCron={this.changeCron} />
         </ModalBlur>
       </Card>
     )
