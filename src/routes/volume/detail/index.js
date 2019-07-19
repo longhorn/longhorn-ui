@@ -20,7 +20,7 @@ import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCo
 import { addPrefix } from '../../../utils/pathnamePrefix'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
@@ -248,8 +248,10 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       defaultPVCName,
       pvNameDisabled,
     },
+    selected: selectedVolume.kubernetesStatus ? selectedVolume.kubernetesStatus : {},
     visible: createPVAndPVCSingleVisible,
     nameSpaceDisabled,
+    previousChecked,
     onOk(params) {
       dispatch({
         type: 'volume/createPVAndPVCSingle',
@@ -267,6 +269,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     onChange() {
       dispatch({
         type: 'volume/changeCheckbox',
+      })
+    },
+    setPreviousChange(checked) {
+      dispatch({
+        type: 'volume/setPreviousChange',
+        payload: checked,
       })
     },
   }

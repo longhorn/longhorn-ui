@@ -12,6 +12,7 @@ import Filter from './Filter/Filter'
 import EngineImageUpgradeTooltip from './Tooltip/EngineImageUpgradeTooltip'
 import ReplicaHATooltip from './Tooltip/ReplicaHATooltip'
 import ReactCron from './ReactCron/ReactCron'
+import BackupLabelInput from './BackupLabelInput/BackupLabelInput'
 
 export {
   DropOption,
@@ -28,4 +29,5 @@ export {
   ReplicaHATooltip,
   ScheduleText,
   ReactCron,
+  BackupLabelInput,
 }

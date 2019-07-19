@@ -184,7 +184,11 @@ export default (namespace) => {
       }, { call, put }) {
         yield put({ type: 'setLoading', payload: true })
         const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
-        yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
+        if (Object.getOwnPropertyNames(payload.labels).length === 0) {
+          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
+        } else {
+          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels })
+        }
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
       },

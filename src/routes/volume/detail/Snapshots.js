@@ -2,23 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Tooltip, Card, Switch } from 'antd'
 import { Snapshot } from '../../../components'
-import { backupProgressModal } from '../../../utils/backup'
+import CreateBackupModal from './CreateBackupModal'
 import styles from './index.less'
 import { disabledSnapshotAction } from '../helper/index'
 
 class Snapshots extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      createBackModalKey: Math.random(),
+      createBackModalVisible: false,
+    }
     this.onAction = (action) => {
       if (action.type === 'backup') {
-        backupProgressModal(props.volumeId)
-        this.props.dispatch({
-          type: 'snapshotModal/backup',
-          payload: {
-            snapshotCreateUrl: this.props.volume.actions.snapshotCreate,
-            snapshotBackupUrl: this.props.volume.actions.snapshotBackup,
-            querySnapShotUrl: this.props.volume.actions.snapshotList,
-          },
+        this.setState({
+          ...this.state,
+          createBackModalVisible: true,
         })
         return
       }
@@ -104,6 +103,39 @@ class Snapshots extends React.Component {
     return true
   }
 
+  createBackupModal = () => {
+    let me = this
+    return {
+      item: {
+        frontend: 'iscsi',
+      },
+      visible: me.state.createBackModalVisible,
+      onOk(data) {
+        me.props.dispatch({
+          type: 'snapshotModal/backup',
+          payload: {
+            snapshotCreateUrl: me.props.volume.actions.snapshotCreate,
+            snapshotBackupUrl: me.props.volume.actions.snapshotBackup,
+            querySnapShotUrl: me.props.volume.actions.snapshotList,
+            labels: data,
+          },
+        })
+        me.setState({
+          ...me.state,
+          createBackModalKey: Math.random(),
+          createBackModalVisible: false,
+        })
+      },
+      onCancel() {
+        me.setState({
+          ...me.state,
+          createBackModalKey: Math.random(),
+          createBackModalVisible: false,
+        })
+      },
+    }
+  }
+
   render() {
     if (!this.props.volume) {
       return null
@@ -145,6 +177,7 @@ class Snapshots extends React.Component {
             <Snapshot {...treeProps} onAction={this.onAction} />
           </div>
         </div>
+        <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} />
       </Card>
     )
   }

@@ -12,13 +12,24 @@ const formItemLayout = {
     span: 15,
   },
 }
+const formItemLayout2 = {
+  labelCol: {
+    span: 14,
+  },
+  wrapperCol: {
+    span: 2,
+  },
+}
 const modal = ({
   item,
   visible,
   onCancel,
+  selected,
   onOk,
   onChange,
+  setPreviousChange,
   nameSpaceDisabled,
+  previousChecked,
   form: {
     getFieldDecorator,
     validateFields,
@@ -45,10 +56,14 @@ const modal = ({
     onOk: handleOk,
   }
 
-
   function onInnerChange(value) {
     value.target.checked ? setFieldsValue({ namespace: '', pvcName: item.defaultPVCName }) : setFieldsValue({ namespace: '', pvcName: '' })
     onChange()
+  }
+
+  function onPreviousChange(value) {
+    value.target.checked && !nameSpaceDisabled ? setFieldsValue({ namespace: selected.namespace, pvcName: selected.pvcName }) : setFieldsValue({ namespace: '', pvcName: item.defaultPVCName })
+    setPreviousChange(value.target.checked)
   }
 
   return (
@@ -65,9 +80,18 @@ const modal = ({
             ],
           })(<Input disabled={item.pvNameDisabled} />)}
         </FormItem>
-        <FormItem label="Create PVC" hasFeedback {...formItemLayout}>
-          <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>
-        </FormItem>
+        <div style={{ display: 'flex' }}>
+          <div style={{ flex: 1 }}>
+            <FormItem label="Create PVC" hasFeedback {...formItemLayout2}>
+              <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>
+            </FormItem>
+          </div>
+          <div style={{ flex: 1 }}>
+            <FormItem label="Use Previous PVC" hasFeedback {...formItemLayout2}>
+              <Checkbox checked={previousChecked} disabled={!selected.lastPVCRefAt || nameSpaceDisabled} onChange={onPreviousChange}></Checkbox>
+            </FormItem>
+          </div>
+        </div>
         <FormItem label="PVC Name" hasFeedback {...formItemLayout}>
           {getFieldDecorator('pvcName', {
             initialValue: item.defaultPVCName,
@@ -98,12 +122,15 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
+  previousChecked: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,
+  selected: PropTypes.object,
   onOk: PropTypes.func,
   onChange: PropTypes.func,
   hosts: PropTypes.array,
   nameSpaceDisabled: PropTypes.bool,
+  setPreviousChange: PropTypes.func,
 }
 
 export default Form.create()(modal)
