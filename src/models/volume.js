@@ -36,6 +36,7 @@ export default {
     snapshotsModalVisible: false,
     salvageModalVisible: false,
     nameSpaceDisabled: false,
+    previousChecked: false,
     pvNameDisabled: false,
     changeVolumeModalVisible: false,
     changeVolumeActivate: '',
@@ -338,10 +339,13 @@ export default {
       action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
       action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
       action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : state.pvNameDisabled = false
-      return { ...state, nameSpaceDisabled: false, pvNameDisabled: state.pvNameDisabled, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
+      return { ...state, nameSpaceDisabled: false, previousChecked: false, pvNameDisabled: state.pvNameDisabled, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
     },
     changeCheckbox(state) {
-      return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled }
+      return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled, previousChecked: !state.nameSpaceDisabled ? false : state.previousChecked }
+    },
+    setPreviousChange(state, action) {
+      return { ...state, previousChecked: action.payload }
     },
     hideCreatePVCAndPVSingleModal(state) {
       return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, createPVAndPVCModalSingleKey: Math.random() }
