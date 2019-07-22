@@ -68,7 +68,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { backup, loading, showRestoreBackup, deleteBackup, sorter, onSorterChange = f => f } = this.props
+    const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange = f => f } = this.props
     const dataSource = backup || []
     const handleMenuClick = (record, event) => {
       switch (event.key) {
@@ -114,7 +114,7 @@ class List extends React.Component {
         sorter: (a, b) => sortTable(a, b, 'snapshotName'),
       }, {
         title: 'Base Image',
-        width: 300,
+        width: 180,
         dataIndex: 'labels.ranchervm-base-image',
         key: 'baseImage',
         render: (text) => {
@@ -147,6 +147,18 @@ class List extends React.Component {
           return (
             <div>
               {moment(new Date(text)).fromNow()}
+            </div>
+          )
+        },
+      }, {
+        title: 'Labels',
+        dataIndex: 'labels',
+        key: 'labels',
+        width: 120,
+        render: (obj) => {
+          return (
+            <div onClick={() => { showBackupLabels(obj) }}>
+              <Icon style={{ fontSize: '18px', color: '#108eb9', cursor: 'pointer' }} type="tags" />
             </div>
           )
         },
@@ -203,6 +215,7 @@ List.propTypes = {
   loading: PropTypes.bool,
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
+  showBackupLabels: PropTypes.func,
 }
 
 export default List

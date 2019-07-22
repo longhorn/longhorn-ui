@@ -223,7 +223,7 @@ export default {
     *bulkBackup({
       payload,
     }, { put }) {
-      yield payload.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl } }))
+      yield payload.actions.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl, labels: payload.labels } }))
     },
     *createPV({
       payload,
@@ -285,7 +285,7 @@ export default {
       payload,
     }, { call }) {
       const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
-      yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
+      yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels })
     },
   },
   reducers: {
