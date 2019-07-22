@@ -233,6 +233,8 @@ class Snapshot extends React.Component {
           this.state.key = Math.random()
         }, 0)
       }
+    } else if (!props.volume.actions.snapshotList) {
+      this.state.loading = false
     }
 
     return (

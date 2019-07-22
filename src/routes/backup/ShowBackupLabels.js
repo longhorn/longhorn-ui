@@ -31,8 +31,8 @@ const modal = ({
     }
   }
 
-  const backupLabelsEle = backupLabels.length > 0 ? <Descriptions title="Backup Labels" bordered column={2}>{backupLabels.map((key, index) => {
-    return <Descriptions.Item key={index} label={key} span={2}>{item[key]}</Descriptions.Item>
+  const backupLabelsEle = backupLabels.length > 0 ? <Descriptions title="Backup Labels" bordered column={1}>{backupLabels.map((key, index) => {
+    return <Descriptions.Item key={index} label={key}>{item[key]}</Descriptions.Item>
   })}</Descriptions> : ''
 
   const workloadsStatus = kubernetesStatus.workloadsStatus ? kubernetesStatus.workloadsStatus.map((data, index) => {
@@ -41,8 +41,8 @@ const modal = ({
         <Descriptions title="Workloads Status" bordered column={3}>
           <Descriptions.Item label="Pod Name" span={3}>{data.podName}</Descriptions.Item>
           <Descriptions.Item label="Workload Name" span={3}>{data.workloadName}</Descriptions.Item>
-          <Descriptions.Item label="Workload Type" span={2}>{data.workloadType}</Descriptions.Item>
-          <Descriptions.Item label="Pod Status" span={2}>{data.podStatus}</Descriptions.Item>
+          <Descriptions.Item label="Workload Type">{data.workloadType}</Descriptions.Item>
+          <Descriptions.Item label="Pod Status">{data.podStatus}</Descriptions.Item>
         </Descriptions>
       </div>
     )
