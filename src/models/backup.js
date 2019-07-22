@@ -17,11 +17,14 @@ export default {
     lastBackupUrl: '',
     baseImage: '',
     size: '',
+    backupLabel: {},
     restoreBackupModalVisible: false,
     createVolumeStandModalVisible: false,
+    showBackuplabelsModalVisible: false,
     restoreBackupFilterKey: Math.random(),
     restoreBackupModalKey: Math.random(),
     createVolumeStandModalKey: Math.random(),
+    showBackupLabelsModalKey: Math.random(),
     sorter: getSorter('backupList.sorter'),
   },
   subscriptions: {
@@ -115,6 +118,12 @@ export default {
     },
     hideCreateVolumeStandModalVisible(state) {
       return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: Math.random() }
+    },
+    showBackuplabelsModalVisible(state, action) {
+      return { ...state, showBackuplabelsModalVisible: true, backupLabel: action.payload, createVolumeStandModalKey: Math.random() }
+    },
+    hideBackuplabelsModalVisible(state) {
+      return { ...state, showBackuplabelsModalVisible: false, createVolumeStandModalKey: Math.random() }
     },
     initModalUrl(state, action) {
       return { ...state, lastBackupUrl: action.found.url, baseImage: action.payload.baseImage, size: action.found.volumeSize }

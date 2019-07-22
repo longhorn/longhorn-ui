@@ -17,6 +17,7 @@ import UpdateReplicaCount from './UpdateReplicaCount'
 import Salvage from './Salvage'
 import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
+import CreateBackupModal from './detail/CreateBackupModal.js'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable } from '../../utils/filter'
 import { addPrefix } from '../../utils/pathnamePrefix'
@@ -26,6 +27,9 @@ class Volume extends React.Component {
     super(props)
     this.state = {
       height: 300,
+      createBackModalKey: Math.random(),
+      createBackModalVisible: false,
+      selectedRows: [],
     }
   }
 
@@ -47,6 +51,7 @@ class Volume extends React.Component {
   }
 
   render() {
+    const me = this
     const { dispatch, loading, location } = this.props
     const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked } = this.props.volume
     const hosts = this.props.host.data
@@ -507,15 +512,50 @@ class Volume extends React.Component {
         })
       },
       bulkBackup(actions) {
-        dispatch({
-          type: 'volume/bulkBackup',
-          payload: actions,
+        // bulkBackup(actions.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }))
+        // dispatch({
+        //   type: 'volume/bulkBackup',
+        //   payload: actions,
+        // })
+        me.setState({
+          ...me.state,
+          createBackModalKey: Math.random(),
+          createBackModalVisible: true,
+          selectedRows: actions,
         })
       },
       createPVAndPVC(actions) {
         dispatch({
           type: 'volume/showCreatePVAndPVCModal',
           payload: actions,
+        })
+      },
+    }
+
+    const createBackModalProps = {
+      item: {
+        frontend: 'iscsi',
+      },
+      visible: me.state.createBackModalVisible,
+      onOk(obj) {
+        dispatch({
+          type: 'volume/bulkBackup',
+          payload: {
+            actions: me.state.selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }),
+            labels: obj,
+          },
+        })
+        me.setState({
+          ...me.state,
+          createBackModalKey: Math.random(),
+          createBackModalVisible: false,
+        })
+      },
+      onCancel() {
+        me.setState({
+          ...me.state,
+          createBackModalKey: Math.random(),
+          createBackModalVisible: false,
         })
       },
     }
@@ -555,6 +595,7 @@ class Volume extends React.Component {
         <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} />
         <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} />
         <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} />
+        <CreateBackupModal key={this.state.createBackModalKey} {...createBackModalProps} />
         <Salvage {...salvageModalProps} />
         <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} />
       </div>
