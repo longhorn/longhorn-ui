@@ -97,10 +97,23 @@ function SnapshotIcon(props, snapshotProps) {
   let backupStatusObject = null
 
   if (backupStatusList && backupStatusList.length > 0) {
-    backupStatusObject = backupStatusList.filter((item) => {
+    let backupStatusObjectList = backupStatusList.filter((item) => {
       return item.snapshot === props.name
     })
-    backupStatusObject = backupStatusObject[0] ? backupStatusObject[0] : null
+    if (backupStatusObjectList && backupStatusObjectList.length > 0) {
+      let total = 0
+      let backupStatusErrorMsg = ''
+      backupStatusObjectList.forEach((ele) => {
+        if (ele.backupError) {
+          backupStatusErrorMsg = ele.backupError
+        }
+        total += ele.progress
+      })
+      backupStatusObject = {}
+      backupStatusObject.backupError = backupStatusErrorMsg
+      backupStatusObject.progress = total / backupStatusObjectList.length
+      backupStatusObject.snapshot = props.name
+    }
   }
   let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError ? <p className="snapshot-name">Error: {backupStatusObject.backupError}</p> : ''
 
@@ -122,7 +135,7 @@ function SnapshotIcon(props, snapshotProps) {
         {
           backupStatusObject ? <div><p className="snapshot-name">Snapshot: {backupStatusObject.snapshot}</p>
             <p className="snapshot-created">Progress: {backupStatusObject.progress}%</p>
-            <p className="snapshot-created">Backup URL: {backupStatusObject.backupURL}</p>
+            {/* <p className="snapshot-created">Backup URL: {backupStatusObject.backupURL}</p> */}
             {backupStatusErrorMsg}</div> : ''
         }
       </div>}>
