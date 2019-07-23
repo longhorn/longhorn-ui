@@ -111,7 +111,7 @@ function SnapshotIcon(props, snapshotProps) {
       })
       backupStatusObject = {}
       backupStatusObject.backupError = backupStatusErrorMsg
-      backupStatusObject.progress = total / backupStatusObjectList.length
+      backupStatusObject.progress = Math.floor(total / backupStatusObjectList.length)
       backupStatusObject.snapshot = props.name
     }
   }
