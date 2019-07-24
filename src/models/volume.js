@@ -169,7 +169,11 @@ export default {
         jobs: [],
       }
       payload.recurring.forEach(r => {
-        data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
+        if (r.task === 'backup') {
+          data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain, labels: r.labels })
+        } else {
+          data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
+        }
       })
       yield call(recurringUpdate, data, payload.url)
       yield put({ type: 'query' })

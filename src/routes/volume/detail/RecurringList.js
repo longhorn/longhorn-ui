@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Button, Select, InputNumber, Card } from 'antd'
+import { Table, Button, Select, InputNumber, Card, Form, Tooltip } from 'antd'
 import { ReactCron } from '../../../components'
 import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
 import { ModalBlur } from '../../../components'
+import { BackupLabelInputForRecurring } from '../../../components'
 import prettyCron from '../../../utils/prettycron'
 import styles from './index.less'
 
@@ -19,12 +20,17 @@ class RecurringList extends React.Component {
       currentRecord: {},
       currentCron: '0 0 * * *',
       modalOpts: {
-        title: 'Create PV/PVC',
+        visible: false,
+      },
+      modalBackupLabesOpts: {
+        title: 'Edit Backup Labels',
         visible: false,
       },
       ReactCronKey: Math.random(),
+      backupLabelInputKey: Math.random(),
       Faulted: false,
       modulerCronDisabled: false,
+      backupLabelsDisabled: false,
     }
   }
 
@@ -195,6 +201,23 @@ class RecurringList extends React.Component {
     })
   }
 
+  editBackupLabels = (record) => {
+    this.setState({
+      ...this.state,
+      currentRecord: record,
+    },
+    () => {
+      this.setState({
+        ...this.state,
+        modalBackupLabesOpts: {
+          title: 'Edit Backup Labels',
+          visible: true,
+        },
+        backupLabelInputKey: Math.random(),
+      })
+    })
+  }
+
   onCronCancel = () => {
     this.setState({
       ...this.state,
@@ -230,6 +253,58 @@ class RecurringList extends React.Component {
     }
   }
 
+  onBackupLabelsOk = () => {
+    const found = this.state.dataSource.find(data => data.name === this.state.currentRecord.name)
+    const { getFieldsValue, validateFields } = this.props.form
+    let data = {}
+
+    validateFields((errors) => {
+      if (errors) {
+        return
+      }
+
+      if (getFieldsValue().keys && getFieldsValue().key && getFieldsValue().value) {
+        getFieldsValue().keys.forEach((item) => {
+          data[getFieldsValue().key[item]] = getFieldsValue().value[item]
+        })
+      }
+
+      if (found) {
+        found.labels = data
+        const dataSource = this.state.dataSource
+        this.setState({
+          ...this.state,
+          dataSource,
+          modalBackupLabesOpts: {
+            title: 'Edit Backup Labels',
+            visible: false,
+          },
+          backupLabelInputKey: Math.random(),
+        })
+      } else {
+        this.setState({
+          ...this.state,
+          modalBackupLabesOpts: {
+            title: 'Edit Backup Labels',
+            visible: false,
+          },
+          backupLabelInputKey: Math.random(),
+        })
+      }
+    })
+  }
+
+  onBackupLabelsCancel = () => {
+    this.setState({
+      ...this.state,
+      modalBackupLabesOpts: {
+        title: 'Edit Backup Labels',
+        visible: false,
+      },
+      backupLabelInputKey: Math.random(),
+    })
+  }
+
   changeCron = (cron) => {
     this.setState({
       ...this.state,
@@ -243,6 +318,26 @@ class RecurringList extends React.Component {
       ...this.state,
       modulerCronDisabled: true,
     })
+  }
+
+  labelsElement = (labels) => {
+    let key = []
+    let value = []
+
+    for (let item in labels) {
+      if (labels[item]) {
+        key.push(item)
+        value.push(labels[item])
+      }
+    }
+
+    if (key.length > 0) {
+      return key.map((ele, index) => {
+        return <div key={index}> {ele} : {value[index]} </div>
+      })
+    }
+
+    return <div>No Labels</div>
   }
 
   render() {
@@ -267,20 +362,40 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
-        render: (text) => {
+        render: (record) => {
           return (
-            <span>{prettyCron.toString(text.cron)}</span>
+            <Tooltip placement="top" title={!this.state.editing ? '' : 'Click edit Cron'}>
+              <span
+                style={{ maxWidth: '500px', display: 'inline-block', color: !this.state.editing ? '#666' : '#108ee9', cursor: !this.state.editing ? 'auto' : 'pointer' }}
+                onClick={() => {
+                  if (!this.state.editing) {
+                    return
+                  }
+                  this.editCron(record)
+                }}>
+                {prettyCron.toString(record.cron)}
+              </span>
+            </Tooltip>
           )
         },
       },
       {
-        title: 'Edit Cron',
-        key: 'cron',
+        title: 'Labels',
+        key: 'LabelsValue',
         render: (record) => {
           return (
-            <div>
-              <Button type="default" disabled={!this.state.editing} onClick={() => { this.editCron(record) }}>Edit</Button>
-            </div>
+            <Tooltip placement="top" title={!this.state.editing || record.task !== 'backup' ? '' : 'Click add labels'}>
+              <div
+                style={{ minWidth: '200px', maxWidth: '500px', color: !this.state.editing || record.task !== 'backup' ? '#666' : '#108ee9', cursor: !this.state.editing || record.task !== 'backup' ? 'auto' : 'pointer' }}
+                onClick={() => {
+                  if (!this.state.editing || record.task !== 'backup') {
+                    return
+                  }
+                  this.editBackupLabels(record)
+                }}>
+              {record.task === 'backup' ? this.labelsElement(record.labels) : <span></span>}
+              </div>
+            </Tooltip>
           )
         },
       },
@@ -346,6 +461,9 @@ class RecurringList extends React.Component {
             </div>}
           </div>
         </div>
+        <ModalBlur key={this.state.backupLabelInputKey} {...this.state.modalBackupLabesOpts} width={520} onCancel={() => { this.onBackupLabelsCancel() }} onOk={() => { this.onBackupLabelsOk() }}>
+          <BackupLabelInputForRecurring form={this.props.form} labelsProps={this.state.currentRecord.labels} />
+        </ModalBlur>
         <ModalBlur disabled={this.state.modulerCronDisabled} {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
           <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} saveDisabled={this.saveDisabled} changeCron={this.changeCron} />
         </ModalBlur>
@@ -357,9 +475,13 @@ class RecurringList extends React.Component {
 RecurringList.propTypes = {
   dataSource: PropTypes.array,
   onOk: PropTypes.func,
+  getFieldsValue: PropTypes.func,
+  validateFields: PropTypes.func,
   loading: PropTypes.bool,
+  form: PropTypes.object,
   dataSourceReplicas: PropTypes.array,
   selectedVolume: PropTypes.object,
 }
 
-export default RecurringList
+const RecurringListEle = Form.create({})(RecurringList)
+export default RecurringListEle

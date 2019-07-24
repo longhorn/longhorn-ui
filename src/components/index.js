@@ -13,6 +13,7 @@ import EngineImageUpgradeTooltip from './Tooltip/EngineImageUpgradeTooltip'
 import ReplicaHATooltip from './Tooltip/ReplicaHATooltip'
 import ReactCron from './ReactCron/ReactCron'
 import BackupLabelInput from './BackupLabelInput/BackupLabelInput'
+import BackupLabelInputForRecurring from './BackupLabelInputForRecurring/BackupLabelInputForRecurring'
 
 export {
   DropOption,
@@ -30,4 +31,5 @@ export {
   ScheduleText,
   ReactCron,
   BackupLabelInput,
+  BackupLabelInputForRecurring,
 }

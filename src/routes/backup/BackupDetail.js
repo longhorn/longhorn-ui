@@ -55,7 +55,9 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
       })
     },
     showBackupLabels(record) {
-      dispatch({ type: 'backup/showBackuplabelsModalVisible', payload: record })
+      if (record) {
+        dispatch({ type: 'backup/showBackuplabelsModalVisible', payload: record })
+      }
     },
   }
 
