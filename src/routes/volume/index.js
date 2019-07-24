@@ -273,11 +273,12 @@ class Volume extends React.Component {
       items: selectedRows,
       visible: bulkAttachHostModalVisible,
       hosts,
-      onOk(selectedHost, urls) {
+      onOk(selectedHost, disableFrontend, urls) {
         dispatch({
           type: 'volume/bulkAttach',
           payload: {
             host: selectedHost,
+            disableFrontend,
             urls,
           },
         })

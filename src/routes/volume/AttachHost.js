@@ -1,15 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Select } from 'antd'
+import { Form, Select, Checkbox } from 'antd'
 import { ModalBlur } from '../../components'
 
 const FormItem = Form.Item
 const formItemLayout = {
   labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+}
+
+const formItemLayoutCheckBox = {
+  labelCol: {
     span: 6,
   },
   wrapperCol: {
-    span: 14,
+    span: 12,
   },
 }
 
@@ -33,7 +42,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      onOk(data.host, items.map(item => item.actions.attach))
+      onOk(data.host, data.disableFrontend, items.map(item => item.actions.attach))
     })
   }
 
@@ -63,6 +72,16 @@ const modal = ({
           })(<Select style={{ width: '100%' }} size="large">
             {options}
           </Select>)}
+        </FormItem>
+        <FormItem label="Disable Frontend" {...formItemLayoutCheckBox}>
+          {getFieldDecorator('disableFrontend', {
+            initialValue: false,
+            rules: [
+              {
+                required: false,
+              },
+            ],
+          })(<Checkbox></Checkbox>)}
         </FormItem>
       </Form>
     </ModalBlur>
