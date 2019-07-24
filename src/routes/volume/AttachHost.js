@@ -15,7 +15,7 @@ const formItemLayout = {
 
 const formItemLayoutCheckBox = {
   labelCol: {
-    span: 6,
+    span: 5,
   },
   wrapperCol: {
     span: 12,
@@ -73,7 +73,7 @@ const modal = ({
             {options}
           </Select>)}
         </FormItem>
-        <FormItem label="Disable Frontend" {...formItemLayoutCheckBox}>
+        <FormItem label="Maintenance" {...formItemLayoutCheckBox}>
           {getFieldDecorator('disableFrontend', {
             initialValue: false,
             rules: [
