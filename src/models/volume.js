@@ -112,7 +112,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideAttachHostModal' })
-      yield call(execAction, payload.url, { hostId: payload.host })
+      yield call(execAction, payload.url, { hostId: payload.host, disableFrontend: payload.disableFrontend })
       yield put({ type: 'query' })
     },
     *salvage({
@@ -216,7 +216,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideBulkAttachHostModal' })
-      yield payload.urls.map(url => call(execAction, url, { hostId: payload.host }))
+      yield payload.urls.map(url => call(execAction, url, { hostId: payload.host, disableFrontend: payload.disableFrontend }))
       yield put({ type: 'query' })
     },
     *bulkBackup({

@@ -9,11 +9,12 @@ export function genAttachHostModalProps(volumes, hosts, visible, dispatch) {
     items: volumes,
     visible,
     hosts,
-    onOk(selectedHost, urls) {
+    onOk(selectedHost, disableFrontend, urls) {
       dispatch({
         type: 'volume/attach',
         payload: {
           host: selectedHost,
+          disableFrontend,
           url: urls[0],
         },
       })
