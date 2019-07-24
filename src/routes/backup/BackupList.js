@@ -158,7 +158,7 @@ class List extends React.Component {
         render: (obj) => {
           return (
             <div onClick={() => { showBackupLabels(obj) }}>
-              <Icon style={{ fontSize: '18px', color: '#108eb9', cursor: 'pointer' }} type="tags" />
+              <Icon style={{ fontSize: '18px', color: obj ? '#108eb9' : '#cccccc', cursor: 'pointer' }} type="tags" />
             </div>
           )
         },

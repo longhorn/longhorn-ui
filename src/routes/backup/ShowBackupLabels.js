@@ -21,7 +21,7 @@ const modal = ({
     width: 800,
   }
 
-  const kubernetesStatus = item.KubernetesStatus ? JSON.parse(item.KubernetesStatus) : {}
+  const kubernetesStatus = item && item.KubernetesStatus ? JSON.parse(item.KubernetesStatus) : {}
 
   let backupLabels = []
 
@@ -37,14 +37,15 @@ const modal = ({
 
   const workloadsStatus = kubernetesStatus.workloadsStatus ? kubernetesStatus.workloadsStatus.map((data, index) => {
     return (
-      <div key={index} style={{ marginTop: '20px' }}>
-        <Descriptions title="Workloads Status" bordered column={3}>
-          <Descriptions.Item label="Pod Name" span={3}>{data.podName}</Descriptions.Item>
-          <Descriptions.Item label="Workload Name" span={3}>{data.workloadName}</Descriptions.Item>
-          <Descriptions.Item label="Workload Type">{data.workloadType}</Descriptions.Item>
-          <Descriptions.Item label="Pod Status">{data.podStatus}</Descriptions.Item>
-        </Descriptions>
-      </div>
+      <Descriptions.Item key={index} label="Workloads Status" span={2}>
+        Pod Name: {data.podName}
+        <br />
+        Workload Name: {data.workloadName}
+        <br />
+        Workload Type: {data.workloadType}
+        <br />
+        Pod Status: {data.podStatus}
+      </Descriptions.Item>
     )
   }) : ''
 
@@ -52,15 +53,15 @@ const modal = ({
   <ModalBlur {...modalOpts}>
     <div style={{ width: '100%', overflow: 'auto', maxHeight: '680px' }}>
       {backupLabelsEle}
-      <div style={{ marginTop: '20px' }}>
+      { item && item.KubernetesStatus ? <div style={{ marginTop: '20px' }}>
         <Descriptions title="Kubernetes Status" bordered column={2}>
           <Descriptions.Item label="Namespace" span={2}>{kubernetesStatus.namespace}</Descriptions.Item>
           <Descriptions.Item label="PV Name" span={2}>{kubernetesStatus.pvName}</Descriptions.Item>
           <Descriptions.Item label="PVC Name" span={2}>{kubernetesStatus.pvcName}</Descriptions.Item>
           <Descriptions.Item label="PV Status" span={2}>{kubernetesStatus.pvStatus}</Descriptions.Item>
+          {workloadsStatus}
         </Descriptions>
-      </div>
-      {workloadsStatus}
+      </div> : '' }
     </div>
   </ModalBlur>
   )
