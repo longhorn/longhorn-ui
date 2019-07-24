@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:1.16.0
 RUN apt-get update -y && \
     apt-get install -y curl \
                        libcurl3 \
