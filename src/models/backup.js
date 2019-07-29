@@ -1,4 +1,4 @@
-import { query, execAction, restore, deleteBackup, createVolume } from '../services/backup'
+import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups } from '../services/backup'
 import { parse } from 'qs'
 import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
@@ -96,6 +96,12 @@ export default {
       const found = data.data.find(b => b.name === payload.lastBackupName)
       yield put({ type: 'initModalUrl', found, payload })
       yield put({ type: 'showCreateVolumeStandModalVisible' })
+    },
+    *deleteAllBackups({
+      payload,
+    }, { call, put }) {
+      yield call(deleteAllBackups, payload)
+      yield put({ type: 'query', payload })
     },
   },
   reducers: {

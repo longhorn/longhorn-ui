@@ -36,6 +36,8 @@ class List extends React.Component {
   handleMenuClick = (record, e) => {
     if (e.key === 'recovery') {
       this.props.Create(record)
+    } else if (e.key === 'deleteAll') {
+      this.props.DeleteAllBackups(record)
     }
   }
 
@@ -121,6 +123,7 @@ class List extends React.Component {
           return (
             <DropOption menuOptions={[
               { key: 'recovery', name: !record.lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: !record.lastBackupName },
+              { key: 'deleteAll', name: 'Delete All Backups' },
             ]}
               onMenuClick={e => this.handleMenuClick(record, e)}
             />
@@ -164,6 +167,7 @@ List.propTypes = {
   onSorterChange: PropTypes.func,
   linkToBackup: PropTypes.func,
   Create: PropTypes.func,
+  DeleteAllBackups: PropTypes.func,
 }
 
 export default List
