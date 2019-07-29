@@ -2,17 +2,33 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import { Row, Col } from 'antd'
+import { Row, Col, Modal } from 'antd'
 import queryString from 'query-string'
 import BackupVolumeList from './BackupVolumeList'
 import { addPrefix } from '../../utils/pathnamePrefix'
 import CreateStandbyVolume from './CreateStandbyVolume'
 import { Filter } from '../../components/index'
 
+const { confirm } = Modal
 
 function Backup({ backup, loading, setting, dispatch, location }) {
   location.search = location.search ? location.search : {}
   const { backupVolumes, sorter, restoreBackupFilterKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size } = backup
+  const showDeleteConfirm = (record) => {
+    confirm({
+      title: 'Are you sure delete all the backups?',
+      content: 'Delete all backups of the volume',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispatch({
+          type: 'backup/deleteAllBackups',
+          payload: record.name,
+        })
+      },
+    })
+  }
   const backupVolumesProps = {
     backup: backupVolumes,
     loading,
@@ -41,6 +57,13 @@ function Backup({ backup, loading, setting, dispatch, location }) {
         type: 'backup/CreateStandVolume',
         payload: record,
       })
+    },
+    DeleteAllBackups(record) {
+      // dispatch({
+      //   type: 'backup/CreateStandVolume',
+      //   payload: record,
+      // })
+      showDeleteConfirm(record)
     },
     sorter,
   }

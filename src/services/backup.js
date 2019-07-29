@@ -44,3 +44,10 @@ export async function deleteBackup(payload) {
     },
   })
 }
+
+export async function deleteAllBackups(name) {
+  return request({
+    url: `/v1/backupvolumes/${name}`,
+    method: 'delete',
+  })
+}
