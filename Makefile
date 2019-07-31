@@ -1,6 +1,6 @@
 VERSION = $(shell ./scripts/version)
 
-REPO = rancher
+REPO = longhornio
 NAME = longhorn-ui
 INSTANCE = default
 LONHORN_MANAGER_IP = http://localhost:9500
