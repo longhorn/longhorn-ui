@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, Modal, Tooltip } from 'antd'
+import { Card, Modal, Tooltip, Progress } from 'antd'
 import { DropOption } from '../../components'
 import diskHealthyImage from '../../assets/images/disk-healthy.png'
 import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
@@ -53,11 +53,28 @@ class Replica extends React.Component {
   }
 
   render() {
-    const { item, hosts } = this.props
+    const { item, hosts, restoreStatus } = this.props
     const host = hosts.find(h => h.id === item.hostId)
     let deleteTooltip = ''
     if (item.volState === 'detached' && item.volState !== 'attached') {
       deleteTooltip = `Replica belongs to volume currently ${item.volState}. Volume must be attached or detached.`
+    }
+    const restoreProgress = (name) => {
+      let total = 0
+      let progress = 0
+      let progressArr = restoreStatus.filter((ele) => {
+        return ele.replica === name
+      })
+
+      progressArr.forEach((ele) => {
+        total += ele.progress
+      })
+
+      if (progressArr && progressArr.length > 0) {
+        progress = Math.floor(total / progressArr.length)
+      }
+
+      return progress === 0 || progress === 100 ? '' : <Progress percent={progress} />
     }
     return (
       <div style={{ display: 'inline-block', padding: '4px 20px' }} key={item.name}>
@@ -72,6 +89,9 @@ class Replica extends React.Component {
             <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15 }}>
               {this.getReplicaShortName(item.name)}
             </span>
+            <div style={{ width: '50%', position: 'absolute', top: '72px', left: '47%', display: 'flex', flexDirection: 'column' }}>
+              {restoreProgress(item.name)}
+            </div>
             <p style={{ position: 'absolute', left: 112, bottom: 20, verticalAlign: '100%' }}>
               {this.modeInfo.text}
             </p>
@@ -112,6 +132,7 @@ Replica.propTypes = {
   item: PropTypes.object.isRequired,
   deleteReplicas: PropTypes.func,
   hosts: PropTypes.array,
+  restoreStatus: PropTypes.array,
 }
 
 export default Replica

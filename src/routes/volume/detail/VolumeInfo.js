@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Alert, Icon, Tag } from 'antd'
+import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { formatMib, utcStrToDate } from '../../../utils/formater'
@@ -12,6 +12,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineImages }) {
   let errorMsg = null
   const state = snapshotModalState
+
   if (isSchedulingFailure(selectedVolume)) {
     errorMsg = (
       <Alert
@@ -96,9 +97,36 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
     tagNodeChild = selectedVolume.nodeSelector.map(forMapNode)
   }
 
+  // resotring progress
+  let restoreProgress = null
+  if (selectedVolume.restoreStatus && selectedVolume.restoreStatus.length > 0) {
+    let total = 0
+    let restoreErrorMsg = ''
+    let isRestoring = false
+    selectedVolume.restoreStatus.forEach((ele) => {
+      if (ele.error) {
+        restoreErrorMsg = ele.error
+      }
+      if (ele.isRestoring) {
+        isRestoring = ele.isRestoring
+      }
+      total += ele.progress
+    })
+    let progress = Math.floor(total / selectedVolume.restoreStatus.length)
+
+    if (!isRestoring && !restoreErrorMsg) {
+      restoreProgress = ''
+    } else if (isRestoring && !restoreErrorMsg) {
+      restoreProgress = <div className={styles.row} style={{ display: 'flex' }}><span className={styles.label}> Restoring:</span> <div style={{ width: '80%' }}> <Progress percent={progress} /> </div></div>
+    } else {
+      restoreProgress = <div className={styles.row} style={{ display: 'flex' }}><span className={styles.label}> Restoring:</span> <div style={{ width: '80%' }}><Tooltip title={restoreErrorMsg}><Progress status="exception" percent={progress} /></Tooltip></div> </div>
+    }
+  }
+
   return (
     <div>
       {errorMsg}
+      {restoreProgress}
       <div className={styles.row}>
         <span className={styles.label}> State:</span>
         <span className={classnames({ [selectedVolume.state.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>

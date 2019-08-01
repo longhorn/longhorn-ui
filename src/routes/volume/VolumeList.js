@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Icon, Tooltip } from 'antd'
+import { Table, Icon, Tooltip, Progress } from 'antd'
 import moment from 'moment'
 import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
@@ -83,8 +83,37 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           }
           return text.hyphenToHump()
         })()
+
+        let restoreProgress = null
+        if (record.restoreStatus && record.restoreStatus.length > 0) {
+          let total = 0
+          let restoreErrorMsg = ''
+          let isRestoring = false
+          record.restoreStatus.forEach((ele) => {
+            if (ele.error) {
+              restoreErrorMsg = ele.error
+            }
+            if (ele.isRestoring) {
+              isRestoring = ele.isRestoring
+            }
+            total += ele.progress
+          })
+          let progress = Math.floor(total / record.restoreStatus.length)
+
+          if (!isRestoring && !restoreErrorMsg) {
+            restoreProgress = ''
+          } else if (isRestoring && !restoreErrorMsg) {
+            restoreProgress = <Tooltip title={`Restoring: ${progress}%`}><Progress showInfo={false} percent={progress} /></Tooltip>
+          } else {
+            restoreProgress = <Tooltip title={restoreErrorMsg}><Progress status="exception" showInfo={false} percent={progress} /></Tooltip>
+          }
+        }
+
         return (
-          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)}>
+          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)} style={{ position: 'relative' }}>
+            <div style={{ width: '100%', position: 'absolute', top: '-25px' }}>
+              {restoreProgress}
+            </div>
             {upgrade} {stateText} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
