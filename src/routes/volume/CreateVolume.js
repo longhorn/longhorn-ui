@@ -115,17 +115,6 @@ const modal = ({
             ],
           })(<InputNumber />)}
         </FormItem>
-
-        <FormItem label="Base Image" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('baseImage', {
-            initialValue: item.baseImage,
-            rules: [
-              {
-                required: false,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
             initialValue: frontends[0].value,
