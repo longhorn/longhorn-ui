@@ -60,6 +60,12 @@ const modal = ({
           <FormItem label="Description" hasFeedback {...formItemLayout}>
             {getFieldDecorator('description', {
               initialValue: '',
+              rules: [
+                {
+                  required: true,
+                  message: "Please fill in support bundle's issue description",
+                },
+              ],
             })(<TextArea autosize={{ minRows: 6, maxRows: 10 }} />)}
           </FormItem>
         </Form>
