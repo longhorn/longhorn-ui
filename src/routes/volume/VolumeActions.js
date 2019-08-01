@@ -73,7 +73,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
 
   const allActions = [
     { key: 'attach', name: 'Attach' },
-    { key: 'detach', name: 'Detach' },
+    { key: 'detach', name: 'Detach', disabled: selected.standby },
     { key: 'salvage', name: 'Salvage' },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1 },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' },
