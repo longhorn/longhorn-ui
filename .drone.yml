@@ -1,0 +1,31 @@
+---
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+- name: publish-master-image
+  image: plugins/docker
+  settings:
+    build_args:
+      - VERSION: ${DRONE_COMMIT:0:7}
+    custom_dns: 1.1.1.1
+    dockerfile: Dockerfile
+    password:
+      from_secret: docker_password
+    repo: longhornio/longhorn-ui
+    tag: master
+    username:
+      from_secret: docker_username
+  when:
+    branch:
+    - master
+    event:
+    - push
+
+volumes:
+- name: socket
+  host:
+    path: /var/run/docker.sock
