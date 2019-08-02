@@ -63,6 +63,7 @@ const modal = ({
               rules: [
                 {
                   required: true,
+                  whitespace: true,
                   message: "Please fill in support bundle's issue description",
                 },
               ],
