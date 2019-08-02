@@ -148,12 +148,23 @@ class Snapshots extends React.Component {
       volumeHead: this.props.volumeHead,
     }
 
+    const isRestoring = () => {
+      if (this.props.volume.restoreStatus && this.props.volume.restoreStatus.length > 0) {
+        let flag = this.props.volume.restoreStatus.every((item) => {
+          return !item.isRestoring
+        })
+        return !flag
+      } else {
+        return false
+      }
+    }
+
     return (
       <Card title={<div className={styles.header}>
         <div>Snapshots</div>
         <div>
           <Tooltip placement="top" title="Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'.">
-              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby}
+              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring()}
                 icon="scan"
                 onClick={() => { this.onAction({ type: 'snapshotCreate' }) }}
                 type="primary">
@@ -162,7 +173,7 @@ class Snapshots extends React.Component {
             </Tooltip>
             &nbsp;
             <Tooltip placement="top" title="Create a new snapshot and then create a backup of the snapshot.">
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring()} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
                 Create Backup
               </Button>
             </Tooltip>

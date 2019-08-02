@@ -71,14 +71,25 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   }
 
+  const isRestoring = () => {
+    if (selected.restoreStatus && selected.restoreStatus.length > 0) {
+      let flag = selected.restoreStatus.every((item) => {
+        return !item.isRestoring
+      })
+      return !flag
+    } else {
+      return false
+    }
+  }
+
   const allActions = [
-    { key: 'attach', name: 'Attach' },
-    { key: 'detach', name: 'Detach', disabled: selected.standby },
-    { key: 'salvage', name: 'Salvage' },
-    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1 },
-    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' },
+    { key: 'attach', name: 'Attach', disabled: isRestoring() },
+    { key: 'detach', name: 'Detach', disabled: selected.standby || isRestoring() },
+    { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
+    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1) || isRestoring() },
+    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() },
   ]
-  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby }, { key: 'delete', name: 'Delete' }]
+  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]
 
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
@@ -88,7 +99,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   })
 
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' })
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring() })
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
