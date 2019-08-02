@@ -433,12 +433,22 @@ class RecurringList extends React.Component {
     ]
     const pagination = false
     const { dataSource } = this.state
-    const { loading } = this.props
+    const { loading, selectedVolume } = this.props
+    const isRestoring = () => {
+      if (selectedVolume.restoreStatus && selectedVolume.restoreStatus.length > 0) {
+        let flag = selectedVolume.restoreStatus.every((item) => {
+          return !item.isRestoring
+        })
+        return !flag
+      } else {
+        return false
+      }
+    }
     return (
       <Card title={<div className={styles.header}>
           <div>Recurring Snapshot and Backup Schedule</div>
           <div>
-            {!this.state.editing && !loading && <Button disabled={this.state.Faulted} onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
+            {!this.state.editing && !loading && <Button disabled={this.state.Faulted || isRestoring()} onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
           </div>
         </div>}
         bordered={false}>
