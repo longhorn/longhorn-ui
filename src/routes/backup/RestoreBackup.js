@@ -41,6 +41,7 @@ const modal = ({
     visible,
     onCancel,
     onOk: handleOk,
+    width: 600,
   }
 
   return (
