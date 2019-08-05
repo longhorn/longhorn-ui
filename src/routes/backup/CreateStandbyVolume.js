@@ -110,17 +110,6 @@ const modal = ({
             ],
           })(<InputNumber />)}
         </FormItem>
-
-        <FormItem label="Base Image" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('baseImage', {
-            initialValue: item.baseImage,
-            rules: [
-              {
-                required: false,
-              },
-            ],
-          })(<Input disabled={true} />)}
-        </FormItem>
         <div style={{ display: 'none' }}>
           <FormItem label="Backup Url" hasFeedback {...formItemLayout}>
             {getFieldDecorator('fromBackup', {
