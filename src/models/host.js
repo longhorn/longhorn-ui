@@ -1,4 +1,4 @@
-import { query, toggleScheduling, updateDisk, deleteHost } from '../services/host'
+import { query, toggleScheduling, updateDisk, deleteHost, getInstancemanagers } from '../services/host'
 import { execAction } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { parse } from 'qs'
@@ -13,6 +13,7 @@ export default {
     selectedDiskID: '',
     selectedReplicaRows: [],
     selectedReplicaRowKeys: [],
+    instanceManagerData: [],
     modalVisible: false,
     addDiskModalVisible: false,
     replicaModalVisible: false,
@@ -20,6 +21,7 @@ export default {
     replicaModalDeleteLoading: false,
     editDisksModalVisible: false,
     diskReplicaModalVisible: false,
+    instanceManagerVisible: false,
     socketStatus: 'closed',
     sorter: getSorter('nodeList.sorter'),
   },
@@ -82,6 +84,36 @@ export default {
       yield put({ type: 'replicaModalDeleteLoaded' })
       yield put({ type: 'clearReplicaSelection' })
     },
+    *getInstanceManagerModal({
+      payload,
+    }, { call, put }) {
+      const dataSourch = yield call(getInstancemanagers)
+      let currentData = []
+      let replicaData = []
+      let engineImageData = []
+      if (dataSourch && dataSourch.data && dataSourch.data.length > 0) {
+        currentData = dataSourch.data.filter((item) => {
+          return item.nodeID === payload.id
+        })
+        replicaData = currentData.filter((item) => {
+          return item.managerType === 'replica'
+        })
+        engineImageData = currentData.filter((item) => {
+          return item.managerType === 'engine'
+        })
+        engineImageData.forEach((item) => {
+          replicaData.forEach((ele) => {
+            if (item.engineImage === ele.engineImage) {
+              item.replicaCurrentState = ele.currentState
+            }
+          })
+          if (!item.replicaCurrentState) {
+            item.replicaCurrentState = ''
+          }
+        })
+      }
+      yield put({ type: 'showInstanceManagerModal', payload: engineImageData })
+    },
   },
   reducers: {
     queryHost(state, action) {
@@ -109,6 +141,12 @@ export default {
     },
     hideAddDiskModal(state) {
       return { ...state, addDiskModalVisible: false }
+    },
+    showInstanceManagerModal(state, action) {
+      return { ...state, instanceManagerVisible: true, instanceManagerData: action.payload }
+    },
+    hideInstanceManagerModal(state) {
+      return { ...state, instanceManagerVisible: false }
     },
     showReplicaModal(state, action) {
       return { ...state, ...action.payload, replicaModalVisible: true }

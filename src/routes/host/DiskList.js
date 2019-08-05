@@ -28,6 +28,11 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      key: 'readiness',
+      dataIndex: 'readiness',
+      width: 200,
+    },
+    {
       key: 'path',
       dataIndex: 'path',
       width: 360,
