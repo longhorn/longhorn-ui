@@ -36,12 +36,12 @@ function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost })
   //   toggleSchedulingTooltip = 'No disks enabled for scheduling'
   //   selected.allowScheduling = false
   // }
-  // menuOptions.push({
-  //   key: selected.allowScheduling ? 'disableScheduling' : 'enableScheduling',
-  //   name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling',
-  //   disabled: toggleSchedulingTooltip !== '',
-  //   tooltip: toggleSchedulingTooltip,
-  // })
+  if (selected.status.key === 'down') {
+    menuOptions.push({
+      key: selected.allowScheduling ? 'disableScheduling' : 'enableScheduling',
+      name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling',
+    })
+  }
 
   let removeNodeTooltip = ''
   if (selected.status.key !== 'down') {
