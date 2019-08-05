@@ -26,7 +26,7 @@ class InstanceManagerComponent extends React.Component {
       {
         title: 'Engine',
         key: 'version',
-        width: 48,
+        width: 120,
         render: (record) => {
           return (
             <div>{record.version}</div>
@@ -36,7 +36,7 @@ class InstanceManagerComponent extends React.Component {
       {
         title: 'Engine Image',
         key: 'state',
-        width: 100,
+        width: 200,
         render: (record) => {
           return (
             <div>{record.state}</div>
@@ -46,7 +46,7 @@ class InstanceManagerComponent extends React.Component {
       {
         title: 'Instance Manager - Engine',
         key: 'currentState',
-        width: 150,
+        width: 200,
         render: (record) => {
           return (
             <div>{record.currentState}</div>
@@ -56,7 +56,7 @@ class InstanceManagerComponent extends React.Component {
       {
         title: 'Instance Manager - Replica',
         key: 'replicaCurrentState',
-        width: 150,
+        width: 200,
         render: (record) => {
           return (
             <div>{record.replicaCurrentState}</div>
