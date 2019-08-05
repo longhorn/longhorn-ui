@@ -30,3 +30,10 @@ export async function deleteHost(data) {
     method: 'delete',
   })
 }
+
+export async function getInstancemanagers() {
+  return request({
+    url: '/v1/instancemanagers',
+    method: 'get',
+  })
+}

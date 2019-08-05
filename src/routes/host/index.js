@@ -14,7 +14,7 @@ import { addPrefix } from '../../utils/pathnamePrefix'
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
   let hostFilter = null
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible } = host
   const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
   const { field, value, stateValue } = queryString.parse(location.search)
   const volumeList = volume.data
@@ -115,6 +115,8 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 
   const hostListProps = {
     dataSource: nodes,
+    dispatch,
+    instanceManagerVisible,
     storageOverProvisioningPercentage: (storageOverProvisioningPercentage && Number(storageOverProvisioningPercentage.value)) || 0,
     minimalSchedulingQuotaWarning: (minimalSchedulingQuotaWarning && Number(minimalSchedulingQuotaWarning.value)) || 90,
     loading,

@@ -6,10 +6,12 @@ import styles from './HostList.less'
 import { sortTable } from '../../utils/sort'
 import DiskList from './DiskList'
 import HostActions from './HostActions'
+import InstanceManagerComponent from './components/InstanceManagerComponent'
 import { nodeStatusColorMap } from '../../utils/filter'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
 import { setSortOrder } from '../../utils/store'
+import { ModalBlur } from '../../components'
 
 class List extends React.Component {
   constructor(props) {
@@ -17,6 +19,8 @@ class List extends React.Component {
     this.state = {
       expandedRowKeys: [],
       sorterOrderChanged: false,
+      modalBlurVisible: false,
+      selectedNode: {},
     }
   }
 
@@ -51,6 +55,29 @@ class List extends React.Component {
     const { dataSource } = this.props
     this.setState({
       expandedRowKeys: dataSource.map(item => item.id),
+    })
+  }
+
+  conditionsIsReady = (record) => {
+    return record && record.conditions && record.conditions.Ready && record.conditions.Ready.type === 'Ready'
+  }
+
+  modalBlurOk = () => {
+    this.props.dispatch({
+      type: 'host/hideInstanceManagerModal',
+    })
+  }
+
+  modalBlurCancel = () => {
+    this.props.dispatch({
+      type: 'host/hideInstanceManagerModal',
+    })
+  }
+
+  showModalBlur = (record) => {
+    this.props.dispatch({
+      type: 'host/getInstanceManagerModal',
+      payload: record,
     })
   }
 
@@ -103,7 +130,23 @@ class List extends React.Component {
             </Tooltip>
           )
         },
-      }, {
+      },
+      {
+        title: 'Readiness',
+        dataIndex: 'readiness',
+        key: 'readiness',
+        width: 200,
+        render: (text, record) => {
+          return (
+            <Tooltip title={'Click to view details'}>
+              <div onClick={() => { this.showModalBlur(record) }} style={{ textAlign: 'center', cursor: 'pointer' }}>
+                {this.conditionsIsReady(record) ? 'Ready' : 'Deploying'}
+              </div>
+            </Tooltip>
+          )
+        },
+      },
+      {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
@@ -267,6 +310,9 @@ class List extends React.Component {
           pagination={pagination}
           rowKey={record => record.id}
         />
+        <ModalBlur width={880} title={'Instance Manager'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
+          <InstanceManagerComponent />
+        </ModalBlur>
       </div>
     )
   }
@@ -286,6 +332,8 @@ List.propTypes = {
   onAllExpandedOrCollapsed: PropTypes.func,
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
+  dispatch: PropTypes.func,
+  instanceManagerVisible: PropTypes.bool,
 }
 
 export default List
