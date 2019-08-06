@@ -310,6 +310,15 @@ export default {
           && data.keyword.split(',').indexOf(item.controller.hostId) > -1)
       }
       sortVolume(data.data)
+      if (data.data.length > 0 && state.data.length > 0) {
+        let ajaxTimeStamp = state.data[0].timestamp && new Date(state.data[0].timestamp).getTime()
+        let wstimeStamp = data.data[0].timestamp && new Date(data.data[0].timestamp).getTime()
+        if (wstimeStamp < ajaxTimeStamp) {
+          return {
+            ...state,
+          }
+        }
+      }
       return {
         ...state,
         ...data,
