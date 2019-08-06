@@ -138,11 +138,9 @@ class List extends React.Component {
         width: 200,
         render: (text, record) => {
           return (
-            <Tooltip title={'Click to view details'}>
-              <div onClick={() => { this.showModalBlur(record) }} style={{ textAlign: 'center', cursor: 'pointer' }}>
-                {this.conditionsIsReady(record) ? 'Ready' : 'Deploying'}
-              </div>
-            </Tooltip>
+            <a style={{ textAlign: 'center', display: 'block' }} onClick={() => { this.showModalBlur(record) }}>
+              {this.conditionsIsReady(record) ? 'Ready' : 'Deploying'}
+            </a>
           )
         },
       },
@@ -310,7 +308,7 @@ class List extends React.Component {
           pagination={pagination}
           rowKey={record => record.id}
         />
-        <ModalBlur width={880} title={'Instance Manager'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
+        <ModalBlur width={980} title={'Instance Manager'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
           <InstanceManagerComponent />
         </ModalBlur>
       </div>

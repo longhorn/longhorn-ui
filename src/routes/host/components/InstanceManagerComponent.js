@@ -26,10 +26,10 @@ class InstanceManagerComponent extends React.Component {
       {
         title: 'Engine',
         key: 'version',
-        width: 120,
+        width: 220,
         render: (record) => {
           return (
-            <div>{record.version}</div>
+            <div>{record.image}</div>
           )
         },
       },
