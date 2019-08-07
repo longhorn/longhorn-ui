@@ -302,6 +302,21 @@ export default {
     updateBackground(state, action) {
       const data = action.payload
       data.data = data.data || []
+      state.data.forEach((item) => {
+        let flag = false
+        data.data.forEach((ele) => {
+          if (ele.id === item.id) {
+            flag = true
+            if (new Date(item.timestamp).getTime() > new Date(ele.timestamp).getTime()) {
+              Object.assign(ele, item)
+            }
+          }
+        })
+        if (!flag && item.state !== 'deleting') {
+          data.data.push(item)
+        }
+      })
+
       if (data && data.field === 'id' && data.keyword) {
         data.data = data.data.filter(item => item[data.field].indexOf(data.keyword) > -1)
       }
@@ -310,15 +325,6 @@ export default {
           && data.keyword.split(',').indexOf(item.controller.hostId) > -1)
       }
       sortVolume(data.data)
-      if (data.data.length > 0 && state.data.length > 0) {
-        let ajaxTimeStamp = state.data[0].timestamp && new Date(state.data[0].timestamp).getTime()
-        let wstimeStamp = data.data[0].timestamp && new Date(data.data[0].timestamp).getTime()
-        if (wstimeStamp < ajaxTimeStamp) {
-          return {
-            ...state,
-          }
-        }
-      }
       return {
         ...state,
         ...data,
