@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Tooltip, Card, Switch } from 'antd'
+import { Button, Tooltip, Card, Switch, Progress } from 'antd'
 import { Snapshot } from '../../../components'
 import CreateBackupModal from './CreateBackupModal'
 import styles from './index.less'
@@ -159,6 +159,35 @@ class Snapshots extends React.Component {
       }
     }
 
+    let purgeStatus = null
+    if (treeProps.volume.purgeStatus && treeProps.volume.purgeStatus.length > 0) {
+      let total = 0
+      let statusErrorMsg = ''
+      treeProps.volume.purgeStatus.forEach((ele) => {
+        if (ele.error) {
+          statusErrorMsg = ele.error
+        }
+        total += ele.progress
+      })
+      purgeStatus = {}
+      purgeStatus.statusErrorMsg = statusErrorMsg
+      purgeStatus.progress = Math.floor(total / treeProps.volume.purgeStatus.length)
+    }
+
+    let purgeStatusEle = () => {
+      if (purgeStatus.progress > 0 && purgeStatus.progress < 100) {
+        return (
+          <div style={{ position: 'absolute', top: 0, left: 0, background: 'rgba(255,255,255,.8)', width: '100%', height: '100%', zIndex: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Tooltip placement="top" title={purgeStatus.statusErrorMsg}>
+              <Progress type="circle" format={percent => `Deleting ${percent}%`} strokeWidth={5} percent={purgeStatus.progress}></Progress>
+            </Tooltip>
+          </div>
+        )
+      } else {
+        return ''
+      }
+    }
+
     return (
       <Card title={<div className={styles.header}>
         <div>Snapshots</div>
@@ -184,6 +213,7 @@ class Snapshots extends React.Component {
           Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
+          {purgeStatusEle()}
           <div style={{ marginTop: '20px' }}>
             <Snapshot {...treeProps} onAction={this.onAction} />
           </div>

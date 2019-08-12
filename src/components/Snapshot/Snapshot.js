@@ -217,14 +217,14 @@ class Snapshot extends React.Component {
   state = {
     key: Math.random(),
     loadingState: true,
-    loading: true,
+    loading: false,
   }
 
   render() {
     let props = this.props
-    let children = (<TreeNode key="1" title={CurrentPoint(props)} />)
-    if (props.snapshotTree.length > 0) {
-      children = loop(props.snapshotTree, props)
+    let children = null
+    if (props.snapshotTree) {
+      children = props.snapshotTree.length > 0 ? loop(props.snapshotTree, props) : <TreeNode key="1" title={CurrentPoint(props)} />
       if (props.loading || this.state.loadingState !== props.loading) {
         this.state.loadingState = props.loading
         this.state.loading = true
