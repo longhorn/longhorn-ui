@@ -229,11 +229,11 @@ export default (namespace) => {
           yield put({ type: 'setSnapshotData', payload: treeData })
           const { rootNode, treeLevelNodes } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)), filterRemoved)
           const { rootNode: rootNodeWithRemoved, treeLevelNodes: treeLevelNodesWithRemoved } = genSnapshotsTreeData(JSON.parse(JSON.stringify(treeData)))
-          yield put({ type: 'setLoading', payload: false })
           yield put({ type: 'setTreeLevelNodes', payload: treeLevelNodes })
           yield put({ type: 'setSnapshot', payload: rootNode.childrenNode || [] })
           yield put({ type: 'setTreeLevelNodesWithRemoved', payload: treeLevelNodesWithRemoved })
           yield put({ type: 'setSnapshotWithRemoved', payload: rootNodeWithRemoved.childrenNode || [] })
+          yield put({ type: 'setLoading', payload: false })
         }
       },
       *startPolling({

@@ -27,6 +27,7 @@
     "react/jsx-closing-tag-location": 0,
     "react/forbid-prop-types": 0,
     "react/no-array-index-key": 0,
+    "linebreak-style": [0 ,"error", "windows"],
     "react/no-access-state-in-setstate": 0,
     "react/jsx-first-prop-new-line": 0,
     "import/prefer-default-export": 0,
