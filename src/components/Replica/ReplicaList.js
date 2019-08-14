@@ -20,9 +20,9 @@ class ReplicaList extends React.Component {
   }
 
   render() {
-    const { dataSource, loading, deleteReplicas, hosts, restoreStatus } = this.props
+    const { dataSource, loading, deleteReplicas, hosts, restoreStatus, purgeStatus } = this.props
     const { start, end } = this.state
-    const replicas = dataSource.map(item => <Replica key={item.name} deleteReplicas={deleteReplicas} restoreStatus={restoreStatus} item={item} hosts={hosts} />)
+    const replicas = dataSource.map(item => <Replica key={item.name} deleteReplicas={deleteReplicas} restoreStatus={restoreStatus} purgeStatus={purgeStatus} item={item} hosts={hosts} />)
     const cNames = classnames(style.replicaContainer, { [style.start]: start }, { [style.end]: end })
     return (
       <div onScroll={this.onScroll} className={cNames}>
@@ -42,6 +42,7 @@ ReplicaList.propTypes = {
   deleteReplicas: PropTypes.func,
   hosts: PropTypes.array,
   restoreStatus: PropTypes.array,
+  purgeStatus: PropTypes.array,
 }
 
 export default ReplicaList

@@ -36,6 +36,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
   selectedVolume.replicas.forEach(replica => { replica.volState = selectedVolume.state })
   const replicaListProps = {
     dataSource: selectedVolume.replicas || [],
+    purgeStatus: selectedVolume.purgeStatus || [],
     restoreStatus: selectedVolume.restoreStatus || [],
     hosts,
     deleteReplicas(replicas) {
