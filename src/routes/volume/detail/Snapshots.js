@@ -159,23 +159,27 @@ class Snapshots extends React.Component {
       }
     }
 
-    let purgeStatus = null
+    let purgeStatus = {}
     if (treeProps.volume.purgeStatus && treeProps.volume.purgeStatus.length > 0) {
       let total = 0
       let statusErrorMsg = ''
+      let isPurging = false
       treeProps.volume.purgeStatus.forEach((ele) => {
         if (ele.error) {
           statusErrorMsg = ele.error
         }
+        if (ele.isPurging) {
+          isPurging = true
+        }
         total += ele.progress
       })
-      purgeStatus = {}
       purgeStatus.statusErrorMsg = statusErrorMsg
+      purgeStatus.isPurging = isPurging
       purgeStatus.progress = Math.floor(total / treeProps.volume.purgeStatus.length)
     }
 
     let purgeStatusEle = () => {
-      if (purgeStatus.progress > 0 && purgeStatus.progress < 100) {
+      if (purgeStatus.isPurging) {
         return (
           <div style={{ position: 'absolute', top: 0, left: 0, background: 'rgba(255,255,255,.8)', width: '100%', height: '100%', zIndex: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Tooltip placement="top" title={purgeStatus.statusErrorMsg}>
