@@ -31,9 +31,14 @@ Build and run a docker image
   make LONGHORN_MANAGER_IP=http://longhorn:9500 run
 ```
 
+## Contribution
+
+Please check [the main repo](https://github.com/longhorn/longhorn#community) for the contributing guide.
+
+
 License
 =======
-Copyright (c) 2014-2019 [Rancher Labs, Inc.](http://rancher.com)
+Copyright (c) 2014-2019 The Longhorn Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
