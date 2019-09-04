@@ -333,7 +333,7 @@ class RecurringList extends React.Component {
 
     if (key.length > 0) {
       return key.map((ele, index) => {
-        return <div key={index}> {ele} : {value[index]} </div>
+        return <div style={{ wordBreak: 'break-word', maxWidth: '500px' }} key={index}> {ele} : {value[index]} </div>
       })
     }
 
@@ -362,6 +362,7 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
+        width: '50%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing ? '' : 'Click edit Cron'}>
@@ -382,11 +383,12 @@ class RecurringList extends React.Component {
       {
         title: 'Labels',
         key: 'LabelsValue',
+        width: '30%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing || record.task !== 'backup' ? '' : 'Click add labels'}>
               <div
-                style={{ minWidth: '200px', maxWidth: '500px', color: !this.state.editing || record.task !== 'backup' ? '#666' : '#108ee9', cursor: !this.state.editing || record.task !== 'backup' ? 'auto' : 'pointer' }}
+                style={{ display: 'flex', justifyContent: 'center', minWidth: '200px', width: '100%', color: !this.state.editing || record.task !== 'backup' ? '#666' : '#108ee9', cursor: !this.state.editing || record.task !== 'backup' ? 'auto' : 'pointer' }}
                 onClick={() => {
                   if (!this.state.editing || record.task !== 'backup') {
                     return
@@ -403,7 +405,7 @@ class RecurringList extends React.Component {
         title: 'Retain',
         dataIndex: 'retain',
         key: 'retain',
-        width: 120,
+        width: '10%',
         render: (text, record) => {
           return (
             this.state.editing ? <div>
