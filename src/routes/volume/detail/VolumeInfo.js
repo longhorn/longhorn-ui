@@ -183,6 +183,10 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
         <span className={styles.label}> Last Backup At:</span>
         {selectedVolume.lastBackupAt ? moment(selectedVolume.lastBackupAt).fromNow() : ''}
       </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Instance Manager:</span>
+        {selectedVolume.controllers.filter(item => item.instanceManagerName !== '').map(item => <div key={item.hostId} style={{ fontFamily: 'monospace', margin: '2px 0px' }}> <span style={{ backgroundColor: '#f2f4f5' }}> {item.instanceManagerName} </span></div>)}
+      </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
