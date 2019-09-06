@@ -102,10 +102,16 @@ class Replica extends React.Component {
               {this.modeInfo.text}
             </p>
           </div>
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <div style={{ textAlign: 'center', marginTop: item.instanceManagerName ? '10px' : '32px', marginBottom: item.instanceManagerName ? '0px' : '10px' }}>
             <h3>{(host && host.name) || 'N/A'}</h3>
-            <p style={{ color: 'gray' }}>Node</p>
+            <div style={{ color: 'gray' }}>Node</div>
           </div>
+          { item.instanceManagerName ? <div style={{ textAlign: 'center', marginTop: '5px', marginBottom: '5px', padding: '0px 5px' }}>
+              <Tooltip title={'Instance Manager'}>
+                {item.instanceManagerName}
+              </Tooltip>
+            </div> : ''
+          }
           <div style={{ textAlign: 'center' }}>
             <Tooltip title={(item && item.dataPath) || 'N/A'}>
               <h3>{(host && host.disks && host.disks[item.diskID] && host.disks[item.diskID].path) || 'N/A'}</h3>
