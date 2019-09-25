@@ -161,6 +161,7 @@ class Volume extends React.Component {
             field: 'volumeName',
             keyword: record.name,
           }),
+          state: true,
         }))
       },
       showSalvage(record) {

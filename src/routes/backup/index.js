@@ -48,6 +48,7 @@ function Backup({ backup, loading, setting, dispatch, location }) {
               field: 'volumeName',
               keyword: id,
             }),
+            state: true,
           }
         )
       )

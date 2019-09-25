@@ -9,12 +9,12 @@ const SubMenu = Menu.SubMenu
 const topMenus = menu.map(item => item.key)
 const getMenus = function (menuArray, siderFold) {
   return menuArray.map(item => {
-    const linkTo = `/${item.key}`
+    const linkTo = { pathname: `/${item.key}`, state: item.key === 'backup' }
     let menus
     let children = (item.child || []).filter(child => child.show === true)
     if (children.length > 0) {
       menus = (
-        <SubMenu key={linkTo}
+        <SubMenu key={linkTo.pathname}
           title={
             <span>
               {item.icon ? <Icon type={item.icon} /> : ''}
@@ -27,7 +27,7 @@ const getMenus = function (menuArray, siderFold) {
       )
     } else {
       menus = (
-        <Menu.Item key={linkTo}>
+        <Menu.Item key={linkTo.pathname}>
           <LinkTo to={linkTo}>
             {item.icon ? <Icon type={item.icon} /> : ''}
             {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}

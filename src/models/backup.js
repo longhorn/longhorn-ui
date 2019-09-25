@@ -30,7 +30,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (history.location.pathname.indexOf('backup') > -1 && history.location.pathname.indexOf('volume') === -1) {
+        if (history.location.state) {
           dispatch({
             type: 'query',
             payload: queryString.parse(location.search),
