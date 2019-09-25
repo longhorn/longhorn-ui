@@ -20,7 +20,7 @@ function list({ loading, dataSource, deleteEngineImage }) {
       render: (text, record) => {
         return (
           <div>
-            <LinkTo to={`/engineimage/${record.id}`}>
+            <LinkTo to={{ pathname: `/engineimage/${record.id}`, state: false }}>
               {text}
             </LinkTo>
           </div>

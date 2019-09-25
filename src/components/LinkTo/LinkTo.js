@@ -5,11 +5,11 @@ import { addPrefix } from '../../utils/pathnamePrefix'
 
 export default function LinkTo({ to, children, ...props }) {
   return (
-    <Link to={addPrefix(to)} {...props}>{children}</Link>
+    <Link to={{ pathname: addPrefix(to.pathname), state: to.state }} {...props}>{children}</Link>
   )
 }
 
 LinkTo.propTypes = {
-  to: PropTypes.string,
+  to: PropTypes.object,
   children: PropTypes.any,
 }

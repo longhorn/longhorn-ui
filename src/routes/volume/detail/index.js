@@ -140,6 +140,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
           field: 'volumeName',
           keyword: record.name,
         }),
+        state: true,
       }))
     },
     showSalvage(record) {
