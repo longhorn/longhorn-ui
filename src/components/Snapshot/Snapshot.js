@@ -220,6 +220,10 @@ class Snapshot extends React.Component {
     loading: false,
   }
 
+  showReomve = () => {
+    this.state.key = Math.random()
+  }
+
   render() {
     let props = this.props
     let children = null
