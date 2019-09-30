@@ -26,6 +26,7 @@ class Snapshots extends React.Component {
           type: 'snapshotModal/setShowRemoved',
           payload: !this.props.showRemoved,
         })
+        this.refs.Snapshot.showReomve()
         return
       }
       let actions
@@ -219,7 +220,7 @@ class Snapshots extends React.Component {
         <div style={{ position: 'relative', top: '0', padding: '20px', backgroundColor: 'white', minHeight: '314px', overflow: 'auto' }}>
           {purgeStatusEle()}
           <div style={{ marginTop: '20px' }}>
-            <Snapshot {...treeProps} onAction={this.onAction} />
+            <Snapshot {...treeProps} onAction={this.onAction} ref="Snapshot" />
           </div>
         </div>
         <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} />
