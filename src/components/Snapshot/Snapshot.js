@@ -218,6 +218,7 @@ class Snapshot extends React.Component {
     key: Math.random(),
     loadingState: true,
     loading: false,
+    previousCreated: '',
   }
 
   showReomve = () => {
@@ -227,6 +228,7 @@ class Snapshot extends React.Component {
   render() {
     let props = this.props
     let children = null
+
     if (props.snapshotTree) {
       children = props.snapshotTree.length > 0 ? loop(props.snapshotTree, props) : <TreeNode key="1" title={CurrentPoint(props)} />
       if (props.loading || this.state.loadingState !== props.loading) {
@@ -239,6 +241,20 @@ class Snapshot extends React.Component {
       }
     } else if (!props.volume.actions.snapshotList) {
       this.state.loading = false
+    }
+
+    if (props.volumeHead) {
+      if (props.volumeHead.created && props.volumeHead.created !== this.state.previousCreated) {
+        this.state.loading = true
+        setTimeout(() => {
+          this.state.loading = false
+          this.state.key = Math.random()
+        }, 0)
+        this.setState({
+          ...this.state,
+          previousCreated: props.volumeHead.created,
+        })
+      }
     }
 
     return (
