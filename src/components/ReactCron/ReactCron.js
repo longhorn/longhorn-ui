@@ -935,7 +935,7 @@ class ReactCron extends React.Component {
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={3}>
-                          Specific hour (choose one or many)z
+                          Specific hour (choose one or many)
                         </Radio>
                         <div className={style.cronInput} style={{display: 'inline-block', width: '300px'}}>
                           <Select
