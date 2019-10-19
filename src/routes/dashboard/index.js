@@ -8,7 +8,12 @@ import { ResourceOverview, EventLogs } from './components'
 import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
-  const { data: eventlogs, sorter } = eventlog
+  let { data: eventlogsData, sorter } = eventlog
+  let eventlogs = eventlogsData.map((item) => {
+    let obj = {}
+    obj.eventType = item.eventType
+    return Object.assign(obj, item.event)
+  })
   const resourceOverviewProps = {
     host,
     volume,
