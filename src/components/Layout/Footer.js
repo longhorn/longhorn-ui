@@ -82,7 +82,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
           <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
           <a target="blank" href="https://forums.rancher.com">Forums</a>
-          <a target="blank" href="https://slack.rancher.io">Slack</a>
+          <a target="blank" href="https://slack.cncf.io/">Slack</a>
         </Col>
         <Col>
           {getStatusIcon(volume)}
