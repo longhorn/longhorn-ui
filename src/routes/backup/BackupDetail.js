@@ -2,16 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import queryString from 'query-string'
+import { Modal } from 'antd'
 import RestoreBackup from './RestoreBackup'
+import { DropOption } from '../../components'
 import BackupList from './BackupList'
 import ShowBackupLabels from './ShowBackupLabels'
+import CreateStandbyVolume from './CreateStandbyVolume'
+
+const { confirm } = Modal
 
 function Backup({ host, backup, setting, loading, location, dispatch }) {
-  const { data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible } = backup
+  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl } = backup
   const hosts = host.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+  const currentBackUp = backupVolumes.filter((item) => { return item.id === queryString.parse(location.search).keyword })
   const backupVolumesProps = {
     backup: data,
     loading,
@@ -93,11 +99,72 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
     },
   }
 
+  const showDeleteConfirm = (record) => {
+    confirm({
+      title: 'Are you sure delete all the backups?',
+      content: 'Delete all backups of the volume',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispatch({
+          type: 'backup/deleteAllBackups',
+          payload: record.name,
+        })
+      },
+    })
+  }
+
+  const createVolumeStandModalProps = {
+    item: {
+      numberOfReplicas: defaultNumberOfReplicas,
+      size,
+      iops: 1000,
+      baseImage,
+      fromBackup: lastBackupUrl,
+    },
+    visible: createVolumeStandModalVisible,
+    onOk(newVolume) {
+      let obj = Object.assign(newVolume, { standby: true, frontend: '' })
+      obj.size = obj.size.replace(/\s/ig, '')
+      dispatch({
+        type: 'backup/createVolume',
+        payload: obj,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'backup/hideCreateVolumeStandModalVisible',
+      })
+    },
+  }
+
+  const handleMenuClick = (record, e) => {
+    if (e.key === 'recovery') {
+      dispatch({
+        type: 'backup/CreateStandVolume',
+        payload: record,
+      })
+    } else if (e.key === 'deleteAll') {
+      showDeleteConfirm(record)
+    }
+  }
+
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
+      <div style={{ position: 'absolute', top: '-50px', right: '20px', display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
+        <DropOption buttonStyle={{ background: '#108eb9', color: '#fff' }}
+          menuOptions={[
+            { key: 'recovery', name: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName },
+            { key: 'deleteAll', name: 'Delete All Backups' },
+          ]}
+          onMenuClick={e => handleMenuClick(currentBackUp[0], e)}
+        />
+      </div>
       <BackupList {...backupVolumesProps} />
       <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
       <ShowBackupLabels key={showBackupLabelsModalKey} {...showBackupLabelsModalProps} />
+      <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
     </div>
   )
 }
