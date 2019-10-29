@@ -62,18 +62,6 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Base Image',
-        dataIndex: 'baseImage',
-        key: 'baseImage',
-        width: 200,
-        render: (text) => {
-          return (
-            <div>
-              {text}
-            </div>
-          )
-        },
-      }, {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',

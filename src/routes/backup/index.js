@@ -73,7 +73,6 @@ function Backup({ backup, loading, setting, dispatch, location }) {
     location,
     fieldOption: [
       { value: 'name', name: 'Name' },
-      { value: 'baseImage', name: 'Base Image' },
     ],
     onSearch(filter) {
       dispatch({
