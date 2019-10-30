@@ -31,8 +31,8 @@
       }
     }
     .snapshot-current-desc{
-      height: 35px;
-      line-height: 35px;
+      height: 55px;
+      line-height: 33px;
       padding-top: 11px;
       button{
         border: none;
@@ -154,7 +154,6 @@
       > li{
         margin-top: 0px;
         &:first-child {
-          height: 160px;
           padding-top: 0px !important;
         } 
         &::before {
@@ -172,11 +171,11 @@
           content: '';
           display: block;
           width: 2px;
-          height: ~"calc(100% - 57px)";
-          border-left: 2px solid white;
+          height: ~"calc(100% - 70px)";
+          border-left: 2px solid #ecf0f1;
           position: absolute;
-          top: 28px;
-          left: -(2*@treeNodeGap - 2);
+          top: 40px;
+          left: -(@treeNodeGap - 20) !important;
           z-index: 1;
         }
       }

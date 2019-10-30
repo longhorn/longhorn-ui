@@ -69,8 +69,6 @@ function SnapshotIcon(props, snapshotProps) {
   const title = (
     <div>
       <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> Confirm snapshot revert? </h3>
-      <p style={{ marginTop: '20px' }}>Volume may not be mounted on the host when reverting,</p>
-      <p>otherwise it may cause filesystem error</p>
     </div>
   )
   const menu = (
@@ -78,7 +76,7 @@ function SnapshotIcon(props, snapshotProps) {
       className="lh-snapshot-dropdown"
       onClick={onClick}
     >
-      { props.usercreated ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
+      { props.usercreated && snapshotProps.volume.disableFrontend ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
           <Popconfirm title={title} onConfirm={() => doAction('snapshotRevert')}>
             <span className="snapshot-revert">Revert</span>
           </Popconfirm>
