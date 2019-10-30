@@ -14,7 +14,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueTitle = '*Summarize%20your%20issue%20here*'
   const issueBody = `*Describe%20your%20issue%20here*%0A%0A---%0AVersion%3A%20\`${currentVersion}\``
-  const issueHref = `https://github.com/rancher/longhorn/issues/new?title=${issueTitle}&body=${issueBody}`
+  const issueHref = `https://github.com/longhorn/longhorn/issues/new?title=${issueTitle}&body=${issueBody}`
 
   const { data } = setting
   let checkUpgrade = false
@@ -78,10 +78,9 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
         <Col>
           {upgrade}
           <a>{currentVersion}</a>
-          <a target="blank" href="https://github.com/rancher/longhorn#longhorn">Documentation</a>
+          <a target="blank" href="https://github.com/longhorn/longhorn#longhorn">Documentation</a>
           <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
-          <a target="blank" href="https://forums.rancher.com">Forums</a>
           <a target="blank" href="https://slack.cncf.io/">Slack</a>
         </Col>
         <Col>

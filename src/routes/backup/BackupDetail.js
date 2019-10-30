@@ -153,7 +153,7 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <div style={{ position: 'absolute', top: '-50px', right: '20px', display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
-        <DropOption buttonStyle={{ background: '#108eb9', color: '#fff' }}
+        <DropOption
           menuOptions={[
             { key: 'recovery', name: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName },
             { key: 'deleteAll', name: 'Delete All Backups' },
