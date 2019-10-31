@@ -93,7 +93,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
   }
 
   let tagNodeChild = ''
-  if (selectedVolume.diskSelector) {
+  if (selectedVolume.diskSelector && selectedVolume.nodeSelector) {
     tagNodeChild = selectedVolume.nodeSelector.map(forMapNode)
   }
 
