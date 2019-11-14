@@ -50,7 +50,6 @@ let filterRemoved = (data) => {
     let item = data[i]
     if (item.removed || (!item.usercreated && item.name !== 'volume-head')) {
       let parent = item.parent
-      // change parent children
       if (parent !== '') {
         let parentEntity = data.find(el => el.name === parent)
 
@@ -64,10 +63,11 @@ let filterRemoved = (data) => {
       // change children parent
       for (let j = 0; j < item.children.length; j += 1) {
         let itemC = item.children[j]
-        if (itemC === 'volume-head') {
-          continue
-        }
+        // if (itemC === 'volume-head') {
+        //   continue
+        // }
         let itemCEntity = data.find(el => el.name === itemC)
+
         itemCEntity.parent = parent
       }
 
