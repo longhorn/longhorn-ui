@@ -66,20 +66,18 @@
       background-color: hsl(209, 66%, 51%);
       float: left;
       margin-top: 3px;
+      margin-left: 6px;
     }
     >li>.ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree{
-      margin-left: 40px;
-      margin-top: -12px;
-      >li:before{
-        width: 56px;
-      }
+      margin-top: 9px;
     }
     .tree-snapshot-icon{
       position: relative;
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
       display: inline-block;
       border-radius: 50%;
+      left: -3px;
       background-color: hsl(209, 66%, 51%);
       z-index: 2;
       .snapshot-icon{
@@ -89,7 +87,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 2px;
+        top: 3px;
         bottom: 0;
         margin: auto;
         font-size: 20px;
@@ -112,11 +110,22 @@
         color: #a4a4a4;
       }
     }
-    @treeNodeGap: 160px;
+    @treeNodeGap: 128px;
     .ant-tree-child-tree.ant-tree-child-tree.ant-tree-child-tree {
-      position: absolute;
-      top: 0px;
+      position: relative;
+      top: -54px;
       margin-left: @treeNodeGap;
+      &::before {
+        content: '';
+        display: block;
+        width: 2px;
+        height: ~"calc(100% - 130px)";
+        border-left: 2px solid #ecf0f1;
+        position: absolute;
+        top: 40px;
+        left: -(@treeNodeGap - 18) !important;
+        z-index: 1;
+      }
     }
 
     .ant-tree-switcher.ant-tree-switcher.ant-tree-switcher.ant-tree-switcher {
@@ -153,6 +162,8 @@
       top: 0px;
       > li{
         margin-top: 0px;
+        padding: 0px !important;
+        // height: 59px;
         &:first-child {
           padding-top: 0px !important;
         } 
@@ -165,18 +176,22 @@
           position: absolute;
           top: 28px;
           z-index: 0;
-          right: 99%;
+          right: 100%;
         }
         &:last-child>.ant-tree-child-tree:before{
           content: '';
           display: block;
           width: 2px;
-          height: ~"calc(100% - 70px)";
+          height: ~"calc(100% - 130px)";
           border-left: 2px solid #ecf0f1;
           position: absolute;
           top: 40px;
-          left: -(@treeNodeGap - 20) !important;
+          left: -(@treeNodeGap - 18) !important;
           z-index: 1;
+        }
+        &:last-child {
+          height: 120px;
+          padding: 0px;
         }
       }
       &:after {
