@@ -11,6 +11,7 @@ export default {
   state: {
     backupVolumes: [],
     backupVolumesForSelect: [],
+    WorkloadDetailModalItem: {},
     filterText: 'all',
     backupStatus: {},
     currentItem: {},
@@ -19,6 +20,7 @@ export default {
     size: '',
     backupLabel: {},
     restoreBackupModalVisible: false,
+    WorkloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
     showBackuplabelsModalVisible: false,
     restoreBackupFilterKey: Math.random(),
@@ -143,6 +145,12 @@ export default {
     updateSorter(state, action) {
       saveSorter('backupList.sorter', action.payload)
       return { ...state, sorter: action.payload }
+    },
+    showWorkloadDetailModal(state, action) {
+      return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: Math.random() }
+    },
+    hideWorkloadDetailModal(state) {
+      return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
     },
     filterBackupVolumes(state, action) {
       if (action.payload) {

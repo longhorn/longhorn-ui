@@ -230,7 +230,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           <Tooltip placement="top" title={title}>
             <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
               {ele}
-              <div>{record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>)}</div>
+              <div>{record.controllers ? record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div>
             </a>
           </Tooltip>
         )
