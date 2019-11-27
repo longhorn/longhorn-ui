@@ -8,18 +8,21 @@ import { DropOption } from '../../components'
 import BackupList from './BackupList'
 import ShowBackupLabels from './ShowBackupLabels'
 import CreateStandbyVolume from './CreateStandbyVolume'
+import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 
 const { confirm } = Modal
 
-function Backup({ host, backup, setting, loading, location, dispatch }) {
-  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl } = backup
+function Backup({ host, backup, volume, setting, loading, location, dispatch }) {
+  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, WorkloadDetailModalVisible, WorkloadDetailModalItem, WorkloadDetailModalKey } = backup
   const hosts = host.data
+  const volumeList = volume.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
   const currentBackUp = backupVolumes.filter((item) => { return item.id === queryString.parse(location.search).keyword })
   const backupVolumesProps = {
     backup: data,
+    volumeList,
     loading,
     onSorterChange(s) {
       dispatch({
@@ -64,6 +67,12 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
       if (record) {
         dispatch({ type: 'backup/showBackuplabelsModalVisible', payload: record })
       }
+    },
+    showWorkloadsStatusDetail(record) {
+      dispatch({
+        type: 'backup/showWorkloadDetailModal',
+        payload: record,
+      })
     },
   }
 
@@ -150,6 +159,17 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
     }
   }
 
+  const WorkloadDetailModalProps = {
+    visible: WorkloadDetailModalVisible,
+    item: WorkloadDetailModalItem,
+    onOk() {
+      dispatch({ type: 'backup/hideWorkloadDetailModal' })
+    },
+    onCancel() {
+      dispatch({ type: 'backup/hideWorkloadDetailModal' })
+    },
+  }
+
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <div style={{ position: 'absolute', top: '-50px', right: '20px', display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
@@ -165,6 +185,7 @@ function Backup({ host, backup, setting, loading, location, dispatch }) {
       <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
       <ShowBackupLabels key={showBackupLabelsModalKey} {...showBackupLabelsModalProps} />
       <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
+      <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
     </div>
   )
 }
@@ -176,10 +197,11 @@ Backup.propTypes = {
   loading: PropTypes.bool,
   host: PropTypes.object,
   setting: PropTypes.object,
+  volume: PropTypes.object,
 }
 
 export default connect(({
-  host, backup, setting, loading,
+  host, backup, setting, loading, volume,
 }) => ({
-  host, backup, setting, loading: loading.models.backup,
+  host, backup, setting, loading: loading.models.backup, volume,
 }))(Backup)

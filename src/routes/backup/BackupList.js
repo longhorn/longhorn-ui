@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal, Icon, message } from 'antd'
+import { Table, Modal, Icon, message, Tooltip } from 'antd'
 import moment from 'moment'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import style from './backupList.less'
 
 const confirm = Modal.confirm
 
@@ -67,8 +68,31 @@ class List extends React.Component {
     window.onresize = null
   }
 
+  fomartData = (data, key) => {
+    if (this.isJson(data)) {
+      let obj = JSON.parse(data)
+
+      return key ? obj[key] : obj
+    }
+    return {}
+  }
+
+  isJson = (str) => {
+    try {
+      let obj = JSON.parse(str)
+
+      if (typeof obj === 'object' && obj) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+  }
+
   render() {
-    const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange = f => f } = this.props
+    const { backup, volumeList, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
     const handleMenuClick = (record, event) => {
       switch (event.key) {
@@ -98,25 +122,46 @@ class List extends React.Component {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
-        width: 300,
+        width: '15%',
         sorter: (a, b) => sortTable(a, b, 'id'),
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
       }, {
         title: 'Volume',
         dataIndex: 'volumeName',
         key: 'volumeName',
-        width: 200,
+        width: '14%',
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
       }, {
         title: 'Snapshot Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
         align: 'center',
-        width: 300,
+        width: '16.72%',
         sorter: (a, b) => sortTable(a, b, 'snapshotName'),
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
       }, {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
-        width: 120,
+        width: '6.25%',
         sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text) => {
           return (
@@ -126,10 +171,90 @@ class List extends React.Component {
           )
         },
       }, {
+        title: <div>PV/PVC</div>,
+        dataIndex: 'labels',
+        key: 'KubernetesStatus',
+        width: '7.63%',
+        render: (record) => {
+          let storageObj = {}
+
+          if (record) {
+            storageObj = this.fomartData(record.KubernetesStatus)
+          }
+          let title = (<div>
+            <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
+            <div><span>PV Status</span><span>: </span><span>{storageObj.pvStatus}</span></div>
+            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{moment(new Date(storageObj.lastPVCRefAt)).fromNow()}</span></div> : ''}
+            { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
+          </div>)
+          let content = (() => {
+            if (!storageObj.pvName) {
+              return ''
+            }
+            if (storageObj.pvName && !storageObj.pvcName && !storageObj.namespace) {
+              return <div>Available</div>
+            }
+            if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && !storageObj.lastPVCRefAt) {
+              return <div>Bound</div>
+            }
+            if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && storageObj.lastPVCRefAt) {
+              return <div>Released</div>
+            }
+            return ''
+          })()
+          return (
+            <Tooltip placement="top" title={title}>
+              <div>
+                {content}
+              </div>
+            </Tooltip>
+          )
+        },
+      }, {
+        title: 'Attached To',
+        dataIndex: 'labels',
+        key: 'WorloadNameAndPodName',
+        width: '12.5%',
+        sorter: (a, b) => sortTable(a, b, 'WorloadName'),
+        render: (record, row) => {
+          let storageObj = {}
+
+          if (record) {
+            storageObj = this.fomartData(record.KubernetesStatus)
+          }
+
+          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {moment(new Date(storageObj.lastPodRefAt)).fromNow()}</div></div> : ''
+          const ele = storageObj.workloadsStatus && storageObj.workloadsStatus.length ? storageObj.workloadsStatus.map((item, index) => {
+            return <div key={index}>{item.podName}</div>
+          }) : ''
+          if (storageObj.workloadsStatus) {
+            storageObj.podList = storageObj.workloadsStatus
+          }
+          let currentVolume = {}
+
+          if (volumeList) {
+            volumeList.forEach((item) => {
+              if (item.name === row.volumeName) {
+                currentVolume = item
+              }
+            })
+          }
+
+          return (
+            <Tooltip placement="top" title={title}>
+              <a onClick={() => { showWorkloadsStatusDetail(storageObj) }} className={style.workloadContainer} style={storageObj.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
+                {ele}
+                <div>{ currentVolume.controllers ? currentVolume.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div>
+              </a>
+            </Tooltip>
+          )
+        },
+      },
+      {
         title: 'SnapshotCreated',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
-        width: 220,
+        width: '12%',
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (
@@ -142,7 +267,6 @@ class List extends React.Component {
         title: 'Labels',
         dataIndex: 'labels',
         key: 'labels',
-        width: 120,
         render: (obj) => {
           return (
             <div onClick={() => { showBackupLabels(obj) }}>
@@ -153,7 +277,8 @@ class List extends React.Component {
       }, {
         title: 'Operation',
         key: 'operation',
-        width: 100,
+        width: 120,
+        fixed: 'right',
         render: (text, record) => {
           return (
             <DropOption menuOptions={[
@@ -189,7 +314,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{ x: 1540, y: this.state.height }}
+          scroll={{ x: 1440, y: this.state.height }}
         />
       </div>
     )
@@ -204,6 +329,8 @@ List.propTypes = {
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
   showBackupLabels: PropTypes.func,
+  showWorkloadsStatusDetail: PropTypes.func,
+  volumeList: PropTypes.array,
 }
 
 export default List
