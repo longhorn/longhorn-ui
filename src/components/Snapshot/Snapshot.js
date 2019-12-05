@@ -68,7 +68,12 @@ function SnapshotIcon(props, snapshotProps) {
 
   const title = (
     <div>
-      <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> Confirm snapshot revert? </h3>
+      <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> {!snapshotProps.volume.disableFrontend ? 'Cannot revert with frontend enabled' : 'Confirm snapshot revert?' }</h3>
+      {!snapshotProps.volume.disableFrontend ? (<div style={{ marginTop: '15px' }}>
+          <p>Please reattach the volume in maintenance mode to revert the volume.</p>
+          <p>Workload shutdown might be needed.</p>
+        </div>) : ''
+      }
     </div>
   )
   const menu = (
@@ -76,10 +81,21 @@ function SnapshotIcon(props, snapshotProps) {
       className="lh-snapshot-dropdown"
       onClick={onClick}
     >
-      { props.usercreated && snapshotProps.volume.disableFrontend ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
-          <Popconfirm title={title} onConfirm={() => doAction('snapshotRevert')}>
-            <span className="snapshot-revert">Revert</span>
-          </Popconfirm>
+      { props.usercreated ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
+          {snapshotProps.volume.disableFrontend ? <Popconfirm
+            title={title}
+            disabled={true}
+            onConfirm={() => {
+              if (snapshotProps.volume.disableFrontend) {
+                doAction('snapshotRevert')
+              }
+            }
+          }>
+            <span>Revert</span>
+          </Popconfirm> : <Tooltip title={<div>
+            <p>Please reattach the volume in maintenance mode to revert the volume.</p>
+            <p>Workload shutdown might be needed.</p>
+          </div>}><span className="saic-Popconfirm-Revert">Revert</span></Tooltip> }
         </Menu.Item> : ''
       }
       { props.usercreated ? <Menu.Item key="snapshotBackup">
