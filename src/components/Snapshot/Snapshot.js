@@ -264,10 +264,11 @@ class Snapshot extends React.Component {
           this.state.loading = false
           this.state.key = Math.random()
         }, 0)
-        this.setState({
-          ...this.state,
-          previousCreated: props.volumeHead.created,
-        })
+        this.state.previousCreated = props.volumeHead.created
+        // this.setState({
+        //   ...this.state,
+        //   previousCreated: props.volumeHead.created,
+        // })
       }
     }
 

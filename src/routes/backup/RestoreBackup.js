@@ -55,6 +55,9 @@ const modal = ({
         ...getFieldsValue(),
         fromBackup: item.fromBackup,
       }
+      if (data.name && typeof data.name === 'string') {
+        data.name = data.name.trimLeftAndRight()
+      }
       onOk(data)
     })
   }

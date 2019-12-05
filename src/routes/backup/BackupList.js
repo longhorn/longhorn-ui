@@ -100,7 +100,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { backup, volumeList, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
+    const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
     const handleMenuClick = (record, event) => {
       switch (event.key) {
@@ -221,12 +221,11 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Attached To',
+        title: 'Workload/Pod',
         dataIndex: 'labels',
-        key: 'WorloadNameAndPodName',
+        key: 'WorkloadNameAndPodName',
         width: '12.5%',
-        sorter: (a, b) => sortTable(a, b, 'WorloadName'),
-        render: (record, row) => {
+        render: (record) => {
           let storageObj = {}
 
           if (record) {
@@ -240,21 +239,21 @@ class List extends React.Component {
           if (storageObj.workloadsStatus) {
             storageObj.podList = storageObj.workloadsStatus
           }
-          let currentVolume = {}
+          // let currentVolume = {}
 
-          if (volumeList) {
-            volumeList.forEach((item) => {
-              if (item.name === row.volumeName) {
-                currentVolume = item
-              }
-            })
-          }
+          // if (volumeList) {
+          //   volumeList.forEach((item) => {
+          //     if (item.name === row.volumeName) {
+          //       currentVolume = item
+          //     }
+          //   })
+          // }
 
           return (
             <Tooltip placement="top" title={title}>
               <a onClick={() => { showWorkloadsStatusDetail(storageObj) }} className={style.workloadContainer} style={storageObj.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
                 {ele}
-                <div>{ currentVolume.controllers ? currentVolume.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div>
+                {/* <div>{ currentVolume.controllers ? currentVolume.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div> */}
               </a>
             </Tooltip>
           )
