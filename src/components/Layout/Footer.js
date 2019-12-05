@@ -78,7 +78,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
         <Col>
           {upgrade}
           <a>{currentVersion}</a>
-          <a target="blank" href="https://github.com/longhorn/longhorn#longhorn">Documentation</a>
+          <a target="blank" href="https://longhorn.io/docs">Documentation</a>
           <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
           <a target="blank" href="https://slack.cncf.io/">Slack</a>
