@@ -21,6 +21,10 @@ String.prototype.humpToSpace = function () {
   return this.replace(/([A-Z])/g, ' $1').toLowerCase()
 }
 
+String.prototype.trimLeftAndRight = function () {
+  return this.replace(/(^\s*)|(\s*$)/g, '')
+}
+
 Date.prototype.format = function (format) {
   const o = {
     'M+': this.getMonth() + 1,

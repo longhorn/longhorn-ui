@@ -44,11 +44,11 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
   }
 
   dataSource.forEach((ele) => {
-    ele.WorloadNameAndPodName = {
+    ele.WorkloadNameAndPodName = {
       podList: ele.kubernetesStatus.workloadsStatus ? ele.kubernetesStatus.workloadsStatus : [],
       lastPodRefAt: ele.kubernetesStatus.lastPodRefAt ? ele.kubernetesStatus.lastPodRefAt : '',
     }
-    ele.WorloadName = ele.WorloadNameAndPodName.podList[0] ? ele.WorloadNameAndPodName.podList[0].workloadName : ''
+    ele.WorkloadName = ele.WorkloadNameAndPodName.podList[0] ? ele.WorkloadNameAndPodName.podList[0].workloadName : ''
   })
 
   const defaultImage = engineImages.find(image => image.default === true)
@@ -217,10 +217,10 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     },
     {
       title: 'Attached To',
-      dataIndex: 'WorloadNameAndPodName',
-      key: 'WorloadNameAndPodName',
+      dataIndex: 'WorkloadNameAndPodName',
+      key: 'WorkloadNameAndPodName',
       width: '12.5%',
-      sorter: (a, b) => sortTable(a, b, 'WorloadName'),
+      sorter: (a, b) => sortTable(a, b, 'WorkloadName'),
       render: (text, record) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
         const ele = text.podList.length ? text.podList.map((item, index) => {

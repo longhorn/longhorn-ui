@@ -254,6 +254,10 @@ class EventLogs extends React.Component {
         title: 'Message',
         dataIndex: 'message',
         className: 'text',
+        width: 200,
+        render: (text) => {
+          return <div style={{ maxHeight: 80, overflow: 'auto' }}>{text}</div>
+        },
       },
     ]
     const onChange = (p, f, s) => {
@@ -263,7 +267,7 @@ class EventLogs extends React.Component {
     return (
       <div className="eventLogs">
         <div className="title">Event Log</div>
-        <div className="content" style={{ overflow: 'hidden' }}>
+        <div className="content">
          <Table columns={columns}
            onChange={onChange}
            rowClassName={rowClassName}
