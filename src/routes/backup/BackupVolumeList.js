@@ -2,10 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'antd'
 import moment from 'moment'
+import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
 import { DropOption } from '../../components'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import { addPrefix } from '../../utils/pathnamePrefix'
+import queryString from 'query-string'
 
 
 class List extends React.Component {
@@ -38,11 +41,13 @@ class List extends React.Component {
       this.props.Create(record)
     } else if (e.key === 'deleteAll') {
       this.props.DeleteAllBackups(record)
+    } else if (e.key === 'restoreLatestBackup') {
+      this.props.restoreLatestBackup(record)
     }
   }
 
   render() {
-    const { backup, loading, sorter, linkToBackup, onSorterChange = f => f } = this.props
+    const { backup, loading, sorter, rowSelection, onSorterChange = f => f } = this.props
     const dataSource = backup || []
 
     const columns = [
@@ -52,13 +57,20 @@ class List extends React.Component {
         key: 'id',
         width: 200,
         sorter: (a, b) => sortTable(a, b, 'id'),
-        render: (text) => {
+        render: (id) => {
           return (
-            <a
-              onClick={() => linkToBackup(text)}
-            >
-              {text}
-            </a>
+            <Link
+              to={{
+                pathname: addPrefix(`/backup/${id}`),
+                search: queryString.stringify({
+                  ...queryString.parse(this.props.search),
+                  field: 'volumeName',
+                  keyword: id,
+                  state: true,
+                }),
+              }}>
+              {id}
+            </Link>
           )
         },
       }, {
@@ -111,6 +123,7 @@ class List extends React.Component {
           return (
             <DropOption menuOptions={[
               { key: 'recovery', name: !record.lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: !record.lastBackupName },
+              { key: 'restoreLatestBackup', name: 'Restore Latest Backup' },
               { key: 'deleteAll', name: 'Delete All Backups' },
             ]}
               onMenuClick={e => this.handleMenuClick(record, e)}
@@ -132,6 +145,7 @@ class List extends React.Component {
     return (
       <div id="backTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
+          rowSelection={rowSelection}
           locale={locale}
           bordered={false}
           columns={columns}
@@ -150,12 +164,14 @@ class List extends React.Component {
 
 List.propTypes = {
   backup: PropTypes.array,
+  rowSelection: PropTypes.object,
   loading: PropTypes.bool,
   sorter: PropTypes.object,
+  search: PropTypes.object,
   onSorterChange: PropTypes.func,
-  linkToBackup: PropTypes.func,
   Create: PropTypes.func,
   DeleteAllBackups: PropTypes.func,
+  restoreLatestBackup: PropTypes.func,
 }
 
 export default List

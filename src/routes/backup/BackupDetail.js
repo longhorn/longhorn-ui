@@ -13,7 +13,7 @@ import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 const { confirm } = Modal
 
 function Backup({ host, backup, volume, setting, loading, location, dispatch }) {
-  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, WorkloadDetailModalVisible, WorkloadDetailModalItem, WorkloadDetailModalKey } = backup
+  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, WorkloadDetailModalVisible, WorkloadDetailModalItem, WorkloadDetailModalKey, previousChecked } = backup
   const hosts = host.data
   const volumeList = volume.data
   const settings = setting.data
@@ -40,14 +40,15 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
         },
       })
     },
-    showRestoreBackup(item) {
+    showRestoreBackup(record) {
       dispatch({
         type: 'backup/showRestoreBackupModal',
         payload: {
           currentItem: {
-            backupName: item.name,
-            fromBackup: item.url,
+            backupName: record.name,
+            fromBackup: record.url,
             numberOfReplicas: defaultNumberOfReplicas,
+            volumeName: record.volumeName,
           },
         },
       })
@@ -79,11 +80,18 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
   const restoreBackupModalProps = {
     item: currentItem,
     hosts,
+    previousChecked,
     visible: restoreBackupModalVisible,
     onOk(selectedBackup) {
       dispatch({
         type: 'backup/restore',
         payload: selectedBackup,
+      })
+    },
+    setPreviousChange(checked) {
+      dispatch({
+        type: 'backup/setPreviousChange',
+        payload: checked,
       })
     },
     onCancel() {

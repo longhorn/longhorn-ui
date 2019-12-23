@@ -1,10 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber } from 'antd'
+import { Form, Input, InputNumber, Checkbox } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 
 const formItemLayout = {
+  labelCol: {
+    span: 3,
+  },
+  wrapperCol: {
+    span: 19,
+  },
+}
+
+const formItemLayout1 = {
   labelCol: {
     span: 7,
   },
@@ -13,15 +22,28 @@ const formItemLayout = {
   },
 }
 
+const formItemLayout2 = {
+  labelCol: {
+    span: 14,
+  },
+  wrapperCol: {
+    span: 8,
+  },
+}
+
 const modal = ({
   item,
   visible,
   onCancel,
   onOk,
+  previousChecked,
+  setPreviousChange,
+  isBulk = false,
   form: {
     getFieldDecorator,
     validateFields,
     getFieldsValue,
+    setFieldsValue,
   },
 }) => {
   function handleOk() {
@@ -37,11 +59,18 @@ const modal = ({
     })
   }
   const modalOpts = {
-    title: `Restore Backup ${item.backupName}`,
+    title: isBulk ? 'Restore Backup' : `Restore Backup ${item.backupName}`,
     visible,
     onCancel,
     onOk: handleOk,
     width: 600,
+  }
+
+  function onPreviousChange(value) {
+    if (item.volumeName) {
+      value.target.checked ? setFieldsValue({ name: item.volumeName }) : setFieldsValue({ name: '' })
+    }
+    setPreviousChange(value.target.checked)
   }
 
   return (
@@ -52,23 +81,42 @@ const modal = ({
             initialValue: item.name,
             rules: [
               {
-                required: true,
+                required: true && !isBulk,
                 message: 'Please input volume name',
               },
             ],
-          })(<Input />)}
+          })(<Input disabled={isBulk} />)}
         </FormItem>
-        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('numberOfReplicas', {
-            initialValue: item.numberOfReplicas,
-            rules: [
-              {
-                required: true,
-                message: 'Please input the number of replicas',
-              },
-            ],
-          })(<InputNumber min={1} />)}
-        </FormItem>
+        <div style={{ display: 'flex' }}>
+          <div style={{ flex: 1 }}>
+          {!isBulk ? <FormItem label="Number of Replicas" hasFeedback {...formItemLayout2}>
+              {getFieldDecorator('numberOfReplicas', {
+                initialValue: item.numberOfReplicas,
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please input the number of replicas',
+                  },
+                ],
+              })(<InputNumber min={1} />)}
+            </FormItem> : <FormItem label="Number of Replicas" hasFeedback {...formItemLayout1}>
+              {getFieldDecorator('numberOfReplicas', {
+                initialValue: item.numberOfReplicas,
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please input the number of replicas',
+                  },
+                ],
+              })(<InputNumber min={1} />)}
+            </FormItem>}
+          </div>
+          {!isBulk ? <div style={{ flex: 1 }}>
+            <FormItem label="Use Previous Name" hasFeedback {...formItemLayout2}>
+              <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange}></Checkbox>
+            </FormItem>
+          </div> : ''}
+        </div>
       </Form>
     </ModalBlur>
   )
@@ -77,10 +125,13 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
+  previousChecked: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  setPreviousChange: PropTypes.func,
   hosts: PropTypes.array,
+  isBulk: PropTypes.bool,
 }
 
 export default Form.create()(modal)
