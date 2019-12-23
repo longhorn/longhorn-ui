@@ -10,6 +10,7 @@ export default {
   namespace: 'backup',
   state: {
     backupVolumes: [],
+    selectedRows: [],
     backupVolumesForSelect: [],
     WorkloadDetailModalItem: {},
     filterText: 'all',
@@ -17,8 +18,11 @@ export default {
     currentItem: {},
     lastBackupUrl: '',
     baseImage: '',
+    previousChecked: false,
     size: '',
     backupLabel: {},
+    bulkRestoreData: [],
+    isBulkRestore: false,
     restoreBackupModalVisible: false,
     WorkloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
@@ -31,11 +35,13 @@ export default {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(location => {
-        if (history.location.state) {
+      history.listen(() => {
+        let search = history.location.search ? queryString.parse(history.location.search) : {}
+
+        if (history.location.state || search.state) {
           dispatch({
             type: 'query',
-            payload: queryString.parse(location.search),
+            payload: search,
           })
         }
       })
@@ -70,11 +76,89 @@ export default {
       const data = yield call(execAction, payload.url)
       yield put({ type: 'updateBackupStatus', payload: { backupStatus: { ...data } } })
     },
+    *queryBackupDetailData({
+      payload,
+    }, { call, put }) {
+      const data = yield call(execAction, payload.url)
+      let lastBackup = null
+      let params = {}
+
+      if (data.data && data.data.length > 0) {
+        data.data.forEach((item) => {
+          if (item.name === payload.lastBackupName) {
+            lastBackup = item
+          }
+        })
+      }
+      if (lastBackup) {
+        params.fromBackup = lastBackup.url
+        params.backupName = lastBackup.name
+        params.numberOfReplicas = payload.numberOfReplicas
+        params.volumeName = lastBackup.volumeName
+
+        yield put({ type: 'showRestoreBackupModal', payload: { currentItem: params } })
+      }
+    },
+    *queryBackupDetailBulkData({
+      payload,
+    }, { call, put }) {
+      // const data = yield call(execAction, payload.url)
+      if (payload && payload.selectedRows && payload.selectedRows.length > 0) {
+        let data = []
+
+        for (let i = 0; i < payload.selectedRows.length; i++) {
+          if (payload.selectedRows[i].actions && payload.selectedRows[i].actions.backupList) {
+            let res = yield call(execAction, payload.selectedRows[i].actions.backupList)
+            if (res.data) {
+              let lastBackup = null
+              res.data.forEach((item) => {
+                if (item.name === payload.selectedRows[i].lastBackupName) {
+                  lastBackup = item
+                }
+              })
+              data.push(lastBackup)
+            }
+          }
+        }
+
+        if (data && data.length > 0) {
+          yield put({ type: 'showRestoreBulkBackupModal',
+            payload: {
+              currentItem: {
+                name: '<Volume Name>',
+                numberOfReplicas: payload.numberOfReplicas,
+              },
+              bulkRestoreData: data,
+            },
+          })
+        }
+      }
+    },
     *restore({
       payload,
     }, { call, put }) {
       yield put({ type: 'hideRestoreBackupModal' })
       yield call(restore, payload)
+    },
+    *restoreBulkBackup({
+      payload,
+    }, { call, put }) {
+      let restoreBulkBackup = []
+      yield put({ type: 'hideRestoreBackupModal' })
+      if (payload.bulkRestoreData && payload.selectedBackup) {
+        payload.bulkRestoreData.forEach((item) => {
+          let params = {}
+          params.numberOfReplicas = payload.selectedBackup.numberOfReplicas
+          params.name = item.volumeName
+          params.fromBackup = item.url
+          restoreBulkBackup.push(params)
+        })
+      }
+      if (restoreBulkBackup.length > 0) {
+        for (let i = 0; i < restoreBulkBackup.length; i++) {
+          yield call(restore, restoreBulkBackup[i])
+        }
+      }
     },
     *delete({
       payload,
@@ -139,8 +223,11 @@ export default {
     showRestoreBackupModal(state, action) {
       return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
     },
+    showRestoreBulkBackupModal(state, action) {
+      return { ...state, ...action.payload, isBulkRestore: true, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
+    },
     hideRestoreBackupModal(state) {
-      return { ...state, restoreBackupModalVisible: false }
+      return { ...state, previousChecked: false, restoreBackupModalVisible: false, isBulkRestore: false }
     },
     updateSorter(state, action) {
       saveSorter('backupList.sorter', action.payload)
@@ -151,6 +238,12 @@ export default {
     },
     hideWorkloadDetailModal(state) {
       return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
+    },
+    changeSelection(state, action) {
+      return { ...state, ...action.payload }
+    },
+    setPreviousChange(state, action) {
+      return { ...state, previousChecked: action.payload }
     },
     filterBackupVolumes(state, action) {
       if (action.payload) {
