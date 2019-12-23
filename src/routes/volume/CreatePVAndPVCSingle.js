@@ -62,7 +62,7 @@ const modal = ({
   }
 
   function onPreviousChange(value) {
-    value.target.checked && !nameSpaceDisabled ? setFieldsValue({ namespace: selected.namespace, pvcName: selected.pvcName }) : setFieldsValue({ namespace: '', pvcName: item.defaultPVCName })
+    value.target.checked && !nameSpaceDisabled ? setFieldsValue({ namespace: selected.namespace, pvcName: selected.pvcName }) : setFieldsValue({ namespace: '', pvcName: '' })
     setPreviousChange(value.target.checked)
   }
 
@@ -105,7 +105,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Namespace" hasFeedback {...formItemLayout}>
           {getFieldDecorator('namespace', {
-            initialValue: '',
+            initialValue: item.previousNamespace,
             rules: [
               {
                 required: !nameSpaceDisabled,
