@@ -44,6 +44,7 @@ export default {
     defaultNamespace: '',
     defaultPVName: '',
     defaultPVCName: '',
+    previousNamespace: '',
     changeVolumeModalKey: Math.random(),
     createPVAndPVCModalSingleKey: Math.random(),
     WorkloadDetailModalKey: Math.random(),
@@ -371,10 +372,11 @@ export default {
       return { ...state, createPVAndPVCVisible: true, selectPVCaction: action.payload, createPVAndPVCModalKey: Math.random() }
     },
     showCreatePVCAndPVSingleModal(state, action) {
-      action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
-      action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
-      action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : state.pvNameDisabled = false
-      return { ...state, nameSpaceDisabled: false, previousChecked: false, pvNameDisabled: state.pvNameDisabled, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
+      action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
+      action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
+      action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : state.pvNameDisabled = false
+      action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt ? state.previousNamespace = action.payload.kubernetesStatus.namespace : state.previousNamespace = ''
+      return { ...state, nameSpaceDisabled: false, previousChecked: !!(action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt), pvNameDisabled: state.pvNameDisabled, previousNamespace: state.previousNamespace, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
     },
     changeCheckbox(state) {
       return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled, previousChecked: !state.nameSpaceDisabled ? false : state.previousChecked }
