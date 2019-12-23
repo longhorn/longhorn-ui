@@ -1,17 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Checkbox } from 'antd'
+import { Form, Input, Checkbox, Alert } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 
 const formItemLayout = {
   labelCol: {
-    span: 10,
+    span: 7,
   },
   wrapperCol: {
-    span: 12,
+    span: 15,
   },
 }
+
+const formItemLayout2 = {
+  labelCol: {
+    span: 14,
+  },
+  wrapperCol: {
+    span: 2,
+  },
+}
+
 const modal = ({
   item,
   visible,
@@ -19,6 +29,9 @@ const modal = ({
   onOk,
   onChange,
   nameSpaceDisabled,
+  selectPVCaction,
+  setPreviousChange,
+  previousChecked,
   defaultBool = true,
   form: {
     getFieldDecorator,
@@ -35,6 +48,8 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
+      data.previousChecked = previousChecked
+      data.createPvcChecked = !nameSpaceDisabled
       onOk(data)
     })
   }
@@ -51,7 +66,21 @@ const modal = ({
     onChange()
   }
 
+  function onPreviousChange(value) {
+    setPreviousChange(value.target.checked)
+  }
 
+  function hasPreviousPVC() {
+    return (selectPVCaction || []).every((ele) => {
+      return !(ele.kubernetesStatus && ele.kubernetesStatus.lastPVCRefAt)
+    })
+  }
+
+  function hasNewlyEnteredPVC() {
+    return (selectPVCaction || []).some((ele) => {
+      return ele.kubernetesStatus && !ele.kubernetesStatus.lastPVCRefAt
+    })
+  }
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -66,19 +95,28 @@ const modal = ({
             ],
           })(<Input disabled={defaultBool} />)}
         </FormItem>
-        <FormItem label="Create PVC" hasFeedback {...formItemLayout}>
-          <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>
-        </FormItem>
+        <div style={{ display: 'flex' }}>
+          <div style={{ flex: 1 }}>
+            <FormItem label="Create PVC" hasFeedback {...formItemLayout2}>
+              <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>
+            </FormItem>
+          </div>
+          <div style={{ flex: 1 }}>
+            <FormItem label="Use Previous PVC" hasFeedback {...formItemLayout2}>
+              <Checkbox checked={previousChecked} disabled={hasPreviousPVC()} onChange={onPreviousChange}></Checkbox>
+            </FormItem>
+          </div>
+        </div>
         <FormItem label="Namespace" hasFeedback {...formItemLayout}>
           {getFieldDecorator('namespace', {
             initialValue: item,
             rules: [
               {
-                required: !nameSpaceDisabled,
+                required: !nameSpaceDisabled && (hasNewlyEnteredPVC() || !previousChecked),
                 message: 'Please input namespace',
               },
             ],
-          })(<Input disabled={nameSpaceDisabled} />)}
+          })(<Input disabled={nameSpaceDisabled || (previousChecked && !hasNewlyEnteredPVC())} />)}
         </FormItem>
         <FormItem label="PVC Name" hasFeedback {...formItemLayout}>
           {getFieldDecorator('pvcName', {
@@ -92,6 +130,10 @@ const modal = ({
           })(<Input disabled={defaultBool} />)}
         </FormItem>
       </Form>
+
+      {previousChecked ? <div style={{ marginTop: 20 }}>
+        <Alert message="If volume has a default namespace, pvc uses this namepace, if not, it uses the newly entered namespace" type="info" showIcon />
+      </div> : ''}
     </ModalBlur>
   )
 }
@@ -106,6 +148,9 @@ modal.propTypes = {
   hosts: PropTypes.array,
   nameSpaceDisabled: PropTypes.bool,
   defaultBool: PropTypes.bool,
+  selectPVCaction: PropTypes.array,
+  setPreviousChange: PropTypes.func,
+  previousChecked: PropTypes.bool,
 }
 
 export default Form.create()(modal)

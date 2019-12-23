@@ -429,6 +429,8 @@ class Volume extends React.Component {
       item: defaultNamespace,
       visible: createPVAndPVCVisible,
       nameSpaceDisabled,
+      selectPVCaction,
+      previousChecked,
       onOk(params) {
         dispatch({
           type: 'volume/createPVAndPVC',
@@ -446,6 +448,12 @@ class Volume extends React.Component {
       onChange() {
         dispatch({
           type: 'volume/changeCheckbox',
+        })
+      },
+      setPreviousChange(checked) {
+        dispatch({
+          type: 'volume/setPreviousChange',
+          payload: checked,
         })
       },
     }
@@ -590,8 +598,8 @@ class Volume extends React.Component {
         <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} />
         <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
         <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
-        <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} />
-        <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />
+        {createPVAndPVCVisible ? <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} /> : ''}
+        {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
         <AttachHost key={attachHostModalKey} {...attachHostModalProps} />
         <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} />
         <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} />
