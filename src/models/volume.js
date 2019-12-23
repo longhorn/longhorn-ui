@@ -261,8 +261,24 @@ export default {
         }
       })
       yield pvAction.map(item => call(createVolumePV, { pvName: item.name }, item.actions.pvCreate))
-      if (payload.params.namespace) {
-        yield payload.action.map(item => call(createVolumeAllPVC, payload.params.namespace, item.name, item.actions.pvcCreate))
+      if (payload.params.createPvcChecked) {
+        if (payload.params.previousChecked) {
+          yield payload.action.map(item => {
+            let namespace = payload.params.namespace
+            let pvcname = item.name
+            if (item.kubernetesStatus && item.kubernetesStatus.namespace) {
+              namespace = item.kubernetesStatus.namespace
+            }
+            if (item.kubernetesStatus && item.kubernetesStatus.pvcName) {
+              pvcname = item.kubernetesStatus.pvcName
+            }
+            return call(createVolumeAllPVC, namespace, pvcname, item.actions.pvcCreate)
+          })
+        } else {
+          yield payload.action.map(item => {
+            return call(createVolumeAllPVC, payload.params.namespace, item.name, item.actions.pvcCreate)
+          })
+        }
       }
       yield put({ type: 'query' })
     },
@@ -367,10 +383,10 @@ export default {
       return { ...state, previousChecked: action.payload }
     },
     hideCreatePVCAndPVSingleModal(state) {
-      return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, createPVAndPVCModalSingleKey: Math.random() }
+      return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, previousChecked: false, createPVAndPVCModalSingleKey: Math.random() }
     },
     hideCreatePVAndPVCModal(state) {
-      return { ...state, createPVAndPVCVisible: false, createPVAndPVCModalKey: Math.random() }
+      return { ...state, createPVAndPVCVisible: false, previousChecked: false, createPVAndPVCModalKey: Math.random() }
     },
     hideCreatePVCAllModal(state) {
       return { ...state, createPVCAllModalVisible: false, createPVCAllModalKey: Math.random() }
