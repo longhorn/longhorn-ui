@@ -253,6 +253,8 @@ class Volume extends React.Component {
         { value: 'namespace', name: 'Namespace' },
         { value: 'replicaNodeRedundancy', name: 'Node redundancy' },
         { value: 'engineImageUpgradable', name: 'Engine image upgradable' },
+        { value: 'pvName', name: 'PV Name' },
+        { value: 'pvcName', name: 'PVC Name' },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
