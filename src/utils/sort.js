@@ -95,3 +95,16 @@ export function sortTableByUTCDate(a, b, prop) {
   }
   return 0
 }
+
+export function sortTableByPVC(a, b, prop) {
+  const valueA = a[prop] && a[prop].pvStatus ? a[prop].pvcName : ''
+  const valueB = b[prop] && b[prop].pvStatus ? b[prop].pvcName : ''
+
+  if (valueA < valueB) {
+    return -1
+  }
+  if (valueA > valueB) {
+    return 1
+  }
+  return 0
+}

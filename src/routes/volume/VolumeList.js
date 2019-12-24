@@ -7,7 +7,7 @@ import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../compo
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
-import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate } from '../../utils/sort'
+import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate, sortTableByPVC } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
@@ -167,6 +167,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: <div>PV/PVC</div>,
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
+      sorter: (a, b) => sortTableByPVC(a, b, 'kubernetesStatus'),
       width: '7.63%',
       render: (text) => {
         let title = (<div>

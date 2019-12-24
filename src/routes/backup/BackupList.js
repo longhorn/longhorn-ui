@@ -91,6 +91,14 @@ class List extends React.Component {
     }
   }
 
+  onCopy = (text, copySuccess) => { // eslint-disable-line no-unused-vars
+    if (copySuccess) {
+      message.success('Copyed', 1.5)
+    } else {
+      message.error('Copy failed', 1.5)
+    }
+  }
+
   render() {
     const { backup, volumeList, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
@@ -139,7 +147,9 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {text}
+              <CopyToClipboard onCopy={this.onCopy} text={text}>
+                <p style={{ color: '#108ee9', cursor: 'pointer', margin: '0px' }}>{text}</p>
+              </CopyToClipboard>
             </div>
           )
         },

@@ -114,8 +114,17 @@ export function filterVolume(data, field, value) {
     return data
   }
   if (field === 'namespace') {
-    return data.filter(item => item.kubernetesStatus.namespace.indexOf(value) > -1)
+    return data.filter(item => item && item.kubernetesStatus && item.kubernetesStatus.namespace.indexOf(value) > -1)
   }
+
+  if (field === 'pvName') {
+    return data.filter(item => item && item.kubernetesStatus && item.kubernetesStatus.pvName.indexOf(value) > -1)
+  }
+
+  if (field === 'pvcName') {
+    return data.filter(item => item && item.kubernetesStatus && item.kubernetesStatus.pvcName.indexOf(value) > -1)
+  }
+
   return filterData(data, field, value)
 }
 
