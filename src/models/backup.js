@@ -1,4 +1,4 @@
-import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups } from '../services/backup'
+import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags } from '../services/backup'
 import { parse } from 'qs'
 import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
@@ -19,8 +19,11 @@ export default {
     lastBackupUrl: '',
     baseImage: '',
     previousChecked: false,
+    tagsLoading: true,
     size: '',
     backupLabel: {},
+    nodeTags: [],
+    diskTags: [],
     bulkRestoreData: [],
     isBulkRestore: false,
     restoreBackupModalVisible: false,
@@ -97,7 +100,14 @@ export default {
         params.volumeName = lastBackup.volumeName
 
         yield put({ type: 'showRestoreBackupModal', payload: { currentItem: params } })
+        yield put({ type: 'queryDiskTagsAndgetNodeTags' })
       }
+    },
+    *beforeShowRestoreBackupModal({
+      payload,
+    }, { put }) {
+      yield put({ type: 'showRestoreBackupModal', payload })
+      yield put({ type: 'queryDiskTagsAndgetNodeTags' })
     },
     *queryBackupDetailBulkData({
       payload,
@@ -131,6 +141,8 @@ export default {
               bulkRestoreData: data,
             },
           })
+
+          yield put({ type: 'queryDiskTagsAndgetNodeTags' })
         }
       }
     },
@@ -139,6 +151,18 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideRestoreBackupModal' })
       yield call(restore, payload)
+    },
+    *queryDiskTagsAndgetNodeTags({
+      payload,
+    }, { call, put }) {
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
+
+      if (nodeTags.status === 200 && diskTags.status === 200) {
+        yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
+      } else {
+        yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
+      }
     },
     *restoreBulkBackup({
       payload,
@@ -151,6 +175,8 @@ export default {
           params.numberOfReplicas = payload.selectedBackup.numberOfReplicas
           params.name = item.volumeName
           params.fromBackup = item.url
+          params.nodeSelector = payload.selectedBackup.nodeSelector
+          params.diskSelector = payload.selectedBackup.diskSelector
           restoreBulkBackup.push(params)
         })
       }
@@ -227,7 +253,7 @@ export default {
       return { ...state, ...action.payload, isBulkRestore: true, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
     },
     hideRestoreBackupModal(state) {
-      return { ...state, previousChecked: false, restoreBackupModalVisible: false, isBulkRestore: false }
+      return { ...state, previousChecked: false, tagsLoading: true, restoreBackupModalVisible: false, isBulkRestore: false }
     },
     updateSorter(state, action) {
       saveSorter('backupList.sorter', action.payload)
@@ -244,6 +270,9 @@ export default {
     },
     setPreviousChange(state, action) {
       return { ...state, previousChecked: action.payload }
+    },
+    changeTagsLoading(state, action) {
+      return { ...state, ...action.payload }
     },
     filterBackupVolumes(state, action) {
       if (action.payload) {

@@ -1,33 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Checkbox } from 'antd'
+import { Form, Input, InputNumber, Checkbox, Spin, Select } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
+const Option = Select.Option
 
 const formItemLayout = {
-  labelCol: {
-    span: 3,
-  },
-  wrapperCol: {
-    span: 19,
-  },
-}
-
-const formItemLayout1 = {
   labelCol: {
     span: 7,
   },
   wrapperCol: {
     span: 15,
-  },
-}
-
-const formItemLayout2 = {
-  labelCol: {
-    span: 14,
-  },
-  wrapperCol: {
-    span: 8,
   },
 }
 
@@ -37,6 +20,9 @@ const modal = ({
   onCancel,
   onOk,
   previousChecked,
+  nodeTags,
+  diskTags,
+  tagsLoading,
   setPreviousChange,
   isBulk = false,
   form: {
@@ -90,36 +76,48 @@ const modal = ({
             ],
           })(<Input disabled={isBulk} />)}
         </FormItem>
-        <div style={{ display: 'flex' }}>
-          <div style={{ flex: 1 }}>
-          {!isBulk ? <FormItem label="Number of Replicas" hasFeedback {...formItemLayout2}>
-              {getFieldDecorator('numberOfReplicas', {
-                initialValue: item.numberOfReplicas,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input the number of replicas',
-                  },
-                ],
-              })(<InputNumber min={1} />)}
-            </FormItem> : <FormItem label="Number of Replicas" hasFeedback {...formItemLayout1}>
-              {getFieldDecorator('numberOfReplicas', {
-                initialValue: item.numberOfReplicas,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input the number of replicas',
-                  },
-                ],
-              })(<InputNumber min={1} />)}
-            </FormItem>}
-          </div>
-          {!isBulk ? <div style={{ flex: 1 }}>
-            <FormItem label="Use Previous Name" hasFeedback {...formItemLayout2}>
+          {!isBulk ? <FormItem label="Use Previous Name" hasFeedback {...formItemLayout}>
               <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange}></Checkbox>
-            </FormItem>
-          </div> : ''}
-        </div>
+            </FormItem> : ''}
+          {!isBulk ? <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('numberOfReplicas', {
+              initialValue: item.numberOfReplicas,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input the number of replicas',
+                },
+              ],
+            })(<InputNumber min={1} />)}
+          </FormItem> : <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('numberOfReplicas', {
+              initialValue: item.numberOfReplicas,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input the number of replicas',
+                },
+              ],
+            })(<InputNumber min={1} />)}
+          </FormItem>}
+        <Spin spinning={tagsLoading}>
+          <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('nodeSelector', {
+              initialValue: [],
+            })(<Select mode="tags">
+            { nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
+        <Spin spinning={tagsLoading}>
+          <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('diskSelector', {
+              initialValue: [],
+            })(<Select mode="tags">
+            { diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
       </Form>
     </ModalBlur>
   )
@@ -134,7 +132,10 @@ modal.propTypes = {
   onOk: PropTypes.func,
   setPreviousChange: PropTypes.func,
   hosts: PropTypes.array,
+  nodeTags: PropTypes.array,
+  diskTags: PropTypes.array,
   isBulk: PropTypes.bool,
+  tagsLoading: PropTypes.bool,
 }
 
 export default Form.create()(modal)

@@ -12,7 +12,7 @@ const { confirm } = Modal
 
 function Backup({ host, backup, loading, setting, dispatch, location }) {
   location.search = location.search ? location.search : {}
-  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked } = backup
+  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags } = backup
   const hosts = host.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -110,6 +110,9 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
   const restoreBackupModalProps = {
     item: currentItem,
     hosts,
+    tagsLoading,
+    nodeTags,
+    diskTags,
     previousChecked,
     isBulk: isBulkRestore,
     visible: restoreBackupModalVisible,
@@ -190,7 +193,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
         </Col>
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
-      <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} />
+      { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
       <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
     </div>
   )
