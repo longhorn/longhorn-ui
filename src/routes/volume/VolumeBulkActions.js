@@ -5,16 +5,20 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, createPVAndPVC }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, createPVAndPVC, commandKeyDown }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
-        confirm({
-          title: `Are you sure you want to delete volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
-          onOk() {
-            bulkDeleteVolume(selectedRows)
-          },
-        })
+        if (commandKeyDown) {
+          bulkDeleteVolume(selectedRows)
+        } else {
+          confirm({
+            title: `Are you sure you want to delete volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
+            onOk() {
+              bulkDeleteVolume(selectedRows)
+            },
+          })
+        }
         break
       case 'upgrade':
         showBulkEngineUpgrade(selectedRows)
@@ -91,6 +95,7 @@ bulkActions.propTypes = {
   showBulkSalvage: PropTypes.func,
   bulkBackup: PropTypes.func,
   createPVAndPVC: PropTypes.func,
+  commandKeyDown: PropTypes.bool,
 }
 
 export default bulkActions

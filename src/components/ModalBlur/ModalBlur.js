@@ -11,6 +11,9 @@ class ModalBlur extends React.Component {
         type: 'app/changeBlur',
         payload: this.props.visible,
       })
+    if (this.props.visible) {
+      document.addEventListener('keydown', this.onkeydown, false)
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -21,6 +24,10 @@ class ModalBlur extends React.Component {
       type: 'app/changeBlur',
       payload: nextProps.visible,
     })
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onkeydown, false)
   }
 
   onCancel = () => {
@@ -37,6 +44,12 @@ class ModalBlur extends React.Component {
       payload: false,
     })
     this.props.onOk && this.props.onOk()
+  }
+
+  onkeydown = (e) => {
+    if (e.keyCode === 13) {
+      this.onOk()
+    }
   }
 
   width = this.props.width ? this.props.width : 'auto'

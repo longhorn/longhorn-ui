@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, createPVAndPVC, changeVolume }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, createPVAndPVC, changeVolume, commandKeyDown }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -14,12 +14,16 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         showSalvage(record)
         break
       case 'delete':
-        confirm({
-          title: `Are you sure you want to delete volume ${record.name} ?`,
-          onOk() {
-            deleteVolume(record)
-          },
-        })
+        if (commandKeyDown) {
+          deleteVolume(record)
+        } else {
+          confirm({
+            title: `Are you sure you want to delete volume ${record.name} ?`,
+            onOk() {
+              deleteVolume(record)
+            },
+          })
+        }
         break
       case 'detach':
         confirm({
@@ -127,6 +131,7 @@ actions.propTypes = {
   showUpdateReplicaCount: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   changeVolume: PropTypes.func,
+  commandKeyDown: PropTypes.bool,
 }
 
 export default actions
