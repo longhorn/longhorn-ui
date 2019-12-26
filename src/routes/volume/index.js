@@ -30,7 +30,10 @@ class Volume extends React.Component {
       createBackModalKey: Math.random(),
       createBackModalVisible: false,
       selectedRows: [],
+      commandKeyDown: false,
     }
+    document.addEventListener('keydown', this.onkeydown, false)
+    document.addEventListener('keyup', this.onkeyup, false)
   }
 
   componentDidMount() {
@@ -48,6 +51,24 @@ class Volume extends React.Component {
 
   componentWillUnmount() {
     window.onresize = null
+    document.removeEventListener('keydown', this.onkeydown, false)
+    document.removeEventListener('onkeyup', this.onkeyup, false)
+  }
+
+  onkeyup = () => {
+    this.setState({
+      ...this.state,
+      commandKeyDown: false,
+    })
+  }
+
+  onkeydown = (e) => {
+    if (e.keyCode === 91 && !this.state.commandKeyDown) {
+      this.setState({
+        ...this.state,
+        commandKeyDown: true,
+      })
+    }
   }
 
   render() {
@@ -92,6 +113,7 @@ class Volume extends React.Component {
       loading,
       engineImages,
       height: this.state.height,
+      commandKeyDown: this.state.commandKeyDown,
       onSorterChange(s) {
         dispatch({
           type: 'volume/updateSorter',
@@ -501,6 +523,7 @@ class Volume extends React.Component {
     const volumeBulkActionsProps = {
       selectedRows,
       engineImages,
+      commandKeyDown: this.state.commandKeyDown,
       bulkDeleteVolume() {
         dispatch({
           type: 'volume/bulkDelete',

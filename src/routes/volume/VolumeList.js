@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange, height = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange, height, commandKeyDown = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -33,6 +33,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     showSnapshotDetail,
     changeVolume,
     height,
+    commandKeyDown,
   }
   /**
    *add dataSource kubernetesStatus fields
@@ -336,6 +337,7 @@ list.propTypes = {
   showSnapshotDetail: PropTypes.func,
   height: PropTypes.number,
   changeVolume: PropTypes.func,
+  commandKeyDown: PropTypes.bool,
 }
 
 export default list
