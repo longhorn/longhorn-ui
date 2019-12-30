@@ -125,11 +125,36 @@ export function filterVolume(data, field, value) {
     return data.filter(item => item && item.kubernetesStatus && item.kubernetesStatus.pvcName.indexOf(value) > -1)
   }
 
+  if (field === 'DiskTag') {
+    return data.filter(item => (item.diskSelector || []).some((ele) => ele.toLowerCase().indexOf(value.toLowerCase()) > -1))
+  }
+
+  if (field === 'NodeTag') {
+    return data.filter(item => (item.nodeSelector || []).some((ele) => ele.toLowerCase().indexOf(value.toLowerCase()) > -1))
+  }
+
   return filterData(data, field, value)
 }
 
 export function filterNode(data, field, value) {
-  return filterData(data, field, value)
+  if (field === 'DiskTag') {
+    data.forEach((item) => {
+      item.diskTagsFrontEnd = []
+      if (item.disks) {
+        (Object.keys(item.disks) || []).forEach((key) => {
+          (item.disks[key].tags || []).forEach((tag) => {
+            item.diskTagsFrontEnd.push(tag)
+          })
+        })
+      }
+    })
+
+    return data.filter(item => (item.diskTagsFrontEnd || []).some((ele) => ele.toLowerCase().indexOf(value.toLowerCase()) > -1))
+  } else if (field === 'NodeTag') {
+    return data.filter(item => (item.tags || []).some((ele) => ele.toLowerCase().indexOf(value.toLowerCase()) > -1))
+  } else {
+    return filterData(data, field, value)
+  }
 }
 
 export function filterEngineImage(data, field, value) {
