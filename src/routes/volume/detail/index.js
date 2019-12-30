@@ -14,13 +14,14 @@ import Snapshots from './Snapshots'
 import RecurringList from './RecurringList'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
+import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import Salvage from '../Salvage'
 import { ReplicaList } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from '../helper'
 import { addPrefix } from '../../../utils/pathnamePrefix'
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
@@ -180,6 +181,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         payload: record.actions.activate,
       })
     },
+    showExpansionVolumeSizeModal(record) {
+      dispatch({
+        type: 'volume/showExpansionVolumeSizeModal',
+        payload: record,
+      })
+    },
   }
 
   const attachHostModalProps = genAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -282,6 +289,29 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
   }
 
+  const expansionVolumeSizeModalProps = {
+    item: {
+      size: 20,
+    },
+    hosts,
+    visible: expansionVolumeSizeModalVisible,
+    selected: selectedVolume,
+    onOk(params) {
+      dispatch({
+        type: 'volume/expandVolume',
+        payload: {
+          params,
+          selected: selectedVolume,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideExpansionVolumeSizeModal',
+      })
+    },
+  }
+
   const changeVolumeModalProps = {
     item: {
       frontend: 'iscsi',
@@ -328,6 +358,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
       {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
+      {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
       <Salvage {...salvageModalProps} />
       <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
       <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />

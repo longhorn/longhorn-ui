@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showSnapshotDetail, onSorterChange, height, commandKeyDown = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showSnapshotDetail, onSorterChange, height, commandKeyDown = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -31,6 +31,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     createPVAndPVC,
     showWorkloadsStatusDetail,
     showSnapshotDetail,
+    showExpansionVolumeSizeModal,
     changeVolume,
     height,
     commandKeyDown,
@@ -142,10 +143,23 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       key: 'size',
       width: '6.25%',
       sorter: (a, b) => sortTable(a, b, 'size'),
-      render: (text) => {
+      render: (text, record) => {
+        let oldSize = record && record.controllers && record.controllers[0] && record.controllers[0].size ? record.controllers[0].size : ''
+        let isExpanding = (text !== oldSize && record.state === 'attached')
+        let message = `The volume is in expansion progress from size ${formatMib(oldSize)} to size ${formatMib(text)}`
+
         return (
           <div>
-            {formatMib(text)}
+            {isExpanding ? <Tooltip title={message}>
+              <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
+                <div className={style.expendVolumeIcon}>
+                  <Icon type="loading" />
+                </div>
+                <div style={{ fontSize: '20px' }}>
+                  <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+                </div>
+              </div>
+            </Tooltip> : <div>{formatMib(text)}</div>}
           </div>
         )
       },
@@ -338,6 +352,7 @@ list.propTypes = {
   height: PropTypes.number,
   changeVolume: PropTypes.func,
   commandKeyDown: PropTypes.bool,
+  showExpansionVolumeSizeModal: PropTypes.func,
 }
 
 export default list
