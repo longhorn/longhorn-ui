@@ -100,3 +100,13 @@ export async function getDiskTags() {
     method: 'get',
   })
 }
+
+export async function expandVolume(params) {
+  return request({
+    url: params.url,
+    method: 'post',
+    data: {
+      ...params.data,
+    },
+  })
+}

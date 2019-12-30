@@ -1,4 +1,4 @@
-import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags } from '../services/volume'
+import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
@@ -37,6 +37,7 @@ export default {
     salvageModalVisible: false,
     nameSpaceDisabled: false,
     previousChecked: false,
+    expansionVolumeSizeModalVisible: false,
     pvNameDisabled: false,
     changeVolumeModalVisible: false,
     changeVolumeActivate: '',
@@ -58,6 +59,7 @@ export default {
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
+    expansionVolumeSizeModalKey: Math.random(),
     updateReplicaCountModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
@@ -302,6 +304,18 @@ export default {
       yield payload.action.map(item => call(createVolumePVC, payload.params, item))
       yield put({ type: 'query' })
     },
+    *expandVolume({
+      payload,
+    }, { call, put }) {
+      let params = {}
+      yield put({ type: 'hideExpansionVolumeSizeModal' })
+      if (payload && payload.selected && payload.selected.actions && payload.params) {
+        params.url = payload.selected.actions.expand
+        params.data = payload.params
+
+        yield call(expandVolume, params)
+      }
+    },
     *snapshotCreateThenBackup({
       payload,
     }, { call }) {
@@ -401,6 +415,12 @@ export default {
     },
     hideCreatePVModal(state) {
       return { ...state, createPVModalVisible: false }
+    },
+    showExpansionVolumeSizeModal(state, action) {
+      return { ...state, selected: action.payload, expansionVolumeSizeModalVisible: true, expansionVolumeSizeModalKey: Math.random() }
+    },
+    hideExpansionVolumeSizeModal(state) {
+      return { ...state, expansionVolumeSizeModalVisible: false, expansionVolumeSizeModalKey: Math.random() }
     },
     showWorkloadDetailModal(state, action) {
       return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: Math.random() }

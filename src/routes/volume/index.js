@@ -6,6 +6,7 @@ import { Row, Col, Button } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
 import CreateVolume from './CreateVolume'
+import ExpansionVolumeSizeModal from './ExpansionVolumeSizeModal'
 import ChangeVolumeModal from './ChangeVolumeModal'
 import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
@@ -74,7 +75,7 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace } = this.props.volume
+    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = queryString.parse(this.props.location.search)
@@ -220,6 +221,12 @@ class Volume extends React.Component {
       showWorkloadsStatusDetail(record) {
         dispatch({
           type: 'volume/showWorkloadDetailModal',
+          payload: record,
+        })
+      },
+      showExpansionVolumeSizeModal(record) {
+        dispatch({
+          type: 'volume/showExpansionVolumeSizeModal',
           payload: record,
         })
       },
@@ -429,6 +436,29 @@ class Volume extends React.Component {
       },
     }
 
+    const expansionVolumeSizeModalProps = {
+      item: {
+        size: 20,
+      },
+      hosts,
+      visible: expansionVolumeSizeModalVisible,
+      selected,
+      onOk(params) {
+        dispatch({
+          type: 'volume/expandVolume',
+          payload: {
+            params,
+            selected,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideExpansionVolumeSizeModal',
+        })
+      },
+    }
+
     const changeVolumeModalProps = {
       item: {
         frontend: 'iscsi',
@@ -623,7 +653,8 @@ class Volume extends React.Component {
         <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
         <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} />
         <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
-        <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} />
+        {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
+        {createVolumeModalVisible ? <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} /> : ''}
         {createPVAndPVCVisible ? <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} /> : ''}
         {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
         <AttachHost key={attachHostModalKey} {...attachHostModalProps} />

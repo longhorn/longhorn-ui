@@ -123,6 +123,25 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
     }
   }
 
+  const volumeSizeEle = () => {
+    let oldSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].size ? selectedVolume.controllers[0].size : ''
+    let isExpanding = (selectedVolume.size !== oldSize && selectedVolume.state === 'attached')
+    let message = `The volume is in expansion progress from size ${formatMib(oldSize)} to size ${formatMib(selectedVolume.size)}`
+
+    return (<div style={{ display: 'inline-block' }}>
+      {isExpanding ? <Tooltip title={message}>
+        <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
+          <div className={styles.expendVolumeIcon}>
+            <Icon type="loading" />
+          </div>
+          <div style={{ fontSize: '20px' }}>
+            <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+          </div>
+        </div>
+      </Tooltip> : <div>{formatMib(selectedVolume.size)}</div>}
+    </div>)
+  }
+
   return (
     <div>
       {errorMsg}
@@ -152,7 +171,8 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       </div>}
       <div className={styles.row}>
         <span className={styles.label}> Size:</span>
-        {formatMib(selectedVolume.size)}
+        {/* {formatMib(selectedVolume.size)} */}
+        {volumeSizeEle()}
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>

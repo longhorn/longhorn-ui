@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, createPVAndPVC, changeVolume, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, createPVAndPVC, changeVolume, commandKeyDown }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -56,6 +56,9 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'changeVolume':
         changeVolume(record)
         break
+      case 'expandVolume':
+        showExpansionVolumeSizeModal(record)
+        break
       default:
     }
   }
@@ -103,6 +106,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   })
 
+  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: !(selected.state === 'attached' || selected.state === 'detached') })
   availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring() })
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
@@ -132,6 +136,7 @@ actions.propTypes = {
   createPVAndPVC: PropTypes.func,
   changeVolume: PropTypes.func,
   commandKeyDown: PropTypes.bool,
+  showExpansionVolumeSizeModal: PropTypes.func,
 }
 
 export default actions
