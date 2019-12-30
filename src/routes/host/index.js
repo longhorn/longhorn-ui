@@ -250,6 +250,8 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     fieldOption: [
       { value: 'name', name: 'Name' },
       { value: 'status', name: 'Status' },
+      { value: 'NodeTag', name: 'Node Tag' },
+      { value: 'DiskTag', name: 'Disk Tag' },
     ],
     expandAll() {
       hostList && hostList.expandAll()

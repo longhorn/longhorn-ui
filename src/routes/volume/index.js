@@ -284,6 +284,8 @@ class Volume extends React.Component {
         { value: 'engineImageUpgradable', name: 'Engine image upgradable' },
         { value: 'pvName', name: 'PV Name' },
         { value: 'pvcName', name: 'PVC Name' },
+        { value: 'NodeTag', name: 'Node Tag' },
+        { value: 'DiskTag', name: 'Disk Tag' },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
