@@ -52,6 +52,8 @@ class Volume extends React.Component {
 
   componentWillUnmount() {
     window.onresize = null
+    this.onkeyup = null
+    this.onkeydown = null
     document.removeEventListener('keydown', this.onkeydown, false)
     document.removeEventListener('onkeyup', this.onkeyup, false)
   }
@@ -654,20 +656,20 @@ class Volume extends React.Component {
         </Row>
         <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
         <VolumeList {...volumeListProps} />
-        <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
-        { SnapshotDetailModalVisible ? <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} /> : ''}
-        <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
+        {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
+        {SnapshotDetailModalVisible ? <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} /> : ''}
+        {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
         {createVolumeModalVisible ? <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} /> : ''}
         {createPVAndPVCVisible ? <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} /> : ''}
         {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
-        <AttachHost key={attachHostModalKey} {...attachHostModalProps} />
-        <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} />
-        <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} />
-        <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} />
-        <CreateBackupModal key={this.state.createBackModalKey} {...createBackModalProps} />
-        <Salvage {...salvageModalProps} />
-        <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} />
+        {attachHostModalVisible ? <AttachHost key={attachHostModalKey} {...attachHostModalProps} /> : ''}
+        {bulkAttachHostModalVisible ? <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} /> : ''}
+        {engineUpgradeModalVisible ? <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} /> : ''}
+        {bulkEngineUpgradeModalVisible ? <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} /> : ''}
+        {me.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...createBackModalProps} /> : ''}
+        {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
+        {updateReplicaCountModalVisible ? <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} /> : ''}
       </div>
     )
   }

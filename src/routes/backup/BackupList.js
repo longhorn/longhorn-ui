@@ -260,7 +260,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'SnapshotCreated',
+        title: 'Snapshot Created',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
         width: '12%',
