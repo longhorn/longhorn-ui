@@ -256,7 +256,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: <div><div>Schedule</div></div>,
       key: 'recurringJobs',
       width: '9.375%',
-      render: (text) => {
+      render: (text, record) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
         let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
         if (text.recurringJobs && text.recurringJobs.length) {
@@ -269,7 +269,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         }
         return (
           <Tooltip placement="top" title={title}>
-            <div onClick={() => { showSnapshotDetail(text.recurringJobs) }} style={{ cursor: 'pointer' }}>
+            <div onClick={() => { showSnapshotDetail(record) }} style={{ cursor: 'pointer' }}>
               <IconBackup fill={fill} width={30} height={30} />
             </div>
           </Tooltip>

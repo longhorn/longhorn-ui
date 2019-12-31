@@ -211,7 +211,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
 
   const snapshotsProp = {
     ...snapshotModal,
-    selectedVolume,
     volume: selectedVolume,
     volumeId,
     dispatch,
