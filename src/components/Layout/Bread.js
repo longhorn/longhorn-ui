@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Breadcrumb, Icon } from 'antd'
 import styles from './Bread.less'
 import { menu } from '../../utils'
-import { Link } from 'dva/router'
+import { LinkTo } from '../../components'
 import { getPrefix } from '../../utils/pathnamePrefix'
 
 const p = getPrefix()
@@ -57,9 +57,9 @@ function Bread({ location }) {
           ? <Icon type={pathSet[item].icon} />
           : ''}
         {
-          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{pathSet[item].name}</span> : <Link to={pathSet[item].path}>
+          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{pathSet[item].name}</span> : <LinkTo to={{ pathname: pathSet[item].path }}>
               {pathSet[item].name}
-            </Link>
+            </LinkTo>
         }
       </Breadcrumb.Item>
     )
