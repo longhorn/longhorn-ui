@@ -231,7 +231,7 @@ class Volume extends React.Component {
         })
       },
       showSnapshotDetail(record) {
-        if (record && record.length) {
+        if (record) {
           dispatch({
             type: 'volume/showSnapshotDetailModal',
             payload: record,
@@ -393,7 +393,9 @@ class Volume extends React.Component {
 
     const SnapshotDetailModalProps = {
       visible: SnapshotDetailModalVisible,
-      item: SnapshotDetailModalItem,
+      selectedVolume: SnapshotDetailModalItem,
+      loading,
+      dispatch,
       onOk() {
         dispatch({ type: 'volume/hideSnapshotDetailModal' })
       },
@@ -651,7 +653,7 @@ class Volume extends React.Component {
         <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
         <VolumeList {...volumeListProps} />
         <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
-        <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} />
+        { SnapshotDetailModalVisible ? <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} /> : ''}
         <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
         {createVolumeModalVisible ? <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} /> : ''}

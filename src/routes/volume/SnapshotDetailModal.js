@@ -1,15 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card } from 'antd'
 import { ModalBlur } from '../../components'
-import IconBackup from '../../components/Icon/IconBackup'
-import prettyCron from '../../utils/prettycron'
+import RecurringList from './RecurringList'
 
 const modal = ({
   visible,
   onCancel,
   onOk,
-  item,
+  selectedVolume,
+  dispatch,
+  loading,
 }) => {
   const modalOpts = {
     title: 'Recurring Snapshot and Backup',
@@ -17,32 +17,30 @@ const modal = ({
     onCancel,
     onOk,
     hasOnCancel: true,
-    width: 680,
+    width: 850,
+    okText: 'Close',
   }
 
-  let CardItem = []
-  if (item) {
-    item.sort((a, b) => {
-      return a.task.localeCompare(b.task)
-    })
-    CardItem = item.map((ele, index) => {
-      let fill = ele.task === 'backup' ? '#00C1DE' : 'rgb(241, 196, 15)'
-      return (
-        <Card key={index} style={{ width: 520, margin: '5px' }}>
-          <div style={{ minHeight: '30px', display: 'flex', alignItems: 'center', marginBottom: '5px' }}><b style={{ marginRight: '10px' }}>Type: </b> <span style={{ marginRight: '4px' }}>{ele.task}</span> <IconBackup fill={fill} /></div>
-          <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Schedule: </b>{prettyCron.toString(ele.cron)}</div>
-          <div style={{ minHeight: '30px', display: 'flex' }}><b style={{ marginRight: '10px' }}>Retain: </b>{ele.retain}</div>
-        </Card>
-      )
-    })
+  const recurringListProps = {
+    selectedVolume,
+    dataSourceReplicas: selectedVolume.replicas || [],
+    dataSource: selectedVolume.recurringJobs || [],
+    loading,
+    onOk(recurring) {
+      dispatch({
+        type: 'volume/recurringUpdate',
+        payload: {
+          recurring,
+          url: selectedVolume.actions.recurringUpdate,
+        },
+      })
+    },
   }
 
   return (
     <ModalBlur {...modalOpts}>
-      <div style={{ width: '100%', overflow: 'auto', height: '230px' }}>
-        <div style={{ display: 'flex', width: 'fit-content', flexDirection: 'column' }}>
-          {CardItem}
-        </div>
+      <div style={{ width: '100%', overflow: 'auto', maxHeight: '500px' }}>
+        <RecurringList {...recurringListProps} />
       </div>
     </ModalBlur>
   )
@@ -50,9 +48,11 @@ const modal = ({
 
 modal.propTypes = {
   visible: PropTypes.bool,
-  item: PropTypes.array,
+  loading: PropTypes.bool,
+  selectedVolume: PropTypes.object,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
+  dispatch: PropTypes.func,
 }
 
 export default modal
