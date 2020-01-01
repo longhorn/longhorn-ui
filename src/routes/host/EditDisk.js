@@ -63,7 +63,7 @@ const modal = ({
     visible,
     onCancel,
     onOk: handleOk,
-    width: 1300,
+    width: 850,
     okText: 'Save',
   }
 

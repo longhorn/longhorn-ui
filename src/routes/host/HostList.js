@@ -307,6 +307,7 @@ class List extends React.Component {
           simple
           pagination={pagination}
           rowKey={record => record.id}
+          scroll={{ x: 1440 }}
         />
         <ModalBlur width={980} title={'Instance Manager'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
           <InstanceManagerComponent />

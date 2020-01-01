@@ -96,7 +96,7 @@ class EditableDiskList extends React.Component {
             <div className={styles.label}>
               Node Tags
             </div>
-            <div className={styles.control} style={{ width: '700px', lineHeight: '40px' }}>
+            <div className={styles.control} style={{ width: '500px', lineHeight: '40px' }}>
               <div>
                 {getFieldDecorator('tags', {
                   initialValue: node.tags,
