@@ -29,12 +29,12 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
 
   return (
     <div style={{ position: 'relative' }} className={classnames(styles.ediableDisk, { [styles.rowDeleted]: disk.deleted })}>
-      <div style={{ width: '83%', padding: '0px 15px', lineHeight: '40px' }}>
+      <div style={{ width: '99%', padding: '0px 15px', lineHeight: '40px' }}>
         {getFieldDecorator(`disks['${disk.id}']['tags']`, {
           initialValue: disk.tags,
         })(<DistTag tags={disk.tags} changeTags={(tags) => { form.setFieldsValue({ [`disks['${disk.id}']['tags']`]: tags }) }} />)}
       </div>
-      <div className={styles.formItem} style={{ width: '83%' }}>
+      <div className={styles.formItem} style={{ width: '99%' }}>
         <div className={styles.label}>
           Path
         </div>
