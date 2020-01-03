@@ -53,6 +53,32 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     ele.WorkloadName = ele.WorkloadNameAndPodName.podList[0] ? ele.WorkloadNameAndPodName.podList[0].workloadName : ''
   })
 
+  const statusProgress = (currentStatusArr, key) => {
+    if (currentStatusArr && currentStatusArr.length > 0) {
+      let total = 0
+      let restoreErrorMsg = ''
+      let isRestoring = false
+      currentStatusArr.forEach((ele) => {
+        if (ele.error) {
+          restoreErrorMsg = ele.error
+        }
+        if (ele[key]) {
+          isRestoring = ele[key]
+        }
+        total += ele.progress
+      })
+      let progress = Math.floor(total / currentStatusArr.length)
+
+      if (!isRestoring && !restoreErrorMsg) {
+        return ''
+      } else if (isRestoring && !restoreErrorMsg) {
+        return <Tooltip title={`${key === 'isRestoring' ? 'Restoring' : 'Rebuilding'}: ${progress}%`}><Progress showInfo={false} percent={progress} /></Tooltip>
+      } else {
+        return <Tooltip title={restoreErrorMsg}><Progress status="active" showInfo={false} percent={progress} /></Tooltip>
+      }
+    }
+  }
+
   const defaultImage = engineImages.find(image => image.default === true)
   const columns = [
     {
@@ -86,35 +112,37 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           return text.hyphenToHump()
         })()
 
-        let restoreProgress = null
-        if (record.restoreStatus && record.restoreStatus.length > 0) {
-          let total = 0
-          let restoreErrorMsg = ''
-          let isRestoring = false
-          record.restoreStatus.forEach((ele) => {
-            if (ele.error) {
-              restoreErrorMsg = ele.error
-            }
-            if (ele.isRestoring) {
-              isRestoring = ele.isRestoring
-            }
-            total += ele.progress
-          })
-          let progress = Math.floor(total / record.restoreStatus.length)
+        let restoreProgress = statusProgress(record.restoreStatus, 'isRestoring')
+        let rebuildProgress = statusProgress(record.rebuildStatus, 'isRebuilding')
+        // if (record.restoreStatus && record.restoreStatus.length > 0) {
+        //   let total = 0
+        //   let restoreErrorMsg = ''
+        //   let isRestoring = false
+        //   record.restoreStatus.forEach((ele) => {
+        //     if (ele.error) {
+        //       restoreErrorMsg = ele.error
+        //     }
+        //     if (ele.isRestoring) {
+        //       isRestoring = ele.isRestoring
+        //     }
+        //     total += ele.progress
+        //   })
+        //   let progress = Math.floor(total / record.restoreStatus.length)
 
-          if (!isRestoring && !restoreErrorMsg) {
-            restoreProgress = ''
-          } else if (isRestoring && !restoreErrorMsg) {
-            restoreProgress = <Tooltip title={`Restoring: ${progress}%`}><Progress showInfo={false} percent={progress} /></Tooltip>
-          } else {
-            restoreProgress = <Tooltip title={restoreErrorMsg}><Progress status="exception" showInfo={false} percent={progress} /></Tooltip>
-          }
-        }
+        //   if (!isRestoring && !restoreErrorMsg) {
+        //     restoreProgress = ''
+        //   } else if (isRestoring && !restoreErrorMsg) {
+        //     restoreProgress = <Tooltip title={`Restoring: ${progress}%`}><Progress showInfo={false} percent={progress} /></Tooltip>
+        //   } else {
+        //     restoreProgress = <Tooltip title={restoreErrorMsg}><Progress status="exception" showInfo={false} percent={progress} /></Tooltip>
+        //   }
+        // }
 
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)} style={{ position: 'relative' }}>
             <div style={{ width: '100%', position: 'absolute', top: '-25px' }}>
               {restoreProgress}
+              {rebuildProgress}
             </div>
             {upgrade} {stateText} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>

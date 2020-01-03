@@ -53,13 +53,37 @@ class Replica extends React.Component {
   }
 
   render() {
-    const { item, hosts, restoreStatus, purgeStatus } = this.props
+    const { item, hosts, restoreStatus, rebuildStatus, purgeStatus } = this.props
+
     const host = hosts.find(h => h.id === item.hostId)
     let deleteTooltip = ''
     if (item.volState === 'detached' && item.volState !== 'attached') {
       deleteTooltip = `Replica belongs to volume currently ${item.volState}. Volume must be attached or detached.`
     }
     const restoreProgress = (name, arr, state) => {
+      let total = 0
+      let progress = 0
+      let rebuildError = ''
+      let progressArr = arr.filter((ele) => {
+        return ele.replica === name
+      })
+
+      progressArr.forEach((ele) => {
+        total += ele.progress
+        rebuildError = ele.error
+      })
+
+      if (progressArr && progressArr.length > 0) {
+        progress = Math.floor(total / progressArr.length)
+      }
+      if (rebuildError) {
+        return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={rebuildError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
+      } else {
+        return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state === 'restore' ? 'Restoring' : 'Deleting Snapshot'} ${progress}%`}><Progress status={state === 'restore' ? 'active' : 'exception'} percent={progress} showInfo={false} /></Tooltip>
+      }
+    }
+
+    const rebuildProgress = (name, arr, state) => {
       let total = 0
       let progress = 0
       let restoreError = ''
@@ -78,7 +102,7 @@ class Replica extends React.Component {
       if (restoreError) {
         return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={restoreError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
       } else {
-        return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state === 'restore' ? 'Restoring' : 'Deleting Snapshot'} ${progress}%`}><Progress status={state === 'restore' ? 'active' : 'exception'} percent={progress} showInfo={false} /></Tooltip>
+        return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state} ${progress}%`}><Progress percent={progress} showInfo={false} /></Tooltip>
       }
     }
     return (
@@ -97,6 +121,7 @@ class Replica extends React.Component {
             <div style={{ width: '50%', position: 'absolute', top: '57px', left: '44%', height: '44px', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
               {restoreProgress(item.name, restoreStatus, 'restore')}
               {restoreProgress(item.name, purgeStatus, 'purge')}
+              {rebuildProgress(item.name, rebuildStatus, 'Rebuilding')}
             </div>
             <p style={{ position: 'absolute', left: 112, bottom: 20, verticalAlign: '100%' }}>
               {this.modeInfo.text}
@@ -145,6 +170,7 @@ Replica.propTypes = {
   deleteReplicas: PropTypes.func,
   hosts: PropTypes.array,
   restoreStatus: PropTypes.array,
+  rebuildStatus: PropTypes.array,
   purgeStatus: PropTypes.array,
 }
 

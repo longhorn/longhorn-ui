@@ -39,6 +39,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     dataSource: selectedVolume.replicas || [],
     purgeStatus: selectedVolume.purgeStatus || [],
     restoreStatus: selectedVolume.restoreStatus || [],
+    rebuildStatus: selectedVolume.rebuildStatus || [],
     hosts,
     deleteReplicas(replicas) {
       replicas.forEach(replica => { replica.removeUrl = selectedVolume.actions.replicaRemove })
