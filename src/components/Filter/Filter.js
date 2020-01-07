@@ -9,13 +9,14 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '' } = queryString.parse(props.location.search)
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '' } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
       value,
       nodeRedundancyValue,
       engineImageUpgradableValue,
+      scheduleValue,
       keyword: value,
     }
   }
@@ -41,6 +42,10 @@ class Filter extends React.Component {
 
   handleEngineImageUpgradableValueChange = (engineImageUpgradableValue) => {
     this.setState({ ...this.state, engineImageUpgradableValue })
+  }
+
+  handleScheduleValueChange = (scheduleValue) => {
+    this.setState({ ...this.state, scheduleValue })
   }
 
   handleFieldChange = (field) => {
@@ -84,10 +89,20 @@ class Filter extends React.Component {
         style={{ width: '100%' }}
         size="large"
         allowClear
-        defaultValue={this.state.engineImageUpgradableValue}
+        defaultValue={this.state.scheduleValue}
         onChange={this.handleEngineImageUpgradableValueChange}
     >
     {this.props.engineImageUpgradableOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+    </Select>)
+    } else if (this.state.field === 'schedule' && this.props.scheduleOption) {
+      valueForm = (<Select key="schedule"
+        style={{ width: '100%' }}
+        size="large"
+        allowClear
+        defaultValue={this.state.scheduleValue}
+        onChange={this.handleScheduleValueChange}
+    >
+    {this.props.scheduleOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
     </Select>)
     }
 
@@ -112,6 +127,7 @@ Filter.propTypes = {
   stateOption: PropTypes.array,
   fieldOption: PropTypes.array,
   defaultField: PropTypes.string,
+  scheduleOption: PropTypes.array,
   replicaNodeRedundancyOption: PropTypes.array,
   engineImageUpgradableOption: PropTypes.array,
 }

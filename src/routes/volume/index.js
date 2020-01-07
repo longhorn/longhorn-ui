@@ -12,6 +12,7 @@ import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import WorkloadDetailModal from './WorkloadDetailModal'
 import SnapshotDetailModal from './SnapshotDetailModal'
+import SnapshotBulkModal from './SnapshotBulkModal'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import UpdateReplicaCount from './UpdateReplicaCount'
@@ -20,7 +21,7 @@ import { Filter } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
-import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable } from '../../utils/filter'
+import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import { addPrefix } from '../../utils/pathnamePrefix'
 
 class Volume extends React.Component {
@@ -33,8 +34,6 @@ class Volume extends React.Component {
       selectedRows: [],
       commandKeyDown: false,
     }
-    document.addEventListener('keydown', this.onkeydown, false)
-    document.addEventListener('keyup', this.onkeyup, false)
   }
 
   componentDidMount() {
@@ -48,14 +47,14 @@ class Volume extends React.Component {
         height,
       })
     }
+    window.addEventListener('keydown', this.onkeydown)
+    window.addEventListener('keyup', this.onkeyup)
   }
 
   componentWillUnmount() {
     window.onresize = null
-    this.onkeyup = null
-    this.onkeydown = null
-    document.removeEventListener('keydown', this.onkeydown, false)
-    document.removeEventListener('onkeyup', this.onkeyup, false)
+    window.removeEventListener('keydown', this.onkeydown)
+    window.removeEventListener('keyup', this.onkeyup)
   }
 
   onkeyup = () => {
@@ -66,7 +65,7 @@ class Volume extends React.Component {
   }
 
   onkeydown = (e) => {
-    if (e.keyCode === 91 && !this.state.commandKeyDown) {
+    if ((e.keyCode === 91 || e.keyCode === 17) && !this.state.commandKeyDown) {
       this.setState({
         ...this.state,
         commandKeyDown: true,
@@ -77,10 +76,10 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey } = this.props.volume
+    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
-    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue } = queryString.parse(this.props.location.search)
+    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue } = queryString.parse(this.props.location.search)
     const volumeFilterMap = {
       healthy: healthyVolume,
       inProgress: inProgressVolume,
@@ -103,6 +102,12 @@ class Volume extends React.Component {
         volumes = volumes.filter(item => isVolumeImageUpgradable(item, defaultImage))
       } else if (engineImageUpgradableValue === 'no') {
         volumes = volumes.filter(item => !isVolumeImageUpgradable(item, defaultImage))
+      }
+    } else if (field && field === 'schedule') {
+      if (scheduleValue === 'yes') {
+        volumes = volumes.filter(item => isVolumeSchedule(item))
+      } else if (scheduleValue === 'no') {
+        volumes = volumes.filter(item => !isVolumeSchedule(item))
       }
     } else if (field && field === 'namespace' && value) {
       volumes = filterVolume(volumes, field, value)
@@ -277,6 +282,10 @@ class Volume extends React.Component {
         { value: 'yes', name: 'Yes' },
         { value: 'no', name: 'No' },
       ],
+      scheduleOption: [
+        { value: 'yes', name: 'Yes' },
+        { value: 'no', name: 'No' },
+      ],
       fieldOption: [
         { value: 'name', name: 'Name' },
         { value: 'host', name: 'Node' },
@@ -288,10 +297,11 @@ class Volume extends React.Component {
         { value: 'pvcName', name: 'PVC Name' },
         { value: 'NodeTag', name: 'Node Tag' },
         { value: 'DiskTag', name: 'Disk Tag' },
+        { value: 'schedule', name: 'Scheduled' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue } = filter
-        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue) ? dispatch(routerRedux.push({
+        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue } = filter
+        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue) ? dispatch(routerRedux.push({
           pathname: addPrefix('/volume'),
           search: queryString.stringify({
             ...queryString.parse(location.search),
@@ -300,6 +310,7 @@ class Volume extends React.Component {
             stateValue: filterStateValue,
             nodeRedundancyValue: redundancyValue,
             engineImageUpgradableValue: imageUpgradableValue,
+            scheduleValue: schedulePropValue,
           }),
         })) : dispatch(routerRedux.push({
           pathname: addPrefix('/volume'),
@@ -400,11 +411,18 @@ class Volume extends React.Component {
       selectedVolume: SnapshotDetailModalItem,
       loading,
       dispatch,
-      onOk() {
-        dispatch({ type: 'volume/hideSnapshotDetailModal' })
-      },
       onCancel() {
         dispatch({ type: 'volume/hideSnapshotDetailModal' })
+      },
+    }
+
+    const SnapshotBulkModalProps = {
+      visible: SnapshotBulkModalVisible,
+      selectedRows,
+      loading,
+      dispatch,
+      onCancel() {
+        dispatch({ type: 'volume/hideSnapshotBulkModal' })
       },
     }
 
@@ -595,6 +613,9 @@ class Volume extends React.Component {
           selectedRows: actions,
         })
       },
+      createSchedule(actions) {
+        dispatch({ type: 'volume/showSnapshotBulkModal', payload: actions })
+      },
       createPVAndPVC(actions) {
         dispatch({
           type: 'volume/showCreatePVAndPVCModal',
@@ -657,6 +678,7 @@ class Volume extends React.Component {
         <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
         <VolumeList {...volumeListProps} />
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
+        {SnapshotBulkModalVisible ? <SnapshotBulkModal key={SnapshotBulkModalKey} {...SnapshotBulkModalProps}></SnapshotBulkModal> : ''}
         {SnapshotDetailModalVisible ? <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}

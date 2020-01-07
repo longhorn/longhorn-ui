@@ -223,7 +223,7 @@ class Snapshots extends React.Component {
             <Snapshot {...treeProps} onAction={this.onAction} ref="Snapshot" />
           </div>
         </div>
-        <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} />
+        {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
       </Card>
     )
   }

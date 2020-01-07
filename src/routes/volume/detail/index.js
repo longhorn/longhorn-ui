@@ -359,9 +359,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
       {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
       {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
-      <Salvage {...salvageModalProps} />
-      <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} />
-      <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} />
+      {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
+      {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
+      {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
     </div>
   )
 }
