@@ -62,6 +62,10 @@ export function isVolumeImageUpgradable(volume, defaultImage) {
   return volume.currentImage !== '' && defaultImage && defaultImage.image !== volume.currentImage && ((state === 'attached' && robustness === 'healthy') || (state === 'detached' && robustness !== 'faulted'))
 }
 
+export function isVolumeSchedule(volume) {
+  return volume.recurringJobs && volume.recurringJobs.length > 0
+}
+
 export function isVolumeReplicaNotRedundancy(volume) {
   const numberOfReplicas = volume.numberOfReplicas
   const totalReplicas = validReplicas(volume.replicas)

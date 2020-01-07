@@ -5,7 +5,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, createPVAndPVC, commandKeyDown }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, createPVAndPVC, createSchedule, commandKeyDown }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -36,6 +36,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         break
       case 'backup':
         bulkBackup(selectedRows)
+        break
+      case 'createSchedule':
+        createSchedule(selectedRows)
         break
       case 'createPVAndPVC':
         createPVAndPVC(selectedRows)
@@ -68,6 +71,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState(['attaching']) || isHasStandy() || isRestoring() } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || isRestoring() } },
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || isAttached() } },
+    { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() } },
   ]
 
@@ -95,6 +99,7 @@ bulkActions.propTypes = {
   showBulkSalvage: PropTypes.func,
   bulkBackup: PropTypes.func,
   createPVAndPVC: PropTypes.func,
+  createSchedule: PropTypes.func,
   commandKeyDown: PropTypes.bool,
 }
 

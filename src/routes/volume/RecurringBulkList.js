@@ -15,7 +15,7 @@ class RecurringList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: this.props.dataSource.map(item => ({ ...item })),
+      dataSource: [],
       editing: true,
       currentRecord: {},
       currentCron: '0 0 * * *',
@@ -31,33 +31,11 @@ class RecurringList extends React.Component {
       Faulted: false,
       modulerCronDisabled: false,
       backupLabelsDisabled: false,
-      tooltip: '',
     }
   }
 
   componentDidMount() {
-    let Faulted = true
-    let tooltip = ''
-    this.props.dataSourceReplicas.forEach((item) => {
-      if (!item.failedAt) {
-        Faulted = false
-      }
-    })
-    if (Faulted) {
-      tooltip = 'Replicas has error'
-    }
-    if (this.props.selectedVolume.standby) {
-      Faulted = this.props.selectedVolume.standby
-      tooltip = 'Cannot set for disaster recovery volume'
-    }
-
     document.addEventListener('keydown', this.onkeydown, false)
-
-    this.setState({
-      ...this.state,
-      tooltip,
-      Faulted,
-    })
   }
 
   componentWillUnmount() {
@@ -93,9 +71,10 @@ class RecurringList extends React.Component {
   }
 
   onEdit = () => {
-    const dataSource = this.props.dataSource.map(item => ({ ...item }))
+    const dataSource = this.state.dataSource.map(item => ({ ...item }))
     this.setState({
       dataSource,
+      editing: true,
     })
   }
 
@@ -160,10 +139,10 @@ class RecurringList extends React.Component {
   onSave = () => {
     const { dataSource } = this.state
     const data = dataSource.filter(item => item.deleted !== true)
-    this.props.onOk(data)
     this.setState({
       dataSource: data.map(item => ({ ...item, isNew: false })),
     })
+    this.props.onOk(data)
   }
 
   isRecurringChanged = (origin, target) => {
@@ -364,7 +343,7 @@ class RecurringList extends React.Component {
         title: 'Type',
         dataIndex: 'task',
         key: 'task',
-        width: 120,
+        width: 180,
         render: (text, record) => {
           return (
             this.state.editing ? <div>
@@ -401,7 +380,7 @@ class RecurringList extends React.Component {
       {
         title: 'Labels',
         key: 'LabelsValue',
-        width: '30%',
+        width: '20%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing || record.task !== 'backup' ? '' : 'Click add labels'}>
@@ -453,17 +432,7 @@ class RecurringList extends React.Component {
     ]
     const pagination = false
     const { dataSource } = this.state
-    const { loading, selectedVolume } = this.props
-    const isRestoring = () => {
-      if (selectedVolume.restoreStatus && selectedVolume.restoreStatus.length > 0) {
-        let flag = selectedVolume.restoreStatus.every((item) => {
-          return !item.isRestoring
-        })
-        return !flag
-      } else {
-        return false
-      }
-    }
+    const { loading } = this.props
     return (
       <div>
         <div style={{ padding: '24px' }}>
@@ -478,9 +447,7 @@ class RecurringList extends React.Component {
             />
           </div>
           <div className={styles.actions}>
-          <Tooltip placement="top" title={isRestoring() ? 'Volume is Restoring' : this.state.tooltip}>
-            <Button style={{ marginRight: '8px' }} disabled={this.state.Faulted || isRestoring()} onClick={this.onNewRecurring} icon="plus">New</Button>
-          </Tooltip>
+            <Button onClick={this.onNewRecurring} icon="plus">New</Button>
           </div>
         </div>
         <ModalBlur key={this.state.backupLabelInputKey} {...this.state.modalBackupLabesOpts} width={520} onCancel={() => { this.onBackupLabelsCancel() }} onOk={() => { this.onBackupLabelsOk() }}>
@@ -491,10 +458,7 @@ class RecurringList extends React.Component {
         </ModalBlur>
         <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #f4f4f4', padding: '10px 16px' }}>
           <Button loading={loading} onClick={this.onCancel}>Cancel</Button>
-          &nbsp;&nbsp;
-          <Tooltip placement="top" title={isRestoring() ? 'Volume is Restoring' : this.state.tooltip}>
-            <Button loading={loading} disabled={this.state.Faulted || isRestoring()} onClick={this.onSave} type="primary">Save</Button>
-          </Tooltip>
+          &nbsp;&nbsp;<Button loading={loading} onClick={this.onSave} type="primary">Save</Button>
         </div>
       </div>
     )
@@ -510,7 +474,6 @@ RecurringList.propTypes = {
   loading: PropTypes.bool,
   form: PropTypes.object,
   dataSourceReplicas: PropTypes.array,
-  selectedVolume: PropTypes.object,
 }
 
 const RecurringListEle = Form.create({})(RecurringList)

@@ -1,18 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ModalBlur } from '../../components'
-import RecurringList from './RecurringList'
+import RecurringList from './RecurringBulkList'
 
 const modal = ({
   visible,
   onCancel,
   onOk,
-  selectedVolume,
+  selectedRows,
   dispatch,
   loading,
 }) => {
   const modalOpts = {
-    title: 'Recurring Snapshot and Backup',
+    title: 'Bulk Update Recurring Snapshot and Backup',
     visible,
     onCancel,
     onOk,
@@ -24,21 +24,21 @@ const modal = ({
   }
 
   const recurringListProps = {
-    selectedVolume,
-    dataSourceReplicas: selectedVolume.replicas || [],
-    dataSource: selectedVolume.recurringJobs || [],
+    selectedRows,
+    dataSourceReplicas: [],
+    dataSource: [],
     loading,
     onOk(recurring) {
       dispatch({
-        type: 'volume/recurringUpdate',
+        type: 'volume/bulkRecurringUpdate',
         payload: {
-          recurring,
-          url: selectedVolume.actions.recurringUpdate,
+          recurringList: recurring,
+          selectedRows,
         },
       })
     },
     onModalCancel() {
-      dispatch({ type: 'volume/hideSnapshotDetailModal' })
+      dispatch({ type: 'volume/hideSnapshotBulkModal' })
     },
   }
 
@@ -54,7 +54,7 @@ const modal = ({
 modal.propTypes = {
   visible: PropTypes.bool,
   loading: PropTypes.bool,
-  selectedVolume: PropTypes.object,
+  selectedRows: PropTypes.array,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
   dispatch: PropTypes.func,

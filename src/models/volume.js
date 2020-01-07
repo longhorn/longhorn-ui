@@ -18,6 +18,7 @@ export default {
     SnapshotDetailModalItem: [],
     nodeTags: [],
     diskTags: [],
+    recurringList: [],
     tagsLoading: true,
     createVolumeModalVisible: false,
     createPVCModalVisible: false,
@@ -40,6 +41,7 @@ export default {
     expansionVolumeSizeModalVisible: false,
     pvNameDisabled: false,
     changeVolumeModalVisible: false,
+    SnapshotBulkModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -61,6 +63,7 @@ export default {
     bulkEngineUpgradeModalKey: Math.random(),
     expansionVolumeSizeModalKey: Math.random(),
     updateReplicaCountModalKey: Math.random(),
+    SnapshotBulkModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
   },
@@ -179,6 +182,28 @@ export default {
         }
       })
       yield call(recurringUpdate, data, payload.url)
+      yield put({ type: 'hideSnapshotDetailModal' })
+      yield put({ type: 'query' })
+    },
+    *bulkRecurringUpdate({
+      payload,
+    }, { call, put }) {
+      if (payload.selectedRows && payload.recurringList) {
+        const data = {
+          jobs: [],
+        }
+        let selectedRows = payload.selectedRows.filter((row) => !row.standby)
+
+        payload.recurringList.forEach(r => {
+          if (r.task === 'backup') {
+            data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain, labels: r.labels })
+          } else {
+            data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
+          }
+        })
+        yield selectedRows.map(row => call(recurringUpdate, data, row.actions.recurringUpdate))
+      }
+      yield put({ type: 'hideSnapshotBulkModal' })
       yield put({ type: 'query' })
     },
     *volumeActivate({
@@ -482,11 +507,20 @@ export default {
     hideUpdateReplicaCountModal(state) {
       return { ...state, updateReplicaCountModalVisible: false }
     },
+    hideSnapshotBulkModal(state) {
+      return { ...state, SnapshotBulkModalVisible: false }
+    },
+    showSnapshotBulkModal(state, action) {
+      return { ...state, SnapshotBulkModalVisible: true, selectedRows: action.payload, SnapshotBulkModalKey: Math.random() }
+    },
     changeSelection(state, action) {
       return { ...state, ...action.payload }
     },
     clearSelection(state) {
       return { ...state, selectedRows: [] }
+    },
+    recurringBulkUpdate(state, action) {
+      return { ...state, recurringList: action.payload.recurring }
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }

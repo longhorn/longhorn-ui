@@ -16,7 +16,7 @@ class RecurringList extends React.Component {
     super(props)
     this.state = {
       dataSource: this.props.dataSource.map(item => ({ ...item })),
-      editing: false,
+      editing: true,
       currentRecord: {},
       currentCron: '0 0 * * *',
       modalOpts: {
@@ -31,21 +31,29 @@ class RecurringList extends React.Component {
       Faulted: false,
       modulerCronDisabled: false,
       backupLabelsDisabled: false,
+      tooltip: '',
     }
   }
 
   componentDidMount() {
     let Faulted = true
+    let tooltip = ''
     this.props.dataSourceReplicas.forEach((item) => {
       if (!item.failedAt) {
         Faulted = false
       }
     })
+    if (Faulted) {
+      tooltip = 'Replicas has error'
+    }
     if (this.props.selectedVolume.standby) {
       Faulted = this.props.selectedVolume.standby
+      tooltip = 'Please activate disaster recovery volume'
     }
+
     this.setState({
       ...this.state,
+      tooltip,
       Faulted,
     })
   }
@@ -90,7 +98,6 @@ class RecurringList extends React.Component {
     const dataSource = this.props.dataSource.map(item => ({ ...item }))
     this.setState({
       dataSource,
-      editing: false,
     })
   }
 
@@ -144,7 +151,6 @@ class RecurringList extends React.Component {
     this.props.onOk(data)
     this.setState({
       dataSource: data.map(item => ({ ...item, isNew: false })),
-      editing: false,
     })
   }
 
@@ -346,11 +352,11 @@ class RecurringList extends React.Component {
         title: 'Type',
         dataIndex: 'task',
         key: 'task',
-        width: 120,
+        width: 180,
         render: (text, record) => {
           return (
             this.state.editing ? <div>
-                <Select disabled={record.deleted} onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 100 }}>
+                <Select disabled={record.deleted} onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 140 }}>
                   <Option value="snapshot">Snapshot</Option>
                   <Option value="backup">Backup</Option>
                 </Select>
@@ -449,36 +455,40 @@ class RecurringList extends React.Component {
     return (
       <Card title={<div className={styles.header}>
           <div>Recurring Snapshot and Backup Schedule</div>
-          <div>
-            {!this.state.editing && !loading && <Button disabled={this.state.Faulted || isRestoring()} onClick={this.onEdit} type="primary" icon="edit">Edit</Button>}
-          </div>
         </div>}
         bordered={false}>
         <div>
-          <Table
-            bordered={false}
-            columns={columns}
-            dataSource={dataSource}
-            simple
-            pagination={pagination}
-            rowKey={record => record.name}
-          />
+          <div style={{ minHeight: '223px' }}>
+            <Table
+              bordered={false}
+              columns={columns}
+              dataSource={dataSource}
+              simple
+              pagination={pagination}
+              rowKey={record => record.name}
+            />
+          </div>
           <div className={styles.new}>
-              {this.state.editing && <Button onClick={this.onNewRecurring} icon="plus">New</Button>}
+            <Tooltip placement="top" title={isRestoring() ? 'Volume is Restoring' : this.state.tooltip}>
+              {this.state.editing && <Button disabled={this.state.Faulted || isRestoring()} onClick={this.onNewRecurring} icon="plus">New</Button>}
+            </Tooltip>
           </div>
           <div className={styles.actions}>
             {(this.state.editing || loading) && <div>
               <Button loading={loading} onClick={this.onCancel}>Cancel</Button>
-              &nbsp;&nbsp;<Button loading={loading} onClick={this.onSave} type="success">Save</Button>
+              &nbsp;&nbsp;
+              <Tooltip placement="top" title={isRestoring() ? 'Volume is Restoring' : this.state.tooltip}>
+                <Button loading={loading} disabled={this.state.Faulted || isRestoring()} onClick={this.onSave} type="success">Save</Button>
+              </Tooltip>
             </div>}
           </div>
         </div>
-        <ModalBlur key={this.state.backupLabelInputKey} {...this.state.modalBackupLabesOpts} width={520} onCancel={() => { this.onBackupLabelsCancel() }} onOk={() => { this.onBackupLabelsOk() }}>
+        {this.state.modalBackupLabesOpts.visible ? <ModalBlur key={this.state.backupLabelInputKey} {...this.state.modalBackupLabesOpts} width={520} onCancel={() => { this.onBackupLabelsCancel() }} onOk={() => { this.onBackupLabelsOk() }}>
           <BackupLabelInputForRecurring form={this.props.form} labelsProps={this.state.currentRecord.labels} />
-        </ModalBlur>
-        <ModalBlur disabled={this.state.modulerCronDisabled} {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
+        </ModalBlur> : ''}
+        {this.state.modalOpts.visible ? <ModalBlur disabled={this.state.modulerCronDisabled} {...this.state.modalOpts} width={880} onCancel={() => { this.onCronCancel() }} onOk={() => { this.onOk() }}>
           <ReactCron cron={this.state.currentRecord.cron} key={this.state.ReactCronKey} saveDisabled={this.saveDisabled} changeCron={this.changeCron} />
-        </ModalBlur>
+        </ModalBlur> : ''}
       </Card>
     )
   }
