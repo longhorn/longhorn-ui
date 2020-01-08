@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Button, Select, InputNumber, Form, Tooltip } from 'antd'
+import { Table, Button, Select, InputNumber, Form, Tooltip, Modal } from 'antd'
 import { ReactCron } from '../../components'
 import IconRemove from '../../components/Icon/IconRemove'
 import IconRestore from '../../components/Icon/IconRestore'
@@ -10,6 +10,7 @@ import prettyCron from '../../utils/prettycron'
 import styles from './detail/index.less'
 
 const Option = Select.Option
+const confirm = Modal.confirm
 
 class RecurringList extends React.Component {
   constructor(props) {
@@ -138,11 +139,18 @@ class RecurringList extends React.Component {
 
   onSave = () => {
     const { dataSource } = this.state
+    const me = this
     const data = dataSource.filter(item => item.deleted !== true)
     this.setState({
       dataSource: data.map(item => ({ ...item, isNew: false })),
     })
-    this.props.onOk(data)
+
+    confirm({
+      title: 'Updated schedule will override any existing schedule',
+      onOk() {
+        me.props.onOk(data)
+      },
+    })
   }
 
   isRecurringChanged = (origin, target) => {

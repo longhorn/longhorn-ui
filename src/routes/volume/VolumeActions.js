@@ -26,12 +26,16 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         }
         break
       case 'detach':
-        confirm({
-          title: `Are you sure you want to detach volume ${record.name} ?`,
-          onOk() {
-            detach(record.actions.detach)
-          },
-        })
+        if (commandKeyDown) {
+          detach(record.actions.detach)
+        } else {
+          confirm({
+            title: `Are you sure you want to detach volume ${record.name} ?`,
+            onOk() {
+              detach(record.actions.detach)
+            },
+          })
+        }
         break
       case 'engineUpgrade':
         showEngineUpgrade(record)

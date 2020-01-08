@@ -27,12 +27,16 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         showBulkAttachHost(selectedRows)
         break
       case 'detach':
-        confirm({
-          title: `Are you sure you want to detach volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
-          onOk() {
-            bulkDetach(selectedRows.map(item => item.actions.detach))
-          },
-        })
+        if (commandKeyDown) {
+          bulkDetach(selectedRows.map(item => item.actions.detach))
+        } else {
+          confirm({
+            title: `Are you sure you want to detach volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
+            onOk() {
+              bulkDetach(selectedRows.map(item => item.actions.detach))
+            },
+          })
+        }
         break
       case 'backup':
         bulkBackup(selectedRows)
