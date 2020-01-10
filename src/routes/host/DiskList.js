@@ -52,7 +52,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       render: (text, record) => {
         return (
           <div className="replicas">
-            <a onClick={() => showDiskReplicaModal(record)}>
+            <a onClick={() => showDiskReplicaModal(record, node)}>
               {text ? text.length : 0}
             </a>
           </div>

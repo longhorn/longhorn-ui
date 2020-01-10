@@ -45,9 +45,9 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     }
     return data.find(item => item.id === selected.id) || {}
   }
-  const getSelectedDisk = (diskID) => {
+  const getSelectedDisk = (nodeId, diskID) => {
     if (diskID) {
-      const node = data.find(n => n.disks[diskID])
+      const node = data.find(n => n.id === nodeId)
       if (node) {
         return { ...node.disks[diskID], name: node.disks[diskID].path }
       }
@@ -143,11 +143,12 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         },
       })
     },
-    showDiskReplicaModal(disk) {
+    showDiskReplicaModal(disk, node) {
       dispatch({
         type: 'host/showDiskReplicaModal',
         payload: {
           selectedDiskID: disk.id,
+          selected: node,
         },
       })
     },
@@ -227,7 +228,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     replicaModalDeleteLoading,
   }
   const diskReplicaModalProps = {
-    selected: getSelectedDisk(selectedDiskID),
+    selected: getSelectedDisk(selected.id, selectedDiskID),
     visible: diskReplicaModalVisible,
     onCancel() {
       dispatch({
@@ -238,6 +239,37 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         payload: false,
       })
     },
+    deleteReplicas(replicas) {
+      dispatch({
+        type: 'host/deleteReplicas',
+        replicas,
+      })
+    },
+    selectedRows: selectedReplicaRows,
+    selectedRowKeys: selectedReplicaRowKeys,
+    rowSelection: {
+      selectedRowKeys: selectedReplicaRowKeys,
+      onChange: (selectedRowKeys, selectedRows) => {
+        if (selectedRowKeys.length === 0) {
+          dispatch({ type: 'host/disableReplicaModalDelete' })
+        } else {
+          dispatch({ type: 'host/enableReplicaModalDelete' })
+        }
+        dispatch({
+          type: 'host/changeReplicaSelection',
+          payload: {
+            selectedReplicaRowKeys: selectedRowKeys,
+            selectedReplicaRows: selectedRows,
+          },
+        })
+      },
+      getCheckboxProps: record => ({
+        disabled: record.volState !== 'detached' && record.volState !== 'attached',
+        name: record.name,
+      }),
+    },
+    replicaModalDeleteDisabled,
+    replicaModalDeleteLoading,
   }
   const HostFilterProps = {
     location,
