@@ -20,8 +20,30 @@ class List extends React.Component {
       expandedRowKeys: [],
       sorterOrderChanged: false,
       modalBlurVisible: false,
+      selectedRows: [],
       selectedNode: {},
+      rowSelection: {
+        selectedRowKeys: [],
+        onChange: this.onSelectChange,
+      },
     }
+  }
+
+  onSelectChange = (_, records) => {
+    this.setState({
+      ...this.state,
+      selectedRows: records,
+      rowSelection: {
+        ...this.state.rowSelection,
+        selectedRowKeys: records.map((item) => item.id),
+      },
+    })
+    this.props.dispatch({
+      type: 'host/changeSelection',
+      payload: {
+        selectedHostRows: records,
+      },
+    })
   }
 
   onExpand = (expanded, record) => {
@@ -306,6 +328,7 @@ class List extends React.Component {
           onChange={onChange}
           simple
           pagination={pagination}
+          rowSelection={this.state.rowSelection}
           rowKey={record => record.id}
           scroll={{ x: 1440 }}
         />

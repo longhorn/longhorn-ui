@@ -10,6 +10,7 @@ export default {
   state: {
     data: [],
     selected: {},
+    selectedHostRows: [],
     selectedDiskID: '',
     selectedReplicaRows: [],
     selectedReplicaRowKeys: [],
@@ -84,6 +85,23 @@ export default {
       yield put({ type: 'replicaModalDeleteLoaded' })
       yield put({ type: 'clearReplicaSelection' })
     },
+    *autoDeleteNode({
+      payload,
+    }, { call, put }) {
+      if (payload && payload.selectedHostRows) {
+        const hostList = payload.selectedHostRows.map((item) => Object.assign({}, item, { allowScheduling: false }))
+        let replicas = []
+        payload.selectedHostRows.forEach((item) => {
+          item.replicas.forEach((ele) => {
+            replicas.push(ele)
+          })
+        })
+        yield hostList.map((item) => call(toggleScheduling, item))
+        yield replicas.map(replica => call(execAction, replica.removeUrl, { name: replica.name }))
+        yield hostList.map((item) => call(deleteHost, item))
+        yield put({ type: 'query' })
+      }
+    },
     *getInstanceManagerModal({
       payload,
     }, { call, put }) {
@@ -129,6 +147,9 @@ export default {
         ...state,
         ...data,
       }
+    },
+    changeSelection(state, action) {
+      return { ...state, ...action.payload }
     },
     showModal(state, action) {
       return { ...state, ...action.payload, modalVisible: true }
