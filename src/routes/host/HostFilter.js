@@ -9,9 +9,37 @@ class HostFilter extends React.Component {
     super(props)
     this.state = {
       isAllExpanded: false,
+      commandKeyDown: false,
       HostBulkActionsProps: {
         bulkDeleteHost: this.bulkDeleteHost,
       },
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.onkeydown)
+    window.addEventListener('keyup', this.onkeyup)
+  }
+
+  componentWillUnmount() {
+    window.onresize = null
+    window.removeEventListener('keydown', this.onkeydown)
+    window.removeEventListener('keyup', this.onkeyup)
+  }
+
+  onkeyup = () => {
+    this.setState({
+      ...this.state,
+      commandKeyDown: false,
+    })
+  }
+
+  onkeydown = (e) => {
+    if ((e.keyCode === 91 || e.keyCode === 17) && !this.state.commandKeyDown) {
+      this.setState({
+        ...this.state,
+        commandKeyDown: true,
+      })
     }
   }
 
@@ -54,7 +82,7 @@ class HostFilter extends React.Component {
         <Col lg={16} md={14} sm={24} xs={24}>
           <div style={{ display: 'flex' }}>
             <Button size="large" type="primary" onClick={() => this.toggleExpand()}>{this.state.isAllExpanded ? 'Collapse' : 'Expand'} All</Button>
-            <HostBulkActions {...this.state.HostBulkActionsProps} selectedRows={selectedHostRows} />
+            <HostBulkActions {...this.state.HostBulkActionsProps} commandKeyDown={this.state.commandKeyDown} selectedRows={selectedHostRows} />
           </div>
         </Col>
         <Col lg={8} md={10} sm={24} xs={24} style={{ marginBottom: 16 }}>
