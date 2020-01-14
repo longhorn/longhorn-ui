@@ -29,6 +29,15 @@ class List extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'host/hideDiskReplicaModal',
+    })
+    this.props.dispatch({
+      type: 'host/hideReplicaModal',
+    })
+  }
+
   onSelectChange = (_, records) => {
     this.setState({
       ...this.state,
