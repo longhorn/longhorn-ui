@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Modal } from 'antd'
-import { DropOption } from '../../components'
+import { DropOption, LinkTo } from '../../components'
 const confirm = Modal.confirm
 
 function list({ dataSource, deleteReplicas, rowSelection }) {
@@ -67,6 +67,23 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      render: (text, record) => {
+        let reg = /(?:([A-Za-z]+):)?(?:\/{0,3})([A-Zaz.\-0-9]+)(?::(\d+))?(\/[^#?]*)?(?:\?([^#]*))?(?:#(.*))?/
+        let result = record.removeUrl.match(reg)
+        let pvcName = ''
+        if (result && result[4]) {
+          let pathArr = result[4].split('/')
+          pvcName = pathArr.pop()
+        }
+
+        return (
+          <div>
+            <LinkTo to={{ pathname: `/volume/${pvcName}`, state: false }}>
+              {text}
+            </LinkTo>
+          </div>
+        )
+      },
     }, {
       title: '',
       key: 'operation',
