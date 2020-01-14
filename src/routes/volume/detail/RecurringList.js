@@ -64,7 +64,7 @@ class RecurringList extends React.Component {
   }
 
   onNewRecurring = () => {
-    this.state.dataSource.push({ retain: 20, name: `c-${Math.random().toString(36).substr(2, 6)}`, editing: true, cron: '0 0 * * *', task: 'snapshot', isNew: true })
+    this.state.dataSource.push({ retain: 20, name: `c-${Math.random().toString(36).substr(2, 6)}`, editing: true, cron: '0 0 * * *', task: 'backup', isNew: true })
     this.setState({
       dataSource: this.state.dataSource,
     })
@@ -357,8 +357,8 @@ class RecurringList extends React.Component {
           return (
             this.state.editing ? <div>
                 <Select disabled={record.deleted} onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 140 }}>
-                  <Option value="snapshot">Snapshot</Option>
                   <Option value="backup">Backup</Option>
+                  <Option value="snapshot">Snapshot</Option>
                 </Select>
               </div> : <div className="capitalize">
                 {text}
