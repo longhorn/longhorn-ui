@@ -5,16 +5,20 @@ import style from './HostBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, bulkDeleteHost }) {
+function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
-        confirm({
-          title: `Are you sure you want to delete node(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
-          onOk() {
-            bulkDeleteHost(selectedRows)
-          },
-        })
+        if (commandKeyDown) {
+          bulkDeleteHost(selectedRows)
+        } else {
+          confirm({
+            title: `Are you sure you want to delete node(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
+            onOk() {
+              bulkDeleteHost(selectedRows)
+            },
+          })
+        }
         break
       default:
     }
@@ -60,6 +64,7 @@ function bulkActions({ selectedRows, bulkDeleteHost }) {
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   bulkDeleteHost: PropTypes.func,
+  commandKeyDown: PropTypes.bool,
 }
 
 export default bulkActions
