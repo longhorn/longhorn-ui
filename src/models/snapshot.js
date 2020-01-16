@@ -68,7 +68,9 @@ let filterRemoved = (data) => {
         // }
         let itemCEntity = data.find(el => el.name === itemC)
 
-        itemCEntity.parent = parent
+        if (itemCEntity) {
+          itemCEntity.parent = parent
+        }
       }
 
       continue
