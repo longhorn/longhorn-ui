@@ -261,6 +261,26 @@ class Volume extends React.Component {
           payload: record.actions.activate,
         })
       },
+      onRowClick(record, flag) {
+        let selecteRowByClick = [record]
+
+        if (flag) {
+          selectedRows.forEach((item) => {
+            if (selecteRowByClick.every((ele) => {
+              return ele.id !== item.id
+            })) {
+              selecteRowByClick.push(item)
+            }
+          })
+        }
+
+        dispatch({
+          type: 'volume/changeSelection',
+          payload: {
+            selectedRows: selecteRowByClick,
+          },
+        })
+      },
       rowSelection: {
         selectedRowKeys: selectedRows.map(item => item.id),
         onChange(_, records) {
