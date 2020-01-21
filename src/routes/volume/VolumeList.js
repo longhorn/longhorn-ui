@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showSnapshotDetail, onSorterChange, height, commandKeyDown = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showSnapshotDetail, onSorterChange, height, commandKeyDown, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -35,6 +35,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     changeVolume,
     height,
     commandKeyDown,
+    onRowClick,
   }
   /**
    *add dataSource kubernetesStatus fields
@@ -346,6 +347,13 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         onChange={onChange}
         dataSource={dataSource}
         loading={loading}
+        onRow={record => {
+          return {
+            onClick: () => {
+              onRowClick(record, commandKeyDown)
+            },
+          }
+        }}
         simple
         pagination={pagination}
         rowKey={record => record.id}
@@ -374,6 +382,7 @@ list.propTypes = {
   rowSelection: PropTypes.object,
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
+  onRowClick: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
   showSnapshotDetail: PropTypes.func,

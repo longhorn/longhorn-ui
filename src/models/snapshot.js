@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: "off" */
-import { execAction, getVolume } from '../services/volume'
+import { execAction } from '../services/volume'
 import { delay } from 'dva/saga'
 
 let loopTree = (node, treeArry, treeLevelNodes) => {
@@ -148,8 +148,8 @@ export default (namespace) => {
       },
       *queryVolume({
         payload,
-      }, { call, put }) {
-        const data = yield call(getVolume, payload)
+      }, { put }) {
+        const data = payload.volume
         yield put({ type: 'setVolume', payload: data })
         yield put({ type: 'querySnapShot', payload: { url: data.actions.snapshotList } })
       },
@@ -205,7 +205,7 @@ export default (namespace) => {
             break
           }
           const volume = yield select(state => state.snapshotModal.volume)
-          if (!volume.actions.snapshotList) {
+          if (volume.actions && !volume.actions.snapshotList) {
             continue
           }
           const loading = yield select(state => state.snapshotModal.loading)
@@ -214,7 +214,9 @@ export default (namespace) => {
           }
           let snapshots
           for (let i = 0; i < 3; i++) {
-            snapshots = yield call(execAction, volume.actions.snapshotList, {}, i !== 2)
+            if (volume.actions) {
+              snapshots = yield call(execAction, volume.actions.snapshotList, {}, i !== 2)
+            }
             if (snapshots === undefined) {
               continue
             } else {

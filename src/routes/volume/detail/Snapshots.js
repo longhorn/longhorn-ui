@@ -53,8 +53,9 @@ class Snapshots extends React.Component {
   UNSAFE_componentWillMount() {
     this.props.dispatch({
       type: 'snapshotModal/queryVolume',
-      payload: this.props.volumeId,
+      payload: { volume: this.props.volume },
     })
+
     this.props.dispatch({
       type: 'snapshotModal/startPolling',
       payload: {
