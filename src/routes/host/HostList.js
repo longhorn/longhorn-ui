@@ -20,6 +20,7 @@ class List extends React.Component {
       expandedRowKeys: [],
       sorterOrderChanged: false,
       modalBlurVisible: false,
+      commandKeyDown: false,
       selectedRows: [],
       selectedNode: {},
       rowSelection: {
@@ -29,6 +30,11 @@ class List extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('keydown', this.onkeydown)
+    window.addEventListener('keyup', this.onkeyup)
+  }
+
   componentWillUnmount() {
     this.props.dispatch({
       type: 'host/hideDiskReplicaModal',
@@ -36,6 +42,24 @@ class List extends React.Component {
     this.props.dispatch({
       type: 'host/hideReplicaModal',
     })
+    window.removeEventListener('keydown', this.onkeydown)
+    window.removeEventListener('keyup', this.onkeyup)
+  }
+
+  onkeyup = () => {
+    this.setState({
+      ...this.state,
+      commandKeyDown: false,
+    })
+  }
+
+  onkeydown = (e) => {
+    if ((e.keyCode === 91 || e.keyCode === 17) && !this.state.commandKeyDown) {
+      this.setState({
+        ...this.state,
+        commandKeyDown: true,
+      })
+    }
   }
 
   onSelectChange = (_, records) => {
@@ -51,6 +75,39 @@ class List extends React.Component {
       type: 'host/changeSelection',
       payload: {
         selectedHostRows: records,
+      },
+    })
+  }
+
+  onRowClick = (record, flag) => {
+    let selecteRowByClick = [record]
+
+    if (flag) {
+      this.state.selectedRows.forEach((item) => {
+        if (selecteRowByClick.every((ele) => {
+          return ele.id !== item.id
+        })) {
+          selecteRowByClick.push(item)
+        } else {
+          selecteRowByClick = selecteRowByClick.filter((ele) => {
+            return ele.id !== item.id
+          })
+        }
+      })
+    }
+
+    this.setState({
+      ...this.state,
+      selectedRows: selecteRowByClick,
+      rowSelection: {
+        ...this.state.rowSelection,
+        selectedRowKeys: selecteRowByClick.map((item) => item.id),
+      },
+    })
+    this.props.dispatch({
+      type: 'backup/changeSelection',
+      payload: {
+        selectedRows: selecteRowByClick,
       },
     })
   }
@@ -331,6 +388,13 @@ class List extends React.Component {
           dataSource={dataSource}
           expandedRowRender={disks}
           onExpand={this.onExpand}
+          onRow={record => {
+            return {
+              onClick: () => {
+                this.onRowClick(record, this.state.commandKeyDown)
+              },
+            }
+          }}
           expandedRowKeys={this.state.expandedRowKeys}
           onExpandedRowsChange={this.onExpandedRowsChange}
           loading={loading}

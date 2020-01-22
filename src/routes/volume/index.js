@@ -270,6 +270,10 @@ class Volume extends React.Component {
               return ele.id !== item.id
             })) {
               selecteRowByClick.push(item)
+            } else {
+              selecteRowByClick = selecteRowByClick.filter((ele) => {
+                return ele.id !== item.id
+              })
             }
           })
         }

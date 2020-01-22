@@ -80,6 +80,30 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
         },
       })
     },
+    onRowClick(record, flag) {
+      let selecteRowByClick = [record]
+
+      if (flag) {
+        selectedRows.forEach((item) => {
+          if (selecteRowByClick.every((ele) => {
+            return ele.id !== item.id
+          })) {
+            selecteRowByClick.push(item)
+          } else {
+            selecteRowByClick = selecteRowByClick.filter((ele) => {
+              return ele.id !== item.id
+            })
+          }
+        })
+      }
+
+      dispatch({
+        type: 'backup/changeSelection',
+        payload: {
+          selectedRows: selecteRowByClick,
+        },
+      })
+    },
     rowSelection: {
       selectedRowKeys: selectedRows.map(item => item.id),
       onChange(_, records) {

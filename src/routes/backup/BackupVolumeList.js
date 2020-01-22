@@ -16,6 +16,7 @@ class List extends React.Component {
     super(props)
     this.state = {
       height: 300,
+      commandKeyDown: false,
     }
   }
 
@@ -30,10 +31,30 @@ class List extends React.Component {
         height,
       })
     }
+    window.addEventListener('keydown', this.onkeydown)
+    window.addEventListener('keyup', this.onkeyup)
   }
 
   componentWillUnmount() {
     window.onresize = null
+    window.removeEventListener('keydown', this.onkeydown)
+    window.removeEventListener('keyup', this.onkeyup)
+  }
+
+  onkeyup = () => {
+    this.setState({
+      ...this.state,
+      commandKeyDown: false,
+    })
+  }
+
+  onkeydown = (e) => {
+    if ((e.keyCode === 91 || e.keyCode === 17) && !this.state.commandKeyDown) {
+      this.setState({
+        ...this.state,
+        commandKeyDown: true,
+      })
+    }
   }
 
   handleMenuClick = (record, e) => {
@@ -47,7 +68,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { backup, loading, sorter, rowSelection, onSorterChange = f => f } = this.props
+    const { backup, loading, sorter, rowSelection, onSorterChange, onRowClick = f => f } = this.props
     const dataSource = backup || []
 
     const columns = [
@@ -150,6 +171,13 @@ class List extends React.Component {
           bordered={false}
           columns={columns}
           onChange={onChange}
+          onRow={record => {
+            return {
+              onClick: () => {
+                onRowClick(record, this.state.commandKeyDown)
+              },
+            }
+          }}
           loading={loading}
           dataSource={dataSource}
           simple
@@ -170,6 +198,7 @@ List.propTypes = {
   search: PropTypes.object,
   onSorterChange: PropTypes.func,
   Create: PropTypes.func,
+  onRowClick: PropTypes.func,
   DeleteAllBackups: PropTypes.func,
   restoreLatestBackup: PropTypes.func,
 }
