@@ -32,6 +32,7 @@ class RecurringList extends React.Component {
       Faulted: false,
       modulerCronDisabled: false,
       backupLabelsDisabled: false,
+      isConfirmation: false,
     }
   }
 
@@ -133,7 +134,20 @@ class RecurringList extends React.Component {
 
   onkeydown = (e) => {
     if (e.keyCode === 13) {
-      this.onSave()
+      if (!this.state.isConfirmation && !this.state.modalOpts.visible && !this.state.modalBackupLabesOpts.visible) {
+        this.setState({
+          ...this.state,
+          isConfirmation: true,
+        })
+        this.onSave()
+      } else if (this.state.modalOpts.visible) {
+        this.onOk()
+      } else if (this.state.modalBackupLabesOpts.visible) {
+        this.onBackupLabelsOk()
+      } else {
+        confirm.destroy()
+        this.onSaveWithOutConfirm()
+      }
     }
   }
 
@@ -148,9 +162,28 @@ class RecurringList extends React.Component {
     confirm({
       title: 'Updated schedule will override any existing schedule',
       onOk() {
+        me.setState({
+          ...me.state,
+          isConfirmation: false,
+        })
         me.props.onOk(data)
       },
+      onCancel() {
+        me.setState({
+          ...me.state,
+          isConfirmation: false,
+        })
+      },
     })
+  }
+
+  onSaveWithOutConfirm = () => {
+    const { dataSource } = this.state
+    const data = dataSource.filter(item => item.deleted !== true)
+    this.setState({
+      dataSource: data.map(item => ({ ...item, isNew: false })),
+    })
+    this.props.onOk(data)
   }
 
   isRecurringChanged = (origin, target) => {
