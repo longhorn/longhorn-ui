@@ -79,7 +79,7 @@ class Volume extends React.Component {
     const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
-    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue } = queryString.parse(this.props.location.search)
+    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue } = queryString.parse(this.props.location.search)
     const volumeFilterMap = {
       healthy: healthyVolume,
       inProgress: inProgressVolume,
@@ -108,6 +108,16 @@ class Volume extends React.Component {
         volumes = volumes.filter(item => isVolumeSchedule(item))
       } else if (scheduleValue === 'no') {
         volumes = volumes.filter(item => !isVolumeSchedule(item))
+      }
+    } else if (field && field === 'pvStatus') {
+      if (pvStatusValue === 'available') {
+        volumes = volumes.filter(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus === 'Available')
+      } else if (pvStatusValue === 'none') {
+        volumes = volumes.filter(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus === '')
+      } else if (pvStatusValue === 'bound') {
+        volumes = volumes.filter(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus === 'Bound')
+      } else if (pvStatusValue === 'released') {
+        volumes = volumes.filter(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus === 'Released')
       }
     } else if (field && field === 'namespace' && value) {
       volumes = filterVolume(volumes, field, value)
@@ -286,6 +296,12 @@ class Volume extends React.Component {
         { value: 'yes', name: 'Yes' },
         { value: 'no', name: 'No' },
       ],
+      pvStatusOption: [
+        { value: 'none', name: 'None' },
+        { value: 'available', name: 'Available' },
+        { value: 'bound', name: 'Bound' },
+        { value: 'released', name: 'Released' },
+      ],
       fieldOption: [
         { value: 'name', name: 'Name' },
         { value: 'host', name: 'Node' },
@@ -295,13 +311,14 @@ class Volume extends React.Component {
         { value: 'engineImageUpgradable', name: 'Engine image upgradable' },
         { value: 'pvName', name: 'PV Name' },
         { value: 'pvcName', name: 'PVC Name' },
+        { value: 'pvStatus', name: 'PV Status' },
         { value: 'NodeTag', name: 'Node Tag' },
         { value: 'DiskTag', name: 'Disk Tag' },
         { value: 'schedule', name: 'Scheduled' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue } = filter
-        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue) ? dispatch(routerRedux.push({
+        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue } = filter
+        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue || pvStatusPropValue) ? dispatch(routerRedux.push({
           pathname: addPrefix('/volume'),
           search: queryString.stringify({
             ...queryString.parse(location.search),
@@ -311,6 +328,7 @@ class Volume extends React.Component {
             nodeRedundancyValue: redundancyValue,
             engineImageUpgradableValue: imageUpgradableValue,
             scheduleValue: schedulePropValue,
+            pvStatusValue: pvStatusPropValue,
           }),
         })) : dispatch(routerRedux.push({
           pathname: addPrefix('/volume'),

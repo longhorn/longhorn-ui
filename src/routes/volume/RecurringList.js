@@ -153,7 +153,13 @@ class RecurringList extends React.Component {
 
   onkeydown = (e) => {
     if (e.keyCode === 13) {
-      this.onSave()
+      if (this.state.modalOpts.visible) {
+        this.onOk()
+      } else if (this.state.modalBackupLabesOpts.visible) {
+        this.onBackupLabelsOk()
+      } else {
+        this.onSave()
+      }
     }
   }
 

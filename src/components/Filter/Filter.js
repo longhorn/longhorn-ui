@@ -9,7 +9,7 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '' } = queryString.parse(props.location.search)
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '' } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
@@ -17,6 +17,7 @@ class Filter extends React.Component {
       nodeRedundancyValue,
       engineImageUpgradableValue,
       scheduleValue,
+      pvStatusValue,
       keyword: value,
     }
   }
@@ -46,6 +47,10 @@ class Filter extends React.Component {
 
   handleScheduleValueChange = (scheduleValue) => {
     this.setState({ ...this.state, scheduleValue })
+  }
+
+  handlePvStatusValueChange = (pvStatusValue) => {
+    this.setState({ ...this.state, pvStatusValue })
   }
 
   handleFieldChange = (field) => {
@@ -104,6 +109,16 @@ class Filter extends React.Component {
     >
     {this.props.scheduleOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
     </Select>)
+    } else if (this.state.field === 'pvStatus' && this.props.pvStatusOption) {
+      valueForm = (<Select key="pvStatus"
+        style={{ width: '100%' }}
+        size="large"
+        allowClear
+        defaultValue={this.state.pvStatusValue}
+        onChange={this.handlePvStatusValueChange}
+    >
+    {this.props.pvStatusOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+    </Select>)
     }
 
     return (
@@ -130,6 +145,7 @@ Filter.propTypes = {
   scheduleOption: PropTypes.array,
   replicaNodeRedundancyOption: PropTypes.array,
   engineImageUpgradableOption: PropTypes.array,
+  pvStatusOption: PropTypes.array,
 }
 
 export default Filter
