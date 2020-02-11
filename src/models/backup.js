@@ -18,6 +18,7 @@ export default {
     currentItem: {},
     lastBackupUrl: '',
     baseImage: '',
+    volumeName: '',
     previousChecked: false,
     tagsLoading: true,
     size: '',
@@ -244,7 +245,7 @@ export default {
       return { ...state, showBackuplabelsModalVisible: false, createVolumeStandModalKey: Math.random() }
     },
     initModalUrl(state, action) {
-      return { ...state, lastBackupUrl: action.found.url, baseImage: action.payload.baseImage, size: action.found.volumeSize }
+      return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, baseImage: action.payload.baseImage, size: action.found.volumeSize }
     },
     showRestoreBackupModal(state, action) {
       return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
