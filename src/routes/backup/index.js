@@ -12,7 +12,7 @@ const { confirm } = Modal
 
 function Backup({ host, backup, loading, setting, dispatch, location }) {
   location.search = location.search ? location.search : {}
-  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags } = backup
+  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName } = backup
   const hosts = host.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -189,6 +189,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
       iops: 1000,
       baseImage,
       fromBackup: lastBackupUrl,
+      name: volumeName,
     },
     visible: createVolumeStandModalVisible,
     onOk(newVolume) {
