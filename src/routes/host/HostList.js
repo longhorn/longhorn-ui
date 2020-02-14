@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Progress, Tooltip, Tag } from 'antd'
+import { Table, Progress, Tooltip, Tag, Icon } from 'antd'
 import classnames from 'classnames'
 import styles from './HostList.less'
 import { sortTable } from '../../utils/sort'
@@ -242,7 +242,7 @@ class List extends React.Component {
         render: (text, record) => {
           return (
             <div style={{ textAlign: 'center' }}>
-              <div>{text}</div>
+              <div>{text} {record && (record.region || record.zone) ? <Tooltip title={<span> region: {record.region} <br></br> zone: {record.zone} </span>}><Icon style={{ marginLeft: '5px', color: '#108ee9' }} type="environment" /></Tooltip> : '' } </div>
               <div className={styles.secondLabel} style={{ color: '#b9b9b9' }}>{record.address}</div>
             </div>
           )

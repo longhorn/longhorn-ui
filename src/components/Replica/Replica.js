@@ -117,6 +117,7 @@ class Replica extends React.Component {
               />
             <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15 }}>
               {this.getReplicaShortName(item.name)}
+              {host && (host.region || host.zone) ? <Tooltip title={<span> region: {host.region} <br></br> zone: {host.zone} </span>}><Icon style={{ marginLeft: '5px' }} type="environment" /></Tooltip> : '' }
             </span>
             <div style={{ width: '50%', position: 'absolute', top: '57px', left: '44%', height: '44px', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
               {restoreProgress(item.name, restoreStatus, 'restore')}
