@@ -16,7 +16,7 @@ Setup:
   cd 'longhorn-ui'
   npm install
 ```
-Run development server pointed at some Longhron Manger API
+Run development server pointed at some Longhorn Manager API
 ```bash
   LONGHORN_MANAGER_IP="http://longhorn:9500/" npm run dev
 ```
