@@ -70,7 +70,7 @@ const modal = ({
             })(<TextArea autosize={{ minRows: 6, maxRows: 10 }} />)}
           </FormItem>
         </Form>
-        { progressPercentage > 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', top: 0, let: 0, right: 0, bottom: 0, background: 'rgba(256, 256, 256, 0.9)' }}>
+        { progressPercentage > 0 ? <div style={{ display: 'flex', zIndex: 100, justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', top: 0, let: 0, right: 0, bottom: 0, background: 'rgba(256, 256, 256, 0.9)' }}>
           <Progress type="circle" strokeWidth={5} percent={progressPercentage} />
         </div> : ''
         }
