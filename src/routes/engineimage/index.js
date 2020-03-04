@@ -96,7 +96,7 @@ class EngineImage extends React.Component {
         </Row>
         <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addEngineImage}>Deploy Engine Image</Button>
         <EngineImageList {...engineImageListProps} />
-        <CreateEngineImage key={createEngineImageModalKey} {...createEngineImageModalProps} />
+        { createEngineImageModalVisible ? <CreateEngineImage key={createEngineImageModalKey} {...createEngineImageModalProps} /> : ''}
       </div>
     )
   }

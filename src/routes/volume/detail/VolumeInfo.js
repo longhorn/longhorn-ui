@@ -183,7 +183,9 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
         {selectedVolume.baseImage}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Engine Image:</span>
+        <Tooltip title={'Provides the binary to start and communicate with the volume engine/replicas.'}>
+          <span className={styles.label}> Engine Image:</span>
+        </Tooltip>
         {selectedVolume.engineImage}
       </div>
       <div className={styles.row}>
@@ -207,7 +209,9 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
         {selectedVolume.lastBackupAt ? moment(selectedVolume.lastBackupAt).fromNow() : ''}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Instance Manager:</span>
+        <Tooltip title={'Manages the engine/replica instances’ life cycle on the node.'}>
+          <span className={styles.label}> Instance Manager:</span>
+        </Tooltip>
         {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.instanceManagerName !== '').map(item => <div key={item.hostId} style={{ fontFamily: 'monospace', margin: '2px 0px' }}> <span style={{ backgroundColor: '#f2f4f5' }}> {item.instanceManagerName} </span></div>) : ''}
       </div>
       { selectedVolume.kubernetesStatus ? <div>

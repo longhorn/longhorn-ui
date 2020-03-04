@@ -170,12 +170,13 @@ class List extends React.Component {
   }
 
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
       deleteHost,
     }
+
     const computeTotalAllocated = (record) => {
       const max = Object.values(record.disks).reduce((total, item) => total + item.storageMaximum, 0)
       const reserved = Object.values(record.disks).reduce((total, item) => total + item.storageReserved, 0)
@@ -405,8 +406,8 @@ class List extends React.Component {
           rowKey={record => record.id}
           scroll={{ x: 1440 }}
         />
-        <ModalBlur width={980} title={'Instance Manager'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
-          <InstanceManagerComponent />
+        <ModalBlur width={980} title={'Components'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
+          <InstanceManagerComponent defaultInstanceManager={defaultInstanceManager} defaultEngineImage={defaultEngineImage} currentNode={currentNode} />
         </ModalBlur>
       </div>
     )
@@ -429,6 +430,9 @@ List.propTypes = {
   onSorterChange: PropTypes.func,
   dispatch: PropTypes.func,
   instanceManagerVisible: PropTypes.bool,
+  defaultInstanceManager: PropTypes.object,
+  defaultEngineImage: PropTypes.object,
+  currentNode: PropTypes.object,
 }
 
 export default List

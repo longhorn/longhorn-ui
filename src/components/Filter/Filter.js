@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Select, Input, Button, Form } from 'antd'
+import { Select, Input, Button, Form, Popover } from 'antd'
 import queryString from 'query-string'
 import styles from './Filter.less'
 
@@ -58,6 +58,18 @@ class Filter extends React.Component {
   }
 
   render() {
+    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '' } = queryString.parse(this.props.location.search)
+
+    let defaultContent = {
+      field,
+      stateValue,
+      value,
+      nodeRedundancyValue,
+      engineImageUpgradableValue,
+      scheduleValue,
+      pvStatusValue,
+    }
+
     let valueForm = (
       <Input
         style={{ width: '100%' }}
@@ -121,12 +133,24 @@ class Filter extends React.Component {
     </Select>)
     }
 
+    let content = ''
+    let popoverVsible = false
+
+    for (let key in defaultContent) {
+      if (defaultContent[key] !== '' && key !== 'field' && this.state[key] !== defaultContent[key]) {
+        content = (<div style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{`Current Filter: ${defaultContent[key]}`}</div>)
+        popoverVsible = true
+      }
+    }
+
     return (
       <Form>
       <Input.Group compact className={styles.filter}>
-       <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
-         {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-       </Select>
+      <Popover placement="topLeft" content={content} visible={popoverVsible}>
+        <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
+          {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+        </Select>
+      </Popover>
       { valueForm }
         <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
       </Input.Group>
