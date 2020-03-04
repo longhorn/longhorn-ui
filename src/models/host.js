@@ -15,6 +15,7 @@ export default {
     selectedReplicaRows: [],
     selectedReplicaRowKeys: [],
     instanceManagerData: [],
+    currentNode: {},
     modalVisible: false,
     addDiskModalVisible: false,
     replicaModalVisible: false,
@@ -130,6 +131,7 @@ export default {
           }
         })
       }
+      yield put({ type: 'setCurrentNode', payload })
       yield put({ type: 'showInstanceManagerModal', payload: engineImageData })
     },
   },
@@ -165,6 +167,9 @@ export default {
     },
     showInstanceManagerModal(state, action) {
       return { ...state, instanceManagerVisible: true, instanceManagerData: action.payload }
+    },
+    setCurrentNode(state, action) {
+      return { ...state, instanceManagerVisible: true, currentNode: action.payload }
     },
     hideInstanceManagerModal(state) {
       return { ...state, instanceManagerVisible: false }

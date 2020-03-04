@@ -14,12 +14,15 @@ import { addPrefix } from '../../utils/pathnamePrefix'
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
   let hostFilter = null
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows, currentNode } = host
   const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
   const { field, value, stateValue } = queryString.parse(location.search)
   const volumeList = volume.data
   const storageOverProvisioningPercentage = setting.data.find(item => item.id === 'storage-over-provisioning-percentage')
   const minimalSchedulingQuotaWarning = setting.data.find(item => item.id === 'minimal-scheduling-quota-warning') || { value: '90' }
+  const defaultInstanceManager = setting.data.find(item => item.id === 'default-instance-manager-image')
+  const defaultEngineImage = setting.data.find(item => item.id === 'default-engine-image')
+
   data.forEach(agent => {
     const replicas = []
     volumeList.forEach(vol => {
@@ -117,6 +120,9 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     dataSource: nodes,
     dispatch,
     instanceManagerVisible,
+    defaultInstanceManager,
+    defaultEngineImage,
+    currentNode,
     storageOverProvisioningPercentage: (storageOverProvisioningPercentage && Number(storageOverProvisioningPercentage.value)) || 0,
     minimalSchedulingQuotaWarning: (minimalSchedulingQuotaWarning && Number(minimalSchedulingQuotaWarning.value)) || 90,
     loading,
