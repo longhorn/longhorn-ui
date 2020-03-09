@@ -69,18 +69,21 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
       key: 'name',
       render: (text, record) => {
         let reg = /(?:([A-Za-z]+):)?(?:\/{0,3})([A-Zaz.\-0-9]+)(?::(\d+))?(\/[^#?]*)?(?:\?([^#]*))?(?:#(.*))?/
-        let result = record.removeUrl.match(reg)
         let pvcName = ''
-        if (result && result[4]) {
-          let pathArr = result[4].split('/')
-          pvcName = pathArr.pop()
+
+        if (record.removeUrl) {
+          let result = record.removeUrl.match(reg)
+          if (result && result[4]) {
+            let pathArr = result[4].split('/')
+            pvcName = pathArr.pop()
+          }
         }
 
         return (
           <div>
-            <LinkTo to={{ pathname: `/volume/${pvcName}`, state: false }}>
-              {text}
-            </LinkTo>
+            { pvcName ? <LinkTo to={{ pathname: `/volume/${pvcName}`, state: false }}>
+                {text}
+              </LinkTo> : text }
           </div>
         )
       },
