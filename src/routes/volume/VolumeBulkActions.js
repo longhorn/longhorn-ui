@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal } from 'antd'
+import { Button, Modal, Menu, Dropdown, Icon } from 'antd'
 import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, createPVAndPVC, createSchedule, commandKeyDown }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, commandKeyDown }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -47,6 +47,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       case 'createPVAndPVC':
         createPVAndPVC(selectedRows)
         break
+      case 'expandVolume':
+        bulkExpandVolume(selectedRows)
+        break
       default:
     }
   }
@@ -74,10 +77,24 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || !hasAction('attach') || hasDoingState() || isRestoring() } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState(['attaching']) || isHasStandy() || isRestoring() } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || isRestoring() } },
+  ]
+
+  const allDropDownActions = [
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || isAttached() } },
+    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() } },
   ]
+
+  const menu = (<Menu>
+    {
+      allDropDownActions.map((item) => {
+        return (<Menu.Item key={item.key}>
+          <Button size="large" type="link" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
+        </Menu.Item>)
+      })
+    }
+  </Menu>)
 
   return (
     <div className={style.bulkActions}>
@@ -89,6 +106,10 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
           </div>
         )
       }) }
+      &nbsp;
+      <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft" disabled={selectedRows.length === 0}>
+        <Button type="primary" size="large"><Icon type="unordered-list" style={{ marginRight: '3px' }} /><Icon type="down" /></Button>
+      </Dropdown>
     </div>
   )
 }
@@ -104,6 +125,7 @@ bulkActions.propTypes = {
   bulkBackup: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   createSchedule: PropTypes.func,
+  bulkExpandVolume: PropTypes.func,
   commandKeyDown: PropTypes.bool,
 }
 

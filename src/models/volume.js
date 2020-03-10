@@ -42,6 +42,7 @@ export default {
     pvNameDisabled: false,
     changeVolumeModalVisible: false,
     SnapshotBulkModalVisible: false,
+    bulkExpandVolumeModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -49,6 +50,7 @@ export default {
     defaultPVCName: '',
     previousNamespace: '',
     changeVolumeModalKey: Math.random(),
+    bulkExpandVolumeModalKey: Math.random(),
     createPVAndPVCModalSingleKey: Math.random(),
     WorkloadDetailModalKey: Math.random(),
     SnapshotDetailModalKey: Math.random(),
@@ -341,6 +343,22 @@ export default {
         yield call(expandVolume, params)
       }
     },
+    *bulkExpandVolume({
+      payload,
+    }, { call, put }) {
+      let params = {}
+      yield put({ type: 'hideBulkExpansionVolumeSizeModal' })
+      if (payload && payload.selectedRows && payload.selectedRows.length > 0) {
+        for (let i = 0; i < payload.selectedRows.length; i++) {
+          if (payload.selectedRows[i] && payload.selectedRows[i].actions && payload.selectedRows[i].actions.expand && payload.params) {
+            params.url = payload.selectedRows[i].actions.expand
+            params.data = payload.params
+
+            yield call(expandVolume, params)
+          }
+        }
+      }
+    },
     *snapshotCreateThenBackup({
       payload,
     }, { call }) {
@@ -447,6 +465,9 @@ export default {
     hideExpansionVolumeSizeModal(state) {
       return { ...state, expansionVolumeSizeModalVisible: false, expansionVolumeSizeModalKey: Math.random() }
     },
+    hideBulkExpansionVolumeSizeModal(state) {
+      return { ...state, bulkExpandVolumeModalVisible: false, bulkExpandVolumeModalKey: Math.random() }
+    },
     showWorkloadDetailModal(state, action) {
       return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: Math.random() }
     },
@@ -512,6 +533,9 @@ export default {
     },
     showSnapshotBulkModal(state, action) {
       return { ...state, SnapshotBulkModalVisible: true, selectedRows: action.payload, SnapshotBulkModalKey: Math.random() }
+    },
+    showBulkExpandVolumeModal(state, action) {
+      return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: Math.random() }
     },
     changeSelection(state, action) {
       return { ...state, ...action.payload }
