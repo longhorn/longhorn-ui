@@ -33,7 +33,7 @@ export const getPropValue = (obj, prop) => {
 }
 
 export function sortVolume(dataSource) {
-  dataSource.sort((a, b) => {
+  dataSource && dataSource.sort((a, b) => {
     const status = getStateWeight(a.state) - getStateWeight(b.state)
     if (status === 0) {
       return utcStrToDate(b.created).getTime() - utcStrToDate(a.created).getTime()
@@ -43,7 +43,7 @@ export function sortVolume(dataSource) {
 }
 
 export function sortVolumeBackups(dataSource) {
-  dataSource.sort((a, b) => {
+  dataSource && dataSource.sort((a, b) => {
     return new Date(b.created).getTime() - new Date(a.created).getTime()
   })
 }
