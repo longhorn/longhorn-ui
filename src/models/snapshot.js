@@ -111,6 +111,20 @@ const genSnapshotsTreeData = (snapshots, filter = (d) => [...d]) => {
   }
 }
 
+const isJson = (str) => {
+  try {
+    let obj = JSON.parse(str)
+
+    if (typeof obj === 'object' && obj) {
+      return true
+    } else {
+      return false
+    }
+  } catch (e) {
+    return false
+  }
+}
+
 export default (namespace) => {
   return {
     namespace,
@@ -166,7 +180,7 @@ export default (namespace) => {
         yield put({ type: 'setLoading', payload: true })
         const snapshots = yield call(execAction, payload.url)
         let treeData = []
-        if (snapshots) {
+        if (snapshots && snapshots.data && isJson(JSON.stringify(snapshots.data))) {
           treeData = snapshots.data
           yield put({ type: 'setSnapshotState', payload: true })
         } else {
@@ -227,7 +241,7 @@ export default (namespace) => {
             continue
           }
           let treeData = []
-          if (snapshots) {
+          if (snapshots && snapshots.data && isJson(JSON.stringify(snapshots.data))) {
             treeData = snapshots.data
           }
           yield put({ type: 'setSnapshotData', payload: treeData })
