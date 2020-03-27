@@ -285,12 +285,13 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideCreatePVAndPVCModal' })
       const pvAction = []
+      let fsType = payload.params && payload.params.fsType ? payload.params.fsType : 'ext4'
       payload.action.forEach((item) => {
         if (!item.kubernetesStatus.pvName) {
           pvAction.push(item)
         }
       })
-      yield pvAction.map(item => call(createVolumePV, { pvName: item.name }, item.actions.pvCreate))
+      yield pvAction.map(item => call(createVolumePV, { pvName: item.name, fsType }, item.actions.pvCreate))
       if (payload.params.createPvcChecked) {
         if (payload.params.previousChecked) {
           yield payload.action.map(item => {
@@ -316,10 +317,10 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideCreatePVCAndPVSingleModal' })
-      if (!payload.action.kubernetesStatus.pvName) {
-        yield call(createVolumePV, { pvName: payload.params.pvName }, payload.action.actions.pvCreate)
+      if (!payload.action.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
+        yield call(createVolumePV, { pvName: payload.params.pvName, fsType: payload.params.fsType }, payload.action.actions.pvCreate)
       }
-      if (payload.params.namespace) {
+      if (payload.params && payload.params.namespace && payload.params.pvcName) {
         yield call(createVolumePVC, { pvcName: payload.params.pvcName, namespace: payload.params.namespace }, payload.action.actions.pvcCreate)
       }
       yield put({ type: 'query' })
