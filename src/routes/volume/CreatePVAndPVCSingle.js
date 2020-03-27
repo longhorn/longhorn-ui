@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Checkbox } from 'antd'
+import { Form, Input, Checkbox, Radio } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 
@@ -79,6 +79,16 @@ const modal = ({
               },
             ],
           })(<Input disabled={item.pvNameDisabled} />)}
+        </FormItem>
+        <FormItem label="File System" {...formItemLayout}>
+          {getFieldDecorator('fsType', {
+            initialValue: 'ext4',
+          })(
+            <Radio.Group>
+              <Radio value="ext4">Ext4</Radio>
+              <Radio value="xfs">XFS</Radio>
+            </Radio.Group>,
+          )}
         </FormItem>
         <div style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
