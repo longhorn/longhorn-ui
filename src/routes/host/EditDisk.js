@@ -29,7 +29,8 @@ const modal = ({
       const deletedDiskIds = Object.keys(values.disks).filter(id => values.disks[id].deleted)
       const allowSchedulingDiskIds = Object.keys(node.disks).filter(id => node.disks[id].allowScheduling)
       const disabledSchedulingDiskIds = deletedDiskIds.filter(id => allowSchedulingDiskIds.indexOf(id) > -1)
-      const updatedDisks = Object.keys(values.disks).filter(k => values.disks[k].deleted !== true).map(k => {
+      const updatedDisks = {}
+      Object.keys(values.disks).filter(k => values.disks[k].deleted !== true).forEach(k => {
         const disk = { ...values.disks[k] }
         // disk.tags = ['ssd']
         const originDisk = node.disks[k]
@@ -44,12 +45,14 @@ const modal = ({
             }
           })
         }
-        return disk
+        disk.name ? updatedDisks[disk.name] = disk : updatedDisks[k] = disk
       })
       let updateNode = Object.assign({}, node, { tags: values.tags, allowScheduling: values.nodeAllowScheduling })
       if (disabledSchedulingDiskIds.length > 0) {
-        const disabledSchedulingDisks = Object.keys(node.disks).map(id => {
-          return { ...node.disks[id], allowScheduling: disabledSchedulingDiskIds.indexOf(id) > -1 ? false : node.disks[id].allowScheduling }
+        const disabledSchedulingDisks = {}
+        Object.keys(node.disks).forEach(id => {
+          let diskItem = { ...node.disks[id], allowScheduling: disabledSchedulingDiskIds.indexOf(id) > -1 ? false : node.disks[id].allowScheduling }
+          node.disks[id] && node.disks[id].name ? disabledSchedulingDisks[node.disks[id].name] = diskItem : disabledSchedulingDisks[id] = diskItem
         })
         onOk(updatedDisks, disabledSchedulingDisks, updateNode)
       } else {
@@ -74,7 +77,7 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <EditableDiskList {...EditableDiskListProps} />
+      {visible ? <EditableDiskList {...EditableDiskListProps} /> : ''}
     </ModalBlur>
   )
 }
