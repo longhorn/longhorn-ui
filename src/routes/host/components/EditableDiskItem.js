@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Radio, Checkbox, Form, Tooltip } from 'antd'
+import { Radio, Checkbox, Form, Tooltip, Input } from 'antd'
 import styles from './EditableDiskItem.less'
 import StorageInput from './StorageInput'
 import DistTag from './TagComponent.js'
@@ -13,7 +13,7 @@ import { byteToGi } from '../helper/index'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 
-function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath = f => f }) {
+function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath, validateName = f => f }) {
   const { getFieldDecorator, getFieldsValue } = form
   const canBeRemoved = () => {
     return disk.storageScheduled === 0 && getFieldsValue().disks[disk.id].allowScheduling === false
@@ -35,10 +35,27 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         })(<DistTag tags={disk.tags} changeTags={(tags) => { form.setFieldsValue({ [`disks['${disk.id}']['tags']`]: tags }) }} />)}
       </div>
       <div className={styles.formItem} style={{ width: '99%' }}>
-        <div className={styles.label}>
-          Path
+        <div className={styles.control}>
+          <div className={styles.label}>
+            Name
+          </div>
+          <FormItem style={{ margin: 0 }}>
+            {getFieldDecorator(`disks['${disk.id}']['name']`, {
+              initialValue: disk.name,
+              rules: [{
+                required: true,
+                message: 'Please Input Path!',
+              }, {
+                validator: validateName,
+              }],
+            })(<Input
+              readOnly={disk.deleted || !isNew} />)}
+          </FormItem>
         </div>
         <div className={styles.control}>
+          <div className={styles.label}>
+            Path
+          </div>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['path']`, {
               rules: [{
@@ -163,6 +180,7 @@ EditableDiskItem.propTypes = {
   onRemove: PropTypes.func,
   onRestore: PropTypes.func,
   validatePath: PropTypes.func,
+  validateName: PropTypes.func,
 }
 
 export default EditableDiskItem

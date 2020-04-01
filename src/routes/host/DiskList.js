@@ -28,9 +28,12 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      key: 'readiness',
-      dataIndex: 'readiness',
+      key: 'id',
+      dataIndex: 'id',
       width: 200,
+      render: (text) => {
+        return (<div>{text}</div>)
+      },
     },
     {
       key: 'path',

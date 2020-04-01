@@ -9,19 +9,40 @@ import DistTag from './TagComponent.js'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 let uuid = 0
+let nameCount = 0
 
 class EditableDiskList extends React.Component {
   constructor(props) {
     super(props)
-    const disks = Object.keys(props.node.disks).map(item => ({ ...props.node.disks[item], id: item }))
+    const disks = Object.keys(props.node.disks).map(item => ({ ...props.node.disks[item], name: item, id: item }))
     this.originDisks = props.node.disks
     this.state = { data: disks }
   }
 
   onAdd = () => {
+    let newData = [...this.state.data]
+    let nameArray = []
+    const reg = /^(0|[1-9][0-9]*)(\.[0-9]*)?$/
+    newData.forEach((item) => {
+      if (item && item.name && item.name.startsWith('disk-') > -1) {
+        let diskNameArr = item.name.split('-')
+        if (diskNameArr[1] && !isNaN(diskNameArr[1]) && reg.test(diskNameArr[1])) {
+          nameCount = parseInt(diskNameArr[1], 10)
+          // Make sure the disk[id] is not duplicated
+          nameArray.push(nameCount)
+        }
+      }
+    })
+
+    if (nameArray.length > 0) {
+      nameCount = nameArray.reduce((a, b) => {
+        return a > b ? a : b
+      })
+    }
+    nameCount++
+
     uuid++
-    const disk = { id: `new_disk_${uuid}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false }
-    const newData = [...this.state.data]
+    const disk = { id: `new_disk_${uuid}`, name: `disk-${nameCount}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false }
     newData.push(disk)
     this.setState({ data: newData })
   }
@@ -66,6 +87,18 @@ class EditableDiskList extends React.Component {
     }
   }
 
+  validateName = (rule, value, callback) => {
+    let reg = /^[a-zA-Z0-9][a-zA-Z0-9_.-]+$/
+    if (!reg.test(value)) {
+      callback('The input is not valid Name')
+    }
+    if (value && Object.values(this.props.form.getFieldsValue().disks).filter(d => d.name === value).length > 1) {
+      callback('This name already exists')
+    } else {
+      callback()
+    }
+  }
+
   render() {
     const data = this.state.data
     const originDisks = this.originDisks
@@ -105,7 +138,7 @@ class EditableDiskList extends React.Component {
             </div>
           </div>
         </div>
-        {data.map(d => (<EditableDiskItem key={d.id} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} />))}
+        {data.map((d, i) => (<EditableDiskItem key={i} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} validateName={this.validateName} />))}
         <div style={{ textAlign: 'right' }}>
           <Button style={{ backgroundColor: '#eef0f1' }} onClick={() => this.onAdd()}> Add Disk </Button>
         </div>
