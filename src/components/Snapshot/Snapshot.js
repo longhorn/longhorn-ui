@@ -127,6 +127,8 @@ function SnapshotIcon(props, snapshotProps) {
       backupStatusObject.backupError = backupStatusErrorMsg
       backupStatusObject.progress = Math.floor(total / backupStatusObjectList.length)
       backupStatusObject.snapshot = props.name
+      backupStatusObject.replicas = backupStatusObjectList.filter(item => item.replica).map(item => item.replica).join(', ')
+      backupStatusObject.backupIds = backupStatusObjectList.filter(item => item.replica).map(item => item.id).join(',')
     }
   }
   let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError ? <p className="snapshot-name">Error: {backupStatusObject.backupError}</p> : ''
@@ -147,8 +149,10 @@ function SnapshotIcon(props, snapshotProps) {
         <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
         <p className="snapshot-name">Removed: {props.removed ? 'True' : 'False'}</p>
         {
-          backupStatusObject ? <div><p className="snapshot-name">Snapshot: {backupStatusObject.snapshot}</p>
+          backupStatusObject ? <div>
             <p className="snapshot-created">Progress: {backupStatusObject.progress}%</p>
+           {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>Replicas: {backupStatusObject.replicas}</p>}
+           {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>Backups: {backupStatusObject.backupIds}</p>}
             {/* <p className="snapshot-created">Backup URL: {backupStatusObject.backupURL}</p> */}
             {backupStatusErrorMsg}</div> : ''
         }
