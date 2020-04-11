@@ -5,7 +5,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, commandKeyDown }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, commandKeyDown }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -25,6 +25,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         break
       case 'attach':
         showBulkAttachHost(selectedRows)
+        break
+      case 'bulkChangeVolume':
+        showBulkChangeVolume(selectedRows)
         break
       case 'detach':
         if (commandKeyDown) {
@@ -84,6 +87,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() } },
+    { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
   ]
 
   const menu = (<Menu>
@@ -119,6 +123,7 @@ bulkActions.propTypes = {
   engineImages: PropTypes.array,
   bulkDeleteVolume: PropTypes.func,
   showBulkEngineUpgrade: PropTypes.func,
+  showBulkChangeVolume: PropTypes.func,
   showBulkAttachHost: PropTypes.func,
   bulkDetach: PropTypes.func,
   showBulkSalvage: PropTypes.func,
