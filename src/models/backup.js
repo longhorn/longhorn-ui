@@ -198,9 +198,9 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideCreateVolumeStandModalVisible' })
       yield call(createVolume, payload)
-      yield put(routerRedux.push({
-        pathname: addPrefix('/volume'),
-      }))
+      // yield put(routerRedux.push({
+      //   pathname: addPrefix('/volume'),
+      // }))
     },
     *CreateStandVolume({
       payload,

@@ -41,6 +41,7 @@ export default {
     expansionVolumeSizeModalVisible: false,
     pvNameDisabled: false,
     changeVolumeModalVisible: false,
+    bulkChangeVolumeModalVisible: false,
     SnapshotBulkModalVisible: false,
     bulkExpandVolumeModalVisible: false,
     changeVolumeActivate: '',
@@ -50,6 +51,7 @@ export default {
     defaultPVCName: '',
     previousNamespace: '',
     changeVolumeModalKey: Math.random(),
+    bulkChangeVolumeModalKey: Math.random(),
     bulkExpandVolumeModalKey: Math.random(),
     createPVAndPVCModalSingleKey: Math.random(),
     WorkloadDetailModalKey: Math.random(),
@@ -213,6 +215,13 @@ export default {
     }, { call, put }) {
       yield call(volumeActivate, { frontend: payload.frontend }, payload.url)
       yield put({ type: 'hideChangeVolumeModal' })
+      yield put({ type: 'query' })
+    },
+    *bulkVolumeActivate({
+      payload,
+    }, { call, put }) {
+      yield payload.map((item) => call(volumeActivate, { frontend: item.frontend }, item.url))
+      yield put({ type: 'hideBulkChangeVolumeModal' })
       yield put({ type: 'query' })
     },
     *actions({
@@ -410,6 +419,12 @@ export default {
     },
     hideChangeVolumeModal(state) {
       return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
+    },
+    showBulkChangeVolumeModal(state) {
+      return { ...state, bulkChangeVolumeModalVisible: true, bulkChangeVolumeModalKey: Math.random() }
+    },
+    hideBulkChangeVolumeModal(state) {
+      return { ...state, bulkChangeVolumeModalVisible: false, bulkChangeVolumeModalKey: Math.random() }
     },
     showCreateVolumeModal(state, action) {
       return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }

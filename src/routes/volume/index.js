@@ -8,6 +8,7 @@ import VolumeList from './VolumeList'
 import CreateVolume from './CreateVolume'
 import ExpansionVolumeSizeModal from './ExpansionVolumeSizeModal'
 import ChangeVolumeModal from './ChangeVolumeModal'
+import BulkChangeVolumeModal from './BulkChangeVolumeModal'
 import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import WorkloadDetailModal from './WorkloadDetailModal'
@@ -77,7 +78,7 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, changeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey } = this.props.volume
+    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, bulkChangeVolumeModalKey, changeVolumeModalVisible, bulkChangeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue } = queryString.parse(this.props.location.search)
@@ -577,6 +578,26 @@ class Volume extends React.Component {
       },
     }
 
+    const bulkChangeVolumeModalProps = {
+      items: selectedRows,
+      visible: bulkChangeVolumeModalVisible,
+      onOk(newVolume, items) {
+        let volumeData = items.map((item) => ({
+          ...newVolume,
+          url: item.actions.activate,
+        }))
+        dispatch({
+          type: 'volume/bulkVolumeActivate',
+          payload: volumeData,
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideBulkChangeVolumeModal',
+        })
+      },
+    }
+
     const createPVAndPVCProps = {
       item: defaultNamespace,
       visible: createPVAndPVCVisible,
@@ -661,6 +682,11 @@ class Volume extends React.Component {
       showBulkEngineUpgrade() {
         dispatch({
           type: 'volume/showBulkEngineUpgradeModal',
+        })
+      },
+      showBulkChangeVolume() {
+        dispatch({
+          type: 'volume/showBulkChangeVolumeModal',
         })
       },
       showBulkAttachHost() {
@@ -758,6 +784,7 @@ class Volume extends React.Component {
         {SnapshotBulkModalVisible ? <SnapshotBulkModal key={SnapshotBulkModalKey} {...SnapshotBulkModalProps}></SnapshotBulkModal> : ''}
         {SnapshotDetailModalVisible ? <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
+        {bulkChangeVolumeModalVisible ? <BulkChangeVolumeModal key={bulkChangeVolumeModalKey} {...bulkChangeVolumeModalProps} /> : ''}
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
         {bulkExpandVolumeModalVisible ? <ExpansionVolumeSizeModal key={bulkExpandVolumeModalKey} {...bulkExpansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : '' }
         {createVolumeModalVisible ? <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} /> : ''}
