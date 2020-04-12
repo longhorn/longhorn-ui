@@ -26,14 +26,17 @@ export default {
     nodeTags: [],
     diskTags: [],
     bulkRestoreData: [],
+    backupVolumesForBulkCreate: [],
     isBulkRestore: false,
     restoreBackupModalVisible: false,
     WorkloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
+    bulkCreateVolumeStandModalVisible: false,
     showBackuplabelsModalVisible: false,
     restoreBackupFilterKey: Math.random(),
     restoreBackupModalKey: Math.random(),
     createVolumeStandModalKey: Math.random(),
+    bulkCreateVolumeStandModalKey: Math.random(),
     showBackupLabelsModalKey: Math.random(),
     sorter: getSorter('backupList.sorter'),
   },
@@ -202,6 +205,12 @@ export default {
         pathname: addPrefix('/volume'),
       }))
     },
+    *bulkCreateVolume({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideBulkCreateVolumeStandModalVisible' })
+      yield payload.map((item) => call(createVolume, item))
+    },
     *CreateStandVolume({
       payload,
     }, { call, put }) {
@@ -209,6 +218,23 @@ export default {
       const found = data.data.find(b => b.name === payload.lastBackupName)
       yield put({ type: 'initModalUrl', found, payload })
       yield put({ type: 'showCreateVolumeStandModalVisible' })
+    },
+    *BulkCreateStandVolume({
+      payload,
+    }, { call, put }) {
+      const data = yield payload.map((item) => call(execAction, item.actions.backupList))
+      const volumes = data.map((item, index) => {
+        const volume = payload[index]
+        const found = item.data.find((b) => b.name === volume.lastBackupName)
+        return {
+          lastBackupUrl: found.url,
+          volumeName: volume.name,
+          baseImage: volume.baseImage,
+          size: found.volumeSize
+        }
+      })
+      yield put({ type: 'initBulkCreateModalUrl', volumes })
+      yield put({ type: 'showBulkCreateVolumeStandModalVisible' })
     },
     *deleteAllBackups({
       payload,
@@ -238,6 +264,12 @@ export default {
     hideCreateVolumeStandModalVisible(state) {
       return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: Math.random() }
     },
+    showBulkCreateVolumeStandModalVisible(state) {
+      return { ...state, bulkCreateVolumeStandModalVisible: true, bulkCreateVolumeStandModalKey: Math.random() }
+    },
+    hideBulkCreateVolumeStandModalVisible(state) {
+      return { ...state, backupVolumesForBulkCreate: [], bulkCreateVolumeStandModalVisible: false, bulkCreateVolumeStandModalKey: Math.random() }
+    },
     showBackuplabelsModalVisible(state, action) {
       return { ...state, showBackuplabelsModalVisible: true, backupLabel: action.payload, createVolumeStandModalKey: Math.random() }
     },
@@ -246,6 +278,10 @@ export default {
     },
     initModalUrl(state, action) {
       return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, baseImage: action.payload.baseImage, size: action.found.volumeSize }
+    },
+    initBulkCreateModalUrl(state, action) {
+
+      return { ...state, backupVolumesForBulkCreate: action.volumes}
     },
     showRestoreBackupModal(state, action) {
       return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
