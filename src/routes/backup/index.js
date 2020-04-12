@@ -5,6 +5,7 @@ import { Row, Col, Modal } from 'antd'
 import BackupVolumeList from './BackupVolumeList'
 import RestoreBackup from './RestoreBackup'
 import CreateStandbyVolume from './CreateStandbyVolume'
+import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
 import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
 
@@ -12,7 +13,7 @@ const { confirm } = Modal
 
 function Backup({ host, backup, loading, setting, dispatch, location }) {
   location.search = location.search ? location.search : {}
-  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, createVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName } = backup
+  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate } = backup
   const hosts = host.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -180,6 +181,12 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
         },
       })
     },
+    showBulkCreateDisasterRecoveryVolume() {
+      dispatch({
+        type: 'backup/BulkCreateStandVolume',
+        payload: selectedRows,
+      })
+    },
   }
 
   const createVolumeStandModalProps = {
@@ -207,6 +214,35 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
     },
   }
 
+  const bulkCreateVolumeStandModalProps = {
+    items: backupVolumesForBulkCreate.map((item)=>({
+      size: item.size,
+      // baseImage: item.baseImage,
+      fromBackup: item.lastBackupUrl,
+      name: item.volumeName,
+    })),
+    numberOfReplicas: defaultNumberOfReplicas,
+    visible: bulkCreateVolumeStandModalVisible,
+    onOk(params, newVolumes) {
+      let data = newVolumes.map((item) => ({
+        ...item,
+        ...params,
+        standby: true,
+        frontend: '',
+        size: item.size.replace(/\s/ig, ''),
+      }))
+      dispatch({
+        type: 'backup/bulkCreateVolume',
+        payload: data,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'backup/hideBulkCreateVolumeStandModalVisible',
+      })
+    },
+  }
+
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <Row gutter={24}>
@@ -220,6 +256,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
       <BackupVolumeList {...backupVolumesProps} />
       { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
       <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
+      <BulkCreateStandbyVolumeModal key={bulkCreateVolumeStandModalKey} {...bulkCreateVolumeStandModalProps} />
     </div>
   )
 }
