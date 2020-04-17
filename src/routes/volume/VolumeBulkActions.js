@@ -60,7 +60,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const isHasStandy = () => selectedRows.some(item => item.standby)
-  const isAttached = () => selectedRows.some(item => item.state === 'attached')
+  // const isAttached = () => selectedRows.some(item => item.state === 'attached')
   const isRestoring = () => selectedRows.some((selected) => {
     if (selected.restoreStatus && selected.restoreStatus.length > 0) {
       let flag = selected.restoreStatus.every((item) => {
@@ -83,7 +83,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   ]
 
   const allDropDownActions = [
-    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || isAttached() } },
+    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() } },
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() } },
