@@ -354,7 +354,7 @@ class List extends React.Component {
         },
       },
       {
-        title: '',
+        title: 'Operation',
         key: 'operation',
         width: 48,
         render: (text, record) => {

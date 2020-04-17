@@ -102,7 +102,18 @@ class Replica extends React.Component {
       if (restoreError) {
         return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={restoreError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
       } else {
-        return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state} ${progress}%`}><Progress percent={progress} showInfo={false} /></Tooltip>
+        return progress === 0 || progress === 100 ? '' : <Tooltip title={<div>{state} {progress}% {fromReplica(progressArr)}</div>}><Progress percent={progress} showInfo={false} /></Tooltip>
+      }
+    }
+    const fromReplica = (arr) => {
+      let fromReplicas = arr.filter((ele) => {
+        return ele.isRebuilding && ele.state === 'in_progress' && ele.fromReplica
+      })
+
+      if (fromReplicas.length > 0) {
+      return <div> Synchronizing from Replica: {fromReplicas.map((r) => r.fromReplica).join(', ')}</div>
+      } else {
+        return ''
       }
     }
     return (
