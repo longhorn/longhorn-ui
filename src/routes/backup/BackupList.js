@@ -14,7 +14,7 @@ const confirm = Modal.confirm
 const BackupUrl = ({ url = '' }) => {
   const onCopy = (text, copySuccess) => { // eslint-disable-line no-unused-vars
     if (copySuccess) {
-      message.success('Copyed', 1.5)
+      message.success('Copied', 1.5)
     } else {
       message.error('Copy failed', 1.5)
     }
@@ -93,7 +93,7 @@ class List extends React.Component {
 
   onCopy = (text, copySuccess) => { // eslint-disable-line no-unused-vars
     if (copySuccess) {
-      message.success('Copyed', 1.5)
+      message.success('Copied', 1.5)
     } else {
       message.error('Copy failed', 1.5)
     }
