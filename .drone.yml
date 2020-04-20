@@ -11,7 +11,7 @@ steps:
   image: plugins/docker
   settings:
     build_args:
-      - VERSION: ${DRONE_COMMIT:0:7}
+      - "VERSION=${DRONE_COMMIT:0:7}"
     custom_dns: 1.1.1.1
     dockerfile: Dockerfile
     password:
@@ -25,6 +25,25 @@ steps:
     - master
     event:
     - push
+
+- name: publish-tagged-image
+  image: plugins/docker
+  settings:
+    build_args:
+      - "VERSION=${DRONE_TAG}"
+    custom_dns: 1.1.1.1
+    dockerfile: Dockerfile
+    password:
+      from_secret: docker_password
+    repo: longhornio/longhorn-ui
+    tag: "${DRONE_TAG}"
+    username:
+      from_secret: docker_username
+  when:
+    branch:
+    - master
+    event:
+    - tag
 
 volumes:
 - name: socket
