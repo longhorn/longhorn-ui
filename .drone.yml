@@ -11,7 +11,7 @@ steps:
   image: plugins/docker
   settings:
     build_args:
-      - VERSION: ${DRONE_COMMIT:0:7}
+      - "VERSION=${DRONE_COMMIT:0:7}"
     custom_dns: 1.1.1.1
     dockerfile: Dockerfile
     password:
@@ -29,6 +29,8 @@ steps:
 - name: publish-tagged-image
   image: plugins/docker
   settings:
+    build_args:
+      - "VERSION=${DRONE_TAG}"
     custom_dns: 1.1.1.1
     dockerfile: Dockerfile
     password:
