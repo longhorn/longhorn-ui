@@ -1,4 +1,4 @@
-import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume } from '../services/volume'
+import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
@@ -351,6 +351,13 @@ export default {
         params.data = payload.params
 
         yield call(expandVolume, params)
+      }
+    },
+    *cancelExpansion({
+      payload,
+    }, { call }) {
+      if (payload && payload.actions && payload.actions.cancelExpansion && payload.name) {
+        yield call(cancelExpansion, { url: payload.actions.cancelExpansion, name: payload.name })
       }
     },
     *bulkExpandVolume({

@@ -215,7 +215,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
   }
 
   const bulkCreateVolumeStandModalProps = {
-    items: backupVolumesForBulkCreate.map((item)=>({
+    items: backupVolumesForBulkCreate.map((item) => ({
       size: item.size,
       // baseImage: item.baseImage,
       fromBackup: item.lastBackupUrl,

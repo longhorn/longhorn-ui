@@ -14,6 +14,7 @@ import ReplicaHATooltip from './Tooltip/ReplicaHATooltip'
 import ReactCron from './ReactCron/ReactCron'
 import BackupLabelInput from './BackupLabelInput/BackupLabelInput'
 import BackupLabelInputForRecurring from './BackupLabelInputForRecurring/BackupLabelInputForRecurring'
+import ExpansionErrorDetail from './ExpansionErrorDetail/ExpansionErrorDetail'
 
 export {
   DropOption,
@@ -32,4 +33,5 @@ export {
   ReactCron,
   BackupLabelInput,
   BackupLabelInputForRecurring,
+  ExpansionErrorDetail,
 }
