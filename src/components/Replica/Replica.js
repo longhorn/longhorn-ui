@@ -83,6 +83,18 @@ class Replica extends React.Component {
       }
     }
 
+    const fromReplica = (arr) => {
+      let fromReplicas = arr.filter((ele) => {
+        return ele.isRebuilding && ele.state === 'in_progress' && ele.fromReplica
+      })
+
+      if (fromReplicas.length > 0) {
+        return <div> Synchronizing from Replica: {fromReplicas.map((r) => r.fromReplica).join(', ')}</div>
+      } else {
+        return ''
+      }
+    }
+
     const rebuildProgress = (name, arr, state) => {
       let total = 0
       let progress = 0
@@ -105,17 +117,7 @@ class Replica extends React.Component {
         return progress === 0 || progress === 100 ? '' : <Tooltip title={<div>{state} {progress}% {fromReplica(progressArr)}</div>}><Progress percent={progress} showInfo={false} /></Tooltip>
       }
     }
-    const fromReplica = (arr) => {
-      let fromReplicas = arr.filter((ele) => {
-        return ele.isRebuilding && ele.state === 'in_progress' && ele.fromReplica
-      })
 
-      if (fromReplicas.length > 0) {
-      return <div> Synchronizing from Replica: {fromReplicas.map((r) => r.fromReplica).join(', ')}</div>
-      } else {
-        return ''
-      }
-    }
     return (
       <div style={{ display: 'inline-block', padding: '4px 20px' }} key={item.name}>
         <Card bodyStyle={{ height: 280, padding: 0 }}>

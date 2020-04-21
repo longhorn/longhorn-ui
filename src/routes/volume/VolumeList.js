@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showSnapshotDetail, onSorterChange, height, commandKeyDown, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, commandKeyDown, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -32,6 +32,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     showWorkloadsStatusDetail,
     showSnapshotDetail,
     showExpansionVolumeSizeModal,
+    showCancelExpansionModal,
     changeVolume,
     height,
     commandKeyDown,
@@ -390,6 +391,7 @@ list.propTypes = {
   changeVolume: PropTypes.func,
   commandKeyDown: PropTypes.bool,
   showExpansionVolumeSizeModal: PropTypes.func,
+  showCancelExpansionModal: PropTypes.func,
 }
 
 export default list

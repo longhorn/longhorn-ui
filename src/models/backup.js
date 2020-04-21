@@ -3,8 +3,6 @@ import { parse } from 'qs'
 import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
 import { getSorter, saveSorter } from '../utils/store'
-import { routerRedux } from 'dva/router'
-import { addPrefix } from '../utils/pathnamePrefix'
 
 export default {
   namespace: 'backup',
@@ -230,7 +228,7 @@ export default {
           lastBackupUrl: found.url,
           volumeName: volume.name,
           baseImage: volume.baseImage,
-          size: found.volumeSize
+          size: found.volumeSize,
         }
       })
       yield put({ type: 'initBulkCreateModalUrl', volumes })
@@ -280,8 +278,7 @@ export default {
       return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, baseImage: action.payload.baseImage, size: action.found.volumeSize }
     },
     initBulkCreateModalUrl(state, action) {
-
-      return { ...state, backupVolumesForBulkCreate: action.volumes}
+      return { ...state, backupVolumesForBulkCreate: action.volumes }
     },
     showRestoreBackupModal(state, action) {
       return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }

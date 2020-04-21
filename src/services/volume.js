@@ -110,3 +110,13 @@ export async function expandVolume(params) {
     },
   })
 }
+
+export async function cancelExpansion(params) {
+  return request({
+    url: params.url,
+    method: 'post',
+    data: {
+      name: params.name,
+    },
+  })
+}
