@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
-import { Row, Col, Card } from 'antd'
+import { Row, Col, Card, Modal, Alert } from 'antd'
 import { routerRedux } from 'dva/router'
 import queryString from 'query-string'
+import moment from 'moment'
 import VolumeActions from '../VolumeActions'
 import VolumeInfo from './VolumeInfo'
 import styles from './index.less'
@@ -16,9 +17,11 @@ import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import Salvage from '../Salvage'
-import { ReplicaList } from '../../../components'
+import { ReplicaList, ExpansionErrorDetail } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from '../helper'
 import { addPrefix } from '../../../utils/pathnamePrefix'
+
+const confirm = Modal.confirm
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey } = volume
@@ -186,6 +189,46 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
       dispatch({
         type: 'volume/showExpansionVolumeSizeModal',
         payload: record,
+      })
+    },
+    showCancelExpansionModal(record) {
+      let message = ''
+      let lastExpansionError = ''
+      let lastExpansionFailedAt = ''
+
+      if (record && record.kubernetesStatus) {
+        if (record.kubernetesStatus.pvStatus) {
+          message = (<div>
+            <div>If the in-progress expansion you want to cancel is triggered by the PVC size update, this operation will not help revert the PVC. Since the PVC size can not shrink, users need to clean up then recreate the PVC and PV after the expansion canceling success:</div>
+            <div>1. Update the field spec.persistentVolumeReclaimPolicy to Retain for the corresponding PV. </div>
+            <div>2. Delete then recreate the related PVC and PV.</div></div>)
+        }
+      }
+
+      if (record && record.controllers && record.controllers[0] && record.controllers[0].lastExpansionError && record.controllers[0].lastExpansionFailedAt) {
+        lastExpansionError = record.controllers[0].lastExpansionError
+        lastExpansionFailedAt = moment(record.controllers[0].lastExpansionFailedAt).fromNow()
+      }
+
+      let content = (<div>
+        <div>This operation is used to cancel the expansion if the volume cannot complete the expansion and gets stuck there. Once the expansion is complete, it cannot be rolled back or canceled</div>
+        {lastExpansionError ? <ExpansionErrorDetail content={lastExpansionError} lastExpansionFailedAt={lastExpansionFailedAt} /> : '' }
+        {message ? <Alert style={{ marginTop: '5px' }} message={message} type="info" /> : ''}
+        </div>)
+
+      confirm({
+        title: 'Are you sure to cancel expansion?',
+        content,
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        width: 800,
+        onOk() {
+          dispatch({
+            type: 'volume/cancelExpansion',
+            payload: record,
+          })
+        },
       })
     },
   }

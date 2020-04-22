@@ -207,7 +207,7 @@ class Snapshots extends React.Component {
               </Button>
             </Tooltip>
             &nbsp;
-            <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create backup for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
+            <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create backup for DR volume' : 'Create a new backup.'}>
               <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring()} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
                 Create Backup
               </Button>
