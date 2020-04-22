@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card } from 'antd'
 import moment from 'moment'
 import { ModalBlur } from '../../components'
 
@@ -22,13 +21,13 @@ const modal = ({
   if (item.podList) {
     CardItem = item.podList.map((ele, index) => {
       return (
-        <Card key={index} style={{ width: 260, margin: '5px' }}>
+        <div style={{ border: '1px solid #f4f4f4', padding: 24, marginRight: 5, marginBottom: 10 }} key={index}>
           <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {moment(new Date(item.lastPodRefAt)).fromNow()}</div> : ''}</div>
           <div> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Name</b> : {ele.workloadName}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Type</b> : {ele.workloadType}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Name</b> : {ele.podName}</div>
           {!item.lastPodRefAt ? <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Status</b> : {ele.podStatus}</div> : ''}
-        </Card>
+        </div>
       )
     })
   }
@@ -36,7 +35,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <div style={{ width: '100%', overflow: 'auto' }}>
-        <div style={{ display: 'flex', width: 'fit-content' }}>
+        <div style={{ display: 'flex', width: 1, whiteSpace: 'nowrap' }}>
           {CardItem}
         </div>
       </div>
