@@ -41,9 +41,10 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(() => {
-        let search = history.location.search ? queryString.parse(history.location.search) : {}
-
-        if (history.location.state || search.state) {
+        let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
+        // This code may cause confusion. React router does not pass parameters when right-clicking on Link,
+        // resulting in no request for the page, so an Undefined judgment is added.
+        if (history.location && (search.state || history.location.state || typeof (history.location.state) === 'undefined')) {
           dispatch({
             type: 'query',
             payload: search,

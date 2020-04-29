@@ -144,7 +144,7 @@ class List extends React.Component {
           return (
             <DropOption menuOptions={[
               { key: 'recovery', name: !record.lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: !record.lastBackupName },
-              { key: 'restoreLatestBackup', name: 'Restore Latest Backup' },
+              { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled: !record.lastBackupName },
               { key: 'deleteAll', name: 'Delete All Backups' },
             ]}
               onMenuClick={e => this.handleMenuClick(record, e)}
