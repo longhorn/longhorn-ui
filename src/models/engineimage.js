@@ -27,7 +27,7 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
-      if (payload && payload.field && payload.keyword) {
+      if (payload && payload.field && payload.keyword && data.data) {
         data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }
       if (data.data) {

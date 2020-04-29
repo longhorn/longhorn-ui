@@ -468,7 +468,7 @@ export default {
       return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, previousChecked: false, createPVAndPVCModalSingleKey: Math.random() }
     },
     hideCreatePVAndPVCModal(state) {
-      return { ...state, createPVAndPVCVisible: false, previousChecked: false, createPVAndPVCModalKey: Math.random() }
+      return { ...state, createPVAndPVCVisible: false, nameSpaceDisabled: false, previousChecked: false, createPVAndPVCModalKey: Math.random() }
     },
     hideCreatePVCAllModal(state) {
       return { ...state, createPVCAllModalVisible: false, createPVCAllModalKey: Math.random() }
