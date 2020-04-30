@@ -11,7 +11,12 @@ class Snapshots extends React.Component {
     super(props)
     this.state = {
       createBackModalKey: Math.random(),
+      createBackBySnapsotModalKey: Math.random(),
       createBackModalVisible: false,
+      createBackBySnapsotModalVisible: false,
+      currentSnapshotName: '',
+      snapshotBackupUrl: '',
+      snapshotListUrl: '',
     }
     this.onAction = (action) => {
       if (action.type === 'backup') {
@@ -27,6 +32,16 @@ class Snapshots extends React.Component {
           payload: !this.props.showRemoved,
         })
         this.refs.Snapshot.showReomve()
+        return
+      }
+      if (action.type === 'snapshotBackup') {
+        this.setState({
+          ...this.state,
+          createBackBySnapsotModalVisible: true,
+          currentSnapshotName: action.payload && action.payload.snapshot && action.payload.snapshot.name ? action.payload.snapshot.name : '',
+          snapshotBackupUrl: action.payload && action.payload.volume && action.payload.volume.actions && action.payload.volume.actions.snapshotBackup ? action.payload.volume.actions.snapshotBackup : '',
+          snapshotListUrl: action.payload && action.payload.volume && action.payload.volume.actions && action.payload.volume.actions.snapshotList ? action.payload.volume.actions.snapshotList : '',
+        })
         return
       }
       let actions
@@ -116,8 +131,7 @@ class Snapshots extends React.Component {
         me.props.dispatch({
           type: 'snapshotModal/backup',
           payload: {
-            snapshotCreateUrl: me.props.volume.actions.snapshotCreate,
-            snapshotBackupUrl: me.props.volume.actions.snapshotBackup,
+            snapshotBackupUrl: me.props.volume.actions.snapshotBackupUrl,
             querySnapShotUrl: me.props.volume.actions.snapshotList,
             labels: data,
           },
@@ -133,6 +147,45 @@ class Snapshots extends React.Component {
           ...me.state,
           createBackModalKey: Math.random(),
           createBackModalVisible: false,
+        })
+      },
+    }
+  }
+
+  createBackupBySnapsotModal = () => {
+    let me = this
+    return {
+      item: {
+        frontend: 'iscsi',
+      },
+      visible: me.state.createBackBySnapsotModalVisible,
+      onOk(data) {
+        if (me.state.snapshotBackupUrl && me.state.currentSnapshotName && me.state.snapshotListUrl) {
+          me.props.dispatch({
+            type: 'snapshotModal/createBackupBySnapshot',
+            payload: {
+              snapshotBackupUrl: me.state.snapshotBackupUrl,
+              snapshotName: me.state.currentSnapshotName,
+              querySnapShotUrl: me.state.snapshotListUrl,
+              labels: data,
+            },
+          })
+          me.setState({
+            ...me.state,
+            createBackBySnapsotModalKey: Math.random(),
+            createBackBySnapsotModalVisible: false,
+            currentSnapshotName: '',
+            snapshotBackupUrl: '',
+          })
+        }
+      },
+      onCancel() {
+        me.setState({
+          ...me.state,
+          createBackBySnapsotModalKey: Math.random(),
+          createBackBySnapsotModalVisible: false,
+          currentSnapshotName: '',
+          snapshotBackupUrl: '',
         })
       },
     }
@@ -225,6 +278,7 @@ class Snapshots extends React.Component {
           </div>
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
+        {this.state.createBackBySnapsotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapsotModalKey} {...this.createBackupBySnapsotModal()} /> : ''}
       </Card>
     )
   }

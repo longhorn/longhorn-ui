@@ -208,6 +208,18 @@ export default (namespace) => {
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
       },
+      *createBackupBySnapshot({
+        payload,
+      }, { call, put }) {
+        yield put({ type: 'setLoading', payload: true })
+        if (Object.getOwnPropertyNames(payload.labels).length === 0) {
+          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName })
+        } else {
+          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, labels: payload.labels })
+        }
+        yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
+        yield put({ type: 'setLoading', payload: false })
+      },
       *polling({
         payload,
       }, { call, put, select }) {
