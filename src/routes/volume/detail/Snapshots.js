@@ -131,7 +131,8 @@ class Snapshots extends React.Component {
         me.props.dispatch({
           type: 'snapshotModal/backup',
           payload: {
-            snapshotBackupUrl: me.props.volume.actions.snapshotBackupUrl,
+            snapshotCreateUrl: me.props.volume.actions.snapshotCreate,
+            snapshotBackupUrl: me.props.volume.actions.snapshotBackup,
             querySnapShotUrl: me.props.volume.actions.snapshotList,
             labels: data,
           },

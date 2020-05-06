@@ -107,7 +107,7 @@ function SnapshotIcon(props, snapshotProps) {
       </Menu.Item>
     </Menu>
   )
-  const backupStatusList = snapshotProps.volume.backupStatus
+  let backupStatusList = snapshotProps.volume.backupStatus
   let backupStatusObject = null
 
   if (backupStatusList && backupStatusList.length > 0) {
@@ -116,10 +116,10 @@ function SnapshotIcon(props, snapshotProps) {
     })
     if (backupStatusObjectList && backupStatusObjectList.length > 0) {
       let total = 0
-      let backupStatusErrorMsg = ''
+      let backupStatusErrorMsg = []
       backupStatusObjectList.forEach((ele) => {
-        if (ele.backupError) {
-          backupStatusErrorMsg = ele.backupError
+        if (ele.error) {
+          backupStatusErrorMsg.push({ replica: ele.replica, error: ele.error })
         }
         total += ele.progress
       })
@@ -131,7 +131,9 @@ function SnapshotIcon(props, snapshotProps) {
       backupStatusObject.backupIds = backupStatusObjectList.filter(item => item.replica).map(item => item.id).join(',')
     }
   }
-  let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError ? <p className="snapshot-name">Error: {backupStatusObject.backupError}</p> : ''
+  let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError && backupStatusObject.backupError.length > 0 ? <div>{ backupStatusObject.backupError.map((ele, index) => {
+    return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : 'Error'}: {ele.error}</p>
+  }) }</div> : ''
 
   return (
     <Dropdown
