@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table } from 'antd'
+import { Table, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
@@ -78,20 +78,26 @@ class List extends React.Component {
         key: 'id',
         width: 200,
         sorter: (a, b) => sortTable(a, b, 'id'),
-        render: (id) => {
+        render: (id, record) => {
+          let errorMessage = record.messages && record.messages.error ? record.messages.error : ''
           return (
-            <Link
-              to={{
-                pathname: addPrefix(`/backup/${id}`),
-                search: queryString.stringify({
-                  ...queryString.parse(this.props.search),
-                  field: 'volumeName',
-                  keyword: id,
-                  state: true,
-                }),
-              }}>
-              {id}
-            </Link>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Tooltip title={errorMessage}>
+                {errorMessage ? <Icon type="warning" style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
+                <Link
+                  to={{
+                    pathname: addPrefix(`/backup/${id}`),
+                    search: queryString.stringify({
+                      ...queryString.parse(this.props.search),
+                      field: 'volumeName',
+                      keyword: id,
+                      state: true,
+                    }),
+                  }}>
+                  {id}
+                </Link>
+              </Tooltip>
+            </div>
           )
         },
       }, {
