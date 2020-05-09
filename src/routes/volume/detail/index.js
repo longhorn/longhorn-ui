@@ -13,6 +13,7 @@ import EngineUpgrade from '../EngineUpgrade'
 import UpdateReplicaCount from '../UpdateReplicaCount'
 import Snapshots from './Snapshots'
 import RecurringList from './RecurringList'
+import EventList from './EventList'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
@@ -23,13 +24,64 @@ import { addPrefix } from '../../../utils/pathnamePrefix'
 
 const confirm = Modal.confirm
 
-function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volume, volumeId, loading }) {
+function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, loading }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
+  const hasReplica = (selected, name) => {
+    if (selected && selected.replicas && selected.replicas.length > 0) {
+      return selected.replicas.some((item) => {
+        return item.name === name
+      })
+    }
+
+    return false
+  }
+  const hasEngine = (selected, name) => {
+    if (selected && selected.replicas && selected.replicas.length > 0) {
+      return selected.controllers.some((item) => {
+        return item.name === name
+      })
+    }
+
+    return false
+  }
+  const eventData = eventlog && eventlog.data ? eventlog.data.filter((ele) => {
+    if (ele.event && ele.event.involvedObject && ele.event.involvedObject.name && ele.event.involvedObject.kind && selectedVolume) {
+      switch (ele.event.involvedObject.kind) {
+        case 'Engine':
+          return hasEngine(selectedVolume, ele.event.involvedObject.name)
+        case 'Replica':
+          return hasReplica(selectedVolume, ele.event.involvedObject.name)
+        case 'Volume':
+          return selectedVolume.id === ele.event.involvedObject.name
+        default:
+          return false
+      }
+    }
+
+    return false
+  }).map((ele, index) => {
+    return {
+      count: ele.event ? ele.event.count : '',
+      firstTimestamp: ele.event && ele.event.firstTimestamp ? ele.event.firstTimestamp : '',
+      lastTimestamp: ele.event && ele.event.lastTimestamp ? ele.event.lastTimestamp : '',
+      timestamp: ele.event && ele.event.lastTimestamp ? Date.parse(ele.event.lastTimestamp) : 0,
+      type: ele.event ? ele.event.type : '',
+      reason: ele.event ? ele.event.reason : '',
+      message: ele.event ? ele.event.message : '',
+      source: ele.event && ele.event.source && ele.event.source.component ? ele.event.source.component : '',
+      kind: ele.event && ele.event.involvedObject && ele.event.involvedObject.kind ? ele.event.involvedObject.kind : '',
+      name: ele.event && ele.event.involvedObject && ele.event.involvedObject.name ? ele.event.involvedObject.name : '',
+      id: index,
+    }
+  }) : []
+  eventData.sort((a, b) => {
+    return b.timestamp - a.timestamp
+  })
   if (!selectedVolume) {
     return (<div></div>)
   }
@@ -253,6 +305,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
     },
   }
 
+
+  const EventListProps = {
+    dataSource: eventData,
+  }
+
   const snapshotsProp = {
     ...snapshotModal,
     volume: selectedVolume,
@@ -394,8 +451,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, host, volu
         <Col xs={24} style={{ marginBottom: 16 }}>
           <Snapshots {...snapshotsProp} />
         </Col>
-        <Col xs={24}>
+        <Col xs={24} style={{ marginBottom: 16 }}>
           <RecurringList {...recurringListProps} />
+        </Col>
+        <Col xs={24}>
+          <EventList {...EventListProps} />
         </Col>
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
@@ -419,6 +479,7 @@ VolumeDetail.propTypes = {
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
   snapshotModal: PropTypes.object,
+  eventlog: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, backup, host, engineimage, volume, loading }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, engineimage, volume, loading, eventlog }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id, eventlog }))(VolumeDetail)
