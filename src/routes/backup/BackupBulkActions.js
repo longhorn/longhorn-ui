@@ -17,8 +17,8 @@ function bulkActions({ selectedRows, restoreLatestBackup, showBulkCreateDisaster
   }
 
   const allActions = [
-    { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName) } },
-    { key: 'bulkCreateDisasterRecoveryVolume', name: 'Create Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName) } },
+    { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName || (record.messages && record.messages.error)) } },
+    { key: 'bulkCreateDisasterRecoveryVolume', name: 'Create Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName || (record.messages && record.messages.error)) } },
   ]
 
   return (
