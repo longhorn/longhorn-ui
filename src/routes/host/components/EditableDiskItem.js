@@ -27,12 +27,66 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
     return <Tooltip placement="top" title="Only the disk with disabled scheduling and no storage scheduled can be deleted"><span><IconRemove disabled /></span></Tooltip>
   }
 
+  // Because the parameters passed need to be retained, the content of the form is retained
   return (
     <div style={{ position: 'relative' }} className={classnames(styles.ediableDisk, { [styles.rowDeleted]: disk.deleted })}>
       <div style={{ width: '99%', padding: '0px 15px', lineHeight: '40px' }}>
         {getFieldDecorator(`disks['${disk.id}']['tags']`, {
           initialValue: disk.tags,
         })(<DistTag tags={disk.tags} changeTags={(tags) => { form.setFieldsValue({ [`disks['${disk.id}']['tags']`]: tags }) }} />)}
+      </div>
+      <div style={{ width: '99%', display: 'flex', justifyContent: 'space-between' }}>
+        <div className={styles.formItem} style={{ width: '30%' }}>
+          <div className={styles.label}>
+            Storage Available
+          </div>
+          <div className={styles.control} style={{ padding: '5px 15px' }}>
+            {byteToGi(disk.storageAvailable)}Gi
+          </div>
+          <div className={styles.control} style={{ display: 'none' }}>
+            <FormItem style={{ margin: 0 }}>
+              {getFieldDecorator(`disks['${disk.id}']['storageAvailable']`, {
+                initialValue: byteToGi(disk.storageAvailable),
+              })(<span>
+                <StorageInput min={0} defaultValue={byteToGi(disk.storageAvailable)} readOnly />
+              </span>)}
+            </FormItem>
+          </div>
+        </div>
+        <div className={styles.formItem} style={{ width: '30%' }}>
+          <div className={styles.label}>
+            Storage Scheduled
+          </div>
+          <div className={styles.control} style={{ padding: '5px 15px' }}>
+           {byteToGi(disk.storageScheduled)}Gi
+          </div>
+          <div className={styles.control} style={{ display: 'none' }}>
+            <FormItem style={{ margin: 0 }}>
+              {getFieldDecorator(`disks['${disk.id}']['storageScheduled']`, {
+                initialValue: byteToGi(disk.storageScheduled),
+              })(<span>
+                <StorageInput min={0} defaultValue={byteToGi(disk.storageScheduled)} readOnly />
+              </span>)}
+            </FormItem>
+          </div>
+        </div>
+        <div className={styles.formItem} style={{ width: '30%' }}>
+          <div className={styles.label}>
+            Storage Max
+          </div>
+          <div className={styles.control} style={{ padding: '5px 15px' }}>
+          {byteToGi(disk.storageMaximum)}Gi
+          </div>
+          <div className={styles.control} style={{ display: 'none' }}>
+            <FormItem style={{ margin: 0 }}>
+              {getFieldDecorator(`disks['${disk.id}']['storageMaximum']`, {
+                initialValue: byteToGi(disk.storageMaximum),
+              })(<span>
+                <StorageInput min={0} defaultValue={byteToGi(disk.storageMaximum)} readOnly />
+              </span>)}
+            </FormItem>
+          </div>
+        </div>
       </div>
       <div className={styles.formItem} style={{ width: '99%' }}>
         <div className={styles.control}>
@@ -73,34 +127,6 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       </div>
       <div className={styles.formItem}>
         <div className={styles.label}>
-          Storage Available
-        </div>
-        <div className={styles.control}>
-          <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks['${disk.id}']['storageAvailable']`, {
-              initialValue: byteToGi(disk.storageAvailable),
-            })(<span>
-              <StorageInput min={0} defaultValue={byteToGi(disk.storageAvailable)} readOnly />
-            </span>)}
-          </FormItem>
-        </div>
-      </div>
-      <div className={styles.formItem}>
-        <div className={styles.label}>
-          Storage Max
-        </div>
-        <div className={styles.control}>
-          <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks['${disk.id}']['storageMaximum']`, {
-              initialValue: byteToGi(disk.storageMaximum),
-            })(<span>
-              <StorageInput min={0} defaultValue={byteToGi(disk.storageMaximum)} readOnly />
-            </span>)}
-          </FormItem>
-        </div>
-      </div>
-      <div className={styles.formItem}>
-        <div className={styles.label}>
           Storage Reserved
         </div>
         <div className={styles.control}>
@@ -109,20 +135,6 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               initialValue: byteToGi(disk.storageReserved),
             })(<span>
               <StorageInput min={0} defaultValue={byteToGi(disk.storageReserved)} readOnly={disk.deleted} />
-            </span>)}
-          </FormItem>
-        </div>
-      </div>
-      <div className={styles.formItem}>
-        <div className={styles.label}>
-          Storage Scheduled
-        </div>
-        <div className={styles.control}>
-          <FormItem style={{ margin: 0 }}>
-            {getFieldDecorator(`disks['${disk.id}']['storageScheduled']`, {
-              initialValue: byteToGi(disk.storageScheduled),
-            })(<span>
-              <StorageInput min={0} defaultValue={byteToGi(disk.storageScheduled)} readOnly />
             </span>)}
           </FormItem>
         </div>
