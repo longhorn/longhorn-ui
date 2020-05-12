@@ -162,7 +162,7 @@ class EventLogs extends React.Component {
               onChange={this.onSearchNameChange}
               onPressEnter={() => this.onSearch('nameText')}
             />
-            <Button type="primary" size="small" onClick={() => this.onSearch('nameText')}>Search</Button>
+            <Button type="primary" size="small" style={{ marginRight: 10 }} onClick={() => this.onSearch('nameText')}>OK</Button>
             <Button size="small" onClick={this.onReset}>Reset</Button>
           </div>
         ),
@@ -195,16 +195,18 @@ class EventLogs extends React.Component {
         render(text) {
           return (<div className="kind">{text}</div>)
         },
-      }, {
-        title: 'Subobject',
-        dataIndex: 'involvedObject.fieldPath',
-        key: 'involvedObject.fieldPath',
-        className: 'text',
-        sorter: (a, b) => sortTable(a, b, 'involvedObject.fieldPath'),
-        render: (text) => {
-          return <div className="subobject">{text}</div>
-        },
-      }, {
+      },
+      // {
+      //   title: 'Subobject',
+      //   dataIndex: 'involvedObject.fieldPath',
+      //   key: 'involvedObject.fieldPath',
+      //   className: 'text',
+      //   sorter: (a, b) => sortTable(a, b, 'involvedObject.fieldPath'),
+      //   render: (text) => {
+      //     return <div className="subobject">{text}</div>
+      //   },
+      // },
+      {
         title: 'Type',
         dataIndex: 'eventType',
         key: 'eventType',
@@ -230,6 +232,7 @@ class EventLogs extends React.Component {
         dataIndex: 'sourceText',
         key: 'sourceText',
         className: 'text',
+        sorter: (a, b) => sortTable(a, b, 'sourceText'),
         filterIcon: <Icon type="filter" style={{ color: this.state.searchField === 'sourceText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
         filterDropdown: (
           <div className="filter-dropdown">
@@ -240,7 +243,7 @@ class EventLogs extends React.Component {
               onChange={this.onSearchSourceChange}
               onPressEnter={() => this.onSearch('sourceText')}
             />
-            <Button type="primary" size="small" onClick={() => this.onSearch('sourceText')}>Search</Button>
+            <Button type="primary" size="small" style={{ marginRight: 10 }} onClick={() => this.onSearch('sourceText')}>OK</Button>
             <Button size="small" onClick={this.onReset}>Reset</Button>
           </div>
         ),
@@ -271,6 +274,7 @@ class EventLogs extends React.Component {
          <Table columns={columns}
            onChange={onChange}
            rowClassName={rowClassName}
+           getPopupContainer={trigger => trigger.parentNode}
            rowKey={(record, key) => key}
            dataSource={this.state.data} />
          </div>
