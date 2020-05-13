@@ -144,13 +144,17 @@ class List extends React.Component {
         dataIndex: 'volumeName',
         key: 'volumeName',
         width: '14%',
-        render: (text) => {
+        render: (text, record) => {
+          let errorMessage = record.messages && record.messages.error ? record.messages.error : ''
           return (
-            <div>
-              <CopyToClipboard onCopy={this.onCopy} text={text}>
-                <p style={{ color: '#108ee9', cursor: 'pointer', margin: '0px' }}>{text}</p>
-              </CopyToClipboard>
-            </div>
+            <Tooltip title={errorMessage}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {errorMessage ? <Icon type="warning" style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
+                <CopyToClipboard onCopy={this.onCopy} text={text}>
+                  <p style={{ color: '#108ee9', cursor: 'pointer', margin: '0px' }}>{text}</p>
+                </CopyToClipboard>
+              </div>
+            </Tooltip>
           )
         },
       }, {
@@ -292,7 +296,7 @@ class List extends React.Component {
           return (
             <DropOption menuOptions={[
               { key: 'delete', name: 'Delete' },
-              { key: 'restore', name: 'Restore' },
+              { key: 'restore', name: 'Restore', disabled: record && record.messages && record.messages.error },
               { key: 'getUrl', name: 'Get URL' },
             ]}
               onMenuClick={e => handleMenuClick(record, e)}
