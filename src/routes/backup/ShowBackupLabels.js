@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 import { Form, Descriptions } from 'antd'
 import { ModalBlur } from '../../components'
 
@@ -22,11 +23,12 @@ const modal = ({
   }
 
   const kubernetesStatus = item && item.KubernetesStatus ? JSON.parse(item.KubernetesStatus) : {}
+  const snapshotCreated = item && item.snapshotCreated ? item.snapshotCreated : ''
 
   let backupLabels = []
 
   for (let key in item) {
-    if (key !== 'KubernetesStatus') {
+    if (key !== 'KubernetesStatus' && key !== 'snapshotCreated') {
       backupLabels.push(key)
     }
   }
@@ -54,7 +56,8 @@ const modal = ({
     <div style={{ width: '100%', overflow: 'auto', maxHeight: '680px' }}>
       {backupLabelsEle}
       { item && item.KubernetesStatus ? <div style={{ marginTop: '20px' }}>
-        <Descriptions title="Kubernetes Status" bordered column={2}>
+        <Descriptions title="Kubernetes Status When Backup Created" bordered column={2}>
+          <Descriptions.Item label="Created Time" span={2}>{moment(new Date(snapshotCreated)).fromNow()}</Descriptions.Item>
           <Descriptions.Item label="Namespace" span={2}>{kubernetesStatus.namespace}</Descriptions.Item>
           <Descriptions.Item label="PV Name" span={2}>{kubernetesStatus.pvName}</Descriptions.Item>
           <Descriptions.Item label="PVC Name" span={2}>{kubernetesStatus.pvcName}</Descriptions.Item>

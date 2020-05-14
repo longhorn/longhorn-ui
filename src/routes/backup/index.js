@@ -255,8 +255,8 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
       { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
-      <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
-      <BulkCreateStandbyVolumeModal key={bulkCreateVolumeStandModalKey} {...bulkCreateVolumeStandModalProps} />
+      { createVolumeStandModalVisible ? <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} /> : ''}
+      { bulkCreateVolumeStandModalVisible ? <BulkCreateStandbyVolumeModal key={bulkCreateVolumeStandModalKey} {...bulkCreateVolumeStandModalProps} /> : ''}
     </div>
   )
 }
