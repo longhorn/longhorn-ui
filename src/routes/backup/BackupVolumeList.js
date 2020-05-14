@@ -149,7 +149,7 @@ class List extends React.Component {
         render: (text, record) => {
           return (
             <DropOption menuOptions={[
-              { key: 'recovery', name: !record.lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
+              { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
               { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
               { key: 'deleteAll', name: 'Delete All Backups' },
             ]}
