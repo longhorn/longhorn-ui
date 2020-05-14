@@ -234,6 +234,7 @@ class List extends React.Component {
 
           if (record) {
             storageObj = this.fomartData(record.KubernetesStatus)
+            storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 
           const title = storageObj.lastPodRefAt ? <div><div>Last time used: {moment(new Date(storageObj.lastPodRefAt)).fromNow()}</div></div> : ''
@@ -280,7 +281,10 @@ class List extends React.Component {
         title: 'Labels',
         dataIndex: 'labels',
         key: 'labels',
-        render: (obj) => {
+        render: (obj, record) => {
+          if (obj && record.snapshotCreated) {
+            obj.snapshotCreated = record.snapshotCreated
+          }
           return (
             <div onClick={() => { showBackupLabels(obj) }}>
               <Icon style={{ fontSize: '18px', color: obj ? '#108eb9' : '#cccccc', cursor: 'pointer' }} type="tags" />
