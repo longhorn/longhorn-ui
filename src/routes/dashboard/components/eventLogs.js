@@ -162,8 +162,8 @@ class EventLogs extends React.Component {
               onChange={this.onSearchNameChange}
               onPressEnter={() => this.onSearch('nameText')}
             />
-            <Button type="primary" size="small" style={{ marginRight: 10 }} onClick={() => this.onSearch('nameText')}>OK</Button>
-            <Button size="small" onClick={this.onReset}>Reset</Button>
+            <Button type="link" onClick={() => this.onSearch('nameText')}>OK</Button>
+            <Button type="link" onClick={this.onReset}>Reset</Button>
           </div>
         ),
         filterDropdownVisible: this.state.filterNameDropdownVisible,
@@ -243,8 +243,8 @@ class EventLogs extends React.Component {
               onChange={this.onSearchSourceChange}
               onPressEnter={() => this.onSearch('sourceText')}
             />
-            <Button type="primary" size="small" style={{ marginRight: 10 }} onClick={() => this.onSearch('sourceText')}>OK</Button>
-            <Button size="small" onClick={this.onReset}>Reset</Button>
+            <Button type="link" onClick={() => this.onSearch('sourceText')}>OK</Button>
+            <Button type="link" onClick={this.onReset}>Reset</Button>
           </div>
         ),
         filterDropdownVisible: this.state.filterSourceDropdownVisible,

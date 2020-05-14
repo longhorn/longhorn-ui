@@ -186,7 +186,7 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
       <div style={{ position: 'absolute', top: '-50px', right: '20px', display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
         <DropOption
           menuOptions={[
-            { key: 'recovery', name: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName ? 'No last backup' : 'Create Disaster Recovery Volume', disabled: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName },
+            { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: currentBackUp.length > 0 && !currentBackUp[0].lastBackupName },
             { key: 'deleteAll', name: 'Delete All Backups' },
           ]}
           onMenuClick={e => handleMenuClick(currentBackUp[0], e)}
