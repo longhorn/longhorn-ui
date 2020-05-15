@@ -103,13 +103,15 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         } else if (isVolumeRelicaLimited(record)) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
+        let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
+        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" style={{ color: '#f15354', marginLeft: '5px' }} /></Tooltip>
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex' }}>{ha}{state}</div>
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
           } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex' }}>{ha}{state}</div>
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
           } else if (text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex' }}>{ha}{state}</div>
+            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
           }
           return text.hyphenToHump()
         })()
