@@ -270,13 +270,13 @@ class EventLogs extends React.Component {
     return (
       <div className="eventLogs">
         <div className="title">Event Log</div>
-        <div className="content">
-         <Table columns={columns}
-           onChange={onChange}
-           rowClassName={rowClassName}
-           getPopupContainer={trigger => trigger.parentNode}
-           rowKey={(record, key) => key}
-           dataSource={this.state.data} />
+          <div className="content">
+            <Table columns={columns}
+              onChange={onChange}
+              rowClassName={rowClassName}
+              getPopupContainer={trigger => trigger.parentNode}
+              rowKey={(record, key) => key}
+              dataSource={this.state.data} />
          </div>
        </div>
     )

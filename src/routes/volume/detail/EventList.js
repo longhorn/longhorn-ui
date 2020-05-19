@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Card, Button, Icon } from 'antd'
+import { Table, Card, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import styles from './index.less'
 
@@ -87,8 +87,9 @@ class EventList extends React.Component {
     return (<Card bodyStyle={{ padding: 0 }}
       title={<div className={styles.header}>
       <div className="title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} /> Event Log</div>
-        <Button onClick={() => this.toggleEventLog()}>{this.state.detailText}</Button>
+        <Tooltip title={this.state.toggleEventLogVisible ? 'Click to Collapse' : 'Click to Expand'}>
+          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} /> Event Log</div>
+        </Tooltip>
       </div></div>}
       bordered={false}>{this.state.toggleEventLogVisible ? <div style={{ padding: 24 }}>
         <Table
