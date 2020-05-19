@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Button, Spin, Icon, Checkbox } from 'antd'
 import styles from './setting.less'
+import { classnames } from '../../utils'
 const FormItem = Form.Item
 
 const form = ({
@@ -95,7 +96,7 @@ const form = ({
       return 1
     }
     return 0
-  }).map(item => <div key={item}> <div className={styles.fieldset}><span className={styles.fieldsetLabel}>{item}</span> { settingsGrouped[item].map(setting => genFormItem(setting))}</div></div>)
+  }).map(item => <div key={item}> <div className={classnames(styles.fieldset, { [styles.dangerZone]: item === 'danger Zone' })}><span className={styles.fieldsetLabel}>{item}</span> { settingsGrouped[item].map(setting => genFormItem(setting))}</div></div>)
 
   return (
     <Spin spinning={saving}>

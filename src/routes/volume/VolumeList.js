@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, commandKeyDown, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -35,6 +35,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     showCancelExpansionModal,
     changeVolume,
     height,
+    confirmDetachWithWorkload,
     commandKeyDown,
     onRowClick,
   }
@@ -104,7 +105,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           ha = (<ReplicaHATooltip type="warning" />)
         }
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
-        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" style={{ color: '#f15354', marginLeft: '5px' }} /></Tooltip>
+        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
             return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
@@ -276,8 +277,10 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         }) : ''
         return (
           <Tooltip placement="top" title={title}>
-            <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
-              {ele}
+            <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={{ margin: 0 }}>
+              <div style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
+                {ele}
+              </div>
               <div>{record.controllers ? record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div>
             </a>
           </Tooltip>
@@ -392,6 +395,7 @@ list.propTypes = {
   height: PropTypes.number,
   changeVolume: PropTypes.func,
   commandKeyDown: PropTypes.bool,
+  confirmDetachWithWorkload: PropTypes.func,
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
 }
