@@ -160,7 +160,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Ready for workload:</span>
-        {selectedVolume.ready ? <span style={{ color: '#52c41a' }}>Ready</span> : <Tooltip title={`Not ready for workload. ${selectedVolume.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `}><span style={{ color: '#f15354' }}>Not Ready</span></Tooltip>}
+        {selectedVolume.ready ? <span className="healthy">Ready</span> : <Tooltip title={`Not ready for workload. ${selectedVolume.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `}><span className="faulted">Not Ready</span></Tooltip>}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>

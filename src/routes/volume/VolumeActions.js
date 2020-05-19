@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, commandKeyDown }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -28,6 +28,8 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'detach':
         if (commandKeyDown) {
           detach(record.actions.detach)
+        } else if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && !record.kubernetesStatus.lastPodRefAt) {
+          confirmDetachWithWorkload(record)
         } else {
           confirm({
             title: `Are you sure you want to detach volume ${record.name} ?`,
@@ -117,7 +119,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
     availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
   }
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring() })
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.robustness === 'faulted' || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring() })
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
@@ -145,6 +147,7 @@ actions.propTypes = {
   showUpdateReplicaCount: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   changeVolume: PropTypes.func,
+  confirmDetachWithWorkload: PropTypes.func,
   commandKeyDown: PropTypes.bool,
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
