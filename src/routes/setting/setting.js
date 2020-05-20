@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Button, Spin, Icon, Checkbox } from 'antd'
+import { Form, Input, Button, Spin, Icon, Checkbox, Select } from 'antd'
 import styles from './setting.less'
 import { classnames } from '../../utils'
 const FormItem = Form.Item
+const { Option } = Select
 
 const form = ({
   form: {
@@ -28,6 +29,13 @@ const form = ({
     return rules
   }
   const genInputItem = (setting) => {
+    if (setting.id === 'volume-attachment-recovery-policy') {
+      return (<Select>
+        <Option value="wait">wait</Option>
+        <Option value="never">never</Option>
+        <Option value="immediate">immediate</Option>
+      </Select>)
+    }
     switch (setting.definition.type) {
       case 'bool':
         return (<Checkbox disabled={setting.definition.readOnly} />)
@@ -52,6 +60,7 @@ const form = ({
         valuePropName = 'value'
         break
     }
+
     return (
       <FormItem key={setting.id}>
         <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
