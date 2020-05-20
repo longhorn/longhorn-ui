@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Button, Radio } from 'antd'
+import moment from 'moment'
+import { Form, Button, Radio, Icon, Tooltip } from 'antd'
 import styles from './EditableDiskItem.less'
 import EditableDiskItem from './EditableDiskItem'
 import { formatPath } from '../helper/index'
@@ -136,6 +137,28 @@ class EditableDiskList extends React.Component {
                 })(<DistTag nodeBoolean={true} tags={node.tags} changeTags={(tags) => { form.setFieldsValue({ tags }) }} />)}
               </div>
             </div>
+          </div>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
+            <div className={styles.label}>
+              Conditions
+            </div>
+            <div className={styles.control} style={{ width: '690px', lineHeight: '40px', display: 'flex' }}>
+              {node && node.conditions && Object.keys(node.conditions).map((key) => {
+                let title = (<div>
+                  {node.conditions[key] && node.conditions[key].lastProbeTime && node.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(node.conditions[key].lastProbeTime).fromNow()}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].lastTransitionTime && node.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(node.conditions[key].lastTransitionTime).fromNow()}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].message && node.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {node.conditions[key].message}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].reason && node.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {node.conditions[key].reason}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].status && node.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {node.conditions[key].status}</div> : ''}
+                </div>)
+                return (<Tooltip key={key} title={title}><div style={{ marginRight: 40 }}>
+                    {node.conditions[key].status && node.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" /> }
+                    {node.conditions[key].type}
+                  </div></Tooltip>)
+              })}
+             </div>
           </div>
         </div>
         {data.map((d, i) => (<EditableDiskItem key={i} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} validateName={this.validateName} />))}
