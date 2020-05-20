@@ -163,6 +163,35 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
         {selectedVolume.ready ? <span className="healthy">Ready</span> : <Tooltip title={`Not ready for workload. ${selectedVolume.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `}><span className="faulted">Not Ready</span></Tooltip>}
       </div>
       <div className={styles.row}>
+        <div className={styles.formItem} style={{ display: 'flex' }}>
+          <span className={styles.label}>
+            Conditions:
+          </span>
+          <div className={styles.control} style={{ display: 'flex' }}>
+            {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).map((key) => {
+              let title = (<div>
+                {selectedVolume.conditions[key] && selectedVolume.conditions[key].lastProbeTime && selectedVolume.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(selectedVolume.conditions[key].lastProbeTime).fromNow()}</div> : ''}
+                {selectedVolume.conditions[key] && selectedVolume.conditions[key].lastTransitionTime && selectedVolume.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div> : ''}
+                {selectedVolume.conditions[key] && selectedVolume.conditions[key].message && selectedVolume.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {selectedVolume.conditions[key].message}</div> : ''}
+                {selectedVolume.conditions[key] && selectedVolume.conditions[key].reason && selectedVolume.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {selectedVolume.conditions[key].reason}</div> : ''}
+                {selectedVolume.conditions[key] && selectedVolume.conditions[key].status && selectedVolume.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {selectedVolume.conditions[key].status}</div> : ''}
+              </div>)
+              let icon = ''
+              if (key === 'restore') {
+                icon = selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'true' || selectedVolume.conditions[key].reason === '') ? <Icon className="healthy" style={{ marginRight: 5, color: selectedVolume.conditions[key].reason === '' && selectedVolume.conditions[key].status.toLowerCase() === 'false' ? '#666666' : '#27ae60' }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
+              } else {
+                icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
+              }
+
+              return (<Tooltip key={key} title={title}><div style={{ marginRight: 10 }}>
+                  {icon}
+                  {selectedVolume.conditions[key].type}
+                </div></Tooltip>)
+            })}
+            </div>
+        </div>
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>
         {(frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
