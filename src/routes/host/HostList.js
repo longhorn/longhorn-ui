@@ -206,8 +206,8 @@ class List extends React.Component {
         className: styles.status,
         sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
         render: (text, record) => {
-          const status = record.status
-          const message = record.conditions.Ready.message
+          const status = record && record.status
+          const message = record && record.conditions && record.conditions.Ready && record.conditions.Ready.message
           const colorMap = nodeStatusColorMap[status.key] || { color: '', bg: '' }
           return (
             <Tooltip title={`${message}`}>
