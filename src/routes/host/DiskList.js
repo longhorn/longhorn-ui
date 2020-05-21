@@ -7,16 +7,16 @@ import './DiskList.less'
 
 function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal }) {
   const getDiskStatus = (d) => {
-    if (node.conditions.Ready.status.toLowerCase() === 'false') {
+    if (node.conditions && node.conditions.Ready && node.conditions.Ready.statues && node.conditions.Ready.status.toLowerCase() === 'false') {
       return (<span className="error">Error</span>)
     }
     if (node.allowScheduling === false || d.allowScheduling === false) {
       return (<span className="disabled">Disabled</span>)
     }
-    if (node.conditions.Schedulable.status.toLowerCase() === 'false') {
+    if (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status && node.conditions.Schedulable.status.toLowerCase() === 'false') {
       return (<span className="disabled">Unschedulable</span>)
     }
-    const status = d.conditions.Schedulable.status.toLowerCase() === 'true'
+    const status = d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status && d.conditions.Schedulable.status.toLowerCase() === 'true'
     if (status) {
       return (<span className="schedulable">Schedulable</span>)
     }
