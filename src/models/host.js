@@ -178,7 +178,7 @@ export default {
       return { ...state, ...action.payload, replicaModalVisible: true }
     },
     hideReplicaModal(state) {
-      return { ...state, replicaModalVisible: false }
+      return { ...state, replicaModalVisible: false, selectedReplicaRows: [], selectedReplicaRowKeys: [] }
     },
     enableReplicaModalDelete(state) {
       return { ...state, replicaModalDeleteDisabled: false }
@@ -202,7 +202,7 @@ export default {
       return { ...state, ...action.payload, diskReplicaModalVisible: true }
     },
     hideDiskReplicaModal(state) {
-      return { ...state, diskReplicaModalVisible: false }
+      return { ...state, diskReplicaModalVisible: false, selectedReplicaRows: [], selectedReplicaRowKeys: [] }
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
