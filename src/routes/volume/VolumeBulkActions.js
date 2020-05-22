@@ -73,6 +73,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       return false
     }
   })
+  const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
   /*
   * PV/PVC decides whether to disable it
   */
@@ -86,7 +87,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
 
   const allDropDownActions = [
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() } },
-    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') } },
+    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() || isHasPVC() || isFaulted() } },
     { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
