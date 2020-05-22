@@ -30,9 +30,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         showBulkChangeVolume(selectedRows)
         break
       case 'detach':
-        if (commandKeyDown) {
-          bulkDetach(selectedRows.map(item => item.actions.detach))
-        } else if (selectedRows.some((ele) => ele.kubernetesStatus && ele.kubernetesStatus.workloadsStatus && !ele.kubernetesStatus.lastPodRefAt)) {
+        if (selectedRows.some((ele) => ele.kubernetesStatus && ele.kubernetesStatus.workloadsStatus && !ele.kubernetesStatus.lastPodRefAt)) {
           confirmDetachWithWorkload()
         } else {
           confirm({
