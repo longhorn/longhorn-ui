@@ -100,31 +100,31 @@ function checkDayOfMonthField(dayOfMonthField) {
 
 
 function checkMonthsField(monthsField) {
-    monthsField = monthsField.replace("JAN", "1")
-    monthsField = monthsField.replace("FEB", "2")
-    monthsField = monthsField.replace("MAR", "3")
-    monthsField = monthsField.replace("APR", "4")
-    monthsField = monthsField.replace("MAY", "5")
-    monthsField = monthsField.replace("JUN", "6")
-    monthsField = monthsField.replace("JUL", "7")
-    monthsField = monthsField.replace("AUG", "8")
-    monthsField = monthsField.replace("SEP", "9")
-    monthsField = monthsField.replace("OCT", "10")
-    monthsField = monthsField.replace("NOV", "11")
-    monthsField = monthsField.replace("DEC", "12")
+    monthsField = monthsField && monthsField.replace("JAN", "1")
+    monthsField = monthsField && monthsField.replace("FEB", "2")
+    monthsField = monthsField && monthsField.replace("MAR", "3")
+    monthsField = monthsField && monthsField.replace("APR", "4")
+    monthsField = monthsField && monthsField.replace("MAY", "5")
+    monthsField = monthsField && monthsField.replace("JUN", "6")
+    monthsField = monthsField && monthsField.replace("JUL", "7")
+    monthsField = monthsField && monthsField.replace("AUG", "8")
+    monthsField = monthsField && monthsField.replace("SEP", "9")
+    monthsField = monthsField && monthsField.replace("OCT", "10")
+    monthsField = monthsField && monthsField.replace("NOV", "11")
+    monthsField = monthsField && monthsField.replace("DEC", "12")
 
     return checkField(monthsField, 1, 31)
 }
 
 function checkDayOfWeekField(dayOfWeekField) {
 
-    dayOfWeekField = dayOfWeekField.replace("SUN", "1" )
-    dayOfWeekField = dayOfWeekField.replace("MON", "2" )
-    dayOfWeekField = dayOfWeekField.replace("TUE", "3" )
-    dayOfWeekField = dayOfWeekField.replace("WED", "4" )
-    dayOfWeekField = dayOfWeekField.replace("THU", "5" )
-    dayOfWeekField = dayOfWeekField.replace("FRI", "6" )
-    dayOfWeekField = dayOfWeekField.replace("SAT", "7" )        
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("SUN", "1" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("MON", "2" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("TUE", "3" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("WED", "4" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("THU", "5" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("FRI", "6" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("SAT", "7" )        
 
     if (dayOfWeekField == "?") {
         return true

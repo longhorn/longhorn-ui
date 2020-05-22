@@ -26,9 +26,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         }
         break
       case 'detach':
-        if (commandKeyDown) {
-          detach(record.actions.detach)
-        } else if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && !record.kubernetesStatus.lastPodRefAt) {
+        if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && !record.kubernetesStatus.lastPodRefAt) {
           confirmDetachWithWorkload(record)
         } else {
           confirm({
