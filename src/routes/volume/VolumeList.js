@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, replicaSoftAntiAffinitySettingValue, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -37,6 +37,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     height,
     confirmDetachWithWorkload,
     commandKeyDown,
+    replicaSoftAntiAffinitySettingValue,
     onRowClick,
   }
   /**
@@ -99,9 +100,9 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
           upgrade = (<EngineImageUpgradeTooltip currentVersion={currentVersion} latestVersion={latestVersion} />)
         }
         let ha = null
-        if (isVolumeReplicaNotRedundancy(record)) {
+        if (isVolumeReplicaNotRedundancy(record) && replicaSoftAntiAffinitySettingValue) {
           ha = (<ReplicaHATooltip type="danger" />)
-        } else if (isVolumeRelicaLimited(record)) {
+        } else if (isVolumeRelicaLimited(record) && replicaSoftAntiAffinitySettingValue) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
@@ -398,6 +399,7 @@ list.propTypes = {
   confirmDetachWithWorkload: PropTypes.func,
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
+  replicaSoftAntiAffinitySettingValue: PropTypes.bool,
 }
 
 export default list
