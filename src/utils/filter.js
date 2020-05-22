@@ -53,7 +53,7 @@ function filterData(data, field, value) {
 }
 
 function validReplicas(replicas) {
-  return replicas.filter(item => item.failedAt === '' && (item.mode === 'RW' || item.mode === ''))
+  return replicas.filter(item => item.failedAt === '')
 }
 
 export function isVolumeImageUpgradable(volume, defaultImage) {
@@ -67,8 +67,8 @@ export function isVolumeSchedule(volume) {
 }
 
 export function isVolumeReplicaNotRedundancy(volume) {
-  const numberOfReplicas = volume.numberOfReplicas
   const totalReplicas = validReplicas(volume.replicas)
+  const numberOfReplicas = totalReplicas && totalReplicas.length
   const volumeNodeReplicas = totalReplicas.reduce((total, current) => {
     const replicas = total[current.hostId] || []
     replicas.push(current)
@@ -79,8 +79,8 @@ export function isVolumeReplicaNotRedundancy(volume) {
 }
 
 export function isVolumeRelicaLimited(volume) {
-  const numberOfReplicas = volume.numberOfReplicas
   const totalReplicas = validReplicas(volume.replicas)
+  const numberOfReplicas = totalReplicas && totalReplicas.length
   const volumeNodeReplicas = totalReplicas.reduce((total, current) => {
     const replicas = total[current.hostId] || []
     replicas.push(current)

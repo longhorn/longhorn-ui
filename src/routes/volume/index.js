@@ -92,6 +92,14 @@ class Volume extends React.Component {
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue } = queryString.parse(this.props.location.search)
+    const settings = this.props.setting.data
+    const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
+    const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+    const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
+    let replicaSoftAntiAffinitySettingValue = false
+    if (replicaSoftAntiAffinitySetting) {
+      replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting.value && replicaSoftAntiAffinitySetting.value.toLowerCase() === 'true'
+    }
     const volumeFilterMap = {
       healthy: healthyVolume,
       inProgress: inProgressVolume,
@@ -144,6 +152,7 @@ class Volume extends React.Component {
       engineImages,
       height: this.state.height,
       commandKeyDown: this.state.commandKeyDown,
+      replicaSoftAntiAffinitySettingValue,
       onSorterChange(s) {
         dispatch({
           type: 'volume/updateSorter',
@@ -566,10 +575,6 @@ class Volume extends React.Component {
         })
       },
     }
-
-    const settings = this.props.setting.data
-    const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
-    const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
     const createVolumeModalProps = {
       item: {
         numberOfReplicas: defaultNumberOfReplicas,
