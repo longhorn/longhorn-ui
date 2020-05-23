@@ -376,7 +376,7 @@ class List extends React.Component {
        <DiskList disks={data} node={node} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
       )
     }
-    const pagination = false
+    const pagination = true
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }

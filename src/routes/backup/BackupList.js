@@ -52,12 +52,12 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backDetailTable').offsetHeight - 72
+    let height = document.getElementById('backDetailTable').offsetHeight - 109
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('backDetailTable').offsetHeight - 72
+      height = document.getElementById('backDetailTable').offsetHeight - 109
       this.setState({
         height,
       })
@@ -268,7 +268,7 @@ class List extends React.Component {
         title: 'Snapshot Created',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
-        width: '12%',
+        width: '260',
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (
@@ -310,7 +310,7 @@ class List extends React.Component {
       },
     ]
 
-    const pagination = false
+    const pagination = true
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }
