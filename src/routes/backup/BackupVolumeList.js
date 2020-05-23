@@ -21,12 +21,12 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backTable').offsetHeight - 72
+    let height = document.getElementById('backTable').offsetHeight - 109
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('backTable').offsetHeight - 72
+      height = document.getElementById('backTable').offsetHeight - 109
       this.setState({
         height,
       })
@@ -160,7 +160,7 @@ class List extends React.Component {
       },
     ]
 
-    const pagination = false
+    const pagination = true
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }

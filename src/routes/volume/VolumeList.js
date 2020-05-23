@@ -291,7 +291,6 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     {
       title: <div><div>Schedule</div></div>,
       key: 'recurringJobs',
-      width: '9.375%',
       render: (text, record) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
         let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
@@ -305,7 +304,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         }
         return (
           <Tooltip placement="top" title={title}>
-            <div onClick={() => { showSnapshotDetail(record) }} style={{ cursor: 'pointer' }}>
+            <div onClick={() => { showSnapshotDetail(record) }} style={{ width: '100%', cursor: 'pointer' }}>
               <IconBackup fill={fill} width={30} height={30} />
             </div>
           </Tooltip>
@@ -316,6 +315,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
+      width: 200,
       sorter: (a, b) => sortTableByISODate(a, b, 'lastBackupAt'),
       render: (text) => {
         let lastTime = text ? moment(text).fromNow() : ''
@@ -339,7 +339,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
     },
   ]
 
-  const pagination = false
+  const pagination = true
   const onChange = (p, f, s) => {
     onSorterChange(s)
   }
@@ -365,7 +365,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         pagination={pagination}
         rowKey={record => record.id}
         height={'100%'}
-        scroll={{ x: 1440, y: height }}
+        scroll={{ x: 1540, y: height }}
       />
     </div>
   )
