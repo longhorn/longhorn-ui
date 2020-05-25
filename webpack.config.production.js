@@ -18,6 +18,7 @@ const theme = require("./src/theme");
 
 
 module.exports = {
+  devtool: 'source-map',
   entry: path.resolve(__dirname, "src", "index.js"),
   output: {
     filename: "[name].[chunkhash:8].js",
