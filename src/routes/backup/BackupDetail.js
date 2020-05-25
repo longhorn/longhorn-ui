@@ -122,7 +122,7 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
   const showDeleteConfirm = (record) => {
     confirm({
       title: 'Are you sure delete all the backups?',
-      content: 'Delete all backups of the volume',
+      content: 'If there is backup restore process in progress using the backups of this volume (including DR volumes), deleting the backup volume will result in restore failure and the volume in the restore process will become FAULTED. Are you sure you want to delete this backup volume?',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
