@@ -364,7 +364,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         simple
         pagination={pagination}
         rowKey={record => record.id}
-        height={'100%'}
+        height={`${height}px`}
         scroll={{ x: 1540, y: height }}
       />
     </div>

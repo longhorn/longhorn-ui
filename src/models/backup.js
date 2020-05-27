@@ -244,7 +244,7 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteAllBackups, payload)
-      yield put({ type: 'query', payload })
+      yield put({ type: 'query' })
     },
   },
   reducers: {

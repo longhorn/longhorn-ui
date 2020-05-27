@@ -27,10 +27,21 @@ class List extends React.Component {
         selectedRowKeys: [],
         onChange: this.onSelectChange,
       },
+      height: 0,
     }
   }
 
   componentDidMount() {
+    let height = document.getElementById('hostTable').offsetHeight - 109
+    this.setState({
+      height,
+    })
+    window.onresize = () => {
+      height = document.getElementById('hostTable').offsetHeight - 109
+      this.setState({
+        height,
+      })
+    }
     window.addEventListener('keydown', this.onkeydown)
     window.addEventListener('keyup', this.onkeyup)
   }
@@ -382,7 +393,7 @@ class List extends React.Component {
     }
     setSortOrder(columns, sorter)
     return (
-      <div style={{ overflow: 'hidden' }}>
+      <div id="hostTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
           bordered={false}
           columns={columns}
@@ -404,7 +415,7 @@ class List extends React.Component {
           pagination={pagination}
           rowSelection={this.state.rowSelection}
           rowKey={record => record.id}
-          scroll={{ x: 1440 }}
+          scroll={{ x: 1440, y: this.state.height }}
         />
         <ModalBlur width={980} title={'Components'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
           <InstanceManagerComponent defaultInstanceManager={defaultInstanceManager} defaultEngineImage={defaultEngineImage} currentNode={currentNode} />

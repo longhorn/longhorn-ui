@@ -168,6 +168,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
           simple
           pagination={pagination}
           rowKey={record => record.id}
+          scroll={{ y: '100%' }}
         />
       </div>
     </div>
