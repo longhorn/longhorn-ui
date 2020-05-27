@@ -321,7 +321,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   }
 
   return (
-    <div className="content-inner">
+    <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <HostFilter ref={(component) => { hostFilter = component }} {...HostFilterProps} />
       <HostList ref={(component) => { hostList = component }} {...hostListProps} />
       {modalVisible && <AddDisk {...addDiskModalProps} />}
