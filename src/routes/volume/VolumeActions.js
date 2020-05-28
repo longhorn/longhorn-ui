@@ -101,7 +101,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'detach', name: 'Detach', disabled: selected.standby || isRestoring() },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1) || isRestoring() },
-    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() },
+    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]
 
