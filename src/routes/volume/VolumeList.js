@@ -348,6 +348,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
   return (
     <div id="volumeTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
+        className="volume-table-class"
         rowSelection={rowSelection}
         bordered={false}
         columns={columns}

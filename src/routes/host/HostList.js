@@ -395,6 +395,7 @@ class List extends React.Component {
     return (
       <div id="hostTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
+          className="host-table-class"
           bordered={false}
           columns={columns}
           dataSource={dataSource}
