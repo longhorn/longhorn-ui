@@ -56,7 +56,7 @@ function SnapshotIcon(props, snapshotProps) {
     })
   }
   function onClick({ key }) {
-    if (key === 'snapshotRevert') {
+    if (key === 'snapshotRevert' && snapshotProps && snapshotProps.volume) {
       const title = (
         <div>
           <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> {!snapshotProps.volume.disableFrontend ? 'Cannot revert with frontend enabled' : 'Confirm snapshot revert?' }</h3>
@@ -68,14 +68,16 @@ function SnapshotIcon(props, snapshotProps) {
         </div>
       )
 
-      Modal.confirm({
-        title,
-        okText: 'Ok',
-        cancelText: 'Cancel',
-        onOk: () => {
-          doAction('snapshotRevert')
-        },
-      })
+      if (snapshotProps && snapshotProps.volume && snapshotProps.volume.disableFrontend) {
+        Modal.confirm({
+          title,
+          okText: 'Ok',
+          cancelText: 'Cancel',
+          onOk: () => {
+            doAction('snapshotRevert')
+          },
+        })
+      }
       return
     }
     // Move to normal popup
