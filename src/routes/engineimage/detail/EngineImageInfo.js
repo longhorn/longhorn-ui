@@ -16,7 +16,7 @@ function EngineImageInfo({ selectedEngineImage }) {
         <span>{ moment(new Date(selectedEngineImage.buildDate)).fromNow() }</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>Satus:</span>
+        <span className={styles.label}>Status:</span>
         <span className={classnames({ [selectedEngineImage.state.toLowerCase()]: true, capitalize: true })}>{selectedEngineImage.state.hyphenToHump()}</span>
       </div>
       <div className={styles.row}>
