@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ReactMarkdown from 'react-markdown/with-html'
 import { Form, Input, Button, Spin, Icon, Checkbox, Select } from 'antd'
 import styles from './setting.less'
 import { classnames } from '../../utils'
@@ -63,14 +64,13 @@ const form = ({
 
     return (
       <FormItem key={setting.id}>
-        <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
+        <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', fontWeight: 700, marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
         {getFieldDecorator(setting.name, {
           rules: parseSettingRules(setting),
           initialValue,
           valuePropName,
-        })(genInputItem(setting))
-        }
-        <div><Icon type="question-circle-o" /> &nbsp;<small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}{setting.definition.description}</small></div>
+        })(genInputItem(setting))}
+        <div>{setting.definition.required && !setting.definition.readOnly ? <Icon style={{ mariginRight: 5 }} type="question-circle-o" /> : <Icon style={{ margin: '10px 5px 0px 0px', float: 'left' }} type="question-circle-o" />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
       </FormItem>
     )
   }
