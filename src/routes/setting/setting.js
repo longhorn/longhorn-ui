@@ -63,14 +63,14 @@ const form = ({
     }
 
     return (
-      <FormItem key={setting.id}>
+      <FormItem key={setting.id} className={'settings-container'}>
         <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', fontWeight: 700, marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
         {getFieldDecorator(setting.name, {
           rules: parseSettingRules(setting),
           initialValue,
           valuePropName,
         })(genInputItem(setting))}
-        <div>{setting.definition.required && !setting.definition.readOnly ? <Icon style={{ mariginRight: 5 }} type="question-circle-o" /> : <Icon style={{ margin: '10px 5px 0px 0px', float: 'left' }} type="question-circle-o" />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
+        <div>{setting.definition.required && !setting.definition.readOnly ? <Icon style={{ mariginRight: 5 }} type="question-circle-o" /> : <Icon style={{ margin: '8px 5px 0px 0px', float: 'left' }} type="question-circle-o" />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
       </FormItem>
     )
   }
