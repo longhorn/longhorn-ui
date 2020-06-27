@@ -1,8 +1,8 @@
-FROM nginx:1.16.0
+FROM nginx:1.18.0
 RUN apt-get update -y && \
     apt-get install -y curl \
-                       libcurl3 \
-                       libcurl3-dev \
+                       libcurl4 \
+                       libcurl4-openssl-dev \
                        ngrep \
                        gnupg
 
