@@ -60,10 +60,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const isHasStandy = () => selectedRows.some(item => item.standby)
-  const isAttached = () => selectedRows.some(item => item.state !== 'detached')
+  const canUpgradeEngine = () => selectedRows.some(item => (item.state !== 'detached' && item.state !== 'attached'))
   const isFaulted = () => selectedRows.some(item => item.robustness === 'faulted')
   const isHasPVC = () => selectedRows.some(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus && item.kubernetesStatus.pvStatus === 'Bound')
-  // const isAttached = () => selectedRows.some(item => item.state === 'attached')
   const isRestoring = () => selectedRows.some((selected) => {
     if (selected.restoreStatus && selected.restoreStatus.length > 0) {
       let flag = selected.restoreStatus.every((item) => {
@@ -87,7 +86,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   ]
 
   const allDropDownActions = [
-    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || isAttached() } },
+    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 || isHasStandy() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() || isHasPVC() || isFaulted() } },
