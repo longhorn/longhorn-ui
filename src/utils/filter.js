@@ -15,8 +15,8 @@ export function detachedVolume(data) { return data.filter((item) => item.state =
 export function faultedVolume(data) { return data.filter((item) => item.state === 'detached' && item.robustness === 'faulted') }
 
 const isSchedulable = (node) => node.conditions && node.conditions.Schedulable.status.toLowerCase() === 'true' && node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.conditions && d.conditions.Schedulable.status.toLowerCase() === 'true'))
-const isUnschedulable = (node) => (node.conditions && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === false || (d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status.toLowerCase() === 'false') || (d.conditions && d.conditions.Ready && d.conditions.Ready.status.toLowerCase() === 'false'))) || (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status.toLowerCase() === 'false')
 const isDisabled = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'true' && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))
+const isUnschedulable = (node) => (node.conditions && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === false || (d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status.toLowerCase() === 'false') || (d.conditions && d.conditions.Ready && d.conditions.Ready.status.toLowerCase() === 'false'))) || (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status.toLowerCase() === 'false')
 const isDown = (node) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'false'
 export const nodeStatusColorMap = {
   schedulable: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
@@ -40,7 +40,7 @@ export function getNodeStatus(node) {
 export function schedulableNode(data) { return data.filter(node => isSchedulable(node)) }
 // Unschedulable (yellow)
 // a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, but ALL of THOSE disks.State == Unschedulable).
-export function unschedulableNode(data) { return data.filter(node => isUnschedulable(node)) }
+export function unschedulableNode(data) { return data.filter(node => (isUnschedulable(node) && !isDisabled(node) && !isDown(node))) }
 // Scheduling disabled (grey)
 // a. Node.Status == UP, and (either node.AllowScheduling == false, or ALL of the disk.AllowScheduling == false)
 export function schedulingDisabledNode(data) { return data.filter(node => isDisabled(node)) }
