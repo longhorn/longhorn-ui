@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, replicaSoftAntiAffinitySettingValue, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, replicaSoftAntiAffinitySettingValue, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -105,6 +105,9 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
         } else if (isVolumeRelicaLimited(record) && replicaSoftAntiAffinitySettingValue) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
+        let attchedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
+          return record.controllers && record.controllers[0] && host.id === record.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
+        })
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
         let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
         let stateText = (() => {
@@ -150,7 +153,7 @@ function list({ loading, dataSource, engineImages, showAttachHost, showEngineUpg
               {restoreProgress}
               {rebuildProgress}
             </div>
-            {upgrade} {stateText} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
+            {upgrade} {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''} {stateText} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
       },
@@ -376,6 +379,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   engineImages: PropTypes.array,
+  hosts: PropTypes.array,
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,

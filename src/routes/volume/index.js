@@ -153,6 +153,7 @@ class Volume extends React.Component {
       height: this.state.height,
       commandKeyDown: this.state.commandKeyDown,
       replicaSoftAntiAffinitySettingValue,
+      hosts,
       onSorterChange(s) {
         dispatch({
           type: 'volume/updateSorter',
