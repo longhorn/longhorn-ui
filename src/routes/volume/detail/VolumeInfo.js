@@ -9,9 +9,13 @@ import styles from './VolumeInfo.less'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
-function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineImages }) {
+function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineImages, hosts }) {
   let errorMsg = null
   const state = snapshotModalState
+
+  const attchedNodeIsDown = selectedVolume.state === 'attached' && selectedVolume.robustness === 'unknown' && hosts && hosts.some((host) => {
+    return selectedVolume.controllers && selectedVolume.controllers[0] && host.id === selectedVolume.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
+  })
 
   if (isSchedulingFailure(selectedVolume)) {
     errorMsg = (
@@ -154,6 +158,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Health:</span>
+        {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 8 }} type="api" /></Tooltip> : ''}
         <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
           {ha} {healthState}
         </span>
@@ -291,6 +296,7 @@ VolumeInfo.propTypes = {
   snapshotData: PropTypes.array,
   snapshotModalState: PropTypes.bool,
   engineImages: PropTypes.array,
+  hosts: PropTypes.array,
 }
 
 export default VolumeInfo

@@ -82,7 +82,7 @@ export function getUpdateReplicaCountModalProps(volume, visible, dispatch) {
   }
 }
 export function getHealthState(state) {
-  return state.toLowerCase() === 'unknown' ? '' : state.hyphenToHump()
+  return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }
 
 export function needToWaitDone(state, replicas) {

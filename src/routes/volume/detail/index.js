@@ -114,6 +114,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     snapshotData,
     snapshotModalState,
     engineImages,
+    hosts,
     clearBackupStatus() {
       dispatch({
         type: 'backup/updateBackupStatus',
