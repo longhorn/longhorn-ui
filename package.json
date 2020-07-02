@@ -6,7 +6,8 @@
     "dev": "webpack-dev-server --config=webpack.config.development.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config=webpack.config.production.js --mode production",
     "lint": "eslint --ext .js src",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "test": "jest"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.0.0",
@@ -89,6 +90,7 @@
     "happypack": "^5.0.0-beta.4",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^1.0.0-rc.4",
+    "jest": "^26.1.0",
     "keymaster": "^1.6.2",
     "less": "3.0.4",
     "less-loader": "^4.1.0",
