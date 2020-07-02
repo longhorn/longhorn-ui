@@ -89,7 +89,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: '130px',
+      width: '190px',
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         let upgrade = null
@@ -162,7 +162,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      width: '15.2%',
+      width: '11.2%',
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (

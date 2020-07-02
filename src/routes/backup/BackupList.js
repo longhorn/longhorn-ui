@@ -176,7 +176,7 @@ class List extends React.Component {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
-        width: '6.25%',
+        width: 100,
         sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text) => {
           return (
@@ -269,7 +269,7 @@ class List extends React.Component {
         title: 'Snapshot Created',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
-        width: '260',
+        width: 260,
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (
@@ -282,6 +282,7 @@ class List extends React.Component {
         title: 'Labels',
         dataIndex: 'labels',
         key: 'labels',
+        width: 100,
         render: (obj, record) => {
           if (obj && record.snapshotCreated) {
             obj.snapshotCreated = record.snapshotCreated

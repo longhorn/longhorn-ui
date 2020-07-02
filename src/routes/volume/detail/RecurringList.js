@@ -356,7 +356,7 @@ class RecurringList extends React.Component {
         render: (text, record) => {
           return (
             this.state.editing ? <div>
-                <Select disabled={record.deleted} onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 140 }}>
+                <Select getPopupContainer={triggerNode => triggerNode.parentElement} disabled={record.deleted} onChange={(value) => this.onTaskTypeChange(record, value)} defaultValue={record.task} style={{ width: 140 }}>
                   <Option value="backup">Backup</Option>
                   <Option value="snapshot">Snapshot</Option>
                 </Select>
@@ -368,7 +368,7 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
-        width: '50%',
+        width: '30%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing ? '' : 'Click edit Cron'}>
@@ -466,6 +466,7 @@ class RecurringList extends React.Component {
               simple
               pagination={pagination}
               rowKey={record => record.name}
+              scroll={{ x: 850 }}
             />
           </div>
           <div className={styles.new}>
