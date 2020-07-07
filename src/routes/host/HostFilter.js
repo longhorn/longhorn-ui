@@ -12,6 +12,7 @@ class HostFilter extends React.Component {
       commandKeyDown: false,
       HostBulkActionsProps: {
         bulkDeleteHost: this.bulkDeleteHost,
+        showBulkEditNodeModal: this.showBulkEditNodeModal,
       },
     }
   }
@@ -60,6 +61,15 @@ class HostFilter extends React.Component {
   bulkDeleteHost = () => {
     this.props.dispatch({
       type: 'host/autoDeleteNode',
+      payload: {
+        selectedHostRows: this.props.selectedHostRows,
+      },
+    })
+  }
+
+  showBulkEditNodeModal = () => {
+    this.props.dispatch({
+      type: 'host/showBulkEditNodeModal',
       payload: {
         selectedHostRows: this.props.selectedHostRows,
       },

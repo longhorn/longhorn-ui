@@ -5,7 +5,7 @@ import style from './HostBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown }) {
+function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEditNodeModal }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -19,6 +19,9 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown }) {
             },
           })
         }
+        break
+      case 'editNode':
+        showBulkEditNodeModal()
         break
       default:
     }
@@ -36,6 +39,17 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown }) {
         }))
       },
     },
+    { key: 'editNode',
+      name: 'Edit Node',
+      disabled() {
+        return selectedRows.length === 0 || selectedRows.some((item) => {
+          if (item && item.status && item.status.key === 'down') {
+            return true
+          }
+          return false
+        })
+      },
+    },
   ]
 
   const message = selectedRows.length === 0 || selectedRows.some((item) => {
@@ -51,7 +65,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown }) {
         return (
           <div key={item.key}>
             &nbsp;
-            <Tooltip title={`${message}`}>
+            <Tooltip title={`${item.key === 'delete' ? message : ''}`}>
               <Button size="large" type="primary" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
             </Tooltip>
           </div>
@@ -64,6 +78,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown }) {
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   bulkDeleteHost: PropTypes.func,
+  showBulkEditNodeModal: PropTypes.func,
   commandKeyDown: PropTypes.bool,
 }
 
