@@ -8,13 +8,14 @@ import AddDisk from './AddDisk'
 import EditDisk from './EditDisk'
 import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
+import BulkEditNode from './BulkEditNode'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus } from '../../utils/filter'
 import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
   let hostFilter = null
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows, currentNode } = host
+  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows, currentNode, editBulkDisksModalVisible } = host
   const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
   const { field, value, stateValue } = queryString.parse(location.search)
   const volumeList = volume.data
@@ -115,6 +116,30 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       dispatch({
         type: 'app/changeBlur',
         payload: false,
+      })
+    },
+  }
+
+  const editBulkDisksModalProps = {
+    visible: editBulkDisksModalVisible,
+    onOk(allowScheduling) {
+      if (allowScheduling === 'noOperation') {
+        dispatch({
+          type: 'host/hideBulkEditNodeModal',
+        })
+      } else {
+        dispatch({
+          type: 'host/changeBulkNodeScheduling',
+          payload: {
+            allowScheduling,
+            selected: selectedHostRows,
+          },
+        })
+      }
+    },
+    onCancel() {
+      dispatch({
+        type: 'host/hideBulkEditNodeModal',
       })
     },
   }
@@ -328,6 +353,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
       {editDisksModalVisible && <EditDisk {...editDiskModalProps} />}
       {diskReplicaModalVisible && <HostReplica {...diskReplicaModalProps} />}
+      {editBulkDisksModalVisible && <BulkEditNode {...editBulkDisksModalProps} />}
     </div>
   )
 }
