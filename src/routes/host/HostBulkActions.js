@@ -46,7 +46,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEdi
           if (item && item.status && item.status.key === 'down') {
             return true
           }
-          return false
+          return selectedRows[0].allowScheduling !== item.allowScheduling
         })
       },
     },

@@ -199,7 +199,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['deleted']`, {
               initialValue: !!disk.deleted,
-            })(<Checkbox style={{ display: 'none' }} />)}
+            })(<Checkbox checked style={{ display: 'none' }} />)}
             {genActionButton()}
           </FormItem>
         </div>
