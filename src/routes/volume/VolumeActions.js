@@ -5,6 +5,41 @@ import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
 function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, commandKeyDown }) {
+  const deleteWranElement = (record) => {
+    let workloadResources = ''
+    let hasPvTooltipText = ''
+    let pvResources = ''
+
+    if (record && record.kubernetesStatus && record.kubernetesStatus.pvStatus && record.kubernetesStatus.pvName) {
+      hasPvTooltipText = (<div>{`The following resources associated with this volume (${record.name}) will be deleted:`}</div>)
+      pvResources = (<div style={{ margin: '10px', color: '#b7b7b7' }}>
+        <div style={{ paddingLeft: '10px' }}>PV Name: {record.kubernetesStatus.pvName}</div>
+        { !record.kubernetesStatus.lastPVCRefAt && record.kubernetesStatus.pvcName ? <div style={{ paddingLeft: '10px' }}>PVC Name: {record.kubernetesStatus.pvcName}</div> : ''}
+      </div>)
+    }
+    if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && record.kubernetesStatus.workloadsStatus.length > 0) {
+      workloadResources = (<div>
+        <div style={{ margin: '10px 0px', color: '#b7b7b7' }}>{record.kubernetesStatus.workloadsStatus.map((item, i) => {
+          return (<div key={i} style={{ paddingLeft: '10px' }}>Pod Name: {item.podName} ({item.podStatus})</div>)
+        })}</div>
+      </div>)
+    }
+    if (record.state === 'attached') {
+      return (<div>
+          <div>{`The volume is attached on ${record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''}. Deleting this volume may cause errors for any running applications using this volume!`} </div>
+          {workloadResources}
+          {hasPvTooltipText}
+          {pvResources}
+          <div style={{ marginTop: 10 }}>{`Are you sure you want to delete volume (${record.name}) ?`} </div>
+        </div>)
+    } else {
+      return (<div>
+        {hasPvTooltipText}
+        {pvResources}
+        <div style={{ marginTop: hasPvTooltipText || pvResources ? 10 : 0 }}>{`Are you sure you want to delete volume ${record.name} ?`} </div>
+      </div>)
+    }
+  }
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'attach':
@@ -17,8 +52,10 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         if (commandKeyDown) {
           deleteVolume(record)
         } else {
+          let title = deleteWranElement(record)
           confirm({
-            title: `Are you sure you want to delete volume ${record.name} ?`,
+            width: 700,
+            title,
             onOk() {
               deleteVolume(record)
             },
