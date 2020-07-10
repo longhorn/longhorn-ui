@@ -24,7 +24,7 @@ export default {
     editDisksModalVisible: false,
     diskReplicaModalVisible: false,
     instanceManagerVisible: false,
-    editBulkDisksModalVisible: false,
+    editBulkNodesModalVisible: false,
     socketStatus: 'closed',
     sorter: getSorter('nodeList.sorter'),
   },
@@ -151,9 +151,18 @@ export default {
   },
   reducers: {
     queryHost(state, action) {
+      let selectedHostRows = []
+
+      if (action.payload && action.payload.data && action.payload.data) {
+        selectedHostRows = action.payload.data.filter((item) => {
+          return state.selectedHostRows.some((ele) => item.id === ele.id)
+        })
+      }
+
       return {
         ...state,
         ...action.payload,
+        selectedHostRows,
       }
     },
     updateBackground(state, action) {
@@ -207,10 +216,10 @@ export default {
       return { ...state, replicaModalDeleteLoading: false }
     },
     showBulkEditNodeModal(state, action) {
-      return { ...state, ...action.payload, editBulkDisksModalVisible: true }
+      return { ...state, ...action.payload, editBulkNodesModalVisible: true }
     },
     hideBulkEditNodeModal(state) {
-      return { ...state, editBulkDisksModalVisible: false }
+      return { ...state, editBulkNodesModalVisible: false }
     },
     showEditDisksModal(state, action) {
       return { ...state, ...action.payload, editDisksModalVisible: true }

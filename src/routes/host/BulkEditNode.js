@@ -12,6 +12,7 @@ const modal = ({
   visible,
   onCancel,
   onOk,
+  selectedHostRows,
 }) => {
   function handleOk() {
     const { validateFields } = form
@@ -22,6 +23,8 @@ const modal = ({
       }
     })
   }
+
+  const isEnabled = selectedHostRows.every((item) => item.allowScheduling)
 
   const { getFieldDecorator } = form
 
@@ -44,11 +47,11 @@ const modal = ({
           <div className={styles.control} style={{ width: '210px' }}>
             <FormItem style={{ margin: '3px 0px 0px 0px' }}>
               {getFieldDecorator('nodeAllowScheduling', {
-                initialValue: 'noOperation',
+                initialValue: !isEnabled,
               })(
                 <RadioGroup>
-                  <Radio value>Enable</Radio>
-                  <Radio value={false}>Disable</Radio>
+                  <Radio disabled={isEnabled} value={true}>Enable</Radio>
+                  <Radio disabled={!isEnabled} value={false}>Disable</Radio>
                 </RadioGroup>
               )}
             </FormItem>
@@ -61,6 +64,7 @@ const modal = ({
 
 modal.propTypes = {
   form: PropTypes.object.isRequired,
+  selectedHostRows: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   onOk: PropTypes.func,
