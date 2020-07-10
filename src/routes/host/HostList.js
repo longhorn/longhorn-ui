@@ -213,7 +213,7 @@ class List extends React.Component {
         title: <span style={{ display: 'inline-block', padding: '0 0 0 30px' }}>Status</span>,
         dataIndex: 'conditions.Ready.status',
         key: 'status',
-        width: 210,
+        width: 180,
         className: styles.status,
         sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
         render: (text, record) => {
@@ -235,7 +235,7 @@ class List extends React.Component {
         title: 'Readiness',
         dataIndex: 'readiness',
         key: 'readiness',
-        width: 200,
+        width: 110,
         render: (text, record) => {
           return (
             <a style={{ textAlign: 'center', display: 'block' }} onClick={() => { this.showModalBlur(record) }}>
@@ -248,7 +248,7 @@ class List extends React.Component {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        width: 300,
+        width: 240,
         className: styles.name,
         sorter: (a, b) => sortTable(a, b, 'name'),
         render: (text, record) => {
@@ -263,7 +263,7 @@ class List extends React.Component {
         title: 'Replicas',
         dataIndex: 'replicas',
         key: 'replicas',
-        width: 96,
+        width: 120,
         className: styles.replicas,
         sorter: (a, b) => a.replicas.length - b.replicas.length,
         render: (text, record) => {
@@ -277,7 +277,7 @@ class List extends React.Component {
         title: 'Allocated',
         dataIndex: 'storageScheduled',
         key: 'allocated',
-        width: 180,
+        width: 160,
         className: styles.allocated,
         sorter: (a, b) => computeAllocated(a) - computeAllocated(b),
         render: (text, record) => {
@@ -300,7 +300,7 @@ class List extends React.Component {
       }, {
         title: 'Used',
         key: 'used',
-        width: 180,
+        width: 160,
         className: styles.used,
         sorter: (a, b) => computeUsed(a) - computeUsed(b),
         render: (text, record) => {
@@ -340,7 +340,7 @@ class List extends React.Component {
       {
         title: 'Tags',
         key: 'tags',
-        width: 100,
+        width: 170,
         className: styles.size,
         render: (text, record) => {
           let forMap = (tag, index) => {
@@ -367,7 +367,7 @@ class List extends React.Component {
       {
         title: 'Operation',
         key: 'operation',
-        width: 48,
+        width: 120,
         render: (text, record) => {
           return (
             <HostActions {...hostActionsProps} selected={record} />

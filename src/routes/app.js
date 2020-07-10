@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Helmet } from 'react-helmet'
-import { LocaleProvider } from 'antd'
+import { ConfigProvider } from 'antd'
 import enUS from 'antd/lib/locale-provider/en_US'
 import { Layout } from '../components'
 import { classnames, config } from '../utils'
@@ -25,7 +25,7 @@ const App = ({ children, dispatch, location, app }) => {
   }
 
   return (
-    <LocaleProvider locale={enUS}>
+    <ConfigProvider locale={enUS}>
       <div className={blur(app.blur)}>
         <Helmet>
           <title>Longhorn</title>
@@ -44,7 +44,7 @@ const App = ({ children, dispatch, location, app }) => {
           </div>
         </div>
       </div>
-    </LocaleProvider>
+    </ConfigProvider>
   )
 }
 

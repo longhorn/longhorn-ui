@@ -370,7 +370,7 @@ class RecurringList extends React.Component {
         title: 'Type',
         dataIndex: 'task',
         key: 'task',
-        width: 120,
+        width: 170,
         render: (text, record) => {
           return (
             this.state.editing ? <div>
@@ -386,7 +386,7 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
-        width: '50%',
+        width: '30%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing ? '' : 'Click edit Cron'}>

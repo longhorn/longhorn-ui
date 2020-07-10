@@ -88,7 +88,7 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
         )
       },
     }, {
-      title: '',
+      title: 'Operation',
       key: 'operation',
       width: 100,
       render: (text, record) => {

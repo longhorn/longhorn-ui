@@ -93,18 +93,18 @@ function SnapshotIcon(props, snapshotProps) {
       onClick={onClick}
     >
       { props.usercreated ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
-          {snapshotProps.volume.disableFrontend ? <div>Revert</div> : <Tooltip title={<div>
+          {snapshotProps.volume.disableFrontend ? <div style={{ padding: '0px 12px' }}>Revert</div> : <Tooltip title={<div>
             <p>Please reattach the volume in maintenance mode to revert the volume.</p>
             <p>Workload shutdown might be needed.</p>
           </div>}><div className="saic-Popconfirm-Revert">Revert</div></Tooltip> }
         </Menu.Item> : ''
       }
       { props.usercreated ? <Menu.Item key="snapshotBackup">
-          <div>Backup</div>
+          <div style={{ padding: '0px 12px' }}>Backup</div>
         </Menu.Item> : ''
       }
       <Menu.Item key="snapshotDelete">
-        <div>Delete</div>
+        <div style={{ padding: '0px 12px' }}>Delete</div>
       </Menu.Item>
     </Menu>
   )
@@ -138,10 +138,11 @@ function SnapshotIcon(props, snapshotProps) {
 
   return (
     <Dropdown
-      placement="bottomRight"
+      placement="bottomLeft"
       overlay={menu}
       trigger={props.removed ? [] : ['click']}
       key={props.name}
+      getPopupContainer={triggerNode => triggerNode.parentElement}
     >
       <Tooltip placement="right"
         autoAdjustOverflow={false}

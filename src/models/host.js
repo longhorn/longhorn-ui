@@ -24,6 +24,7 @@ export default {
     editDisksModalVisible: false,
     diskReplicaModalVisible: false,
     instanceManagerVisible: false,
+    editBulkDisksModalVisible: false,
     socketStatus: 'closed',
     sorter: getSorter('nodeList.sorter'),
   },
@@ -134,6 +135,19 @@ export default {
       yield put({ type: 'setCurrentNode', payload })
       yield put({ type: 'showInstanceManagerModal', payload: engineImageData })
     },
+    *changeBulkNodeScheduling({
+      payload,
+    }, { call, put }) {
+      yield payload.selected.map(item => {
+        const data = {
+          ...item,
+          allowScheduling: payload.allowScheduling,
+        }
+        return call(toggleScheduling, data)
+      })
+      yield put({ type: 'hideBulkEditNodeModal' })
+      yield put({ type: 'query' })
+    },
   },
   reducers: {
     queryHost(state, action) {
@@ -191,6 +205,12 @@ export default {
     },
     replicaModalDeleteLoaded(state) {
       return { ...state, replicaModalDeleteLoading: false }
+    },
+    showBulkEditNodeModal(state, action) {
+      return { ...state, ...action.payload, editBulkDisksModalVisible: true }
+    },
+    hideBulkEditNodeModal(state) {
+      return { ...state, editBulkDisksModalVisible: false }
     },
     showEditDisksModal(state, action) {
       return { ...state, ...action.payload, editDisksModalVisible: true }

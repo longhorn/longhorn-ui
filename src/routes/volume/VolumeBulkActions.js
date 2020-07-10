@@ -6,14 +6,48 @@ import style from './VolumeBulkActions.less'
 const confirm = Modal.confirm
 
 function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, confirmDetachWithWorkload, commandKeyDown }) {
+  const deleteWranElement = (rows) => {
+    let workloadResources = []
+    let pvResources = []
+    let hasVolumeAttached = false
+
+    rows.forEach((item) => {
+      if (item && item.kubernetesStatus && item.kubernetesStatus.pvStatus && item.kubernetesStatus.pvName) {
+        pvResources.push((<div style={{ margin: '10px', color: '#b7b7b7' }}>
+          <div style={{ paddingLeft: '10px' }}>PV Name: {item.kubernetesStatus.pvName}</div>
+          { !item.kubernetesStatus.lastPVCRefAt && item.kubernetesStatus.pvcName ? <div style={{ paddingLeft: '10px' }}>PVC Name: {item.kubernetesStatus.pvcName}</div> : ''}
+        </div>))
+      }
+      if (item.kubernetesStatus && item.kubernetesStatus.workloadsStatus && item.kubernetesStatus.workloadsStatus.length > 0) {
+        workloadResources.push((<div>
+          <div style={{ margin: '10px 0px', color: '#b7b7b7' }}>{item.kubernetesStatus.workloadsStatus.map((ele, i) => {
+            return (<div key={i} style={{ paddingLeft: '10px' }}>Pod Name: {ele.podName} ({ele.podStatus})</div>)
+          })}</div>
+        </div>))
+      }
+      if (item.state === 'attached') {
+        hasVolumeAttached = true
+      }
+    })
+    return (<div>
+      {hasVolumeAttached ? <div>Some of the selected volumes are attached to a node and may cause errors in any applications using them once they are deleted.</div> : ''}
+      {!hasVolumeAttached && workloadResources.length > 0 ? <div>The following applications used these volumes:</div> : '' }
+      {workloadResources.map((item, i) => <div key={i}>{item}</div>)}
+      {pvResources.length > 0 ? <div>The following resources (PersistentVolumes and PersistentVolumeClaims) associated with these volumes will be deleted:</div> : ''}
+      {pvResources.map((item, i) => <div key={i}>{item}</div>)}
+      <div style={{ marginTop: 10 }}>{`Are you sure you want to delete volume (${selectedRows.map(item => item.name).join(', ')}) ?`} </div>
+    </div>)
+  }
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
         if (commandKeyDown) {
           bulkDeleteVolume(selectedRows)
         } else {
+          let title = deleteWranElement(selectedRows)
           confirm({
-            title: `Are you sure you want to delete volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
+            width: 700,
+            title,
             onOk() {
               bulkDeleteVolume(selectedRows)
             },
@@ -60,10 +94,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const isHasStandy = () => selectedRows.some(item => item.standby)
-  const isAttached = () => selectedRows.some(item => item.state !== 'detached')
+  const canUpgradeEngine = () => selectedRows.some(item => (item.state !== 'detached' && item.state !== 'attached'))
   const isFaulted = () => selectedRows.some(item => item.robustness === 'faulted')
   const isHasPVC = () => selectedRows.some(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus && item.kubernetesStatus.pvStatus === 'Bound')
-  // const isAttached = () => selectedRows.some(item => item.state === 'attached')
   const isRestoring = () => selectedRows.some((selected) => {
     if (selected.restoreStatus && selected.restoreStatus.length > 0) {
       let flag = selected.restoreStatus.every((item) => {
@@ -87,7 +120,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   ]
 
   const allDropDownActions = [
-    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || isAttached() } },
+    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 || isHasStandy() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() || isHasPVC() || isFaulted() } },

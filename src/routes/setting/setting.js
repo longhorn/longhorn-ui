@@ -31,7 +31,7 @@ const form = ({
   }
   const genInputItem = (setting) => {
     if (setting.id === 'volume-attachment-recovery-policy') {
-      return (<Select>
+      return (<Select getPopupContainer={triggerNode => triggerNode.parentElement}>
         <Option value="wait">wait</Option>
         <Option value="never">never</Option>
         <Option value="immediate">immediate</Option>

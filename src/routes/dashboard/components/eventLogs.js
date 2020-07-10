@@ -211,7 +211,7 @@ class EventLogs extends React.Component {
         dataIndex: 'eventType',
         key: 'eventType',
         className: 'text',
-        width: 70,
+        width: 120,
         filters: filtersEventType,
         sorter: (a, b) => sortTable(a, b, 'eventType'),
         onFilter: (value, record) => (record.eventType || '').indexOf(value) === 0,
