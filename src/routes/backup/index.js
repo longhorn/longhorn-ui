@@ -199,6 +199,9 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
       name: volumeName,
     },
     visible: createVolumeStandModalVisible,
+    nodeTags,
+    diskTags,
+    tagsLoading,
     onOk(newVolume) {
       let data = Object.assign(newVolume, { standby: true, frontend: '' })
       data.size = data.size.replace(/\s/ig, '')
@@ -223,6 +226,9 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
     })),
     numberOfReplicas: defaultNumberOfReplicas,
     visible: bulkCreateVolumeStandModalVisible,
+    nodeTags,
+    diskTags,
+    tagsLoading,
     onOk(params, newVolumes) {
       let data = newVolumes.map((item) => ({
         ...item,
@@ -268,6 +274,9 @@ Backup.propTypes = {
   loading: PropTypes.bool,
   host: PropTypes.object,
   setting: PropTypes.object,
+  nodeTags: PropTypes.array,
+  diskTags: PropTypes.array,
+  tagsLoading: PropTypes.bool,
 }
 
 export default connect(({ host, backup, setting, loading }) => ({ host, backup, setting, loading: loading.models.backup }))(Backup)

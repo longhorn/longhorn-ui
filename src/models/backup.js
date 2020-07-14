@@ -213,9 +213,6 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideCreateVolumeStandModalVisible' })
       yield call(createVolume, payload)
-      // yield put(routerRedux.push({
-      //   pathname: addPrefix('/volume'),
-      // }))
     },
     *bulkCreateVolume({
       payload,
@@ -230,6 +227,7 @@ export default {
       const found = data.data.find(b => b.name === payload.lastBackupName)
       yield put({ type: 'initModalUrl', found, payload })
       yield put({ type: 'showCreateVolumeStandModalVisible' })
+      yield put({ type: 'queryDiskTagsAndgetNodeTags' })
     },
     *BulkCreateStandVolume({
       payload,
@@ -247,6 +245,7 @@ export default {
       })
       yield put({ type: 'initBulkCreateModalUrl', volumes })
       yield put({ type: 'showBulkCreateVolumeStandModalVisible' })
+      yield put({ type: 'queryDiskTagsAndgetNodeTags' })
     },
     *deleteAllBackups({
       payload,
