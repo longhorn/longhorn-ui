@@ -9,7 +9,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
-    let hasVolumeAttached = false
+    let hasPVRows = []
+    let hasWorkloadsRows = []
+    let hasVolumeAttachedRows = []
 
     rows.forEach((item) => {
       if (item && item.kubernetesStatus && item.kubernetesStatus.pvStatus && item.kubernetesStatus.pvName) {
@@ -17,6 +19,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
           <div style={{ paddingLeft: '10px' }}>PV Name: {item.kubernetesStatus.pvName}</div>
           { !item.kubernetesStatus.lastPVCRefAt && item.kubernetesStatus.pvcName ? <div style={{ paddingLeft: '10px' }}>PVC Name: {item.kubernetesStatus.pvcName}</div> : ''}
         </div>))
+        hasPVRows.push(item.name)
       }
       if (item.kubernetesStatus && item.kubernetesStatus.workloadsStatus && item.kubernetesStatus.workloadsStatus.length > 0) {
         workloadResources.push((<div>
@@ -24,18 +27,19 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
             return (<div key={i} style={{ paddingLeft: '10px' }}>Pod Name: {ele.podName} ({ele.podStatus})</div>)
           })}</div>
         </div>))
+        hasWorkloadsRows.push(item.name)
       }
       if (item.state === 'attached') {
-        hasVolumeAttached = true
+        hasVolumeAttachedRows.push(item.name)
       }
     })
     return (<div>
-      {hasVolumeAttached ? <div>Some of the selected volumes are attached to a node and may cause errors in any applications using them once they are deleted.</div> : ''}
-      {!hasVolumeAttached && workloadResources.length > 0 ? <div>The following applications used these volumes:</div> : '' }
+      {hasVolumeAttachedRows.length > 0 ? <div>{`Some of the selected volumes (${hasVolumeAttachedRows.map(item => item).join(', ')}) are attached to a node and may cause errors in any applications using them once they are deleted.`}</div> : ''}
+      {workloadResources.length > 0 ? <div>{ `Some of the selected volumes (${hasWorkloadsRows.map(item => item).join(', ')}) have workloads associated with them which may encounter errors once the volume(s) are deleted:` }</div> : '' }
       {workloadResources.map((item, i) => <div key={i}>{item}</div>)}
-      {pvResources.length > 0 ? <div>The following resources (PersistentVolumes and PersistentVolumeClaims) associated with these volumes will be deleted:</div> : ''}
+      {pvResources.length > 0 ? <div>{ `The following resources (PersistentVolumes and PersistentVolumeClaims) associated with these volumes(s) (${hasPVRows.map(item => item).join(', ')}) will be deleted:` }</div> : ''}
       {pvResources.map((item, i) => <div key={i}>{item}</div>)}
-      <div style={{ marginTop: 10 }}>{`Are you sure you want to delete volume (${selectedRows.map(item => item.name).join(', ')}) ?`} </div>
+      <div style={{ marginTop: 10 }}>{`Are you sure you want to delete volume(s) (${rows.map(item => item.name).join(', ')}) ?`} </div>
     </div>)
   }
   const handleClick = (action) => {
