@@ -24,21 +24,15 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         })}</div>
       </div>)
     }
-    if (record.state === 'attached') {
-      return (<div>
-          <div>{`The volume is attached on ${record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''}. Deleting this volume may cause errors for any running applications using this volume!`} </div>
-          {workloadResources}
-          {hasPvTooltipText}
-          {pvResources}
-          <div style={{ marginTop: 10 }}>{`Are you sure you want to delete volume (${record.name}) ?`} </div>
-        </div>)
-    } else {
-      return (<div>
-        {hasPvTooltipText}
-        {pvResources}
-        <div style={{ marginTop: hasPvTooltipText || pvResources ? 10 : 0 }}>{`Are you sure you want to delete volume ${record.name} ?`} </div>
-      </div>)
-    }
+
+    return (<div>
+      {record.state === 'attached' ? <div>{`The volume is attached on ${record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''}. Deleting this volume may cause errors for any running applications using this volume!`} </div> : ''}
+      {workloadResources ? <div> { `The following workload(s) depend on this volume (${record.name}) and may encounter errors once it is deleted:` }</div> : '' }
+      {workloadResources}
+      {hasPvTooltipText}
+      {pvResources}
+      <div style={{ marginTop: hasPvTooltipText || pvResources ? 10 : 0 }}>{`Are you sure you want to delete volume (${record.name}) ?`} </div>
+    </div>)
   }
   const handleMenuClick = (event, record) => {
     switch (event.key) {
