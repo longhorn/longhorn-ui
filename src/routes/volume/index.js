@@ -58,13 +58,16 @@ class Volume extends React.Component {
       this.setState({
         height,
       })
+      this.props.dispatch({ type: 'app/changeNavbar' })
     }
     window.addEventListener('keydown', this.onkeydown)
     window.addEventListener('keyup', this.onkeyup)
   }
 
   componentWillUnmount() {
-    window.onresize = null
+    window.onresize = () => {
+      this.props.dispatch({ type: 'app/changeNavbar' })
+    }
     window.removeEventListener('keydown', this.onkeydown)
     window.removeEventListener('keyup', this.onkeyup)
   }

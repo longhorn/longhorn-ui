@@ -24,6 +24,7 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
     backup: data,
     volumeList,
     loading,
+    dispatch,
     onSorterChange(s) {
       dispatch({
         type: 'backup/updateSorter',

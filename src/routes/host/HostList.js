@@ -41,6 +41,7 @@ class List extends React.Component {
       this.setState({
         height,
       })
+      this.props.dispatch({ type: 'app/changeNavbar' })
     }
     window.addEventListener('keydown', this.onkeydown)
     window.addEventListener('keyup', this.onkeyup)
@@ -55,6 +56,9 @@ class List extends React.Component {
     })
     window.removeEventListener('keydown', this.onkeydown)
     window.removeEventListener('keyup', this.onkeyup)
+    window.onresize = () => {
+      this.props.dispatch({ type: 'app/changeNavbar' })
+    }
   }
 
   onkeyup = () => {
@@ -115,10 +119,11 @@ class List extends React.Component {
         selectedRowKeys: selecteRowByClick.map((item) => item.id),
       },
     })
+
     this.props.dispatch({
-      type: 'backup/changeSelection',
+      type: 'host/changeSelection',
       payload: {
-        selectedRows: selecteRowByClick,
+        selectedHostRows: selecteRowByClick,
       },
     })
   }
