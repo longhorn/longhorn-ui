@@ -23,7 +23,6 @@ class HostFilter extends React.Component {
   }
 
   componentWillUnmount() {
-    window.onresize = null
     window.removeEventListener('keydown', this.onkeydown)
     window.removeEventListener('keyup', this.onkeyup)
   }

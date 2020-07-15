@@ -12,7 +12,7 @@ export default {
   namespace: 'app',
   state: {
     menuPopoverVisible: false,
-    isNavbar: document.body.clientWidth < 768,
+    isNavbar: false,
     bundlesropsVisible: false,
     blur: false,
     progressPercentage: 0,
@@ -31,10 +31,12 @@ export default {
   effects: {
     *changeNavbar({
       payload,
-    }, { put }) {
-      if (document.body.clientWidth < 768) {
+    }, { put, select }) {
+      const isNavbar = yield select(store => { return store.app.isNavbar })
+
+      if (document.body.clientWidth < 768 && !isNavbar) {
         yield put({ type: 'showNavbar' })
-      } else {
+      } else if (document.body.clientWidth >= 768 && isNavbar) {
         yield put({ type: 'hideNavbar' })
       }
     },
@@ -91,12 +93,14 @@ export default {
       return {
         ...state,
         isNavbar: true,
+        menuPopoverVisible: true,
       }
     },
     hideNavbar(state) {
       return {
         ...state,
         isNavbar: false,
+        menuPopoverVisible: false,
       }
     },
     showBundlesModel(state) {

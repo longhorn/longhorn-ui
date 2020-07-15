@@ -37,6 +37,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
     backup: backupVolumes,
     search: location.search,
     loading,
+    dispatch,
     onSorterChange(s) {
       dispatch({
         type: 'backup/updateSorter',

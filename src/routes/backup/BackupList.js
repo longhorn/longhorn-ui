@@ -61,11 +61,14 @@ class List extends React.Component {
       this.setState({
         height,
       })
+      this.props.dispatch({ type: 'app/changeNavbar' })
     }
   }
 
   componentWillUnmount() {
-    window.onresize = null
+    window.onresize = () => {
+      this.props.dispatch({ type: 'app/changeNavbar' })
+    }
   }
 
   fomartData = (data, key) => {
@@ -350,6 +353,7 @@ List.propTypes = {
   onSorterChange: PropTypes.func,
   showBackupLabels: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
+  dispatch: PropTypes.func,
   volumeList: PropTypes.array,
 }
 
