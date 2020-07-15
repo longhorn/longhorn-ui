@@ -143,6 +143,9 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
       baseImage,
       fromBackup: lastBackupUrl,
     },
+    nodeTags,
+    diskTags,
+    tagsLoading,
     visible: createVolumeStandModalVisible,
     onOk(newVolume) {
       let obj = Object.assign(newVolume, { standby: true, frontend: '' })
