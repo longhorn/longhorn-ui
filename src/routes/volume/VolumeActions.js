@@ -17,7 +17,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         { !record.kubernetesStatus.lastPVCRefAt && record.kubernetesStatus.pvcName ? <div style={{ paddingLeft: '10px' }}>PVC Name: {record.kubernetesStatus.pvcName}</div> : ''}
       </div>)
     }
-    if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && record.kubernetesStatus.workloadsStatus.length > 0) {
+    if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && !record.kubernetesStatus.lastPodRefAt && record.kubernetesStatus.workloadsStatus.length > 0) {
       workloadResources = (<div>
         <div style={{ margin: '10px 0px', color: '#b7b7b7' }}>{record.kubernetesStatus.workloadsStatus.map((item, i) => {
           return (<div key={i} style={{ paddingLeft: '10px' }}>Pod Name: {item.podName} ({item.podStatus})</div>)

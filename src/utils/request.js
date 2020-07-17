@@ -19,7 +19,7 @@ const fetch = (options) => {
     data,
     url,
   } = options
-  url = url.replace(/^https?.+?(:\d{2,6})?(?=\/v1)/, '')
+  url = url ? url.replace(/^https?.+?(:\d{2,6})?(?=\/v1)/, '') : ''
   switch (method.toLowerCase()) {
     case 'get':
       return axios.get(`${url}${options.data ? `?${qs.stringify(options.data)}` : ''}`, config)

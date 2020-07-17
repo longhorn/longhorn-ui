@@ -21,7 +21,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         </div>))
         hasPVRows.push(item.name)
       }
-      if (item.kubernetesStatus && item.kubernetesStatus.workloadsStatus && item.kubernetesStatus.workloadsStatus.length > 0) {
+      if (item.kubernetesStatus && item.kubernetesStatus.workloadsStatus && !item.kubernetesStatus.lastPodRefAt && item.kubernetesStatus.workloadsStatus.length > 0) {
         workloadResources.push((<div>
           <div style={{ margin: '10px 0px', color: '#b7b7b7' }}>{item.kubernetesStatus.workloadsStatus.map((ele, i) => {
             return (<div key={i} style={{ paddingLeft: '10px' }}>Pod Name: {ele.podName} ({ele.podStatus})</div>)
