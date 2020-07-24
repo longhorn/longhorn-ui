@@ -1,5 +1,5 @@
 # Longhorn UI
-[![Build Status](https://drone-publish.rancher.io/api/badges/longhorn/longhorn-ui/status.svg)](https://drone-publish.rancher.io/longhorn/longhorn-ui)
+[![Build Status](https://drone-publish.longhorn.io/api/badges/longhorn/longhorn-ui/status.svg)](https://drone-publish.longhorn.io/longhorn/longhorn-ui)
 --------
 
 Admin UI for Longhorn Manger
