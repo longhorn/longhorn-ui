@@ -167,7 +167,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       render: (text, record) => {
         return (
           <div style={{ maxWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LinkTo style={{ display: 'flex', alignItems: 'center' }} to={{ pathname: `/volume/${text}`, state: false }}>
+            <LinkTo style={{ display: 'flex', alignItems: 'center', wordBreak: 'break-word' }} to={{ pathname: `/volume/${text}`, state: false }}>
               {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume'}><div style={{ marginRight: '5px', display: 'flex', alignItems: 'center' }}><IconStandBackup fill={volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'} /></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
           </div>
