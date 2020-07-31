@@ -23,7 +23,7 @@ module.exports = {
   output: {
     filename: "[name].[chunkhash:8].js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/",
+    publicPath: "./",
     chunkFilename: "[name].[chunkhash:8].async.js"
   },
   resolve: {

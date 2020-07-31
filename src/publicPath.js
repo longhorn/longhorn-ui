@@ -1,6 +1,6 @@
 /* eslint-disable */
 const pathname = window.location.pathname
-const pathnamePattern = /\/k8s\/clusters\/.+?\/proxy\/?/g
+const pathnamePattern = /(\/k8s\/clusters\/|\/api\/v1\/).+?\/proxy\/?/g
 const match = pathname.match(pathnamePattern)
 
 if (match && match[0]) {
