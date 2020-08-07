@@ -21,7 +21,7 @@ import app from './main'
 
 import routerConfig from './router'
 
-// 2. Model
+// 2. Model (I am also helpless to not be able to load on demand, that the data is closely related, it must be loaded all!)
 app.model(appmodel)
 app.model(snapshot('snapshotModal'))
 app.model(host)

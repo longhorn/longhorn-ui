@@ -12,7 +12,7 @@ import BackupBulkActions from './BackupBulkActions'
 const { confirm } = Modal
 
 function Backup({ host, backup, loading, setting, dispatch, location }) {
-  location.search = location.search ? location.search : {}
+  location.search = location.search ? location.search : ''
   const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate } = backup
   const hosts = host.data
   const settings = setting.data
@@ -44,21 +44,6 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
         payload: { field: s.field, order: s.order, columnKey: s.columnKey },
       })
     },
-    // linkToBackup(id) {
-    //   dispatch(
-    //     routerRedux.push(
-    //       {
-    //         pathname: addPrefix(`/backup/${id}`),
-    //         search: queryString.stringify({
-    //           ...queryString.parse(location.search),
-    //           field: 'volumeName',
-    //           keyword: id,
-    //           state: true,
-    //         }),
-    //       }
-    //     )
-    //   )
-    // },
     Create(record) {
       dispatch({
         type: 'backup/CreateStandVolume',

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Menu, Icon } from 'antd'
 import { LinkTo } from '../../components'
 import { menu } from '../../utils'
-import { getPrefix } from '../../utils/pathnamePrefix'
 
 const SubMenu = Menu.SubMenu
 const topMenus = menu.map(item => item.key)
@@ -41,7 +40,7 @@ const getMenus = function (menuArray, siderFold) {
 
 function Menus({ location, isNavbar, switchMenuPopover }) {
   const menuItems = getMenus(menu, false)
-  const pathname = location.pathname.substr(getPrefix().length)
+  const pathname = location.pathname
   const activeClass = (pathname && pathname !== '/') ? `/${pathname.split('/').filter(item => item && item !== '/')[0]}` : '/dashboard'
   return (
     <Menu

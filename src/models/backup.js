@@ -44,24 +44,11 @@ export default {
         let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
         // This code may cause confusion. React router does not pass parameters when right-clicking on Link,
         // resulting in no request for the page, so an Undefined judgment is added.
-        const rancherProxyPath = 'http:longhorn-frontend:80/proxy'
-        const kubectlProxyPath = 'longhorn-frontend:http/proxy'
 
         let isbackupVolumePage = true
         let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting']
-        if (history.location && history.location.pathname.indexOf(rancherProxyPath) > -1) {
-          let proxyPathNameArry = history.location.pathname.split(rancherProxyPath)
-          let proxyPathName = proxyPathNameArry.length > 0 && proxyPathNameArry[1] ? proxyPathNameArry[1] : ''
 
-          isbackupVolumePage = path.every(ele => !proxyPathName.startsWith(ele)) && proxyPathName !== '/'
-        } else if (history.location && history.location.pathname.indexOf(kubectlProxyPath) > -1) {
-          let proxyPathNameArry = history.location.pathname.split(kubectlProxyPath)
-          let proxyPathName = proxyPathNameArry.length > 0 && proxyPathNameArry[1] ? proxyPathNameArry[1] : ''
-
-          isbackupVolumePage = path.every(ele => !proxyPathName.startsWith(ele)) && proxyPathName !== '/'
-        } else {
-          isbackupVolumePage = history.location && history.location.pathname && history.location.pathname !== '/' && path.every(ele => !history.location.pathname.startsWith(ele))
-        }
+        isbackupVolumePage = history.location && history.location.pathname && history.location.pathname !== '/' && path.every(ele => !history.location.pathname.startsWith(ele))
 
         if (history.location && (search.state || history.location.state || typeof (history.location.state) === 'undefined') && isbackupVolumePage) {
           dispatch({

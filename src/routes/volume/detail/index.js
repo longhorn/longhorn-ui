@@ -20,7 +20,6 @@ import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from '../helper'
-import { addPrefix } from '../../../utils/pathnamePrefix'
 
 const confirm = Modal.confirm
 
@@ -158,7 +157,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
     showSnapshots(record) {
       dispatch(routerRedux.push({
-        pathname: addPrefix(`/volume/${record.name}/snapshots`),
+        pathname: `/volume/${record.name}/snapshots`,
       }))
     },
     showRecurring(record) {
@@ -193,12 +192,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
     showBackups(record) {
       dispatch(routerRedux.push({
-        pathname: addPrefix(`/backup/${record.name}`),
+        pathname: `/backup/${record.name}`,
         search: queryString.stringify({
           field: 'volumeName',
           keyword: record.name,
         }),
-        state: true,
       }))
     },
     showSalvage(record) {

@@ -1,14 +1,13 @@
 import axios from 'axios'
 import qs from 'qs'
 import { message } from 'antd'
-import { getPrefix } from './pathnamePrefix'
 message.config({
   top: 60,
   duration: 5,
 })
 
 const config = {
-  baseURL: getPrefix(),
+  baseURL: window.__pathname_prefix__, // eslint-disable-line no-underscore-dangle
   headers: {
     Accept: 'application/json',
   },
@@ -20,6 +19,7 @@ const fetch = (options) => {
     url,
   } = options
   url = url ? url.replace(/^https?.+?(:\d{2,6})?(?=\/v1)/, '') : ''
+
   switch (method.toLowerCase()) {
     case 'get':
       return axios.get(`${url}${options.data ? `?${qs.stringify(options.data)}` : ''}`, config)

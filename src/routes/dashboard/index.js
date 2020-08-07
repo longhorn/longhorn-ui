@@ -5,7 +5,6 @@ import queryString from 'query-string'
 import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
-import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
   let { data: eventlogsData, sorter } = eventlog
@@ -20,7 +19,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     loading,
     onVolumeClick(v) {
       dispatch(routerRedux.push({
-        pathname: addPrefix('/volume'),
+        pathname: '/volume',
         search: queryString.stringify({
           ...queryString.parse(location.search),
           field: 'status',
@@ -30,7 +29,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
     },
     onNodeClick(n) {
       dispatch(routerRedux.push({
-        pathname: addPrefix('/node'),
+        pathname: '/node',
         search: queryString.stringify({
           ...queryString.parse(location.search),
           field: 'status',

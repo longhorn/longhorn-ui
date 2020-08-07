@@ -80,10 +80,6 @@ function SnapshotIcon(props, snapshotProps) {
       }
       return
     }
-    // Move to normal popup
-    // if (key === 'snapshotBackup') {
-    //   backupProgressModal(snapshotProps.volume.name)
-    // }
     doAction(key)
   }
 

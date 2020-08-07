@@ -8,7 +8,6 @@ import { Filter } from '../../components/index'
 import EngineImageList from './EngineImageList'
 import CreateEngineImage from './CreateEngineImage'
 import { filterEngineImage } from '../../utils/filter'
-import { addPrefix } from '../../utils/pathnamePrefix'
 
 class EngineImage extends React.Component {
   render() {
@@ -63,14 +62,14 @@ class EngineImage extends React.Component {
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
         filterField && filterValue ? dispatch(routerRedux.push({
-          pathname: addPrefix('/engineimage'),
+          pathname: '/engineimage',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: filterField,
             keyword: filterValue,
           }),
         })) : dispatch(routerRedux.push({
-          pathname: addPrefix('/engineimage'),
+          pathname: '/engineimage',
           search: queryString.stringify({}),
         }))
       },

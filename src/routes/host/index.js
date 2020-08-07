@@ -10,7 +10,6 @@ import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
 import BulkEditNode from './BulkEditNode'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus } from '../../utils/filter'
-import { addPrefix } from '../../utils/pathnamePrefix'
 
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
@@ -332,7 +331,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     onSearch(filter) {
       const { field: filterField, value: filterValue, stateValue: filterStateValue } = filter
       filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
-        pathname: addPrefix('/node'),
+        pathname: '/node',
         search: queryString.stringify({
           ...queryString.parse(location.search),
           field: filterField,
@@ -340,7 +339,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
           stateValue: filterStateValue,
         }),
       })) : dispatch(routerRedux.push({
-        pathname: addPrefix('/node'),
+        pathname: '/node',
         search: queryString.stringify({}),
       }))
     },

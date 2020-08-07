@@ -5,7 +5,6 @@ import wsClosed from '../assets/images/ws-closed.svg'
 import wsConnecting from '../assets/images/ws-connecting.svg'
 import wsError from '../assets/images/ws-error.svg'
 import wsOpen from '../assets/images/ws-open.svg'
-import { getPrefix } from './pathnamePrefix'
 
 export function constructWebsocketURL(type, period) {
   let loc = window.location
@@ -15,12 +14,9 @@ export function constructWebsocketURL(type, period) {
     proto = 'wss:'
   }
 
-  let prefix = getPrefix()
-  if (prefix === '') {
-    prefix = '/'
-  }
+  let prefix = window.__pathname_prefix__ // eslint-disable-line no-underscore-dangle
 
-  return `${proto}//${loc.host}${prefix}v1/ws/${period}/${type}`
+  return `${proto}//${loc.host}${prefix}${prefix.endsWith('/') ? '' : '/'}v1/ws/${period}/${type}`
 }
 
 export function wsChanges(dispatch, type, period) {
@@ -70,20 +66,22 @@ export function getStatusIcon(resource) {
   const status = resource.socketStatus
 
   const title = `${type}: ${status}`
-  var src
-  switch(status) {
-  case 'connecting':
-    src = wsConnecting
-    break
-  case 'open':
-    src = wsOpen
-    break
-  case 'closed':
-    src = wsClosed
-    break
-  case 'error':
-  default:
-    src = wsError
+
+  let src
+
+  switch (status) {
+    case 'connecting':
+      src = wsConnecting
+      break
+    case 'open':
+      src = wsOpen
+      break
+    case 'closed':
+      src = wsClosed
+      break
+    case 'error':
+    default:
+      src = wsError
   }
   return (
     <Tooltip placement="topRight" title={title}>

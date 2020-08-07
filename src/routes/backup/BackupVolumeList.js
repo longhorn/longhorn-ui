@@ -7,7 +7,6 @@ import { formatMib } from '../../utils/formater'
 import { DropOption } from '../../components'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
-import { addPrefix } from '../../utils/pathnamePrefix'
 import queryString from 'query-string'
 
 
@@ -89,12 +88,11 @@ class List extends React.Component {
                 {errorMessage ? <Icon type="warning" style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
                 <Link
                   to={{
-                    pathname: addPrefix(`/backup/${id}`),
+                    pathname: `/backup/${id}`,
                     search: queryString.stringify({
                       ...queryString.parse(this.props.search),
                       field: 'volumeName',
                       keyword: id,
-                      state: true,
                     }),
                   }}>
                   {id}
@@ -205,7 +203,7 @@ List.propTypes = {
   rowSelection: PropTypes.object,
   loading: PropTypes.bool,
   sorter: PropTypes.object,
-  search: PropTypes.object,
+  search: PropTypes.string,
   onSorterChange: PropTypes.func,
   Create: PropTypes.func,
   onRowClick: PropTypes.func,

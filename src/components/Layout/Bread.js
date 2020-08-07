@@ -4,9 +4,7 @@ import { Breadcrumb, Icon } from 'antd'
 import styles from './Bread.less'
 import { menu } from '../../utils'
 import { LinkTo } from '../../components'
-import { getPrefix } from '../../utils/pathnamePrefix'
 
-const p = getPrefix()
 
 let pathSet = []
 const getPathSet = function (menuArray, parentPath) {
@@ -31,7 +29,6 @@ function Bread({ location }) {
   const paths = {}
 
   location.pathname
-    .replace(p, '')
     .replace(/^\+/, '')
     .split('/')
     .forEach((item, key) => {
