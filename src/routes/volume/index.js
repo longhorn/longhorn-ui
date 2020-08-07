@@ -26,7 +26,6 @@ import { formatMib } from '../../utils/formater'
 import CreateBackupModal from './detail/CreateBackupModal.js'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
-import { addPrefix } from '../../utils/pathnamePrefix'
 
 const confirm = Modal.confirm
 
@@ -193,7 +192,7 @@ class Volume extends React.Component {
       },
       showSnapshots: (record) => {
         dispatch(routerRedux.push({
-          pathname: addPrefix(`/volume/${record.name}/snapshots`),
+          pathname: `/volume/${record.name}/snapshots`,
         }))
       },
       showRecurring(record) {
@@ -220,13 +219,12 @@ class Volume extends React.Component {
       },
       showBackups(record) {
         dispatch(routerRedux.push({
-          pathname: addPrefix(`/backup/${record.name}`),
+          pathname: `/backup/${record.name}`,
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: 'volumeName',
             keyword: record.name,
           }),
-          state: true,
         }))
       },
       showSalvage(record) {
@@ -418,8 +416,9 @@ class Volume extends React.Component {
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue } = filter
+
         filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue || pvStatusPropValue) ? dispatch(routerRedux.push({
-          pathname: addPrefix('/volume'),
+          pathname: '/volume',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: filterField,
@@ -431,7 +430,7 @@ class Volume extends React.Component {
             pvStatusValue: pvStatusPropValue,
           }),
         })) : dispatch(routerRedux.push({
-          pathname: addPrefix('/volume'),
+          pathname: '/volume',
           search: queryString.stringify({}),
         }))
       },

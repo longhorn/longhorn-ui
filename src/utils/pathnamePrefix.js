@@ -5,15 +5,3 @@ export function getPrefix({ suffixSlash = true } = {}) {
   }
   return p.replace(/\/{2,}/g, '/')
 }
-
-export function addPrefix(path) {
-  const prefix = getPrefix()
-  if (!prefix) {
-    return path
-  }
-
-  const p = `${prefix}${path}`
-
-  // remove duplicated slashs
-  return p.replace(/\/{2,}/g, '/')
-}

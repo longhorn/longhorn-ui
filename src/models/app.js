@@ -1,7 +1,6 @@
 /* eslint no-unused-vars: "off" */
 import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
 import { message } from 'antd'
-import { addPrefix } from '../utils/pathnamePrefix'
 
 message.config({
   top: 60,
@@ -62,12 +61,7 @@ export default {
         }
 
         if (dataStepTwo.state === 'ReadyForDownload') {
-          let path = addPrefix('')
-          if (path) {
-            window.location.href = `${path}v1/supportbundles/${data.id}/${data.name}/download`
-          } else {
-            window.location.href = `${dataStepTwo.links.self}/${data.name}/download`
-          }
+          window.location.href = `${ window.__pathname_prefix__ }/v1/supportbundles/${data.id}/${data.name}/download` // eslint-disable-line
         } else {
           message.error('Download failed support bundle creation is still in progress')
         }

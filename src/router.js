@@ -13,7 +13,6 @@ import backupDetailComponent from './routes/backup/BackupDetail'
 import settingComponent from './routes/setting/'
 import engineimageComponent from './routes/engineimage/'
 import engineimageDetailComponent from './routes/engineimage/detail'
-import { addPrefix } from './utils/pathnamePrefix'
 
 const Routers = function ({ history, app }) {
   const App = dynamic({
@@ -66,25 +65,25 @@ const Routers = function ({ history, app }) {
     component: () => engineimageDetailComponent,
   })
 
-  const path = addPrefix('') || '/'
+  const path = '/'
 
   return (
     <Router history={history}>
       <Switch>
         <App path={path} component={App}>
-         <Switch>
-          <Route exact path={path} render={() => <Redirect to={`${path}dashboard`} />} />
-          <Route exact path={`${path}dashboard`} component={dashboard} />
-          <Route exact path={`${path}node`} component={node} />
-          <Route exact path={`${path}volume`} component={volume} />
-          <Route exact path={`${path}volume/:id`} component={volumeDetail} />
-          <Route exact path={`${path}backup`} component={backup} />
-          <Route exact path={`${path}backup/:id`} component={backupDetail} />
-          <Route exact path={`${path}setting`} component={setting} />
-          <Route exact path={`${path}engineimage`} component={engineimage} />
-          <Route exact path={`${path}engineimage/:id`} component={engineimageDetail} />
-          <Route component={notfound} />
-         </Switch>
+          <Switch>
+            <Route exact path={path} render={() => <Redirect to={`${path}dashboard`} />} />
+            <Route path={`${path}dashboard`} component={dashboard} />
+            <Route path={`${path}node`} component={node} />
+            <Route exact path={`${path}volume`} component={volume} />
+            <Route path={`${path}volume/:id`} component={volumeDetail} />
+            <Route exact path={`${path}backup`} component={backup} />
+            <Route path={`${path}backup/:id`} component={backupDetail} />
+            <Route path={`${path}setting`} component={setting} />
+            <Route exact path={`${path}engineimage`} component={engineimage} />
+            <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
+            <Route component={notfound} />
+          </Switch>
         </App>
       </Switch>
     </Router>

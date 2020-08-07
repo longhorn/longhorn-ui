@@ -81,7 +81,7 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
 
         return (
           <div>
-            { pvcName ? <LinkTo to={{ pathname: `/volume/${pvcName}`, state: false }}>
+            { pvcName ? <LinkTo to={{ pathname: `/volume/${pvcName}` }}>
                 {text}
               </LinkTo> : text }
           </div>

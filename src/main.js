@@ -1,11 +1,13 @@
-import createHistory from 'history/createBrowserHistory'
+import createHistory from 'history/createHashHistory'
 import createLoading from 'dva-loading'
 import dva from 'dva'
 
 // 1. Initialize
 const app = dva({
   ...createLoading(),
-  history: createHistory(),
+  history: createHistory({
+    queryKey: false,
+  }),
   onError() {
   },
 })
