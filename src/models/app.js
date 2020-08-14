@@ -61,7 +61,7 @@ export default {
         }
 
         if (dataStepTwo.state === 'ReadyForDownload') {
-          window.location.href = `${ window.__pathname_prefix__ }/v1/supportbundles/${data.id}/${data.name}/download` // eslint-disable-line
+          window.location.href = `${ window.__pathname_prefix__ }${ window.__pathname_prefix__.endsWith('/') ? '' : '/'}v1/supportbundles/${data.id}/${data.name}/download` // eslint-disable-line
         } else {
           message.error('Download failed support bundle creation is still in progress')
         }
