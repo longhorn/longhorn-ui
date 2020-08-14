@@ -10,11 +10,11 @@ ENV VERSION ${VERSION}
 RUN envsubst '${VERSION}' < /web/src/utils/config.js > /web/src/utils/config.js.subst && mv /web/src/utils/config.js.subst /web/src/utils/config.js
 RUN npm run build
 
-FROM nginx:1.16.0
+FROM nginx:1.19.0
 RUN apt-get update -y && \
     apt-get install -y curl \
-                       libcurl3 \
-                       libcurl3-dev
+                       libcurl4 \
+                       libcurl4-openssl-dev
 RUN mkdir -p web/dist
 WORKDIR /web
 COPY --from=builder /web/dist /web/dist
