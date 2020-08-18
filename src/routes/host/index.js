@@ -31,6 +31,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
           if (agent.id === replica.hostId) {
             replica.removeUrl = vol.actions.replicaRemove
             replica.volState = vol.state
+            replica.volumeName = vol.name
             replicas.push(replica)
           }
         })
