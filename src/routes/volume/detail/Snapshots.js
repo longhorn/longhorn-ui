@@ -250,7 +250,7 @@ class Snapshots extends React.Component {
 
     return (
       <Card title={<div className={styles.header}>
-        <div>Snapshots</div>
+        <div>Snapshots and Backups</div>
         <div>
           <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create snapshot for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
               <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring()}

@@ -349,6 +349,19 @@ class RecurringList extends React.Component {
   render() {
     const columns = [
       {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        width: 220,
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
+      },
+      {
         title: 'Type',
         dataIndex: 'task',
         key: 'task',

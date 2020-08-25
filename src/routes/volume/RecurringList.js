@@ -367,6 +367,19 @@ class RecurringList extends React.Component {
   render() {
     const columns = [
       {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        width: '15%',
+        render: (text) => {
+          return (
+            <div>
+              {text}
+            </div>
+          )
+        },
+      },
+      {
         title: 'Type',
         dataIndex: 'task',
         key: 'task',
@@ -386,7 +399,7 @@ class RecurringList extends React.Component {
       }, {
         title: 'Schedule',
         key: 'schedule',
-        width: '30%',
+        width: '25%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing ? '' : 'Click edit Cron'}>
@@ -407,7 +420,7 @@ class RecurringList extends React.Component {
       {
         title: 'Labels',
         key: 'LabelsValue',
-        width: '30%',
+        width: '20%',
         render: (record) => {
           return (
             <Tooltip placement="top" title={!this.state.editing || record.task !== 'backup' ? '' : 'Click add labels'}>
