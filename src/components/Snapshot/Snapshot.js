@@ -166,7 +166,7 @@ function SnapshotIcon(props, snapshotProps) {
             }
           </div>
           <div className="tree-snapshot-desc">
-            <p className="snapshot-name">{props.name.substr(0, 5)}</p>
+            <p className="snapshot-name">{props.name.substr(0, 8)}</p>
             <p className="snapshot-time">{moment(new Date(props.created)).fromNow()}</p>
           </div>
         </div>

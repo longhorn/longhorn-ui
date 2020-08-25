@@ -17,7 +17,7 @@ const modal = ({
     onCancel,
     onOk,
     hasOnCancel: true,
-    width: 850,
+    width: 920,
     okText: 'Close',
     footer: null,
     bodyStyle: { padding: '0px' },
