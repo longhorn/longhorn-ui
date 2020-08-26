@@ -79,7 +79,7 @@ class Replica extends React.Component {
       if (rebuildError) {
         return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={rebuildError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
       } else {
-        return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state === 'restore' ? 'Restoring' : 'Deleting Snapshot'} ${progress}%`}><Progress status={state === 'restore' ? 'active' : 'exception'} percent={progress} showInfo={false} /></Tooltip>
+        return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state === 'restore' ? 'Restoring' : 'Deleting Snapshot'} ${progress}%`}><Progress status={state === 'restore' ? 'success' : 'exception'} percent={progress} showInfo={false} /></Tooltip>
       }
     }
 
@@ -114,7 +114,7 @@ class Replica extends React.Component {
       if (restoreError) {
         return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={restoreError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
       } else {
-        return progress === 0 || progress === 100 ? '' : <Tooltip title={<div>{state} {progress}% {fromReplica(progressArr)}</div>}><Progress percent={progress} showInfo={false} /></Tooltip>
+        return progress === 0 || progress === 100 ? '' : <Tooltip title={<div>{state} {progress}% {fromReplica(progressArr)}</div>}><Progress status={'success'} percent={progress} showInfo={false} /></Tooltip>
       }
     }
 
