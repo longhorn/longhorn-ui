@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, replicaSoftAntiAffinitySettingValue, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, replicaSoftAntiAffinitySettingValue, customColumnList, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -38,6 +38,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     confirmDetachWithWorkload,
     commandKeyDown,
     replicaSoftAntiAffinitySettingValue,
+    customColumnList,
     onRowClick,
   }
   /**
@@ -84,7 +85,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
   }
 
   const defaultImage = engineImages.find(image => image.default === true)
-  const columns = [
+  let columns = [
     {
       title: 'State',
       dataIndex: 'state',
@@ -166,7 +167,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
-          <div style={{ maxWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <LinkTo style={{ display: 'flex', alignItems: 'center', wordBreak: 'break-word' }} to={{ pathname: `/volume/${text}` }}>
               {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume'}><div style={{ marginRight: '5px', display: 'flex', alignItems: 'center' }}><IconStandBackup fill={volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'} /></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
             </LinkTo>
@@ -216,7 +217,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       },
     },
     {
-      title: <div>PV/PVC</div>,
+      title: 'PV/PVC',
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
       sorter: (a, b) => sortTableByPVC(a, b, 'kubernetesStatus'),
@@ -292,7 +293,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       },
     },
     {
-      title: <div><div>Schedule</div></div>,
+      title: 'Schedule',
       key: 'recurringJobs',
       render: (text, record) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
@@ -342,6 +343,12 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     },
   ]
 
+  if (customColumnList) {
+    columns = columns.filter((ele) => {
+      return customColumnList.indexOf(ele.key) > -1 || ele.key === 'operation'
+    })
+  }
+
   const pagination = true
   const onChange = (p, f, s) => {
     onSorterChange(s)
@@ -379,6 +386,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   engineImages: PropTypes.array,
+  customColumnList: PropTypes.array,
   hosts: PropTypes.array,
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
