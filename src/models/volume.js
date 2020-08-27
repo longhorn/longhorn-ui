@@ -44,6 +44,7 @@ export default {
     SnapshotBulkModalVisible: false,
     bulkExpandVolumeModalVisible: false,
     updateBulkReplicaCountModalVisible: false,
+    customColumnVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -69,8 +70,10 @@ export default {
     updateReplicaCountModalKey: Math.random(),
     SnapshotBulkModalKey: Math.random(),
     updateBulkReplicaCountModalKey: Math.random(),
+    customColumnKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
+    customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -444,6 +447,12 @@ export default {
     showCreateVolumeModal(state, action) {
       return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }
     },
+    showCustomColumnModal(state, action) {
+      return { ...state, ...action.payload, customColumnVisible: true, customColumnKey: Math.random() }
+    },
+    hideCustomColumnModal(state, action) {
+      return { ...state, ...action.payload, customColumnVisible: false }
+    },
     changeTagsLoading(state, action) {
       return { ...state, ...action.payload }
     },
@@ -589,6 +598,12 @@ export default {
     updateSorter(state, action) {
       saveSorter('volumeList.sorter', action.payload)
       return { ...state, sorter: action.payload }
+    },
+    changeColumns(state, action) {
+      if (action && action.payload && action.payload.columns) {
+        window.sessionStorage.setItem('customColumnList', JSON.stringify(action.payload.columns))
+      }
+      return { ...state, customColumnList: action.payload.columns }
     },
   },
 }
