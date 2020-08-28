@@ -57,6 +57,31 @@ export function getEngineUpgradeModalProps(volumes, engineImages, visible, dispa
   }
 }
 
+export function getUpdateBulkReplicaCountModalProps(volumes, visible, dispatch) {
+  return {
+    items: volumes,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/bulkReplicaCountUpdate',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkReplicaCountModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getUpdateReplicaCountModalProps(volume, visible, dispatch) {
   return {
     item: volume,
