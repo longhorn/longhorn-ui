@@ -43,6 +43,7 @@ export default {
     bulkChangeVolumeModalVisible: false,
     SnapshotBulkModalVisible: false,
     bulkExpandVolumeModalVisible: false,
+    updateBulkReplicaCountModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -67,6 +68,7 @@ export default {
     expansionVolumeSizeModalKey: Math.random(),
     updateReplicaCountModalKey: Math.random(),
     SnapshotBulkModalKey: Math.random(),
+    updateBulkReplicaCountModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
   },
@@ -234,6 +236,13 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideUpdateReplicaCountModal' })
       yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *bulkReplicaCountUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateBulkReplicaCountModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
     *bulkDelete({
@@ -547,8 +556,14 @@ export default {
     showUpdateReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateReplicaCountModalVisible: true, updateReplicaCountModalKey: Math.random() }
     },
+    showUpdateBulkReplicaCountModal(state, action) {
+      return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: Math.random() }
+    },
     hideUpdateReplicaCountModal(state) {
       return { ...state, updateReplicaCountModalVisible: false }
+    },
+    hideUpdateBulkReplicaCountModal(state, action) {
+      return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: false }
     },
     hideSnapshotBulkModal(state) {
       return { ...state, SnapshotBulkModalVisible: false }

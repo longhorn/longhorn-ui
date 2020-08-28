@@ -14,7 +14,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
+  items,
   visible,
   onCancel,
   onOk,
@@ -32,9 +32,33 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      onOk(data, item.actions.updateReplicaCount)
+
+      let updateReplicaCountUrl = []
+
+      if (items && items.length > 0) {
+        items.forEach((ele) => {
+          if (ele.actions && ele.actions.updateReplicaCount) {
+            updateReplicaCountUrl.push(ele.actions.updateReplicaCount)
+          }
+        })
+      }
+
+      onOk(data, updateReplicaCountUrl)
     })
   }
+
+  function groupBy(objectArray, property) {
+    return objectArray.reduce((acc, obj) => {
+      let key = obj[property]
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(obj)
+      return acc
+    }, {})
+  }
+
+  let initialValue = ''
 
   const modalOpts = {
     title: 'Update Replicas Count',
@@ -42,15 +66,26 @@ const modal = ({
     onCancel,
     onOk: handleOk,
   }
-  if (!item) {
+  if (!items) {
     return null
   }
+
+  if (items.length === 1) {
+    initialValue = items[0].numberOfReplicas
+  } else {
+    let obj = groupBy(items, 'numberOfReplicas') || {}
+
+    if (Object.keys(obj) && Object.keys(obj).length === 1) {
+      initialValue = Object.keys(obj)[0]
+    }
+  }
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Number Of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('replicaCount', {
-            initialValue: item.numberOfReplicas,
+            initialValue,
             rules: [
               {
                 required: true,
@@ -66,7 +101,7 @@ const modal = ({
                 },
               },
             ],
-          })(<InputNumber min={1} max={20} step={1} />)}
+          })(<InputNumber placeholder="various" min={1} max={20} step={1} />)}
         </FormItem>
       </Form>
     </ModalBlur>
@@ -77,7 +112,7 @@ modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
-  item: PropTypes.object,
+  items: PropTypes.array,
   onOk: PropTypes.func,
 }
 
