@@ -30,11 +30,11 @@ const form = ({
     return rules
   }
   const genInputItem = (setting) => {
-    if (setting.id === 'volume-attachment-recovery-policy') {
+    if (setting.definition && setting.definition.options) {
       return (<Select getPopupContainer={triggerNode => triggerNode.parentElement}>
-        <Option value="wait">wait</Option>
-        <Option value="never">never</Option>
-        <Option value="immediate">immediate</Option>
+        {setting.definition.options.map((item) => {
+          return <Option value={item}>{item}</Option>
+        })}
       </Select>)
     }
     switch (setting.definition.type) {
