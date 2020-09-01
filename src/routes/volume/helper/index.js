@@ -106,6 +106,71 @@ export function getUpdateReplicaCountModalProps(volume, visible, dispatch) {
     },
   }
 }
+
+export function getUpdateDataLocalitytModalProps(volume, visible, defaultDataLocalityOption, dispatch) {
+  let option = []
+
+  if (defaultDataLocalityOption && defaultDataLocalityOption.length > 0) {
+    option = defaultDataLocalityOption
+  }
+
+  return {
+    item: volume,
+    option,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/dataLocalityUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateDataLocalityModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateBulkDataLocalitytModalProps(volumes, visible, defaultDataLocalityOption, dispatch) {
+  let option = []
+
+  if (defaultDataLocalityOption && defaultDataLocalityOption.length > 0) {
+    option = defaultDataLocalityOption
+  }
+
+  return {
+    items: volumes,
+    option,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/bulkDataLocalityUpdate',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkDataLocalityModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }

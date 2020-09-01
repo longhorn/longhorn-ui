@@ -21,6 +21,7 @@ const modal = ({
   onCancel,
   onOk,
   nodeTags,
+  defaultDataLocalityOption,
   diskTags,
   tagsLoading,
   form: {
@@ -129,6 +130,15 @@ const modal = ({
           </Select>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
+          <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('dataLocality', {
+              initialValue: 'best-effort',
+            })(<Select>
+            { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
+        <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
               initialValue: [],
@@ -160,6 +170,7 @@ modal.propTypes = {
   hosts: PropTypes.array,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
+  defaultDataLocalityOption: PropTypes.array,
   tagsLoading: PropTypes.bool,
 }
 

@@ -17,6 +17,12 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
     return selectedVolume.controllers && selectedVolume.controllers[0] && host.id === selectedVolume.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
   })
 
+  const dataLocalityWarn = selectedVolume.dataLocality === 'best-effort' && selectedVolume.state === 'attached' && selectedVolume.replicas && selectedVolume.replicas.every((item) => {
+    let attachedNode = selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].hostId ? selectedVolume.controllers[0].hostId : ''
+
+    return item.hostId !== attachedNode
+  })
+
   if (isSchedulingFailure(selectedVolume)) {
     errorMsg = (
       <Alert
@@ -156,12 +162,13 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
           {upgrade} {selectedVolume.state.hyphenToHump()} {needToWaitDone(selectedVolume.state, selectedVolume.replicas) ? <Icon type="loading" /> : null}
         </span>
       </div>
-      <div className={styles.row}>
+      <div className={styles.row} style={{ display: 'flex', alignItems: 'center' }}>
         <span className={styles.label}> Health:</span>
         {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 8 }} type="api" /></Tooltip> : ''}
         <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
           {ha} {healthState}
         </span>
+        {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Ready for workload:</span>
@@ -188,7 +195,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
                 icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
               }
 
-              return (<Tooltip key={key} title={title}><div style={{ marginRight: 10 }}>
+              return (<Tooltip key={key} title={title}><div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
                   {icon}
                   {selectedVolume.conditions[key].type}
                 </div></Tooltip>)
@@ -215,6 +222,10 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
         {state ? formatMib(computeActualSize()) : 'Unknown'}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}>Data Locality:</span>
+        {selectedVolume.dataLocality}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Base Image:</span>
