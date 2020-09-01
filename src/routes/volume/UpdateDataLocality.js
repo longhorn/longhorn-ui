@@ -1,20 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber } from 'antd'
+import { Form, Select } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
+const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
-    span: 10,
+    span: 6,
   },
   wrapperCol: {
-    span: 14,
+    span: 16,
   },
 }
 
 const modal = ({
   item,
+  option,
   visible,
   onCancel,
   onOk,
@@ -32,15 +34,14 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-
-      let url = item && item.actions && item.actions.updateReplicaCount
+      let url = item && item.actions && item.actions.updateDataLocality
 
       onOk(data, url)
     })
   }
 
   const modalOpts = {
-    title: 'Update Replicas Count',
+    title: 'Update Data Locality',
     visible,
     onCancel,
     onOk: handleOk,
@@ -51,25 +52,12 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Number Of Replicas" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('replicaCount', {
-            initialValue: item.numberOfReplicas,
-            rules: [
-              {
-                required: true,
-                message: 'Please input the number of replicas',
-              },
-              {
-                validator: (rule, value, callback) => {
-                  if (value < 1 || value > 20 || !/^\d+$/.test(value)) {
-                    callback('The value should be an integer between 1 and 20')
-                  } else {
-                    callback()
-                  }
-                },
-              },
-            ],
-          })(<InputNumber min={1} max={20} step={1} />)}
+        <FormItem label="Data Locality" {...formItemLayout}>
+          {getFieldDecorator('dataLocality', {
+            initialValue: item.dataLocality,
+          })(<Select>
+          { option.map(value => <Option key={value} value={value}>{value}</Option>) }
+          </Select>)}
         </FormItem>
       </Form>
     </ModalBlur>
@@ -79,6 +67,7 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
+  option: PropTypes.array,
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,

@@ -14,7 +14,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, commandKeyDown, replicaSoftAntiAffinitySettingValue, customColumnList, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, showUpdateDataLocality, commandKeyDown, replicaSoftAntiAffinitySettingValue, customColumnList, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -39,6 +39,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     commandKeyDown,
     replicaSoftAntiAffinitySettingValue,
     customColumnList,
+    showUpdateDataLocality,
     onRowClick,
   }
   /**
@@ -109,6 +110,10 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
         let attchedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
           return record.controllers && record.controllers[0] && host.id === record.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
         })
+        let dataLocalityWarn = record.dataLocality === 'best-effort' && record.state === 'attached' && record.replicas && record.replicas.every((item) => {
+          let attachedNode = record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''
+          return item.hostId !== attachedNode
+        })
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
         let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
         let stateText = (() => {
@@ -124,29 +129,6 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
 
         let restoreProgress = statusProgress(record.restoreStatus, 'isRestoring')
         let rebuildProgress = statusProgress(record.rebuildStatus, 'isRebuilding')
-        // if (record.restoreStatus && record.restoreStatus.length > 0) {
-        //   let total = 0
-        //   let restoreErrorMsg = ''
-        //   let isRestoring = false
-        //   record.restoreStatus.forEach((ele) => {
-        //     if (ele.error) {
-        //       restoreErrorMsg = ele.error
-        //     }
-        //     if (ele.isRestoring) {
-        //       isRestoring = ele.isRestoring
-        //     }
-        //     total += ele.progress
-        //   })
-        //   let progress = Math.floor(total / record.restoreStatus.length)
-
-        //   if (!isRestoring && !restoreErrorMsg) {
-        //     restoreProgress = ''
-        //   } else if (isRestoring && !restoreErrorMsg) {
-        //     restoreProgress = <Tooltip title={`Restoring: ${progress}%`}><Progress showInfo={false} percent={progress} /></Tooltip>
-        //   } else {
-        //     restoreProgress = <Tooltip title={restoreErrorMsg}><Progress status="exception" showInfo={false} percent={progress} /></Tooltip>
-        //   }
-        // }
 
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)} style={{ position: 'relative' }}>
@@ -154,7 +136,11 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
               {restoreProgress}
               {rebuildProgress}
             </div>
-            {upgrade} {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''} {stateText} {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
+            {upgrade}
+            {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
+            {stateText}
+            {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
+            {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
           </div>
         )
       },
@@ -436,6 +422,7 @@ list.propTypes = {
   confirmDetachWithWorkload: PropTypes.func,
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
+  showUpdateDataLocality: PropTypes.func,
   replicaSoftAntiAffinitySettingValue: PropTypes.bool,
 }
 

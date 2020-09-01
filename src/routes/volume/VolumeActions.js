@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, commandKeyDown }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -85,6 +85,9 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'updateReplicaCount':
         showUpdateReplicaCount(record)
         break
+      case 'updateDataLocality':
+        showUpdateDataLocality(record)
+        break
       case 'pvAndpvcCreate':
         createPVAndPVC(record)
         break
@@ -127,12 +130,17 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   }
 
+  const canuUdateDataLocality = () => {
+    return selected.actions && selected.actions.updateDataLocality
+  }
+
   const allActions = [
     { key: 'attach', name: 'Attach', disabled: isRestoring() },
     { key: 'detach', name: 'Detach', disabled: selected.standby || isRestoring() },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1) || isRestoring() || (selected.state !== 'detached' && selected.state !== 'attached') },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby },
+    { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canuUdateDataLocality() },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]
 
@@ -180,6 +188,7 @@ actions.propTypes = {
   commandKeyDown: PropTypes.bool,
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
+  showUpdateDataLocality: PropTypes.func,
 }
 
 export default actions

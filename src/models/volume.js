@@ -45,6 +45,8 @@ export default {
     bulkExpandVolumeModalVisible: false,
     updateBulkReplicaCountModalVisible: false,
     customColumnVisible: false,
+    updateDataLocalityModalVisible: false,
+    updateBulkDataLocalityModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -71,6 +73,8 @@ export default {
     SnapshotBulkModalKey: Math.random(),
     updateBulkReplicaCountModalKey: Math.random(),
     customColumnKey: Math.random(),
+    updateDataLocalitytModalKey: Math.random(),
+    updateBulkDataLocalityModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -245,6 +249,20 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideUpdateBulkReplicaCountModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *dataLocalityUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateDataLocalityModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *bulkDataLocalityUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateBulkDataLocalityModal' })
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
@@ -565,14 +583,26 @@ export default {
     showUpdateReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateReplicaCountModalVisible: true, updateReplicaCountModalKey: Math.random() }
     },
+    showUpdateDataLocality(state, action) {
+      return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalitytModalKey: Math.random() }
+    },
     showUpdateBulkReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: Math.random() }
+    },
+    showUpdateBulkDataLocalityModal(state, action) {
+      return { ...state, ...action.payload, updateBulkDataLocalityModalVisible: true, updateBulkDataLocalityModalKey: Math.random() }
     },
     hideUpdateReplicaCountModal(state) {
       return { ...state, updateReplicaCountModalVisible: false }
     },
     hideUpdateBulkReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: false }
+    },
+    hideUpdateBulkDataLocalityModal(state) {
+      return { ...state, updateBulkDataLocalityModalVisible: false }
+    },
+    hideUpdateDataLocalityModal(state) {
+      return { ...state, updateDataLocalityModalVisible: false }
     },
     hideSnapshotBulkModal(state) {
       return { ...state, SnapshotBulkModalVisible: false }
