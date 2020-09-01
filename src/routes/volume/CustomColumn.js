@@ -55,6 +55,10 @@ const modal = ({
       disabled: true,
     },
     {
+      value: 'actualSize',
+      label: 'Actual Size',
+    },
+    {
       value: 'created',
       label: 'Created',
     },
@@ -72,8 +76,8 @@ const modal = ({
       disabled: true,
     },
     {
-      value: 'Schedule',
-      label: 'recurringJobs',
+      value: 'recurringJobs',
+      label: 'Schedule',
     },
     {
       value: 'lastBackupAt',

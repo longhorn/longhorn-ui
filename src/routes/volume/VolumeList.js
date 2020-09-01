@@ -90,7 +90,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: '190px',
+      width: 140,
       sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         let upgrade = null
@@ -163,7 +163,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      width: '11.2%',
+      width: 160,
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
@@ -179,7 +179,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: '6.25%',
+      width: 100,
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (text, record) => {
         let oldSize = record && record.controllers && record.controllers[0] && record.controllers[0].size ? record.controllers[0].size : ''
@@ -203,10 +203,26 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       },
     },
     {
+      title: 'Actual Size',
+      dataIndex: 'actualSize',
+      key: 'actualSize',
+      width: 140,
+      sorter: (a, b) => sortTable(a, b, 'size'),
+      render: (text, record) => {
+        let size = record && record.controllers && record.controllers[0] && record.controllers[0].actualSize ? record.controllers[0].actualSize : ''
+
+        return (
+          <div>
+            <div>{formatMib(size)}</div>
+          </div>
+        )
+      },
+    },
+    {
       title: 'Created',
       dataIndex: 'created',
       key: 'created',
-      width: '9.72%',
+      width: 120,
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
       render: (text) => {
         return (
@@ -221,7 +237,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
       sorter: (a, b) => sortTableByPVC(a, b, 'kubernetesStatus'),
-      width: '7.63%',
+      width: 140,
       render: (text) => {
         let title = (<div>
           <div><span>PV Name</span><span>: </span><span>{text.pvName}</span></div>
@@ -257,7 +273,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Namespace',
       dataIndex: 'kubernetesStatus',
       key: 'namespace',
-      width: '9.72%',
+      width: 160,
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
@@ -273,7 +289,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Attached To',
       dataIndex: 'WorkloadNameAndPodName',
       key: 'WorkloadNameAndPodName',
-      width: '12.5%',
+      width: 240,
       sorter: (a, b) => sortTable(a, b, 'WorkloadName'),
       render: (text, record) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {moment(new Date(text.lastPodRefAt)).fromNow()}</div></div> : ''
@@ -295,6 +311,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     {
       title: 'Schedule',
       key: 'recurringJobs',
+      width: 100,
       render: (text, record) => {
         let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
         let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
@@ -333,7 +350,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     {
       title: 'Operation',
       key: 'operation',
-      width: '110px',
+      width: 110,
       fixed: 'right',
       render: (text, record) => {
         return (
@@ -343,11 +360,18 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     },
   ]
 
+  // dynamic column width
+  let columnWidth = 0
+
   if (customColumnList) {
     columns = columns.filter((ele) => {
       return customColumnList.indexOf(ele.key) > -1 || ele.key === 'operation'
     })
   }
+
+  columns.forEach((ele) => {
+    columnWidth += ele.width
+  })
 
   const pagination = true
   const onChange = (p, f, s) => {
@@ -376,7 +400,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
         pagination={pagination}
         rowKey={record => record.id}
         height={`${height}px`}
-        scroll={{ x: 1540, y: height }}
+        scroll={{ x: columnWidth, y: height }}
       />
     </div>
   )
