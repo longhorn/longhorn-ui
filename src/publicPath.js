@@ -13,8 +13,9 @@ let columnArr = [
 	'kubernetesStatus',
 	'namespace',
 	'WorkloadNameAndPodName',
-	'Schedule',
+	'recurringJobs',
 	'lastBackupAt',
+	'actualSize',
 ]
 
 if (column) {
