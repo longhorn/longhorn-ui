@@ -123,8 +123,8 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   const editBulkNodesModalProps = {
     visible: editBulkNodesModalVisible,
     selectedHostRows,
-    onOk(allowScheduling) {
-      if (allowScheduling === 'noOperation') {
+    onOk(opt) {
+      if (opt.allowScheduling === 'noOperation') {
         dispatch({
           type: 'host/hideBulkEditNodeModal',
         })
@@ -132,7 +132,8 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         dispatch({
           type: 'host/changeBulkNodeScheduling',
           payload: {
-            allowScheduling,
+            allowScheduling: opt.allowScheduling,
+            evictionRequested: opt.evictionRequested,
             selected: selectedHostRows,
           },
         })
