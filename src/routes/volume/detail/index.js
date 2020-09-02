@@ -110,7 +110,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const backupStatusProps = {
     selectedVolume,
     backupStatus,
-    snapshotData,
     snapshotModalState,
     engineImages,
     hosts,

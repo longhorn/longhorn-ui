@@ -32,8 +32,8 @@ const form = ({
   const genInputItem = (setting) => {
     if (setting.definition && setting.definition.options) {
       return (<Select getPopupContainer={triggerNode => triggerNode.parentElement}>
-        {setting.definition.options.map((item) => {
-          return <Option value={item}>{item}</Option>
+        {setting.definition.options.map((item, index) => {
+          return <Option key={index} value={item}>{item}</Option>
         })}
       </Select>)
     }

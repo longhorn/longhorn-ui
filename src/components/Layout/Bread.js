@@ -31,6 +31,7 @@ function Bread({ location }) {
   location.pathname
     .replace(/^\+/, '')
     .split('/')
+    .filter((item) => item)
     .forEach((item, key) => {
       if (key > 0) {
         pathNames.push((`${pathNames[key - 1]}-${item}`).hyphenToHump())
