@@ -9,7 +9,7 @@ import styles from './VolumeInfo.less'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
-function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineImages, hosts }) {
+function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts }) {
   let errorMsg = null
   const state = snapshotModalState
 
@@ -28,13 +28,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       />
     )
   }
-  const computeActualSize = () => {
-    let total = 0
-    snapshotData.forEach(item => {
-      total += Number(item.size)
-    })
-    return total
-  }
+  const computeActualSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].actualSize ? selectedVolume.controllers[0].actualSize : ''
   const defaultImage = engineImages.find(image => image.default === true)
   const healthState = getHealthState(selectedVolume.robustness)
   let upgrade = ''
@@ -214,7 +208,7 @@ function VolumeInfo({ selectedVolume, snapshotData, snapshotModalState, engineIm
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
-        {state ? formatMib(computeActualSize()) : 'Unknown'}
+        {state ? formatMib(computeActualSize) : 'Unknown'}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Base Image:</span>
@@ -293,7 +287,6 @@ VolumeInfo.propTypes = {
   queryBackupStatus: PropTypes.func,
   clearBackupStatus: PropTypes.func,
   snapshotModal: PropTypes.object,
-  snapshotData: PropTypes.array,
   snapshotModalState: PropTypes.bool,
   engineImages: PropTypes.array,
   hosts: PropTypes.array,
