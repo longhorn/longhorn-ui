@@ -108,6 +108,7 @@ class Volume extends React.Component {
       replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting.value && replicaSoftAntiAffinitySetting.value.toLowerCase() === 'true'
     }
     const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
+    const defaultDataLocalityValue = defaultDataLocalitySetting && defaultDataLocalitySetting.value ? defaultDataLocalitySetting.value : 'disabled'
 
     const volumeFilterMap = {
       healthy: healthyVolume,
@@ -605,6 +606,7 @@ class Volume extends React.Component {
       },
       nodeTags,
       defaultDataLocalityOption,
+      defaultDataLocalityValue,
       diskTags,
       tagsLoading,
       hosts,
