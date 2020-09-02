@@ -142,6 +142,7 @@ export default {
         const data = {
           ...item,
           allowScheduling: payload.allowScheduling,
+          evictionRequested: payload.evictionRequested,
         }
         return call(toggleScheduling, data)
       })

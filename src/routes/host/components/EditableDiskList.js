@@ -43,7 +43,7 @@ class EditableDiskList extends React.Component {
     nameCount++
 
     uuid++
-    const disk = { id: `new_disk_${uuid}`, name: `disk-${nameCount}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false }
+    const disk = { id: `new_disk_${uuid}`, name: `disk-${nameCount}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false, evictionRequested: false }
     newData.push(disk)
     this.setState({ data: newData })
   }
@@ -126,6 +126,25 @@ class EditableDiskList extends React.Component {
               </FormItem>
             </div>
           </div>
+          <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
+            <div className={styles.label}>
+              Eviction Requested
+            </div>
+            <div className={styles.control} style={{ width: '210px' }}>
+              <FormItem style={{ margin: '3px 0px 0px 0px' }}>
+                {getFieldDecorator('evictionRequested', {
+                  initialValue: node.evictionRequested,
+                })(
+                  <RadioGroup>
+                    <Radio value={true}>True</Radio>
+                    <Radio value={false}>False</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: 'flex' }}>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
               Node Tags

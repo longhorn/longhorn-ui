@@ -191,6 +191,23 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           </FormItem>
         </div>
       </div>
+      <div className={styles.formItem}>
+        <div className={styles.label}>
+          Eviction Requested
+        </div>
+        <div className={styles.control} style={{ width: '210px' }}>
+          <FormItem style={{ margin: '3px 0px 0px 0px' }}>
+            {getFieldDecorator(`disks['${disk.id}']['evictionRequested']`, {
+              initialValue: disk.evictionRequested,
+            })(
+              <RadioGroup disabled={disk.deleted}>
+                <Radio value={true}>True</Radio>
+                <Radio value={false}>False</Radio>
+              </RadioGroup>
+            )}
+          </FormItem>
+        </div>
+      </div>
       <div className={styles.formItem} style={{ width: '66px' }}>
         <div className={styles.label}>
         &nbsp;
