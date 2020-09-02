@@ -23,7 +23,7 @@ const BackupUrl = ({ url = '' }) => {
   return (
     <div>
       <h3> Backup URL: </h3>
-      <p style={{ marginTop: 20, marginLeft: -40, fontSize: '1.2em' }}>
+      <p style={{ marginTop: 20, display: 'inline-block', wordBreak: 'break-all', fontSize: '1.2em' }}>
         {url}
         {
           url ? <CopyToClipboard onCopy={onCopy} text={url}>
@@ -112,6 +112,7 @@ class List extends React.Component {
           break
         case 'delete':
           confirm({
+            width: '800px',
             title: `Are you sure you want to delete backup ${record.name} ?`,
             content: 'If there is backup restore process in progress using this backup (including DR volumes), deleting the backup will result in restore failure and volume in the restore process will become FAULTED. Are you sure you want to delete this backup?',
             onOk() {
@@ -121,7 +122,7 @@ class List extends React.Component {
           break
         case 'getUrl':
           Modal.info({
-            width: '600',
+            width: '800px',
             content: <BackupUrl url={record.url} />,
           })
           break
