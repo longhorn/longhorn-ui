@@ -76,7 +76,7 @@ const modal = ({
     let obj = groupBy(items, 'numberOfReplicas') || {}
 
     if (Object.keys(obj) && Object.keys(obj).length === 1) {
-      initialValue = Object.keys(obj)[0]
+      initialValue = parseInt(Object.keys(obj)[0], 10)
     }
   }
 
