@@ -132,13 +132,20 @@ function SnapshotIcon(props, snapshotProps) {
     return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : 'Error'}: {ele.error}</p>
   }) }</div> : ''
 
+  let backgroundColor = '#3085d5'
+
+  if (props.usercreated && backupStatusObject) {
+    backgroundColor = '#33AB65'
+  } else if (!props.usercreated) {
+    backgroundColor = '#F1C40F'
+  }
+
   return (
     <Dropdown
       placement="bottomLeft"
       overlay={menu}
       trigger={props.removed ? [] : ['click']}
       key={props.name}
-      getPopupContainer={triggerNode => triggerNode.parentElement}
     >
       <Tooltip placement="right"
         autoAdjustOverflow={false}
@@ -158,7 +165,7 @@ function SnapshotIcon(props, snapshotProps) {
         }
       </div>}>
         <div>
-          <div className="tree-snapshot-icon" style={{ background: props.usercreated ? '#3085d5' : 'rgb(241, 196, 15)' }}>
+          <div className="tree-snapshot-icon" style={{ background: backgroundColor }}>
             <Icon className="snapshot-icon" type="camera" />
             { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-5px', left: '-5px' }}>
                 <Progress type="circle" percent={backupStatusObject.progress} width={40} />
