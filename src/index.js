@@ -7,6 +7,7 @@ import eventlog from './models/eventlog'
 import engineimage from './models/engineimage'
 import backup from './models/backup'
 import snapshot from './models/snapshot'
+import disk from './models/disk'
 
 // import assets
 import './assets/iconfont/iconfont.eot'
@@ -30,6 +31,7 @@ app.model(eventlog)
 app.model(engineimage)
 app.model(backup)
 app.model(volume)
+app.model(disk)
 
 // 3. Router
 app.router(routerConfig)

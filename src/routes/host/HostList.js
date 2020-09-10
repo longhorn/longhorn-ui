@@ -7,7 +7,7 @@ import { sortTable } from '../../utils/sort'
 import DiskList from './DiskList'
 import HostActions from './HostActions'
 import InstanceManagerComponent from './components/InstanceManagerComponent'
-import { nodeStatusColorMap } from '../../utils/filter'
+import { nodeStatusColorMap, nodeDisks, DisksWithoutNode } from '../../utils/filter'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
 import { setSortOrder } from '../../utils/store'
@@ -186,32 +186,51 @@ class List extends React.Component {
   }
 
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showEditNodeModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode, connectNode, disconnectNode, deleteDisk, updateDisk = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
+      showEditNodeModal,
       deleteHost,
     }
 
+    const diskActionsProps = {
+      connectNode,
+      disconnectNode,
+      deleteDisk,
+      updateDisk,
+    }
+
+    const disksWithoutNode = DisksWithoutNode(dataSource, this.props.disks)
+    let tableFooter = ''
+    let tableFooterHeight = 16
+
+    // To dynamically calculate the height of the diskstable, since the padding and margin are 54, the maximum height of the disktable is 200.
+    if (disksWithoutNode && disksWithoutNode.length > 0) {
+      tableFooter = <DiskList height={disksWithoutNode.length * 100} disks={disksWithoutNode} {...diskActionsProps} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
+      tableFooterHeight = disksWithoutNode.length > 2 ? 254 : (disksWithoutNode.length * 100 + 54)
+    }
+
     const computeTotalAllocated = (record) => {
-      const max = Object.values(record.disks).reduce((total, item) => total + item.storageMaximum, 0)
-      const reserved = Object.values(record.disks).reduce((total, item) => total + item.storageReserved, 0)
+      // when disk state is disconnected the field storageMaximum will change to 0
+      const max = nodeDisks(record.id, this.props.disks).reduce((total, item) => total + (item.state === 'disconnected' ? 0 : item.storageMaximum), 0)
+      const reserved = nodeDisks(record.id, this.props.disks).reduce((total, item) => total + (item.state === 'disconnected' ? 0 : item.storageReserved), 0)
       return ((max - reserved) * storageOverProvisioningPercentage) / 100
     }
     const computeAllocated = (record) => {
-      return Object.values(record.disks).reduce((total, item) => total + item.storageScheduled, 0)
+      return nodeDisks(record.id, this.props.disks).reduce((total, item) => total + item.storageScheduled, 0)
     }
     const coumputeTotalUsed = (record) => {
-      return Object.values(record.disks).reduce((total, item) => total + item.storageMaximum, 0)
+      return nodeDisks(record.id, this.props.disks).reduce((total, item) => total + (item.state === 'disconnected' ? 0 : item.storageMaximum), 0)
     }
     const computeUsed = (record) => {
-      return Object.values(record.disks).reduce((total, item) => total + (item.storageMaximum - item.storageAvailable), 0)
+      return nodeDisks(record.id, this.props.disks).reduce((total, item) => total + (item.state === 'disconnected' ? 0 : (item.storageMaximum - item.storageAvailable)), 0)
     }
     const computeSize = (record) => {
-      return Object.values(record.disks).reduce((total, item) => total + (item.storageMaximum - item.storageReserved), 0)
+      return nodeDisks(record.id, this.props.disks).reduce((total, item) => total + (item.state === 'disconnected' ? 0 : (item.storageMaximum - item.storageReserved)), 0)
     }
     const computeReserved = (record) => {
-      return Object.values(record.disks).reduce((total, item) => total + item.storageReserved, 0)
+      return nodeDisks(record.id, this.props.disks).reduce((total, item) => total + item.storageReserved, 0)
     }
     const columns = [
       {
@@ -380,16 +399,15 @@ class List extends React.Component {
         },
       },
     ]
-    const disks = function (node) {
-      const data = Object.keys(node.disks).map(diskId => {
-        const disk = node.disks[diskId]
+    const disks = (node) => {
+      const data = nodeDisks(node.id, this.props.disks).map(disk => {
         return {
-          id: diskId,
+          id: disk.id,
           ...disk,
         }
       })
       return (
-       <DiskList disks={data} node={node} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
+       <DiskList disks={data} node={node} {...diskActionsProps} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
       )
     }
     const pagination = true
@@ -406,6 +424,7 @@ class List extends React.Component {
           dataSource={dataSource}
           expandedRowRender={disks}
           onExpand={this.onExpand}
+          footer={() => tableFooter}
           onRow={record => {
             return {
               onClick: () => {
@@ -421,7 +440,7 @@ class List extends React.Component {
           pagination={pagination}
           rowSelection={this.state.rowSelection}
           rowKey={record => record.id}
-          scroll={{ x: 1440, y: this.state.height }}
+          scroll={{ x: 1440, y: (this.state.height - tableFooterHeight) }}
         />
         <ModalBlur width={980} title={'Components'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
           <InstanceManagerComponent defaultInstanceManager={defaultInstanceManager} defaultEngineImage={defaultEngineImage} currentNode={currentNode} />
@@ -434,12 +453,18 @@ class List extends React.Component {
 List.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  disks: PropTypes.array,
   storageOverProvisioningPercentage: PropTypes.number,
   minimalSchedulingQuotaWarning: PropTypes.number,
   showAddDiskModal: PropTypes.func,
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
+  showEditNodeModal: PropTypes.func,
+  connectNode: PropTypes.func,
+  disconnectNode: PropTypes.func,
+  deleteDisk: PropTypes.func,
+  updateDisk: PropTypes.func,
   deleteHost: PropTypes.func,
   showDiskReplicaModal: PropTypes.func,
   onAllExpandedOrCollapsed: PropTypes.func,

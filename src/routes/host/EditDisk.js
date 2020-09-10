@@ -8,6 +8,7 @@ import { byteToGi, giToByte } from './helper/index'
 const modal = ({
   form,
   node,
+  disks,
   visible,
   onCancel,
   onOk,
@@ -73,6 +74,7 @@ const modal = ({
   const EditableDiskListProps = {
     form,
     node,
+    disks,
   }
 
   return (
@@ -85,6 +87,7 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   node: PropTypes.object,
+  disks: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   onOk: PropTypes.func,

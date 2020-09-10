@@ -4,38 +4,44 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ node, selected, updateDisk }) {
-  const handleMenuClick = (event, record) => {
+function actions({ node, selected, connectNode, disconnectNode, deleteDisk, updateDisk }) {
+  const handleMenuClick = (event) => {
     switch (event.key) {
-      case 'togglingScheduling':
+      case 'connectNode':
       {
-        const updateDisks = Object.keys(node.disks)
-          .map(id => ({ ...node.disks[id], allowScheduling: id === record.id ? !record.allowScheduling : node.disks[id].allowScheduling }))
-        updateDisk(updateDisks, node.actions.diskUpdate)
+        connectNode(selected)
         break
       }
-      case 'delete':
+      case 'disconnectNode':
         confirm({
-          title: `Are you sure you want to delete disk which mounted on ${record.path}`,
+          title: `Are you sure you want to disconnect the disk ${selected.id} from node ${node.id}`,
           onOk() {
-            const disks = Object.keys(node.disks)
-              .filter(id => record.id !== id)
-              .map(id => ({ ...node.disks[id] }))
-            updateDisk(disks, node.actions.diskUpdate)
+            disconnectNode(selected)
           },
         })
+        break
+      case 'deleteDisk':
+        confirm({
+          title: `Are you sure you want to delete the disk ${selected.id}`,
+          onOk() {
+            deleteDisk(selected)
+          },
+        })
+        break
+      case 'updateDisk':
+        updateDisk(selected)
         break
       default:
     }
   }
 
   const availableActions = [
-    { key: 'togglingScheduling', name: selected.allowScheduling ? 'Disable Scheduling' : 'Enable Scheduling' },
+    { key: 'updateDisk', name: 'Update Disk' },
+    { key: 'connectNode', name: 'Connect Node', disabled: selected.nodeID },
+    { key: 'disconnectNode', name: 'Disconnect Node', disabled: !selected.nodeID },
+    { key: 'deleteDisk', name: 'Delete Disk', disabled: selected.replicas > 0 || (selected.state === 'connected' && selected.allowScheduling), tooltip: 'Need to clean up all related replicas and disable the scheduling before deleting the disk' },
   ]
-  const deleteAction = { key: 'delete', name: 'Delete' }
-  if (!node.storageScheduled && !selected.allowScheduling) {
-    availableActions.push(deleteAction)
-  }
+
   return (
     <DropOption menuOptions={availableActions}
       onMenuClick={(e) => handleMenuClick(e, selected)}
@@ -46,6 +52,9 @@ function actions({ node, selected, updateDisk }) {
 actions.propTypes = {
   node: PropTypes.object,
   selected: PropTypes.object,
+  connectNode: PropTypes.func,
+  disconnectNode: PropTypes.func,
+  deleteDisk: PropTypes.func,
   updateDisk: PropTypes.func,
 }
 

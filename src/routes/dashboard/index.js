@@ -6,7 +6,7 @@ import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
 
-function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
+function Dashboard({ host, disk, volume, eventlog, loading, dispatch, location }) {
   let { data: eventlogsData, sorter } = eventlog
   let eventlogs = eventlogsData.map((item) => {
     let obj = {}
@@ -15,6 +15,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
   })
   const resourceOverviewProps = {
     host,
+    disk,
     volume,
     loading,
     onVolumeClick(v) {
@@ -60,6 +61,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
 
 Dashboard.propTypes = {
   host: PropTypes.object,
+  disk: PropTypes.object,
   volume: PropTypes.object,
   eventlog: PropTypes.object,
   loading: PropTypes.object,
@@ -67,4 +69,4 @@ Dashboard.propTypes = {
   location: PropTypes.object,
 }
 
-export default connect(({ host, volume, eventlog, loading }) => ({ host, volume, eventlog, loading }))(Dashboard)
+export default connect(({ host, disk, volume, eventlog, loading }) => ({ host, disk, volume, eventlog, loading }))(Dashboard)

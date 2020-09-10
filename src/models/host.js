@@ -1,7 +1,6 @@
-import { query, toggleScheduling, updateDisk, deleteHost, getInstancemanagers } from '../services/host'
+import { query, toggleScheduling, updateNode, updateDisk, deleteHost, getInstancemanagers } from '../services/host'
 import { execAction } from '../services/volume'
 import { wsChanges } from '../utils/websocket'
-import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 
@@ -25,6 +24,7 @@ export default {
     diskReplicaModalVisible: false,
     instanceManagerVisible: false,
     editBulkNodesModalVisible: false,
+    editNodeModalVisible: false,
     socketStatus: 'closed',
     sorter: getSorter('nodeList.sorter'),
   },
@@ -43,7 +43,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       if (data.data) {
         data.data.sort((a, b) => a.name.localeCompare(b.name))
       }
@@ -68,6 +68,13 @@ export default {
       }
       yield call(toggleScheduling, payload.updateNode)
       yield call(updateDisk, { disks: payload.disks }, payload.url)
+      yield put({ type: 'query' })
+    },
+    *updateNode({
+      payload,
+    }, { call, put }) {
+      yield call(updateNode, payload.updateNode)
+      yield put({ type: 'hideEditNodeModal' })
       yield put({ type: 'query' })
     },
     *deleteHost({
@@ -227,6 +234,12 @@ export default {
     },
     hideEditDisksModal(state) {
       return { ...state, editDisksModalVisible: false }
+    },
+    showEditNodeModal(state, action) {
+      return { ...state, ...action.payload, editNodeModalVisible: true }
+    },
+    hideEditNodeModal(state) {
+      return { ...state, editNodeModalVisible: false }
     },
     showDiskReplicaModal(state, action) {
       return { ...state, ...action.payload, diskReplicaModalVisible: true }

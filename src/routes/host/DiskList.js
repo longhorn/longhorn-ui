@@ -2,18 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Progress, Tooltip, Tag } from 'antd'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
+import DiskActions from './DiskActions'
 import { formatMib } from '../../utils/formater'
 import './DiskList.less'
 
-function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal }) {
+function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal, connectNode, disconnectNode, deleteDisk, updateDisk, height }) {
   const getDiskStatus = (d) => {
-    if (node.conditions && node.conditions.Ready && node.conditions.Ready.statues && node.conditions.Ready.status.toLowerCase() === 'false') {
+    if (node && node.conditions && node.conditions.Ready && node.conditions.Ready.statues && node.conditions.Ready.status.toLowerCase() === 'false') {
       return (<span className="error">Error</span>)
     }
-    if (node.allowScheduling === false || d.allowScheduling === false) {
+    if ((node && node.allowScheduling === false) || d.allowScheduling === false) {
       return (<span className="disabled">Disabled</span>)
     }
-    if (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status && node.conditions.Schedulable.status.toLowerCase() === 'false') {
+    if (node && node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status && node.conditions.Schedulable.status.toLowerCase() === 'false') {
       return (<span className="disabled">Unschedulable</span>)
     }
     const status = d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status && d.conditions.Schedulable.status.toLowerCase() === 'true'
@@ -22,10 +23,18 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
     }
     return (<span className="unschedulable">Unschedulable</span>)
   }
+
+  const diskActionsProps = {
+    connectNode,
+    disconnectNode,
+    deleteDisk,
+    updateDisk,
+  }
+
   const columns = [
     {
       key: 'status',
-      width: 160,
+      width: 180,
       render: (text, record) => {
         return (<div style={{ padding: '0 0 0 20px' }} className="status">{getDiskStatus(record)}</div>)
       },
@@ -33,7 +42,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
     {
       key: 'id',
       dataIndex: 'id',
-      width: 200,
+      width: 180,
       render: (text) => {
         return (<div>{text}</div>)
       },
@@ -41,7 +50,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
     {
       key: 'path',
       dataIndex: 'path',
-      width: 360,
+      width: 200,
       render: (text) => {
         return (
           <div className="path" style={{ textAlign: 'center' }}>
@@ -70,8 +79,8 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       dataIndex: 'storageScheduled',
       width: 180,
       render: (text, record) => {
-        const allocated = text
-        const total = ((record.storageMaximum - record.storageReserved) * storageOverProvisioningPercentage) / 100
+        const allocated = record.state === 'disconnected' ? 0 : text
+        const total = record.state === 'disconnected' ? 0 : ((record.storageMaximum - record.storageReserved) * storageOverProvisioningPercentage) / 100
         const p = total === 0 ? 0 : Math.round((allocated / total) * 100)
         return (
           <div className="allocated">
@@ -91,8 +100,8 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       key: 'used',
       width: 180,
       render: (text, record) => {
-        const used = record.storageMaximum - record.storageAvailable
-        const total = record.storageMaximum
+        const used = record.state === 'disconnected' ? 0 : record.storageMaximum - record.storageAvailable
+        const total = record.state === 'disconnected' ? 0 : record.storageMaximum
         const p = total === 0 ? 0 : Math.round((used / total) * 100)
         return (
           <div className="used">
@@ -112,12 +121,12 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       key: 'size',
       width: 180,
       render: (text, record) => {
-        const reserved = record.storageReserved
-        const total = record.storageMaximum - record.storageReserved
+        const reserved = record.state === 'disconnected' ? 0 : record.storageReserved
+        const total = record.state === 'disconnected' ? 0 : record.storageMaximum - record.storageReserved
         return (
-          <div className="size" style={{ textAlign: 'center' }}>
+          <div className="size" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
             <div>{formatMib(total)}</div>
-            <div className="secondLabel" style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} Reserved` : null}</div>
+            <div className="secondLabel" style={{ color: '#b9b9b9' }}>{reserved > 0 ? `+${formatMib(reserved)} Reserved` : null}</div>
           </div>
         )
       },
@@ -150,14 +159,20 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
     },
     {
       key: 'operation',
-      width: 38,
+      width: 120,
+      render: (text, record) => {
+        return (
+          <DiskActions {...diskActionsProps} node={node} selected={record} />
+        )
+      },
     },
   ]
 
   const pagination = false
+  const tableHeight = height && height < 200 ? height : 200
   return (
     <div className="diskList">
-      <div className="title">Disks</div>
+      <div className="title">{node ? 'Disks' : 'Disconnect Disks'}</div>
       <div className="content">
         <Table
           showHeader={false}
@@ -168,7 +183,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
           simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{ y: '100%' }}
+          scroll={{ x: 980, y: tableHeight }}
         />
       </div>
     </div>
@@ -177,8 +192,13 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
 diskList.propTypes = {
   disks: PropTypes.array,
   node: PropTypes.object,
+  connectNode: PropTypes.func,
+  disconnectNode: PropTypes.func,
+  deleteDisk: PropTypes.func,
+  updateDisk: PropTypes.func,
   storageOverProvisioningPercentage: PropTypes.number,
   minimalSchedulingQuotaWarning: PropTypes.number,
+  height: PropTypes.number,
   showDiskReplicaModal: PropTypes.func,
 }
 

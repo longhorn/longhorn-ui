@@ -8,7 +8,23 @@ export async function query(params) {
   })
 }
 
+export async function queryDisks(params) {
+  return request({
+    url: '/v1/disks',
+    method: 'get',
+    data: params,
+  })
+}
+
 export async function toggleScheduling(data) {
+  return request({
+    url: data.links.self,
+    method: 'put',
+    data,
+  })
+}
+
+export async function updateNode(data) {
   return request({
     url: data.links.self,
     method: 'put',

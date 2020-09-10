@@ -1,20 +1,24 @@
 import React from 'react'
+import { Button } from 'antd'
 import PropTypes from 'prop-types'
 import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import queryString from 'query-string'
 import HostList from './HostList'
-import AddDisk from './AddDisk'
-import EditDisk from './EditDisk'
+import AddDisk from './components/AddDisk'
+import EditDisk from './components/EditDisk'
+import EditNode from './EditNode'
 import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
 import BulkEditNode from './BulkEditNode'
-import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus } from '../../utils/filter'
+import ConnectNodeModal from './components/ConnectNodeModal'
+import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus, nodeDisks } from '../../utils/filter'
 
-function Host({ host, volume, setting, loading, dispatch, location }) {
+function Host({ host, disk, volume, setting, loading, dispatch, location }) {
   let hostList = null
   let hostFilter = null
-  const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows, currentNode, editBulkNodesModalVisible } = host
+  const { data, selected, replicaModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows, currentNode, editBulkNodesModalVisible, editNodeModalVisible } = host
+  const { selectedDisk, connectNodeModalVisible, addDiskModalVisible, editDiskModalVisible } = disk
   const { selectedDiskID, sorter, selectedReplicaRows, selectedReplicaRowKeys, replicaModalDeleteDisabled, replicaModalDeleteLoading } = host
   const { field, value, stateValue } = queryString.parse(location.search)
   const volumeList = volume.data
@@ -38,10 +42,10 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       }
     })
     agent.replicas = replicas
-    Object.keys(agent.disks).forEach(id => {
-      agent.disks[id].replicas = replicas.filter(r => r.diskID === id)
+    nodeDisks(agent.id, disk.data).forEach(item => {
+      item.replicas = replicas.filter(r => r.diskID === item.id)
     })
-    agent.status = getNodeStatus(agent)
+    agent.status = getNodeStatus(agent, disk.data)
   })
   const getSelected = () => {
     if (!selected.id) {
@@ -53,8 +57,10 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     if (diskID) {
       const node = data.find(n => n.id === nodeId)
 
-      if (node && node.disks && node.disks[diskID]) {
-        return { ...node.disks[diskID], name: node.disks[diskID].path }
+      if (node && nodeDisks(node.id, disk.data).length > 0) {
+        let currentDisk = nodeDisks(node.id, disk.data).find((item) => item.id === diskID)
+
+        return currentDisk ? { ...currentDisk, name: currentDisk.path } : {}
       } else {
         return {}
       }
@@ -71,23 +77,24 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 
   let nodes = data
   if (field && field === 'status' && nodeFilterMap[stateValue]) {
-    nodes = nodeFilterMap[stateValue](data)
+    nodes = nodeFilterMap[stateValue](data, disk.data)
   } else if (field && value && field !== 'status') {
     nodes = filterNode(data, field, value)
   }
 
   const addDiskModalProps = {
-    item: {},
+    items: disk.data,
+    nodes,
     visible: addDiskModalVisible,
-    onOk(disk) {
+    onOk(diskParams) {
       dispatch({
-        type: 'host/createDisk',
-        payload: disk,
+        type: 'disk/createDisk',
+        payload: diskParams,
       })
     },
     onCancel() {
       dispatch({
-        type: 'host/hideAddDiskModal',
+        type: 'disk/hideAddDiksModal',
       })
       dispatch({
         type: 'app/changeBlur',
@@ -96,22 +103,39 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     },
   }
   const editDiskModalProps = {
-    visible: editDisksModalVisible,
-    node: selected,
-    onOk(disks, disableSchedulingDisks, updateNode) {
+    selectedDisk,
+    visible: editDiskModalVisible,
+    onOk(diskParams) {
       dispatch({
-        type: 'host/updateDisk',
+        type: 'disk/updateDisk',
+        payload: diskParams,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'disk/hideEditDiskModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+
+  const editNodeModalProps = {
+    visible: editNodeModalVisible,
+    node: selected,
+    onOk(updateNode) {
+      dispatch({
+        type: 'host/updateNode',
         payload: {
-          disks,
-          disableSchedulingDisks,
           updateNode,
-          url: selected.actions.diskUpdate,
         },
       })
     },
     onCancel() {
       dispatch({
-        type: 'host/hideEditDisksModal',
+        type: 'host/hideEditNodeModal',
       })
       dispatch({
         type: 'app/changeBlur',
@@ -148,6 +172,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 
   const hostListProps = {
     dataSource: nodes,
+    disks: disk.data,
     dispatch,
     instanceManagerVisible,
     defaultInstanceManager,
@@ -179,11 +204,11 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         },
       })
     },
-    showDiskReplicaModal(disk, node) {
+    showDiskReplicaModal(diskParams, node) {
       dispatch({
         type: 'host/showDiskReplicaModal',
         payload: {
-          selectedDiskID: disk.id,
+          selectedDiskID: diskParams.id,
           selected: node,
         },
       })
@@ -200,20 +225,48 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         payload: record,
       })
     },
-    updateDisk(disks, url) {
+    showEditDisksModal(record) {
       dispatch({
-        type: 'host/updateDisk',
+        type: 'host/showEditNodeModal',
         payload: {
-          disks,
-          url,
+          selected: record,
         },
       })
     },
-    showEditDisksModal(record) {
+    showEditNodeModal(record) {
       dispatch({
-        type: 'host/showEditDisksModal',
+        type: 'host/showEditNodeModal',
         payload: {
           selected: record,
+        },
+      })
+    },
+    // disk options
+    connectNode(record) {
+      dispatch({
+        type: 'disk/showConnectNodeModal',
+        payload: {
+          selectedDisk: record,
+        },
+      })
+    },
+    disconnectNode(record) {
+      dispatch({
+        type: 'disk/disconnectNode',
+        payload: record,
+      })
+    },
+    deleteDisk(record) {
+      dispatch({
+        type: 'disk/deleteDisk',
+        payload: record,
+      })
+    },
+    updateDisk(record) {
+      dispatch({
+        type: 'disk/showEditDiskModal',
+        payload: {
+          selectedDisk: record,
         },
       })
     },
@@ -263,6 +316,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     replicaModalDeleteDisabled,
     replicaModalDeleteLoading,
   }
+
   const diskReplicaModalProps = {
     selected: getSelectedDisk(selected.id, selectedDiskID),
     visible: diskReplicaModalVisible,
@@ -347,13 +401,39 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     },
   }
 
+  const ConnectNodeModalProps = {
+    item: selectedDisk,
+    visible: connectNodeModalVisible,
+    hosts: nodes,
+    onOk(params) {
+      dispatch({
+        type: 'disk/connectNode',
+        payload: params,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'disk/hideConnectNodeModal',
+      })
+    },
+  }
+
+  const addDisk = () => {
+    dispatch({
+      type: 'disk/showAddDiksModal',
+    })
+  }
+
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
+      <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addDisk}>Create Disk</Button>
       <HostFilter ref={(component) => { hostFilter = component }} {...HostFilterProps} />
       <HostList ref={(component) => { hostList = component }} {...hostListProps} />
-      {modalVisible && <AddDisk {...addDiskModalProps} />}
+      {addDiskModalVisible && <AddDisk {...addDiskModalProps} />}
+      {editDiskModalVisible && <EditDisk {...editDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
-      {editDisksModalVisible && <EditDisk {...editDiskModalProps} />}
+      {connectNodeModalVisible && <ConnectNodeModal {...ConnectNodeModalProps} />}
+      {editNodeModalVisible && <EditNode {...editNodeModalProps} />}
       {diskReplicaModalVisible && <HostReplica {...diskReplicaModalProps} />}
       {editBulkNodesModalVisible && <BulkEditNode {...editBulkNodesModalProps} />}
     </div>
@@ -362,6 +442,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 
 Host.propTypes = {
   host: PropTypes.object,
+  disk: PropTypes.object,
   volume: PropTypes.object,
   setting: PropTypes.object,
   location: PropTypes.object,
@@ -369,4 +450,4 @@ Host.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default connect(({ volume, host, setting, loading }) => ({ volume, host, setting, loading: loading.models.host }))(Host)
+export default connect(({ volume, host, disk, setting, loading }) => ({ volume, host, disk, setting, loading: loading.models.host || loading.models.disk }))(Host)

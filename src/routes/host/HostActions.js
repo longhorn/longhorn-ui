@@ -2,11 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { DropOption } from '../../components'
 
-function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost }) {
+function actions({ selected, toggleScheduling, showEditDisksModal, showEditNodeModal, deleteHost }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'editDisk':
         showEditDisksModal(record)
+        break
+      case 'editNode':
+        showEditNodeModal(record)
         break
       case 'disableScheduling':
       case 'enableScheduling':
@@ -21,21 +24,12 @@ function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost })
   const menuOptions = []
 
   menuOptions.push({
-    key: 'editDisk',
-    name: 'Edit node and disks',
+    key: 'editNode',
+    name: 'Edit node',
     disabled: selected.status.key === 'down',
     tooltip: selected.status.key === 'down' ? 'Node must not be down' : '',
   })
 
-  // let toggleSchedulingTooltip = ''
-  // if (!selected.conditions || !selected.conditions.Ready) {
-  //   toggleSchedulingTooltip = 'Node missing ready condition'
-  // } else if (selected.conditions.Ready.status.toLowerCase() !== 'true') {
-  //   toggleSchedulingTooltip = 'Node must be ready'
-  // } else if (!Object.values(selected.disks).some(d => d.allowScheduling === true)) {
-  //   toggleSchedulingTooltip = 'No disks enabled for scheduling'
-  //   selected.allowScheduling = false
-  // }
   if (selected.status.key === 'down') {
     menuOptions.push({
       key: selected.allowScheduling ? 'disableScheduling' : 'enableScheduling',
@@ -71,6 +65,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
+  showEditNodeModal: PropTypes.func,
   deleteHost: PropTypes.func,
 }
 

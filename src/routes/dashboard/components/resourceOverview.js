@@ -6,7 +6,7 @@ import { formatMib } from '../../../utils/formater'
 import ResourceChart from './resourceChart'
 import ResourceDetail from './resourceDetail'
 import styles from './resourceOverview.less'
-import { nodeStatusColorMap, healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
+import { nodeStatusColorMap, healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, nodeDisks } from '../../../utils/filter'
 
 class ResourceOverview extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class ResourceOverview extends React.Component {
   }
 
   render() {
-    const { host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f } = this.props
+    const { host, disk, volume, loading, onVolumeClick = f => f, onNodeClick = f => f } = this.props
     const { host: hostLoading, volume: volumeLoading } = loading.models
     this.hostLoading = hostLoading
     this.volumeLoading = volumeLoading
@@ -37,7 +37,7 @@ class ResourceOverview extends React.Component {
     // a. Total Storage = sum(node.MaximumStorage)
     const computeTotalSpace = () => {
       return host.data.reduce((total, currentNode) => {
-        return total + Object.values(currentNode.disks).reduce((totalSpace, currentDisk) => {
+        return total + nodeDisks(currentNode.id, disk.data).reduce((totalSpace, currentDisk) => {
           return totalSpace + currentDisk.storageMaximum
         }, 0)
       }, 0)
@@ -47,11 +47,11 @@ class ResourceOverview extends React.Component {
     const computeDisabledSpace = () => {
       return host.data.reduce((total, currentNode) => {
         if (currentNode.allowScheduling === false) {
-          return total + Object.values(currentNode.disks).reduce((totalSpace, currentDisk) => {
+          return total + nodeDisks(currentNode.id, disk.data).reduce((totalSpace, currentDisk) => {
             return totalSpace + currentDisk.storageMaximum
           }, 0)
         }
-        return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === false).reduce((totalSpace, currentDisk) => {
+        return total + nodeDisks(currentNode.id, disk.data).filter(d => d.allowScheduling === false).reduce((totalSpace, currentDisk) => {
           return totalSpace + currentDisk.storageMaximum
         }, 0)
       }, 0)
@@ -60,7 +60,7 @@ class ResourceOverview extends React.Component {
     // a. Reserved storage = sum(enabledNodes.enabledDisks.ReservedStorage)
     const computeReservedSpace = () => {
       return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
-        return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((reservedSpace, currentDisk) => {
+        return total + nodeDisks(currentNode.id, disk.data).filter(d => d.allowScheduling === true).reduce((reservedSpace, currentDisk) => {
           return reservedSpace + currentDisk.storageReserved
         }, 0)
       }, 0)
@@ -69,7 +69,7 @@ class ResourceOverview extends React.Component {
     // a. AvailableForSchedulingStorage = sum(enabledNodes.enabledDisks.AvailableStorage - enabledNodes.enabledDisks.ReservedStorage)
     const computeSchedulableSpace = () => {
       const result = host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
-        return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((availabeSpace, currentDisk) => {
+        return total + nodeDisks(currentNode.id, disk.data).filter(d => d.allowScheduling === true).reduce((availabeSpace, currentDisk) => {
           return availabeSpace + (currentDisk.storageAvailable - currentDisk.storageReserved)
         }, 0)
       }, 0)
@@ -79,7 +79,7 @@ class ResourceOverview extends React.Component {
     // a. UsedStorage = sum(enabledNodes.enabledDisk.MaximumStorage - enabledNodes.enabledDisks.AvailableStorage)
     const computeUsedSpace = () => {
       return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
-        return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((usedSpace, currentDisk) => {
+        return total + nodeDisks(currentNode.id, disk.data).filter(d => d.allowScheduling === true).reduce((usedSpace, currentDisk) => {
           return usedSpace + (currentDisk.storageMaximum - currentDisk.storageAvailable)
         }, 0)
       }, 0)
@@ -103,9 +103,9 @@ class ResourceOverview extends React.Component {
     const nodeInfo = {
       // Total. The total number of nodes.
       total: host.data.length,
-      schedulable: schedulableNode(host.data).length,
-      unschedulable: unschedulableNode(host.data).length,
-      schedulingDisabled: schedulingDisabledNode(host.data).length,
+      schedulable: schedulableNode(host.data, disk.data).length,
+      unschedulable: unschedulableNode(host.data, disk.data).length,
+      schedulingDisabled: schedulingDisabledNode(host.data, disk.data).length,
       down: downNode(host.data).length,
     }
 
@@ -243,6 +243,7 @@ class ResourceOverview extends React.Component {
 
 ResourceOverview.propTypes = {
   host: PropTypes.object,
+  disk: PropTypes.object,
   volume: PropTypes.object,
   loading: PropTypes.object,
   onVolumeClick: PropTypes.func,
