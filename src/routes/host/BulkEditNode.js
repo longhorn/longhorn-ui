@@ -70,11 +70,11 @@ const modal = ({
           <div className={styles.control} style={{ width: '210px' }}>
             <FormItem style={{ margin: '3px 0px 0px 0px' }}>
               {getFieldDecorator('allowScheduling', {
-                initialValue: !isEnabled,
+                initialValue: isEnabled,
               })(
                 <RadioGroup>
-                  <Radio disabled={isEnabled} value={true}>Enable</Radio>
-                  <Radio disabled={!isEnabled} value={false}>Disable</Radio>
+                  <Radio value={true}>Enable</Radio>
+                  <Radio value={false}>Disable</Radio>
                 </RadioGroup>
               )}
             </FormItem>
