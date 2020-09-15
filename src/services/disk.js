@@ -8,21 +8,6 @@ export async function query(params) {
   })
 }
 
-export async function disconnectNode(params) {
-  return request({
-    url: params.url,
-    method: 'post',
-  })
-}
-
-export async function connectNode(params) {
-  return request({
-    url: params.url,
-    method: 'post',
-    data: { nodeID: params.name, path: params.path },
-  })
-}
-
 export async function createDisk(params) {
   return request({
     url: '/v1/disks',

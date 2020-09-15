@@ -6,13 +6,13 @@ import DiskActions from './DiskActions'
 import { formatMib } from '../../utils/formater'
 import './DiskList.less'
 
-function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal, connectNode, disconnectNode, deleteDisk, updateDisk, height }) {
+function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal, deleteDisk, updateDisk, height }) {
   const getDiskStatus = (d) => {
     if (node && node.conditions && node.conditions.Ready && node.conditions.Ready.statues && node.conditions.Ready.status.toLowerCase() === 'false') {
       return (<span className="error">Error</span>)
     }
     if ((node && node.allowScheduling === false) || d.allowScheduling === false) {
-      return (<span className="disabled">Disabled</span>)
+      return (<Tooltip title={node.allowScheduling === false && d.allowScheduling !== false ? 'The node to which the disk belongs is not schedulable. So this disk is not schedulable no matter what state it is in.' : ''}><span className="disabled">Disabled</span></Tooltip>)
     }
     if (node && node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status && node.conditions.Schedulable.status.toLowerCase() === 'false') {
       return (<span className="disabled">Unschedulable</span>)
@@ -25,8 +25,6 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
   }
 
   const diskActionsProps = {
-    connectNode,
-    disconnectNode,
     deleteDisk,
     updateDisk,
   }
@@ -162,7 +160,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       width: 120,
       render: (text, record) => {
         return (
-          <DiskActions {...diskActionsProps} node={node} selected={record} />
+          <DiskActions {...diskActionsProps} selected={record} />
         )
       },
     },
@@ -192,8 +190,6 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
 diskList.propTypes = {
   disks: PropTypes.array,
   node: PropTypes.object,
-  connectNode: PropTypes.func,
-  disconnectNode: PropTypes.func,
   deleteDisk: PropTypes.func,
   updateDisk: PropTypes.func,
   storageOverProvisioningPercentage: PropTypes.number,

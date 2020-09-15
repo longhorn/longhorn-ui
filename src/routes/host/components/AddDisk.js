@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import DistTag from './TagComponent.js'
-import { Form, Input, Modal, Radio, Select } from 'antd'
+import { Form, Modal, Radio, Select } from 'antd'
 import { byteToGi, giToByte } from '../helper/index'
 import StorageInput from './StorageInput'
 import PathInput from './PathInput'
@@ -12,7 +12,6 @@ const RadioGroup = Radio.Group
 const Option = Select.Option
 
 const modal = ({
-  items,
   nodes,
   visible,
   onCancel,
@@ -56,18 +55,6 @@ const modal = ({
     onCancel,
     width: 850,
     onOk: handleOk,
-  }
-
-  const validateName = (rule, value, callback) => {
-    let reg = /^[a-zA-Z0-9][a-zA-Z0-9_.-]+$/
-    if (!reg.test(value)) {
-      callback('The input is not valid Name')
-    }
-    if (value && items.filter(d => d.name === value).length > 1) {
-      callback('This name already exists')
-    } else {
-      callback()
-    }
   }
 
   return (
@@ -121,22 +108,6 @@ const modal = ({
                   {nodes.map(node => (<Option key={node.id} value={node.id}>{node.id}</Option>))}
                 </Select>
               )}
-            </FormItem>
-          </div>
-          <div className={styles.control}>
-            <div className={styles.label}>
-              Name
-            </div>
-            <FormItem style={{ margin: 0 }}>
-              {getFieldDecorator('name', {
-                initialValue: disk.name,
-                rules: [{
-                  required: true,
-                  message: 'Please Input Path!',
-                }, {
-                  validator: validateName,
-                }],
-              })(<Input />)}
             </FormItem>
           </div>
           <div className={styles.control}>
@@ -213,7 +184,6 @@ modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
-  items: PropTypes.array,
   nodes: PropTypes.array,
   onOk: PropTypes.func,
 }

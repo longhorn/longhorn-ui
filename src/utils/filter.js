@@ -14,8 +14,8 @@ export function detachedVolume(data) { return data.filter((item) => item.state =
 // a. Volume.State == detached && volume.Robustness == Fault
 export function faultedVolume(data) { return data.filter((item) => item.state === 'detached' && item.robustness === 'faulted') }
 
-export function nodeDisks(nodeID, disks) { return disks.filter((disk) => disk.nodeID === nodeID) }
-export function DisksWithoutNode(nodes, disks) { return disks.filter((disk) => nodes.every((node) => disk.nodeID !== node.id)) }
+export function nodeDisks(nodeID, disks) { return disks.filter((disk) => disk.nodeID === nodeID && disk.state === 'connected') }
+export function DisksWithoutNode(disks) { return disks.filter((disk) => disk.state === 'disconnected') }
 
 const isSchedulable = (node, disks) => node.conditions && node.conditions.Schedulable.status.toLowerCase() === 'true' && node.conditions.Ready.status.toLowerCase() === 'true' && node.allowScheduling === true && (nodeDisks(node.id, disks).some(d => d.allowScheduling === true) && nodeDisks(node.id, disks).some(d => d.conditions && d.conditions.Schedulable.status.toLowerCase() === 'true'))
 const isDisabled = (node, disks) => node.conditions && node.conditions.Ready.status.toLowerCase() === 'true' && (node.allowScheduling === false || nodeDisks(node.id, disks).every(d => d.allowScheduling === false))

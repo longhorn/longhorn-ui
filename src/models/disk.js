@@ -1,4 +1,4 @@
-import { query, disconnectNode, connectNode, createDisk, deleteDisk, updateDisk } from '../services/disk'
+import { query, createDisk, deleteDisk, updateDisk } from '../services/disk'
 import { wsChanges } from '../utils/websocket'
 
 export default {
@@ -29,19 +29,6 @@ export default {
       yield put({ type: 'queryDisk', payload: { ...data } })
     },
     // disk actions
-    *disconnectNode({
-      payload,
-    }, { call, put }) {
-      yield call(disconnectNode, { url: payload.actions.disconnect })
-      yield put({ type: 'query' })
-    },
-    *connectNode({
-      payload,
-    }, { call, put }) {
-      yield put({ type: 'hideConnectNodeModal' })
-      yield call(connectNode, { url: payload.url, name: payload.name, path: payload.path })
-      yield put({ type: 'query' })
-    },
     *createDisk({
       payload,
     }, { call, put }) {
@@ -83,12 +70,6 @@ export default {
     },
     hideAddDiksModal(state) {
       return { ...state, addDiskModalVisible: false }
-    },
-    showConnectNodeModal(state, action) {
-      return { ...state, ...action.payload, connectNodeModalVisible: true }
-    },
-    hideConnectNodeModal(state) {
-      return { ...state, connectNodeModalVisible: false }
     },
     showEditDiskModal(state, action) {
       return { ...state, ...action.payload, editDiskModalVisible: true }

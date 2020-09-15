@@ -186,7 +186,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showEditNodeModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode, connectNode, disconnectNode, deleteDisk, updateDisk = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showEditNodeModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode, deleteDisk, updateDisk = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
@@ -195,20 +195,18 @@ class List extends React.Component {
     }
 
     const diskActionsProps = {
-      connectNode,
-      disconnectNode,
       deleteDisk,
       updateDisk,
     }
 
-    const disksWithoutNode = DisksWithoutNode(dataSource, this.props.disks)
+    const disksListWithoutNode = DisksWithoutNode(this.props.disks)
     let tableFooter = ''
     let tableFooterHeight = 16
 
     // To dynamically calculate the height of the diskstable, since the padding and margin are 54, the maximum height of the disktable is 200.
-    if (disksWithoutNode && disksWithoutNode.length > 0) {
-      tableFooter = <DiskList height={disksWithoutNode.length * 100} disks={disksWithoutNode} {...diskActionsProps} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
-      tableFooterHeight = disksWithoutNode.length > 2 ? 254 : (disksWithoutNode.length * 100 + 54)
+    if (disksListWithoutNode && disksListWithoutNode.length > 0) {
+      tableFooter = <DiskList height={disksListWithoutNode.length * 100} disks={disksListWithoutNode} {...diskActionsProps} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
+      tableFooterHeight = disksListWithoutNode.length > 2 ? 254 : (disksListWithoutNode.length * 100 + 54)
     }
 
     const computeTotalAllocated = (record) => {
