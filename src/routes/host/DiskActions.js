@@ -24,7 +24,7 @@ function actions({ selected, deleteDisk, updateDisk }) {
 
   const availableActions = [
     { key: 'updateDisk', name: 'Update Disk', disabled: selected.state === 'disconnected' },
-    { key: 'deleteDisk', name: 'Delete Disk', disabled: selected.state === 'connected' && selected.allowScheduling, tooltip: selected.state === 'connected' && selected.allowScheduling ? 'Need to disable the scheduling before deleting the disk' : '' },
+    { key: 'deleteDisk', name: 'Delete Disk', disabled: selected.state === 'connected' && selected.allowScheduling, tooltip: selected.state === 'connected' && selected.allowScheduling ? 'Need to disable the scheduling before deleting the disk' : 'Directly deleting the disk will fail replicas using the disk' },
   ]
 
   return (

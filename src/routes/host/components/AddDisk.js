@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import DistTag from './TagComponent.js'
-import { Form, Modal, Radio, Select } from 'antd'
+import { Form, Modal, Radio, Select, Input } from 'antd'
 import { byteToGi, giToByte } from '../helper/index'
 import StorageInput from './StorageInput'
 import PathInput from './PathInput'
@@ -79,7 +79,7 @@ const modal = ({
               Storage Scheduled
             </div>
             <div className={styles.control} style={{ padding: '5px 15px' }}>
-            {byteToGi(disk.storageScheduled)}Gi
+              {byteToGi(disk.storageScheduled)}Gi
             </div>
           </div>
           <div className={styles.formItem} style={{ width: '30%' }}>
@@ -87,11 +87,26 @@ const modal = ({
               Storage Max
             </div>
             <div className={styles.control} style={{ padding: '5px 15px' }}>
-            {byteToGi(disk.storageMaximum)}Gi
+              {byteToGi(disk.storageMaximum)}Gi
             </div>
           </div>
         </div>
-        <div className={styles.formItem} style={{ width: '109%' }}>
+        <div className={styles.formItem} style={{ width: '100%', marginBottom: 20 }}>
+          <div className={styles.control}>
+            <div className={styles.label}>
+              Disk Name
+            </div>
+            <FormItem style={{ margin: 0 }}>
+              {getFieldDecorator('name', {
+                initialValue: disk.name,
+                rules: [{
+                  required: false,
+                }],
+              })(
+                <Input placeholder="Disk Name" />
+              )}
+            </FormItem>
+          </div>
           <div className={styles.control}>
             <div className={styles.label}>
               Node ID
@@ -127,52 +142,54 @@ const modal = ({
             </FormItem>
           </div>
         </div>
-        <div className={styles.formItem}>
-          <div className={styles.label}>
-            Storage Reserved
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+          <div className={styles.formItem} style={{ width: '30%' }}>
+            <div className={styles.label}>
+              Storage Reserved
+            </div>
+            <div className={styles.control}>
+              <FormItem style={{ margin: 0 }}>
+                {getFieldDecorator('storageReserved', {
+                  initialValue: byteToGi(disk.storageReserved),
+                })(<span>
+                  <StorageInput min={0} defaultValue={byteToGi(disk.storageReserved)} />
+                </span>)}
+              </FormItem>
+            </div>
           </div>
-          <div className={styles.control}>
-            <FormItem style={{ margin: 0 }}>
-              {getFieldDecorator('storageReserved', {
-                initialValue: byteToGi(disk.storageReserved),
-              })(<span>
-                <StorageInput min={0} defaultValue={byteToGi(disk.storageReserved)} />
-              </span>)}
-            </FormItem>
+          <div className={styles.formItem} style={{ width: '30%' }}>
+            <div className={styles.label}>
+              Scheduling
+            </div>
+            <div className={styles.control} style={{ width: '210px' }}>
+              <FormItem style={{ margin: '3px 0px 0px 0px' }}>
+                {getFieldDecorator('allowScheduling', {
+                  initialValue: disk.allowScheduling,
+                })(
+                  <RadioGroup disabled={disk.deleted}>
+                    <Radio value>Enable</Radio>
+                    <Radio value={false}>Disable</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+            </div>
           </div>
-        </div>
-        <div className={styles.formItem}>
-          <div className={styles.label}>
-            Scheduling
-          </div>
-          <div className={styles.control} style={{ width: '210px' }}>
-            <FormItem style={{ margin: '3px 0px 0px 0px' }}>
-              {getFieldDecorator('allowScheduling', {
-                initialValue: disk.allowScheduling,
-              })(
-                <RadioGroup disabled={disk.deleted}>
-                  <Radio value>Enable</Radio>
-                  <Radio value={false}>Disable</Radio>
-                </RadioGroup>
-              )}
-            </FormItem>
-          </div>
-        </div>
-        <div className={styles.formItem}>
-          <div className={styles.label}>
-            Eviction Requested
-          </div>
-          <div className={styles.control} style={{ width: '210px' }}>
-            <FormItem style={{ margin: '3px 0px 0px 0px' }}>
-              {getFieldDecorator('evictionRequested', {
-                initialValue: disk.evictionRequested,
-              })(
-                <RadioGroup disabled={disk.deleted}>
-                  <Radio value={true}>True</Radio>
-                  <Radio value={false}>False</Radio>
-                </RadioGroup>
-              )}
-            </FormItem>
+          <div className={styles.formItem} style={{ width: '30%' }}>
+            <div className={styles.label}>
+              Eviction Requested
+            </div>
+            <div className={styles.control} style={{ width: '210px' }}>
+              <FormItem style={{ margin: '3px 0px 0px 0px' }}>
+                {getFieldDecorator('evictionRequested', {
+                  initialValue: disk.evictionRequested,
+                })(
+                  <RadioGroup disabled={disk.deleted}>
+                    <Radio value={true}>True</Radio>
+                    <Radio value={false}>False</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+            </div>
           </div>
         </div>
       </div>
