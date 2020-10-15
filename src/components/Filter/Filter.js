@@ -9,7 +9,7 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '' } = queryString.parse(props.location.search)
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '' } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
@@ -18,6 +18,7 @@ class Filter extends React.Component {
       engineImageUpgradableValue,
       scheduleValue,
       pvStatusValue,
+      revisionCounterValue,
       keyword: value,
     }
   }
@@ -53,12 +54,16 @@ class Filter extends React.Component {
     this.setState({ ...this.state, pvStatusValue })
   }
 
+  handleRevisionCounterValueChange = (revisionCounterValue) => {
+    this.setState({ ...this.state, revisionCounterValue })
+  }
+
   handleFieldChange = (field) => {
     this.setState({ ...this.state, field })
   }
 
   render() {
-    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '' } = queryString.parse(this.props.location.search)
+    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '' } = queryString.parse(this.props.location.search)
 
     let defaultContent = {
       field,
@@ -68,6 +73,7 @@ class Filter extends React.Component {
       engineImageUpgradableValue,
       scheduleValue,
       pvStatusValue,
+      revisionCounterValue,
     }
 
     let valueForm = (
@@ -131,6 +137,16 @@ class Filter extends React.Component {
     >
     {this.props.pvStatusOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
     </Select>)
+    } else if (this.state.field === 'revisionCounter' && this.props.revisionCounterOption) {
+      valueForm = (<Select key="revisionCounter"
+        style={{ width: '100%' }}
+        size="large"
+        allowClear
+        defaultValue={this.state.revisionCounterValue}
+        onChange={this.handleRevisionCounterValueChange}
+    >
+    {this.props.revisionCounterOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+    </Select>)
     }
 
     let content = ''
@@ -170,6 +186,7 @@ Filter.propTypes = {
   replicaNodeRedundancyOption: PropTypes.array,
   engineImageUpgradableOption: PropTypes.array,
   pvStatusOption: PropTypes.array,
+  revisionCounterOption: PropTypes.array,
 }
 
 export default Filter
