@@ -274,9 +274,9 @@ class Snapshots extends React.Component {
           <div style={{ marginTop: '20px' }}>
             <Snapshot {...treeProps} onAction={this.onAction} ref="Snapshot" />
           </div>
-          <div style={{ position: 'absolute', top: 5, right: 5 }}>
-            Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
-          </div>
+        </div>
+        <div style={{ position: 'absolute', top: 80, right: 30 }}>
+          Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
         {this.state.createBackBySnapsotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapsotModalKey} {...this.createBackupBySnapsotModal()} /> : ''}
