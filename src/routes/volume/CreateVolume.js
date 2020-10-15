@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select, Spin } from 'antd'
+import { Form, Input, InputNumber, Select, Checkbox, Spin } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 const FormItem = Form.Item
@@ -23,6 +23,7 @@ const modal = ({
   nodeTags,
   defaultDataLocalityOption,
   defaultDataLocalityValue,
+  defaultRevisionCounterValue,
   diskTags,
   tagsLoading,
   form: {
@@ -47,6 +48,7 @@ const modal = ({
     title: 'Create Volume',
     visible,
     onCancel,
+    width: 680,
     onOk: handleOk,
   }
 
@@ -137,6 +139,12 @@ const modal = ({
           { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
+        <FormItem label="Disable Revision Counter" {...formItemLayout}>
+          {getFieldDecorator('revisionCounterDisabled', {
+            valuePropName: 'checked',
+            initialValue: defaultRevisionCounterValue,
+          })(<Checkbox></Checkbox>)}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
@@ -172,6 +180,7 @@ modal.propTypes = {
   defaultDataLocalityOption: PropTypes.array,
   tagsLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
+  defaultRevisionCounterValue: PropTypes.bool,
 }
 
 export default Form.create()(modal)

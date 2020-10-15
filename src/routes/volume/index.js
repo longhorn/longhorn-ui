@@ -97,10 +97,11 @@ class Volume extends React.Component {
     const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, bulkChangeVolumeModalKey, changeVolumeModalVisible, bulkChangeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey, updateBulkReplicaCountModalVisible, updateBulkReplicaCountModalKey, customColumnKey, customColumnVisible, customColumnList, updateDataLocalityModalVisible, updateDataLocalitytModalKey, updateBulkDataLocalityModalVisible, updateBulkDataLocalityModalKey } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
-    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue } = queryString.parse(this.props.location.search)
+    const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)
     const settings = this.props.setting.data
     const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
     const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
+    const defaultRevisionCounterSetting = settings.find(s => s.id === 'disable-revision-counter')
     const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     let replicaSoftAntiAffinitySettingValue = false
@@ -109,6 +110,7 @@ class Volume extends React.Component {
     }
     const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
     const defaultDataLocalityValue = defaultDataLocalitySetting && defaultDataLocalitySetting.value ? defaultDataLocalitySetting.value : 'disabled'
+    const defaultRevisionCounterValue = defaultRevisionCounterSetting && defaultRevisionCounterSetting.value ? defaultRevisionCounterSetting.value === 'true' : false
 
     const volumeFilterMap = {
       healthy: healthyVolume,
@@ -155,6 +157,12 @@ class Volume extends React.Component {
       volumes = filterVolume(volumes, field, nodeRedundancyValue)
     } else if (field && value && field !== 'status' && field !== 'engineImageUpgradable' && field !== 'replicaNodeRedundancy') {
       volumes = filterVolume(volumes, field, value)
+    } else if (field && field === 'revisionCounter') {
+      volumes = volumes.filter(item => {
+        // Using string comparison is convenient for uploading values in url
+        let flag = item.revisionCounterDisabled ? 'True' : 'False'
+        return flag === revisionCounterValue
+      })
     }
     const volumeListProps = {
       dataSource: volumes,
@@ -430,11 +438,16 @@ class Volume extends React.Component {
         { value: 'NodeTag', name: 'Node Tag' },
         { value: 'DiskTag', name: 'Disk Tag' },
         { value: 'schedule', name: 'Scheduled' },
+        { value: 'revisionCounter', name: 'Revision Counter' },
+      ],
+      revisionCounterOption: [
+        { value: 'True', name: 'True' },
+        { value: 'False', name: 'False' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue } = filter
+        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue, revisionCounterValue: revisionCounterPropValue } = filter
 
-        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue || pvStatusPropValue) ? dispatch(routerRedux.push({
+        filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue || pvStatusPropValue || revisionCounterPropValue) ? dispatch(routerRedux.push({
           pathname: '/volume',
           search: queryString.stringify({
             ...queryString.parse(location.search),
@@ -445,6 +458,7 @@ class Volume extends React.Component {
             engineImageUpgradableValue: imageUpgradableValue,
             scheduleValue: schedulePropValue,
             pvStatusValue: pvStatusPropValue,
+            revisionCounterValue: revisionCounterPropValue,
           }),
         })) : dispatch(routerRedux.push({
           pathname: '/volume',
@@ -607,6 +621,7 @@ class Volume extends React.Component {
       nodeTags,
       defaultDataLocalityOption,
       defaultDataLocalityValue,
+      defaultRevisionCounterValue,
       diskTags,
       tagsLoading,
       hosts,

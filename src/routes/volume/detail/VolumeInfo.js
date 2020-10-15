@@ -284,6 +284,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
             <span className={styles.label}> PV Status:</span>
             {selectedVolume.kubernetesStatus.pvStatus}
           </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Revision Counter:</span>
+            {selectedVolume.revisionCounterDisabled ? 'True' : 'False'}
+          </div>
           {podList}
         </div>
         : ''
