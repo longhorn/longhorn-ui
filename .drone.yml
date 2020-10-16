@@ -47,6 +47,23 @@ steps:
     event:
     - tag
 
+- name: slack_notify
+  image: plugins/slack
+  settings:
+    template: "Build {{build.link}} failed.\n"
+    username: Drone_Publish
+    webhook:
+      from_secret: slack_webhook
+  when:
+    event:
+      exclude:
+      - pull_request
+    instance:
+      include:
+      - drone-publish.longhorn.io
+    status:
+      - failure
+
 volumes:
 - name: socket
   host:
@@ -100,6 +117,23 @@ steps:
     event:
     - tag
 
+- name: slack_notify
+  image: plugins/slack
+  settings:
+    template: "Build {{build.link}} failed.\n"
+    username: Drone_Publish
+    webhook:
+      from_secret: slack_webhook
+  when:
+    event:
+      exclude:
+      - pull_request
+    instance:
+      include:
+      - drone-publish.longhorn.io
+    status:
+      - failure
+
 volumes:
 - name: socket
   host:
@@ -152,7 +186,24 @@ steps:
     - master                                                                    
     event:                                                                      
     - tag                                                                       
-                                                                                
+ 
+- name: slack_notify
+  image: plugins/slack
+  settings:
+    template: "Build {{build.link}} failed.\n"
+    username: Drone_Publish
+    webhook:
+      from_secret: slack_webhook
+  when:
+    event:
+      exclude:
+      - pull_request
+    instance:
+      include:
+      - drone-publish.longhorn.io
+    status:
+      - failure
+                                                                               
 depends_on:                                                                     
 - default-amd64                                                                 
 - default-arm64   
