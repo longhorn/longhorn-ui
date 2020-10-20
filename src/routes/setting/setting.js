@@ -82,8 +82,10 @@ const form = ({
         return 1
       case 'scheduling':
         return 2
+      case 'danger Zone':
+        return 3
       default:
-        return category
+        return 0
     }
   }
   const settingsGrouped = data.reduce((result, item) => {
@@ -95,6 +97,7 @@ const form = ({
     }
     return result
   }, {})
+
   const settings = Object.keys(settingsGrouped).sort((a, b) => {
     const categoryA = getCategoryWeight(a)
     const categoryB = getCategoryWeight(b)
