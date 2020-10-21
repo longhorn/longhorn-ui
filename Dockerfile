@@ -10,11 +10,14 @@ ENV VERSION ${VERSION}
 RUN envsubst '${VERSION}' < /web/src/utils/config.js > /web/src/utils/config.js.subst && mv /web/src/utils/config.js.subst /web/src/utils/config.js
 RUN npm run build
 
-FROM nginx:1.19.0
-RUN apt-get update -y && \
-    apt-get install -y curl \
-                       libcurl4 \
-                       libcurl4-openssl-dev
+FROM nginx:1.19.3-alpine
+RUN apk update && \
+    apk add curl && \
+    apk add curl-dev && \
+    apk add bash && \
+    apk add gettext && \
+    apk add shadow && \
+    rm -rf /var/cache/apk/*                 
 RUN mkdir -p web/dist
 WORKDIR /web
 COPY --from=builder /web/dist /web/dist
