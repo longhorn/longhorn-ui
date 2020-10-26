@@ -11,7 +11,6 @@ class HostFilter extends React.Component {
       isAllExpanded: false,
       commandKeyDown: false,
       HostBulkActionsProps: {
-        bulkDeleteHost: this.bulkDeleteHost,
         showBulkEditNodeModal: this.showBulkEditNodeModal,
       },
     }
@@ -57,15 +56,6 @@ class HostFilter extends React.Component {
     this.setState({ isAllExpanded: !this.state.isAllExpanded })
   }
 
-  bulkDeleteHost = () => {
-    this.props.dispatch({
-      type: 'host/autoDeleteNode',
-      payload: {
-        selectedHostRows: this.props.selectedHostRows,
-      },
-    })
-  }
-
   showBulkEditNodeModal = () => {
     this.props.dispatch({
       type: 'host/showBulkEditNodeModal',
@@ -91,7 +81,7 @@ class HostFilter extends React.Component {
         <Col lg={16} md={14} sm={24} xs={24}>
           <div style={{ display: 'flex' }}>
             <Button size="large" type="primary" onClick={() => this.toggleExpand()}>{this.state.isAllExpanded ? 'Collapse' : 'Expand'} All</Button>
-            <HostBulkActions {...this.state.HostBulkActionsProps} commandKeyDown={this.state.commandKeyDown} selectedRows={selectedHostRows} />
+            <HostBulkActions {...this.state.HostBulkActionsProps} selectedRows={selectedHostRows} />
           </div>
         </Col>
         <Col lg={8} md={10} sm={24} xs={24} style={{ marginBottom: 16 }}>

@@ -186,11 +186,10 @@ class List extends React.Component {
   }
 
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, deleteHost, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
-      deleteHost,
     }
 
     const computeTotalAllocated = (record) => {
@@ -440,7 +439,6 @@ List.propTypes = {
   showReplicaModal: PropTypes.func,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
-  deleteHost: PropTypes.func,
   showDiskReplicaModal: PropTypes.func,
   onAllExpandedOrCollapsed: PropTypes.func,
   sorter: PropTypes.object,
