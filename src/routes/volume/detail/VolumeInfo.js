@@ -7,6 +7,7 @@ import { formatMib, utcStrToDate } from '../../../utils/formater'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from '../helper/index'
 import styles from './VolumeInfo.less'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
+import IconSnapshot from '../../../components/Icon/IconSnapshot'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
 function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts }) {
@@ -174,24 +175,38 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
             Conditions:
           </span>
           <div className={styles.control} style={{ display: 'flex' }}>
-            {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).map((key) => {
-              let title = (<div>
-                {selectedVolume.conditions[key] && selectedVolume.conditions[key].lastProbeTime && selectedVolume.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(selectedVolume.conditions[key].lastProbeTime).fromNow()}</div> : ''}
-                {selectedVolume.conditions[key] && selectedVolume.conditions[key].lastTransitionTime && selectedVolume.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div> : ''}
-                {selectedVolume.conditions[key] && selectedVolume.conditions[key].message && selectedVolume.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {selectedVolume.conditions[key].message}</div> : ''}
-                {selectedVolume.conditions[key] && selectedVolume.conditions[key].reason && selectedVolume.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {selectedVolume.conditions[key].reason}</div> : ''}
-                {selectedVolume.conditions[key] && selectedVolume.conditions[key].status && selectedVolume.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {selectedVolume.conditions[key].status}</div> : ''}
-              </div>)
+            {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).filter((key) => {
+              return key === 'restore' || key === 'scheduled' || key === 'toomanysnapshots'
+            }).map((key) => {
+              let title = selectedVolume.conditions[key] ? (<div>
+                {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
+                {selectedVolume.conditions[key].lastProbeTime && <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(selectedVolume.conditions[key].lastProbeTime).fromNow()}</div>}
+                {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div>}
+                {selectedVolume.conditions[key].message && <div style={{ marginBottom: 5 }}>Message: {selectedVolume.conditions[key].message}</div>}
+                {selectedVolume.conditions[key].reason && <div style={{ marginBottom: 5 }}>Reason: {selectedVolume.conditions[key].reason}</div>}
+                {selectedVolume.conditions[key].status && <div style={{ marginBottom: 5 }}>Status: {selectedVolume.conditions[key].status}</div>}
+              </div>) : ''
               let icon = ''
-              if (key === 'restore') {
+              if (key === 'toomanysnapshots') {
+                if (selectedVolume.conditions[key] && selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'false' || selectedVolume.conditions[key].reason === '')) {
+                  icon = <IconSnapshot fill="#27ae60" />
+                  title = (<div>
+                    {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
+                    {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div>}
+                    <div style={{ marginBottom: 5 }}>Status: The snapshot threshold was not exceeded</div>
+                  </div>)
+                } else {
+                  icon = <IconSnapshot fill="#f15354" />
+                }
+              } else if (key === 'restore') {
                 icon = selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'true' || selectedVolume.conditions[key].reason === '') ? <Icon className="healthy" style={{ marginRight: 5, color: selectedVolume.conditions[key].reason === '' && selectedVolume.conditions[key].status.toLowerCase() === 'false' ? '#666666' : '#27ae60' }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
               } else {
                 icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
               }
+              let text = key !== 'toomanysnapshots' ? selectedVolume.conditions[key].type : ''
 
               return (<Tooltip key={key} title={title}><div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
-                  {icon}
-                  {selectedVolume.conditions[key].type}
+                  {icon}{text}
                 </div></Tooltip>)
             })}
             </div>
