@@ -193,7 +193,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
                   title = (<div>
                     {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
                     {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div>}
-                    <div style={{ marginBottom: 5 }}>Status: The snapshot threshold was not exceeded</div>
+                    <div style={{ marginBottom: 5 }}>Status: The snapshot number threshold has not been exceeded</div>
                   </div>)
                 } else {
                   icon = <IconSnapshot fill="#f15354" />
