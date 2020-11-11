@@ -146,6 +146,9 @@ function SnapshotIcon(props, snapshotProps) {
       overlay={menu}
       trigger={props.removed ? [] : ['click']}
       key={props.name}
+      getPopupContainer={() => {
+        return document.getElementById('tree-snapshot') || document.body
+      }}
     >
       <Tooltip placement="right"
         autoAdjustOverflow={false}
@@ -285,16 +288,18 @@ class Snapshot extends React.Component {
 
     return (
       <Spin spinning={this.state.loading}>
-        <Tree
-          defaultExpandAll
-          className="lh-tree-snapshot"
-          autoExpandParent={false}
-          key={this.state.key}
-        >
-          <TreeNode className="tree-start-wrap" title={StartPoint()} key={`${props.volume.id}`}>
-            {children}
-          </TreeNode>
-        </Tree>
+        <div id="tree-snapshot">
+          <Tree
+            defaultExpandAll
+            className="lh-tree-snapshot"
+            autoExpandParent={false}
+            key={this.state.key}
+          >
+            <TreeNode className="tree-start-wrap" title={StartPoint()} key={`${props.volume.id}`}>
+              {children}
+            </TreeNode>
+          </Tree>
+        </div>
       </Spin>
     )
   }
