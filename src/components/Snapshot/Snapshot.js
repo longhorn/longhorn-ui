@@ -55,6 +55,17 @@ function SnapshotIcon(props, snapshotProps) {
       },
     })
   }
+
+  function disabledDeleteBackup() {
+    let disabled = false
+
+    if (snapshotProps.volume) {
+      disabled = (snapshotProps.volume.backupStatus && snapshotProps.volume.backupStatus.some((item) => item.state === 'in_progress')) || (snapshotProps.volume.restoreStatus && snapshotProps.volume.restoreStatus.some((item) => item.isRestoring))
+    }
+
+    return disabled
+  }
+
   function onClick({ key }) {
     if (key === 'snapshotRevert' && snapshotProps && snapshotProps.volume) {
       const title = (
@@ -80,6 +91,11 @@ function SnapshotIcon(props, snapshotProps) {
       }
       return
     }
+
+    if (key === 'snapshotDelete' && disabledDeleteBackup()) {
+      return
+    }
+
     doAction(key)
   }
 
@@ -99,8 +115,10 @@ function SnapshotIcon(props, snapshotProps) {
           <div style={{ padding: '0px 12px' }}>Backup</div>
         </Menu.Item> : ''
       }
-      <Menu.Item key="snapshotDelete">
-        <div style={{ padding: '0px 12px' }}>Delete</div>
+      <Menu.Item className="delete-menu-item" key="snapshotDelete">
+        { !disabledDeleteBackup() ? <div style={{ padding: '0px 12px' }}>Delete</div> : <Tooltip title={<div>
+            <p>Delete cannot be performed while a backup or restore operation is in progress.</p>
+          </div>}><div className="saic-Popconfirm-delete">Delete</div></Tooltip> }
       </Menu.Item>
     </Menu>
   )

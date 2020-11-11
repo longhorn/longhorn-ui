@@ -102,6 +102,25 @@ class List extends React.Component {
     }
   }
 
+  disabledDeleteBackup = (record) => {
+    let inProgress = false
+    let isRestoring = false
+    let currentVolumeForBackup = this.props.volumes.find((item) => item.name === record.volumeName)
+    // The volume name may be different to backup when restoring.
+    let currentVolumeArrayForRestore = this.props.volumes.filter((item) => {
+      return (this.props.backup || []).find((ele) => ele.url === item.fromBackup)
+    })
+    if (currentVolumeArrayForRestore && currentVolumeArrayForRestore.length > 0) {
+      isRestoring = currentVolumeArrayForRestore.some((item) => item.restoreStatus && item.restoreStatus.some((ele) => ele.isRestoring))
+    }
+
+    if (currentVolumeForBackup) {
+      inProgress = (currentVolumeForBackup && currentVolumeForBackup.backupStatus && currentVolumeForBackup.backupStatus.some((item) => item.state === 'in_progress')) || isRestoring
+    }
+
+    return inProgress
+  }
+
   render() {
     const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
@@ -249,21 +268,11 @@ class List extends React.Component {
           if (storageObj.workloadsStatus) {
             storageObj.podList = storageObj.workloadsStatus
           }
-          // let currentVolume = {}
-
-          // if (volumeList) {
-          //   volumeList.forEach((item) => {
-          //     if (item.name === row.volumeName) {
-          //       currentVolume = item
-          //     }
-          //   })
-          // }
 
           return (
             <Tooltip placement="top" title={title}>
               <a onClick={() => { showWorkloadsStatusDetail(storageObj) }} className={style.workloadContainer} style={storageObj.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
                 {ele}
-                {/* <div>{ currentVolume.controllers ? currentVolume.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div> */}
               </a>
             </Tooltip>
           )
@@ -303,9 +312,12 @@ class List extends React.Component {
         width: 120,
         fixed: 'right',
         render: (text, record) => {
+          let disabled = this.disabledDeleteBackup(record)
+          let tooltip = disabled ? 'Delete cannot be performed while a backup or restore operation is in progress' : ''
+
           return (
             <DropOption menuOptions={[
-              { key: 'delete', name: 'Delete' },
+              { key: 'delete', name: 'Delete', disabled, tooltip },
               { key: 'restore', name: 'Restore', disabled: record && record.messages && record.messages.error },
               { key: 'getUrl', name: 'Get URL' },
             ]}
@@ -355,7 +367,7 @@ List.propTypes = {
   showBackupLabels: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
   dispatch: PropTypes.func,
-  volumeList: PropTypes.array,
+  volumes: PropTypes.array,
 }
 
 export default List

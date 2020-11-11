@@ -69,6 +69,17 @@ class List extends React.Component {
     }
   }
 
+  disabledDeleteAllBackup = (record) => {
+    let inProgress = false
+    let currentVolume = this.props.volumes.find((item) => item.id === record.id)
+
+    if (currentVolume) {
+      inProgress = (currentVolume.backupStatus && currentVolume.backupStatus.some((item) => item.state === 'in_progress')) || (currentVolume.restoreStatus && currentVolume.restoreStatus.some((item) => item.isRestoring))
+    }
+
+    return inProgress
+  }
+
   render() {
     const { backup, loading, sorter, rowSelection, onSorterChange, onRowClick = f => f } = this.props
     const dataSource = backup || []
@@ -148,11 +159,14 @@ class List extends React.Component {
         key: 'operation',
         width: 120,
         render: (text, record) => {
+          let disabled = this.disabledDeleteAllBackup(record)
+          let tooltip = disabled ? 'Delete cannot be performed while a backup or restore operation is in progress' : ''
+
           return (
             <DropOption menuOptions={[
               { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
               { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
-              { key: 'deleteAll', name: 'Delete All Backups' },
+              { key: 'deleteAll', name: 'Delete All Backups', disabled, tooltip },
             ]}
               onMenuClick={e => this.handleMenuClick(record, e)}
             />
@@ -200,6 +214,7 @@ class List extends React.Component {
 
 List.propTypes = {
   backup: PropTypes.array,
+  volumes: PropTypes.array,
   rowSelection: PropTypes.object,
   loading: PropTypes.bool,
   sorter: PropTypes.object,

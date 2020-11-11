@@ -82,12 +82,10 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (!location.pathname.endsWith('/backup')) {
-          dispatch({
-            type: 'query',
-            payload: queryString.parse(location.search),
-          })
-        }
+        dispatch({
+          type: 'query',
+          payload: queryString.parse(location.search),
+        })
       })
       wsChanges(dispatch, 'volumes', '1s')
     },

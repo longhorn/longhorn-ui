@@ -11,10 +11,11 @@ import BackupBulkActions from './BackupBulkActions'
 
 const { confirm } = Modal
 
-function Backup({ host, backup, loading, setting, dispatch, location }) {
+function Backup({ host, volume, backup, loading, setting, dispatch, location }) {
   location.search = location.search ? location.search : ''
   const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate } = backup
   const hosts = host.data
+  const volumes = volume.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
@@ -36,6 +37,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
   const backupVolumesProps = {
     backup: backupVolumes,
     search: location.search,
+    volumes,
     loading,
     dispatch,
     onSorterChange(s) {
@@ -259,10 +261,11 @@ Backup.propTypes = {
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
   host: PropTypes.object,
+  volume: PropTypes.object,
   setting: PropTypes.object,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   tagsLoading: PropTypes.bool,
 }
 
-export default connect(({ host, backup, setting, loading }) => ({ host, backup, setting, loading: loading.models.backup }))(Backup)
+export default connect(({ host, volume, backup, setting, loading }) => ({ host, volume, backup, setting, loading: loading.models.backup }))(Backup)

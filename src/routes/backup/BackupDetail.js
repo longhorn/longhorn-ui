@@ -15,14 +15,14 @@ const { confirm } = Modal
 function Backup({ host, backup, volume, setting, loading, location, dispatch }) {
   const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, WorkloadDetailModalVisible, WorkloadDetailModalItem, WorkloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
   const hosts = host.data
-  const volumeList = volume.data
+  const volumes = volume.data
   const settings = setting.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
   const currentBackUp = backupVolumes.filter((item) => { return item.id === queryString.parse(location.search).keyword })
   const backupVolumesProps = {
     backup: data,
-    volumeList,
+    volumes,
     loading,
     dispatch,
     onSorterChange(s) {
