@@ -153,7 +153,7 @@ class Replica extends React.Component {
           }
           <div style={{ textAlign: 'center' }}>
             <Tooltip title={(item && item.dataPath) || 'N/A'}>
-              <h3>{(host && host.disks && host.disks[item.diskID] && host.disks[item.diskID].path) || 'N/A'}</h3>
+              <h3>{(item && item.diskPath) || 'N/A'}</h3>
             </Tooltip>
           </div>
           <span style={{ position: 'absolute', bottom: 20, left: 20 }} className={item.running ? 'healthy' : 'stopped'}>
