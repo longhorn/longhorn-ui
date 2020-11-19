@@ -199,7 +199,7 @@ export default {
       return { ...state, instanceManagerVisible: false }
     },
     showReplicaModal(state, action) {
-      return { ...state, ...action.payload, replicaModalVisible: true }
+      return { ...state, ...action.payload, replicaModalVisible: true, replicaModalDeleteDisabled: true }
     },
     hideReplicaModal(state) {
       return { ...state, replicaModalVisible: false, selectedReplicaRows: [], selectedReplicaRowKeys: [] }
@@ -214,7 +214,7 @@ export default {
       return { ...state, replicaModalDeleteLoading: true }
     },
     replicaModalDeleteLoaded(state) {
-      return { ...state, replicaModalDeleteLoading: false }
+      return { ...state, replicaModalDeleteLoading: false, replicaModalDeleteDisabled: true }
     },
     showBulkEditNodeModal(state, action) {
       return { ...state, ...action.payload, editBulkNodesModalVisible: true }

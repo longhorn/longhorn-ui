@@ -52,9 +52,18 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   const getSelectedDisk = (nodeId, diskID) => {
     if (diskID) {
       const node = data.find(n => n.id === nodeId)
+      let disk = node && node.disks && node.disks[diskID] ? node.disks[diskID] : null
+      let replicas = []
 
-      if (node && node.disks && node.disks[diskID]) {
-        return { ...node.disks[diskID], name: node.disks[diskID].path }
+      if (disk) {
+        Object.keys(disk.scheduledReplica).forEach((key) => {
+          let replica = node.replicas.find(item => item.name === key)
+
+          if (replica) {
+            replicas.push(replica)
+          }
+        })
+        return { ...disk, name: disk.path, replicas }
       } else {
         return {}
       }
