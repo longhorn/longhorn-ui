@@ -52,14 +52,16 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      key: 'replicas',
-      dataIndex: 'replicas',
+      key: 'scheduledReplica',
+      dataIndex: 'scheduledReplica',
       width: 96,
-      render: (text, record) => {
+      render: (replicas, record) => {
+        let numberOfReplicas = replicas ? Object.keys(replicas).length : 0
+
         return (
           <div className="replicas">
             <a onClick={() => showDiskReplicaModal(record, node)}>
-              {text ? text.length : 0}
+              {numberOfReplicas}
             </a>
           </div>
         )
