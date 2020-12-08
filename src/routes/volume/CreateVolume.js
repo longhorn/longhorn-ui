@@ -30,6 +30,7 @@ const modal = ({
     getFieldDecorator,
     validateFields,
     getFieldsValue,
+    setFieldsValue,
   },
 }) => {
   function handleOk() {
@@ -39,7 +40,13 @@ const modal = ({
       }
       const data = {
         ...getFieldsValue(),
+        size: `${getFieldsValue().size}${getFieldsValue().unit}`,
       }
+
+      if (data.unit) {
+        delete data.unit
+      }
+
       onOk(data)
     })
   }
@@ -50,6 +57,21 @@ const modal = ({
     onCancel,
     width: 680,
     onOk: handleOk,
+  }
+
+  function unitChange(value) {
+    let currentSize = getFieldsValue().size
+
+    if (value === 'Gi') {
+      currentSize /= 1024
+    } else {
+      currentSize *= 1024
+    }
+    setFieldsValue({
+      ...getFieldsValue(),
+      unit: value,
+      size: currentSize,
+    })
   }
 
   return (
@@ -66,32 +88,47 @@ const modal = ({
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="Size" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('size', {
-            initialValue: item.size,
-            rules: [
-              {
-                required: true,
-                message: 'Please input volume size',
-              }, {
-                validator: (rule, value, callback) => {
-                  if (value === '' || typeof value !== 'number') {
-                    callback()
-                    return
-                  }
-                  if (value < 0 || value > 65536) {
-                    callback('The value should be between 0 and 65535')
-                  } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
-                    callback('This value should have at most two decimal places')
-                  } else {
-                    callback()
-                  }
+        <div style={{ display: 'flex', paddingLeft: 118 }}>
+          <FormItem label="Size" {...formItemLayout}>
+            {getFieldDecorator('size', {
+              initialValue: item.size,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input volume size',
+                }, {
+                  validator: (rule, value, callback) => {
+                    if (value === '' || typeof value !== 'number') {
+                      callback()
+                      return
+                    }
+                    if (value < 0 || value > 65536) {
+                      callback('The value should be between 0 and 65535')
+                    } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
+                      callback('This value should have at most two decimal places')
+                    } else {
+                      callback()
+                    }
+                  },
                 },
-              },
-            ],
-          })(<InputNumber />)}
-          <span>Gi</span>
-        </FormItem>
+              ],
+            })(<InputNumber style={{ width: '220px' }} />)}
+          </FormItem>
+          <FormItem style={{ marginLeft: 45 }}>
+            {getFieldDecorator('unit', {
+              initialValue: item.unit,
+              rules: [{ required: true, message: 'Please select your unit!' }],
+            })(
+              <Select
+                style={{ width: '100px' }}
+                onChange={unitChange}
+              >
+                <Option value="Mi">Mi</Option>
+                <Option value="Gi">Gi</Option>
+              </Select>,
+            )}
+          </FormItem>
+        </div>
 
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {

@@ -26,7 +26,6 @@ import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
-import { formatMib } from '../../utils/formater'
 import CreateBackupModal from './detail/CreateBackupModal.js'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalitytModalProps, getUpdateBulkDataLocalitytModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
@@ -614,6 +613,7 @@ class Volume extends React.Component {
         numberOfReplicas: defaultNumberOfReplicas,
         size: 20,
         iops: 1000,
+        unit: 'Gi',
         frontend: 'iscsi',
         diskSelector: [],
         nodeSelector: [],
@@ -645,7 +645,7 @@ class Volume extends React.Component {
 
     const expansionVolumeSizeModalProps = {
       item: {
-        size: 20,
+        unit: 'Mi',
       },
       hosts,
       visible: expansionVolumeSizeModalVisible,
@@ -666,21 +666,13 @@ class Volume extends React.Component {
       },
     }
 
-    const formatSize = function (size) {
-      if (size) {
-        let sizeHasUnit = formatMib(size)
-        return Number(sizeHasUnit.split(' ')[0])
-      }
-      return 0
-    }
-
     const bulkExpansionVolumeSizeModalProps = {
       item: {
-        size: 20,
+        unit: 'Mi',
       },
       hosts,
       visible: bulkExpandVolumeModalVisible,
-      selected: bulkExpandVolumeModalVisible && selectedRows && selectedRows.length > 0 ? selectedRows.reduce((p, v) => { return formatSize(p.size) < formatSize(v.size) ? v : p }) : '',
+      selected: bulkExpandVolumeModalVisible && selectedRows && selectedRows.length > 0 ? selectedRows.reduce((p, v) => { return parseInt(p.size, 10) < parseInt(v.size, 10) ? v : p }) : '',
       onOk(params) {
         dispatch({
           type: 'volume/bulkExpandVolume',
