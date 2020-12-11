@@ -176,6 +176,14 @@ const modal = ({
           { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
+        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('accessMode', {
+            initialValue: 'rwo',
+          })(<Select>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Disable Revision Counter" {...formItemLayout}>
           {getFieldDecorator('revisionCounterDisabled', {
             valuePropName: 'checked',

@@ -100,6 +100,14 @@ const modal = ({
               ],
             })(<InputNumber min={1} />)}
           </FormItem>}
+        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('accessMode', {
+            initialValue: item.accessMode,
+          })(<Select>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+          </Select>)}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
