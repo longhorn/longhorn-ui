@@ -88,8 +88,8 @@ const modal = ({
             ],
           })(<Input />)}
         </FormItem>
-        <div style={{ display: 'flex', paddingLeft: 118 }}>
-          <FormItem label="Size" {...formItemLayout}>
+        <div style={{ display: 'flex' }}>
+          <FormItem label="Size" style={{ flex: 0.8, paddingLeft: 92 }} {...formItemLayout}>
             {getFieldDecorator('size', {
               initialValue: item.size,
               rules: [
@@ -106,6 +106,10 @@ const modal = ({
                       callback('The value should be between 0 and 65535')
                     } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
                       callback('This value should have at most two decimal places')
+                    } else if (value < 10 && getFieldsValue().unit === 'Mi') {
+                      callback('The volume size must be greater than 10 Mi')
+                    } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
+                      callback('Decimals are not allowed')
                     } else {
                       callback()
                     }
@@ -114,7 +118,7 @@ const modal = ({
               ],
             })(<InputNumber style={{ width: '220px' }} />)}
           </FormItem>
-          <FormItem style={{ marginLeft: 45 }}>
+          <FormItem>
             {getFieldDecorator('unit', {
               initialValue: item.unit,
               rules: [{ required: true, message: 'Please select your unit!' }],
