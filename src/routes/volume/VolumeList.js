@@ -319,6 +319,49 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       },
     },
     {
+      title: 'Data Locality',
+      dataIndex: 'dataLocality',
+      key: 'dataLocality',
+      width: 220,
+      render: (text, record) => {
+        return (
+          <div>
+            {record.dataLocality}
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Replicas',
+      dataIndex: 'replicas',
+      key: 'replicas',
+      width: 100,
+      render: (text, record) => {
+        return (
+          <div>
+            {record.numberOfReplicas}
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Access Mode',
+      dataIndex: 'accessMode',
+      key: 'accessMode',
+      width: 200,
+      render: (text) => {
+        const accessModeObject = {
+          rwo: 'ReadWriteOnce',
+          rwx: 'ReadWriteMany',
+        }
+        return (
+          <div>
+            {accessModeObject[text] ? accessModeObject[text] : ''}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
