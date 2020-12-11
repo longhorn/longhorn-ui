@@ -87,7 +87,6 @@ const modal = ({
             ],
           })(<Input disabled={true} />)}
         </FormItem>
-
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: item.numberOfReplicas,
@@ -113,6 +112,14 @@ const modal = ({
               },
             ],
           })(<InputNumber />)}
+        </FormItem>
+        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('accessMode', {
+            initialValue: 'rwo',
+          })(<Select>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+          </Select>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
