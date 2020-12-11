@@ -83,6 +83,18 @@ const modal = ({
       value: 'lastBackupAt',
       label: 'Last Backup At',
     },
+    {
+      value: 'replicas',
+      label: 'Replicas',
+    },
+    {
+      value: 'dataLocality',
+      label: 'Data Locality',
+    },
+    {
+      value: 'accessMode',
+      label: 'Access Mode',
+    },
   ]
 
   const modalOpts = {
