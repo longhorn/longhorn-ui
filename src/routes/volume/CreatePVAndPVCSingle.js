@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Checkbox, Radio } from 'antd'
+import { Form, Input, Checkbox, Radio, Select } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
+const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
@@ -79,6 +80,12 @@ const modal = ({
               },
             ],
           })(<Input disabled={item.pvNameDisabled} />)}
+        </FormItem>
+        <FormItem label="Access Mode" {...formItemLayout}>
+          <Select disabled={true} value={item.accessMode}>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+          </Select>
         </FormItem>
         <FormItem label="File System" {...formItemLayout}>
           {getFieldDecorator('fsType', {

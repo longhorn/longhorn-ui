@@ -12,7 +12,6 @@ export default {
     data: [],
     selected: null,
     selectedRows: [],
-    selectPVCaction: [],
     WorkloadDetailModalItem: {},
     SnapshotDetailModalItem: [],
     nodeTags: [],
@@ -47,6 +46,8 @@ export default {
     customColumnVisible: false,
     updateDataLocalityModalVisible: false,
     updateBulkDataLocalityModalVisible: false,
+    updateAccessModeModalVisible: false,
+    updateBulkAccessModeModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -73,8 +74,10 @@ export default {
     SnapshotBulkModalKey: Math.random(),
     updateBulkReplicaCountModalKey: Math.random(),
     customColumnKey: Math.random(),
-    updateDataLocalitytModalKey: Math.random(),
+    updateDataLocalityModalKey: Math.random(),
     updateBulkDataLocalityModalKey: Math.random(),
+    updateAccessModeModalKey: Math.random(),
+    updateBulkAccessModeModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -266,6 +269,20 @@ export default {
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
+    *accessModeUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateAccessModeModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *bulkAccessModeUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateBulkAccessModeModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
     *bulkDelete({
       payload,
     }, { call, put }) {
@@ -296,27 +313,6 @@ export default {
       payload,
     }, { put }) {
       yield payload.actions.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl, labels: payload.labels } }))
-    },
-    *createPV({
-      payload,
-    }, { call, put }) {
-      yield put({ type: 'hideCreatePVModal' })
-      yield payload.action.map(item => call(createVolumePV, payload.params, item))
-      yield put({ type: 'query' })
-    },
-    *createAllPV({
-      payload,
-    }, { call, put }) {
-      yield put({ type: 'hideCreatePVModal' })
-      yield payload.map(item => call(createVolumePV, { pvName: item.name }, item.actions.pvCreate))
-      yield put({ type: 'query' })
-    },
-    *createAllPVC({
-      payload,
-    }, { call, put }) {
-      yield put({ type: 'hideCreatePVCAllModal' })
-      yield payload.action.map(item => call(createVolumeAllPVC, payload.params.namespace, item.name, item.actions.pvcCreate))
-      yield put({ type: 'query' })
     },
     *createPVAndPVC({
       payload,
@@ -361,13 +357,6 @@ export default {
       if (payload.params && payload.params.namespace && payload.params.pvcName) {
         yield call(createVolumePVC, { pvcName: payload.params.pvcName, namespace: payload.params.namespace }, payload.action.actions.pvcCreate)
       }
-      yield put({ type: 'query' })
-    },
-    *createPVC({
-      payload,
-    }, { call, put }) {
-      yield put({ type: 'hideCreatePVCModal' })
-      yield payload.action.map(item => call(createVolumePVC, payload.params, item))
       yield put({ type: 'query' })
     },
     *expandVolume({
@@ -474,24 +463,15 @@ export default {
     changeTagsLoading(state, action) {
       return { ...state, ...action.payload }
     },
-    showCreatePVCModal(state, action) {
-      return { ...state, defaultPvOrPvcName: action.item.name, selectPVCaction: action.payload, createPVCModalVisible: true, createPVCModalKey: Math.random() }
-    },
-    showCreatePVModal(state, action) {
-      return { ...state, defaultPvOrPvcName: action.item.name, selectPVCaction: action.payload, createPVModalVisible: true, createPVModalKey: Math.random() }
-    },
-    showCreatePVCAllModal(state, action) {
-      return { ...state, createPVCAllModalVisible: true, selectPVCaction: action.payload, createPVCAllModalKey: Math.random() }
-    },
     showCreatePVAndPVCModal(state, action) {
-      return { ...state, createPVAndPVCVisible: true, selectPVCaction: action.payload, createPVAndPVCModalKey: Math.random() }
+      return { ...state, createPVAndPVCVisible: true, selectedRows: action.payload, createPVAndPVCModalKey: Math.random() }
     },
     showCreatePVCAndPVSingleModal(state, action) {
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : state.pvNameDisabled = false
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt ? state.previousNamespace = action.payload.kubernetesStatus.namespace : state.previousNamespace = ''
-      return { ...state, nameSpaceDisabled: false, previousChecked: !!(action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt), pvNameDisabled: state.pvNameDisabled, previousNamespace: state.previousNamespace, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selectPVCaction: action.payload, createPVAndPVCModalSingleKey: Math.random() }
+      return { ...state, nameSpaceDisabled: false, previousChecked: !!(action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt), pvNameDisabled: state.pvNameDisabled, previousNamespace: state.previousNamespace, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selected: action.payload, createPVAndPVCModalSingleKey: Math.random() }
     },
     changeCheckbox(state) {
       return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled, previousChecked: !state.nameSpaceDisabled ? false : state.previousChecked }
@@ -505,17 +485,8 @@ export default {
     hideCreatePVAndPVCModal(state) {
       return { ...state, createPVAndPVCVisible: false, nameSpaceDisabled: false, previousChecked: false, createPVAndPVCModalKey: Math.random() }
     },
-    hideCreatePVCAllModal(state) {
-      return { ...state, createPVCAllModalVisible: false, createPVCAllModalKey: Math.random() }
-    },
     hideCreateVolumeModal(state) {
       return { ...state, createVolumeModalVisible: false, tagsLoading: true }
-    },
-    hideCreatePVCModal(state) {
-      return { ...state, createPVCModalVisible: false }
-    },
-    hideCreatePVModal(state) {
-      return { ...state, createPVModalVisible: false }
     },
     showExpansionVolumeSizeModal(state, action) {
       return { ...state, selected: action.payload, expansionVolumeSizeModalVisible: true, expansionVolumeSizeModalKey: Math.random() }
@@ -584,13 +555,19 @@ export default {
       return { ...state, ...action.payload, updateReplicaCountModalVisible: true, updateReplicaCountModalKey: Math.random() }
     },
     showUpdateDataLocality(state, action) {
-      return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalitytModalKey: Math.random() }
+      return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalityModalKey: Math.random() }
+    },
+    showUpdateAccessMode(state, action) {
+      return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }
     },
     showUpdateBulkReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: Math.random() }
     },
     showUpdateBulkDataLocalityModal(state, action) {
       return { ...state, ...action.payload, updateBulkDataLocalityModalVisible: true, updateBulkDataLocalityModalKey: Math.random() }
+    },
+    showUpdateBulkAccessModeModal(state, action) {
+      return { ...state, ...action.payload, updateBulkAccessModeModalVisible: true, updateBulkAccessModeModalKey: Math.random() }
     },
     hideUpdateReplicaCountModal(state) {
       return { ...state, updateReplicaCountModalVisible: false }
@@ -601,8 +578,14 @@ export default {
     hideUpdateBulkDataLocalityModal(state) {
       return { ...state, updateBulkDataLocalityModalVisible: false }
     },
+    hideUpdateBulkAccessModeModal(state) {
+      return { ...state, updateBulkAccessModeModalVisible: false }
+    },
     hideUpdateDataLocalityModal(state) {
       return { ...state, updateDataLocalityModalVisible: false }
+    },
+    hideUpdateAccessModeModal(state) {
+      return { ...state, updateAccessModeModalVisible: false }
     },
     hideSnapshotBulkModal(state) {
       return { ...state, SnapshotBulkModalVisible: false }

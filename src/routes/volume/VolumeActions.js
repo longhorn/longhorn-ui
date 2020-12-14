@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, commandKeyDown }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -88,6 +88,9 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'updateDataLocality':
         showUpdateDataLocality(record)
         break
+      case 'updateAccessMode':
+        showUpdateAccessMode(record)
+        break
       case 'pvAndpvcCreate':
         createPVAndPVC(record)
         break
@@ -130,8 +133,12 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   }
 
-  const canuUdateDataLocality = () => {
+  const canUpdateDataLocality = () => {
     return selected.actions && selected.actions.updateDataLocality
+  }
+
+  const canUpdateAccessMode = () => {
+    return selected.actions && selected.actions.updateAccessMode
   }
 
   const allActions = [
@@ -140,7 +147,8 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1) || isRestoring() || (selected.state !== 'detached' && selected.state !== 'attached') },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby },
-    { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canuUdateDataLocality() },
+    { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() },
+    { key: 'updateAccessMode', name: 'Update Access Mode', disabled: !canUpdateAccessMode() },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]
 
@@ -189,6 +197,7 @@ actions.propTypes = {
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
   showUpdateDataLocality: PropTypes.func,
+  showUpdateAccessMode: PropTypes.func,
 }
 
 export default actions

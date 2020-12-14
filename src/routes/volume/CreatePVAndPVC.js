@@ -29,7 +29,7 @@ const modal = ({
   onOk,
   onChange,
   nameSpaceDisabled,
-  selectPVCaction,
+  selectedRows,
   setPreviousChange,
   previousChecked,
   defaultBool = true,
@@ -71,13 +71,13 @@ const modal = ({
   }
 
   function hasPreviousPVC() {
-    return (selectPVCaction || []).every((ele) => {
+    return (selectedRows || []).every((ele) => {
       return !(ele.kubernetesStatus && ele.kubernetesStatus.lastPVCRefAt)
     })
   }
 
   function hasNewlyEnteredPVC() {
-    return (selectPVCaction || []).some((ele) => {
+    return (selectedRows || []).some((ele) => {
       return ele.kubernetesStatus && !ele.kubernetesStatus.lastPVCRefAt
     })
   }
@@ -94,6 +94,9 @@ const modal = ({
               },
             ],
           })(<Input disabled={defaultBool} />)}
+        </FormItem>
+        <FormItem label="Access Mode" {...formItemLayout}>
+          <Input disabled={true} value={'<Volume Access Mode>'} />
         </FormItem>
         <FormItem label="File System" {...formItemLayout}>
           {getFieldDecorator('fsType', {
@@ -158,7 +161,7 @@ modal.propTypes = {
   hosts: PropTypes.array,
   nameSpaceDisabled: PropTypes.bool,
   defaultBool: PropTypes.bool,
-  selectPVCaction: PropTypes.array,
+  selectedRows: PropTypes.array,
   setPreviousChange: PropTypes.func,
   previousChecked: PropTypes.bool,
 }
