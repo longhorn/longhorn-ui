@@ -12,6 +12,7 @@ import AttachHost from '../AttachHost'
 import EngineUpgrade from '../EngineUpgrade'
 import UpdateReplicaCount from '../UpdateReplicaCount'
 import UpdateDataLocality from '../UpdateDataLocality'
+import UpdateAccessMode from '../UpdateAccessMode'
 import Snapshots from './Snapshots'
 import RecurringList from './RecurringList'
 import EventList from './EventList'
@@ -20,12 +21,12 @@ import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
-import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateDataLocalitytModalProps } from '../helper'
+import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateAccessModeModalProps } from '../helper'
 
 const confirm = Modal.confirm
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, createPVAndPVCSingleVisible, selectPVCaction, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalitytModalKey } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
@@ -235,6 +236,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    showUpdateAccessMode(record) {
+      dispatch({
+        type: 'volume/showUpdateAccessMode',
+        payload: {
+          selected: record,
+        },
+      })
+    },
     createPVAndPVC(actions) {
       dispatch({
         type: 'volume/showCreatePVCAndPVSingleModal',
@@ -361,15 +370,17 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   }
 
   const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selectedVolume, updateReplicaCountModalVisible, dispatch)
-  const updateDataLocalitytModalProps = getUpdateDataLocalitytModalProps(selectedVolume, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
-
+  const updateDataLocalityModalProps = getUpdateDataLocalityModalProps(selectedVolume, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
+  const updateAccessModeModalProps = getUpdateAccessModeModalProps(selectedVolume, updateAccessModeModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
       defaultPVCName,
       pvNameDisabled,
+      previousNamespace,
+      accessMode: selectedVolume && selectedVolume.accessMode ? selectedVolume.accessMode : 'rwo',
     },
-    selected: selectedVolume.kubernetesStatus ? selectedVolume.kubernetesStatus : {},
+    selected: selectedVolume && selectedVolume.kubernetesStatus ? selectedVolume.kubernetesStatus : {},
     visible: createPVAndPVCSingleVisible,
     nameSpaceDisabled,
     previousChecked,
@@ -377,7 +388,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       dispatch({
         type: 'volume/createPVAndPVCSingle',
         payload: {
-          action: selectPVCaction,
+          action: selectedVolume,
           params,
         },
       })
@@ -472,7 +483,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
       {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
       {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
-      {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalitytModalKey} {...updateDataLocalitytModalProps} /> : ''}
+      {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : ''}
+      {updateAccessModeModalVisible ? <UpdateAccessMode key={updateAccessModeModalKey} {...updateAccessModeModalProps} /> : ''}
       {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
       {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
       {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}

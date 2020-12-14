@@ -107,7 +107,7 @@ export function getUpdateReplicaCountModalProps(volume, visible, dispatch) {
   }
 }
 
-export function getUpdateDataLocalitytModalProps(volume, visible, defaultDataLocalityOption, dispatch) {
+export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLocalityOption, dispatch) {
   let option = []
 
   if (defaultDataLocalityOption && defaultDataLocalityOption.length > 0) {
@@ -139,7 +139,7 @@ export function getUpdateDataLocalitytModalProps(volume, visible, defaultDataLoc
   }
 }
 
-export function getUpdateBulkDataLocalitytModalProps(volumes, visible, defaultDataLocalityOption, dispatch) {
+export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDataLocalityOption, dispatch) {
   let option = []
 
   if (defaultDataLocalityOption && defaultDataLocalityOption.length > 0) {
@@ -162,6 +162,56 @@ export function getUpdateBulkDataLocalitytModalProps(volumes, visible, defaultDa
     onCancel() {
       dispatch({
         type: 'volume/hideUpdateBulkDataLocalityModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateAccessModeModalProps(volume, visible, dispatch) {
+  return {
+    item: volume,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/accessModeUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateAccessModeModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateBulkAccessModeModalProps(volumes, visible, dispatch) {
+  return {
+    items: volumes,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/bulkAccessModeUpdate',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkAccessModeModal',
       })
       dispatch({
         type: 'app/changeBlur',

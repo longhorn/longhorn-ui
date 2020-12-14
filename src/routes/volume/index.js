@@ -22,12 +22,14 @@ import UpdateReplicaCount from './UpdateReplicaCount'
 import UpdateBulkReplicaCount from './UpdateBulkReplicaCount'
 import ConfirmModalWithWorkload from './ConfirmModalWithWorkload'
 import UpdateDataLocality from './UpdateDataLocality'
+import UpdateAccessMode from './UpdateAccessMode'
+import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
-import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalitytModalProps, getUpdateBulkDataLocalitytModalProps } from './helper'
+import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateBulkDataLocalityModalProps, getUpdateAccessModeModalProps, getUpdateBulkAccessModeModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 
 const confirm = Modal.confirm
@@ -93,7 +95,7 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, selectPVCaction, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, bulkChangeVolumeModalKey, changeVolumeModalVisible, bulkChangeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey, updateBulkReplicaCountModalVisible, updateBulkReplicaCountModalKey, customColumnKey, customColumnVisible, customColumnList, updateDataLocalityModalVisible, updateDataLocalitytModalKey, updateBulkDataLocalityModalVisible, updateBulkDataLocalityModalKey } = this.props.volume
+    const { selected, selectedRows, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, bulkChangeVolumeModalKey, changeVolumeModalVisible, bulkChangeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey, updateBulkReplicaCountModalVisible, updateBulkReplicaCountModalKey, customColumnKey, customColumnVisible, customColumnList, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateBulkDataLocalityModalVisible, updateBulkDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, updateBulkAccessModeModalVisible, updateBulkAccessModeModalKey } = this.props.volume
     const hosts = this.props.host.data
     const engineImages = this.props.engineimage.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)
@@ -262,6 +264,14 @@ class Volume extends React.Component {
       showUpdateDataLocality(record) {
         dispatch({
           type: 'volume/showUpdateDataLocality',
+          payload: {
+            selected: record,
+          },
+        })
+      },
+      showUpdateAccessMode(record) {
+        dispatch({
+          type: 'volume/showUpdateAccessMode',
           payload: {
             selected: record,
           },
@@ -733,13 +743,13 @@ class Volume extends React.Component {
       item: defaultNamespace,
       visible: createPVAndPVCVisible,
       nameSpaceDisabled,
-      selectPVCaction,
+      selectedRows,
       previousChecked,
       onOk(params) {
         dispatch({
           type: 'volume/createPVAndPVC',
           payload: {
-            action: selectPVCaction,
+            action: selectedRows,
             params,
           },
         })
@@ -768,8 +778,9 @@ class Volume extends React.Component {
         defaultPVCName,
         previousNamespace,
         pvNameDisabled,
+        accessMode: selected && selected.accessMode ? selected.accessMode : 'rwo',
       },
-      selected: selectPVCaction.kubernetesStatus ? selectPVCaction.kubernetesStatus : {},
+      selected: selected && selected.kubernetesStatus ? selected.kubernetesStatus : {},
       visible: createPVAndPVCSingleVisible,
       nameSpaceDisabled,
       previousChecked,
@@ -777,7 +788,7 @@ class Volume extends React.Component {
         dispatch({
           type: 'volume/createPVAndPVCSingle',
           payload: {
-            action: selectPVCaction,
+            action: selected,
             params,
           },
         })
@@ -872,6 +883,14 @@ class Volume extends React.Component {
           },
         })
       },
+      showUpdateBulkAccessMode(record) {
+        dispatch({
+          type: 'volume/showUpdateBulkAccessModeModal',
+          payload: {
+            selectedRows: record,
+          },
+        })
+      },
       confirmDetachWithWorkload() {
         me.setState({
           ...me.state,
@@ -949,8 +968,10 @@ class Volume extends React.Component {
 
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
     const updateBulKReplicaCountModalProps = getUpdateBulkReplicaCountModalProps(selectedRows, updateBulkReplicaCountModalVisible, dispatch)
-    const updateDataLocalitytModalProps = getUpdateDataLocalitytModalProps(selected, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
-    const updateBulkDataLocalitytModalProps = getUpdateBulkDataLocalitytModalProps(selectedRows, updateBulkDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
+    const updateDataLocalityModalProps = getUpdateDataLocalityModalProps(selected, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
+    const updateBulkDataLocalityModalProps = getUpdateBulkDataLocalityModalProps(selectedRows, updateBulkDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
+    const updateAccessModeModalProps = getUpdateAccessModeModalProps(selected, updateAccessModeModalVisible, dispatch)
+    const updateBulkAccessModeModalProps = getUpdateBulkAccessModeModalProps(selectedRows, updateBulkAccessModeModalVisible, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
@@ -985,8 +1006,10 @@ class Volume extends React.Component {
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {updateReplicaCountModalVisible ? <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} /> : ''}
         {updateBulkReplicaCountModalVisible ? <UpdateBulkReplicaCount key={updateBulkReplicaCountModalKey} {...updateBulKReplicaCountModalProps} /> : ''}
-        {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalitytModalKey} {...updateDataLocalitytModalProps} /> : ''}
-        {updateBulkDataLocalityModalVisible ? <UpdateBulkDataLocality key={updateBulkDataLocalityModalKey} {...updateBulkDataLocalitytModalProps} /> : ''}
+        {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : ''}
+        {updateBulkDataLocalityModalVisible ? <UpdateBulkDataLocality key={updateBulkDataLocalityModalKey} {...updateBulkDataLocalityModalProps} /> : ''}
+        {updateAccessModeModalVisible ? <UpdateAccessMode key={updateAccessModeModalKey} {...updateAccessModeModalProps} /> : ''}
+        {updateBulkAccessModeModalVisible ? <UpdateBulkAccessMode key={updateBulkAccessModeModalKey} {...updateBulkAccessModeModalProps} /> : ''}
       </div>
     )
   }

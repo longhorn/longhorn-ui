@@ -38,6 +38,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
   const computeActualSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].actualSize ? selectedVolume.controllers[0].actualSize : ''
   const defaultImage = engineImages.find(image => image.default === true)
   const healthState = getHealthState(selectedVolume.robustness)
+  const accessModeObject = {
+    rwo: 'ReadWriteOnce',
+    rwx: 'ReadWriteMany',
+  }
   let upgrade = ''
   let ha = ''
   if (isVolumeImageUpgradable(selectedVolume, defaultImage)) {
@@ -235,6 +239,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
       <div className={styles.row}>
         <span className={styles.label}>Data Locality:</span>
         {selectedVolume.dataLocality}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Access Mode:</span>
+        {accessModeObject[selectedVolume.accessMode] ? accessModeObject[selectedVolume.accessMode] : ''}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Base Image:</span>
