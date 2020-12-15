@@ -148,7 +148,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1) || isRestoring() || (selected.state !== 'detached' && selected.state !== 'attached') },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby },
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() },
-    { key: 'updateAccessMode', name: 'Update Access Mode', disabled: !canUpdateAccessMode() },
+    { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]
 

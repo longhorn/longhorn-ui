@@ -108,7 +108,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
   const disableUpdateBulkDataLocality = () => selectedRows.some(item => !item.actions || !item.actions.updateDataLocality)
-  const disableUpdateAccessMode = () => selectedRows.some(item => !item.actions || !item.actions.updateAccessMode)
+  const disableUpdateAccessMode = () => selectedRows.some(item => (item.kubernetesStatus && item.kubernetesStatus.pvStatus) || !item.actions || !item.actions.updateAccessMode)
   const isHasStandy = () => selectedRows.some(item => item.standby)
   const canUpgradeEngine = () => selectedRows.some(item => (item.state !== 'detached' && item.state !== 'attached'))
   const isFaulted = () => selectedRows.some(item => item.robustness === 'faulted')
