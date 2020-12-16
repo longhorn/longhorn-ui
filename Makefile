@@ -7,9 +7,13 @@ LONHORN_MANAGER_IP = http://localhost:9500
 PORT = 8000
 IMAGE = $(REPO)/$(NAME):$(VERSION)
 
+BASE_IMAGE = $(shell grep FROM Dockerfile | grep -vi 'AS' | awk '{print $$2}' )
+
 .PHONY: build push shell run start stop rm release
 
 build:
+	# update base image to get latest changes
+	docker pull ${BASE_IMAGE}
 	docker build -t $(IMAGE) --build-arg VERSION=$(VERSION) .
 	@echo Build $(IMAGE) successful
 	@mkdir -p bin
