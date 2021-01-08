@@ -7,7 +7,7 @@ const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps,
     const tooltip = item.tooltip !== undefined ? item.tooltip : ''
     return (
       <Menu.Item key={item.key} disabled={!!item.disabled}>
-        <Tooltip title={tooltip} {...tooltipProps}>{item.name}</Tooltip>
+        <Tooltip title={tooltip} {...tooltipProps}><div>{ item.name }</div></Tooltip>
       </Menu.Item>
     )
   })
