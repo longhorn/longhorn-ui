@@ -9,6 +9,7 @@ import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate, sortTableByPVC } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import { pagination } from '../../utils/page'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
 import IconBackup from '../../components/Icon/IconBackup'
@@ -403,7 +404,6 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     columnWidth += ele.width
   })
 
-  const pagination = true
   const onChange = (p, f, s) => {
     onSorterChange(s)
   }
@@ -427,7 +427,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
           }
         }}
         simple
-        pagination={pagination}
+        pagination={pagination('volumePageSize')}
         rowKey={record => record.id}
         height={`${height}px`}
         scroll={{ x: columnWidth, y: height }}

@@ -11,6 +11,7 @@ import { nodeStatusColorMap } from '../../utils/filter'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
 import { setSortOrder } from '../../utils/store'
+import { pagination } from '../../utils/page'
 import { ModalBlur } from '../../components'
 
 class List extends React.Component {
@@ -391,7 +392,6 @@ class List extends React.Component {
        <DiskList disks={data} node={node} showDiskReplicaModal={showDiskReplicaModal} storageOverProvisioningPercentage={storageOverProvisioningPercentage} minimalSchedulingQuotaWarning={minimalSchedulingQuotaWarning} />
       )
     }
-    const pagination = true
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }
@@ -417,7 +417,7 @@ class List extends React.Component {
           loading={loading}
           onChange={onChange}
           simple
-          pagination={pagination}
+          pagination={pagination('hostPageSize')}
           rowSelection={this.state.rowSelection}
           rowKey={record => record.id}
           scroll={{ x: 1440, y: this.state.height }}

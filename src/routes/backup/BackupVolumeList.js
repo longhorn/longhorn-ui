@@ -7,6 +7,7 @@ import { formatMib } from '../../utils/formater'
 import { DropOption } from '../../components'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import { pagination } from '../../utils/page'
 import queryString from 'query-string'
 
 
@@ -161,7 +162,6 @@ class List extends React.Component {
       },
     ]
 
-    const pagination = true
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }
@@ -189,7 +189,7 @@ class List extends React.Component {
           loading={loading}
           dataSource={dataSource}
           simple
-          pagination={pagination}
+          pagination={pagination('backupDetailPageSize')}
           rowKey={record => record.id}
           scroll={{ x: 1020, y: this.state.height }}
         />

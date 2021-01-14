@@ -7,6 +7,7 @@ import { DropOption } from '../../components'
 import { formatMib } from '../../utils/formater'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import { pagination } from '../../utils/page'
 import style from './backupList.less'
 
 const confirm = Modal.confirm
@@ -316,7 +317,6 @@ class List extends React.Component {
       },
     ]
 
-    const pagination = true
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }
@@ -336,7 +336,7 @@ class List extends React.Component {
           loading={loading}
           dataSource={dataSource}
           simple
-          pagination={pagination}
+          pagination={pagination('backupPageSize')}
           rowKey={record => record.id}
           scroll={{ x: 1440, y: this.state.height }}
         />
