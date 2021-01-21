@@ -7,7 +7,7 @@ import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../compo
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
-import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate, sortTableByPVC } from '../../utils/sort'
+import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate, sortTableByPVC, sortTableActualSize, sortTableState } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import style from './VolumeList.less'
@@ -94,7 +94,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       dataIndex: 'state',
       key: 'state',
       width: 140,
-      sorter: (a, b) => sortTable(a, b, 'state'),
+      sorter: (a, b) => sortTableState(a, b),
       render: (text, record) => {
         let upgrade = null
         const state = getHealthState(record.robustness)
@@ -195,9 +195,9 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       dataIndex: 'actualSize',
       key: 'actualSize',
       width: 140,
-      sorter: (a, b) => sortTable(a, b, 'size'),
+      sorter: (a, b) => sortTableActualSize(a, b),
       render: (text, record) => {
-        let size = record && record.controllers && record.controllers[0] && record.controllers[0].actualSize ? record.controllers[0].actualSize : ''
+        let size = record && record.controllers && record.controllers[0] && record.controllers[0].actualSize ? parseInt(record.controllers[0].actualSize, 10) : 0
 
         return (
           <div>
