@@ -17,6 +17,10 @@ const getStateWeight = (state) => {
   }
 }
 
+const getActualSize = (volume) => {
+  return volume && volume.controllers && volume.controllers[0] && volume.controllers[0].actualSize ? parseInt(volume.controllers[0].actualSize, 10) : 0
+}
+
 export const getPropValue = (obj, prop) => {
   const props = prop.split('.')
   if (props.length > 1) {
@@ -49,8 +53,41 @@ export function sortVolumeBackups(dataSource) {
 }
 
 export function sortTable(a, b, prop) {
-  const valueA = getPropValue(a, prop)
-  const valueB = getPropValue(b, prop)
+  const reg = /^\d+$/
+  let valueA = getPropValue(a, prop)
+  let valueB = getPropValue(b, prop)
+  if (reg.test(valueA) && reg.test(valueB)) {
+    valueA = parseInt(valueA, 10)
+    valueB = parseInt(valueB, 10)
+  }
+  if (valueA < valueB) {
+    return -1
+  }
+  if (valueA > valueB) {
+    return 1
+  }
+  return 0
+}
+
+export function sortTableActualSize(a, b) {
+  const valueA = getActualSize(a)
+  const valueB = getActualSize(b)
+  if (valueA < valueB) {
+    return -1
+  }
+  if (valueA > valueB) {
+    return 1
+  }
+  return 0
+}
+
+export function sortTableState(a, b) {
+  let valueA = getPropValue(a, 'state')
+  let valueB = getPropValue(b, 'state')
+  if (valueA === 'attached' && valueB === 'attached') {
+    valueA = getPropValue(a, 'robustness')
+    valueB = getPropValue(b, 'robustness')
+  }
   if (valueA < valueB) {
     return -1
   }
