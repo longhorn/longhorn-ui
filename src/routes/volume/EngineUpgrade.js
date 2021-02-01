@@ -19,6 +19,7 @@ const modal = ({
   onCancel,
   onOk,
   engineImages,
+  engineUpgradePerNodeLimit,
   form: {
     getFieldDecorator,
     validateFields,
@@ -47,7 +48,14 @@ const modal = ({
   if (!items || items.length === 0) {
     return null
   }
-  const options = engineImages.filter(engineImage => items.findIndex(item => item.engineImage === engineImage.image) === -1 && engineImage.state === 'ready').map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
+  const options = engineImages.filter((engineImage) => {
+    return items.findIndex((item) => {
+      if (engineUpgradePerNodeLimit && engineUpgradePerNodeLimit.value !== '0') {
+        return item.engineImage === engineImage.image || !engineImage.default
+      }
+      return item.engineImage === engineImage.image
+    }) === -1 && engineImage.state === 'ready'
+  }).map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
 
   return (
     <ModalBlur {...modalOpts}>
@@ -76,6 +84,7 @@ modal.propTypes = {
   items: PropTypes.array,
   onOk: PropTypes.func,
   engineImages: PropTypes.array,
+  engineUpgradePerNodeLimit: PropTypes.object,
 }
 
 export default Form.create()(modal)
