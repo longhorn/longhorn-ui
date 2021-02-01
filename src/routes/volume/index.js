@@ -29,7 +29,7 @@ import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
-import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateBulkDataLocalityModalProps, getUpdateAccessModeModalProps, getUpdateBulkAccessModeModalProps } from './helper'
+import { genAttachHostModalProps, getEngineUpgradeModalProps, getBulkEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateBulkDataLocalityModalProps, getUpdateAccessModeModalProps, getUpdateBulkAccessModeModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 
 const confirm = Modal.confirm
@@ -105,6 +105,7 @@ class Volume extends React.Component {
     const defaultRevisionCounterSetting = settings.find(s => s.id === 'disable-revision-counter')
     const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
+    const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
     let replicaSoftAntiAffinitySettingValue = false
     if (replicaSoftAntiAffinitySetting) {
       replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting.value && replicaSoftAntiAffinitySetting.value.toLowerCase() === 'true'
@@ -172,6 +173,7 @@ class Volume extends React.Component {
       height: this.state.height,
       commandKeyDown: this.state.commandKeyDown,
       replicaSoftAntiAffinitySettingValue,
+      engineUpgradePerNodeLimit,
       customColumnList,
       hosts,
       onSorterChange(s) {
@@ -503,31 +505,10 @@ class Volume extends React.Component {
       },
     }
 
-    const engineUpgradeModalProps = getEngineUpgradeModalProps(selected ? [selected] : [], engineImages, engineUpgradeModalVisible, dispatch)
+    const engineUpgradeModalProps = getEngineUpgradeModalProps(selected ? [selected] : [], engineImages, engineUpgradePerNodeLimit, engineUpgradeModalVisible, dispatch)
 
-    const bulkEngineUpgradeModalProps = {
-      items: selectedRows,
-      visible: bulkEngineUpgradeModalVisible,
-      engineImages,
-      onOk(image, urls) {
-        dispatch({
-          type: 'volume/bulkEngineUpgrade',
-          payload: {
-            image,
-            urls,
-          },
-        })
-      },
-      onCancel() {
-        dispatch({
-          type: 'volume/hideBulkEngineUpgradeModal',
-        })
-        dispatch({
-          type: 'app/changeBlur',
-          payload: false,
-        })
-      },
-    }
+    const bulkEngineUpgradeModalProps = getBulkEngineUpgradeModalProps(selectedRows, engineImages, engineUpgradePerNodeLimit, bulkEngineUpgradeModalVisible, dispatch)
+
     const salvageModalProps = {
       item: selected,
       visible: salvageModalVisible,
@@ -814,6 +795,7 @@ class Volume extends React.Component {
     const volumeBulkActionsProps = {
       selectedRows,
       engineImages,
+      engineUpgradePerNodeLimit,
       commandKeyDown: this.state.commandKeyDown,
       bulkDeleteVolume() {
         dispatch({

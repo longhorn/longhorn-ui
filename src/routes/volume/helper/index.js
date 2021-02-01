@@ -31,11 +31,12 @@ export function genAttachHostModalProps(volumes, hosts, visible, dispatch) {
   }
 }
 
-export function getEngineUpgradeModalProps(volumes, engineImages, visible, dispatch) {
+export function getEngineUpgradeModalProps(volumes, engineImages, engineUpgradePerNodeLimit, visible, dispatch) {
   return {
     items: volumes,
     visible,
     engineImages,
+    engineUpgradePerNodeLimit,
     onOk(image, urls) {
       dispatch({
         type: 'volume/engineUpgrade',
@@ -48,6 +49,33 @@ export function getEngineUpgradeModalProps(volumes, engineImages, visible, dispa
     onCancel() {
       dispatch({
         type: 'volume/hideEngineUpgradeModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getBulkEngineUpgradeModalProps(volumes, engineImages, engineUpgradePerNodeLimit, visible, dispatch) {
+  return {
+    items: volumes,
+    visible,
+    engineImages,
+    engineUpgradePerNodeLimit,
+    onOk(image, urls) {
+      dispatch({
+        type: 'volume/bulkEngineUpgrade',
+        payload: {
+          image,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideBulkEngineUpgradeModal',
       })
       dispatch({
         type: 'app/changeBlur',

@@ -5,7 +5,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
@@ -124,6 +124,18 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       return false
     }
   })
+  const isAutomaticallyUpgradeEngine = () => {
+    return selectedRows.some((item) => {
+      if (engineUpgradePerNodeLimit && engineUpgradePerNodeLimit.value !== '0') {
+        let defaultEngineImage = engineImages.find(engineImage => engineImage.default)
+        if (defaultEngineImage) {
+          return item.engineImage === defaultEngineImage.image
+        }
+        return true
+      }
+      return false
+    })
+  }
   const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
   /*
   * PV/PVC decides whether to disable it
@@ -137,7 +149,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   ]
 
   const allDropDownActions = [
-    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
+    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || isAutomaticallyUpgradeEngine() || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() } },
     { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() } },
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() } },
@@ -192,6 +204,7 @@ bulkActions.propTypes = {
   showUpdateBulkReplicaCount: PropTypes.func,
   showUpdateBulkDataLocality: PropTypes.func,
   showUpdateBulkAccessMode: PropTypes.func,
+  engineUpgradePerNodeLimit: PropTypes.object,
   commandKeyDown: PropTypes.bool,
 }
 
