@@ -164,7 +164,13 @@ class List extends React.Component {
   }
 
   conditionsIsReady = (record) => {
-    return record && record.conditions && record.conditions.Ready && record.conditions.Ready.type === 'Ready'
+    if (record && record.status && record.status.name.toLowerCase() === 'down') {
+      return 'NotReady'
+    } else if (record && record.conditions && record.conditions.Ready && record.conditions.Ready.type === 'Ready') {
+      return 'Ready'
+    } else {
+      return 'Deploying'
+    }
   }
 
   modalBlurOk = () => {
@@ -244,7 +250,7 @@ class List extends React.Component {
         render: (text, record) => {
           return (
             <a style={{ textAlign: 'center', display: 'block' }} onClick={() => { this.showModalBlur(record) }}>
-              {this.conditionsIsReady(record) ? 'Ready' : 'Deploying'}
+              {this.conditionsIsReady(record)}
             </a>
           )
         },
