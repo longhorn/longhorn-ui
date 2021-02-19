@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ReactMarkdown from 'react-markdown/with-html'
-import { Form, Input, Button, Spin, Icon, Checkbox, Select } from 'antd'
+import { Form, Input, Button, Spin, Icon, Checkbox, Select, InputNumber } from 'antd'
 import styles from './setting.less'
 import { classnames } from '../../utils'
 const FormItem = Form.Item
@@ -29,6 +29,15 @@ const form = ({
     }
     return rules
   }
+  const limitNumber = value => {
+    if (typeof value === 'string') {
+      return !isNaN(Number(value)) ? value.replace(/[^\d]/g, '') : ''
+    } else if (typeof value === 'number') {
+      return !isNaN(value) ? String(value).replace(/[^\d]/g, '') : ''
+    } else {
+      return ''
+    }
+  }
   const genInputItem = (setting) => {
     if (setting.definition && setting.definition.options) {
       return (<Select getPopupContainer={triggerNode => triggerNode.parentElement}>
@@ -40,6 +49,8 @@ const form = ({
     switch (setting.definition.type) {
       case 'bool':
         return (<Checkbox disabled={setting.definition.readOnly} />)
+      case 'int':
+        return (<InputNumber style={{ width: '100%' }} parser={limitNumber} disabled={setting.definition.readOnly} min={0} />)
       default:
         return (<Input readOnly={setting.definition.readOnly} checked={setting.value} />)
     }
@@ -55,6 +66,14 @@ const form = ({
           initialValue = setting.definition.default === 'true'
         }
         valuePropName = 'checked'
+        break
+      case 'int':
+        if (setting.value !== '') {
+          initialValue = parseInt(setting.value, 10)
+        } else {
+          initialValue = 0
+        }
+        valuePropName = 'value'
         break
       default:
         initialValue = setting.value || setting.definition.default
