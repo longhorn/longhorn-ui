@@ -10,7 +10,6 @@ import InstanceManagerComponent from './components/InstanceManagerComponent'
 import { nodeStatusColorMap } from '../../utils/filter'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
-import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import { ModalBlur } from '../../components'
 
@@ -187,7 +186,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal, sorter, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, toggleScheduling, showEditDisksModal, showDiskReplicaModal, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
     const hostActionsProps = {
       toggleScheduling,
       showEditDisksModal,
@@ -220,7 +219,7 @@ class List extends React.Component {
         key: 'status',
         width: 180,
         className: styles.status,
-        sorter: (a, b) => sortTable(a, b, 'conditions.Ready.status'),
+        sorter: (a, b) => sortTable(a, b, 'status.name'),
         render: (text, record) => {
           const status = record && record.status
           const message = record && record.conditions && record.conditions.Ready && record.conditions.Ready.message
@@ -330,7 +329,7 @@ class List extends React.Component {
         key: 'size',
         width: 180,
         className: styles.size,
-        sorter: (a, b) => computeSize(a) - computeSize(b),
+        sorter: (a, b) => computeSize(b) - computeSize(a),
         render: (text, record) => {
           const reserved = computeReserved(record)
           const total = computeSize(record)
@@ -395,7 +394,6 @@ class List extends React.Component {
     const onChange = (p, f, s) => {
       onSorterChange(s)
     }
-    setSortOrder(columns, sorter)
     return (
       <div id="hostTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
