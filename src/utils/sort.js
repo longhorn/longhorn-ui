@@ -112,6 +112,7 @@ export function sortTableObject(a, b, prop, propin) {
 export function sortTableByISODate(a, b, prop) {
   const valueA = isoStrToDate(getPropValue(a, prop))
   const valueB = isoStrToDate(getPropValue(b, prop))
+
   if (valueA < valueB) {
     return -1
   }
@@ -124,6 +125,21 @@ export function sortTableByISODate(a, b, prop) {
 export function sortTableByUTCDate(a, b, prop) {
   const valueA = utcStrToDate(getPropValue(a, prop))
   const valueB = utcStrToDate(getPropValue(b, prop))
+  if (valueA < valueB) {
+    return -1
+  }
+  if (valueA > valueB) {
+    return 1
+  }
+  return 0
+}
+
+export function sortTableByTimestamp(a, b, prop) {
+  const timestampA = new Date(getPropValue(a, prop)).getTime()
+  const timestampB = new Date(getPropValue(b, prop)).getTime()
+  const valueA = isNaN(timestampA) ? 0 : timestampA
+  const valueB = isNaN(timestampB) ? 0 : timestampB
+
   if (valueA < valueB) {
     return -1
   }

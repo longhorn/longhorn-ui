@@ -7,7 +7,7 @@ import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../compo
 import { formatMib, utcStrToDate } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
-import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByISODate, sortTableByPVC, sortTableActualSize, sortTableState } from '../../utils/sort'
+import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import style from './VolumeList.less'
@@ -369,7 +369,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
       width: 200,
-      sorter: (a, b) => sortTableByISODate(a, b, 'lastBackupAt'),
+      sorter: (a, b) => sortTableByTimestamp(a, b, 'lastBackupAt'),
       render: (text) => {
         let lastTime = text ? moment(text).fromNow() : ''
         return (
