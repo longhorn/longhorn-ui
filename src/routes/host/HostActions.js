@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { DropOption } from '../../components'
 
-function actions({ selected, toggleScheduling, showEditDisksModal }) {
+function actions({ selected, toggleScheduling, showEditDisksModal, deleteHost }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'editDisk':
@@ -11,6 +11,9 @@ function actions({ selected, toggleScheduling, showEditDisksModal }) {
       case 'disableScheduling':
       case 'enableScheduling':
         toggleScheduling(record)
+        break
+      case 'deleteHost':
+        deleteHost(record)
         break
       default:
     }
@@ -40,6 +43,19 @@ function actions({ selected, toggleScheduling, showEditDisksModal }) {
     })
   }
 
+  let removeNodeTooltip = ''
+  if (selected.status.key !== 'down') {
+    removeNodeTooltip = 'Kubernetes node status must be down first'
+  } else if (selected.replicas.length > 0) {
+    removeNodeTooltip = 'Replicas on this node must be deleted first'
+  }
+  menuOptions.push({
+    key: 'deleteHost',
+    name: 'Remove Node',
+    disabled: removeNodeTooltip !== '',
+    tooltip: removeNodeTooltip,
+  })
+
   const tooltipProps = { placement: 'left' }
   return (
     <DropOption
@@ -55,6 +71,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   toggleScheduling: PropTypes.func,
   showEditDisksModal: PropTypes.func,
+  deleteHost: PropTypes.func,
 }
 
 export default actions
