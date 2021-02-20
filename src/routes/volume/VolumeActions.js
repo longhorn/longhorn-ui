@@ -156,13 +156,15 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     return false
   }
 
+  const upgradingEngine = () => selected.currentImage !== selected.engineImage
+
   const allActions = [
     { key: 'attach', name: 'Attach', disabled: isRestoring() },
     { key: 'detach', name: 'Detach', disabled: selected.standby || isRestoring() || isRwxVolumeWithWorkload(), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image && engineImage.state === 'ready') === -1) || isRestoring() || (selected.state !== 'detached' && selected.state !== 'attached') },
-    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby },
-    { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() },
+    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby || upgradingEngine() },
+    { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]

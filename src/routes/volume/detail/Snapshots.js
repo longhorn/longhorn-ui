@@ -214,6 +214,7 @@ class Snapshots extends React.Component {
         return false
       }
     }
+    const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.engineImage
 
     let purgeStatus = {}
     if (treeProps.volume.purgeStatus && treeProps.volume.purgeStatus.length > 0) {
@@ -253,7 +254,7 @@ class Snapshots extends React.Component {
         <div>Snapshots and Backups</div>
         <div>
           <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create snapshot for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
-              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring()}
+              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()}
                 icon="scan"
                 onClick={() => { this.onAction({ type: 'snapshotCreate' }) }}
                 type="primary">
@@ -262,7 +263,7 @@ class Snapshots extends React.Component {
             </Tooltip>
             &nbsp;
             <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create backup for DR volume' : 'Create a new backup.'}>
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring()} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine()} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
                 Create Backup
               </Button>
             </Tooltip>

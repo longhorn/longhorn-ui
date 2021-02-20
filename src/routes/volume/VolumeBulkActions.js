@@ -137,6 +137,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     })
   }
   const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
+  const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.engineImage)
   /*
   * PV/PVC decides whether to disable it
   */
@@ -151,8 +152,8 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const allDropDownActions = [
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || isAutomaticallyUpgradeEngine() || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() } },
-    { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() } },
-    { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() } },
+    { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() || upgradingEngine() } },
+    { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 || isHasStandy() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() || isHasPVC() || isFaulted() } },
