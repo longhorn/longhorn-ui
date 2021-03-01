@@ -9,7 +9,7 @@ import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueTitle = '*Summarize%20your%20issue%20here*'
@@ -89,6 +89,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, dispatch })
           {getStatusIcon(setting)}
           {getStatusIcon(engineimage)}
           {getStatusIcon(eventlog)}
+          {getStatusIcon(backingImage)}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
       </Row>
@@ -102,8 +103,9 @@ Footer.propTypes = {
   setting: PropTypes.object,
   engineimage: PropTypes.object,
   eventlog: PropTypes.object,
+  backingImage: PropTypes.object,
   app: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog }) => ({ app, host, volume, setting, engineimage, eventlog }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage }))(Footer)

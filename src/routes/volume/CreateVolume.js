@@ -25,6 +25,7 @@ const modal = ({
   defaultDataLocalityValue,
   defaultRevisionCounterValue,
   diskTags,
+  backingImages,
   tagsLoading,
   form: {
     getFieldDecorator,
@@ -188,6 +189,13 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backingImage', {
+            initialValue: '',
+          })(<Select allowClear={true}>
+            { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+          </Select>)}
+        </FormItem>
         <FormItem label="Disable Revision Counter" {...formItemLayout}>
           {getFieldDecorator('revisionCounterDisabled', {
             valuePropName: 'checked',
@@ -230,6 +238,7 @@ modal.propTypes = {
   tagsLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
+  backingImages: PropTypes.array,
 }
 
 export default Form.create()(modal)

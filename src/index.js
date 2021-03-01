@@ -5,6 +5,7 @@ import volume from './models/volume'
 import setting from './models/setting'
 import eventlog from './models/eventlog'
 import engineimage from './models/engineimage'
+import backingImage from './models/backingImage'
 import backup from './models/backup'
 import snapshot from './models/snapshot'
 
@@ -28,6 +29,7 @@ app.model(host)
 app.model(setting)
 app.model(eventlog)
 app.model(engineimage)
+app.model(backingImage)
 app.model(backup)
 app.model(volume)
 

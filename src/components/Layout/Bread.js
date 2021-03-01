@@ -44,7 +44,7 @@ function Bread({ location }) {
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {
       pathSet[item] = {
-        name: paths[key],
+        name: paths[key].firstUpperCase(),
         clickable: true,
         path: location.pathname.split('/').splice(0, key + 2).join('/'),
       }

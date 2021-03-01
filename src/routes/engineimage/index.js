@@ -66,7 +66,7 @@ class EngineImage extends React.Component {
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: filterField,
-            keyword: filterValue,
+            value: filterValue,
           }),
         })) : dispatch(routerRedux.push({
           pathname: '/engineimage',
