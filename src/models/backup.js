@@ -46,7 +46,7 @@ export default {
         // resulting in no request for the page, so an Undefined judgment is added.
 
         let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting']
+        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage']
 
         isbackupVolumePage = history.location && history.location.pathname && history.location.pathname !== '/' && path.every(ele => !history.location.pathname.startsWith(ele))
 

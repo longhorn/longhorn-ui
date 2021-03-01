@@ -12,11 +12,12 @@ import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 
 const { confirm } = Modal
 
-function Backup({ host, backup, volume, setting, loading, location, dispatch }) {
+function Backup({ host, backup, volume, setting, backingImage, loading, location, dispatch }) {
   const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, WorkloadDetailModalVisible, WorkloadDetailModalItem, WorkloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
   const hosts = host.data
   const volumeList = volume.data
   const settings = setting.data
+  const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
   const currentBackUp = backupVolumes.filter((item) => { return item.id === queryString.parse(location.search).keyword })
@@ -87,6 +88,7 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
     tagsLoading,
     nodeTags,
     diskTags,
+    backingImages,
     visible: restoreBackupModalVisible,
     onOk(selectedBackup) {
       dispatch({
@@ -150,6 +152,7 @@ function Backup({ host, backup, volume, setting, loading, location, dispatch }) 
     diskTags,
     tagsLoading,
     visible: createVolumeStandModalVisible,
+    backingImages,
     onOk(newVolume) {
       let obj = Object.assign(newVolume, { standby: true, frontend: '' })
       obj.size = obj.size.replace(/\s/ig, '')
@@ -215,10 +218,11 @@ Backup.propTypes = {
   host: PropTypes.object,
   setting: PropTypes.object,
   volume: PropTypes.object,
+  backingImage: PropTypes.object,
 }
 
 export default connect(({
-  host, backup, setting, loading, volume,
+  host, backup, setting, loading, volume, backingImage,
 }) => ({
-  host, backup, setting, loading: loading.models.backup, volume,
+  host, backup, setting, loading: loading.models.backup, volume, backingImage,
 }))(Backup)

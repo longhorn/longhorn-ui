@@ -245,8 +245,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
         {accessModeObject[selectedVolume.accessMode] ? accessModeObject[selectedVolume.accessMode] : ''}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Base Image:</span>
-        {selectedVolume.baseImage}
+        <span className={styles.label}> Backing Image:</span>
+        {selectedVolume.backingImage}
       </div>
       <div className={styles.row}>
         <Tooltip title={'Provides the binary to start and communicate with the volume engine/replicas.'}>

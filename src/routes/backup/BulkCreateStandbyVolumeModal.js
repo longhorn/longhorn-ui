@@ -24,6 +24,7 @@ const modal = ({
   nodeTags,
   diskTags,
   tagsLoading,
+  backingImages,
   form: {
     getFieldDecorator,
     validateFields,
@@ -89,6 +90,13 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backingImage', {
+            initialValue: '',
+          })(<Select allowClear={true}>
+            { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+          </Select>)}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
@@ -122,6 +130,7 @@ modal.propTypes = {
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   tagsLoading: PropTypes.bool,
+  backingImages: PropTypes.array,
 }
 
 export default Form.create()(modal)

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
-import { Row, Col, Modal } from 'antd'
+import { Row, Col, Modal, Descriptions } from 'antd'
 import BackupVolumeList from './BackupVolumeList'
 import RestoreBackup from './RestoreBackup'
 import CreateStandbyVolume from './CreateStandbyVolume'
@@ -9,13 +9,14 @@ import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
 import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
 
-const { confirm } = Modal
+const { confirm, info } = Modal
 
-function Backup({ host, backup, loading, setting, dispatch, location }) {
+function Backup({ host, backup, loading, setting, backingImage, dispatch, location }) {
   location.search = location.search ? location.search : ''
   const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate } = backup
   const hosts = host.data
   const settings = setting.data
+  const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
   const showDeleteConfirm = (record) => {
@@ -31,6 +32,18 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
           payload: record.name,
         })
       },
+    })
+  }
+  const showBackingImageInfo = (record) => {
+    let content = record.backingImageName || record.backingImageURL ? (<Descriptions title="" bordered>
+      <Descriptions.Item label="Backing Image Name" span={3}>{record.backingImageName}</Descriptions.Item>
+      <Descriptions.Item label="Backing Image URL" span={3}>{record.backingImageURL}</Descriptions.Item>
+    </Descriptions>) : (<div style={{ textAlign: 'center' }}>No Data</div>)
+    info({
+      title: 'Backing Image Info',
+      content,
+      okText: 'OK',
+      width: 860,
     })
   }
   const backupVolumesProps = {
@@ -56,6 +69,9 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
       //   payload: record,
       // })
       showDeleteConfirm(record)
+    },
+    showBackingImageInfo(record) {
+      showBackingImageInfo(record)
     },
     restoreLatestBackup(record) {
       dispatch({
@@ -124,6 +140,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
     tagsLoading,
     nodeTags,
     diskTags,
+    backingImages,
     previousChecked,
     isBulk: isBulkRestore,
     visible: restoreBackupModalVisible,
@@ -188,6 +205,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
     nodeTags,
     diskTags,
     tagsLoading,
+    backingImages,
     onOk(newVolume) {
       let data = Object.assign(newVolume, { standby: true, frontend: '' })
       data.size = data.size.replace(/\s/ig, '')
@@ -215,6 +233,7 @@ function Backup({ host, backup, loading, setting, dispatch, location }) {
     nodeTags,
     diskTags,
     tagsLoading,
+    backingImages,
     onOk(params, newVolumes) {
       let data = newVolumes.map((item) => ({
         ...item,
@@ -260,9 +279,10 @@ Backup.propTypes = {
   loading: PropTypes.bool,
   host: PropTypes.object,
   setting: PropTypes.object,
+  backingImage: PropTypes.object,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   tagsLoading: PropTypes.bool,
 }
 
-export default connect(({ host, backup, setting, loading }) => ({ host, backup, setting, loading: loading.models.backup }))(Backup)
+export default connect(({ host, backup, setting, backingImage, loading }) => ({ host, backup, setting, backingImage, loading: loading.models.backup }))(Backup)

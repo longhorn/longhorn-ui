@@ -13,6 +13,12 @@ String.prototype.hyphenToHump = function () {
   })
 }
 
+String.prototype.firstUpperCase = function () {
+  return this.replace(/\b(\w)(\w*)/g, ($0, $1, $2) => {
+    return $1.toUpperCase() + $2.toLowerCase()
+  })
+}
+
 String.prototype.humpToHyphen = function () {
   return this.replace(/([A-Z])/g, '-$1').toLowerCase()
 }

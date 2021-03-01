@@ -23,6 +23,7 @@ const modal = ({
   nodeTags,
   diskTags,
   tagsLoading,
+  backingImages,
   setPreviousChange,
   isBulk = false,
   form: {
@@ -108,6 +109,13 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backingImage', {
+            initialValue: '',
+          })(<Select allowClear={true}>
+            { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+          </Select>)}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
@@ -142,6 +150,7 @@ modal.propTypes = {
   hosts: PropTypes.array,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
+  backingImages: PropTypes.array,
   isBulk: PropTypes.bool,
   tagsLoading: PropTypes.bool,
 }

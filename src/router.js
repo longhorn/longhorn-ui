@@ -12,6 +12,7 @@ import backupComponent from './routes/backup/'
 import backupDetailComponent from './routes/backup/BackupDetail'
 import settingComponent from './routes/setting/'
 import engineimageComponent from './routes/engineimage/'
+import backingImageComponent from './routes/backingImage/'
 import engineimageDetailComponent from './routes/engineimage/detail'
 
 const Routers = function ({ history, app }) {
@@ -60,6 +61,11 @@ const Routers = function ({ history, app }) {
     component: () => engineimageComponent,
   })
 
+  const backingImage = dynamic({
+    app,
+    component: () => backingImageComponent,
+  })
+
   const engineimageDetail = dynamic({
     app,
     component: () => engineimageDetailComponent,
@@ -81,6 +87,7 @@ const Routers = function ({ history, app }) {
             <Route path={`${path}backup/:id`} component={backupDetail} />
             <Route path={`${path}setting`} component={setting} />
             <Route exact path={`${path}engineimage`} component={engineimage} />
+            <Route exact path={`${path}backingImage`} component={backingImage} />
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
             <Route component={notfound} />
           </Switch>

@@ -67,6 +67,8 @@ class List extends React.Component {
       this.props.DeleteAllBackups(record)
     } else if (e.key === 'restoreLatestBackup') {
       this.props.restoreLatestBackup(record)
+    } else if (e.key === 'backingImageInfo') {
+      this.props.showBackingImageInfo(record)
     }
   }
 
@@ -115,8 +117,9 @@ class List extends React.Component {
             </div>
           )
         },
-      }, {
-        title: ' Last Backup At',
+      },
+      {
+        title: 'Last Backup At',
         dataIndex: 'lastBackupAt',
         key: 'lastBackupAt',
         width: 200,
@@ -148,12 +151,15 @@ class List extends React.Component {
         title: 'Operation',
         key: 'operation',
         width: 120,
+        fixed: 'right',
         render: (text, record) => {
+          let hasBackingImage = record.backingImageName || record.backingImageURL
           return (
             <DropOption menuOptions={[
               { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
               { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
               { key: 'deleteAll', name: 'Delete All Backups' },
+              { key: 'backingImageInfo', name: 'Backing Image Info', disabled: !hasBackingImage, tooltip: hasBackingImage ? '' : 'No backing image is used' },
             ]}
               onMenuClick={e => this.handleMenuClick(record, e)}
             />
@@ -169,6 +175,13 @@ class List extends React.Component {
     const locale = {
       emptyText: backup ? 'No Data' : 'Please select a volume first',
     }
+
+    // dynamic column width
+    let columnWidth = 0
+
+    columns.forEach((ele) => {
+      columnWidth += ele.width
+    })
 
     return (
       <div id="backTable" style={{ overflow: 'hidden', flex: 1 }}>
@@ -191,7 +204,7 @@ class List extends React.Component {
           simple
           pagination={pagination('backupDetailPageSize')}
           rowKey={record => record.id}
-          scroll={{ x: 1020, y: this.state.height }}
+          scroll={{ x: columnWidth, y: this.state.height }}
         />
       </div>
     )
@@ -210,6 +223,7 @@ List.propTypes = {
   DeleteAllBackups: PropTypes.func,
   dispatch: PropTypes.func,
   restoreLatestBackup: PropTypes.func,
+  showBackingImageInfo: PropTypes.func,
 }
 
 export default List
