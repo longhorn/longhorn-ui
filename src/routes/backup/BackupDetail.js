@@ -13,7 +13,7 @@ import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 const { confirm } = Modal
 
 function Backup({ host, backup, volume, setting, backingImage, loading, location, dispatch }) {
-  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, WorkloadDetailModalVisible, WorkloadDetailModalItem, WorkloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
+  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
   const hosts = host.data
   const volumeList = volume.data
   const settings = setting.data
@@ -179,9 +179,9 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
     }
   }
 
-  const WorkloadDetailModalProps = {
-    visible: WorkloadDetailModalVisible,
-    item: WorkloadDetailModalItem,
+  const workloadDetailModalProps = {
+    visible: workloadDetailModalVisible,
+    item: workloadDetailModalItem,
     onOk() {
       dispatch({ type: 'backup/hideWorkloadDetailModal' })
     },
@@ -203,9 +203,9 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
       </div>
       <BackupList {...backupVolumesProps} />
       { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
-      <ShowBackupLabels key={showBackupLabelsModalKey} {...showBackupLabelsModalProps} />
-      <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} />
-      <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} />
+      { showBackuplabelsModalVisible ? <ShowBackupLabels key={showBackupLabelsModalKey} {...showBackupLabelsModalProps} /> : ''}
+      { createVolumeStandModalVisible ? <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} /> : ''}
+      { workloadDetailModalVisible ? <WorkloadDetailModal key={workloadDetailModalKey} {...workloadDetailModalProps} /> : ''}
     </div>
   )
 }

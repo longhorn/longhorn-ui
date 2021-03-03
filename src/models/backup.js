@@ -10,7 +10,7 @@ export default {
     backupVolumes: [],
     selectedRows: [],
     backupVolumesForSelect: [],
-    WorkloadDetailModalItem: {},
+    workloadDetailModalItem: {},
     filterText: 'all',
     backupStatus: {},
     currentItem: {},
@@ -27,7 +27,7 @@ export default {
     backupVolumesForBulkCreate: [],
     isBulkRestore: false,
     restoreBackupModalVisible: false,
-    WorkloadDetailModalVisible: false,
+    workloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
     bulkCreateVolumeStandModalVisible: false,
     showBackuplabelsModalVisible: false,
@@ -36,6 +36,7 @@ export default {
     createVolumeStandModalKey: Math.random(),
     bulkCreateVolumeStandModalKey: Math.random(),
     showBackupLabelsModalKey: Math.random(),
+    workloadDetailModalKey: Math.random(),
     sorter: getSorter('backupList.sorter'),
   },
   subscriptions: {
@@ -300,10 +301,10 @@ export default {
       return { ...state, sorter: action.payload }
     },
     showWorkloadDetailModal(state, action) {
-      return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: Math.random() }
+      return { ...state, workloadDetailModalVisible: true, workloadDetailModalItem: action.payload, workloadDetailModalKey: Math.random() }
     },
     hideWorkloadDetailModal(state) {
-      return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
+      return { ...state, workloadDetailModalVisible: false, workloadDetailModalKey: Math.random() }
     },
     changeSelection(state, action) {
       return { ...state, ...action.payload }
