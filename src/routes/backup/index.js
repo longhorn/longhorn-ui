@@ -8,12 +8,13 @@ import CreateStandbyVolume from './CreateStandbyVolume'
 import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
 import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
+import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 
 const { confirm, info } = Modal
 
 function Backup({ host, backup, loading, setting, backingImage, dispatch, location }) {
   location.search = location.search ? location.search : ''
-  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate } = backup
+  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem } = backup
   const hosts = host.data
   const settings = setting.data
   const backingImages = backingImage.data
@@ -81,6 +82,12 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
           lastBackupName: record.lastBackupName,
           numberOfReplicas: defaultNumberOfReplicas,
         },
+      })
+    },
+    showWorkloadsStatusDetail(record) {
+      dispatch({
+        type: 'backup/showWorkloadDetailModal',
+        payload: record,
       })
     },
     onRowClick(record, flag) {
@@ -254,6 +261,17 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     },
   }
 
+  const workloadDetailModalProps = {
+    visible: workloadDetailModalVisible,
+    item: workloadDetailModalItem,
+    onOk() {
+      dispatch({ type: 'backup/hideWorkloadDetailModal' })
+    },
+    onCancel() {
+      dispatch({ type: 'backup/hideWorkloadDetailModal' })
+    },
+  }
+
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
       <Row gutter={24}>
@@ -268,6 +286,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
       { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
       { createVolumeStandModalVisible ? <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} /> : ''}
       { bulkCreateVolumeStandModalVisible ? <BulkCreateStandbyVolumeModal key={bulkCreateVolumeStandModalKey} {...bulkCreateVolumeStandModalProps} /> : ''}
+      { workloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...workloadDetailModalProps} /> : ''}
     </div>
   )
 }

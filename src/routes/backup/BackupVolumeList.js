@@ -9,7 +9,7 @@ import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import queryString from 'query-string'
-
+import style from './backupList.less'
 
 class List extends React.Component {
   constructor(props) {
@@ -44,6 +44,29 @@ class List extends React.Component {
     window.removeEventListener('keyup', this.onkeyup)
   }
 
+  fomartData = (data, key) => {
+    if (this.isJson(data)) {
+      let obj = JSON.parse(data)
+
+      return key ? obj[key] : obj
+    }
+    return {}
+  }
+
+  isJson = (str) => {
+    try {
+      let obj = JSON.parse(str)
+
+      if (typeof obj === 'object' && obj) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+  }
+
   onkeyup = () => {
     this.setState({
       ...this.state,
@@ -73,7 +96,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { backup, loading, sorter, rowSelection, onSorterChange, onRowClick = f => f } = this.props
+    const { backup, loading, sorter, rowSelection, onSorterChange, onRowClick, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
 
     const columns = [
@@ -137,13 +160,84 @@ class List extends React.Component {
         dataIndex: 'created',
         key: 'created',
         align: 'center',
-        width: 200,
+        width: 180,
         sorter: (a, b) => sortTable(a, b, 'created'),
         render: (text) => {
           return (
             <div>
               {moment(new Date(text)).fromNow()}
             </div>
+          )
+        },
+      },
+      {
+        title: <div>PV/PVC</div>,
+        dataIndex: 'labels',
+        key: 'KubernetesStatus',
+        width: 120,
+        render: (record) => {
+          let storageObj = {}
+
+          if (record) {
+            storageObj = this.fomartData(record.KubernetesStatus)
+          }
+          let title = (<div>
+            <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
+            <div><span>PV Status</span><span>: </span><span>{storageObj.pvStatus}</span></div>
+            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{moment(new Date(storageObj.lastPVCRefAt)).fromNow()}</span></div> : ''}
+            { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
+          </div>)
+          let content = (() => {
+            if (!storageObj.pvName) {
+              return ''
+            }
+            if (storageObj.pvName && !storageObj.pvcName && !storageObj.namespace) {
+              return <div>Available</div>
+            }
+            if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && !storageObj.lastPVCRefAt) {
+              return <div>Bound</div>
+            }
+            if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && storageObj.lastPVCRefAt) {
+              return <div>Released</div>
+            }
+            return ''
+          })()
+          return (
+            <Tooltip placement="top" title={title}>
+              <div>
+                {content}
+              </div>
+            </Tooltip>
+          )
+        },
+      },
+      {
+        title: 'Workload/Pod',
+        dataIndex: 'labels',
+        key: 'WorkloadNameAndPodName',
+        width: 230,
+        render: (record) => {
+          let storageObj = {}
+
+          if (record) {
+            storageObj = this.fomartData(record.KubernetesStatus)
+            storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
+          }
+
+          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {moment(new Date(storageObj.lastPodRefAt)).fromNow()}</div></div> : ''
+          const ele = storageObj.workloadsStatus && storageObj.workloadsStatus.length ? storageObj.workloadsStatus.map((item, index) => {
+            return <div key={index}>{item.podName}</div>
+          }) : ''
+          if (storageObj.workloadsStatus) {
+            storageObj.podList = storageObj.workloadsStatus
+          }
+
+          return (
+            <Tooltip placement="top" title={title}>
+              <a onClick={() => { showWorkloadsStatusDetail(storageObj) }} className={style.workloadContainer} style={storageObj.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
+                {ele}
+              </a>
+            </Tooltip>
           )
         },
       },
@@ -224,6 +318,7 @@ List.propTypes = {
   dispatch: PropTypes.func,
   restoreLatestBackup: PropTypes.func,
   showBackingImageInfo: PropTypes.func,
+  showWorkloadsStatusDetail: PropTypes.func,
 }
 
 export default List
