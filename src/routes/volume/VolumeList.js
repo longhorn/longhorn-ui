@@ -9,6 +9,7 @@ import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import { statusUpgradingEngine } from '../../utils/status'
 import { pagination } from '../../utils/page'
 import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
@@ -139,6 +140,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
               {restoreProgress}
               {rebuildProgress}
             </div>
+            {statusUpgradingEngine(record)}
             {upgrade}
             {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
             {stateText}
