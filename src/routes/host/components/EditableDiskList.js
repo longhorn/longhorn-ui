@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import { Form, Button, Radio, Icon, Tooltip } from 'antd'
+import { Form, Button, Radio, Icon, Tooltip, InputNumber } from 'antd'
 import styles from './EditableDiskItem.less'
 import EditableDiskItem from './EditableDiskItem'
 import { formatPath } from '../helper/index'
@@ -100,6 +100,16 @@ class EditableDiskList extends React.Component {
     }
   }
 
+  limitNumber = value => {
+    if (typeof value === 'string') {
+      return !isNaN(Number(value)) ? value.replace(/[^\d]/g, '') : ''
+    } else if (typeof value === 'number') {
+      return !isNaN(value) ? String(value).replace(/[^\d]/g, '') : ''
+    } else {
+      return ''
+    }
+  }
+
   render() {
     const data = this.state.data
     const originDisks = this.originDisks
@@ -141,6 +151,34 @@ class EditableDiskList extends React.Component {
                   </RadioGroup>
                 )}
               </FormItem>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
+            <div className={styles.label}>
+              Engine Manager CPU Request
+            </div>
+            <div className={styles.control} style={{ marginTop: 10 }}>
+              <div style={{ display: 'flex' }}>
+                {getFieldDecorator('engineManagerCPURequest', {
+                  initialValue: node.engineManagerCPURequest,
+                })(<InputNumber size="large" style={{ width: '100%' }} parser={this.limitNumber} min={0} />)}
+                <span className="ant-input-group-addon">m</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
+            <div className={styles.label}>
+              Replica Manager CPU Request
+            </div>
+            <div className={styles.control} style={{ marginTop: 10 }}>
+              <div style={{ display: 'flex' }}>
+                {getFieldDecorator('replicaManagerCPURequest', {
+                  initialValue: node.replicaManagerCPURequest,
+                })(<InputNumber size="large" style={{ width: '100%' }} parser={this.limitNumber} min={0} />)}
+                <span className="ant-input-group-addon">m</span>
+              </div>
             </div>
           </div>
         </div>
