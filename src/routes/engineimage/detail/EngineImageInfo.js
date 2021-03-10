@@ -5,6 +5,16 @@ import classnames from 'classnames'
 import styles from './EngineImageInfo.less'
 
 function EngineImageInfo({ selectedEngineImage }) {
+  const nodeDeploymentMapElement = (nodeDeploymentMap) => {
+    if (nodeDeploymentMap) {
+      return Object.keys(nodeDeploymentMap).map((key) => {
+        return (<div className={styles.descriptionsMap} key={key}>{key}: {nodeDeploymentMap[key].toString().firstUpperCase()}</div>)
+      })
+    }
+
+    return ''
+  }
+
   return (
     <div>
       <div className={styles.row}>
@@ -35,7 +45,10 @@ function EngineImageInfo({ selectedEngineImage }) {
         <span className={styles.label}>NoRefSince:</span>
         <span>{selectedEngineImage.noRefSince}</span>
       </div>
-
+      <div className={styles.row} style={{ display: 'flex' }}>
+        <span className={styles.label}>NodeDeploymentMap:</span>
+        <span>{nodeDeploymentMapElement(selectedEngineImage.nodeDeploymentMap)}</span>
+      </div>
     </div>
   )
 }

@@ -54,7 +54,7 @@ const modal = ({
         return item.engineImage === engineImage.image || !engineImage.default
       }
       return item.engineImage === engineImage.image
-    }) === -1 && engineImage.state === 'ready'
+    }) === -1
   }).map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
 
   return (
