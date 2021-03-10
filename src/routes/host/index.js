@@ -197,12 +197,6 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
         },
       })
     },
-    toggleScheduling(record) {
-      dispatch({
-        type: 'host/toggleScheduling',
-        payload: record,
-      })
-    },
     deleteHost(record) {
       dispatch({
         type: 'host/deleteHost',
