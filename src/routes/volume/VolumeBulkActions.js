@@ -141,7 +141,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   /*
   * PV/PVC decides whether to disable it
   */
-  const hasMoreOptions = () => engineImages.findIndex(engineImage => engineImage.state === 'ready' && selectedRows.findIndex(item => item.engineImage === engineImage.image) === -1) === -1
+  const hasMoreOptions = () => engineImages.findIndex(engineImage => selectedRows.findIndex(item => item.engineImage === engineImage.image) === -1) === -1
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || !hasAction('attach') || hasDoingState() || isRestoring() } },

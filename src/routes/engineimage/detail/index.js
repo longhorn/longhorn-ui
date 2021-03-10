@@ -14,7 +14,6 @@ function EngineImageDetail({ engineimage, engineimageId }) {
   }
   const bodyStyle = {
     bodyStyle: {
-      height: 360,
       background: '#fff',
     },
   }
