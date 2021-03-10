@@ -80,9 +80,10 @@ const form = ({
         valuePropName = 'value'
         break
     }
+    let deprecatedSettings = setting.definition && setting.definition.type === 'deprecated'
 
     return (
-      <FormItem key={setting.id} className={'settings-container'}>
+      <FormItem key={setting.id} className={'settings-container'} style={{ display: deprecatedSettings ? 'none' : 'block' }}>
         <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', fontWeight: 700, marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
         {getFieldDecorator(setting.name, {
           rules: parseSettingRules(setting),
