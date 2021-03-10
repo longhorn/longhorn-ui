@@ -47,7 +47,7 @@ const modal = ({
         }
         disk.name ? updatedDisks[disk.name] = disk : updatedDisks[k] = disk
       })
-      let updateNode = Object.assign({}, node, { tags: values.tags, allowScheduling: values.nodeAllowScheduling, evictionRequested: values.evictionRequested })
+      let updateNode = Object.assign({}, node, { tags: values.tags, allowScheduling: values.nodeAllowScheduling, evictionRequested: values.evictionRequested, engineManagerCPURequest: values.engineManagerCPURequest, replicaManagerCPURequest: values.replicaManagerCPURequest })
       if (disabledSchedulingDiskIds.length > 0) {
         const disabledSchedulingDisks = {}
         Object.keys(node.disks).forEach(id => {
@@ -68,6 +68,7 @@ const modal = ({
     onOk: handleOk,
     width: 850,
     okText: 'Save',
+    style: { top: 0 },
   }
 
   const EditableDiskListProps = {
