@@ -12,9 +12,7 @@ import BundlesModel from './BundlesModel'
 function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
-  const issueTitle = '*Summarize%20your%20issue%20here*'
-  const issueBody = `*Describe%20your%20issue%20here*%0A%0A---%0AVersion%3A%20\`${currentVersion}\``
-  const issueHref = `https://github.com/longhorn/longhorn/issues/new?title=${issueTitle}&body=${issueBody}`
+  const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
 
   const { data } = setting
   let checkUpgrade = false
