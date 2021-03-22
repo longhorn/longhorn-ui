@@ -156,6 +156,10 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     return false
   }
 
+  const isRWXVolumeAndAttached = () => {
+    return selected.accessMode && selected.accessMode === 'rwx' && selected.state === 'attached'
+  }
+
   const upgradingEngine = () => selected.currentImage !== selected.engineImage
 
   const allActions = [
@@ -177,7 +181,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   })
 
-  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: !(selected.actions && (Object.keys(selected.actions).includes('attach'))) || (selected.conditions && selected.conditions.scheduled && selected.conditions.scheduled && selected.conditions.scheduled.status.toLowerCase() === 'false') })
+  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: !(selected.actions && (Object.keys(selected.actions).includes('attach'))) || (selected.conditions && selected.conditions.scheduled && selected.conditions.scheduled && selected.conditions.scheduled.status.toLowerCase() === 'false') || isRWXVolumeAndAttached() })
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
     availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
   }
