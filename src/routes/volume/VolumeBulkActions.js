@@ -136,6 +136,11 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       return false
     })
   }
+  const hasRWXVolumeAndAttached = () => {
+    return selectedRows.some((item) => {
+      return item.accessMode && item.accessMode === 'rwx' && item.state === 'attached'
+    })
+  }
   const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
   const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.engineImage)
   /*
@@ -151,7 +156,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
 
   const allDropDownActions = [
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || isAutomaticallyUpgradeEngine() || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
-    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() } },
+    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !hasAction('attach') || !conditionsScheduled() || hasRWXVolumeAndAttached() } },
     { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() || upgradingEngine() } },
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
