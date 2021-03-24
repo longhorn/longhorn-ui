@@ -105,7 +105,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   }
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
-  const hasRwxVolumeWithWorkload = () => selectedRows.some(item => item.accessMode === 'rwx' && item.kubernetesStatus.workloadsStatus && item.kubernetesStatus.workloadsStatus.length > 0)
+  const hasRwxVolumeWithWorkload = () => selectedRows.some(item => item.accessMode === 'rwx' && item.kubernetesStatus.workloadsStatus && item.kubernetesStatus.workloadsStatus.length > 0 && item.kubernetesStatus.lastPodRefAt === '')
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
   const disableUpdateBulkDataLocality = () => selectedRows.some(item => !item.actions || !item.actions.updateDataLocality)
