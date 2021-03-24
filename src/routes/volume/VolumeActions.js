@@ -134,7 +134,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
   }
 
   const isRwxVolumeWithWorkload = () => {
-    return selected.accessMode === 'rwx' && selected.kubernetesStatus.workloadsStatus && selected.kubernetesStatus.workloadsStatus.length > 0
+    return selected.accessMode === 'rwx' && selected.kubernetesStatus.workloadsStatus && selected.kubernetesStatus.workloadsStatus.length > 0 && selected.kubernetesStatus.lastPodRefAt === ''
   }
 
   const canUpdateDataLocality = () => {
