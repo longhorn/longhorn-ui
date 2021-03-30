@@ -44,3 +44,35 @@ export function isoStrToDate(isoStr) {
   }
   return 'Invalid ISO Date'
 }
+
+export function formatSnapshot(selectVolume, snapshot) {
+  let backupStatusList = selectVolume.backupStatus
+  let backupStatusObject = null
+
+  if (backupStatusList && backupStatusList.length > 0) {
+    let backupStatusObjectList = backupStatusList.filter((item) => {
+      return item.snapshot === snapshot.name
+    })
+    if (backupStatusObjectList && backupStatusObjectList.length > 0) {
+      let total = 0
+      let backupStatusErrorMsg = []
+      backupStatusObjectList.forEach((ele) => {
+        if (ele.error) {
+          backupStatusErrorMsg.push({ replica: ele.replica, error: ele.error })
+        }
+        total += ele.progress
+      })
+      backupStatusObject = {}
+      backupStatusObject.backupError = backupStatusErrorMsg
+      backupStatusObject.progress = Math.floor(total / backupStatusObjectList.length)
+      backupStatusObject.snapshot = snapshot.name
+      backupStatusObject.replicas = backupStatusObjectList.filter(item => item.replica).map(item => item.replica).join(', ')
+      backupStatusObject.backupIds = backupStatusObjectList.filter(item => item.id).map(item => item.id).join(',')
+    }
+  }
+
+  return {
+    ...snapshot,
+    backupStatusObject,
+  }
+}
