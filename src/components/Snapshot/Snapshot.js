@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Tree, Icon, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } from 'antd'
-import { formatMib } from '../../utils/formater'
+import { formatSnapshot, formatMib } from '../../utils/formater'
 import moment from 'moment'
 import { disabledSnapshotAction } from '../../routes/volume/helper/index'
 import './Snapshot.less'
@@ -104,39 +104,17 @@ function SnapshotIcon(props, snapshotProps) {
       </Menu.Item>
     </Menu>
   )
-  let backupStatusList = snapshotProps.volume.backupStatus
-  let backupStatusObject = null
-
-  if (backupStatusList && backupStatusList.length > 0) {
-    let backupStatusObjectList = backupStatusList.filter((item) => {
-      return item.snapshot === props.name
-    })
-    if (backupStatusObjectList && backupStatusObjectList.length > 0) {
-      let total = 0
-      let backupStatusErrorMsg = []
-      backupStatusObjectList.forEach((ele) => {
-        if (ele.error) {
-          backupStatusErrorMsg.push({ replica: ele.replica, error: ele.error })
-        }
-        total += ele.progress
-      })
-      backupStatusObject = {}
-      backupStatusObject.backupError = backupStatusErrorMsg
-      backupStatusObject.progress = Math.floor(total / backupStatusObjectList.length)
-      backupStatusObject.snapshot = props.name
-      backupStatusObject.replicas = backupStatusObjectList.filter(item => item.replica).map(item => item.replica).join(', ')
-      backupStatusObject.backupIds = backupStatusObjectList.filter(item => item.replica).map(item => item.id).join(',')
-    }
-  }
+  let snapshotObject = formatSnapshot(snapshotProps.volume, props)
+  let backupStatusObject = snapshotObject.backupStatusObject
   let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError && backupStatusObject.backupError.length > 0 ? <div>{ backupStatusObject.backupError.map((ele, index) => {
     return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : 'Error'}: {ele.error}</p>
   }) }</div> : ''
 
   let backgroundColor = '#3085d5'
 
-  if (props.usercreated && backupStatusObject) {
+  if (snapshotObject.usercreated && backupStatusObject) {
     backgroundColor = '#33AB65'
-  } else if (!props.usercreated) {
+  } else if (!snapshotObject.usercreated) {
     backgroundColor = '#F1C40F'
   }
 
@@ -144,8 +122,8 @@ function SnapshotIcon(props, snapshotProps) {
     <Dropdown
       placement="bottomLeft"
       overlay={menu}
-      trigger={props.removed ? [] : ['click']}
-      key={props.name}
+      trigger={snapshotObject.removed ? [] : ['click']}
+      key={snapshotObject.name}
       getPopupContainer={() => {
         return document.getElementById('tree-snapshot') || document.body
       }}
@@ -153,11 +131,11 @@ function SnapshotIcon(props, snapshotProps) {
       <Tooltip placement="right"
         autoAdjustOverflow={false}
         title={<div>
-        <p className="snapshot-name">Name: {props.name}</p>
-        <p className="snapshot-created">Created: {props.created}</p>
-        <p className="snapshot-name">Size: {formatMib(props.size)}</p>
-        <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
-        <p className="snapshot-name">Removed: {props.removed ? 'True' : 'False'}</p>
+        <p className="snapshot-name">Name: {snapshotObject.name}</p>
+        <p className="snapshot-created">Created: {snapshotObject.created}</p>
+        <p className="snapshot-name">Size: {formatMib(snapshotObject.size)}</p>
+        <p className="snapshot-name">Created By User: {snapshotObject.usercreated ? 'True' : 'False'}</p>
+        <p className="snapshot-name">Removed: {snapshotObject.removed ? 'True' : 'False'}</p>
         {
           backupStatusObject ? <div>
             <p className="snapshot-created">Progress: {backupStatusObject.progress}%</p>
@@ -176,8 +154,8 @@ function SnapshotIcon(props, snapshotProps) {
             }
           </div>
           <div className="tree-snapshot-desc">
-            <p className="snapshot-name">{props.name.substr(0, 8)}</p>
-            <p className="snapshot-time">{moment(new Date(props.created)).fromNow()}</p>
+            <p className="snapshot-name">{snapshotObject.name.substr(0, 8)}</p>
+            <p className="snapshot-time">{moment(new Date(snapshotObject.created)).fromNow()}</p>
           </div>
         </div>
       </Tooltip>

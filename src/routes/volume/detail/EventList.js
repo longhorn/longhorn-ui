@@ -98,7 +98,7 @@ class EventList extends React.Component {
           dataSource={this.props.dataSource}
           rowKey={record => record.id}
         />
-      </div> : <div style={{ padding: 15 }}></div>}</Card>
+      </div> : <div></div>}</Card>
     )
   }
 }

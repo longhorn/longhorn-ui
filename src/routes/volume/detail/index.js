@@ -16,6 +16,7 @@ import UpdateAccessMode from '../UpdateAccessMode'
 import Snapshots from './Snapshots'
 import RecurringList from './RecurringList'
 import EventList from './EventList'
+import SnapshotList from './SnapshotList'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
@@ -325,8 +326,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
   }
 
+  const snapshotListProps = {
+    dataSource: snapshotModal.data,
+    selectedVolume,
+  }
 
-  const EventListProps = {
+  const eventListProps = {
     dataSource: eventData,
   }
 
@@ -477,8 +482,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         <Col xs={24} style={{ marginBottom: 16 }}>
           <RecurringList {...recurringListProps} />
         </Col>
+        <Col style={{ marginBottom: 10 }} xs={24}>
+          <SnapshotList {...snapshotListProps} />
+        </Col>
         <Col xs={24}>
-          <EventList {...EventListProps} />
+          <EventList {...eventListProps} />
         </Col>
       </Row>
       {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
