@@ -17,6 +17,13 @@ const getPathSet = function (menuArray, parentPath) {
       clickable: item.clickable === undefined,
     }
     if (item.child) {
+      // setting This menu is a bit special
+      // the page below the menu is actually the root page
+      // but for nav it is a subset of setting nav.
+      // So it needs to be handled in a special way
+      if (item.key === 'setting') {
+        getPathSet(item.child, '/')
+      }
       getPathSet(item.child, `${parentPath}${item.key}/`)
     }
   })
@@ -44,7 +51,7 @@ function Bread({ location }) {
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {
       pathSet[item] = {
-        name: paths[key].firstUpperCase(),
+        name: paths[key],
         clickable: true,
         path: location.pathname.split('/').splice(0, key + 2).join('/'),
       }
