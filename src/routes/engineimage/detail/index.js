@@ -21,7 +21,7 @@ function EngineImageDetail({ engineimage, engineimageId }) {
     <div>
       <Row gutter={24}>
         <Col md={24} xs={24}>
-          <Card title="Enging Image Detail" bordered={false} {...bodyStyle}>
+          <Card title="Engine Image Detail" bordered={false} {...bodyStyle}>
             <EngineImageInfo {...engineImageProps} />
           </Card>
         </Col>
