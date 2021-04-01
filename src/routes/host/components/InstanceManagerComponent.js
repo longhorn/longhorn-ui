@@ -12,13 +12,12 @@ class InstanceManagerComponent extends React.Component {
     const currentNode = this.props.currentNode
 
     let data = []
-    let engineimageObj = { name: 'Engine Image', image: 'N/A', state: 'N/A', id: 'engineRowKey' }
+    let engineimageObj = { name: 'Engine Image', image: defaultEngineImage.value, state: 'not deployed', id: 'engineRowKey' }
     let instanceManagerObj = { name: 'Instance Manager', image: 'N/A', state: 'N/A', id: 'instanceRowKey' }
 
     engineimage.forEach((item) => {
-      if (defaultEngineImage.value === item.image) {
-        engineimageObj.image = item.image
-        engineimageObj.state = item.state
+      if (defaultEngineImage.value === item.image && item.nodeDeploymentMap && item.nodeDeploymentMap[currentNode.id]) {
+        engineimageObj.state = 'deployed'
       }
     })
 
