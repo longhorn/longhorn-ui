@@ -1,5 +1,5 @@
 import { query } from '../services/eventlog'
-import { wsChanges } from '../utils/websocket'
+import { wsChanges, updateState } from '../utils/websocket'
 import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
 
@@ -28,12 +28,11 @@ export default {
       const data = yield call(query, parse(payload))
       yield put({ type: 'queryEventlog', payload: { ...data } })
     },
-    *updateBackground({ payload }, { put }) {
-      const data = payload
-      yield put({ type: 'queryEventlog', payload: { ...data } })
-    },
   },
   reducers: {
+    updateBackground(state, action) {
+      return updateState(state, action)
+    },
     queryEventlog(state, action) {
       return {
         ...state,

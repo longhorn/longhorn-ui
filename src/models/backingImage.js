@@ -1,6 +1,6 @@
 import { create, deleteBackingImage, query, deleteDisksOnBackingImage } from '../services/backingImage'
 import { parse } from 'qs'
-import { wsChanges } from '../utils/websocket'
+import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 
 export default {
@@ -83,16 +83,7 @@ export default {
       }
     },
     updateBackground(state, action) {
-      const data = action.payload
-      data.data = data.data || []
-      if (data && data.field && data.keyword) {
-        data.data = data.data.filter(item => item[data.field].indexOf(data.keyword.trim()) > -1)
-      }
-      data.data.sort((a, b) => a.name.localeCompare(b.image))
-      return {
-        ...state,
-        ...data,
-      }
+      return updateState(state, action)
     },
     showCreateBackingImageModal(state, action) {
       return { ...state, ...action.payload, createBackingImageModalVisible: true, createBackingImageModalKey: Math.random() }

@@ -1,5 +1,5 @@
 import { create, deleteEngineImage, query } from '../services/engineimage'
-import { wsChanges } from '../utils/websocket'
+import { wsChanges, updateState } from '../utils/websocket'
 import { parse } from 'qs'
 import queryString from 'query-string'
 
@@ -57,16 +57,7 @@ export default {
       }
     },
     updateBackground(state, action) {
-      const data = action.payload
-      data.data = data.data || []
-      if (data && data.field && data.keyword) {
-        data.data = data.data.filter(item => item[data.field].indexOf(data.keyword.trim()) > -1)
-      }
-      data.data.sort((a, b) => a.image.localeCompare(b.image))
-      return {
-        ...state,
-        ...data,
-      }
+      return updateState(state, action)
     },
     showCreateEngineImageModal(state, action) {
       return { ...state, ...action.payload, createEngineImageModalVisible: true, createEngineImageModalKey: Math.random() }
