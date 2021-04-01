@@ -1,6 +1,6 @@
 import { query, toggleScheduling, updateDisk, deleteHost, getInstancemanagers } from '../services/host'
 import { execAction } from '../services/volume'
-import { wsChanges } from '../utils/websocket'
+import { wsChanges, updateState } from '../utils/websocket'
 import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
@@ -167,12 +167,7 @@ export default {
       }
     },
     updateBackground(state, action) {
-      const data = action.payload
-      data.data = data.data || []
-      return {
-        ...state,
-        ...data,
-      }
+      return updateState(state, action)
     },
     changeSelection(state, action) {
       return { ...state, ...action.payload }

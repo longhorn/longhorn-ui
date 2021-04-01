@@ -89,3 +89,14 @@ export function getStatusIcon(resource) {
     </Tooltip>
   )
 }
+
+export function updateState(state, action) {
+  const data = action.payload && action.payload.data ? action.payload.data : []
+  if (data.length > 0) {
+    return {
+      ...state,
+      data,
+    }
+  }
+  return state
+}

@@ -13,8 +13,7 @@ class EngineImage extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
     const { data, createEngineImageModalVisible, createEngineImageModalKey } = this.props.engineimage
-    this.props.location.query = this.props.location.query ? this.props.location.query : {}
-    const { field, value } = queryString.parse(location.serach)
+    const { field, value } = queryString.parse(this.props.location.search)
     let engineimages = data
     if (field && value) {
       engineimages = filterEngineImage(data, field, value)

@@ -1,5 +1,5 @@
 import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion } from '../services/volume'
-import { wsChanges } from '../utils/websocket'
+import { wsChanges, updateState } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
 import { routerRedux } from 'dva/router'
@@ -409,35 +409,7 @@ export default {
       }
     },
     updateBackground(state, action) {
-      const data = action.payload
-      data.data = data.data || []
-      state.data.forEach((item) => {
-        let flag = false
-        data.data.forEach((ele) => {
-          if (ele.id === item.id) {
-            flag = true
-            if (new Date(item.timestamp).getTime() > new Date(ele.timestamp).getTime()) {
-              Object.assign(ele, item)
-            }
-          }
-        })
-        if (!flag && item.state !== 'deleting') {
-          data.data.push(item)
-        }
-      })
-
-      if (data && data.field === 'id' && data.keyword) {
-        data.data = data.data.filter(item => item[data.field].indexOf(data.keyword) > -1)
-      }
-      if (data && data.field === 'host' && data.keyword) {
-        data.data = data.data.filter(item => item.controller && item.controller.hostId
-          && data.keyword.split(',').indexOf(item.controller.hostId) > -1)
-      }
-      sortVolume(data.data)
-      return {
-        ...state,
-        ...data,
-      }
+      return updateState(state, action)
     },
     showChangeVolumeModal(state, aciton) {
       return { ...state, changeVolumeActivate: aciton.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
