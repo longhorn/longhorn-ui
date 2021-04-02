@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Select, Checkbox } from 'antd'
+import { Form, Select, Checkbox, Alert, Row, Col } from 'antd'
 import { ModalBlur } from '../../components'
 
 const FormItem = Form.Item
@@ -58,6 +58,12 @@ const modal = ({
   if (!items || items.length === 0) {
     return null
   }
+
+  // RWX volumes can only be manually attached in maintenance mode.
+  const hasRwxVolume = items && items.some((item) => {
+    return item.accessMode === 'rwx'
+  })
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -73,17 +79,23 @@ const modal = ({
             {options}
           </Select>)}
         </FormItem>
-        <FormItem label="Maintenance" {...formItemLayoutCheckBox}>
+        <FormItem label="Maintenance" valuepropname={'checked'} {...formItemLayoutCheckBox}>
           {getFieldDecorator('disableFrontend', {
-            initialValue: false,
+            initialValue: hasRwxVolume,
+            valuePropName: 'checked',
             rules: [
               {
                 required: false,
               },
             ],
-          })(<Checkbox></Checkbox>)}
+          })(<Checkbox disabled={hasRwxVolume}></Checkbox>)}
         </FormItem>
       </Form>
+      { hasRwxVolume ? <Row>
+        <Col span={18} style={{ marginLeft: 100 }}>
+          <Alert message="RWX volumes can only be manually attached in maintenance mode." type="warning" showIcon />
+        </Col>
+      </Row> : '' }
     </ModalBlur>
   )
 }

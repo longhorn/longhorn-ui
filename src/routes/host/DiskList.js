@@ -25,7 +25,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
   const columns = [
     {
       key: 'status',
-      width: 160,
+      width: 170,
       render: (text, record) => {
         return (<div style={{ padding: '0 0 0 20px' }} className="status">{getDiskStatus(record)}</div>)
       },
