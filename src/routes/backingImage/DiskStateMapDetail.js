@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal } from 'antd'
+import { Table, Modal, Progress, Tooltip } from 'antd'
 import DiskStateMapActions from './DiskStateMapActions'
 import { ModalBlur, DropOption } from '../../components'
 const confirm = Modal.confirm
@@ -8,6 +8,7 @@ const confirm = Modal.confirm
 const modal = ({
   visible,
   selected,
+  backingImages,
   onCancel,
   deleteDisksOnBackingImage,
   selectedRows,
@@ -40,12 +41,19 @@ const modal = ({
     }
   }
 
-  const dataSource = Object.keys(selected.diskStateMap).map((key) => {
-    return {
-      status: selected.diskStateMap[key],
-      disk: key,
-    }
+  // update detail list
+  let currentData = backingImages.find((item) => {
+    return item.id === selected.id
   })
+
+  const dataSource = currentData && currentData.diskStateMap ? Object.keys(currentData.diskStateMap).map((key) => {
+    return {
+      status: currentData.diskStateMap[key],
+      disk: key,
+      downloading: currentData.diskStateMap[key] && currentData.downloadProgressMap[key] !== 'undefined' && currentData.diskStateMap[key] === 'downloading',
+      progress: currentData.downloadProgressMap && currentData.downloadProgressMap[key] ? parseInt(currentData.downloadProgressMap[key], 10) : 0,
+    }
+  }) : []
 
   const columns = [
     {
@@ -54,9 +62,12 @@ const modal = ({
       key: 'status',
       width: 150,
       className: 'active',
-      render: (text) => {
+      render: (text, record) => {
         return (
-          <div>{text}</div>
+          <div>
+            { record.downloading ? <Tooltip title={`${record.progress}%`}><div><Progress showInfo={false} percent={record.progress} /></div></Tooltip> : ''}
+            <div>{text}</div>
+          </div>
         )
       },
     }, {
@@ -119,6 +130,7 @@ modal.propTypes = {
   diskStateMapDeleteDisabled: PropTypes.bool,
   diskStateMapDeleteLoading: PropTypes.bool,
   selected: PropTypes.object,
+  backingImages: PropTypes.array,
   onCancel: PropTypes.func,
   selectedRows: PropTypes.array,
   deleteDisksOnBackingImage: PropTypes.func,

@@ -71,6 +71,7 @@ class BackingImage extends React.Component {
 
     const diskStateMapDetailModalProps = {
       selected,
+      backingImages,
       visible: diskStateMapDetailModalVisible,
       onCancel: () => {
         dispatch({ type: 'backingImage/hideDiskStateMapDetailModal' })
