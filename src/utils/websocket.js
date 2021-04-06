@@ -92,7 +92,8 @@ export function getStatusIcon(resource) {
 
 export function updateState(state, action) {
   const data = action.payload && action.payload.data ? action.payload.data : []
-  if (data.length > 0) {
+  // When resourceType is undefined, it means that the data is not updated.
+  if (action.payload && action.payload.resourceType) {
     return {
       ...state,
       data,
