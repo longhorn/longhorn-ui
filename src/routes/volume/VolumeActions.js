@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { detachable, attachable } from './helper'
 const confirm = Modal.confirm
 
 function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, engineUpgradePerNodeLimit, commandKeyDown }) {
@@ -159,8 +160,8 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
   const upgradingEngine = () => selected.currentImage !== selected.engineImage
 
   const allActions = [
-    { key: 'attach', name: 'Attach', disabled: isRestoring() },
-    { key: 'detach', name: 'Detach', disabled: selected.standby || isRestoring() || isRwxVolumeWithWorkload(), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
+    { key: 'attach', name: 'Attach', disabled: !attachable(selected) },
+    { key: 'detach', name: 'Detach', disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image) === -1) || isRestoring() || (selected.state !== 'detached' && selected.state !== 'attached') },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby || upgradingEngine() },
