@@ -61,7 +61,7 @@ const modal = ({
 
   // RWX volumes can only be manually attached in maintenance mode.
   const hasRwxVolume = items && items.some((item) => {
-    return item.accessMode === 'rwx'
+    return item.accessMode === 'rwx' && !item.migratable
   })
 
   return (

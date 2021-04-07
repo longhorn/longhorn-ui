@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Menu, Dropdown, Icon } from 'antd'
+import { detachable, attachable } from './helper'
 import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
@@ -105,7 +106,6 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   }
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
-  const hasRwxVolumeWithWorkload = () => selectedRows.some(item => item.accessMode === 'rwx' && item.kubernetesStatus.workloadsStatus && item.kubernetesStatus.workloadsStatus.length > 0 && item.kubernetesStatus.lastPodRefAt === '')
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
   const disableUpdateBulkDataLocality = () => selectedRows.some(item => !item.actions || !item.actions.updateDataLocality)
@@ -144,8 +144,8 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const hasMoreOptions = () => engineImages.findIndex(engineImage => selectedRows.findIndex(item => item.engineImage === engineImage.image) === -1) === -1
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
-    { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || !hasAction('attach') || hasDoingState() || isRestoring() } },
-    { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || !hasAction('detach') || hasDoingState(['attaching']) || isHasStandy() || isRestoring() || hasRwxVolumeWithWorkload() } },
+    { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
+    { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !detachable(item)) } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || isRestoring() } },
   ]
 

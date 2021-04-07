@@ -269,3 +269,34 @@ export function disabledSnapshotAction(volume, modelState) {
 export function extractImageVersion(image) {
   return image.substr(image.lastIndexOf(':') + 1, image.length)
 }
+
+const isRestoring = (volume) => {
+  if (volume.restoreStatus && volume.restoreStatus.length > 0) {
+    let flag = volume.restoreStatus.every((item) => {
+      return !item.isRestoring
+    })
+    return !flag
+  } else {
+    return false
+  }
+}
+
+export function detachable(volume) {
+  if (volume.standby || isRestoring(volume)) {
+    return false
+  }
+  if (volume.accessMode === 'rwo') {
+    return volume.state === 'attached'
+  }
+  if (volume.migratable) {
+    return volume.state === 'attached' && volume.controllers && volume.controllers.length <= 1
+  }
+  return volume.state === 'attached' && volume.disableFrontend
+}
+
+export function attachable(volume) {
+  if (isRestoring(volume)) {
+    return false
+  }
+  return volume.state === 'detached'
+}
