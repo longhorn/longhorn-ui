@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Menu, Dropdown, Icon } from 'antd'
-import { detachable, attachable } from './helper'
+import { detachable, attachable, isRestoring } from './helper'
 import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
@@ -114,15 +114,8 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   const canUpgradeEngine = () => selectedRows.some(item => (item.state !== 'detached' && item.state !== 'attached'))
   const isFaulted = () => selectedRows.some(item => item.robustness === 'faulted')
   const isHasPVC = () => selectedRows.some(item => item.kubernetesStatus && item.kubernetesStatus.pvStatus && item.kubernetesStatus.pvStatus === 'Bound')
-  const isRestoring = () => selectedRows.some((selected) => {
-    if (selected.restoreStatus && selected.restoreStatus.length > 0) {
-      let flag = selected.restoreStatus.every((item) => {
-        return !item.isRestoring
-      })
-      return !flag
-    } else {
-      return false
-    }
+  const hasVolumeRestoring = () => selectedRows.some((selected) => {
+    return isRestoring(selected)
   })
   const isAutomaticallyUpgradeEngine = () => {
     return selectedRows.some((item) => {
@@ -146,17 +139,17 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !detachable(item)) } },
-    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || isRestoring() } },
+    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() } },
   ]
 
   const allDropDownActions = [
-    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || isAutomaticallyUpgradeEngine() || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || isRestoring() || canUpgradeEngine() } },
+    { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || isAutomaticallyUpgradeEngine() || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || hasVolumeRestoring() || canUpgradeEngine() } },
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => item.state !== 'detached') || !conditionsScheduled() } },
     { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() || upgradingEngine() } },
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
     { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 || isHasStandy() } },
-    { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || isRestoring() || isHasPVC() || isFaulted() } },
+    { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() } },
     { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
   ]
 

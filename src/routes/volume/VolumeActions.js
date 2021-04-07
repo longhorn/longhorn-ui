@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
-import { detachable, attachable } from './helper'
+import { detachable, attachable, isRestoring } from './helper'
 const confirm = Modal.confirm
 
 function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, engineUpgradePerNodeLimit, commandKeyDown }) {
@@ -123,17 +123,6 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   }
 
-  const isRestoring = () => {
-    if (selected.restoreStatus && selected.restoreStatus.length > 0) {
-      let flag = selected.restoreStatus.every((item) => {
-        return !item.isRestoring
-      })
-      return !flag
-    } else {
-      return false
-    }
-  }
-
   const isRwxVolumeWithWorkload = () => {
     return selected.accessMode === 'rwx' && selected.kubernetesStatus.workloadsStatus && selected.kubernetesStatus.workloadsStatus.length > 0 && selected.kubernetesStatus.lastPodRefAt === ''
   }
@@ -162,13 +151,13 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
   const allActions = [
     { key: 'attach', name: 'Attach', disabled: !attachable(selected) },
     { key: 'detach', name: 'Detach', disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
-    { key: 'salvage', name: 'Salvage', disabled: isRestoring() },
-    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image) === -1) || isRestoring() || (selected.state !== 'detached' && selected.state !== 'attached') },
-    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring() || selected.standby || upgradingEngine() },
+    { key: 'salvage', name: 'Salvage', disabled: isRestoring(selected) },
+    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') },
+    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
   ]
-  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring() }, { key: 'delete', name: 'Delete' }]
+  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
@@ -182,7 +171,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
     availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
   }
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.robustness === 'faulted' || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring() })
+  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.robustness === 'faulted' || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring(selected) })
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
