@@ -198,9 +198,12 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
       })
     },
     deleteHost(record) {
+      // Change to same as batch operation
       dispatch({
-        type: 'host/deleteHost',
-        payload: record,
+        type: 'host/autoDeleteNode',
+        payload: {
+          selectedHostRows: [record],
+        },
       })
     },
     updateDisk(disks, url) {

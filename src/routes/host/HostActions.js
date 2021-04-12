@@ -26,9 +26,8 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
   let removeNodeTooltip = ''
   if (selected.status.key !== 'down') {
     removeNodeTooltip = 'Kubernetes node status must be down first'
-  } else if (selected.replicas.length > 0) {
-    removeNodeTooltip = 'Replicas on this node must be deleted first'
   }
+
   menuOptions.push({
     key: 'deleteHost',
     name: 'Remove Node',
