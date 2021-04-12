@@ -70,6 +70,7 @@ export default {
       yield call(updateDisk, { disks: payload.disks }, payload.url)
       yield put({ type: 'query' })
     },
+    // The operation to delete a single node is replaced by `autoDeleteNode`
     *deleteHost({
       payload,
     }, { call, put }) {
