@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Modal } from 'antd'
 import { DropOption } from '../../components'
+
+const confirm = Modal.confirm
 
 function actions({ selected, showEditDisksModal, deleteHost }) {
   const handleMenuClick = (event, record) => {
@@ -9,7 +12,12 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
         showEditDisksModal(record)
         break
       case 'deleteHost':
-        deleteHost(record)
+        confirm({
+          title: `Are you sure you want to delete node ${selected.name} ?`,
+          onOk() {
+            deleteHost(record)
+          },
+        })
         break
       default:
     }
