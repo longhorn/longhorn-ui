@@ -10,7 +10,7 @@ import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components
 import IconSnapshot from '../../../components/Icon/IconSnapshot'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
-function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts }) {
+function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, currentBackingImage }) {
   let errorMsg = null
   const state = snapshotModalState
 
@@ -244,10 +244,16 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts })
         <span className={styles.label}> Access Mode:</span>
         {accessModeObject[selectedVolume.accessMode] ? accessModeObject[selectedVolume.accessMode] : ''}
       </div>
-      <div className={styles.row}>
-        <span className={styles.label}> Backing Image:</span>
-        {selectedVolume.backingImage}
-      </div>
+      {currentBackingImage ? <div>
+        <div className={styles.row}>
+          <span className={styles.label}> Backing Image:</span>
+          {selectedVolume.backingImage}
+        </div>
+        <div className={styles.row}>
+          <span className={styles.label}> Backing Image Size:</span>
+          {formatMib(currentBackingImage.size)}
+        </div>
+      </div> : ''}
       <div className={styles.row}>
         <Tooltip title={'Provides the binary to start and communicate with the volume engine/replicas.'}>
           <span className={styles.label}> Engine Image:</span>
@@ -327,6 +333,7 @@ VolumeInfo.propTypes = {
   snapshotModal: PropTypes.object,
   snapshotModalState: PropTypes.bool,
   engineImages: PropTypes.array,
+  currentBackingImage: PropTypes.object,
   hosts: PropTypes.array,
 }
 
