@@ -37,6 +37,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail 
       title: 'Image URL',
       dataIndex: 'imageURL',
       key: 'imageURL',
+      width: 400,
       render: (text) => {
         return (
           <div>
@@ -57,9 +58,9 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail 
         )
       },
     }, {
-      title: '',
+      title: 'Operation',
       key: 'operation',
-      width: 100,
+      width: 120,
       render: (text, record) => {
         return (
           <BackingImageActions {...backingImageActionsProps} selected={record} />

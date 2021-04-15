@@ -57,7 +57,7 @@ const modal = ({
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="Url" hasFeedback {...formItemLayout}>
+        <FormItem label="URL" hasFeedback {...formItemLayout}>
           {getFieldDecorator('imageURL', {
             initialValue: item.imageURL,
             rules: [
