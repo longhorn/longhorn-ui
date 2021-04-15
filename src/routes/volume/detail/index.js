@@ -26,13 +26,14 @@ import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCo
 
 const confirm = Modal.confirm
 
-function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading }) {
+function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
+  const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
   const settings = setting.data
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
   const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
@@ -119,6 +120,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     backupStatus,
     snapshotModalState,
     engineImages,
+    currentBackingImage,
     hosts,
     clearBackupStatus() {
       dispatch({
@@ -514,6 +516,7 @@ VolumeDetail.propTypes = {
   snapshotModal: PropTypes.object,
   eventlog: PropTypes.object,
   setting: PropTypes.object,
+  backingImage: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, backup, host, engineimage, volume, loading, eventlog, setting }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, engineimage, volume, loading, eventlog, setting, backingImage }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting, backingImage }))(VolumeDetail)

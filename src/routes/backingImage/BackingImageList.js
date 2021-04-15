@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Button } from 'antd'
 import BackingImageActions from './BackingImageActions'
+import { formatMib } from '../../utils/formater'
 
 function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail }) {
   const backingImageActionsProps = {
@@ -30,6 +31,18 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail 
         return (
           <div>
             {text}
+          </div>
+        )
+      },
+    }, {
+      title: 'Size',
+      dataIndex: 'size',
+      key: 'size',
+      width: 100,
+      render: (text) => {
+        return (
+          <div>
+            {formatMib(text)}
           </div>
         )
       },
