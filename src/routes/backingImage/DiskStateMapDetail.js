@@ -31,7 +31,7 @@ const modal = ({
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure to delete the images from the disk ${record.disk} ?`,
+          title: `Are you sure to delete the images image file from the disk ${record.disk} ?`,
           onOk() {
             deleteDisksOnBackingImage([record])
           },
