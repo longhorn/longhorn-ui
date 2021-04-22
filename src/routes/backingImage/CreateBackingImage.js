@@ -6,10 +6,10 @@ const FormItem = Form.Item
 
 const formItemLayout = {
   labelCol: {
-    span: 7,
+    span: 4,
   },
   wrapperCol: {
-    span: 15,
+    span: 17,
   },
 }
 
@@ -40,6 +40,7 @@ const modal = ({
     title: 'Create Backing Image',
     visible,
     onCancel,
+    width: 1040,
     onOk: handleOk,
   }
 
