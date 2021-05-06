@@ -29,9 +29,8 @@ class EventList extends React.Component {
       {
         title: 'Name',
         key: 'name',
-        width: 120,
         render: (record) => {
-          return (<div>{record.name}</div>)
+          return (<div style={{ minWidth: 120 }}>{record.name}</div>)
         },
       }, {
         title: 'Kind',
