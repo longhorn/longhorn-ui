@@ -7,7 +7,7 @@ platform:
   arch: amd64
 
 steps:
-- name: publish-master-image
+- name: publish-image
   image: plugins/docker
   settings:
     build_args:
@@ -18,12 +18,10 @@ steps:
     password:
       from_secret: docker_password
     repo: longhornio/longhorn-ui
-    tag: "master-amd64"
+    tag: "${DRONE_BRANCH}-head-amd64"
     username:
       from_secret: docker_username
   when:
-    branch:
-    - master
     event:
     - push
 
@@ -42,8 +40,6 @@ steps:
     username:
       from_secret: docker_username
   when:
-    branch:
-    - master
     event:
     - tag
 
@@ -77,7 +73,7 @@ platform:
   arch: arm64
 
 steps:
-- name: publish-master-image
+- name: publish-image
   image: plugins/docker
   settings:
     build_args:
@@ -88,12 +84,10 @@ steps:
     password:
       from_secret: docker_password
     repo: longhornio/longhorn-ui
-    tag: "master-arm64"
+    tag: "${DRONE_BRANCH}-head-arm64"
     username:
       from_secret: docker_username
   when:
-    branch:
-    - master
     event:
     - push
 
@@ -112,8 +106,6 @@ steps:
     username:
       from_secret: docker_username
   when:
-    branch:
-    - master
     event:
     - tag
 
@@ -138,55 +130,51 @@ volumes:
 - name: socket
   host:
     path: /var/run/docker.sock
----                                                                             
-kind: pipeline                                                                  
-name: manifest                                                                  
-                                                                                
-platform:                                                                       
-  os: linux                                                                     
-  arch: amd64                                                                   
-                                                                                
-steps:                                                                          
-- name: manifest-master                                                         
-  image: plugins/manifest:1                                                     
-  settings:                                                                     
-    username:                                                                   
-      from_secret: docker_username                                              
-    password:                                                                   
-      from_secret: docker_password                                              
-    platforms:                                                                  
-      - linux/amd64                                                             
-      - linux/arm64                                                             
-    target: "longhornio/longhorn-ui:master"                                
-    template: "longhornio/longhorn-ui:master-ARCH"                         
-  when:                                                                         
-    instance:                                                                   
-    - drone-publish.longhorn.io                                                 
-    branch:                                                                     
-    - master                                                                    
-    event:                                                                      
-    - push                                                                      
-                                                                                
-- name: manifest-tag                                                            
-  image: plugins/manifest:1                                                     
-  settings:                                                                     
-    username:                                                                   
-      from_secret: docker_username                                              
-    password:                                                                   
-      from_secret: docker_password                                              
-    platforms:                                                                  
-      - linux/amd64                                                             
-      - linux/arm64                                                             
-    target: "longhornio/longhorn-ui:${DRONE_TAG}"                          
-    template: "longhornio/longhorn-ui:${DRONE_TAG}-ARCH"                   
-  when:                                                                         
-    instance:                                                                   
-    - drone-publish.longhorn.io                                                 
-    branch:                                                                     
-    - master                                                                    
-    event:                                                                      
-    - tag                                                                       
- 
+---
+kind: pipeline
+name: manifest
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: manifest
+  image: plugins/manifest:1
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    target: "longhornio/longhorn-ui:${DRONE_BRANCH}-head"
+    template: "longhornio/longhorn-ui:${DRONE_BRANCH}-head-ARCH"
+  when:
+    instance:
+    - drone-publish.longhorn.io
+    event:
+    - push
+
+- name: manifest-tag
+  image: plugins/manifest:1
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    target: "longhornio/longhorn-ui:${DRONE_TAG}"
+    template: "longhornio/longhorn-ui:${DRONE_TAG}-ARCH"
+  when:
+    instance:
+    - drone-publish.longhorn.io
+    event:
+    - tag
+
 - name: slack_notify
   image: plugins/slack
   settings:
@@ -203,7 +191,7 @@ steps:
       - drone-publish.longhorn.io
     status:
       - failure
-                                                                               
-depends_on:                                                                     
-- default-amd64                                                                 
-- default-arm64   
+
+depends_on:
+- default-amd64
+- default-arm64
