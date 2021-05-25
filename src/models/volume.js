@@ -313,6 +313,7 @@ export default {
       payload,
     }, { put }) {
       yield payload.actions.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl, labels: payload.labels } }))
+      yield put({ type: 'query' })
     },
     *createPVAndPVC({
       payload,
