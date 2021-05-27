@@ -48,6 +48,7 @@ export default {
     updateBulkDataLocalityModalVisible: false,
     updateAccessModeModalVisible: false,
     updateBulkAccessModeModalVisible: false,
+    confirmModalWithWorkloadVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -78,6 +79,7 @@ export default {
     updateBulkDataLocalityModalKey: Math.random(),
     updateAccessModeModalKey: Math.random(),
     updateBulkAccessModeModalKey: Math.random(),
+    confirmModalWithWorkloadKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -589,6 +591,12 @@ export default {
         window.sessionStorage.setItem('customColumnList', JSON.stringify(action.payload.columns))
       }
       return { ...state, customColumnList: action.payload.columns }
+    },
+    showConfirmDetachWithWorkload(state) {
+      return { ...state, confirmModalWithWorkloadVisible: true, confirmModalWithWorkloadKey: Math.random() }
+    },
+    hideConfirmDetachWithWorkload(state) {
+      return { ...state, confirmModalWithWorkloadVisible: false, confirmModalWithWorkloadKey: Math.random() }
     },
   },
 }
