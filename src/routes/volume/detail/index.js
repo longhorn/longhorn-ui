@@ -22,12 +22,13 @@ import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
+import ConfirmModalWithWorkload from '../ConfirmModalWithWorkload'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateAccessModeModalProps } from '../helper'
 
 const confirm = Modal.confirm
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey } = volume
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, confirmModalWithWorkloadVisible, confirmModalWithWorkloadKey } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
@@ -306,6 +307,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    confirmDetachWithWorkload() {
+      dispatch({
+        type: 'volume/showConfirmDetachWithWorkload',
+      })
+    },
   }
 
   const attachHostModalProps = genAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -462,6 +468,32 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
   }
 
+  const confirmModalWithWorkloadProps = {
+    visible: confirmModalWithWorkloadVisible,
+    title: `Detach volume ${selectedVolume.name}`,
+    onOk() {
+      if (selectedVolume.actions && selectedVolume.actions.detach) {
+        dispatch({
+          type: 'volume/detach',
+          payload: {
+            url: selectedVolume.actions.detach,
+          },
+        })
+      }
+      dispatch({
+        type: 'volume/hideConfirmDetachWithWorkload',
+      })
+      dispatch({
+        type: 'snapshotModal/stopPolling',
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideConfirmDetachWithWorkload',
+      })
+    },
+  }
+
   return (
     <div style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
       <Row gutter={24}>
@@ -500,6 +532,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
       {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
       {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
+      {confirmModalWithWorkloadVisible ? <ConfirmModalWithWorkload key={confirmModalWithWorkloadKey} {...confirmModalWithWorkloadProps} /> : ''}
     </div>
   )
 }
