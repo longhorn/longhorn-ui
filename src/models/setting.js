@@ -3,6 +3,7 @@ import { wsChanges, updateState } from '../utils/websocket'
 import { parse } from 'qs'
 
 export default {
+  ws: null,
   namespace: 'setting',
   state: {
     data: [],
@@ -17,7 +18,6 @@ export default {
           payload: location.query,
         })
       })
-      wsChanges(dispatch, 'settings', '1s')
     },
   },
   effects: {
@@ -38,6 +38,25 @@ export default {
       }
       yield put({ type: 'query' })
       yield put({ type: 'hideSaving' })
+    },
+    *startWS({
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.setting.ws)
+      if (ws) {
+        ws.open()
+      } else {
+        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.setting.ws)
+      if (ws) {
+        ws.close(1000)
+      }
     },
   },
   reducers: {
@@ -64,6 +83,9 @@ export default {
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }

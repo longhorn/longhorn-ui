@@ -4,6 +4,7 @@ import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 
 export default {
+  ws: null,
   namespace: 'backingImage',
   state: {
     data: [],
@@ -26,7 +27,6 @@ export default {
           payload: location.pathname === '/backingImage' ? queryString.parse(location.search) : '',
         })
       })
-      wsChanges(dispatch, 'backingimages', '1s')
     },
   },
   effects: {
@@ -74,6 +74,25 @@ export default {
       })
       yield put({ type: 'query' })
     },
+    *startWS({
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.backingImage.ws)
+      if (ws) {
+        ws.open()
+      } else {
+        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.backingImage.ws)
+      if (ws) {
+        ws.close(1000)
+      }
+    },
   },
   reducers: {
     queryBackingImage(state, action) {
@@ -114,6 +133,9 @@ export default {
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }
