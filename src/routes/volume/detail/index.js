@@ -341,6 +341,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
   const eventListProps = {
     dataSource: eventData,
+    dispatch,
   }
 
   const snapshotsProp = {

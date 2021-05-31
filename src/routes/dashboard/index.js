@@ -47,6 +47,7 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
       })
     },
     sorter,
+    dispatch,
   }
   return (
     <div style={{ overflow: 'auto', height: '100%' }}>

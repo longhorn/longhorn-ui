@@ -22,6 +22,7 @@ module.exports = {
     open: false,
     hot: true,
     quiet: true,
+    disableHostCheck: true,
     historyApiFallback: true,
     overlay: {
       errors: true

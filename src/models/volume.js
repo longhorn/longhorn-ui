@@ -9,6 +9,7 @@ import queryString from 'query-string'
 export default {
   namespace: 'volume',
   state: {
+    ws: null,
     data: [],
     selected: null,
     selectedRows: [],
@@ -94,7 +95,6 @@ export default {
           })
         }
       })
-      wsChanges(dispatch, 'volumes', '1s')
     },
   },
   effects: {
@@ -403,6 +403,25 @@ export default {
       const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
       yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels })
     },
+    *startWS({
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.volume.ws)
+      if (ws) {
+        ws.open()
+      } else {
+        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.volume.ws)
+      if (ws) {
+        ws.close(1000)
+      }
+    },
   },
   reducers: {
     queryVolume(state, action) {
@@ -598,6 +617,9 @@ export default {
     },
     hideConfirmDetachWithWorkload(state) {
       return { ...state, confirmModalWithWorkloadVisible: false, confirmModalWithWorkloadKey: Math.random() }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }

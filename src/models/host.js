@@ -8,6 +8,7 @@ import queryString from 'query-string'
 export default {
   namespace: 'host',
   state: {
+    ws: null,
     data: [],
     selected: {},
     selectedHostRows: [],
@@ -36,7 +37,6 @@ export default {
           payload: queryString.parse(location.search),
         })
       })
-      wsChanges(dispatch, 'nodes', '1s')
     },
   },
   effects: {
@@ -150,6 +150,25 @@ export default {
       yield put({ type: 'hideBulkEditNodeModal' })
       yield put({ type: 'query' })
     },
+    *startWS({
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.host.ws)
+      if (ws) {
+        ws.open()
+      } else {
+        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.host.ws)
+      if (ws) {
+        ws.close(1000)
+      }
+    },
   },
   reducers: {
     queryHost(state, action) {
@@ -242,6 +261,9 @@ export default {
     },
     clearReplicaSelection(state) {
       return { ...state, selectedReplicaRows: [], selectedReplicaRowKeys: [] }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }
