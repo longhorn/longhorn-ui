@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: "off" */
 import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
+import { getDataDependency } from '../utils/dataDependency'
 import { message } from 'antd'
 
 message.config({
@@ -20,11 +21,24 @@ export default {
     modalButtonDisabled: false,
   },
   subscriptions: {
-    setup({ dispatch }) {
+    setup({ dispatch, history }) {
       dispatch({ type: 'changeNavbar' })
       window.onresize = () => {
         dispatch({ type: 'changeNavbar' })
       }
+      history.listen(location => {
+        if (location.pathname) {
+          let data = getDataDependency(location.pathname)
+          if (data && data.runWs && data.stopWs) {
+            data.runWs.forEach(item => {
+              dispatch({ type: `${item.ns}/startWS`, payload: { type: item.key, ns: item.ns, dispatch } })
+            })
+            data.stopWs.forEach(item => {
+              dispatch({ type: `${item.ns}/stopWS` })
+            })
+          }
+        }
+      })
     },
   },
   effects: {

@@ -4,6 +4,7 @@ import { parse } from 'qs'
 import queryString from 'query-string'
 
 export default {
+  ws: null,
   namespace: 'engineimage',
   state: {
     data: [],
@@ -19,7 +20,6 @@ export default {
           payload: queryString.parse(location.search),
         })
       })
-      wsChanges(dispatch, 'engineimages', '1s')
     },
   },
   effects: {
@@ -48,6 +48,25 @@ export default {
       yield call(deleteEngineImage, payload)
       yield put({ type: 'query' })
     },
+    *startWS({
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.engineimage.ws)
+      if (ws) {
+        ws.open()
+      } else {
+        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.engineimage.ws)
+      if (ws) {
+        ws.close(1000)
+      }
+    },
   },
   reducers: {
     queryEngineimage(state, action) {
@@ -67,6 +86,9 @@ export default {
     },
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }
