@@ -22,6 +22,20 @@ class EventList extends React.Component {
       detailText: !this.state.toggleEventLogVisible ? 'Collapse' : 'Expand',
       iconType: !this.state.toggleEventLogVisible ? 'minus-square' : 'plus-square',
     })
+    if (!this.state.toggleEventLogVisible) {
+      this.props.dispatch({
+        type: 'eventlog/startWS',
+        payload: {
+          dispatch: this.props.dispatch,
+          type: 'events',
+          ns: 'eventlog',
+        },
+      })
+    } else {
+      this.props.dispatch({
+        type: 'eventlog/stopWS',
+      })
+    }
   }
 
   render() {
@@ -104,6 +118,7 @@ class EventList extends React.Component {
 
 EventList.propTypes = {
   dataSource: PropTypes.array,
+  dispatch: PropTypes.func,
 }
 
 export default EventList

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tooltip } from 'antd'
-import ReconnectingWebSocket from 'reconnecting-websocket'
+import RobustWebSocket from 'robust-websocket'
 import wsClosed from '../assets/images/ws-closed.svg'
 import wsConnecting from '../assets/images/ws-connecting.svg'
 import wsError from '../assets/images/ws-error.svg'
@@ -19,11 +19,19 @@ export function constructWebsocketURL(type, period) {
   return `${proto}//${loc.host}${prefix}${prefix.endsWith('/') ? '' : '/'}v1/ws/${period}/${type}`
 }
 
-export function wsChanges(dispatch, type, period) {
+export function wsChanges(dispatch, type, period, ns) {
   let url = constructWebsocketURL(type, period)
-  const options = {}
-  const rws = new ReconnectingWebSocket(url, [], options)
-  dispatch({ type: 'updateSocketStatus', payload: 'connecting' })
+  const options = {
+    timeout: 4000,
+    shouldReconnect: function(event, ws) {
+      if (event.code === 1008 || event.code === 1011) return
+      return [0, 3000, 10000][ws.attempts]
+    },
+    automaticOpen: true,
+  }
+  const rws = new RobustWebSocket(url, [], options)
+  dispatch({ type: `${ns}/updateSocketStatus`, payload: 'connecting' })
+  dispatch({ type: `${ns}/updateWs`, payload: rws })
   let recentWrite = true
   let expectError = false
   window.setInterval(() => {
@@ -39,21 +47,21 @@ export function wsChanges(dispatch, type, period) {
   rws.addEventListener('message', (msg) => {
     recentWrite = true
     dispatch({
-      type: 'updateBackground',
+      type: `${ns}/updateBackground`,
       payload: JSON.parse(msg.data),
     })
   })
   rws.addEventListener('open', () => {
-    dispatch({ type: 'updateSocketStatus', payload: 'open' })
+    dispatch({ type: `${ns}/updateSocketStatus`, payload: 'open' })
   })
   rws.addEventListener('close', () => {
-    dispatch({ type: 'updateSocketStatus', payload: 'closed' })
+    dispatch({ type: `${ns}/updateSocketStatus`, payload: 'closed' })
   })
   rws.addEventListener('error', () => {
     if (expectError) {
       expectError = false
     } else {
-      dispatch({ type: 'updateSocketStatus', payload: 'error' })
+      dispatch({ type: `${ns}/updateSocketStatus`, payload: 'error' })
     }
   })
 }
