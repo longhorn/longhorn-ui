@@ -82,6 +82,7 @@ export default {
           yield put({ type: 'queryBackup', payload: { data: null } })
         }
       }
+      yield put({ type: 'clearSelection' })
     },
     *queryBackupStatus({
       payload,
@@ -161,6 +162,7 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideRestoreBackupModal' })
       yield call(restore, payload)
+      yield put({ type: 'query' })
     },
     *queryDiskTagsAndgetNodeTags({
       payload,
@@ -195,6 +197,7 @@ export default {
           yield call(restore, restoreBulkBackup[i])
         }
       }
+      yield put({ type: 'query' })
     },
     *delete({
       payload,
@@ -207,12 +210,14 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideCreateVolumeStandModalVisible' })
       yield call(createVolume, payload)
+      yield put({ type: 'query' })
     },
     *bulkCreateVolume({
       payload,
     }, { call, put }) {
       yield put({ type: 'hideBulkCreateVolumeStandModalVisible' })
       yield payload.map((item) => call(createVolume, item))
+      yield put({ type: 'query' })
     },
     *CreateStandVolume({
       payload,
@@ -254,6 +259,12 @@ export default {
         ...state,
         ...action.payload,
         restoreBackupFilterKey: Math.random(),
+      }
+    },
+    clearSelection(state) {
+      return {
+        ...state,
+        selectedRows: [],
       }
     },
     updateBackupStatus(state, action) {
