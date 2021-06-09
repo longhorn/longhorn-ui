@@ -57,17 +57,6 @@ const modal = ({
     return 0
   }
 
-  function noticePVCText() {
-    if (selected && selected.kubernetesStatus) {
-      if (selected.kubernetesStatus.pvName && (!selected.kubernetesStatus.pvcName || selected.kubernetesStatus.lastPVCRefAt)) {
-        return 'The capacity of related PV will not be updated'
-      } else if (selected.kubernetesStatus.pvName && selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) {
-        return 'The capacity of related PV and PVC will not be updated'
-      } else {
-        return ''
-      }
-    }
-  }
   let minValue = formatSize()
 
   function unitChange(value) {
@@ -81,15 +70,10 @@ const modal = ({
     setFieldsValue({ size: currentSize, unit: value })
   }
 
-  const messagePvAndPVC = noticePVCText()
   const messageDisableFrontend = selected && selected.disableFrontend ? 'Longhorn will not expand the filesystem for the volume in maintenance mode. There is no available frontend for filesystem expansion' : ''
-
 
   return (
     <ModalBlur {...modalOpts}>
-      {messagePvAndPVC ? <div style={{ marginBottom: 20 }}>
-        <Alert style={{ paddingLeft: '40px' }} message={messagePvAndPVC} type="info" showIcon />
-      </div> : ''}
       {messageDisableFrontend ? <div style={{ marginBottom: 20 }}>
         <Alert style={{ paddingLeft: '40px' }} message={messageDisableFrontend} type="info" showIcon />
       </div> : ''}
