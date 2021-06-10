@@ -7,9 +7,6 @@ const dependency = {
     }, {
       ns: 'host',
       key: 'nodes',
-    }, {
-      ns: 'eventlog',
-      key: 'events',
     }],
   },
   host: {

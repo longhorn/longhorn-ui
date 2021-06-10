@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Input, Button, Icon } from 'antd'
+import { Table, Input, Button, Icon, Switch, Tooltip } from 'antd'
 import { sortTable, sortTableByISODate } from '../../../utils/sort'
 import { setSortOrder } from '../../../utils/store'
 import './eventLogs.less'
@@ -97,6 +97,23 @@ class EventLogs extends React.Component {
         return d.map(item => ({ ...item, sourceText: this.wrapValue(item.sourceText, searchText) }))
       default:
         return d
+    }
+  }
+
+  toggleEventWS = (value) => {
+    if (value) {
+      this.props.dispatch({
+        type: 'eventlog/startWS',
+        payload: {
+          dispatch: this.props.dispatch,
+          type: 'events',
+          ns: 'eventlog',
+        },
+      })
+    } else {
+      this.props.dispatch({
+        type: 'eventlog/stopWS',
+      })
     }
   }
 
@@ -269,16 +286,21 @@ class EventLogs extends React.Component {
     setSortOrder(columns, sorter)
     return (
       <div className="eventLogs">
-        <div className="title">Event Log</div>
-          <div className="content">
-            <Table columns={columns}
-              onChange={onChange}
-              rowClassName={rowClassName}
-              getPopupContainer={trigger => trigger.parentNode}
-              rowKey={(record, key) => key}
-              dataSource={this.state.data} />
-         </div>
-       </div>
+        <div className="flex flex-row">
+          <div className="title" style={{ marginRight: 20 }}>Event Log</div>
+          <Tooltip placement="topLeft" title={'In order to avoid high traffic waste, the events ws connection is closed by default. If you need to turn it on,click to switch.'}>
+            <Switch onChange={this.toggleEventWS} />
+          </Tooltip>
+        </div>
+        <div className="content">
+          <Table columns={columns}
+            onChange={onChange}
+            rowClassName={rowClassName}
+            getPopupContainer={trigger => trigger.parentNode}
+            rowKey={(record, key) => key}
+            dataSource={this.state.data} />
+        </div>
+      </div>
     )
   }
 }
@@ -287,6 +309,7 @@ EventLogs.propTypes = {
   data: PropTypes.array,
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
+  dispatch: PropTypes.func,
 }
 
 export default EventLogs
