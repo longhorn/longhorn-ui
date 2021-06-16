@@ -157,7 +157,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     {
       allDropDownActions.map((item) => {
         return (<Menu.Item key={item.key}>
-          <Button size="large" type="link" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
+          <Button style={{ width: '100%', textAlign: 'left' }} size="large" type="link" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
         </Menu.Item>)
       })
     }

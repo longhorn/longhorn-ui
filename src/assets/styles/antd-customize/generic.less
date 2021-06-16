@@ -143,4 +143,24 @@
   .ant-confirm-body .ant-confirm-title {
     word-wrap: break-word;
   }
+
+  // Use ant footer css replace table empty text
+  .cron-job-modal {
+    .ant-table-footer {
+      position: relative;
+      z-index: 1;
+      margin-top: -1px;
+      padding: 16px 16px;
+      color: rgba(0, 0, 0, 0.25);
+      font-size: 15px;
+      text-align: center;
+      background: #fff;
+      border-top: 0px solid #f4f4f4;
+      border-bottom: 1px solid #f4f4f4;
+      border-radius: 0 0 3px 3px;
+    }
+    .ant-table-placeholder {
+      display: none;
+    }
+  }
 }

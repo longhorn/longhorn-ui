@@ -488,7 +488,7 @@ class RecurringList extends React.Component {
     const { dataSource } = this.state
     const { loading } = this.props
     return (
-      <div>
+      <div className="cron-job-modal">
         <div style={{ padding: '24px' }}>
           <div style={{ minHeight: '223px' }}>
             <Table
@@ -498,6 +498,7 @@ class RecurringList extends React.Component {
               simple
               pagination={pagination}
               rowKey={record => record.name}
+              footer={() => this.props.emptyText}
             />
           </div>
           <div className={styles.actions}>
@@ -528,6 +529,7 @@ RecurringList.propTypes = {
   loading: PropTypes.bool,
   form: PropTypes.object,
   dataSourceReplicas: PropTypes.array,
+  emptyText: PropTypes.string,
 }
 
 const RecurringListEle = Form.create({})(RecurringList)

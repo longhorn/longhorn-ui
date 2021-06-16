@@ -11,6 +11,7 @@ const modal = ({
   dispatch,
   loading,
 }) => {
+  const emptyText = `${selectedRows ? selectedRows.length : 0} Volume Selected`
   const modalOpts = {
     title: 'Bulk Update Recurring Snapshot and Backup',
     visible,
@@ -22,12 +23,12 @@ const modal = ({
     footer: null,
     bodyStyle: { padding: '0px' },
   }
-
   const recurringListProps = {
     selectedRows,
     dataSourceReplicas: [],
     dataSource: [],
     loading,
+    emptyText,
     onOk(recurring) {
       dispatch({
         type: 'volume/bulkRecurringUpdate',
