@@ -58,6 +58,7 @@ const modal = ({
     onCancel,
     width: 680,
     onOk: handleOk,
+    style: { top: 0 },
   }
 
   function unitChange(value) {
@@ -194,6 +195,16 @@ const modal = ({
             initialValue: '',
           })(<Select allowClear={true}>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+          </Select>)}
+        </FormItem>
+        <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('replicaAutoBalance', {
+            initialValue: 'ignored',
+          })(<Select>
+            <Option key={'ignored'} value={'ignored'}>ignored</Option>
+            <Option key={'disabled'} value={'disabled'}>disabled</Option>
+            <Option key={'least-effort'} value={'least-effort'}>least-effort</Option>
+            <Option key={'best-effort'} value={'best-effort'}>best-effort</Option>
           </Select>)}
         </FormItem>
         <FormItem label="Disable Revision Counter" {...formItemLayout}>
