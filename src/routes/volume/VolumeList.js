@@ -16,7 +16,7 @@ import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLi
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
 
-function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, commandKeyDown, replicaSoftAntiAffinitySettingValue, engineUpgradePerNodeLimit, customColumnList, onRowClick = f => f }) {
+function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEngineUpgrade, showRecurring, showSnapshots, detach, deleteVolume, changeVolume, showBackups, takeSnapshot, showSalvage, showUpdateReplicaCount, rollback, rowSelection, sorter, createPVAndPVC, showWorkloadsStatusDetail, showExpansionVolumeSizeModal, showCancelExpansionModal, showSnapshotDetail, onSorterChange, height, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, commandKeyDown, replicaSoftAntiAffinitySettingValue, engineUpgradePerNodeLimit, customColumnList, onRowClick = f => f }) {
   const volumeActionsProps = {
     engineImages,
     showAttachHost,
@@ -44,6 +44,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
     customColumnList,
     showUpdateDataLocality,
     showUpdateAccessMode,
+    showUpdateReplicaAutoBalanceModal,
     onRowClick,
   }
   /**
@@ -471,6 +472,7 @@ list.propTypes = {
   showCancelExpansionModal: PropTypes.func,
   showUpdateDataLocality: PropTypes.func,
   showUpdateAccessMode: PropTypes.func,
+  showUpdateReplicaAutoBalanceModal: PropTypes.func,
   replicaSoftAntiAffinitySettingValue: PropTypes.bool,
   engineUpgradePerNodeLimit: PropTypes.object,
 }

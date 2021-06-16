@@ -249,6 +249,31 @@ export function getUpdateBulkAccessModeModalProps(volumes, visible, dispatch) {
   }
 }
 
+export function getUpdateReplicaAutoBalanceModalProps(volumes, visible, dispatch) {
+  return {
+    items: volumes,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateReplicaAutoBalanceModal',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateReplicaAutoBalanceModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }
@@ -298,4 +323,15 @@ export function attachable(volume) {
     return false
   }
   return volume.state === 'detached'
+}
+
+export function groupBy(objectArray, property) {
+  return objectArray.reduce((acc, obj) => {
+    let key = obj[property]
+    if (!acc[key]) {
+      acc[key] = []
+    }
+    acc[key].push(obj)
+    return acc
+  }, {})
 }

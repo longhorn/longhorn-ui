@@ -50,6 +50,7 @@ export default {
     updateAccessModeModalVisible: false,
     updateBulkAccessModeModalVisible: false,
     confirmModalWithWorkloadVisible: false,
+    updateReplicaAutoBalanceModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -81,6 +82,7 @@ export default {
     updateAccessModeModalKey: Math.random(),
     updateBulkAccessModeModalKey: Math.random(),
     confirmModalWithWorkloadKey: Math.random(),
+    updateReplicaAutoBalanceModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -282,6 +284,13 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideUpdateBulkAccessModeModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateReplicaAutoBalanceModal({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateReplicaAutoBalanceModal' })
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
@@ -589,6 +598,12 @@ export default {
     },
     showBulkExpandVolumeModal(state, action) {
       return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: Math.random() }
+    },
+    showUpdateReplicaAutoBalanceModal(state, action) {
+      return { ...state, ...action.payload, updateReplicaAutoBalanceModalVisible: true, updateReplicaAutoBalanceModalKey: Math.random() }
+    },
+    hideUpdateReplicaAutoBalanceModal(state) {
+      return { ...state, updateReplicaAutoBalanceModalVisible: false }
     },
     changeSelection(state, action) {
       return { ...state, ...action.payload }

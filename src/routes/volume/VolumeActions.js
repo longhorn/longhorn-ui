@@ -5,7 +5,7 @@ import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, engineUpgradePerNodeLimit, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, engineUpgradePerNodeLimit, commandKeyDown }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -104,6 +104,9 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'cancelExpansion':
         showCancelExpansionModal(record)
         break
+      case 'updateReplicaAutoBalance':
+        showUpdateReplicaAutoBalanceModal(record)
+        break
       default:
     }
   }
@@ -135,6 +138,10 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     return selected.actions && selected.actions.updateAccessMode
   }
 
+  const canUpdateReplicaAutoBalance = () => {
+    return selected.actions && selected.actions.updateReplicaAutoBalance
+  }
+
   const isAutomaticallyUpgradeEngine = () => {
     if (engineUpgradePerNodeLimit && engineUpgradePerNodeLimit.value !== '0') {
       let defaultEngineImage = engineImages.find(engineImage => engineImage.default)
@@ -156,6 +163,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
+    { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 
@@ -205,6 +213,7 @@ actions.propTypes = {
   showCancelExpansionModal: PropTypes.func,
   showUpdateDataLocality: PropTypes.func,
   showUpdateAccessMode: PropTypes.func,
+  showUpdateReplicaAutoBalanceModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
 }
 
