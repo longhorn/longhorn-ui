@@ -25,6 +25,7 @@ export default {
     diskTags: [],
     bulkRestoreData: [],
     backupVolumesForBulkCreate: [],
+    search: {},
     isBulkRestore: false,
     restoreBackupModalVisible: false,
     workloadDetailModalVisible: false,
@@ -55,6 +56,11 @@ export default {
           dispatch({
             type: 'query',
             payload: search,
+          })
+          // Record search params for volume detail page
+          dispatch({
+            type: 'recordSearch',
+            payload: { search },
           })
         }
       })
@@ -159,10 +165,11 @@ export default {
     },
     *restore({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       yield put({ type: 'hideRestoreBackupModal' })
       yield call(restore, payload)
-      yield put({ type: 'query' })
+      const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'query', payload: { ...search } })
     },
     *queryDiskTagsAndgetNodeTags({
       payload,
@@ -178,7 +185,7 @@ export default {
     },
     *restoreBulkBackup({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       let restoreBulkBackup = []
       yield put({ type: 'hideRestoreBackupModal' })
       if (payload.bulkRestoreData && payload.selectedBackup) {
@@ -197,27 +204,31 @@ export default {
           yield call(restore, restoreBulkBackup[i])
         }
       }
-      yield put({ type: 'query' })
+      const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'query', payload: { ...search } })
     },
     *delete({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       yield call(deleteBackup, payload)
-      yield put({ type: 'query', payload })
+      const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'query', payload: { ...search } })
     },
     *createVolume({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       yield put({ type: 'hideCreateVolumeStandModalVisible' })
       yield call(createVolume, payload)
-      yield put({ type: 'query' })
+      const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'query', payload: { ...search } })
     },
     *bulkCreateVolume({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       yield put({ type: 'hideBulkCreateVolumeStandModalVisible' })
       yield payload.map((item) => call(createVolume, item))
-      yield put({ type: 'query' })
+      const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'query', payload: { ...search } })
     },
     *CreateStandVolume({
       payload,
@@ -248,9 +259,10 @@ export default {
     },
     *deleteAllBackups({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       yield call(deleteAllBackups, payload)
-      yield put({ type: 'query' })
+      const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'query', payload: { ...search } })
     },
   },
   reducers: {
@@ -324,6 +336,9 @@ export default {
       return { ...state, previousChecked: action.payload }
     },
     changeTagsLoading(state, action) {
+      return { ...state, ...action.payload }
+    },
+    recordSearch(state, action) {
       return { ...state, ...action.payload }
     },
     filterBackupVolumes(state, action) {
