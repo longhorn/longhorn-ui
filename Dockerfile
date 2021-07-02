@@ -12,12 +12,12 @@ RUN npm run build
 
 FROM nginx:1.20.1-alpine
 RUN apk update && \
-    apk add --upgrade --no-cache curl && \
-    apk add --upgrade --no-cache libxml2 && \
+    apk upgrade && \
+    apk add curl && \
     apk add bash && \
     apk add gettext && \
     apk add shadow && \
-    rm -rf /var/cache/apk/*                 
+    rm -rf /var/cache/apk/*
 RUN mkdir -p web/dist
 WORKDIR /web
 COPY --from=builder /web/dist /web/dist
