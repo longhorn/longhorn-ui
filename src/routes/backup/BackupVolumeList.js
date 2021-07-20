@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Icon, Tooltip } from 'antd'
-import moment from 'moment'
+import { formatDate } from '../../utils/formatDate'
 import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
 import { DropOption } from '../../components'
@@ -150,7 +150,7 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {text ? moment(new Date(text)).fromNow() : ''}
+              {text ? formatDate(new Date(text)) : ''}
             </div>
           )
         },
@@ -165,7 +165,7 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {moment(new Date(text)).fromNow()}
+              {text ? formatDate(new Date(text)) : ''}
             </div>
           )
         },
@@ -184,7 +184,7 @@ class List extends React.Component {
           let title = (<div>
             <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
             <div><span>PV Status</span><span>: </span><span>{storageObj.pvStatus}</span></div>
-            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{moment(new Date(storageObj.lastPVCRefAt)).fromNow()}</span></div> : ''}
+            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(new Date(storageObj.lastPVCRefAt))}</span></div> : ''}
             { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
           </div>)
           let content = (() => {
@@ -224,7 +224,7 @@ class List extends React.Component {
             storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 
-          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {moment(new Date(storageObj.lastPodRefAt)).fromNow()}</div></div> : ''
+          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {formatDate(new Date(storageObj.lastPodRefAt))}</div></div> : ''
           const ele = storageObj.workloadsStatus && storageObj.workloadsStatus.length ? storageObj.workloadsStatus.map((item, index) => {
             return <div key={index}>{item.podName}</div>
           }) : ''

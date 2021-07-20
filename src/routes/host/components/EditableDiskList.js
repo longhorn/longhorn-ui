@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
+import { formatDate } from '../../../utils/formatDate'
 import { Form, Button, Radio, Icon, Tooltip, InputNumber } from 'antd'
 import styles from './EditableDiskItem.less'
 import EditableDiskItem from './EditableDiskItem'
@@ -204,8 +204,8 @@ class EditableDiskList extends React.Component {
             <div className={styles.control} style={{ width: '690px', lineHeight: '40px', display: 'flex' }}>
               {node && node.conditions && Object.keys(node.conditions).map((key) => {
                 let title = (<div>
-                  {node.conditions[key] && node.conditions[key].lastProbeTime && node.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(node.conditions[key].lastProbeTime).fromNow()}</div> : ''}
-                  {node.conditions[key] && node.conditions[key].lastTransitionTime && node.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(node.conditions[key].lastTransitionTime).fromNow()}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].lastProbeTime && node.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(node.conditions[key].lastProbeTime)}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].lastTransitionTime && node.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(node.conditions[key].lastTransitionTime)}</div> : ''}
                   {node.conditions[key] && node.conditions[key].message && node.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {node.conditions[key].message}</div> : ''}
                   {node.conditions[key] && node.conditions[key].reason && node.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {node.conditions[key].reason}</div> : ''}
                   {node.conditions[key] && node.conditions[key].status && node.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {node.conditions[key].status}</div> : ''}

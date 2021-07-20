@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Tree, Icon, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } from 'antd'
 import { formatSnapshot, formatMib } from '../../utils/formater'
-import moment from 'moment'
+import { formatDate } from '../../utils/formatDate'
 import { disabledSnapshotAction } from '../../routes/volume/helper/index'
 import './Snapshot.less'
 
@@ -155,7 +155,7 @@ function SnapshotIcon(props, snapshotProps) {
           </div>
           <div className="tree-snapshot-desc">
             <p className="snapshot-name">{snapshotObject.name.substr(0, 8)}</p>
-            <p className="snapshot-time">{moment(new Date(snapshotObject.created)).fromNow()}</p>
+            <p className="snapshot-time">{formatDate(new Date(snapshotObject.created))}</p>
           </div>
         </div>
       </Tooltip>
