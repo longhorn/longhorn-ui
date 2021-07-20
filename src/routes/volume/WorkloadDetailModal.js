@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
+import { formatDate } from '../../utils/formatDate'
 import { ModalBlur } from '../../components'
 
 const modal = ({
@@ -22,8 +22,8 @@ const modal = ({
     CardItem = item.podList.map((ele, index) => {
       return (
         <div style={{ border: '1px solid #f4f4f4', padding: 24, marginRight: 5, marginBottom: 10 }} key={index}>
-          {item.snapshotCreated ? <div style={{ marginBottom: '10px' }}> <b>Created Time</b> : {moment(new Date(item.snapshotCreated)).fromNow()}</div> : ''}
-          <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {moment(new Date(item.lastPodRefAt)).fromNow()}</div> : ''}</div>
+          {item.snapshotCreated ? <div style={{ marginBottom: '10px' }}> <b>Created Time</b> : {formatDate(new Date(item.snapshotCreated))}</div> : ''}
+          <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {formatDate(new Date(item.lastPodRefAt))}</div> : ''}</div>
           <div style={{ marginTop: item.lastPodRefAt ? '10px' : '0px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Name</b> : {ele.workloadName}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Type</b> : {ele.workloadType}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Name</b> : {ele.podName}</div>

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Icon } from 'antd'
 import classnames from 'classnames'
-import moment from 'moment'
+import { formatDate } from '../../utils/formatDate'
 import EngineImageActions from './EngineImageActions'
 import { LinkTo } from '../../components'
 
@@ -66,7 +66,7 @@ function list({ loading, dataSource, deleteEngineImage }) {
       render: (text) => {
         return (
           <div>
-            {moment(new Date(text)).fromNow()}
+            {formatDate(new Date(text))}
           </div>
         )
       },

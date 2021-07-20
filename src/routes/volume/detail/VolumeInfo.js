@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
-import moment from 'moment'
+import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
 import { formatMib, utcStrToDate } from '../../../utils/formater'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from '../helper/index'
@@ -184,8 +184,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             }).map((key) => {
               let title = selectedVolume.conditions[key] ? (<div>
                 {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
-                {selectedVolume.conditions[key].lastProbeTime && <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(selectedVolume.conditions[key].lastProbeTime).fromNow()}</div>}
-                {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div>}
+                {selectedVolume.conditions[key].lastProbeTime && <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(selectedVolume.conditions[key].lastProbeTime)}</div>}
+                {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(selectedVolume.conditions[key].lastTransitionTime)}</div>}
                 {selectedVolume.conditions[key].message && <div style={{ marginBottom: 5 }}>Message: {selectedVolume.conditions[key].message}</div>}
                 {selectedVolume.conditions[key].reason && <div style={{ marginBottom: 5 }}>Reason: {selectedVolume.conditions[key].reason}</div>}
                 {selectedVolume.conditions[key].status && <div style={{ marginBottom: 5 }}>Status: {selectedVolume.conditions[key].status}</div>}
@@ -196,7 +196,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
                   icon = <IconSnapshot fill="#27ae60" />
                   title = (<div>
                     {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
-                    {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(selectedVolume.conditions[key].lastTransitionTime).fromNow()}</div>}
+                    {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(selectedVolume.conditions[key].lastTransitionTime)}</div>}
                     <div style={{ marginBottom: 5 }}>Status: The snapshot number threshold has not been exceeded</div>
                   </div>)
                 } else {
@@ -262,7 +262,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Created:</span>
-        {moment(utcStrToDate(selectedVolume.created)).fromNow()}
+        {formatDate(utcStrToDate(selectedVolume.created))}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Node Tags:</span>
@@ -278,7 +278,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Last Backup At:</span>
-        {selectedVolume.lastBackupAt ? moment(selectedVolume.lastBackupAt).fromNow() : ''}
+        {selectedVolume.lastBackupAt ? formatDate(selectedVolume.lastBackupAt) : ''}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Replicas Auto Balance:</span>
@@ -293,12 +293,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
-              {selectedVolume.kubernetesStatus.lastPVCRefAt ? moment(new Date(selectedVolume.kubernetesStatus.lastPVCRefAt)).fromNow() : ''}
+              {selectedVolume.kubernetesStatus.lastPVCRefAt ? formatDate(new Date(selectedVolume.kubernetesStatus.lastPVCRefAt)) : ''}
             </div> : ''
           }
           {selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time used by Pod:</span>
-              {selectedVolume.kubernetesStatus.lastPodRefAt ? moment(new Date(selectedVolume.kubernetesStatus.lastPodRefAt)).fromNow() : ''}
+              {selectedVolume.kubernetesStatus.lastPodRefAt ? formatDate(new Date(selectedVolume.kubernetesStatus.lastPodRefAt)) : ''}
             </div> : ''
           }
           <div className={styles.row}>
