@@ -265,6 +265,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {formatDate(utcStrToDate(selectedVolume.created))}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Encrypted:</span>
+        {String(selectedVolume.encrypted).firstUpperCase()}
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Node Tags:</span>
         {tagNodeChild}
       </div>

@@ -773,6 +773,7 @@ class Volume extends React.Component {
         previousNamespace,
         pvNameDisabled,
         accessMode: selected && selected.accessMode ? selected.accessMode : 'rwo',
+        encrypted: selected && selected.encrypted,
       },
       selected: selected && selected.kubernetesStatus ? selected.kubernetesStatus : {},
       visible: createPVAndPVCSingleVisible,
@@ -782,7 +783,7 @@ class Volume extends React.Component {
         dispatch({
           type: 'volume/createPVAndPVCSingle',
           payload: {
-            action: selected,
+            selectedVolume: selected,
             params,
           },
         })

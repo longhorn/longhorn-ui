@@ -116,6 +116,12 @@ const modal = ({
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
+        <FormItem label="Encrypted" {...formItemLayout}>
+          {getFieldDecorator('encrypted', {
+            valuePropName: 'encrypted',
+            initialValue: false,
+          })(<Checkbox></Checkbox>)}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {

@@ -407,6 +407,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       pvNameDisabled,
       previousNamespace,
       accessMode: selectedVolume && selectedVolume.accessMode ? selectedVolume.accessMode : 'rwo',
+      encrypted: selectedVolume && selectedVolume.encrypted,
     },
     selected: selectedVolume && selectedVolume.kubernetesStatus ? selectedVolume.kubernetesStatus : {},
     visible: createPVAndPVCSingleVisible,
@@ -416,7 +417,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       dispatch({
         type: 'volume/createPVAndPVCSingle',
         payload: {
-          action: selectedVolume,
+          selectedVolume,
           params,
         },
       })

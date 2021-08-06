@@ -134,6 +134,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
 
         let restoreProgress = statusProgress(record.restoreStatus, 'isRestoring')
         let rebuildProgress = statusProgress(record.rebuildStatus, 'isRebuilding')
+        let isEncrypted = record && record.encrypted
 
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)} style={{ position: 'relative' }}>
@@ -141,6 +142,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
               {restoreProgress}
               {rebuildProgress}
             </div>
+            {isEncrypted ? <Tooltip title={'Encrypted Volume'}><Icon className="color-warning" style={{ marginRight: 5, marginBottom: 2 }} type="lock" /></Tooltip> : null}
             {statusUpgradingEngine(record)}
             {upgrade}
             {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
