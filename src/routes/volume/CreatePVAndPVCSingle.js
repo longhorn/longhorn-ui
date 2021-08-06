@@ -87,6 +87,16 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>
         </FormItem>
+        { (item.encrypted && !item.pvNameDisabled) && <FormItem label="Secret Namespace" {...formItemLayout}>
+          {getFieldDecorator('secretNamespace', {
+            initialValue: '',
+          })(<Input disabled={false} />)}
+        </FormItem>}
+        { (item.encrypted && !item.pvNameDisabled) && <FormItem label="Secret Name" {...formItemLayout}>
+          {getFieldDecorator('secretName', {
+            initialValue: '',
+          })(<Input disabled={false} />)}
+        </FormItem>}
         <FormItem label="File System" {...formItemLayout}>
           {getFieldDecorator('fsType', {
             initialValue: 'ext4',

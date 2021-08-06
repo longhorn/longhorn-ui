@@ -213,6 +213,12 @@ const modal = ({
             initialValue: defaultRevisionCounterValue,
           })(<Checkbox></Checkbox>)}
         </FormItem>
+        <FormItem label="Encrypted" {...formItemLayout}>
+          {getFieldDecorator('encrypted', {
+            valuePropName: 'encrypted',
+            initialValue: false,
+          })(<Checkbox></Checkbox>)}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {

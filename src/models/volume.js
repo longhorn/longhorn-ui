@@ -363,11 +363,16 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideCreatePVCAndPVSingleModal' })
-      if (!payload.action.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
-        yield call(createVolumePV, { pvName: payload.params.pvName, fsType: payload.params.fsType }, payload.action.actions.pvCreate)
+      if (payload.selectedVolume && payload.selectedVolume.kubernetesStatus && !payload.selectedVolume.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
+        let params = { pvName: payload.params.pvName, fsType: payload.params.fsType }
+        if (payload.selectedVolume.encrypted) {
+          Object.assign(params, { secretNamespace: payload.params.secretNamespace, secretName: payload.params.secretName })
+        }
+        yield call(createVolumePV, params, payload.selectedVolume.actions.pvCreate)
       }
       if (payload.params && payload.params.namespace && payload.params.pvcName) {
-        yield call(createVolumePVC, { pvcName: payload.params.pvcName, namespace: payload.params.namespace }, payload.action.actions.pvcCreate)
+        let params = { pvcName: payload.params.pvcName, namespace: payload.params.namespace }
+        yield call(createVolumePVC, params, payload.selectedVolume.actions.pvcCreate)
       }
       yield put({ type: 'query' })
     },

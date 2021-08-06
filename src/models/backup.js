@@ -191,11 +191,9 @@ export default {
       if (payload.bulkRestoreData && payload.selectedBackup) {
         payload.bulkRestoreData.forEach((item) => {
           let params = {}
-          params.numberOfReplicas = payload.selectedBackup.numberOfReplicas
+          Object.assign(params, payload.selectedBackup)
           params.name = item.volumeName
           params.fromBackup = item.url
-          params.nodeSelector = payload.selectedBackup.nodeSelector
-          params.diskSelector = payload.selectedBackup.diskSelector
           restoreBulkBackup.push(params)
         })
       }
