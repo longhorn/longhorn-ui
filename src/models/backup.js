@@ -14,6 +14,7 @@ export default {
     filterText: 'all',
     backupStatus: {},
     currentItem: {},
+    currentBackupVolume: {},
     lastBackupUrl: '',
     baseImage: '',
     volumeName: '',
@@ -115,6 +116,7 @@ export default {
         params.backupName = lastBackup.name
         params.numberOfReplicas = payload.numberOfReplicas
         params.volumeName = lastBackup.volumeName
+        params.backingImage = payload.backingImage ? payload.backingImage : ''
 
         yield put({ type: 'showRestoreBackupModal', payload: { currentItem: params } })
         yield put({ type: 'queryDiskTagsAndgetNodeTags' })
@@ -233,6 +235,7 @@ export default {
     }, { call, put }) {
       const data = yield call(execAction, payload.actions.backupList)
       const found = data.data.find(b => b.name === payload.lastBackupName)
+      yield put({ type: 'setCurrentBackupVolume', payload: { currentBackupVolume: payload } })
       yield put({ type: 'initModalUrl', found, payload })
       yield put({ type: 'showCreateVolumeStandModalVisible' })
       yield put({ type: 'queryDiskTagsAndgetNodeTags' })
@@ -288,7 +291,7 @@ export default {
       return { ...state, createVolumeStandModalVisible: true, createVolumeStandModalKey: Math.random() }
     },
     hideCreateVolumeStandModalVisible(state) {
-      return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: Math.random() }
+      return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: Math.random(), currentBackupVolume: {} }
     },
     showBulkCreateVolumeStandModalVisible(state) {
       return { ...state, bulkCreateVolumeStandModalVisible: true, bulkCreateVolumeStandModalKey: Math.random() }
@@ -337,6 +340,9 @@ export default {
       return { ...state, ...action.payload }
     },
     recordSearch(state, action) {
+      return { ...state, ...action.payload }
+    },
+    setCurrentBackupVolume(state, action) {
       return { ...state, ...action.payload }
     },
     filterBackupVolumes(state, action) {

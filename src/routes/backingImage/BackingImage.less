@@ -1,0 +1,37 @@
+.backingImageModalContainer {
+  margin-bottom: 10px;
+  &>div {
+    margin-bottom: 10px;
+  }
+  div {
+    word-break: break-all;
+  }
+  .parametersContainer {
+    margin-bottom: 10px;
+    display: grid; 
+    grid-template-columns: 36% 63%;
+    grid-row-gap: 15px;
+    div {
+      font-weight: 700;
+    }
+    span {
+      display: block;
+    }
+    .currentChecksum {
+      position: relative;
+      text-align: left;
+      summary {
+        position: absolute;
+        top: 24px;
+        left: 0px;
+        border: 1px solid #e1e4e8;
+        border-radius: 2em;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 22px;
+        padding: 0 7px;
+      }
+    }
+  }
+}
