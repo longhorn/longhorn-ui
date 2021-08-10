@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackingImage }) {
+function actions({ selected, deleteBackingImage, cleanUpDiskMap }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'delete':
@@ -15,11 +15,17 @@ function actions({ selected, deleteBackingImage }) {
           },
         })
         break
+      case 'cleanUp':
+        cleanUpDiskMap(record)
+        break
       default:
     }
   }
 
-  const availableActions = [{ key: 'delete', name: 'Delete' }]
+  const availableActions = [
+    { key: 'delete', name: 'Delete' },
+    { key: 'cleanUp', name: 'Clean Up' },
+  ]
 
   return (
     <DropOption menuOptions={availableActions}
@@ -31,6 +37,7 @@ function actions({ selected, deleteBackingImage }) {
 actions.propTypes = {
   selected: PropTypes.object,
   deleteBackingImage: PropTypes.func,
+  cleanUpDiskMap: PropTypes.func,
 }
 
 export default actions

@@ -7,12 +7,34 @@ import CreateBackingImage from './CreateBackingImage'
 import BackingImageList from './BackingImageList'
 import DiskStateMapDetail from './DiskStateMapDetail'
 import { Filter } from '../../components/index'
+import BackingImageBulkActions from './BackingImageBulkActions'
 import queryString from 'query-string'
 
 class BackingImage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      height: 300,
+    }
+  }
+
+  componentDidMount() {
+    let height = document.getElementById('backingImageTable').offsetHeight - 109
+    this.setState({
+      height,
+    })
+    window.onresize = () => {
+      height = document.getElementById('backingImageTable').offsetHeight - 109
+      this.setState({
+        height,
+      })
+      this.props.dispatch({ type: 'app/changeNavbar' })
+    }
+  }
+
   render() {
     const { dispatch, loading, location } = this.props
-    const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys } = this.props.backingImage
+    const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows, cleanUp } = this.props.backingImage
     const { field, value } = queryString.parse(this.props.location.search)
     let backingImages = data.filter((item) => {
       if (field && value) {
@@ -25,6 +47,7 @@ class BackingImage extends React.Component {
     }
     const backingImageListProps = {
       dataSource: backingImages,
+      height: this.state.height,
       loading,
       deleteBackingImage(record) {
         dispatch({
@@ -32,11 +55,28 @@ class BackingImage extends React.Component {
           payload: record,
         })
       },
+      cleanUpDiskMap(record) {
+        dispatch({
+          type: 'backingImage/showDiskStateMapDetailModal',
+          payload: { record, cleanUp: true },
+        })
+      },
       showDiskStateMapDetail(record) {
         dispatch({
           type: 'backingImage/showDiskStateMapDetailModal',
-          payload: record,
+          payload: { record, cleanUp: false },
         })
+      },
+      rowSelection: {
+        selectedRowKeys: selectedRows.map(item => item.id),
+        onChange(_, records) {
+          dispatch({
+            type: 'backingImage/changeSelection',
+            payload: {
+              selectedRows: records,
+            },
+          })
+        },
       },
     }
 
@@ -52,10 +92,26 @@ class BackingImage extends React.Component {
         url: '',
       },
       visible: createBackingImageModalVisible,
-      onOk(newEngineImage) {
+      onOk(newBackingImage) {
+        let params = {}
+        params.name = newBackingImage.name
+        if (newBackingImage.requireUpload) {
+          params.sourceType = 'upload'
+          params.parameters = {}
+        } else {
+          params.sourceType = 'download'
+          params.parameters = {
+            url: newBackingImage.imageURL,
+          }
+        }
+        params.expectedChecksum = newBackingImage.expectedChecksum
+
         dispatch({
           type: 'backingImage/create',
-          payload: newEngineImage,
+          payload: params,
+          callback: () => {
+            // to do upload
+          },
         })
       },
       onCancel() {
@@ -72,6 +128,7 @@ class BackingImage extends React.Component {
     const diskStateMapDetailModalProps = {
       selected,
       backingImages,
+      cleanUp,
       visible: diskStateMapDetailModalVisible,
       onCancel: () => {
         dispatch({ type: 'backingImage/hideDiskStateMapDetailModal' })
@@ -96,8 +153,8 @@ class BackingImage extends React.Component {
       selectedRows: selectedDiskStateMapRows,
       rowSelection: {
         selectedRowKeys: selectedDiskStateMapRowKeys,
-        onChange: (selectedRowKeys, selectedRows) => {
-          if (selectedRowKeys.length === 0) {
+        onChange: (selectedDiskRowKeys, selectedDiskRows) => {
+          if (selectedDiskRowKeys.length === 0) {
             dispatch({ type: 'backingImage/disableDiskStateMapDelete' })
           } else {
             dispatch({ type: 'backingImage/enableDiskStateMapDelete' })
@@ -105,8 +162,8 @@ class BackingImage extends React.Component {
           dispatch({
             type: 'backingImage/changeDiskStateMapSelection',
             payload: {
-              selectedDiskStateMapRowKeys: selectedRowKeys,
-              selectedDiskStateMapRows: selectedRows,
+              selectedDiskStateMapRowKeys: selectedDiskRowKeys,
+              selectedDiskStateMapRows: selectedDiskRows,
             },
           })
         },
@@ -137,10 +194,23 @@ class BackingImage extends React.Component {
       },
     }
 
+    const backingImageBulkActionsProps = {
+      selectedRows,
+      deleteBackingImages(record) {
+        dispatch({
+          type: 'backingImage/bulkDelete',
+          payload: record,
+        })
+      },
+    }
+
     return (
-      <div className="content-inner">
-        <Row gutter={24}>
-          <Col lg={{ offset: 18, span: 6 }} md={{ offset: 16, span: 8 }} sm={24} xs={24} style={{ marginBottom: 16 }}>
+      <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
+        <Row gutter={24} style={{ marginBottom: 16 }}>
+          <Col lg={{ span: 4 }} md={{ span: 6 }} sm={24} xs={24}>
+            <BackingImageBulkActions {...backingImageBulkActionsProps} />
+          </Col>
+          <Col lg={{ offset: 13, span: 7 }} md={{ offset: 8, span: 10 }} sm={24} xs={24}>
             <Filter {...backingImageFilterProps} />
           </Col>
         </Row>
