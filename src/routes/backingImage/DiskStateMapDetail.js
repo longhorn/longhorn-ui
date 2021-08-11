@@ -154,9 +154,9 @@ const modal = ({
               <div className={style.currentChecksum}>
                 { currentData.expectedChecksum === currentData.currentChecksum ? <Tooltip title={'Current checksum is the same as the expected value'}>
                   <summary className="color-success">Verified</summary>
-                </Tooltip> : <Tooltip title={'Current checksum doesn’t match the expected value'}>
+                </Tooltip> : (currentData.expectedChecksum !== '' && <Tooltip title={'Current checksum doesn’t match the expected value'}>
                   <summary className="color-error">Failed</summary>
-                </Tooltip>}
+                </Tooltip>)}
                 Current SHA512 Checksum:
               </div>
               <span>{currentData.currentChecksum ? currentData.currentChecksum : ''}</span>
