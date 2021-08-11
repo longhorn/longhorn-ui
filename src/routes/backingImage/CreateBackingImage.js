@@ -62,6 +62,12 @@ const modal = ({
 
   const uploadProps = {
     showUploadList: false,
+    beforeUpload: (file) => {
+      setFieldsValue({
+        fileContainer: file,
+      })
+      return false
+    },
   }
 
   let disabled = getFieldsValue().requireUpload === 'true'
@@ -86,10 +92,11 @@ const modal = ({
             initialValue: 'false',
             rules: [
               {
-                required: false,
+                required: true,
               },
             ],
           })(<Select defaultValue={'false'} onChange={selectChange}>
+            <Option value={'true'}>Upload From Local</Option>
             <Option value={'false'}>Download From URL</Option>
           </Select>)}
         </FormItem>
@@ -98,7 +105,7 @@ const modal = ({
             initialValue: item.imageURL,
             rules: [
               {
-                required: false,
+                required: !disabled,
                 message: 'Please input backing image url',
               },
             ],
@@ -117,8 +124,8 @@ const modal = ({
                 validator: (rule, value, callback) => {
                   if (disabled) {
                     let size = 0
-                    if (value && value.file && value.file.originFileObj) {
-                      size = value.file.originFileObj.size
+                    if (value && value.size) {
+                      size = value.size
                     }
                     if (size % 512 === 0) {
                       callback()

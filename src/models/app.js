@@ -19,6 +19,9 @@ export default {
     bundlesropsKey: Math.random(),
     okText: 'OK',
     modalButtonDisabled: false,
+    // backing image global uploading
+    backingImageUploadPercent: 0,
+    backingImageUploadStarted: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -144,6 +147,30 @@ export default {
       return {
         ...state,
         progressPercentage: action.payload,
+      }
+    },
+    backingImageUploadProgress(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      }
+    },
+    resetbackingImageUploadPercent(state) {
+      return {
+        ...state,
+        backingImageUploadPercent: 0,
+      }
+    },
+    startBackingImageUpload(state) {
+      return {
+        ...state,
+        backingImageUploadStarted: true,
+      }
+    },
+    stopBackingImageUpload(state) {
+      return {
+        ...state,
+        backingImageUploadStarted: false,
       }
     },
   },
