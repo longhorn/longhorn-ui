@@ -1,5 +1,7 @@
-import { create, deleteBackingImage, query, deleteDisksOnBackingImage } from '../services/backingImage'
+import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk } from '../services/backingImage'
 import { parse } from 'qs'
+import { message, notification } from 'antd'
+import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 
@@ -47,10 +49,43 @@ export default {
     },
     *create({
       payload,
-    }, { call, put }) {
+      callback,
+    }, { call, put, select }) {
       yield put({ type: 'hideCreateBackingImageModal' })
-      yield call(create, payload)
+      let resp = yield call(create, payload)
       yield put({ type: 'query' })
+      if (resp && resp.status === 200 && resp.message === 'OK' && payload.sourceType === 'upload') {
+        let canUpload = false
+        // The reason for the delay is that the back-end upload service cannot be started immediately.
+        // The interface opened by the service has not been checked for the time being.
+        // So it needs to delay 60s temporarily
+        for (let i = 0; i < 30; i++) {
+          yield delay(2000)
+          yield put({ type: 'query' })
+          let data = yield select(state => state.backingImage.data)
+          if (data && data.length > 0) {
+            let currentBackingImage = data.find((item) => {
+              return item.name === payload.name
+            })
+            if (currentBackingImage && currentBackingImage.diskFileStatusMap) {
+              let diskMap = currentBackingImage.diskFileStatusMap
+              canUpload = Object.keys(diskMap).some((key) => {
+                return diskMap[key].state === 'starting'
+              })
+              if (canUpload) {
+                break
+              }
+            }
+          }
+        }
+        if (callback) {
+          !canUpload && message.error('Timeout waiting for the upload service initialization, please delete then recreate Backing Image.')
+          callback(resp, canUpload)
+        }
+      } else {
+        // When a creation error occurs, the notification that has been turned on must be terminated.
+        payload.sourceType === 'upload' && notification.destroy()
+      }
     },
     *delete({
       payload,
@@ -84,6 +119,23 @@ export default {
         },
       })
       yield put({ type: 'query' })
+    },
+    *singleInterfaceUpload({
+      payload,
+      callback,
+    }, { call, put }) {
+      // eslint-disable-next-line no-undef
+      const formData = new FormData()
+      const url = `${payload.url}&size=${payload.size}`
+      yield put({ type: 'app/startBackingImageUpload' })
+      formData.append('chunk', payload.file)
+      let resp = yield call(uploadChunk, url, formData, {}, payload.onProgress)
+      if (callback) callback()
+      yield put({ type: 'app/resetbackingImageUploadPercent' })
+      yield put({ type: 'app/stopBackingImageUpload' })
+      if (resp && resp.code !== 200) {
+        message.error(`Upload failed! please delete then recreate Backing Image. ${resp.data}`)
+      }
     },
     *startWS({
       payload,
