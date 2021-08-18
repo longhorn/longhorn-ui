@@ -10,7 +10,7 @@ ENV VERSION ${VERSION}
 RUN envsubst '${VERSION}' < /web/src/utils/config.js > /web/src/utils/config.js.subst && mv /web/src/utils/config.js.subst /web/src/utils/config.js
 RUN npm run build
 
-FROM nginx:1.20.1-alpine
+FROM nginx:1.21.1-alpine
 RUN apk update && \
     apk upgrade && \
     apk add curl && \
