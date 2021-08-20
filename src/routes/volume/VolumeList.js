@@ -96,7 +96,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 140,
+      width: 160,
       sorter: (a, b) => sortTableState(a, b),
       render: (text, record) => {
         let upgrade = null

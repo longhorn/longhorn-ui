@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select, Spin } from 'antd'
+import { Form, Input, InputNumber, Select, Spin, Checkbox } from 'antd'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formater'
 const FormItem = Form.Item
@@ -128,6 +128,12 @@ const modal = ({
           })(<Select allowClear={true}>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
+        </FormItem>
+        <FormItem label="Encrypted" {...formItemLayout}>
+          {getFieldDecorator('encrypted', {
+            valuePropName: 'encrypted',
+            initialValue: false,
+          })(<Checkbox></Checkbox>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
