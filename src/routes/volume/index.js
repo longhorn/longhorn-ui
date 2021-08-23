@@ -100,6 +100,7 @@ class Volume extends React.Component {
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
     const engineImages = this.props.engineimage.data
+    const { backupTargetAvailable, backupTargetMessage } = this.props.backup
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)
     const settings = this.props.setting.data
     const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -811,6 +812,9 @@ class Volume extends React.Component {
       engineImages,
       engineUpgradePerNodeLimit,
       commandKeyDown: this.state.commandKeyDown,
+      // For create backup
+      backupTargetAvailable,
+      backupTargetMessage,
       bulkDeleteVolume() {
         dispatch({
           type: 'volume/bulkDelete',
@@ -1027,9 +1031,10 @@ Volume.propTypes = {
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
   host: PropTypes.object,
+  backup: PropTypes.object,
   engineimage: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
 }
 
-export default connect(({ engineimage, host, volume, setting, backingImage, loading }) => ({ engineimage, host, volume, setting, backingImage, loading: loading.models.volume }))(Volume)
+export default connect(({ engineimage, host, volume, setting, backingImage, backup, loading }) => ({ engineimage, host, volume, setting, backingImage, backup, loading: loading.models.volume }))(Volume)

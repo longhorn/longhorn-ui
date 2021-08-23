@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal, Menu, Dropdown, Icon } from 'antd'
+import { Button, Modal, Menu, Dropdown, Icon, Tooltip } from 'antd'
 import { detachable, attachable, isRestoring } from './helper'
 import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
@@ -143,7 +143,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !detachable(item)) } },
-    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() } },
+    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() || !backupTargetAvailable }, toolTip: backupTargetMessage },
   ]
 
   const allDropDownActions = [
@@ -174,7 +174,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
         return (
           <div key={item.key}>
             &nbsp;
-            <Button size="large" type="primary" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
+            <Tooltip title={`${item.toolTip ? item.toolTip : ''}`}>
+              <Button size="large" type="primary" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
+            </Tooltip>
           </div>
         )
       }) }
@@ -205,6 +207,8 @@ bulkActions.propTypes = {
   showUpdateBulkAccessMode: PropTypes.func,
   showUpdateReplicaAutoBalanceModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
+  backupTargetAvailable: PropTypes.bool,
+  backupTargetMessage: PropTypes.string,
   commandKeyDown: PropTypes.bool,
 }
 

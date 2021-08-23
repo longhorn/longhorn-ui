@@ -8,6 +8,14 @@ export async function query(params) {
   })
 }
 
+export async function queryTarget(params) {
+  return request({
+    url: '/v1/backuptargets',
+    method: 'get',
+    data: params,
+  })
+}
+
 export async function createVolume(params) {
   return request({
     url: '/v1/volumes',

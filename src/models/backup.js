@@ -1,5 +1,6 @@
-import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags } from '../services/backup'
+import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
 import { parse } from 'qs'
+import { message } from 'antd'
 import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
 import { getSorter, saveSorter } from '../utils/store'
@@ -18,6 +19,7 @@ export default {
     lastBackupUrl: '',
     baseImage: '',
     volumeName: '',
+    backupTargetMessage: '',
     previousChecked: false,
     tagsLoading: true,
     size: '',
@@ -29,6 +31,7 @@ export default {
     search: {},
     isBulkRestore: false,
     restoreBackupModalVisible: false,
+    backupTargetAvailable: false,
     workloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
     bulkCreateVolumeStandModalVisible: false,
@@ -48,22 +51,16 @@ export default {
         // This code may cause confusion. React router does not pass parameters when right-clicking on Link,
         // resulting in no request for the page, so an Undefined judgment is added.
 
-        let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage']
-
-        isbackupVolumePage = history.location && history.location.pathname && history.location.pathname !== '/' && path.every(ele => !history.location.pathname.startsWith(ele))
-
-        if (history.location && (search.state || history.location.state || typeof (history.location.state) === 'undefined') && isbackupVolumePage) {
-          dispatch({
-            type: 'query',
-            payload: search,
-          })
-          // Record search params for volume detail page
-          dispatch({
-            type: 'recordSearch',
-            payload: { search },
-          })
-        }
+        dispatch({
+          type: 'query',
+          payload: search,
+        })
+        dispatch({ type: 'queryBackupTarget', payload: { history } })
+        // Record search params for volume detail page
+        dispatch({
+          type: 'recordSearch',
+          payload: { search },
+        })
       })
     },
   },
@@ -90,6 +87,19 @@ export default {
         }
       }
       yield put({ type: 'clearSelection' })
+    },
+    *queryBackupTarget({
+      payload,
+    }, { call, put }) {
+      let resp = yield call(queryTarget)
+      if (resp && resp.data && resp.data[0]) {
+        let isbackupVolumePage = true
+        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage']
+
+        isbackupVolumePage = payload.history && payload.history.location && payload.history.location.pathname && payload.history.location.pathname !== '/' && path.every(ele => !payload.history.location.pathname.startsWith(ele))
+        if (!resp.data[0].available && isbackupVolumePage) message.error(resp.data[0].message)
+        yield put({ type: 'setBackupTargetAvailable', payload: { backupTargetAvailable: resp.data[0].available, backupTargetMessage: resp.data[0].message } })
+      }
     },
     *queryBackupStatus({
       payload,
@@ -273,6 +283,9 @@ export default {
         ...action.payload,
         restoreBackupFilterKey: Math.random(),
       }
+    },
+    setBackupTargetAvailable(state, action) {
+      return { ...state, backupTargetAvailable: action.payload.backupTargetAvailable, backupTargetMessage: action.payload.backupTargetMessage }
     },
     clearSelection(state) {
       return {

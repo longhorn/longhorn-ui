@@ -30,7 +30,7 @@ const confirm = Modal.confirm
 
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage }) {
   const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, confirmModalWithWorkloadVisible, confirmModalWithWorkloadKey, updateReplicaAutoBalanceModalVisible, updateReplicaAutoBalanceModalKey } = volume
-  const { backupStatus } = backup
+  const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const hosts = host.data
   const engineImages = engineimage.data
@@ -362,6 +362,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     volume: selectedVolume,
     volumeId,
     dispatch,
+    backupTargetAvailable,
+    backupTargetMessage,
     volumeHead: snapshotData.find(d => d.name === 'volume-head'),
   }
 
