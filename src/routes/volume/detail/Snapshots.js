@@ -249,6 +249,16 @@ class Snapshots extends React.Component {
       }
     }
 
+    const createBackupTooltip = () => {
+      if (!this.props.backupTargetAvailable) {
+        return this.props.backupTargetMessage
+      }
+      if (this.props.volume.standby) {
+        return 'Unable to create backup for DR volume.'
+      }
+      return 'Create a new backup.'
+    }
+
     return (
       <Card title={<div className={styles.header}>
         <div>Snapshots and Backups</div>
@@ -262,8 +272,8 @@ class Snapshots extends React.Component {
               </Button>
             </Tooltip>
             &nbsp;
-            <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create backup for DR volume' : 'Create a new backup.'}>
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine()} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
+            <Tooltip placement="top" title={createBackupTooltip()}>
+              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
                 Create Backup
               </Button>
             </Tooltip>
@@ -295,6 +305,8 @@ Snapshots.propTypes = {
   snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
   showRemoved: PropTypes.bool,
+  backupTargetAvailable: PropTypes.bool,
+  backupTargetMessage: PropTypes.string,
   volumeHead: PropTypes.object,
 }
 
