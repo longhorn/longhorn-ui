@@ -21,6 +21,11 @@ module.exports = [
     ],
   },
   {
+    key: 'recurringJob',
+    name: 'Recurring Job',
+    icon: 'history',
+  },
+  {
     key: 'backup',
     name: 'Backup',
     icon: 'copy',

@@ -42,6 +42,9 @@ const dependency = {
     }, {
       ns: 'engineimage',
       key: 'engineimages',
+    }, {
+      ns: 'recurringJob',
+      key: 'recurringjobs',
     }],
   },
   engineimage: {
@@ -49,6 +52,13 @@ const dependency = {
     runWs: [{
       ns: 'engineimage',
       key: 'engineimages',
+    }],
+  },
+  recurringJob: {
+    path: '/recurringJob',
+    runWs: [{
+      ns: 'recurringJob',
+      key: 'recurringjobs',
     }],
   },
   backingImage: {
@@ -97,6 +107,9 @@ const allWs = [{
 }, {
   ns: 'engineimage',
   key: 'engineimages',
+}, {
+  ns: 'recurringJob',
+  key: 'recurringjobs',
 }]
 
 export function getDataDependency(pathName) {

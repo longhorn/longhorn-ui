@@ -14,7 +14,7 @@ import UpdateReplicaCount from '../UpdateReplicaCount'
 import UpdateDataLocality from '../UpdateDataLocality'
 import UpdateAccessMode from '../UpdateAccessMode'
 import Snapshots from './Snapshots'
-import RecurringList from './RecurringList'
+import RecurringJob from './RecurringJob'
 import EventList from './EventList'
 import SnapshotList from './SnapshotList'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
@@ -28,10 +28,11 @@ import { genAttachHostModalProps, getEngineUpgradeModalProps, getUpdateReplicaCo
 
 const confirm = Modal.confirm
 
-function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage }) {
-  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, confirmModalWithWorkloadVisible, confirmModalWithWorkloadKey, updateReplicaAutoBalanceModalVisible, updateReplicaAutoBalanceModalKey } = volume
+function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage, recurringJob }) {
+  const { data, attachHostModalVisible, engineUpgradeModalVisible, salvageModalVisible, updateReplicaCountModalVisible, createPVAndPVCModalSingleKey, defaultPVName, defaultPVCName, pvNameDisabled, previousNamespace, createPVAndPVCSingleVisible, nameSpaceDisabled, changeVolumeModalKey, changeVolumeActivate, changeVolumeModalVisible, previousChecked, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, confirmModalWithWorkloadVisible, confirmModalWithWorkloadKey, updateReplicaAutoBalanceModalVisible, updateReplicaAutoBalanceModalKey, volumeRecurringJobs } = volume
   const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
+  const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
@@ -331,20 +332,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
   const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps([selectedVolume], updateReplicaAutoBalanceModalVisible, dispatch)
 
-  const recurringListProps = {
+  const recurringJobProps = {
+    dataSource: volumeRecurringJobs,
+    recurringJobData,
     selectedVolume,
-    dataSourceReplicas: selectedVolume.replicas || [],
-    dataSource: selectedVolume.recurringJobs || [],
     loading,
-    onOk(recurring) {
-      dispatch({
-        type: 'volume/recurringUpdate',
-        payload: {
-          recurring,
-          url: selectedVolume.actions.recurringUpdate,
-        },
-      })
-    },
+    dispatch,
   }
 
   const snapshotListProps = {
@@ -531,7 +524,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
           <Snapshots {...snapshotsProp} />
         </Col>
         <Col xs={24} style={{ marginBottom: 16 }}>
-          <RecurringList {...recurringListProps} />
+          <RecurringJob {...recurringJobProps} />
         </Col>
         <Col style={{ marginBottom: 10 }} xs={24}>
           <SnapshotList {...snapshotListProps} />
@@ -568,6 +561,7 @@ VolumeDetail.propTypes = {
   eventlog: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
+  recurringJob: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, backup, host, engineimage, volume, loading, eventlog, setting, backingImage }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting, backingImage }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, engineimage, volume, loading, eventlog, setting, backingImage, recurringJob }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting, backingImage, recurringJob }))(VolumeDetail)

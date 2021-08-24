@@ -50,7 +50,6 @@ export default {
         let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
         // This code may cause confusion. React router does not pass parameters when right-clicking on Link,
         // resulting in no request for the page, so an Undefined judgment is added.
-
         dispatch({
           type: 'query',
           payload: search,
@@ -94,7 +93,7 @@ export default {
       let resp = yield call(queryTarget)
       if (resp && resp.data && resp.data[0]) {
         let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage']
+        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage', '/recurringJob']
 
         isbackupVolumePage = payload.history && payload.history.location && payload.history.location.pathname && payload.history.location.pathname !== '/' && path.every(ele => !payload.history.location.pathname.startsWith(ele))
         if (!resp.data[0].available && isbackupVolumePage) message.error(resp.data[0].message)

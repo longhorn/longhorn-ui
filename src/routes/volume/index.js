@@ -14,8 +14,7 @@ import BulkChangeVolumeModal from './BulkChangeVolumeModal'
 import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import WorkloadDetailModal from './WorkloadDetailModal'
-import SnapshotDetailModal from './SnapshotDetailModal'
-import SnapshotBulkModal from './SnapshotBulkModal'
+import RecurringJobModal from './RecurringJobModal'
 import AttachHost from './AttachHost'
 import EngineUgrade from './EngineUpgrade'
 import UpdateReplicaCount from './UpdateReplicaCount'
@@ -96,11 +95,12 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { selected, selectedRows, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, SnapshotDetailModalVisible, WorkloadDetailModalItem, SnapshotDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, SnapshotDetailModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, bulkChangeVolumeModalKey, changeVolumeModalVisible, bulkChangeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, SnapshotBulkModalKey, SnapshotBulkModalVisible, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey, updateBulkReplicaCountModalVisible, updateBulkReplicaCountModalKey, customColumnKey, customColumnVisible, customColumnList, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateBulkDataLocalityModalVisible, updateBulkDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, updateBulkAccessModeModalVisible, updateBulkAccessModeModalKey, updateReplicaAutoBalanceModalVisible, updateReplicaAutoBalanceModalKey } = this.props.volume
+    const { selected, selectedRows, data, createPVAndPVCVisible, createPVAndPVCSingleVisible, createVolumeModalVisible, WorkloadDetailModalVisible, recurringJobModalVisible, WorkloadDetailModalItem, createPVAndPVCModalKey, createPVAndPVCModalSingleKey, createVolumeModalKey, WorkloadDetailModalKey, recurringJobModalKey, attachHostModalVisible, attachHostModalKey, bulkAttachHostModalVisible, bulkAttachHostModalKey, engineUpgradeModalVisible, engineUpgradeModaKey, bulkEngineUpgradeModalVisible, bulkEngineUpgradeModalKey, salvageModalVisible, updateReplicaCountModalVisible, updateReplicaCountModalKey, sorter, defaultPVName, defaultPVCName, pvNameDisabled, defaultNamespace, nameSpaceDisabled, changeVolumeModalKey, bulkChangeVolumeModalKey, changeVolumeModalVisible, bulkChangeVolumeModalVisible, changeVolumeActivate, nodeTags, diskTags, tagsLoading, previousChecked, previousNamespace, expansionVolumeSizeModalVisible, expansionVolumeSizeModalKey, bulkExpandVolumeModalVisible, bulkExpandVolumeModalKey, updateBulkReplicaCountModalVisible, updateBulkReplicaCountModalKey, customColumnKey, customColumnVisible, customColumnList, updateDataLocalityModalVisible, updateDataLocalityModalKey, updateBulkDataLocalityModalVisible, updateBulkDataLocalityModalKey, updateAccessModeModalVisible, updateAccessModeModalKey, updateBulkAccessModeModalVisible, updateBulkAccessModeModalKey, updateReplicaAutoBalanceModalVisible, updateReplicaAutoBalanceModalKey, volumeRecurringJobs } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
     const engineImages = this.props.engineimage.data
     const { backupTargetAvailable, backupTargetMessage } = this.props.backup
+    const recurringJobData = this.props.recurringJob.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)
     const settings = this.props.setting.data
     const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -359,10 +359,10 @@ class Volume extends React.Component {
           },
         })
       },
-      showSnapshotDetail(record) {
+      showRecurringJobModal(record) {
         if (record) {
           dispatch({
-            type: 'volume/showSnapshotDetailModal',
+            type: 'volume/showRecurringJobModal',
             payload: record,
           })
         }
@@ -557,23 +557,18 @@ class Volume extends React.Component {
       },
     }
 
-    const SnapshotDetailModalProps = {
-      visible: SnapshotDetailModalVisible,
-      selectedVolume: SnapshotDetailModalItem,
+    const recurringJobModalProps = {
+      visible: recurringJobModalVisible,
+      selectedVolume: selected,
+      volumeRecurringJobs,
+      recurringJobData,
       loading,
       dispatch,
       onCancel() {
-        dispatch({ type: 'volume/hideSnapshotDetailModal' })
+        dispatch({ type: 'volume/hideRecurringJobModal' })
       },
-    }
-
-    const SnapshotBulkModalProps = {
-      visible: SnapshotBulkModalVisible,
-      selectedRows,
-      loading,
-      dispatch,
-      onCancel() {
-        dispatch({ type: 'volume/hideSnapshotBulkModal' })
+      onOk() {
+        dispatch({ type: 'volume/hideRecurringJobModal' })
       },
     }
 
@@ -858,9 +853,6 @@ class Volume extends React.Component {
       bulkExpandVolume(actions) {
         dispatch({ type: 'volume/showBulkExpandVolumeModal', payload: actions })
       },
-      createSchedule(actions) {
-        dispatch({ type: 'volume/showSnapshotBulkModal', payload: actions })
-      },
       createPVAndPVC(actions) {
         dispatch({
           type: 'volume/showCreatePVAndPVCModal',
@@ -996,8 +988,7 @@ class Volume extends React.Component {
         <Button style={{ position: 'absolute', top: '-50px', right: '150px' }} size="large" type="primary" onClick={customColumn}>Custom Column</Button>
         <VolumeList {...volumeListProps} />
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
-        {SnapshotBulkModalVisible ? <SnapshotBulkModal key={SnapshotBulkModalKey} {...SnapshotBulkModalProps}></SnapshotBulkModal> : ''}
-        {SnapshotDetailModalVisible ? <SnapshotDetailModal key={SnapshotDetailModalKey} {...SnapshotDetailModalProps} /> : ''}
+        {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
         {bulkChangeVolumeModalVisible ? <BulkChangeVolumeModal key={bulkChangeVolumeModalKey} {...bulkChangeVolumeModalProps} /> : ''}
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
@@ -1033,8 +1024,9 @@ Volume.propTypes = {
   host: PropTypes.object,
   backup: PropTypes.object,
   engineimage: PropTypes.object,
+  recurringJob: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
 }
 
-export default connect(({ engineimage, host, volume, setting, backingImage, backup, loading }) => ({ engineimage, host, volume, setting, backingImage, backup, loading: loading.models.volume }))(Volume)
+export default connect(({ engineimage, host, volume, setting, backingImage, backup, recurringJob, loading }) => ({ engineimage, host, volume, setting, backingImage, backup, recurringJob, loading: loading.models.volume }))(Volume)

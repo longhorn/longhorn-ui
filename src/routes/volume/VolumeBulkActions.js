@@ -6,7 +6,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, createSchedule, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
@@ -92,9 +92,6 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       case 'updateBulkAccessMode':
         showUpdateBulkAccessMode(selectedRows)
         break
-      case 'createSchedule':
-        createSchedule(selectedRows)
-        break
       case 'createPVAndPVC':
         createPVAndPVC(selectedRows)
         break
@@ -153,7 +150,6 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled() { return selectedRows.length === 0 || disableUpdateReplicaAutoBalance() } },
-    { key: 'createSchedule', name: 'Update Schedule', disabled() { return selectedRows.length === 0 || isHasStandy() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() } },
     { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
   ]
@@ -199,7 +195,6 @@ bulkActions.propTypes = {
   showBulkSalvage: PropTypes.func,
   bulkBackup: PropTypes.func,
   createPVAndPVC: PropTypes.func,
-  createSchedule: PropTypes.func,
   bulkExpandVolume: PropTypes.func,
   confirmDetachWithWorkload: PropTypes.func,
   showUpdateBulkReplicaCount: PropTypes.func,
