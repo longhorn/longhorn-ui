@@ -9,7 +9,7 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '' } = queryString.parse(props.location.search)
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroupValue = '' } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
@@ -19,6 +19,7 @@ class Filter extends React.Component {
       scheduleValue,
       pvStatusValue,
       revisionCounterValue,
+      isGroupValue,
       keyword: value,
     }
   }
@@ -58,12 +59,16 @@ class Filter extends React.Component {
     this.setState({ ...this.state, revisionCounterValue })
   }
 
+  handleIsGroupValueChange = (isGroupValue) => {
+    this.setState({ ...this.state, isGroupValue })
+  }
+
   handleFieldChange = (field) => {
     this.setState({ ...this.state, field })
   }
 
   render() {
-    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '' } = queryString.parse(this.props.location.search)
+    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroup = '' } = queryString.parse(this.props.location.search)
 
     let defaultContent = {
       field,
@@ -74,6 +79,7 @@ class Filter extends React.Component {
       scheduleValue,
       pvStatusValue,
       revisionCounterValue,
+      isGroup,
     }
 
     let valueForm = (
@@ -187,6 +193,7 @@ Filter.propTypes = {
   engineImageUpgradableOption: PropTypes.array,
   pvStatusOption: PropTypes.array,
   revisionCounterOption: PropTypes.array,
+  recurringJobIsGroupOption: PropTypes.array,
 }
 
 export default Filter

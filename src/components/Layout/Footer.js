@@ -9,7 +9,7 @@ import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -88,6 +88,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(engineimage)}
           {getStatusIcon(eventlog)}
           {getStatusIcon(backingImage)}
+          {getStatusIcon(recurringJob)}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
       </Row>
@@ -102,8 +103,9 @@ Footer.propTypes = {
   engineimage: PropTypes.object,
   eventlog: PropTypes.object,
   backingImage: PropTypes.object,
+  recurringJob: PropTypes.object,
   app: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob }))(Footer)

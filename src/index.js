@@ -8,6 +8,7 @@ import engineimage from './models/engineimage'
 import backingImage from './models/backingImage'
 import backup from './models/backup'
 import snapshot from './models/snapshot'
+import recurringJob from './models/recurringJob'
 
 // import assets
 import './assets/iconfont/iconfont.eot'
@@ -32,6 +33,7 @@ app.model(engineimage)
 app.model(backingImage)
 app.model(backup)
 app.model(volume)
+app.model(recurringJob)
 
 // 3. Router
 app.router(routerConfig)

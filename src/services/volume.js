@@ -36,14 +36,6 @@ export async function deleteVolume(params) {
   })
 }
 
-export async function recurringUpdate(data, url) {
-  return request({
-    url,
-    method: 'post',
-    data,
-  })
-}
-
 export async function getVolume(volumeName) {
   return request({
     url: `/v1/volumes/${volumeName}`,
@@ -116,6 +108,55 @@ export async function cancelExpansion(params) {
     method: 'post',
     data: {
       name: params.name,
+    },
+  })
+}
+
+export async function createRecurringJob(params) {
+  return request({
+    url: '/v1/recurringjobs',
+    method: 'post',
+    data: {
+      ...params,
+    },
+  })
+}
+
+export async function recurringJobAdd(params) {
+  return request({
+    url: params.url,
+    method: 'post',
+    data: {
+      name: params.name,
+      isGroup: params.isGroup,
+    },
+  })
+}
+
+export async function removeVolumeRecurringJob(params) {
+  return request({
+    url: params.url,
+    method: 'post',
+    data: {
+      name: params.name,
+      isGroup: params.isGroup,
+    },
+  })
+}
+
+export async function getVolumeRecurringJobList(url) {
+  return request({
+    url,
+    method: 'post',
+  })
+}
+
+export async function updateRecurringJob(params) {
+  return request({
+    url: `/v1/recurringjobs/${params.name}`,
+    method: 'put',
+    data: {
+      ...params,
     },
   })
 }

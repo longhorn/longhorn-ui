@@ -1,4 +1,5 @@
-import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion } from '../services/volume'
+import { create, deleteVolume, query, execAction, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion, createRecurringJob, recurringJobAdd, getVolumeRecurringJobList, removeVolumeRecurringJob, updateRecurringJob } from '../services/volume'
+import { query as getRecurringJob } from '../services/recurringJob'
 import { wsChanges, updateState } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
@@ -14,7 +15,7 @@ export default {
     selected: null,
     selectedRows: [],
     WorkloadDetailModalItem: {},
-    SnapshotDetailModalItem: [],
+    volumeRecurringJobs: [],
     nodeTags: [],
     diskTags: [],
     recurringList: [],
@@ -26,14 +27,13 @@ export default {
     createPVAndPVCSingleVisible: false,
     createPVAndPVCVisible: false,
     WorkloadDetailModalVisible: false,
-    SnapshotDetailModalVisible: false,
+    recurringJobModalVisible: false,
     attachHostModalVisible: false,
     bulkAttachHostModalVisible: false,
     engineUpgradeModalVisible: false,
     bulkEngineUpgradeModalVisible: false,
     updateReplicaCountModalVisible: false,
     recurringModalVisible: false,
-    snapshotsModalVisible: false,
     salvageModalVisible: false,
     nameSpaceDisabled: false,
     previousChecked: false,
@@ -41,7 +41,6 @@ export default {
     pvNameDisabled: false,
     changeVolumeModalVisible: false,
     bulkChangeVolumeModalVisible: false,
-    SnapshotBulkModalVisible: false,
     bulkExpandVolumeModalVisible: false,
     updateBulkReplicaCountModalVisible: false,
     customColumnVisible: false,
@@ -57,12 +56,13 @@ export default {
     defaultPVName: '',
     defaultPVCName: '',
     previousNamespace: '',
+    recurringJobList: [],
     changeVolumeModalKey: Math.random(),
     bulkChangeVolumeModalKey: Math.random(),
     bulkExpandVolumeModalKey: Math.random(),
     createPVAndPVCModalSingleKey: Math.random(),
     WorkloadDetailModalKey: Math.random(),
-    SnapshotDetailModalKey: Math.random(),
+    recurringJobModalKey: Math.random(),
     createPVCAllModalKey: Math.random(),
     createVolumeModalKey: Math.random(),
     createPVAndPVCModalKey: Math.random(),
@@ -74,7 +74,6 @@ export default {
     bulkEngineUpgradeModalKey: Math.random(),
     expansionVolumeSizeModalKey: Math.random(),
     updateReplicaCountModalKey: Math.random(),
-    SnapshotBulkModalKey: Math.random(),
     updateBulkReplicaCountModalKey: Math.random(),
     customColumnKey: Math.random(),
     updateDataLocalityModalKey: Math.random(),
@@ -121,6 +120,16 @@ export default {
       yield put({ type: 'hideEngineUpgradeModal' })
       yield call(execAction, payload.url, { image: payload.image })
       yield put({ type: 'query' })
+    },
+    *queryVolumeRecurringJobList({
+      payload,
+    }, { call, put }) {
+      if (payload.actions) {
+        const recurringJobResp = yield call(getVolumeRecurringJobList, payload.actions.recurringJobList)
+        if (recurringJobResp && recurringJobResp.data) {
+          yield put({ type: 'setVolumeRecurringJobs', payload: recurringJobResp.data })
+        }
+      }
     },
     *rollback({
       payload,
@@ -185,44 +194,6 @@ export default {
       replicas,
     }, { call, put }) {
       yield replicas.map(replica => call(execAction, replica.removeUrl, { name: replica.name }))
-      yield put({ type: 'query' })
-    },
-    *recurringUpdate({
-      payload,
-    }, { call, put }) {
-      const data = {
-        jobs: [],
-      }
-      payload.recurring.forEach(r => {
-        if (r.task === 'backup') {
-          data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain, labels: r.labels })
-        } else {
-          data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
-        }
-      })
-      yield call(recurringUpdate, data, payload.url)
-      yield put({ type: 'hideSnapshotDetailModal' })
-      yield put({ type: 'query' })
-    },
-    *bulkRecurringUpdate({
-      payload,
-    }, { call, put }) {
-      if (payload.selectedRows && payload.recurringList) {
-        const data = {
-          jobs: [],
-        }
-        let selectedRows = payload.selectedRows.filter((row) => !row.standby)
-
-        payload.recurringList.forEach(r => {
-          if (r.task === 'backup') {
-            data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain, labels: r.labels })
-          } else {
-            data.jobs.push({ cron: r.cron, name: r.name, task: r.task, retain: r.retain })
-          }
-        })
-        yield selectedRows.map(row => call(recurringUpdate, data, row.actions.recurringUpdate))
-      }
-      yield put({ type: 'hideSnapshotBulkModal' })
       yield put({ type: 'query' })
     },
     *volumeActivate({
@@ -417,6 +388,128 @@ export default {
       const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
       yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels })
     },
+    *createRecurringJob({
+      payload,
+    }, { call, put }) {
+      let resp = yield call(createRecurringJob, payload.recurringJob)
+      if (resp && resp.status === 200 && payload.selectedVolume.actions && payload.selectedVolume.actions.recurringJobAdd) {
+        let url = payload.selectedVolume.actions.recurringJobAdd
+        let params = {
+          url,
+          name: resp.name,
+          isGroup: false,
+        }
+        let recurringJobResp = yield call(recurringJobAdd, params)
+        if (recurringJobResp && recurringJobResp.data) {
+          yield put({ type: 'recurringJob/query' })
+          yield put({ type: 'queryVolumeRecurringJobList',
+            payload: {
+              ...payload.selectedVolume,
+            },
+          })
+        }
+      }
+    },
+    *updateRecurringJob({
+      payload,
+    }, { call, put }) {
+      let resp = yield call(updateRecurringJob, payload.recurringJob)
+      if (resp && resp.status === 200) {
+        yield put({ type: 'recurringJob/query' })
+        yield put({ type: 'queryVolumeRecurringJobList',
+          payload: {
+            ...payload.selectedVolume,
+          },
+        })
+      }
+    },
+    *addRecurringJobGroupToVolume({
+      payload,
+    }, { call, put }) {
+      if (payload.selectedVolume.actions && payload.selectedVolume.actions.recurringJobAdd) {
+        let url = payload.selectedVolume.actions.recurringJobAdd
+        let params = {
+          url,
+          name: payload.recurringJobGroup.name,
+          isGroup: true,
+        }
+        let recurringJobResp = yield call(recurringJobAdd, params)
+        if (recurringJobResp && recurringJobResp.data) {
+          yield put({ type: 'queryVolumeRecurringJobList',
+            payload: {
+              ...payload.selectedVolume,
+            },
+          })
+        }
+      }
+    },
+    *addExistingRecurringJobToVolume({
+      payload,
+    }, { call, put }) {
+      if (payload.selectedVolume.actions && payload.selectedVolume.actions.recurringJobAdd) {
+        let url = payload.selectedVolume.actions.recurringJobAdd
+        let params = {
+          url,
+          name: payload.recurringJob.name,
+          isGroup: false,
+        }
+        let recurringJobResp = yield call(recurringJobAdd, params)
+        if (recurringJobResp && recurringJobResp.data) {
+          yield put({ type: 'queryVolumeRecurringJobList',
+            payload: {
+              ...payload.selectedVolume,
+            },
+          })
+        }
+      }
+    },
+    *removeVolumeRecurringJob({
+      payload,
+    }, { call, put }) {
+      if (payload.selectedVolume && payload.selectedVolume.actions) {
+        let recurringJobResp = yield call(removeVolumeRecurringJob, {
+          url: payload.selectedVolume.actions.recurringJobDelete,
+          name: payload.name,
+          isGroup: payload.isGroup,
+        })
+        if (recurringJobResp && recurringJobResp.data) {
+          yield put({ type: 'queryVolumeRecurringJobList',
+            payload: {
+              ...payload.selectedVolume,
+            },
+          })
+        }
+      }
+    },
+    *removeBulkVolumeRecurringJob({
+      payload,
+      callback,
+    }, { call, put }) {
+      if (payload.selectedVolume && payload.selectedVolume.actions && payload.selectedJobRows && payload.selectedJobRows.length) {
+        for (let i = 0; i < payload.selectedJobRows.length; i++) {
+          yield call(removeVolumeRecurringJob, {
+            url: payload.selectedVolume.actions.recurringJobDelete,
+            name: payload.selectedJobRows[i].name,
+            isGroup: payload.isGroup,
+          })
+        }
+
+        yield put({ type: 'queryVolumeRecurringJobList',
+          payload: {
+            ...payload.selectedVolume,
+          },
+        })
+      }
+      if (callback) callback()
+    },
+    *getRecurringJob({
+      callback,
+    }, { call }) {
+      let recurringJobListResp = yield call(getRecurringJob)
+      if (recurringJobListResp && recurringJobListResp.data) {
+        if (callback) callback(recurringJobListResp.data)
+      }
+    },
     *startWS({
       payload,
     }, { select }) {
@@ -484,6 +577,9 @@ export default {
     changeCheckbox(state) {
       return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled, previousChecked: !state.nameSpaceDisabled ? false : state.previousChecked }
     },
+    setVolumeRecurringJobs(state, action) {
+      return { ...state, volumeRecurringJobs: action.payload }
+    },
     setPreviousChange(state, action) {
       return { ...state, previousChecked: action.payload }
     },
@@ -511,11 +607,11 @@ export default {
     hideWorkloadDetailModal(state) {
       return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
     },
-    showSnapshotDetailModal(state, action) {
-      return { ...state, SnapshotDetailModalVisible: true, SnapshotDetailModalItem: action.payload, SnapshotDetailModalKey: Math.random() }
+    showRecurringJobModal(state, action) {
+      return { ...state, recurringJobModalVisible: true, selected: action.payload, recurringJobModalKey: Math.random() }
     },
-    hideSnapshotDetailModal(state) {
-      return { ...state, SnapshotDetailModalVisible: false, SnapshotDetailModalKey: Math.random() }
+    hideRecurringJobModal(state) {
+      return { ...state, recurringJobModalVisible: false, recurringJobModalKey: Math.random() }
     },
     showAttachHostModal(state, action) {
       return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }
@@ -546,12 +642,6 @@ export default {
     },
     hideRecurringModal(state) {
       return { ...state, recurringModalVisible: false }
-    },
-    showSnapshotsModal(state, action) {
-      return { ...state, ...action.payload, snapshotsModalVisible: true }
-    },
-    hideSnapshotsModal(state) {
-      return { ...state, snapshotsModalVisible: false }
     },
     showSalvageModal(state, action) {
       return { ...state, ...action.payload, salvageModalVisible: true }
@@ -594,12 +684,6 @@ export default {
     },
     hideUpdateAccessModeModal(state) {
       return { ...state, updateAccessModeModalVisible: false }
-    },
-    hideSnapshotBulkModal(state) {
-      return { ...state, SnapshotBulkModalVisible: false }
-    },
-    showSnapshotBulkModal(state, action) {
-      return { ...state, SnapshotBulkModalVisible: true, selectedRows: action.payload, SnapshotBulkModalKey: Math.random() }
     },
     showBulkExpandVolumeModal(state, action) {
       return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: Math.random() }
