@@ -298,7 +298,19 @@ class List extends React.Component {
             </div>
           )
         },
-      }, {
+      },
+      {
+        title: 'Creation State',
+        dataIndex: 'state',
+        key: 'state',
+        width: 150,
+        render: (text) => {
+          return (
+            <div>{text}</div>
+          )
+        },
+      },
+      {
         title: 'Operation',
         key: 'operation',
         width: 120,
@@ -338,7 +350,7 @@ class List extends React.Component {
           simple
           pagination={pagination('backupPageSize')}
           rowKey={record => record.id}
-          scroll={{ x: 1440, y: this.state.height }}
+          scroll={{ x: 1550, y: this.state.height }}
         />
       </div>
     )
