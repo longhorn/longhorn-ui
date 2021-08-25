@@ -20,7 +20,8 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
-  const currentBackUp = backupVolumes.find((item) => { return item.id === queryString.parse(location.search).keyword })
+  const volumeName = queryString.parse(location.search).keyword
+  const currentBackUp = backupVolumes.find((item) => { return item.id === volumeName })
   const backupVolumesProps = {
     backup: data,
     volumeList,
@@ -62,7 +63,7 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
       dispatch({
         type: 'backup/delete',
         payload: {
-          volumeName: record.volumeName,
+          volumeName,
           name: record.name,
           listUrl,
           ...queryString.parse(location.search),
