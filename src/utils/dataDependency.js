@@ -64,6 +64,9 @@ const dependency = {
   backingImage: {
     path: '/backingImage',
     runWs: [{
+      ns: 'volume',
+      key: 'volumes',
+    }, {
       ns: 'backingImage',
       key: 'backingimages',
     }],

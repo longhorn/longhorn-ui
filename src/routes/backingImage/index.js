@@ -64,6 +64,7 @@ class BackingImage extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
     const { uploadFile } = this
+    const { data: volumeData } = this.props.volume
     const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows, cleanUp } = this.props.backingImage
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
     const { field, value } = queryString.parse(this.props.location.search)
@@ -76,6 +77,7 @@ class BackingImage extends React.Component {
     if (backingImages && backingImages.length > 0) {
       backingImages.sort((a, b) => a.name.localeCompare(b.name))
     }
+    const volumeNameOptions = volumeData.map((volume) => volume.name)
     const backingImageListProps = {
       dataSource: backingImages,
       height: this.state.height,
@@ -122,11 +124,12 @@ class BackingImage extends React.Component {
         name: '',
         url: '',
       },
+      volumeNameOptions,
       visible: createBackingImageModalVisible,
       onOk(newBackingImage) {
         let params = {}
         params.name = newBackingImage.name
-        if (newBackingImage.requireUpload) {
+        if (newBackingImage.type === 'upload') {
           params.sourceType = 'upload'
           params.parameters = {}
 
@@ -136,10 +139,16 @@ class BackingImage extends React.Component {
             key: 'uploadNotification',
             duration: 0,
           })
-        } else {
+        } else if (newBackingImage.type === 'download') {
           params.sourceType = 'download'
           params.parameters = {
             url: newBackingImage.imageURL,
+          }
+        } else {
+          params.sourceType = 'export-from-volume'
+          params.parameters = {
+            'volume-name': newBackingImage.volumeName,
+            'export-type': newBackingImage.exportType,
           }
         }
         params.expectedChecksum = newBackingImage.expectedChecksum
@@ -149,7 +158,7 @@ class BackingImage extends React.Component {
           payload: params,
           callback: (record, canUpload) => {
             // to do upload
-            if (newBackingImage.fileContainer && newBackingImage.fileContainer.file && newBackingImage.requireUpload && canUpload) {
+            if (newBackingImage.fileContainer && newBackingImage.fileContainer.file && newBackingImage.type === 'upload' && canUpload) {
               let file = newBackingImage.fileContainer.file
               uploadFile(file, record)
             } else {
@@ -280,7 +289,8 @@ BackingImage.propTypes = {
   backingImage: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
+  volume: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, backingImage, loading }) => ({ app, backingImage, loading: loading.models.backingImage }))(BackingImage)
+export default connect(({ app, volume, backingImage, loading }) => ({ app, volume, backingImage, loading: loading.models.backingImage }))(BackingImage)

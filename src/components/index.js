@@ -15,6 +15,7 @@ import ReactCron from './ReactCron/ReactCron'
 import BackupLabelInput from './BackupLabelInput/BackupLabelInput'
 import BackupLabelInputForRecurring from './BackupLabelInputForRecurring/BackupLabelInputForRecurring'
 import ExpansionErrorDetail from './ExpansionErrorDetail/ExpansionErrorDetail'
+import AutoComplete from './AutoComplete/AutoComplete'
 
 export {
   DropOption,
@@ -34,4 +35,5 @@ export {
   BackupLabelInput,
   BackupLabelInputForRecurring,
   ExpansionErrorDetail,
+  AutoComplete,
 }
