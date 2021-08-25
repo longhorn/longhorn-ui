@@ -128,6 +128,10 @@ const modal = ({
 
   const pagination = true
 
+  const isReady = dataSource.every((item) => {
+    return item.status === 'ready'
+  })
+
   return (
     <ModalBlur {...modalOpts}>
       <div style={{ width: '100%', overflow: 'auto', padding: '10px 20px 10px' }}>
@@ -135,12 +139,16 @@ const modal = ({
           <Card>
             <div className={style.parametersContainer} style={{ marginBottom: 0 }}>
               <div>Created From: </div>
-              <span>{currentData.sourceType === 'download' ? 'Download from URL' : currentData.sourceType.toUpperCase()}</span>
+              <span>
+                {currentData.sourceType === 'download' && 'Download from URL'}
+                {currentData.sourceType === 'upload' && 'Upload'}
+                {currentData.sourceType === 'export-from-volume' && 'Export from a Longhorn volume'}
+              </span>
               <div style={{ textAlign: 'left' }}>Parameters During Creation:</div>
               <div>
                 {currentData.parameters && Object.keys(currentData.parameters).length > 0 ? Object.keys(currentData.parameters).map((key) => {
                   return <div style={{ display: 'flex' }} key={key}>
-                    <div style={{ width: 60, fontWeight: 'normal' }}>{key ? key.toUpperCase() : key }:</div>
+                    <div style={{ minWidth: 60, fontWeight: 'normal' }}>{key}:</div>
                     <div style={{ marginLeft: 10, fontWeight: 'normal' }}>{currentData.parameters[key]}</div>
                   </div>
                 }) : <Tooltip title="empty"><Icon type="stop" className="color-warning" /></Tooltip>}
@@ -152,9 +160,9 @@ const modal = ({
               { currentData.expectedChecksum && currentData.expectedChecksum !== currentData.currentChecksum ? <div style={{ textAlign: 'left' }}>Expected SHA512 Checksum:</div> : '' }
               { currentData.expectedChecksum && currentData.expectedChecksum !== currentData.currentChecksum ? <span>{currentData.expectedChecksum}</span> : '' }
               <div className={style.currentChecksum}>
-                { currentData.expectedChecksum === currentData.currentChecksum && currentData.currentChecksum !== '' ? <Tooltip title={'Current checksum is the same as the expected value'}>
+                { currentData.expectedChecksum === currentData.currentChecksum && currentData.currentChecksum !== '' && isReady ? <Tooltip title={'Current checksum is the same as the expected value'}>
                   <summary className="color-success">Verified</summary>
-                </Tooltip> : (currentData.expectedChecksum !== '' && <Tooltip title={'Current checksum doesn’t match the expected value'}>
+                </Tooltip> : ((currentData.expectedChecksum !== '' && isReady) && <Tooltip title={'Current checksum doesn’t match the expected value'}>
                   <summary className="color-error">Failed</summary>
                 </Tooltip>)}
                 Current SHA512 Checksum:

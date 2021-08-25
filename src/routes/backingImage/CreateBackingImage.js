@@ -1,21 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Select, Upload, Button, Icon } from 'antd'
-import { ModalBlur } from '../../components'
+import { ModalBlur, AutoComplete } from '../../components'
 const FormItem = Form.Item
 const Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
-    span: 4,
+    span: 6,
   },
   wrapperCol: {
-    span: 17,
+    span: 15,
   },
 }
 
 const modal = ({
   item,
+  volumeNameOptions,
   visible,
   onCancel,
   onOk,
@@ -24,6 +25,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
     setFieldsValue,
+    getFieldValue,
   },
 }) => {
   function handleOk() {
@@ -31,10 +33,8 @@ const modal = ({
       if (errors) {
         return
       }
-      const requireUpload = getFieldsValue().requireUpload === 'true'
       const data = {
         ...getFieldsValue(),
-        requireUpload,
       }
       onOk(data)
     })
@@ -49,13 +49,21 @@ const modal = ({
   }
 
   const selectChange = (value) => {
-    if (value === 'false') {
+    if (value === 'upload') {
       setFieldsValue({
         imageURL: '',
+        volumeName: '',
+      })
+    } else if (value === 'download') {
+      setFieldsValue({
+        fileContainer: null,
+        volumeName: '',
       })
     } else {
       setFieldsValue({
         fileContainer: null,
+        imageURL: '',
+        expectedChecksum: '',
       })
     }
   }
@@ -70,8 +78,16 @@ const modal = ({
     },
   }
 
-  let disabled = getFieldsValue().requireUpload === 'true'
+  const autoCompleteProps = {
+    options: volumeNameOptions,
+    autoCompleteChange: (value) => {
+      setFieldsValue({
+        volumeName: value,
+      })
+    },
+  }
 
+  const creationType = getFieldValue('type')
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -87,42 +103,82 @@ const modal = ({
           })(<Input />)}
         </FormItem>
         <FormItem label="Created From" {...formItemLayout}>
-          {getFieldDecorator('requireUpload', {
-            valuePropName: 'requireUpload',
-            initialValue: 'false',
+          {getFieldDecorator('type', {
+            valuePropName: 'type',
+            initialValue: 'download',
             rules: [
               {
                 required: true,
               },
             ],
-          })(<Select defaultValue={'false'} onChange={selectChange}>
-            <Option value={'true'}>Upload From Local</Option>
-            <Option value={'false'}>Download From URL</Option>
+          })(<Select defaultValue={'download'} onChange={selectChange}>
+            <Option value={'download'}>Download From URL</Option>
+            <Option value={'upload'}>Upload From Local</Option>
+            <Option value={'volume'}>Export from a Longhorn volume</Option>
           </Select>)}
         </FormItem>
-        <FormItem label="URL" {...formItemLayout} style={{ display: disabled ? 'none' : 'block' }}>
+        <FormItem label="Volume Name" {...formItemLayout} style={{ display: creationType === 'volume' ? 'block' : 'none' }}>
+          {getFieldDecorator('volumeName', {
+            initialValue: '',
+            valuePropName: 'value',
+            rules: [
+              {
+                required: creationType === 'volume',
+                message: 'Please input volume name',
+              },
+              {
+                validator: (rule, value, callback) => {
+                  if (creationType === 'volume') {
+                    if (volumeNameOptions && volumeNameOptions.includes(value)) {
+                      callback()
+                    } else {
+                      callback('Please select an existing Longhorn volume.')
+                    }
+                  } else {
+                    callback()
+                  }
+                },
+              },
+            ],
+          })(<AutoComplete {...autoCompleteProps}></AutoComplete>)}
+        </FormItem>
+        <FormItem label="Exported Backing Image Type" {...formItemLayout} style={{ display: creationType === 'volume' ? 'block' : 'none' }}>
+          {getFieldDecorator('exportType', {
+            valuePropName: 'exportType',
+            initialValue: 'raw',
+            rules: [
+              {
+                required: true,
+              },
+            ],
+          })(<Select defaultValue={'raw'}>
+            <Option value={'raw'}>raw</Option>
+            <Option value={'qcow2'}>qcow2</Option>
+          </Select>)}
+        </FormItem>
+        <FormItem label="URL" {...formItemLayout} style={{ display: creationType === 'download' ? 'block' : 'none' }}>
           {getFieldDecorator('imageURL', {
             initialValue: item.imageURL,
             rules: [
               {
-                required: !disabled,
+                required: creationType === 'download',
                 message: 'Please input backing image url',
               },
             ],
-          })(<Input disabled={disabled} />)}
+          })(<Input disabled={!(creationType === 'download')} />)}
         </FormItem>
-        <FormItem label="File" {...formItemLayout} style={{ display: disabled ? 'block' : 'none' }}>
+        <FormItem label="File" {...formItemLayout} style={{ display: creationType === 'upload' ? 'block' : 'none' }}>
           {getFieldDecorator('fileContainer', {
             valuePropName: 'fileContainer',
             initialValue: null,
             rules: [
               {
-                required: disabled,
+                required: creationType === 'upload',
                 message: 'Please upload backing image file',
               },
               {
                 validator: (rule, value, callback) => {
-                  if (disabled) {
+                  if (creationType === 'upload') {
                     let size = 0
                     if (value && value.size) {
                       size = value.size
@@ -139,13 +195,13 @@ const modal = ({
               },
             ],
           })(<Upload {...uploadProps}>
-            <Button disabled={!disabled}>
+            <Button disabled={!(creationType === 'upload')}>
               <Icon type="upload" /> Upload
             </Button>
           </Upload>)}
           <span style={{ marginLeft: 10 }}>{ getFieldsValue().fileContainer && getFieldsValue().fileContainer.file ? getFieldsValue().fileContainer.file.name : ''}</span>
         </FormItem>
-        <FormItem label="Expected Checksum" {...formItemLayout}>
+        <FormItem label="Expected Checksum" {...formItemLayout} style={{ display: creationType !== 'volume' ? 'block' : 'none' }}>
           {getFieldDecorator('expectedChecksum', {
             initialValue: '',
             rules: [
@@ -166,6 +222,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  volumeNameOptions: PropTypes.array,
 }
 
 export default Form.create()(modal)
