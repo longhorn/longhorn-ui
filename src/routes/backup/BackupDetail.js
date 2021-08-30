@@ -6,6 +6,7 @@ import { Modal } from 'antd'
 import RestoreBackup from './RestoreBackup'
 import { DropOption } from '../../components'
 import BackupList from './BackupList'
+import { sortBackups } from '../../utils/sort'
 import ShowBackupLabels from './ShowBackupLabels'
 import CreateStandbyVolume from './CreateStandbyVolume'
 import WorkloadDetailModal from '../volume/WorkloadDetailModal'
@@ -13,7 +14,7 @@ import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 const { confirm } = Modal
 
 function Backup({ host, backup, volume, setting, backingImage, loading, location, dispatch }) {
-  const { backupVolumes, data, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
+  const { backupVolumes, backupData, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
   const hosts = host.data
   const volumeList = volume.data
   const settings = setting.data
@@ -22,8 +23,9 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
   const volumeName = queryString.parse(location.search).keyword
   const currentBackUp = backupVolumes.find((item) => { return item.id === volumeName })
-  const backupVolumesProps = {
-    backup: data,
+  sortBackups(backupData)
+  const backupProps = {
+    backup: backupData,
     volumeList,
     loading,
     dispatch,
@@ -34,22 +36,13 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
       })
     },
     sorter,
-    queryBackups(name, url) {
-      dispatch({
-        type: 'backup/query',
-        payload: {
-          url,
-          name,
-        },
-      })
-    },
     showRestoreBackup(record) {
       let currentVolume = volumeList.find((item) => record.volumeName === item.name)
       dispatch({
         type: 'backup/beforeShowRestoreBackupModal',
         payload: {
           currentItem: {
-            backupName: record.name,
+            backupName: record.id,
             fromBackup: record.url,
             numberOfReplicas: defaultNumberOfReplicas,
             volumeName: record.volumeName,
@@ -64,7 +57,7 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
         type: 'backup/delete',
         payload: {
           volumeName,
-          name: record.name,
+          name: record.id,
           listUrl,
           ...queryString.parse(location.search),
         },
@@ -126,7 +119,7 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
     },
   }
 
-  const showDeleteConfirm = (record) => {
+  const showDeleteConfirm = () => {
     confirm({
       title: 'Are you sure delete all the backups?',
       content: 'If there is backup restore process in progress using the backups of this volume (including DR volumes), deleting the backup volume will result in restore failure and the volume in the restore process will become FAULTED. Are you sure you want to delete this backup volume?',
@@ -136,7 +129,7 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
       onOk() {
         dispatch({
           type: 'backup/deleteAllBackups',
-          payload: record.name,
+          payload: volumeName,
         })
       },
     })
@@ -204,7 +197,7 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
           onMenuClick={e => handleMenuClick(currentBackUp, e)}
         />
       </div>
-      <BackupList {...backupVolumesProps} />
+      <BackupList {...backupProps} />
       { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
       { showBackuplabelsModalVisible ? <ShowBackupLabels key={showBackupLabelsModalKey} {...showBackupLabelsModalProps} /> : ''}
       { createVolumeStandModalVisible ? <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} /> : ''}

@@ -80,6 +80,9 @@ function SnapshotIcon(props, snapshotProps) {
       }
       return
     }
+    if (key === 'snapshotBackup' && snapshotProps.disableBackup) {
+      return
+    }
     doAction(key)
   }
 
@@ -92,11 +95,11 @@ function SnapshotIcon(props, snapshotProps) {
           {snapshotProps.volume.disableFrontend ? <div style={{ padding: '0px 12px' }}>Revert</div> : <Tooltip title={<div>
             <p>Please reattach the volume in maintenance mode to revert the volume.</p>
             <p>Workload shutdown might be needed.</p>
-          </div>}><div className="saic-Popconfirm-Revert">Revert</div></Tooltip> }
+          </div>}><div className="disable-dropdown-menu">Revert</div></Tooltip> }
         </Menu.Item> : ''
       }
-      { props.usercreated ? <Menu.Item key="snapshotBackup">
-          <div style={{ padding: '0px 12px' }}>Backup</div>
+      { props.usercreated ? <Menu.Item key="snapshotBackup" className="revert-menu-item">
+          { !snapshotProps.disableBackup ? <div style={{ padding: '0px 12px' }}>Backup</div> : <Tooltip title={snapshotProps.disableBackupMessage}><div className="disable-dropdown-menu">Backup</div></Tooltip>}
         </Menu.Item> : ''
       }
       <Menu.Item key="snapshotDelete">
@@ -288,6 +291,7 @@ Snapshot.propTypes = {
   volume: PropTypes.object,
   state: PropTypes.bool,
   volumeHead: PropTypes.object,
+  disableBackup: PropTypes.bool,
 }
 
 export default Snapshot

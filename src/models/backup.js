@@ -1,18 +1,20 @@
-import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
+import { query, queryBackupList, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
 import { parse } from 'qs'
 import { message } from 'antd'
+import { wsChanges } from '../utils/websocket'
 import queryString from 'query-string'
-import { sortVolumeBackups, sortTable } from '../utils/sort'
-import { getSorter, saveSorter } from '../utils/store'
+import { sortTable } from '../utils/sort'
+import { getSorter, saveSorter, getBackupVolumeName } from '../utils/store'
 
 export default {
   namespace: 'backup',
   state: {
+    wsBackup: null,
+    wsBackupVolume: null,
     backupVolumes: [],
+    backupData: [],
     selectedRows: [],
-    backupVolumesForSelect: [],
     workloadDetailModalItem: {},
-    filterText: 'all',
     backupStatus: {},
     currentItem: {},
     currentBackupVolume: {},
@@ -36,7 +38,9 @@ export default {
     createVolumeStandModalVisible: false,
     bulkCreateVolumeStandModalVisible: false,
     showBackuplabelsModalVisible: false,
-    restoreBackupFilterKey: Math.random(),
+    socketStatusBackupVolumes: 'closed',
+    socketStatusBackups: 'closed',
+    backupFilterKey: Math.random(),
     restoreBackupModalKey: Math.random(),
     createVolumeStandModalKey: Math.random(),
     bulkCreateVolumeStandModalKey: Math.random(),
@@ -48,12 +52,18 @@ export default {
     setup({ dispatch, history }) {
       history.listen(() => {
         let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
-        // This code may cause confusion. React router does not pass parameters when right-clicking on Link,
-        // resulting in no request for the page, so an Undefined judgment is added.
-        dispatch({
-          type: 'query',
-          payload: search,
-        })
+        if (getBackupVolumeName(search)) {
+          // In backup detail page
+          dispatch({
+            type: 'queryBackup',
+            payload: search,
+          })
+        } else {
+          dispatch({
+            type: 'queryBackupVolume',
+            payload: search,
+          })
+        }
         dispatch({ type: 'queryBackupTarget', payload: { history } })
         // Record search params for volume detail page
         dispatch({
@@ -64,28 +74,31 @@ export default {
     },
   },
   effects: {
-    *query({
+    *queryBackupVolume({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
-      const filter = payload && payload.field && payload.keyword
-      if (data && data.status === 200) {
-        data.data.sort((a, b) => sortTable(a, b, 'name'))
-        yield put({ type: 'queryBackup', payload: { backupVolumes: data.data, backupVolumesForSelect: data.data } })
-        if (filter) {
-          const found = data.data.find(b => b.name === payload.keyword)
-          if (found) {
-            const list = yield call(execAction, found.actions.backupList)
-            sortVolumeBackups(list.data)
-            yield put({ type: 'queryBackup', payload: { data: list.data } })
-          } else {
-            yield put({ type: 'queryBackup', payload: { data: [] } })
-          }
-        } else {
-          yield put({ type: 'queryBackup', payload: { data: null } })
+      const search = parse(payload)
+      const resp = yield call(query, search)
+      if (resp && resp.status === 200) {
+        resp.data.sort((a, b) => sortTable(a, b, 'name'))
+        if (search && search.field === 'name' && search.value !== '') {
+          resp.data = resp.data.filter((item) => {
+            return item.id.includes(search.value)
+          })
         }
+        yield put({ type: 'setBackupVolumes', payload: { backupVolumes: resp.data || [] } })
       }
       yield put({ type: 'clearSelection' })
+    },
+    *queryBackup({
+      payload,
+    }, { call, put }) {
+      const search = parse(payload)
+      const resp = yield call(queryBackupList, search.keyword)
+      if (resp && resp.status === 200) {
+        resp.data.sort((a, b) => sortTable(a, b, 'id'))
+        yield put({ type: 'setBackups', payload: { backupData: resp.data || [] } })
+      }
     },
     *queryBackupTarget({
       payload,
@@ -106,7 +119,7 @@ export default {
       const data = yield call(execAction, payload.url)
       yield put({ type: 'updateBackupStatus', payload: { backupStatus: { ...data } } })
     },
-    *queryBackupDetailData({
+    *restoreLatestBackup({
       payload,
     }, { call, put }) {
       const data = yield call(execAction, payload.url)
@@ -115,14 +128,14 @@ export default {
 
       if (data.data && data.data.length > 0) {
         data.data.forEach((item) => {
-          if (item.name === payload.lastBackupName) {
+          if (item.id === payload.lastBackupName) {
             lastBackup = item
           }
         })
       }
       if (lastBackup) {
         params.fromBackup = lastBackup.url
-        params.backupName = lastBackup.name
+        params.backupName = lastBackup.id
         params.numberOfReplicas = payload.numberOfReplicas
         params.volumeName = lastBackup.volumeName
         params.backingImage = payload.backingImage ? payload.backingImage : ''
@@ -150,7 +163,7 @@ export default {
             if (res.data) {
               let lastBackup = null
               res.data.forEach((item) => {
-                if (item.name === payload.selectedRows[i].lastBackupName) {
+                if (item.id === payload.selectedRows[i].lastBackupName) {
                   lastBackup = item
                 }
               })
@@ -243,8 +256,9 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(execAction, payload.actions.backupList)
-      const found = data.data.find(b => b.name === payload.lastBackupName)
+      const found = data.data.find(backup => backup.id === payload.lastBackupName)
       yield put({ type: 'setCurrentBackupVolume', payload: { currentBackupVolume: payload } })
+      // For DR Volume
       yield put({ type: 'initModalUrl', found, payload })
       yield put({ type: 'showCreateVolumeStandModalVisible' })
       yield put({ type: 'queryDiskTagsAndgetNodeTags' })
@@ -252,17 +266,18 @@ export default {
     *BulkCreateStandVolume({
       payload,
     }, { call, put }) {
-      const data = yield payload.map((item) => call(execAction, item.actions.backupList))
+      const data = yield payload.backupVolume.map((item) => call(execAction, item.actions.backupList))
       const volumes = data.map((item, index) => {
-        const volume = payload[index]
-        const found = item.data.find((b) => b.name === volume.lastBackupName)
+        const volume = payload.backupVolume[index]
+        const found = item.data.find((backup) => backup.id === volume.lastBackupName)
         return {
           lastBackupUrl: found.url,
-          volumeName: volume.name,
+          volumeName: volume.id,
           baseImage: volume.baseImage,
           size: found.volumeSize,
         }
       })
+      // For DR Volume
       yield put({ type: 'initBulkCreateModalUrl', volumes })
       yield put({ type: 'showBulkCreateVolumeStandModalVisible' })
       yield put({ type: 'queryDiskTagsAndgetNodeTags' })
@@ -274,14 +289,87 @@ export default {
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
     },
+    *startWS({
+      payload,
+    }, { select }) {
+      if (payload.type === 'backupvolumes') {
+        let wsBackupVolume = yield select(state => state.backup.wsBackupVolume)
+        if (wsBackupVolume) {
+          wsBackupVolume.open()
+        } else {
+          wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+        }
+      }
+
+      if (payload.type === 'backups' && getBackupVolumeName(payload.search)) {
+        let wsBackup = yield select(state => state.backup.wsBackup)
+        if (wsBackup) {
+          wsBackup.open()
+        } else {
+          wsChanges(payload.dispatch, payload.type, '1s', payload.ns, payload.search)
+        }
+      } else {
+        // Clear the backup ws connection
+        let wsBackup = yield select(state => state.backup.wsBackup)
+        if (wsBackup) wsBackup.close(1000)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let search = yield select(state => state.backup.search)
+      let wsBackup = yield select(state => state.backup.wsBackup)
+      let wsBackupVolume = yield select(state => state.backup.wsBackupVolume)
+      if (wsBackup && !getBackupVolumeName(search)) wsBackup.close(1000)
+      if (wsBackupVolume) wsBackupVolume.close(1000)
+    },
   },
   reducers: {
-    queryBackup(state, action) {
+    setBackupVolumes(state, action) {
       return {
         ...state,
         ...action.payload,
-        restoreBackupFilterKey: Math.random(),
       }
+    },
+    setBackups(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      }
+    },
+    updateBackgroundBackups(state, action) {
+      let volumeName = getBackupVolumeName(state.search)
+      if (volumeName && action.payload && action.payload.data) {
+        let backupData = action.payload.data.filter((item) => {
+          return item.volumeName === volumeName
+        })
+        return {
+          ...state,
+          backupData: backupData || [],
+        }
+      }
+      return {
+        ...state,
+      }
+    },
+    updateSocketStatusBackups(state, action) {
+      return { ...state, socketStatusBackups: action.payload }
+    },
+    updateBackgroundBackupVolumes(state, action) {
+      if (action.payload && action.payload.data) {
+        return {
+          ...state,
+          backupVolumes: action.payload.data || [],
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
+    },
+    updateSocketStatusBackupVolumes(state, action) {
+      return { ...state, socketStatusBackupVolumes: action.payload }
     },
     setBackupTargetAvailable(state, action) {
       return { ...state, backupTargetAvailable: action.payload.backupTargetAvailable, backupTargetMessage: action.payload.backupTargetMessage }
@@ -357,19 +445,14 @@ export default {
     setCurrentBackupVolume(state, action) {
       return { ...state, ...action.payload }
     },
-    filterBackupVolumes(state, action) {
-      if (action.payload) {
-        let key = action.payload.field
-        let value = action.payload.value
-        state.backupVolumes = []
-        state.backupVolumesForSelect.find((item) => {
-          if (item[key].indexOf(value) !== -1) {
-            state.backupVolumes.push(item)
-          }
-          return null
-        })
+    updateWsBackups(state, action) {
+      if (action.payload && action.payload.search) {
+        return { ...state, wsBackup: action.payload.rws }
       }
-      return { ...state, filterText: action.payload }
+      return { ...state }
+    },
+    updateWsBackupVolumes(state, action) {
+      return { ...state, wsBackupVolume: action.payload }
     },
   },
 }

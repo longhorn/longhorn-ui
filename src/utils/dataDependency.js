@@ -89,6 +89,12 @@ const dependency = {
     }, {
       ns: 'backingImage',
       key: 'backingimages',
+    }, {
+      ns: 'backup',
+      key: 'backupvolumes',
+    }, {
+      ns: 'backup',
+      key: 'backups',
     }],
   },
 }
@@ -113,6 +119,12 @@ const allWs = [{
 }, {
   ns: 'recurringJob',
   key: 'recurringjobs',
+}, {
+  ns: 'backup',
+  key: 'backupvolumes',
+}, {
+  ns: 'backup',
+  key: 'backups',
 }]
 
 export function getDataDependency(pathName) {

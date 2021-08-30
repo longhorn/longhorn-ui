@@ -196,13 +196,6 @@ class Snapshots extends React.Component {
     if (!this.props.volume) {
       return null
     }
-    const treeProps = {
-      loading: this.props.loading,
-      volume: this.props.volume,
-      state: this.props.state,
-      snapshotTree: this.props.showRemoved ? this.props.snapshotTreeWithRemoved : this.props.snapshotTree,
-      volumeHead: this.props.volumeHead,
-    }
 
     const isRestoring = () => {
       if (this.props.volume.restoreStatus && this.props.volume.restoreStatus.length > 0) {
@@ -215,6 +208,28 @@ class Snapshots extends React.Component {
       }
     }
     const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.engineImage
+
+    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable
+
+    const createBackupTooltipMessage = () => {
+      if (!this.props.backupTargetAvailable) {
+        return this.props.backupTargetMessage
+      }
+      if (this.props.volume.standby) {
+        return 'Unable to create backup for DR volume.'
+      }
+      return 'Create a new backup.'
+    }
+
+    const treeProps = {
+      loading: this.props.loading,
+      volume: this.props.volume,
+      state: this.props.state,
+      snapshotTree: this.props.showRemoved ? this.props.snapshotTreeWithRemoved : this.props.snapshotTree,
+      volumeHead: this.props.volumeHead,
+      disableBackup,
+      disableBackupMessage: createBackupTooltipMessage(),
+    }
 
     let purgeStatus = {}
     if (treeProps.volume.purgeStatus && treeProps.volume.purgeStatus.length > 0) {
@@ -249,16 +264,6 @@ class Snapshots extends React.Component {
       }
     }
 
-    const createBackupTooltip = () => {
-      if (!this.props.backupTargetAvailable) {
-        return this.props.backupTargetMessage
-      }
-      if (this.props.volume.standby) {
-        return 'Unable to create backup for DR volume.'
-      }
-      return 'Create a new backup.'
-    }
-
     return (
       <Card title={<div className={styles.header}>
         <div>Snapshots and Backups</div>
@@ -272,8 +277,8 @@ class Snapshots extends React.Component {
               </Button>
             </Tooltip>
             &nbsp;
-            <Tooltip placement="top" title={createBackupTooltip()}>
-              <Button disabled={!this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
+            <Tooltip placement="top" title={createBackupTooltipMessage()}>
+              <Button disabled={disableBackup} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
                 Create Backup
               </Button>
             </Tooltip>

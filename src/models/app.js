@@ -1,6 +1,7 @@
 /* eslint no-unused-vars: "off" */
 import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
 import { getDataDependency } from '../utils/dataDependency'
+import queryString from 'query-string'
 import { message } from 'antd'
 
 message.config({
@@ -32,9 +33,10 @@ export default {
       history.listen(location => {
         if (location.pathname) {
           let data = getDataDependency(location.pathname)
+          let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
           if (data && data.runWs && data.stopWs) {
             data.runWs.forEach(item => {
-              dispatch({ type: `${item.ns}/startWS`, payload: { type: item.key, ns: item.ns, dispatch } })
+              dispatch({ type: `${item.ns}/startWS`, payload: { type: item.key, ns: item.ns, search, dispatch } })
             })
             data.stopWs.forEach(item => {
               dispatch({ type: `${item.ns}/stopWS` })

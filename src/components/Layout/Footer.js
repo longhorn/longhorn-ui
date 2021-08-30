@@ -4,12 +4,12 @@ import { connect } from 'dva'
 import { Row, Col, Tooltip } from 'antd'
 import styles from './Footer.less'
 import { config } from '../../utils'
-import { getStatusIcon } from '../../utils/websocket'
+import { getStatusIcon, getBackupStatusIcon } from '../../utils/websocket'
 import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -89,6 +89,8 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(eventlog)}
           {getStatusIcon(backingImage)}
           {getStatusIcon(recurringJob)}
+          {getBackupStatusIcon(backup, 'backupVolumes')}
+          {getBackupStatusIcon(backup, 'backups')}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
       </Row>
@@ -105,7 +107,8 @@ Footer.propTypes = {
   backingImage: PropTypes.object,
   recurringJob: PropTypes.object,
   app: PropTypes.object,
+  backup: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup }))(Footer)
