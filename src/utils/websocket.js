@@ -19,8 +19,8 @@ export function constructWebsocketURL(type, period) {
   return `${proto}//${loc.host}${prefix}${prefix.endsWith('/') ? '' : '/'}v1/ws/${period}/${type}`
 }
 
-export function wsChanges(dispatch, type, period, ns) {
-  let url = constructWebsocketURL(type, period)
+export function wsChanges(dispatch, type, period, ns, search) {
+  const url = constructWebsocketURL(type, period)
   const options = {
     timeout: 4000,
     shouldReconnect: function(event, ws) {
@@ -29,9 +29,22 @@ export function wsChanges(dispatch, type, period, ns) {
     },
     automaticOpen: true,
   }
+  // To do. Because two ws connections will be maintained under backup ns.
+  const backupType = type ? type : ''
   const rws = new RobustWebSocket(url, [], options)
-  dispatch({ type: `${ns}/updateSocketStatus`, payload: 'connecting' })
-  dispatch({ type: `${ns}/updateWs`, payload: rws })
+  if (ns === 'backup') {
+    if (backupType === 'backupvolumes') {
+      dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'connecting' })
+      dispatch({ type: `${ns}/updateWsBackupVolumes`, payload: rws })
+    }
+    if (backupType === 'backups') {
+      dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'connecting' })
+      dispatch({ type: `${ns}/updateWsBackups`, payload: { rws, search }})
+    }
+  } else {
+    dispatch({ type: `${ns}/updateSocketStatus`, payload: 'connecting' })
+    dispatch({ type: `${ns}/updateWs`, payload: rws })
+  }
   let recentWrite = true
   let expectError = false
   window.setInterval(() => {
@@ -46,22 +59,48 @@ export function wsChanges(dispatch, type, period, ns) {
 
   rws.addEventListener('message', (msg) => {
     recentWrite = true
-    dispatch({
-      type: `${ns}/updateBackground`,
-      payload: JSON.parse(msg.data),
-    })
+    if (ns === 'backup') {
+      if (backupType === 'backupvolumes') dispatch({
+        type: `${ns}/updateBackgroundBackupVolumes`,
+        payload: JSON.parse(msg.data),
+      })
+      if (backupType === 'backups') dispatch({
+        type: `${ns}/updateBackgroundBackups`,
+        payload: JSON.parse(msg.data),
+      })
+    } else {
+      dispatch({
+        type: `${ns}/updateBackground`,
+        payload: JSON.parse(msg.data),
+      })
+    }
   })
   rws.addEventListener('open', () => {
-    dispatch({ type: `${ns}/updateSocketStatus`, payload: 'open' })
+    if (ns === 'backup') {
+      if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'open' })
+      if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'open' })
+    } else {
+      dispatch({ type: `${ns}/updateSocketStatus`, payload: 'open' })
+    }
   })
   rws.addEventListener('close', () => {
-    dispatch({ type: `${ns}/updateSocketStatus`, payload: 'closed' })
+    if (ns === 'backup') {
+      if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'closed' })
+      if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'closed' })
+    } else {
+      dispatch({ type: `${ns}/updateSocketStatus`, payload: 'closed' })
+    }
   })
   rws.addEventListener('error', () => {
     if (expectError) {
       expectError = false
     } else {
-      dispatch({ type: `${ns}/updateSocketStatus`, payload: 'error' })
+      if (ns === 'backup') {
+        if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'error' })
+        if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'error' })
+      } else {
+        dispatch({ type: `${ns}/updateSocketStatus`, payload: 'error' })
+      }
     }
   })
 }
@@ -74,6 +113,38 @@ export function getStatusIcon(resource) {
   const status = resource.socketStatus
 
   const title = `${type}: ${status}`
+
+  let src
+
+  switch (status) {
+    case 'connecting':
+      src = wsConnecting
+      break
+    case 'open':
+      src = wsOpen
+      break
+    case 'closed':
+      src = wsClosed
+      break
+    case 'error':
+    default:
+      src = wsError
+  }
+  return (
+    <Tooltip placement="topRight" title={title}>
+      <img src={src} alt="WS"></img>
+    </Tooltip>
+  )
+}
+
+// Backup model has two websocket status.
+export function getBackupStatusIcon (resource, type) {
+  if (resource === undefined) {
+    return
+  }
+  const status = type === 'backupVolumes' ? resource.socketStatusBackupVolumes : resource.socketStatusBackups
+
+  const title = type === 'backupVolumes' ? `BackupVolumes: ${status}` : `Backups: ${status}`
 
   let src
 

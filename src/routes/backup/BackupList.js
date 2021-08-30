@@ -319,8 +319,8 @@ class List extends React.Component {
           return (
             <DropOption menuOptions={[
               { key: 'delete', name: 'Delete' },
-              { key: 'restore', name: 'Restore', disabled: (record && record.messages && record.messages.error) || record.state !== 'Ready' },
-              { key: 'getUrl', name: 'Get URL', disabled: record.state !== 'Ready' },
+              { key: 'restore', name: 'Restore', disabled: (record && record.messages && record.messages.error) || !record.url },
+              { key: 'getUrl', name: 'Get URL', disabled: (record && record.messages && record.messages.error) || !record.url },
             ]}
               onMenuClick={e => handleMenuClick(record, e)}
             />

@@ -8,6 +8,13 @@ export async function query(params) {
   })
 }
 
+export async function queryBackupList(name) {
+  return request({
+    url: `/v1/backupvolumes/${name}?action=backupList`,
+    method: 'post',
+  })
+}
+
 export async function queryTarget(params) {
   return request({
     url: '/v1/backuptargets',

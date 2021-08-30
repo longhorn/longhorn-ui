@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
+import { routerRedux } from 'dva/router'
 import { Row, Col, Modal, Descriptions } from 'antd'
 import BackupVolumeList from './BackupVolumeList'
+import queryString from 'query-string'
 import RestoreBackup from './RestoreBackup'
 import CreateStandbyVolume from './CreateStandbyVolume'
 import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
@@ -16,7 +18,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
   location.search = location.search ? location.search : ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
-  const { backupVolumes, sorter, restoreBackupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
+  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
   const hosts = host.data
   const settings = setting.data
   const backingImages = backingImage.data
@@ -32,7 +34,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
       onOk() {
         dispatch({
           type: 'backup/deleteAllBackups',
-          payload: record.name,
+          payload: record.id,
         })
       },
     })
@@ -78,7 +80,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     },
     restoreLatestBackup(record) {
       dispatch({
-        type: 'backup/queryBackupDetailData',
+        type: 'backup/restoreLatestBackup',
         payload: {
           url: record.actions.backupList,
           lastBackupName: record.lastBackupName,
@@ -137,10 +139,18 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
       { value: 'name', name: 'Name' },
     ],
     onSearch(filter) {
-      dispatch({
-        type: 'backup/filterBackupVolumes',
-        payload: filter,
-      })
+      const { field: filterField, value: filterValue } = filter
+      filter && filterField && filterValue ? dispatch(routerRedux.push({
+        pathname: '/backup',
+        search: queryString.stringify({
+          ...queryString.parse(location.search),
+          field: filterField,
+          value: filterValue,
+        }),
+      })) : dispatch(routerRedux.push({
+        pathname: '/backup',
+        search: queryString.stringify({}),
+      }))
     },
   }
 
@@ -197,7 +207,9 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     showBulkCreateDisasterRecoveryVolume() {
       dispatch({
         type: 'backup/BulkCreateStandVolume',
-        payload: selectedRows,
+        payload: {
+          backupVolume: selectedRows,
+        },
       })
     },
   }
@@ -283,7 +295,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
           <BackupBulkActions {...backupBulkActionsProps} />
         </Col>
         <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
-          <Filter key={restoreBackupFilterKey} {...volumeFilterProps} />
+          <Filter key={backupFilterKey} {...volumeFilterProps} />
         </Col>
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
