@@ -109,7 +109,9 @@ export default {
         let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage', '/recurringJob']
 
         isbackupVolumePage = payload.history && payload.history.location && payload.history.location.pathname && payload.history.location.pathname !== '/' && path.every(ele => !payload.history.location.pathname.startsWith(ele))
-        if (!resp.data[0].available && isbackupVolumePage) message.error(resp.data[0].message)
+        if (isbackupVolumePage) {
+          !resp.data[0].available ? message.error(resp.data[0].message) : message.destroy()
+        }
         yield put({ type: 'setBackupTargetAvailable', payload: { backupTargetAvailable: resp.data[0].available, backupTargetMessage: resp.data[0].message } })
       }
     },
