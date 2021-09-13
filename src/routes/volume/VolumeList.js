@@ -307,22 +307,10 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       key: 'recurringJobs',
       width: 100,
       render: (text, record) => {
-        let title = text.recurringJobs && text.recurringJobs.length ? 'Only recurring snapshot scheduled' : 'No recurring backup scheduled'
-        let fill = text.recurringJobs && text.recurringJobs.length ? 'rgb(241, 196, 15)' : 'rgba(0, 0, 0, 0.25)'
-        if (text.recurringJobs && text.recurringJobs.length) {
-          text.recurringJobs.forEach((ele) => {
-            if (ele.task === 'backup') {
-              fill = '#00C1DE'
-              title = 'Recurring backup scheduled'
-            }
-          })
-        }
         return (
-          <Tooltip placement="top" title={title}>
-            <div onClick={() => { showRecurringJobModal(record) }} style={{ width: '100%', cursor: 'pointer' }}>
-              <IconBackup fill={fill} width={30} height={30} />
-            </div>
-          </Tooltip>
+          <div onClick={() => { showRecurringJobModal(record) }} style={{ width: '100%', cursor: 'pointer' }}>
+            <IconBackup fill={'rgb(241, 196, 15)'} width={30} height={30} />
+          </div>
         )
       },
     },
