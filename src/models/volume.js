@@ -124,7 +124,9 @@ export default {
     *queryVolumeRecurringJobList({
       payload,
     }, { call, put }) {
-      if (payload.actions) {
+      // Init recurringJobs to empty array
+      yield put({ type: 'setVolumeRecurringJobs', payload: [] })
+      if (payload.actions && payload.actions.recurringJobList) {
         const recurringJobResp = yield call(getVolumeRecurringJobList, payload.actions.recurringJobList)
         if (recurringJobResp && recurringJobResp.data) {
           yield put({ type: 'setVolumeRecurringJobs', payload: recurringJobResp.data })
