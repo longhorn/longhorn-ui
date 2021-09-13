@@ -566,6 +566,8 @@ class RecurringJob extends React.Component {
       onCancel: this.hideModalGroupDeatil,
     }
 
+    const canAddJobToVolume = selectedVolume.actions && selectedVolume.actions.recurringJobList && selectedVolume.actions.recurringJobAdd
+
     return (
       <Card title={<div className={styles.header}>
           <div>Recurring Jobs Schedule</div>
@@ -578,7 +580,7 @@ class RecurringJob extends React.Component {
                 <Button type="primary" disabled={this.state.selectedJobRows && this.state.selectedJobRows.length === 0} onClick={() => this.bulkDeleteJob()}> Delete </Button>
               </div>
               <div className={styles.new}>
-                <Button type="primary" onClick={this.onNewRecurringJob} icon="plus">Add</Button>
+                <Button type="primary" onClick={this.onNewRecurringJob} disabled={!canAddJobToVolume} icon="plus">Add</Button>
               </div>
             </div>
             <div style={{ minHeight: '270px', maxHeight: '350' }}>
@@ -604,7 +606,7 @@ class RecurringJob extends React.Component {
                 <Button type="primary" disabled={this.state.selectedJobGroupRows && this.state.selectedJobGroupRows.length === 0} onClick={() => this.bulkDeleteJobGroup()}> Delete </Button>
               </div>
               <div className={styles.new}>
-                <Button type="primary" onClick={this.addJobGroupForVolume} icon="plus">Add</Button>
+                <Button type="primary" onClick={this.addJobGroupForVolume} disabled={!canAddJobToVolume} icon="plus">Add</Button>
               </div>
             </div>
             </div>
