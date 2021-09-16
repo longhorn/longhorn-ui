@@ -149,7 +149,7 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {text ? formatDate(new Date(text)) : ''}
+              {text ? formatDate(text) : ''}
             </div>
           )
         },
@@ -164,7 +164,7 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {text ? formatDate(new Date(text)) : ''}
+              {text ? formatDate(text) : ''}
             </div>
           )
         },
@@ -183,7 +183,7 @@ class List extends React.Component {
           let title = (<div>
             <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
             <div><span>PV Status</span><span>: </span><span>{storageObj.pvStatus}</span></div>
-            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(new Date(storageObj.lastPVCRefAt))}</span></div> : ''}
+            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(storageObj.lastPVCRefAt)}</span></div> : ''}
             { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
           </div>)
           let content = (() => {
@@ -223,7 +223,7 @@ class List extends React.Component {
             storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 
-          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {formatDate(new Date(storageObj.lastPodRefAt))}</div></div> : ''
+          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {formatDate(storageObj.lastPodRefAt)}</div></div> : ''
           const ele = storageObj.workloadsStatus && storageObj.workloadsStatus.length ? storageObj.workloadsStatus.map((item, index) => {
             return <div key={index}>{item.podName}</div>
           }) : ''

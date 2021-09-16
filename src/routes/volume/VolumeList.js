@@ -4,7 +4,7 @@ import { Table, Icon, Tooltip, Progress } from 'antd'
 import { formatDate } from '../../utils/formatDate'
 import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
-import { formatMib, utcStrToDate } from '../../utils/formater'
+import { formatMib } from '../../utils/formater'
 import VolumeActions from './VolumeActions'
 import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
@@ -221,7 +221,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       render: (text) => {
         return (
           <div>
-            {formatDate(utcStrToDate(text))}
+            {formatDate(text)}
           </div>
         )
       },
@@ -236,7 +236,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
         let title = (<div>
           <div><span>PV Name</span><span>: </span><span>{text.pvName}</span></div>
           <div><span>PV Status</span><span>: </span><span>{text.pvStatus}</span></div>
-          { text.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(new Date(text.lastPVCRefAt))}</span></div> : ''}
+          { text.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(text.lastPVCRefAt)}</span></div> : ''}
           { text.pvcName ? <div><span>{ text.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{text.pvcName}</span></div> : ''}
         </div>)
         let content = (() => {
@@ -286,7 +286,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       width: 240,
       sorter: (a, b) => sortTable(a, b, 'WorkloadName'),
       render: (text, record) => {
-        const title = text.lastPodRefAt ? <div><div>Last time used: {formatDate(new Date(text.lastPodRefAt))}</div></div> : ''
+        const title = text.lastPodRefAt ? <div><div>Last time used: {formatDate(text.lastPodRefAt)}</div></div> : ''
         const ele = text.podList.length ? text.podList.map((item, index) => {
           return <div key={index}>{item.podName}</div>
         }) : ''
