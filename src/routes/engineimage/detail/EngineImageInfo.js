@@ -23,7 +23,7 @@ function EngineImageInfo({ selectedEngineImage }) {
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Build Date:</span>
-        <span>{ formatDate(new Date(selectedEngineImage.buildDate)) }</span>
+        <span>{ formatDate(selectedEngineImage.buildDate) }</span>
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Status:</span>

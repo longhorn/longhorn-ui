@@ -66,7 +66,7 @@ function list({ loading, dataSource, deleteEngineImage }) {
       render: (text) => {
         return (
           <div>
-            {formatDate(new Date(text))}
+            {formatDate(text)}
           </div>
         )
       },
