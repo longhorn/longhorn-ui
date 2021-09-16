@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Card, Icon, Tooltip } from 'antd'
-import moment from 'moment'
+import { formatDate } from '../../../utils/formatDate'
 import styles from './index.less'
 
 class EventList extends React.Component {
@@ -71,14 +71,14 @@ class EventList extends React.Component {
         title: 'First Time',
         key: 'firstTimestamp',
         render: (record) => {
-          return (<div>{moment(record.firstTimestamp).fromNow()}</div>)
+          return (<div>{formatDate(record.firstTimestamp)}</div>)
         },
       },
       {
         title: 'Last Time',
         key: 'lastTimestamp',
         render: (record) => {
-          return (<div>{moment(record.lastTimestamp).fromNow()}</div>)
+          return (<div>{formatDate(record.lastTimestamp)}</div>)
         },
       },
       {
