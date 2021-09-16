@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
 import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
-import { formatMib, utcStrToDate } from '../../../utils/formater'
+import { formatMib } from '../../../utils/formater'
 import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from '../helper/index'
 import styles from './VolumeInfo.less'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
@@ -262,7 +262,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Created:</span>
-        {formatDate(utcStrToDate(selectedVolume.created))}
+        {formatDate(selectedVolume.created)}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Encrypted:</span>
@@ -297,12 +297,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
-              {selectedVolume.kubernetesStatus.lastPVCRefAt ? formatDate(new Date(selectedVolume.kubernetesStatus.lastPVCRefAt)) : ''}
+              {selectedVolume.kubernetesStatus.lastPVCRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPVCRefAt) : ''}
             </div> : ''
           }
           {selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time used by Pod:</span>
-              {selectedVolume.kubernetesStatus.lastPodRefAt ? formatDate(new Date(selectedVolume.kubernetesStatus.lastPodRefAt)) : ''}
+              {selectedVolume.kubernetesStatus.lastPodRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPodRefAt) : ''}
             </div> : ''
           }
           <div className={styles.row}>
