@@ -158,7 +158,7 @@ function SnapshotIcon(props, snapshotProps) {
           </div>
           <div className="tree-snapshot-desc">
             <p className="snapshot-name">{snapshotObject.name.substr(0, 8)}</p>
-            <p className="snapshot-time">{formatDate(new Date(snapshotObject.created))}</p>
+            <p className="snapshot-time">{formatDate(snapshotObject.created)}</p>
           </div>
         </div>
       </Tooltip>

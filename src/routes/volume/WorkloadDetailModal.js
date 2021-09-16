@@ -22,8 +22,8 @@ const modal = ({
     CardItem = item.podList.map((ele, index) => {
       return (
         <div style={{ border: '1px solid #f4f4f4', padding: 24, marginRight: 5, marginBottom: 10 }} key={index}>
-          {item.snapshotCreated ? <div style={{ marginBottom: '10px' }}> <b>Created Time</b> : {formatDate(new Date(item.snapshotCreated))}</div> : ''}
-          <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {formatDate(new Date(item.lastPodRefAt))}</div> : ''}</div>
+          {item.snapshotCreated ? <div style={{ marginBottom: '10px' }}> <b>Created Time</b> : {formatDate(item.snapshotCreated)}</div> : ''}
+          <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {formatDate(item.lastPodRefAt)}</div> : ''}</div>
           <div style={{ marginTop: item.lastPodRefAt ? '10px' : '0px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Name</b> : {ele.workloadName}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Type</b> : {ele.workloadType}</div>
           <div style={{ marginTop: '10px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Pod Name</b> : {ele.podName}</div>

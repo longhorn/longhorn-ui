@@ -57,7 +57,7 @@ const modal = ({
       {backupLabelsEle}
       { item && item.KubernetesStatus ? <div style={{ marginTop: '20px' }}>
         <Descriptions title="Kubernetes Status When Backup Created" bordered column={2}>
-          <Descriptions.Item label="Created Time" span={2}>{formatDate(new Date(snapshotCreated))}</Descriptions.Item>
+          <Descriptions.Item label="Created Time" span={2}>{formatDate(snapshotCreated)}</Descriptions.Item>
           <Descriptions.Item label="Namespace" span={2}>{kubernetesStatus.namespace}</Descriptions.Item>
           <Descriptions.Item label="PV Name" span={2}>{kubernetesStatus.pvName}</Descriptions.Item>
           <Descriptions.Item label="PVC Name" span={2}>{kubernetesStatus.pvcName}</Descriptions.Item>
