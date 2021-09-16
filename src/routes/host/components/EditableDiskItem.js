@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import moment from 'moment'
+import { formatDate } from '../../../utils/formatDate'
 import { Radio, Checkbox, Form, Tooltip, Input, Icon } from 'antd'
 import styles from './EditableDiskItem.less'
 import StorageInput from './StorageInput'
@@ -44,8 +44,8 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           <div className={styles.control} style={{ width: '690px', lineHeight: '40px', display: 'flex', padding: '0 15px' }}>
             {disk && disk.conditions && Object.keys(disk.conditions).map((key) => {
               let title = (<div>
-                {disk.conditions[key] && disk.conditions[key].lastProbeTime && disk.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {moment(disk.conditions[key].lastProbeTime).fromNow()}</div> : ''}
-                {disk.conditions[key] && disk.conditions[key].lastTransitionTime && disk.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {moment(disk.conditions[key].lastTransitionTime).fromNow()}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].lastProbeTime && disk.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(disk.conditions[key].lastProbeTime)}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].lastTransitionTime && disk.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(disk.conditions[key].lastTransitionTime)}</div> : ''}
                 {disk.conditions[key] && disk.conditions[key].message && disk.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {disk.conditions[key].message}</div> : ''}
                 {disk.conditions[key] && disk.conditions[key].reason && disk.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {disk.conditions[key].reason}</div> : ''}
                 {disk.conditions[key] && disk.conditions[key].status && disk.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {disk.conditions[key].status}</div> : ''}

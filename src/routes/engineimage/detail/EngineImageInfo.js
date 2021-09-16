@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
+import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
 import styles from './EngineImageInfo.less'
 
@@ -23,7 +23,7 @@ function EngineImageInfo({ selectedEngineImage }) {
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Build Date:</span>
-        <span>{ moment(new Date(selectedEngineImage.buildDate)).fromNow() }</span>
+        <span>{ formatDate(selectedEngineImage.buildDate) }</span>
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Status:</span>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Card, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import styles from './index.less'
+import { formatDate } from '../../../utils/formatDate'
 import { formatSnapshot, formatMib } from '../../../utils/formater'
 
 class SnapshotList extends React.Component {
@@ -73,7 +74,7 @@ class SnapshotList extends React.Component {
         title: 'Created',
         key: 'created',
         render: (record) => {
-          return (<div>{moment(record.created).fromNow()}</div>)
+          return (<div>{formatDate(record.created)}</div>)
         },
       },
       {
