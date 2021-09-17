@@ -163,7 +163,19 @@ class List extends React.Component {
             </Tooltip>
           )
         },
-      }, {
+      },
+      {
+        title: 'Creation State',
+        dataIndex: 'state',
+        key: 'state',
+        width: 150,
+        render: (text, record) => {
+          return (
+            <div>{ record.state === 'InProgress' ? <Icon type="loading" /> : text}</div>
+          )
+        },
+      },
+      {
         title: 'Snapshot Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
@@ -296,17 +308,6 @@ class List extends React.Component {
             <div onClick={() => { showBackupLabels(obj) }}>
               <Icon style={{ fontSize: '18px', color: obj ? '#108eb9' : '#cccccc', cursor: 'pointer' }} type="tags" />
             </div>
-          )
-        },
-      },
-      {
-        title: 'Creation State',
-        dataIndex: 'state',
-        key: 'state',
-        width: 150,
-        render: (text) => {
-          return (
-            <div>{text}</div>
           )
         },
       },
