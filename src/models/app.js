@@ -23,6 +23,8 @@ export default {
     // backing image global uploading
     backingImageUploadPercent: 0,
     backingImageUploadStarted: false,
+    stableLonghornVersionslVisible: false,
+    stableLonghornVersionsKey: Math.random(),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -120,6 +122,19 @@ export default {
       return {
         ...state,
         bundlesropsVisible: true,
+      }
+    },
+    showStableLonghornVersions(state) {
+      return {
+        ...state,
+        stableLonghornVersionslVisible: true,
+        stableLonghornVersionsKey: Math.random(),
+      }
+    },
+    hideStableLonghornVersions(state) {
+      return {
+        ...state,
+        stableLonghornVersionslVisible: false,
       }
     },
     hideBundlesModel(state) {
