@@ -8,15 +8,18 @@ import { getStatusIcon } from '../../utils/websocket'
 import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
+import StableLonghornVersions from './StableLonghornVersions'
 
 function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, dispatch }) {
-  const { bundlesropsVisible, bundlesropsKey, okText, modalButtonDisabled, progressPercentage } = app
+  const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
 
   const { data } = setting
   let checkUpgrade = false
   let latestVersion = ''
+  let stableLonghornVersions = ''
+  let stableLonghornVersionsList = []
   data.forEach(option => {
     switch (option.id) {
       case 'upgrade-checker':
@@ -25,10 +28,24 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
       case 'latest-longhorn-version':
         latestVersion = option.value
         break
+      case 'stable-longhorn-versions':
+        stableLonghornVersions = option.value
+        break
       default:
         break
     }
   })
+  if (stableLonghornVersions) stableLonghornVersionsList = stableLonghornVersions.split(',')
+  let gtCurrentLonghornVersionsList = stableLonghornVersionsList.filter((item) => {
+    let stableVersion = semver.valid(item)
+    if (!semver.valid(currentVersion)) return true
+    return stableVersion && semver.valid(currentVersion) && semver.gt(stableVersion, semver.valid(currentVersion))
+  })
+  let gtStableLonghornVersions = gtCurrentLonghornVersionsList.join(', ')
+  if (gtCurrentLonghornVersionsList && gtCurrentLonghornVersionsList.length > 3) {
+    gtStableLonghornVersions = gtCurrentLonghornVersionsList.slice(0, 3).join(' ')
+    gtStableLonghornVersions += ', ...'
+  }
   let versionTag = false
   semver.valid(currentVersion) && semver.valid(latestVersion) ? versionTag = semver.lt(currentVersion, latestVersion) : versionTag = false
   let upgrade = ''
@@ -70,6 +87,27 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     })
   }
 
+  const showStableLonghornVersions = () => {
+    dispatch({
+      type: 'app/showStableLonghornVersions',
+    })
+  }
+
+  const stableLonghornVersionsProps = {
+    visible: stableLonghornVersionslVisible,
+    versions: gtCurrentLonghornVersionsList || [],
+    onOk: () => {
+      dispatch({
+        type: 'app/hideStableLonghornVersions',
+      })
+    },
+    onCancel: () => {
+      dispatch({
+        type: 'app/hideStableLonghornVersions',
+      })
+    },
+  }
+
   return (
     <div className={styles.footer}>
       <Row type="flex" justify="space-between">
@@ -80,6 +118,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
           <a target="blank" href="https://slack.cncf.io/">Slack</a>
+          {gtCurrentLonghornVersionsList && gtCurrentLonghornVersionsList.length > 0 ? <a target="blank" onClick={showStableLonghornVersions}>{`Newer Stable Versions (${gtStableLonghornVersions})`}</a> : ''}
         </Col>
         <Col>
           {getStatusIcon(volume)}
@@ -90,6 +129,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(backingImage)}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
+        <StableLonghornVersions key={stableLonghornVersionsKey} {...stableLonghornVersionsProps} />
       </Row>
     </div>
   )
