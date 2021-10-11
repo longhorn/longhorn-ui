@@ -54,7 +54,7 @@ export default {
       yield put({ type: 'hideCreateBackingImageModal' })
       let resp = yield call(create, payload)
       yield put({ type: 'query' })
-      if (resp && resp.status === 200 && resp.message === 'OK' && payload.sourceType === 'upload') {
+      if (resp && resp.status === 200 && payload.sourceType === 'upload') {
         let canUpload = false
         // The reason for the delay is that the back-end upload service cannot be started immediately.
         // The interface opened by the service has not been checked for the time being.
