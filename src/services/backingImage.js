@@ -43,8 +43,11 @@ export async function uploadChunk(url, params, headers, onProgress) {
   return new Promise((resolve) => {
     // eslint-disable-next-line no-undef
     const xhr = new XMLHttpRequest()
-
-    xhr.open('post', url)
+    // Manually splicing upload file path
+    let uploadUrl = url ? url.replace(/^https?.+?(:\d{2,6})?(?=\/v1)/, '') : ''
+    let baseUrl = window.__pathname_prefix__ // eslint-disable-line no-underscore-dangle
+    uploadUrl = baseUrl.endsWith('/') ? `${baseUrl.substr(0, baseUrl.length - 1)}${uploadUrl}` : `${baseUrl}${uploadUrl}`
+    xhr.open('post', uploadUrl)
     xhr.upload.onprogress = (e) => { onProgress(e) }
     Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
     xhr.send(params)
