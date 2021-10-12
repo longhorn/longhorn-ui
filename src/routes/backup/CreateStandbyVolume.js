@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select, Spin, Checkbox } from 'antd'
+import { Form, Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from 'antd'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formater'
 const FormItem = Form.Item
@@ -23,6 +23,7 @@ const modal = ({
   nodeTags,
   diskTags,
   tagsLoading,
+  backupVolumes,
   backingImages,
   form: {
     getFieldDecorator,
@@ -49,20 +50,29 @@ const modal = ({
     onOk: handleOk,
   }
 
+  const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
+  const message = `The DR volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('name', {
-            initialValue: item.name,
-            rules: [
-              {
-                required: true,
-                message: 'Please input volume name',
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
+        <Popover placement="right"
+          visible={showWarning}
+          content={<div style={{ maxWidth: 200 }}>
+            <Alert message={message} type="warning" />
+          </div>}>
+          <FormItem label="Name" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('name', {
+              initialValue: item.name,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input volume name',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+        </Popover>
         <FormItem label="Size" hasFeedback {...formItemLayout}>
           {getFieldDecorator('size', {
             initialValue: formatMib(item.size),
@@ -180,6 +190,7 @@ modal.propTypes = {
   hosts: PropTypes.array,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
+  backupVolumes: PropTypes.array,
   tagsLoading: PropTypes.bool,
   backingImages: PropTypes.array,
 }
