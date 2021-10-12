@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Checkbox, Spin, Select } from 'antd'
+import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -24,6 +24,7 @@ const modal = ({
   diskTags,
   tagsLoading,
   backingImages,
+  backupVolumes,
   setPreviousChange,
   isBulk = false,
   form: {
@@ -63,20 +64,29 @@ const modal = ({
     setPreviousChange(value.target.checked)
   }
 
+  const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
+  const message = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('name', {
-            initialValue: item.name,
-            rules: [
-              {
-                required: true && !isBulk,
-                message: 'Please input volume name',
-              },
-            ],
-          })(<Input disabled={isBulk} />)}
-        </FormItem>
+        <Popover placement="right"
+          visible={showWarning}
+          content={<div style={{ maxWidth: 200 }}>
+            <Alert message={message} type="warning" />
+          </div>}>
+          <FormItem label="Name" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('name', {
+              initialValue: item.name,
+              rules: [
+                {
+                  required: true && !isBulk,
+                  message: 'Please input volume name',
+                },
+              ],
+            })(<Input disabled={isBulk} />)}
+          </FormItem>
+        </Popover>
           {!isBulk ? <FormItem label="Use Previous Name" hasFeedback {...formItemLayout}>
               <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange}></Checkbox>
             </FormItem> : ''}
@@ -157,6 +167,7 @@ modal.propTypes = {
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   backingImages: PropTypes.array,
+  backupVolumes: PropTypes.array,
   isBulk: PropTypes.bool,
   tagsLoading: PropTypes.bool,
 }
