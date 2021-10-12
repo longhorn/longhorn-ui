@@ -162,6 +162,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     diskTags,
     backingImages,
     previousChecked,
+    backupVolumes,
     isBulk: isBulkRestore,
     visible: restoreBackupModalVisible,
     onOk(selectedBackup) {
@@ -229,6 +230,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     diskTags,
     tagsLoading,
     backingImages,
+    backupVolumes,
     onOk(newVolume) {
       let data = Object.assign(newVolume, { standby: true, frontend: '' })
       data.size = data.size.replace(/\s/ig, '')

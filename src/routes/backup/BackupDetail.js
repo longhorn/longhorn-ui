@@ -83,6 +83,7 @@ function Backup({ host, backup, volume, setting, backingImage, loading, location
     tagsLoading,
     nodeTags,
     diskTags,
+    backupVolumes,
     backingImages,
     visible: restoreBackupModalVisible,
     onOk(selectedBackup) {
