@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Tree, Icon, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } from 'antd'
 import { formatSnapshot, formatMib } from '../../utils/formater'
 import { formatDate } from '../../utils/formatDate'
+import { trueRandom } from '../../utils/trueRandom'
 import { disabledSnapshotAction } from '../../routes/volume/helper/index'
 import './Snapshot.less'
 
@@ -224,14 +225,14 @@ const loop = (data, props) => data.map((item) => {
 
 class Snapshot extends React.Component {
   state = {
-    key: Math.random(),
+    key: trueRandom(),
     loadingState: true,
     loading: false,
     previousCreated: '',
   }
 
   showReomve = () => {
-    this.state.key = Math.random()
+    this.state.key = trueRandom()
   }
 
   render() {
@@ -245,7 +246,7 @@ class Snapshot extends React.Component {
         this.state.loading = true
         setTimeout(() => {
           this.state.loading = false
-          this.state.key = Math.random()
+          this.state.key = trueRandom()
         }, 0)
       }
     } else if (!props.volume.actions.snapshotList) {
@@ -257,7 +258,7 @@ class Snapshot extends React.Component {
         this.state.loading = true
         setTimeout(() => {
           this.state.loading = false
-          this.state.key = Math.random()
+          this.state.key = trueRandom()
         }, 0)
         this.state.previousCreated = props.volumeHead.created
         // this.setState({

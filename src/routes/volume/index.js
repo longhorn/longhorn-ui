@@ -27,6 +27,7 @@ import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
+import { trueRandom } from '../../utils/trueRandom'
 import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getBulkEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateBulkDataLocalityModalProps, getUpdateAccessModeModalProps, getUpdateBulkAccessModeModalProps, getUpdateReplicaAutoBalanceModalProps } from './helper'
@@ -39,10 +40,10 @@ class Volume extends React.Component {
     super(props)
     this.state = {
       height: 300,
-      createBackModalKey: Math.random(),
+      createBackModalKey: trueRandom(),
       createBackModalVisible: false,
       confirmModalWithWorkloadVisible: false,
-      confirmModalWithWorkloadKey: Math.random(),
+      confirmModalWithWorkloadKey: trueRandom(),
       // Used to record the currently selected volume that requires detach operation
       confirmModalWithWorkloadActionUrl: '',
       confirmModalWithWorkloadTitle: '',
@@ -845,7 +846,7 @@ class Volume extends React.Component {
         // })
         me.setState({
           ...me.state,
-          createBackModalKey: Math.random(),
+          createBackModalKey: trueRandom(),
           createBackModalVisible: true,
           selectedRows: actions,
         })
@@ -916,14 +917,14 @@ class Volume extends React.Component {
         })
         me.setState({
           ...me.state,
-          createBackModalKey: Math.random(),
+          createBackModalKey: trueRandom(),
           createBackModalVisible: false,
         })
       },
       onCancel() {
         me.setState({
           ...me.state,
-          createBackModalKey: Math.random(),
+          createBackModalKey: trueRandom(),
           createBackModalVisible: false,
         })
       },

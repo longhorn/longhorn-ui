@@ -1,5 +1,6 @@
 import { create, deleteEngineImage, query } from '../services/engineimage'
 import { wsChanges, updateState } from '../utils/websocket'
+import {trueRandom} from '../utils/trueRandom'
 import { parse } from 'qs'
 import queryString from 'query-string'
 
@@ -9,7 +10,7 @@ export default {
   state: {
     data: [],
     createEngineImageModalVisible: false,
-    createEngineImageModalKey: Math.random(),
+    createEngineImageModalKey: trueRandom(),
     socketStatus: 'closed',
   },
   subscriptions: {
@@ -79,7 +80,7 @@ export default {
       return updateState(state, action)
     },
     showCreateEngineImageModal(state, action) {
-      return { ...state, ...action.payload, createEngineImageModalVisible: true, createEngineImageModalKey: Math.random() }
+      return { ...state, ...action.payload, createEngineImageModalVisible: true, createEngineImageModalKey: trueRandom() }
     },
     hideCreateEngineImageModal(state) {
       return { ...state, createEngineImageModalVisible: false }

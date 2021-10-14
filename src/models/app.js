@@ -1,6 +1,7 @@
 /* eslint no-unused-vars: "off" */
 import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
 import { getDataDependency } from '../utils/dataDependency'
+import { trueRandom } from '../utils/trueRandom'
 import queryString from 'query-string'
 import { message } from 'antd'
 
@@ -17,14 +18,14 @@ export default {
     bundlesropsVisible: false,
     blur: false,
     progressPercentage: 0,
-    bundlesropsKey: Math.random(),
+    bundlesropsKey: trueRandom(),
     okText: 'OK',
     modalButtonDisabled: false,
     // backing image global uploading
     backingImageUploadPercent: 0,
     backingImageUploadStarted: false,
     stableLonghornVersionslVisible: false,
-    stableLonghornVersionsKey: Math.random(),
+    stableLonghornVersionsKey: trueRandom(),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -128,7 +129,7 @@ export default {
       return {
         ...state,
         stableLonghornVersionslVisible: true,
-        stableLonghornVersionsKey: Math.random(),
+        stableLonghornVersionsKey: trueRandom(),
       }
     },
     hideStableLonghornVersions(state) {
@@ -141,7 +142,7 @@ export default {
       return {
         ...state,
         bundlesropsVisible: false,
-        bundlesropsKey: Math.random(),
+        bundlesropsKey: trueRandom(),
         modalButtonDisabled: false,
         okText: 'OK',
         progressPercentage: 0,

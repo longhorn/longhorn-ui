@@ -5,6 +5,7 @@ import { routerRedux } from 'dva/router'
 import CreateRecurringJob from './CreateRecurringJob'
 import RecurringJobList from './RecurringJobList'
 import { Filter } from '../../components/index'
+import { trueRandom } from '../../utils/trueRandom'
 import RecurringJobBulkActions from './RecurringJobBulkActions'
 import queryString from 'query-string'
 import { Row, Col, Button } from 'antd'
@@ -17,12 +18,12 @@ class RecurringJob extends React.Component {
       isEdit: false,
       selected: {},
       createRecurringJobModalVisible: false,
-      createRecurringJobModalKey: Math.random(),
+      createRecurringJobModalKey: trueRandom(),
       currentCron: '0 0 * * *',
       modalCronOpts: {
         visible: false,
       },
-      ReactCronKey: Math.random(),
+      ReactCronKey: trueRandom(),
       modulerCronDisabled: false,
       selectedRows: [],
     }
@@ -48,7 +49,7 @@ class RecurringJob extends React.Component {
       isEdit: false,
       selected: {},
       createRecurringJobModalVisible: true,
-      createRecurringJobModalKey: Math.random(),
+      createRecurringJobModalKey: trueRandom(),
     })
   }
 
@@ -82,7 +83,7 @@ class RecurringJob extends React.Component {
       modalCronOpts: {
         visible: true,
       },
-      ReactCronKey: Math.random(),
+      ReactCronKey: trueRandom(),
     })
   }
 
@@ -196,7 +197,7 @@ class RecurringJob extends React.Component {
           isEdit: true,
           selected: record,
           createRecurringJobModalVisible: true,
-          createRecurringJobModalKey: Math.random(),
+          createRecurringJobModalKey: trueRandom(),
         })
       },
     }

@@ -3,6 +3,7 @@ import { parse } from 'qs'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
+import { trueRandom } from '../utils/trueRandom'
 import queryString from 'query-string'
 
 export default {
@@ -14,9 +15,9 @@ export default {
     selectedRows: [],
     cleanUp: false,
     createBackingImageModalVisible: false,
-    createBackingImageModalKey: Math.random(),
+    createBackingImageModalKey: trueRandom(),
     diskStateMapDetailModalVisible: false,
-    diskStateMapDetailModalKey: Math.random(),
+    diskStateMapDetailModalKey: trueRandom(),
     diskStateMapDeleteDisabled: true,
     diskStateMapDeleteLoading: false,
     selectedDiskStateMapRows: [],
@@ -174,16 +175,16 @@ export default {
       return updateState(state, action)
     },
     showCreateBackingImageModal(state, action) {
-      return { ...state, ...action.payload, createBackingImageModalVisible: true, createBackingImageModalKey: Math.random() }
+      return { ...state, ...action.payload, createBackingImageModalVisible: true, createBackingImageModalKey: trueRandom() }
     },
     hideCreateBackingImageModal(state) {
       return { ...state, createBackingImageModalVisible: false }
     },
     showDiskStateMapDetailModal(state, action) {
-      return { ...state, selected: action.payload.record, cleanUp: action.payload.cleanUp, diskStateMapDetailModalVisible: true, diskStateMapDetailModalKey: Math.random() }
+      return { ...state, selected: action.payload.record, cleanUp: action.payload.cleanUp, diskStateMapDetailModalVisible: true, diskStateMapDetailModalKey: trueRandom() }
     },
     hideDiskStateMapDetailModal(state) {
-      return { ...state, diskStateMapDetailModalVisible: false, cleanUp: false, diskStateMapDetailModalKey: Math.random() }
+      return { ...state, diskStateMapDetailModalVisible: false, cleanUp: false, diskStateMapDetailModalKey: trueRandom() }
     },
     disableDiskStateMapDelete(state) {
       return { ...state, diskStateMapDeleteDisabled: true }

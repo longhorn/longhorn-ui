@@ -4,6 +4,7 @@ import { message } from 'antd'
 import { wsChanges } from '../utils/websocket'
 import queryString from 'query-string'
 import { sortTable } from '../utils/sort'
+import { trueRandom } from '../utils/trueRandom'
 import { getSorter, saveSorter, getBackupVolumeName } from '../utils/store'
 
 export default {
@@ -40,12 +41,12 @@ export default {
     showBackuplabelsModalVisible: false,
     socketStatusBackupVolumes: 'closed',
     socketStatusBackups: 'closed',
-    backupFilterKey: Math.random(),
-    restoreBackupModalKey: Math.random(),
-    createVolumeStandModalKey: Math.random(),
-    bulkCreateVolumeStandModalKey: Math.random(),
-    showBackupLabelsModalKey: Math.random(),
-    workloadDetailModalKey: Math.random(),
+    backupFilterKey: trueRandom(),
+    restoreBackupModalKey: trueRandom(),
+    createVolumeStandModalKey: trueRandom(),
+    bulkCreateVolumeStandModalKey: trueRandom(),
+    showBackupLabelsModalKey: trueRandom(),
+    workloadDetailModalKey: trueRandom(),
     sorter: getSorter('backupList.sorter'),
   },
   subscriptions: {
@@ -390,22 +391,22 @@ export default {
     },
     /** createVolumeStandModalVisible */
     showCreateVolumeStandModalVisible(state) {
-      return { ...state, createVolumeStandModalVisible: true, createVolumeStandModalKey: Math.random() }
+      return { ...state, createVolumeStandModalVisible: true, createVolumeStandModalKey: trueRandom() }
     },
     hideCreateVolumeStandModalVisible(state) {
-      return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: Math.random(), currentBackupVolume: {} }
+      return { ...state, createVolumeStandModalVisible: false, createVolumeStandModalKey: trueRandom(), currentBackupVolume: {} }
     },
     showBulkCreateVolumeStandModalVisible(state) {
-      return { ...state, bulkCreateVolumeStandModalVisible: true, bulkCreateVolumeStandModalKey: Math.random() }
+      return { ...state, bulkCreateVolumeStandModalVisible: true, bulkCreateVolumeStandModalKey: trueRandom() }
     },
     hideBulkCreateVolumeStandModalVisible(state) {
-      return { ...state, backupVolumesForBulkCreate: [], bulkCreateVolumeStandModalVisible: false, bulkCreateVolumeStandModalKey: Math.random() }
+      return { ...state, backupVolumesForBulkCreate: [], bulkCreateVolumeStandModalVisible: false, bulkCreateVolumeStandModalKey: trueRandom() }
     },
     showBackuplabelsModalVisible(state, action) {
-      return { ...state, showBackuplabelsModalVisible: true, backupLabel: action.payload, createVolumeStandModalKey: Math.random() }
+      return { ...state, showBackuplabelsModalVisible: true, backupLabel: action.payload, createVolumeStandModalKey: trueRandom() }
     },
     hideBackuplabelsModalVisible(state) {
-      return { ...state, showBackuplabelsModalVisible: false, createVolumeStandModalKey: Math.random() }
+      return { ...state, showBackuplabelsModalVisible: false, createVolumeStandModalKey: trueRandom() }
     },
     initModalUrl(state, action) {
       return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, baseImage: action.payload.baseImage, size: action.found.volumeSize }
@@ -414,10 +415,10 @@ export default {
       return { ...state, backupVolumesForBulkCreate: action.volumes }
     },
     showRestoreBackupModal(state, action) {
-      return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
+      return { ...state, ...action.payload, restoreBackupModalVisible: true, restoreBackupModalKey: trueRandom() }
     },
     showRestoreBulkBackupModal(state, action) {
-      return { ...state, ...action.payload, isBulkRestore: true, restoreBackupModalVisible: true, restoreBackupModalKey: Math.random() }
+      return { ...state, ...action.payload, isBulkRestore: true, restoreBackupModalVisible: true, restoreBackupModalKey: trueRandom() }
     },
     hideRestoreBackupModal(state) {
       return { ...state, previousChecked: false, tagsLoading: true, restoreBackupModalVisible: false, isBulkRestore: false }
@@ -427,10 +428,10 @@ export default {
       return { ...state, sorter: action.payload }
     },
     showWorkloadDetailModal(state, action) {
-      return { ...state, workloadDetailModalVisible: true, workloadDetailModalItem: action.payload, workloadDetailModalKey: Math.random() }
+      return { ...state, workloadDetailModalVisible: true, workloadDetailModalItem: action.payload, workloadDetailModalKey: trueRandom() }
     },
     hideWorkloadDetailModal(state) {
-      return { ...state, workloadDetailModalVisible: false, workloadDetailModalKey: Math.random() }
+      return { ...state, workloadDetailModalVisible: false, workloadDetailModalKey: trueRandom() }
     },
     changeSelection(state, action) {
       return { ...state, ...action.payload }

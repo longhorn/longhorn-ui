@@ -1,6 +1,7 @@
 import { create, deleteVolume, query, execAction, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion, createRecurringJob, recurringJobAdd, getVolumeRecurringJobList, removeVolumeRecurringJob, updateRecurringJob } from '../services/volume'
 import { query as getRecurringJob } from '../services/recurringJob'
 import { wsChanges, updateState } from '../utils/websocket'
+import { trueRandom } from '../utils/trueRandom'
 import { sortVolume } from '../utils/sort'
 import { parse } from 'qs'
 import { routerRedux } from 'dva/router'
@@ -57,31 +58,31 @@ export default {
     defaultPVCName: '',
     previousNamespace: '',
     recurringJobList: [],
-    changeVolumeModalKey: Math.random(),
-    bulkChangeVolumeModalKey: Math.random(),
-    bulkExpandVolumeModalKey: Math.random(),
-    createPVAndPVCModalSingleKey: Math.random(),
-    WorkloadDetailModalKey: Math.random(),
-    recurringJobModalKey: Math.random(),
-    createPVCAllModalKey: Math.random(),
-    createVolumeModalKey: Math.random(),
-    createPVAndPVCModalKey: Math.random(),
-    createPVCModalKey: Math.random(),
-    createPVModalKey: Math.random(),
-    attachHostModalKey: Math.random(),
-    bulkAttachHostModalKey: Math.random(),
-    engineUpgradeModaKey: Math.random(),
-    bulkEngineUpgradeModalKey: Math.random(),
-    expansionVolumeSizeModalKey: Math.random(),
-    updateReplicaCountModalKey: Math.random(),
-    updateBulkReplicaCountModalKey: Math.random(),
-    customColumnKey: Math.random(),
-    updateDataLocalityModalKey: Math.random(),
-    updateBulkDataLocalityModalKey: Math.random(),
-    updateAccessModeModalKey: Math.random(),
-    updateBulkAccessModeModalKey: Math.random(),
-    confirmModalWithWorkloadKey: Math.random(),
-    updateReplicaAutoBalanceModalKey: Math.random(),
+    changeVolumeModalKey: trueRandom(),
+    bulkChangeVolumeModalKey: trueRandom(),
+    bulkExpandVolumeModalKey: trueRandom(),
+    createPVAndPVCModalSingleKey: trueRandom(),
+    WorkloadDetailModalKey: trueRandom(),
+    recurringJobModalKey: trueRandom(),
+    createPVCAllModalKey: trueRandom(),
+    createVolumeModalKey: trueRandom(),
+    createPVAndPVCModalKey: trueRandom(),
+    createPVCModalKey: trueRandom(),
+    createPVModalKey: trueRandom(),
+    attachHostModalKey: trueRandom(),
+    bulkAttachHostModalKey: trueRandom(),
+    engineUpgradeModaKey: trueRandom(),
+    bulkEngineUpgradeModalKey: trueRandom(),
+    expansionVolumeSizeModalKey: trueRandom(),
+    updateReplicaCountModalKey: trueRandom(),
+    updateBulkReplicaCountModalKey: trueRandom(),
+    customColumnKey: trueRandom(),
+    updateDataLocalityModalKey: trueRandom(),
+    updateBulkDataLocalityModalKey: trueRandom(),
+    updateAccessModeModalKey: trueRandom(),
+    updateBulkAccessModeModalKey: trueRandom(),
+    confirmModalWithWorkloadKey: trueRandom(),
+    updateReplicaAutoBalanceModalKey: trueRandom(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -543,22 +544,22 @@ export default {
       return updateState(state, action)
     },
     showChangeVolumeModal(state, aciton) {
-      return { ...state, changeVolumeActivate: aciton.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
+      return { ...state, changeVolumeActivate: aciton.payload, changeVolumeModalVisible: true, changeVolumeModalKey: trueRandom() }
     },
     hideChangeVolumeModal(state) {
-      return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
+      return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: trueRandom() }
     },
     showBulkChangeVolumeModal(state) {
-      return { ...state, bulkChangeVolumeModalVisible: true, bulkChangeVolumeModalKey: Math.random() }
+      return { ...state, bulkChangeVolumeModalVisible: true, bulkChangeVolumeModalKey: trueRandom() }
     },
     hideBulkChangeVolumeModal(state) {
-      return { ...state, bulkChangeVolumeModalVisible: false, bulkChangeVolumeModalKey: Math.random() }
+      return { ...state, bulkChangeVolumeModalVisible: false, bulkChangeVolumeModalKey: trueRandom() }
     },
     showCreateVolumeModal(state, action) {
-      return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: Math.random() }
+      return { ...state, ...action.payload, createVolumeModalVisible: true, createVolumeModalKey: trueRandom() }
     },
     showCustomColumnModal(state, action) {
-      return { ...state, ...action.payload, customColumnVisible: true, customColumnKey: Math.random() }
+      return { ...state, ...action.payload, customColumnVisible: true, customColumnKey: trueRandom() }
     },
     hideCustomColumnModal(state, action) {
       return { ...state, ...action.payload, customColumnVisible: false }
@@ -567,14 +568,14 @@ export default {
       return { ...state, ...action.payload }
     },
     showCreatePVAndPVCModal(state, action) {
-      return { ...state, createPVAndPVCVisible: true, selectedRows: action.payload, createPVAndPVCModalKey: Math.random() }
+      return { ...state, createPVAndPVCVisible: true, selectedRows: action.payload, createPVAndPVCModalKey: trueRandom() }
     },
     showCreatePVCAndPVSingleModal(state, action) {
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvcName ? state.defaultPVCName = action.payload.kubernetesStatus.pvcName : state.defaultPVCName = action.payload.name
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvName ? state.defaultPVName = action.payload.kubernetesStatus.pvName : state.defaultPVName = action.payload.name
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.pvName ? state.pvNameDisabled = true : state.pvNameDisabled = false
       action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt ? state.previousNamespace = action.payload.kubernetesStatus.namespace : state.previousNamespace = ''
-      return { ...state, nameSpaceDisabled: false, previousChecked: !!(action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt), pvNameDisabled: state.pvNameDisabled, previousNamespace: state.previousNamespace, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selected: action.payload, createPVAndPVCModalSingleKey: Math.random() }
+      return { ...state, nameSpaceDisabled: false, previousChecked: !!(action.payload.kubernetesStatus && action.payload.kubernetesStatus.lastPVCRefAt), pvNameDisabled: state.pvNameDisabled, previousNamespace: state.previousNamespace, createPVAndPVCSingleVisible: true, defaultPVCName: state.defaultPVCName, defaultPVName: state.defaultPVName, selected: action.payload, createPVAndPVCModalSingleKey: trueRandom() }
     },
     changeCheckbox(state) {
       return { ...state, nameSpaceDisabled: !state.nameSpaceDisabled, previousChecked: !state.nameSpaceDisabled ? false : state.previousChecked }
@@ -586,40 +587,40 @@ export default {
       return { ...state, previousChecked: action.payload }
     },
     hideCreatePVCAndPVSingleModal(state) {
-      return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, previousChecked: false, createPVAndPVCModalSingleKey: Math.random() }
+      return { ...state, createPVAndPVCSingleVisible: false, pvNameDisabled: false, previousChecked: false, createPVAndPVCModalSingleKey: trueRandom() }
     },
     hideCreatePVAndPVCModal(state) {
-      return { ...state, createPVAndPVCVisible: false, nameSpaceDisabled: false, previousChecked: false, createPVAndPVCModalKey: Math.random() }
+      return { ...state, createPVAndPVCVisible: false, nameSpaceDisabled: false, previousChecked: false, createPVAndPVCModalKey: trueRandom() }
     },
     hideCreateVolumeModal(state) {
       return { ...state, createVolumeModalVisible: false, tagsLoading: true }
     },
     showExpansionVolumeSizeModal(state, action) {
-      return { ...state, selected: action.payload, expansionVolumeSizeModalVisible: true, expansionVolumeSizeModalKey: Math.random() }
+      return { ...state, selected: action.payload, expansionVolumeSizeModalVisible: true, expansionVolumeSizeModalKey: trueRandom() }
     },
     hideExpansionVolumeSizeModal(state) {
-      return { ...state, expansionVolumeSizeModalVisible: false, expansionVolumeSizeModalKey: Math.random() }
+      return { ...state, expansionVolumeSizeModalVisible: false, expansionVolumeSizeModalKey: trueRandom() }
     },
     hideBulkExpansionVolumeSizeModal(state) {
-      return { ...state, bulkExpandVolumeModalVisible: false, bulkExpandVolumeModalKey: Math.random() }
+      return { ...state, bulkExpandVolumeModalVisible: false, bulkExpandVolumeModalKey: trueRandom() }
     },
     showWorkloadDetailModal(state, action) {
-      return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: Math.random() }
+      return { ...state, WorkloadDetailModalVisible: true, WorkloadDetailModalItem: action.payload, WorkloadDetailModalKey: trueRandom() }
     },
     hideWorkloadDetailModal(state) {
-      return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
+      return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: trueRandom() }
     },
     showRecurringJobModal(state, action) {
-      return { ...state, recurringJobModalVisible: true, selected: action.payload, recurringJobModalKey: Math.random() }
+      return { ...state, recurringJobModalVisible: true, selected: action.payload, recurringJobModalKey: trueRandom() }
     },
     hideRecurringJobModal(state) {
-      return { ...state, recurringJobModalVisible: false, recurringJobModalKey: Math.random() }
+      return { ...state, recurringJobModalVisible: false, recurringJobModalKey: trueRandom() }
     },
     showAttachHostModal(state, action) {
-      return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }
+      return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: trueRandom() }
     },
     showBulkAttachHostModal(state, action) {
-      return { ...state, ...action.payload, bulkAttachHostModalVisible: true, bulkAttachHostModalKey: Math.random() }
+      return { ...state, ...action.payload, bulkAttachHostModalVisible: true, bulkAttachHostModalKey: trueRandom() }
     },
     hideAttachHostModal(state) {
       return { ...state, attachHostModalVisible: false }
@@ -628,10 +629,10 @@ export default {
       return { ...state, bulkAttachHostModalVisible: false }
     },
     showEngineUpgradeModal(state, action) {
-      return { ...state, ...action.payload, engineUpgradeModalVisible: true, engineUpgradeModaKey: Math.random() }
+      return { ...state, ...action.payload, engineUpgradeModalVisible: true, engineUpgradeModaKey: trueRandom() }
     },
     showBulkEngineUpgradeModal(state, action) {
-      return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true, bulkEngineUpgradeModalKey: Math.random() }
+      return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true, bulkEngineUpgradeModalKey: trueRandom() }
     },
     hideEngineUpgradeModal(state) {
       return { ...state, engineUpgradeModalVisible: false }
@@ -652,22 +653,22 @@ export default {
       return { ...state, salvageModalVisible: false }
     },
     showUpdateReplicaCountModal(state, action) {
-      return { ...state, ...action.payload, updateReplicaCountModalVisible: true, updateReplicaCountModalKey: Math.random() }
+      return { ...state, ...action.payload, updateReplicaCountModalVisible: true, updateReplicaCountModalKey: trueRandom() }
     },
     showUpdateDataLocality(state, action) {
-      return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalityModalKey: Math.random() }
+      return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalityModalKey: trueRandom() }
     },
     showUpdateAccessMode(state, action) {
-      return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }
+      return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: trueRandom() }
     },
     showUpdateBulkReplicaCountModal(state, action) {
-      return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: Math.random() }
+      return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: trueRandom() }
     },
     showUpdateBulkDataLocalityModal(state, action) {
-      return { ...state, ...action.payload, updateBulkDataLocalityModalVisible: true, updateBulkDataLocalityModalKey: Math.random() }
+      return { ...state, ...action.payload, updateBulkDataLocalityModalVisible: true, updateBulkDataLocalityModalKey: trueRandom() }
     },
     showUpdateBulkAccessModeModal(state, action) {
-      return { ...state, ...action.payload, updateBulkAccessModeModalVisible: true, updateBulkAccessModeModalKey: Math.random() }
+      return { ...state, ...action.payload, updateBulkAccessModeModalVisible: true, updateBulkAccessModeModalKey: trueRandom() }
     },
     hideUpdateReplicaCountModal(state) {
       return { ...state, updateReplicaCountModalVisible: false }
@@ -688,10 +689,10 @@ export default {
       return { ...state, updateAccessModeModalVisible: false }
     },
     showBulkExpandVolumeModal(state, action) {
-      return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: Math.random() }
+      return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: trueRandom() }
     },
     showUpdateReplicaAutoBalanceModal(state, action) {
-      return { ...state, ...action.payload, updateReplicaAutoBalanceModalVisible: true, updateReplicaAutoBalanceModalKey: Math.random() }
+      return { ...state, ...action.payload, updateReplicaAutoBalanceModalVisible: true, updateReplicaAutoBalanceModalKey: trueRandom() }
     },
     hideUpdateReplicaAutoBalanceModal(state) {
       return { ...state, updateReplicaAutoBalanceModalVisible: false }
@@ -719,10 +720,10 @@ export default {
       return { ...state, customColumnList: action.payload.columns }
     },
     showConfirmDetachWithWorkload(state) {
-      return { ...state, confirmModalWithWorkloadVisible: true, confirmModalWithWorkloadKey: Math.random() }
+      return { ...state, confirmModalWithWorkloadVisible: true, confirmModalWithWorkloadKey: trueRandom() }
     },
     hideConfirmDetachWithWorkload(state) {
-      return { ...state, confirmModalWithWorkloadVisible: false, confirmModalWithWorkloadKey: Math.random() }
+      return { ...state, confirmModalWithWorkloadVisible: false, confirmModalWithWorkloadKey: trueRandom() }
     },
     updateWs(state, action) {
       return { ...state, ws: action.payload }

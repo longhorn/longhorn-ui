@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Tooltip, Card, Switch, Progress } from 'antd'
 import { Snapshot } from '../../../components'
+import { trueRandom } from '../../../utils/trueRandom'
 import CreateBackupModal from './CreateBackupModal'
 import styles from './index.less'
 import { disabledSnapshotAction } from '../helper/index'
@@ -10,8 +11,8 @@ class Snapshots extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      createBackModalKey: Math.random(),
-      createBackBySnapsotModalKey: Math.random(),
+      createBackModalKey: trueRandom(),
+      createBackBySnapsotModalKey: trueRandom(),
       createBackModalVisible: false,
       createBackBySnapsotModalVisible: false,
       currentSnapshotName: '',
@@ -139,14 +140,14 @@ class Snapshots extends React.Component {
         })
         me.setState({
           ...me.state,
-          createBackModalKey: Math.random(),
+          createBackModalKey: trueRandom(),
           createBackModalVisible: false,
         })
       },
       onCancel() {
         me.setState({
           ...me.state,
-          createBackModalKey: Math.random(),
+          createBackModalKey: trueRandom(),
           createBackModalVisible: false,
         })
       },
@@ -173,7 +174,7 @@ class Snapshots extends React.Component {
           })
           me.setState({
             ...me.state,
-            createBackBySnapsotModalKey: Math.random(),
+            createBackBySnapsotModalKey: trueRandom(),
             createBackBySnapsotModalVisible: false,
             currentSnapshotName: '',
             snapshotBackupUrl: '',
@@ -183,7 +184,7 @@ class Snapshots extends React.Component {
       onCancel() {
         me.setState({
           ...me.state,
-          createBackBySnapsotModalKey: Math.random(),
+          createBackBySnapsotModalKey: trueRandom(),
           createBackBySnapsotModalVisible: false,
           currentSnapshotName: '',
           snapshotBackupUrl: '',

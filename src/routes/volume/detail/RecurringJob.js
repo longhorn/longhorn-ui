@@ -7,6 +7,7 @@ import CreateRecurringJob from './CreateRecurringJob'
 import EditRecurringJob from '../../recurringJob/CreateRecurringJob'
 import RecurringJobActions from './RecurringJobActions'
 import AddRecurringJobOrGroupModal from './AddRecurringJobOrGroupModal'
+import { trueRandom } from '../../../utils/trueRandom'
 import styles from './index.less'
 
 const confirm = Modal.confirm
@@ -31,16 +32,16 @@ class RecurringJob extends React.Component {
       addRecurringJobGroupModalVisible: false,
       editRecurringJobModalVisible: false,
       modalGroupDeatilVisible: false,
-      editRecurringJobModalKey: Math.random(),
-      addRecurringJobGroupModalKey: Math.random(),
-      addRecurringJobModalKey: Math.random(),
+      editRecurringJobModalKey: trueRandom(),
+      addRecurringJobGroupModalKey: trueRandom(),
+      addRecurringJobModalKey: trueRandom(),
       recurringJobGroupOptions: [],
       recurringExistingJobOptions: [],
       currentCron: '0 0 * * *',
       modalCronOpts: {
         visible: false,
       },
-      ReactCronKey: Math.random(),
+      ReactCronKey: trueRandom(),
       modulerCronDisabled: false,
     }
   }
@@ -79,7 +80,7 @@ class RecurringJob extends React.Component {
             ...this.state,
             isEdit: false,
             addRecurringJobModalVisible: true,
-            addRecurringJobModalKey: Math.random(),
+            addRecurringJobModalKey: trueRandom(),
             recurringExistingJobOptions,
           })
         } else {
@@ -119,7 +120,7 @@ class RecurringJob extends React.Component {
           this.setState({
             ...this.state,
             addRecurringJobGroupModalVisible: true,
-            addRecurringJobGroupModalKey: Math.random(),
+            addRecurringJobGroupModalKey: trueRandom(),
             recurringJobGroupOptions,
           })
         } else {
@@ -160,7 +161,7 @@ class RecurringJob extends React.Component {
       modalCronOpts: {
         visible: true,
       },
-      ReactCronKey: Math.random(),
+      ReactCronKey: trueRandom(),
     })
   }
   // cron modal end
@@ -371,7 +372,7 @@ class RecurringJob extends React.Component {
           isEdit: true,
           selected: record,
           editRecurringJobModalVisible: true,
-          editRecurringJobModalKey: Math.random(),
+          editRecurringJobModalKey: trueRandom(),
         })
       },
     }

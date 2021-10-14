@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Icon, Button, Select, InputNumber, Tabs, Tooltip } from 'antd'
 import { ModalBlur, ReactCron } from '../../../components'
+import { trueRandom } from '../../../utils/trueRandom'
 
 const Option = Select.Option
 const FormItem = Form.Item
@@ -259,7 +260,7 @@ const modal = ({
       </div>
     </div>
   ))
-  const nameGeneration = getFieldValue('name') ? getFieldValue('name') : `c-${Math.random().toString(36).substr(2, 6)}`
+  const nameGeneration = getFieldValue('name') ? getFieldValue('name') : `c-${trueRandom().toString(36).substr(2, 6)}`
   const disableAddDefaultGroup = getFieldValue('keys').some((k) => getFieldValue('groups')[k.index] === 'default')
 
   return (
