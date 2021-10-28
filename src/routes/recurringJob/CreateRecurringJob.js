@@ -324,7 +324,7 @@ const modal = ({
         </Form.Item>
       </Form>
       <ModalBlur disabled={cronProps.modulerCronDisabled} {...cronProps.modalCronOpts} width={880} onCancel={() => { cronProps.onCronCancel() }} onOk={() => { onCronOk() }}>
-        <ReactCron cron={cronProps.cron} key={cronProps.ReactCronKey} saveDisabled={cronProps.saveDisabled} changeCron={cronProps.changeCron} />
+        <ReactCron cron={isEdit && item.cron ? item.cron : cronProps.cron} key={cronProps.ReactCronKey} saveDisabled={cronProps.saveDisabled} changeCron={cronProps.changeCron} />
       </ModalBlur>
     </ModalBlur>
   )
