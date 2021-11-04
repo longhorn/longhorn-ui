@@ -645,7 +645,7 @@ class Volume extends React.Component {
 
     const expansionVolumeSizeModalProps = {
       item: {
-        unit: 'Mi',
+        unit: 'Gi',
       },
       hosts,
       visible: expansionVolumeSizeModalVisible,
@@ -668,7 +668,7 @@ class Volume extends React.Component {
 
     const bulkExpansionVolumeSizeModalProps = {
       item: {
-        unit: 'Mi',
+        unit: 'Gi',
       },
       hosts,
       visible: bulkExpandVolumeModalVisible,

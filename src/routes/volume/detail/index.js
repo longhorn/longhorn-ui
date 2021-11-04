@@ -437,7 +437,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
   const expansionVolumeSizeModalProps = {
     item: {
-      unit: 'Mi',
+      unit: 'Gi',
     },
     hosts,
     visible: expansionVolumeSizeModalVisible,
