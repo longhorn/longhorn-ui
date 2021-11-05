@@ -1,4 +1,5 @@
 import { request } from '../utils'
+import C from '../utils/constants'
 
 export async function query(params) {
   return request({
@@ -44,7 +45,7 @@ export async function uploadChunk(url, params, headers, onProgress) {
     // eslint-disable-next-line no-undef
     const xhr = new XMLHttpRequest()
     // Manually splicing upload file path
-    let uploadUrl = url ? url.replace(/^https?.+?(:\d{2,6})?(?=\/v1)/, '') : ''
+    let uploadUrl = url ? url.replace(C.RegExp.REQUEST, '') : ''
     let baseUrl = window.__pathname_prefix__ // eslint-disable-line no-underscore-dangle
     uploadUrl = baseUrl.endsWith('/') ? `${baseUrl.substr(0, baseUrl.length - 1)}${uploadUrl}` : `${baseUrl}${uploadUrl}`
     xhr.open('post', uploadUrl)
