@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import { message } from 'antd'
+import C from '../utils/constants'
 message.config({
   top: 60,
   duration: 5,
@@ -18,7 +19,7 @@ const fetch = (options) => {
     data,
     url,
   } = options
-  url = url ? url.replace(/^https?.+?(:\d{2,6})?(?=\/v1)/, '') : ''
+  url = url ? url.replace(C.RegExp.REQUEST, '') : ''
 
   switch (method.toLowerCase()) {
     case 'get':
