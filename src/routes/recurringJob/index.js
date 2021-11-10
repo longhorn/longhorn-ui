@@ -195,6 +195,7 @@ class RecurringJob extends React.Component {
           ...me.state,
           isEdit: true,
           selected: record,
+          currentCron: record.cron,
           createRecurringJobModalVisible: true,
           createRecurringJobModalKey: Math.random(),
         })

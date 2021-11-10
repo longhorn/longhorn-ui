@@ -141,6 +141,7 @@ const modal = ({
     }
   }
   const onCronOk = () => {
+    // CronProps.cron changed by the parent component and passed on to the current component.
     setFieldsValue({
       cron: cronProps.cron,
     })
@@ -291,7 +292,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Cron" {...formItemLayout}>
           {getFieldDecorator('cron', {
-            initialValue: isEdit ? item.cron : cronProps.cron,
+            initialValue: cronProps.cron,
             rules: [
               {
                 required: true,
@@ -324,7 +325,7 @@ const modal = ({
         </Form.Item>
       </Form>
       <ModalBlur disabled={cronProps.modulerCronDisabled} {...cronProps.modalCronOpts} width={880} onCancel={() => { cronProps.onCronCancel() }} onOk={() => { onCronOk() }}>
-        <ReactCron cron={isEdit && item.cron ? item.cron : cronProps.cron} key={cronProps.ReactCronKey} saveDisabled={cronProps.saveDisabled} changeCron={cronProps.changeCron} />
+        <ReactCron cron={cronProps.cron} key={cronProps.ReactCronKey} saveDisabled={cronProps.saveDisabled} changeCron={cronProps.changeCron} />
       </ModalBlur>
     </ModalBlur>
   )
