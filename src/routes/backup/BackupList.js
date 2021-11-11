@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal, Icon, message, Tooltip, Progress } from 'antd'
+import { Table, Modal, Icon, message, Tooltip } from 'antd'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DropOption } from '../../components'
 import { formatDate } from '../../utils/formatDate'
@@ -170,21 +170,9 @@ class List extends React.Component {
         key: 'state',
         width: 150,
         render: (text, record) => {
-          if (record.state === 'InProgress') {
-            return (
-              <div style={{ paddingLeft: 15 }}>
-                <Progress percent={record.progress} />
-              </div>
-            )
-          }
-          if (record.state === 'Error') {
-            return (<div className="error">
-              <Tooltip title={record.error}>
-                <div>{text}</div>
-              </Tooltip>
-            </div>)
-          }
-          return (<div>{text}</div>)
+          return (
+            <div>{ record.state === 'InProgress' ? <Icon type="loading" /> : text}</div>
+          )
         },
       },
       {
@@ -207,10 +195,10 @@ class List extends React.Component {
         key: 'size',
         width: 100,
         sorter: (a, b) => sortTable(a, b, 'size'),
-        render: (text, record) => {
+        render: (text) => {
           return (
             <div>
-              {record.state === 'Completed' && formatMib(text)}
+              {formatMib(text)}
             </div>
           )
         },
@@ -303,7 +291,7 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {text ? formatDate(text) : ''}
+              {formatDate(text)}
             </div>
           )
         },
