@@ -95,6 +95,11 @@ export default {
             payload: queryString.parse(location.search),
           })
         }
+        // Init recurringJobs to empty array
+        dispatch({
+          type: 'setVolumeRecurringJobs',
+          payload: [],
+        })
       })
     },
   },
@@ -124,8 +129,6 @@ export default {
     *queryVolumeRecurringJobList({
       payload,
     }, { call, put }) {
-      // Init recurringJobs to empty array
-      yield put({ type: 'setVolumeRecurringJobs', payload: [] })
       if (payload.actions && payload.actions.recurringJobList) {
         const recurringJobResp = yield call(getVolumeRecurringJobList, payload.actions.recurringJobList)
         if (recurringJobResp && recurringJobResp.data) {
@@ -610,7 +613,7 @@ export default {
       return { ...state, WorkloadDetailModalVisible: false, WorkloadDetailModalKey: Math.random() }
     },
     showRecurringJobModal(state, action) {
-      return { ...state, recurringJobModalVisible: true, selected: action.payload, recurringJobModalKey: Math.random() }
+      return { ...state, recurringJobModalVisible: true, selected: action.payload, volumeRecurringJobs: [], recurringJobModalKey: Math.random() }
     },
     hideRecurringJobModal(state) {
       return { ...state, recurringJobModalVisible: false, recurringJobModalKey: Math.random() }
