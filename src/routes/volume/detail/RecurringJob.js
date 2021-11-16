@@ -78,6 +78,7 @@ class RecurringJob extends React.Component {
           this.setState({
             ...this.state,
             isEdit: false,
+            currentCron: '0 0 * * *',
             addRecurringJobModalVisible: true,
             addRecurringJobModalKey: Math.random(),
             recurringExistingJobOptions,
@@ -324,6 +325,7 @@ class RecurringJob extends React.Component {
       onOk(newRecurringJob) {
         me.setState({
           ...me.state,
+          currentCron: '0 0 * * *',
           editRecurringJobModalVisible: false,
         })
         dispatch({
@@ -370,6 +372,7 @@ class RecurringJob extends React.Component {
           ...me.state,
           isEdit: true,
           selected: record,
+          currentCron: record.cron,
           editRecurringJobModalVisible: true,
           editRecurringJobModalKey: Math.random(),
         })
