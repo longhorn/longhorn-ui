@@ -168,6 +168,8 @@ class Volume extends React.Component {
         let flag = item.revisionCounterDisabled ? 'True' : 'False'
         return flag === revisionCounterValue
       })
+    } else if (field && field === 'engineImage') {
+      volumes = filterVolume(volumes, field, value)
     }
     const volumeListProps = {
       dataSource: volumes,
@@ -463,13 +465,14 @@ class Volume extends React.Component {
         { value: 'DiskTag', name: 'Disk Tag' },
         { value: 'schedule', name: 'Scheduled' },
         { value: 'revisionCounter', name: 'Disable Revision Counter' },
+        { value: 'engineImage', name: 'Engine Image' },
       ],
       revisionCounterOption: [
         { value: 'True', name: 'True' },
         { value: 'False', name: 'False' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue, revisionCounterValue: revisionCounterPropValue } = filter
+        const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue, revisionCounterValue: revisionCounterPropValue, engineImageValue: engineImagePropValue } = filter
 
         filterField && (filterValue || filterStateValue || redundancyValue || imageUpgradableValue || schedulePropValue || pvStatusPropValue || revisionCounterPropValue) ? dispatch(routerRedux.push({
           pathname: '/volume',
@@ -483,6 +486,7 @@ class Volume extends React.Component {
             scheduleValue: schedulePropValue,
             pvStatusValue: pvStatusPropValue,
             revisionCounterValue: revisionCounterPropValue,
+            engineImageValue: engineImagePropValue,
           }),
         })) : dispatch(routerRedux.push({
           pathname: '/volume',
