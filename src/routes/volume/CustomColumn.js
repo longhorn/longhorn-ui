@@ -95,6 +95,10 @@ const modal = ({
       value: 'accessMode',
       label: 'Access Mode',
     },
+    {
+      value: 'engineImage',
+      label: 'Engine Image',
+    },
   ]
 
   const modalOpts = {

@@ -17,6 +17,7 @@ let columnArr = [
 	'recurringJobs',
 	'lastBackupAt',
 	'actualSize',
+	'engineImage',
 ]
 let pageSizeCollectionObject = {
   volumePageSize: 10,

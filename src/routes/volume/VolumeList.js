@@ -341,6 +341,20 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       },
     },
     {
+      title: 'Engine Image',
+      dataIndex: 'engineImage',
+      key: 'engineImage',
+      width: 320,
+      sorter: (a, b) => sortTable(a, b, 'engineImage'),
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Access Mode',
       dataIndex: 'accessMode',
       key: 'accessMode',
