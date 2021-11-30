@@ -115,7 +115,7 @@ class Volume extends React.Component {
     }
     const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
     const defaultDataLocalityValue = defaultDataLocalitySetting && defaultDataLocalitySetting.value ? defaultDataLocalitySetting.value : 'disabled'
-    const defaultRevisionCounterValue = defaultRevisionCounterSetting && defaultRevisionCounterSetting.value ? defaultRevisionCounterSetting.value === 'true' : false
+    const defaultRevisionCounterValue = defaultRevisionCounterSetting && defaultRevisionCounterSetting.value && defaultRevisionCounterSetting.value === 'true'
 
     const volumeFilterMap = {
       healthy: healthyVolume,
@@ -462,7 +462,7 @@ class Volume extends React.Component {
         { value: 'NodeTag', name: 'Node Tag' },
         { value: 'DiskTag', name: 'Disk Tag' },
         { value: 'schedule', name: 'Scheduled' },
-        { value: 'revisionCounter', name: 'Revision Counter' },
+        { value: 'revisionCounter', name: 'Disable Revision Counter' },
       ],
       revisionCounterOption: [
         { value: 'True', name: 'True' },
