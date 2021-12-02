@@ -52,7 +52,7 @@ const form = ({
       case 'int':
         return (<InputNumber style={{ width: '100%' }} parser={limitNumber} disabled={setting.definition.readOnly} min={0} />)
       default:
-        return (<Input readOnly={setting.definition.readOnly} checked={setting.value} />)
+        return (<Input readOnly={setting.definition.readOnly} />)
     }
   }
   const genFormItem = (setting) => {
