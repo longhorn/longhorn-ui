@@ -462,7 +462,7 @@ class Volume extends React.Component {
         { value: 'NodeTag', name: 'Node Tag' },
         { value: 'DiskTag', name: 'Disk Tag' },
         { value: 'schedule', name: 'Scheduled' },
-        { value: 'revisionCounter', name: 'Disable Revision Counter' },
+        { value: 'revisionCounter', name: 'Revision Counter Disabled' },
       ],
       revisionCounterOption: [
         { value: 'True', name: 'True' },
