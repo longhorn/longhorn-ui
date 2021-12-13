@@ -1,7 +1,7 @@
 import { create, deleteEngineImage, query } from '../services/engineimage'
 import { wsChanges, updateState } from '../utils/websocket'
-import { parse } from 'qs'
 import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   ws: null,
@@ -15,10 +15,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: queryString.parse(location.search),
-        })
+        if (enableQueryData(location.pathname, 'engineimage')) {
+          dispatch({
+            type: 'query',
+            payload: location.pathname.startsWith('/engineimage') ? queryString.parse(location.search) : {},
+          })
+        }
       })
     },
   },
@@ -26,7 +28,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       if (payload && payload.field && payload.keyword && data.data) {
         data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }

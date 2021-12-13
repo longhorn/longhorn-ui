@@ -1,10 +1,10 @@
 import { create, deleteVolume, query, execAction, recurringUpdate, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion } from '../services/volume'
 import { wsChanges, updateState } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
-import { parse } from 'qs'
 import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   namespace: 'volume',
@@ -88,10 +88,10 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (!location.pathname.endsWith('/backup')) {
+        if (enableQueryData(location.pathname, 'volume')) {
           dispatch({
             type: 'query',
-            payload: queryString.parse(location.search),
+            payload: location.pathname.startsWith('/volume') ? queryString.parse(location.search) : {},
           })
         }
       })
@@ -101,7 +101,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       if (payload && payload.field === 'id' && payload.keyword) {
         data.data = data.data.filter(item => item[payload.field].indexOf(payload.keyword) > -1)
       }
