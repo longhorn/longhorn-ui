@@ -1,8 +1,8 @@
 import { query, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags } from '../services/backup'
-import { parse } from 'qs'
 import queryString from 'query-string'
 import { sortVolumeBackups, sortTable } from '../utils/sort'
 import { getSorter, saveSorter } from '../utils/store'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   namespace: 'backup',
@@ -42,17 +42,9 @@ export default {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(() => {
-        let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
-        // This code may cause confusion. React router does not pass parameters when right-clicking on Link,
-        // resulting in no request for the page, so an Undefined judgment is added.
-
-        let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage']
-
-        isbackupVolumePage = history.location && history.location.pathname && history.location.pathname !== '/' && path.every(ele => !history.location.pathname.startsWith(ele))
-
-        if (history.location && (search.state || history.location.state || typeof (history.location.state) === 'undefined') && isbackupVolumePage) {
+      history.listen(location => {
+        if (enableQueryData(location.pathname, 'backup')) {
+          let search = history.location && history.location.search && location.pathname.startsWith('/backup') ? queryString.parse(history.location.search) : {}
           dispatch({
             type: 'query',
             payload: search,
@@ -70,7 +62,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       const filter = payload && payload.field && payload.keyword
       if (data && data.status === 200) {
         data.data.sort((a, b) => sortTable(a, b, 'name'))

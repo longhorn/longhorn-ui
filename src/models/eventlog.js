@@ -1,7 +1,7 @@
 import { query } from '../services/eventlog'
 import { wsChanges, updateState } from '../utils/websocket'
-import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   ws: null,
@@ -14,10 +14,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.query,
-        })
+        if (enableQueryData(location.pathname, 'eventlog')) {
+          dispatch({
+            type: 'query',
+            payload: {},
+          })
+        }
       })
     },
   },
@@ -25,7 +27,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       yield put({ type: 'queryEventlog', payload: { ...data } })
     },
     *startWS({

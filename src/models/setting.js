@@ -1,6 +1,6 @@
 import { query, update } from '../services/setting'
 import { wsChanges, updateState } from '../utils/websocket'
-import { parse } from 'qs'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   ws: null,
@@ -13,10 +13,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.query,
-        })
+        if (enableQueryData(location.pathname, 'setting')) {
+          dispatch({
+            type: 'query',
+            payload: {},
+          })
+        }
       })
     },
   },
@@ -24,7 +26,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       yield put({ type: 'querySetting', payload: { ...data } })
     },
     *update({ payload }, { call, put, select }) {
