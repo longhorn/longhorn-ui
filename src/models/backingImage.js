@@ -1,9 +1,9 @@
 import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk } from '../services/backingImage'
-import { parse } from 'qs'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   ws: null,
@@ -26,10 +26,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.pathname === '/backingImage' ? queryString.parse(location.search) : '',
-        })
+        if (enableQueryData(location.pathname, 'backingImage')) {
+          dispatch({
+            type: 'query',
+            payload: location.pathname.startsWith('/backingImage') ? queryString.parse(location.search) : {},
+          })
+        }
       })
     },
   },
@@ -37,7 +39,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       if (payload && payload.field && payload.keyword && data.data) {
         data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.keyword.trim()) > -1)
       }

@@ -1,9 +1,9 @@
 import { query, toggleScheduling, updateDisk, deleteHost, getInstancemanagers } from '../services/host'
 import { execAction } from '../services/volume'
 import { wsChanges, updateState } from '../utils/websocket'
-import { parse } from 'qs'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   namespace: 'host',
@@ -32,10 +32,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: queryString.parse(location.search),
-        })
+        if (enableQueryData(location.pathname, 'host')) {
+          dispatch({
+            type: 'query',
+            payload: location.pathname.startsWith('/node') ? queryString.parse(location.search) : {},
+          })
+        }
       })
     },
   },
@@ -43,7 +45,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       if (data.data) {
         data.data.sort((a, b) => a.name.localeCompare(b.name))
       }
