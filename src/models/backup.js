@@ -1,10 +1,10 @@
 import { query, queryBackupList, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
-import { parse } from 'qs'
 import { message } from 'antd'
 import { wsChanges } from '../utils/websocket'
 import queryString from 'query-string'
 import { sortTable } from '../utils/sort'
 import { getSorter, saveSorter, getBackupVolumeName } from '../utils/store'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   namespace: 'backup',
@@ -50,26 +50,28 @@ export default {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(() => {
-        let search = history.location && history.location.search ? queryString.parse(history.location.search) : {}
-        if (getBackupVolumeName(search)) {
-          // In backup detail page
+      history.listen(location => {
+        if (enableQueryData(location.pathname, 'backup')) {
+          let search = history.location && history.location.search && location.pathname.startsWith('/backup') ? queryString.parse(history.location.search) : {}
+          if (getBackupVolumeName(search)) {
+            // In backup detail page
+            dispatch({
+              type: 'queryBackup',
+              payload: search,
+            })
+          } else {
+            dispatch({
+              type: 'queryBackupVolume',
+              payload: search,
+            })
+          }
+          dispatch({ type: 'queryBackupTarget', payload: { history } })
+          // Record search params for volume detail page
           dispatch({
-            type: 'queryBackup',
-            payload: search,
-          })
-        } else {
-          dispatch({
-            type: 'queryBackupVolume',
-            payload: search,
+            type: 'recordSearch',
+            payload: { search },
           })
         }
-        dispatch({ type: 'queryBackupTarget', payload: { history } })
-        // Record search params for volume detail page
-        dispatch({
-          type: 'recordSearch',
-          payload: { search },
-        })
       })
     },
   },
@@ -77,13 +79,12 @@ export default {
     *queryBackupVolume({
       payload,
     }, { call, put }) {
-      const search = parse(payload)
-      const resp = yield call(query, search)
+      const resp = yield call(query, payload)
       if (resp && resp.status === 200) {
         resp.data.sort((a, b) => sortTable(a, b, 'name'))
-        if (search && search.field === 'name' && search.value !== '') {
+        if (payload && payload.field === 'name' && payload.value !== '') {
           resp.data = resp.data.filter((item) => {
-            return item.id.includes(search.value)
+            return item.id.includes(payload.value)
           })
         }
         yield put({ type: 'setBackupVolumes', payload: { backupVolumes: resp.data || [] } })
@@ -93,8 +94,7 @@ export default {
     *queryBackup({
       payload,
     }, { call, put }) {
-      const search = parse(payload)
-      const resp = yield call(queryBackupList, search.keyword)
+      const resp = yield call(queryBackupList, payload.keyword)
       if (resp && resp.status === 200) {
         resp.data.sort((a, b) => sortTable(a, b, 'id'))
         yield put({ type: 'setBackups', payload: { backupData: resp.data || [] } })
