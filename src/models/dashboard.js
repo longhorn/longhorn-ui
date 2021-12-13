@@ -1,5 +1,6 @@
 import { query } from '../services/dashboard'
-import { parse } from 'qs'
+import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   namespace: 'dashboard',
@@ -9,10 +10,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.query,
-        })
+        if (enableQueryData(location.pathname, 'dashboard')) {
+          dispatch({
+            type: 'query',
+            payload: location.pathname.startsWith('/dashboard') ? queryString.parse(location.search) : {},
+          })
+        }
       })
     },
   },
@@ -20,7 +23,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       yield put({ type: 'queryDashboard', payload: { ...data } })
     },
   },
