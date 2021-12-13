@@ -127,6 +127,18 @@ const allWs = [{
   key: 'backups',
 }]
 
+const httpDataDependency = {
+  '/dashboard': ['volume', 'host', 'eventlog'],
+  '/node': ['volume', 'host', 'setting'],
+  '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob'],
+  '/engineimage': ['engineimage'],
+  '/recurringJob': ['recurringJob'],
+  '/backingImage': ['volume', 'backingImage'],
+  '/setting': ['setting'],
+  '/backup': ['host', 'setting', 'backingImage', 'backup'],
+  '/instanceManager': ['volume', 'instanceManager'],
+}
+
 export function getDataDependency(pathName) {
   let keys = Object.keys(dependency).filter((key) => {
     if (pathName && dependency[key].path) {
@@ -148,4 +160,15 @@ export function getDataDependency(pathName) {
   }
 
   return null
+}
+
+export function enableQueryData(pathName, ns) {
+  let canQueryData = false
+
+  // Determining whether other dependencies model need to request data
+  if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key) && httpDataDependency[key].find((item) => item === ns)) || pathName === '/') {
+    canQueryData = true
+  }
+
+  return canQueryData
 }

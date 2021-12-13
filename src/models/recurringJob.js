@@ -1,7 +1,7 @@
 import { query, create, update, deleteRecurringJob } from '../services/recurringJob'
-import { parse } from 'qs'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   ws: null,
@@ -14,10 +14,12 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        dispatch({
-          type: 'query',
-          payload: location.pathname === '/recurringJob' ? queryString.parse(location.search) : '',
-        })
+        if (enableQueryData(location.pathname, 'recurringJob')) {
+          dispatch({
+            type: 'query',
+            payload: location.pathname.startsWith('/recurringJob') ? queryString.parse(location.search) : {},
+          })
+        }
       })
     },
   },
@@ -25,7 +27,7 @@ export default {
     *query({
       payload,
     }, { call, put }) {
-      const data = yield call(query, parse(payload))
+      const data = yield call(query, payload)
       yield put({ type: 'queryRecurringJob', payload: { ...data } })
     },
     *create({
