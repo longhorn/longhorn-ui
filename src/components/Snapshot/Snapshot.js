@@ -109,7 +109,8 @@ function SnapshotIcon(props, snapshotProps) {
   )
   let snapshotObject = formatSnapshot(snapshotProps.volume, props)
   let backupStatusObject = snapshotObject.backupStatusObject
-  let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError && backupStatusObject.backupError.length > 0 ? <div>{ backupStatusObject.backupError.map((ele, index) => {
+  let backupStatusHasError = backupStatusObject && backupStatusObject.backupError && backupStatusObject.backupError.length > 0
+  let backupStatusErrorMsg = backupStatusHasError ? <div>{ backupStatusObject.backupError.map((ele, index) => {
     return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : 'Error'}: {ele.error}</p>
   }) }</div> : ''
 
@@ -119,6 +120,10 @@ function SnapshotIcon(props, snapshotProps) {
     backgroundColor = '#33AB65'
   } else if (!snapshotObject.usercreated) {
     backgroundColor = '#F1C40F'
+  }
+
+  if (backupStatusHasError) {
+    backgroundColor = '#F15354'
   }
 
   return (
@@ -151,7 +156,7 @@ function SnapshotIcon(props, snapshotProps) {
         <div>
           <div className="tree-snapshot-icon" style={{ background: backgroundColor }}>
             <Icon className="snapshot-icon" type="camera" />
-            { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-5px', left: '-5px' }}>
+            { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 && !backupStatusHasError ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-5px', left: '-5px' }}>
                 <Progress type="circle" percent={backupStatusObject.progress} width={40} />
               </div> : ''
             }
