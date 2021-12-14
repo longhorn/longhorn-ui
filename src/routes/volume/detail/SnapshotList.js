@@ -60,7 +60,7 @@ class SnapshotList extends React.Component {
         title: 'Size',
         key: 'size',
         render: (record) => {
-          return (<div>{formatMib(record.size)}</div>)
+          return (<div>{record.backupStatusObject && record.backupStatusObject.size ? formatMib(record.backupStatusObject.size) : formatMib(record.size)}</div>)
         },
       },
       {
