@@ -136,7 +136,7 @@ function SnapshotIcon(props, snapshotProps) {
         title={<div>
         <p className="snapshot-name">Name: {snapshotObject.name}</p>
         <p className="snapshot-created">Created: {snapshotObject.created}</p>
-        <p className="snapshot-name">Size: {formatMib(snapshotObject.size)}</p>
+        <p className="snapshot-name">Size: {backupStatusObject && backupStatusObject.size ? formatMib(backupStatusObject.size) : formatMib(snapshotObject.size)}</p>
         <p className="snapshot-name">Created By User: {snapshotObject.usercreated ? 'True' : 'False'}</p>
         <p className="snapshot-name">Removed: {snapshotObject.removed ? 'True' : 'False'}</p>
         {

@@ -68,6 +68,8 @@ export function formatSnapshot(selectVolume, snapshot) {
       backupStatusObject.snapshot = snapshot.name
       backupStatusObject.replicas = backupStatusObjectList.filter(item => item.replica).map(item => item.replica).join(', ')
       backupStatusObject.backupIds = backupStatusObjectList.filter(item => item.id).map(item => item.id).join(',')
+      // Backup Size
+      backupStatusObject.size = backupStatusObjectList[0] && backupStatusObjectList[0].size ? backupStatusObjectList[0].size : '0'
     }
   }
 
