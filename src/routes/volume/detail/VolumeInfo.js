@@ -14,9 +14,11 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   let errorMsg = null
   const state = snapshotModalState
 
-  const attchedNodeIsDown = selectedVolume.state === 'attached' && selectedVolume.robustness === 'unknown' && hosts && hosts.some((host) => {
-    return selectedVolume.controllers && selectedVolume.controllers[0] && host.id === selectedVolume.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
-  })
+  let attchedNodeIsDown = () => {
+    let attchedNode = hosts.find((host) => selectedVolume.controllers && selectedVolume.controllers[0] && host.id === selectedVolume.controllers[0].hostId)
+    let attchedNodeHasError = attchedNode === undefined || (attchedNode && attchedNode.conditions && attchedNode.conditions.Ready && attchedNode.conditions.Ready.status === 'False')
+    return selectedVolume.state === 'attached' && selectedVolume.robustness === 'unknown' && attchedNodeHasError
+  }
 
   const dataLocalityWarn = selectedVolume.dataLocality === 'best-effort' && selectedVolume.state === 'attached' && selectedVolume.replicas && selectedVolume.replicas.every((item) => {
     let attachedNode = selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].hostId ? selectedVolume.controllers[0].hostId : ''
@@ -163,7 +165,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row} style={{ display: 'flex', alignItems: 'center' }}>
         <span className={styles.label}> Health:</span>
-        {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 8 }} type="api" /></Tooltip> : ''}
+        {attchedNodeIsDown() ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 8 }} type="api" /></Tooltip> : ''}
         <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
           {ha} {healthState}
         </span>
