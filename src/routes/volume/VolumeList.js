@@ -112,9 +112,11 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
         } else if (isVolumeRelicaLimited(record) && replicaSoftAntiAffinitySettingValue) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
-        let attchedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
-          return record.controllers && record.controllers[0] && host.id === record.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
-        })
+        let attchedNodeIsDown = () => {
+          let attchedNode = hosts.find((host) => record.controllers && record.controllers[0] && host.id === record.controllers[0].hostId)
+          let attchedNodeHasError = attchedNode === undefined || (attchedNode && attchedNode.conditions && attchedNode.conditions.Ready && attchedNode.conditions.Ready.status === 'False')
+          return record.state === 'attached' && record.robustness === 'unknown' && attchedNodeHasError
+        }
         let dataLocalityWarn = record.dataLocality === 'best-effort' && record.state === 'attached' && record.replicas && record.replicas.every((item) => {
           let attachedNode = record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''
           return item.hostId !== attachedNode
@@ -124,7 +126,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
             return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
-          } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
+          } else if (text.hyphenToHump() === 'attached' && (record.robustness === 'degraded' || record.robustness === 'unknown')) {
             return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
           } else if (text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
             return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
@@ -145,7 +147,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
             {isEncrypted ? <Tooltip title={'Encrypted Volume'}><Icon className="color-warning" style={{ marginRight: 5, marginBottom: 2 }} type="lock" /></Tooltip> : null}
             {statusUpgradingEngine(record)}
             {upgrade}
-            {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
+            {attchedNodeIsDown() ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
             {stateText}
             {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
             {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
