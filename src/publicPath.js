@@ -23,6 +23,7 @@ let pageSizeCollectionObject = {
   backupPageSize: 10,
   backupDetailPageSize: 10,
   hostPageSize: 10,
+  instanceManagerSize: 10,
 }
 if (column) {
   columnArr = JSON.parse(column)

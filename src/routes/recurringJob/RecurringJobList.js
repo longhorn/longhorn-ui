@@ -99,7 +99,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
   return (
     <div id="recurringJobTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
-        className="recurringJob-table-class"
+        className="common-table-class"
         bordered={false}
         columns={columns}
         rowSelection={rowSelection}
