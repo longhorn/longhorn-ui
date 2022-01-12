@@ -97,6 +97,13 @@ const dependency = {
       key: 'backups',
     }],
   },
+  instanceManager: {
+    path: '/instanceManager',
+    runWs: [{
+      ns: 'volume',
+      key: 'volumes',
+    }],
+  },
 }
 const allWs = [{
   ns: 'volume',
