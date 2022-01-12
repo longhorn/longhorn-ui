@@ -73,7 +73,7 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
   return (
     <div id="backingImageTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
-        className="backupImage-table-class"
+        className="common-table-class"
         bordered={false}
         columns={columns}
         rowSelection={rowSelection}

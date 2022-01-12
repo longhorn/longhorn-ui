@@ -124,12 +124,6 @@ class Volume extends React.Component {
       detached: detachedVolume,
       faulted: faultedVolume,
     }
-    data.forEach(vol => {
-      const found = hosts.find(h => vol.controller && h.id === vol.controller.hostId)
-      if (found) {
-        vol.host = found.name
-      }
-    })
     let volumes = data
     if (field && field === 'status' && volumeFilterMap[stateValue]) {
       volumes = volumeFilterMap[stateValue](volumes)
