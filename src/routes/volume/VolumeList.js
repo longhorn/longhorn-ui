@@ -408,7 +408,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
   return (
     <div id="volumeTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
-        className="volume-table-class"
+        className="common-table-class"
         rowSelection={rowSelection}
         bordered={false}
         columns={columns}
