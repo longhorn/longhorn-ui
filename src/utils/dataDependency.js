@@ -78,6 +78,13 @@ const dependency = {
       key: 'backingimages',
     }],
   },
+  instanceManager: {
+    path: '/instanceManager',
+    runWs: [{
+      ns: 'volume',
+      key: 'volumes',
+    }],
+  },
 }
 const allWs = [{
   ns: 'volume',
