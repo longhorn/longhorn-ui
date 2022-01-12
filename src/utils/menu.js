@@ -54,6 +54,12 @@ module.exports = [
         name: 'Backing Image',
         icon: 'file-image',
       },
+      {
+        show: true,
+        key: 'instanceManager',
+        name: 'Instance Manager Image',
+        icon: 'apartment',
+      },
     ],
   },
 ]
