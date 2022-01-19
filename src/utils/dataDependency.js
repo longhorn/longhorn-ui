@@ -137,7 +137,7 @@ const allWs = [{
 const httpDataDependency = {
   '/dashboard': ['volume', 'host', 'eventlog'],
   '/node': ['volume', 'host', 'setting'],
-  '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob'],
+  '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
   '/recurringJob': ['recurringJob'],
   '/backingImage': ['volume', 'backingImage'],
@@ -173,7 +173,7 @@ export function enableQueryData(pathName, ns) {
   let canQueryData = false
 
   // Determining whether other dependencies model need to request data
-  if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key) && httpDataDependency[key].find((item) => item === ns)) || pathName === '/') {
+  if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key) && httpDataDependency[key].find((item) => item === ns))) {
     canQueryData = true
   }
 
