@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal } from 'antd'
+import { Button, Modal, Alert } from 'antd'
 
 const confirm = Modal.confirm
 
@@ -10,6 +10,11 @@ function bulkActions({ selectedRows, deleteRecurringJob }) {
       case 'delete':
         confirm({
           title: `Are you sure you want to delete Recurring Job ${selectedRows.map(item => item.name).join(',')} ?`,
+          content: <Alert
+            description={`If one of the recurring job (${selectedRows.map(item => item.name).join(',')}) is the last one of a job group, Longhorn will remove the group from all volumes automatically.`}
+            type="warning"
+          />,
+          width: 760,
           onOk() {
             deleteRecurringJob(selectedRows)
           },
