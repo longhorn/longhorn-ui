@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal } from 'antd'
+import { Modal, Alert } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
@@ -10,6 +10,11 @@ function actions({ selected, deleteRecurringJob, editRecurringJob }) {
       case 'delete':
         confirm({
           title: `Are you sure you want to delete Recurring Job ${record.name} ?`,
+          content: <Alert
+            description={`If the recurring job ${record.name} is the last one of a job group, Longhorn will remove the group from all volumes automatically.`}
+            type="warning"
+          />,
+          width: 760,
           onOk() {
             deleteRecurringJob(record)
           },
