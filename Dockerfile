@@ -26,4 +26,4 @@ COPY --from=builder /web/nginx.conf.template /etc/nginx/nginx.conf.template
 EXPOSE 8000
 ENV LONGHORN_MANAGER_IP http://localhost:9500
 
-CMD ["/bin/bash", "-c", "envsubst '${LONGHORN_MANAGER_IP}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/bash", "-c", "mkdir -p /var/config/nginx/ && cp -r /etc/nginx/* /var/config/nginx/; envsubst '${LONGHORN_MANAGER_IP}' < /etc/nginx/nginx.conf.template > /var/config/nginx/nginx.conf && nginx -c /var/config/nginx/nginx.conf -g 'daemon off;'"]
