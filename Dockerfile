@@ -26,4 +26,7 @@ COPY --from=builder /web/nginx.conf.template /etc/nginx/nginx.conf.template
 EXPOSE 8000
 ENV LONGHORN_MANAGER_IP http://localhost:9500
 
+RUN useradd -r -u 1000 longhorn
+USER 1000
+
 CMD ["/bin/bash", "-c", "mkdir -p /var/config/nginx/ && cp -r /etc/nginx/* /var/config/nginx/; envsubst '${LONGHORN_MANAGER_IP}' < /etc/nginx/nginx.conf.template > /var/config/nginx/nginx.conf && nginx -c /var/config/nginx/nginx.conf -g 'daemon off;'"]
