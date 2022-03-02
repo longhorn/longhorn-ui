@@ -280,7 +280,7 @@ class List extends React.Component {
     return (
       <div id="backTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
-          className="back-table-class"
+          className="common-table-class"
           rowSelection={rowSelection}
           locale={locale}
           bordered={false}

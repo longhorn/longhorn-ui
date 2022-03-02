@@ -87,7 +87,6 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail 
   return (
     <div>
       <Table
-        className="common-table-class"
         bordered={false}
         columns={columns}
         dataSource={dataSource}
