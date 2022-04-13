@@ -88,11 +88,11 @@ class EngineImage extends React.Component {
     return (
       <div className="content-inner">
         <Row gutter={24}>
-          <Col lg={{ offset: 18, span: 6 }} md={{ offset: 16, span: 8 }} sm={24} xs={24} style={{ marginBottom: 16 }}>
+          <Col lg={{ offset: 18, span: 6 }} md={{ offset: 16, span: 8 }} sm={24} xs={24} className="filter-input">
             <Filter {...engineImageFilterProps} />
           </Col>
         </Row>
-        <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addEngineImage}>Deploy Engine Image</Button>
+        <Button className="out-container-button" size="large" type="primary" onClick={addEngineImage}>Deploy Engine Image</Button>
         <EngineImageList {...engineImageListProps} />
         { createEngineImageModalVisible ? <CreateEngineImage key={createEngineImageModalKey} {...createEngineImageModalProps} /> : ''}
       </div>

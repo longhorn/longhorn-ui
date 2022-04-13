@@ -8,6 +8,7 @@ import { Filter } from '../../components/index'
 import RecurringJobBulkActions from './RecurringJobBulkActions'
 import queryString from 'query-string'
 import { Row, Col, Button } from 'antd'
+import C from '../../utils/constants'
 
 class RecurringJob extends React.Component {
   constructor(props) {
@@ -29,12 +30,12 @@ class RecurringJob extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('recurringJobTable').offsetHeight - 109
+    let height = document.getElementById('recurringJobTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('recurringJobTable').offsetHeight - 109
+      height = document.getElementById('recurringJobTable').offsetHeight - C.ContainerMarginHeight
       this.setState({
         height,
       })
@@ -233,13 +234,19 @@ class RecurringJob extends React.Component {
         dispatch({
           type: 'recurringJob/bulkDelete',
           payload: record,
+          callback: () => {
+            me.setState({
+              ...me.state,
+              selectedRows: [],
+            })
+          },
         })
       },
     }
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
-        <Row gutter={24} style={{ marginBottom: 16 }}>
+        <Row gutter={24} className="filter-input">
           <Col lg={{ span: 4 }} md={{ span: 6 }} sm={24} xs={24}>
             <RecurringJobBulkActions {...recurringJobBulkActionsProps} />
           </Col>
@@ -247,7 +254,7 @@ class RecurringJob extends React.Component {
             <Filter {...recurringJobFilterProps} />
           </Col>
         </Row>
-        <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={this.showCreateRecurringJobModal}>Create Recurring Job</Button>
+        <Button className="out-container-button" size="large" type="primary" onClick={this.showCreateRecurringJobModal}>Create Recurring Job</Button>
         {this.state.createRecurringJobModalVisible && <CreateRecurringJob key={this.createRecurringJobModalKey} {...createRecurringJobModalProps} />}
         <RecurringJobList {...recurringJobListProps} />
       </div>

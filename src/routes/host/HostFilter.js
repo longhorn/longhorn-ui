@@ -94,7 +94,7 @@ class HostFilter extends React.Component {
             <HostBulkActions {...this.state.HostBulkActionsProps} commandKeyDown={this.state.commandKeyDown} selectedRows={selectedHostRows} />
           </div>
         </Col>
-        <Col lg={8} md={10} sm={24} xs={24} style={{ marginBottom: 16 }}>
+        <Col lg={8} md={10} sm={24} xs={24}>
           <Filter {...searchGroupProps} />
         </Col>
       </Row>

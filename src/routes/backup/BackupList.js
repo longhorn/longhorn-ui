@@ -9,6 +9,7 @@ import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import style from './backupList.less'
+import C from '../../utils/constants'
 
 const confirm = Modal.confirm
 
@@ -53,12 +54,12 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backDetailTable').offsetHeight - 109
+    let height = document.getElementById('backDetailTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('backDetailTable').offsetHeight - 109
+      height = document.getElementById('backDetailTable').offsetHeight - C.ContainerMarginHeight
       this.setState({
         height,
       })
@@ -363,7 +364,7 @@ class List extends React.Component {
           simple
           pagination={pagination('backupPageSize')}
           rowKey={record => record.id}
-          scroll={{ x: 1550, y: this.state.height }}
+          scroll={{ x: 1550, y: dataSource.length > 0 ? this.state.height : 1 }}
         />
       </div>
     )

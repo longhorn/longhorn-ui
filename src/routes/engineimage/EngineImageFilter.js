@@ -23,7 +23,7 @@ const EngineImageFilter = ({
 
   return (
     <Row gutter={24}>
-      <Col lg={6} md={8} sm={16} xs={24} style={{ marginBottom: 16 }}>
+      <Col lg={6} md={8} sm={16} xs={24} className="filter-input">
         <Search {...searchGroupProps} />
       </Col>
 
