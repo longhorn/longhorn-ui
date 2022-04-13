@@ -31,6 +31,7 @@ import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
 import { genAttachHostModalProps, getEngineUpgradeModalProps, getBulkEngineUpgradeModalProps, getUpdateReplicaCountModalProps, getUpdateBulkReplicaCountModalProps, getUpdateDataLocalityModalProps, getUpdateBulkDataLocalityModalProps, getUpdateAccessModeModalProps, getUpdateBulkAccessModeModalProps, getUpdateReplicaAutoBalanceModalProps } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
+import C from '../../utils/constants'
 
 const confirm = Modal.confirm
 
@@ -53,12 +54,12 @@ class Volume extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('volumeTable').offsetHeight - 109
+    let height = document.getElementById('volumeTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('volumeTable').offsetHeight - 109
+      height = document.getElementById('volumeTable').offsetHeight - C.ContainerMarginHeight
       this.setState({
         height,
       })
@@ -974,12 +975,12 @@ class Volume extends React.Component {
           <Col lg={17} md={15} sm={24} xs={24}>
             <VolumeBulkActions {...volumeBulkActionsProps} />
           </Col>
-          <Col lg={7} md={9} sm={24} xs={24} style={{ marginBottom: 16 }}>
+          <Col lg={7} md={9} sm={24} xs={24}>
             <Filter {...volumeFilterProps} />
           </Col>
         </Row>
-        <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" onClick={addVolume}>Create Volume</Button>
-        <Button style={{ position: 'absolute', top: '-50px', right: '150px' }} size="large" type="primary" onClick={customColumn}>Custom Column</Button>
+        <Button className="out-container-button" size="large" type="primary" onClick={addVolume}>Create Volume</Button>
+        <Button style={{ position: 'absolute', top: '-46px', right: '150px' }} size="large" type="primary" onClick={customColumn}>Custom Column</Button>
         <VolumeList {...volumeListProps} />
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
         {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}

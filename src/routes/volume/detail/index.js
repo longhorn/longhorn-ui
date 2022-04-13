@@ -505,45 +505,49 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   }
 
   return (
-    <div style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
-      <Row gutter={24}>
-        <Col md={{ offset: 16, span: 8 }} style={{ marginBottom: 16, textAlign: 'right' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div>
+        <Col className="out-container-button" md={{ offset: 16, span: 8 }} style={{ marginBottom: 16, textAlign: 'right' }}>
           <VolumeActions {...volumeActionsProps} selected={selectedVolume} />
         </Col>
-        <Col md={8} xs={24} className={styles.col}>
-          <Card title="Volume Details" bordered={false} {...bodyStyle}>
-            <VolumeInfo {...backupStatusProps} />
-          </Card>
-        </Col>
-        <Col md={16} xs={24} style={{ marginBottom: 16 }}>
-          <Card title="Replicas" bordered={false} {...bodyStyle}>
-            <ReplicaList {...replicaListProps} />
-          </Card>
-        </Col>
-        <Col xs={24} style={{ marginBottom: 16 }}>
-          <Snapshots {...snapshotsProp} />
-        </Col>
-        <Col xs={24} style={{ marginBottom: 16 }}>
-          <RecurringJob {...recurringJobProps} />
-        </Col>
-        <Col style={{ marginBottom: 10 }} xs={24}>
-          <SnapshotList {...snapshotListProps} />
-        </Col>
-        <Col xs={24}>
-          <EventList {...eventListProps} />
-        </Col>
-      </Row>
-      {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
-      {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
-      {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
-      {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : ''}
-      {updateAccessModeModalVisible ? <UpdateAccessMode key={updateAccessModeModalKey} {...updateAccessModeModalProps} /> : ''}
-      {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
-      {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
-      {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
-      {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
-      {confirmModalWithWorkloadVisible ? <ConfirmModalWithWorkload key={confirmModalWithWorkloadKey} {...confirmModalWithWorkloadProps} /> : ''}
-      {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
+      </div>
+      <div style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
+        <Row gutter={24}>
+          <Col md={8} xs={24} className={styles.col}>
+            <Card title="Volume Details" bordered={false} {...bodyStyle}>
+              <VolumeInfo {...backupStatusProps} />
+            </Card>
+          </Col>
+          <Col md={16} xs={24} style={{ marginBottom: 16 }}>
+            <Card title="Replicas" bordered={false} {...bodyStyle}>
+              <ReplicaList {...replicaListProps} />
+            </Card>
+          </Col>
+          <Col xs={24} style={{ marginBottom: 16 }}>
+            <Snapshots {...snapshotsProp} />
+          </Col>
+          <Col xs={24} style={{ marginBottom: 16 }}>
+            <RecurringJob {...recurringJobProps} />
+          </Col>
+          <Col style={{ marginBottom: 10 }} xs={24}>
+            <SnapshotList {...snapshotListProps} />
+          </Col>
+          <Col xs={24}>
+            <EventList {...eventListProps} />
+          </Col>
+        </Row>
+        {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
+        {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
+        {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
+        {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : ''}
+        {updateAccessModeModalVisible ? <UpdateAccessMode key={updateAccessModeModalKey} {...updateAccessModeModalProps} /> : ''}
+        {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
+        {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
+        {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
+        {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
+        {confirmModalWithWorkloadVisible ? <ConfirmModalWithWorkload key={confirmModalWithWorkloadKey} {...confirmModalWithWorkloadProps} /> : ''}
+        {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
+      </div>
     </div>
   )
 }

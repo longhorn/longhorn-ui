@@ -296,7 +296,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
         <Col lg={18} md={16} sm={24} xs={24}>
           <BackupBulkActions {...backupBulkActionsProps} />
         </Col>
-        <Col lg={6} md={8} sm={24} xs={24} style={{ marginBottom: 16 }}>
+        <Col lg={6} md={8} sm={24} xs={24}>
           <Filter key={backupFilterKey} {...volumeFilterProps} />
         </Col>
       </Row>

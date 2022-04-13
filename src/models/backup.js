@@ -289,6 +289,7 @@ export default {
     }, { call, put, select }) {
       yield call(deleteAllBackups, payload)
       const search = yield select(store => { return store.backup.search })
+      yield put({ type: 'clearSelection' })
       yield put({ type: 'query', payload: { ...search } })
     },
     *startWS({
