@@ -117,8 +117,8 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
         dataSource={dataSource}
         rowKey={record => record.name}
         loading={loading}
-        height={`${height}px`}
-        scroll={{ x: columnWidth, y: height }}
+        height={`${dataSource.length > 0 ? height : 1}px`}
+        scroll={{ x: columnWidth, y: dataSource.length > 0 ? height : 1 }}
         pagination={pagination('instanceManagerSize')}
         simple
       />

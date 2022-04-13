@@ -10,6 +10,7 @@ import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import queryString from 'query-string'
 import style from './backupList.less'
+import C from '../../utils/constants'
 
 class List extends React.Component {
   constructor(props) {
@@ -21,12 +22,12 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backTable').offsetHeight - 109
+    let height = document.getElementById('backTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('backTable').offsetHeight - 109
+      height = document.getElementById('backTable').offsetHeight - C.ContainerMarginHeight
       this.setState({
         height,
       })
@@ -297,7 +298,7 @@ class List extends React.Component {
           simple
           pagination={pagination('backupDetailPageSize')}
           rowKey={record => record.id}
-          scroll={{ x: columnWidth, y: this.state.height }}
+          scroll={{ x: columnWidth, y: dataSource.length > 0 ? this.state.height : 1 }}
         />
       </div>
     )

@@ -48,16 +48,20 @@ export default {
     },
     *delete({
       payload,
+      callback,
     }, { call, put }) {
       yield call(deleteRecurringJob, payload)
+      if (callback) callback()
       yield put({ type: 'query' })
     },
     *bulkDelete({
       payload,
+      callback,
     }, { call, put }) {
       if (payload && payload.length > 0) {
         yield payload.map(item => call(deleteRecurringJob, item))
       }
+      if (callback) callback()
       yield put({ type: 'query' })
     },
     *startWS({

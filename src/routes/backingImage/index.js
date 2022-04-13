@@ -10,6 +10,7 @@ import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
 import queryString from 'query-string'
 import style from './BackingImage.less'
+import C from '../../utils/constants'
 
 class BackingImage extends React.Component {
   constructor(props) {
@@ -21,12 +22,12 @@ class BackingImage extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backingImageTable').offsetHeight - 109
+    let height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('backingImageTable').offsetHeight - 109
+      height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
       this.setState({
         height,
       })
@@ -261,7 +262,7 @@ class BackingImage extends React.Component {
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
-        <Row gutter={24} style={{ marginBottom: 16 }}>
+        <Row gutter={24} style={{ marginBottom: 8 }}>
           <Col lg={{ span: 4 }} md={{ span: 6 }} sm={24} xs={24}>
             <BackingImageBulkActions {...backingImageBulkActionsProps} />
           </Col>
@@ -275,7 +276,7 @@ class BackingImage extends React.Component {
             <span>Uploading</span>
           </div>
         </div> : ''}
-        <Button style={{ position: 'absolute', top: '-50px', right: '0px' }} size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>Create Backing Image</Button>
+        <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>Create Backing Image</Button>
         <BackingImageList {...backingImageListProps} />
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}
