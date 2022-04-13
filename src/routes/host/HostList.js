@@ -12,6 +12,7 @@ import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formater'
 import { pagination } from '../../utils/page'
 import { ModalBlur } from '../../components'
+import C from '../../utils/constants'
 
 class List extends React.Component {
   constructor(props) {
@@ -32,12 +33,12 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('hostTable').offsetHeight - 109
+    let height = document.getElementById('hostTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
     window.onresize = () => {
-      height = document.getElementById('hostTable').offsetHeight - 109
+      height = document.getElementById('hostTable').offsetHeight - C.ContainerMarginHeight
       this.setState({
         height,
       })
@@ -424,7 +425,7 @@ class List extends React.Component {
           pagination={pagination('hostPageSize')}
           rowSelection={this.state.rowSelection}
           rowKey={record => record.id}
-          scroll={{ x: 1440, y: this.state.height }}
+          scroll={{ x: 1440, y: dataSource.length > 0 ? this.state.height : 0 }}
         />
         <ModalBlur width={980} title={'Components'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
           <InstanceManagerComponent defaultInstanceManager={defaultInstanceManager} defaultEngineImage={defaultEngineImage} currentNode={currentNode} />

@@ -82,7 +82,7 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
         simple
         pagination={pagination}
         rowKey={record => record.id}
-        scroll={{ x: 970, y: height }}
+        scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
       />
     </div>
   )

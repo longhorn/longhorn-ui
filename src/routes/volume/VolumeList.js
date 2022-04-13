@@ -159,13 +159,21 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Name',
       dataIndex: 'id',
       key: 'id',
-      width: 160,
+      width: 200,
       sorter: (a, b) => sortTable(a, b, 'id'),
       render: (text, record) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LinkTo style={{ display: 'flex', alignItems: 'center', wordBreak: 'break-word' }} to={{ pathname: `/volume/${text}` }}>
-              {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume'}><div style={{ marginRight: '5px', display: 'flex', alignItems: 'center' }}><IconStandBackup fill={volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'} /></div></Tooltip> : ''}{isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}><Icon style={{ marginRight: 5 }} type="exclamation-circle-o" className={'error'} /></Tooltip> : null} {text}
+            {record.standby ? <Tooltip title={volumeRestoring(record) ? 'Disaster Recovery Volume restore in progress' : 'Disaster Recovery Volume'}>
+              <div style={{ marginRight: '5px', display: 'flex', alignItems: 'center' }}>
+                <IconStandBackup fill={volumeRestoring(record) ? 'rgba(0, 0, 0, 0.25)' : '#00C1DE'} />
+              </div>
+            </Tooltip> : ''}
+            {isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}>
+              <Icon style={{ marginRight: 5 }} type="exclamation-circle-o" className={'error'} />
+            </Tooltip> : null}
+            <LinkTo style={{ display: 'flex', alignItems: 'center', wordBreak: 'break-all' }} to={{ pathname: `/volume/${text}` }}>
+              {text}
             </LinkTo>
           </div>
         )
@@ -233,7 +241,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
       sorter: (a, b) => sortTableByPVC(a, b, 'kubernetesStatus'),
-      width: 140,
+      width: 120,
       render: (text) => {
         let title = (<div>
           <div><span>PV Name</span><span>: </span><span>{text.pvName}</span></div>
@@ -269,7 +277,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       title: 'Namespace',
       dataIndex: 'kubernetesStatus',
       key: 'namespace',
-      width: 160,
+      width: 140,
       sorter: (a, b) => sortTableObject(a, b, 'kubernetesStatus', 'namespace'),
       render: (text) => {
         return (
@@ -425,8 +433,8 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
         simple
         pagination={pagination('volumePageSize')}
         rowKey={record => record.id}
-        height={`${height}px`}
-        scroll={{ x: columnWidth, y: height }}
+        height={`${dataSource.length > 0 ? height : 1}px`}
+        scroll={{ x: columnWidth, y: dataSource.length > 0 ? height : 1 }}
       />
     </div>
   )
