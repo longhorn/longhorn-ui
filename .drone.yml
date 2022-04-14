@@ -153,6 +153,76 @@ volumes:
     path: /var/run/docker.sock
 ---
 kind: pipeline
+name: default-s390x
+
+platform:
+  os: linux
+  arch: amd64
+
+node:
+  arch: s390x
+
+steps:
+- name: publish-image
+  image: rancher/drone-images:docker-s390x
+  settings:
+    build_args:
+      - "VERSION=${DRONE_COMMIT:0:7}"
+      - ARCH=s390x
+    custom_dns: 1.1.1.1
+    dockerfile: Dockerfile
+    password:
+      from_secret: docker_password
+    repo: longhornio/longhorn-ui
+    tag: "${DRONE_BRANCH}-head-s390x"
+    username:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+
+- name: publish-tagged-image
+  image: rancher/drone-images:docker-s390x
+  settings:
+    build_args:
+      - "VERSION=${DRONE_TAG}"
+      - ARCH=s390x
+    custom_dns: 1.1.1.1
+    dockerfile: Dockerfile
+    password:
+      from_secret: docker_password
+    repo: longhornio/longhorn-ui
+    tag: "${DRONE_TAG}-s390x"
+    username:
+      from_secret: docker_username
+  when:
+    event:
+    - tag
+
+- name: slack_notify
+  image: plugins/slack
+  settings:
+    template: "Build {{build.link}} failed.\n"
+    username: Drone_Publish
+    webhook:
+      from_secret: slack_webhook
+  when:
+    event:
+      exclude:
+      - pull_request
+    instance:
+      include:
+      - drone-publish.longhorn.io
+    status:
+      - failure
+
+volumes:
+- name: socket
+  host:
+    path: /var/run/docker.sock
+
+---
+kind: pipeline
 name: manifest
 
 platform:
@@ -170,6 +240,7 @@ steps:
     platforms:
       - linux/amd64
       - linux/arm64
+      - linux/s390x
     target: "longhornio/longhorn-ui:${DRONE_BRANCH}-head"
     template: "longhornio/longhorn-ui:${DRONE_BRANCH}-head-ARCH"
   when:
@@ -188,6 +259,7 @@ steps:
     platforms:
       - linux/amd64
       - linux/arm64
+      - linux/s390x
     target: "longhornio/longhorn-ui:${DRONE_TAG}"
     template: "longhornio/longhorn-ui:${DRONE_TAG}-ARCH"
   when:
@@ -216,3 +288,4 @@ steps:
 depends_on:
 - default-amd64
 - default-arm64
+- default-s390x
