@@ -83,19 +83,20 @@ function SnapshotIcon(props, snapshotProps) {
     doAction(key)
   }
 
+  let snapshotObject = formatSnapshot(snapshotProps.volume, props)
   const menu = (
     <Menu
       className="lh-snapshot-dropdown"
       onClick={onClick}
     >
-      { props.usercreated ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
+      { props.usercreated && !snapshotObject.removed ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
           {snapshotProps.volume.disableFrontend ? <div style={{ padding: '0px 12px' }}>Revert</div> : <Tooltip title={<div>
             <p>Please reattach the volume in maintenance mode to revert the volume.</p>
             <p>Workload shutdown might be needed.</p>
           </div>}><div className="saic-Popconfirm-Revert">Revert</div></Tooltip> }
         </Menu.Item> : ''
       }
-      { props.usercreated ? <Menu.Item key="snapshotBackup">
+      { props.usercreated && !snapshotObject.removed ? <Menu.Item key="snapshotBackup">
           <div style={{ padding: '0px 12px' }}>Backup</div>
         </Menu.Item> : ''
       }
@@ -104,12 +105,19 @@ function SnapshotIcon(props, snapshotProps) {
       </Menu.Item>
     </Menu>
   )
-  let snapshotObject = formatSnapshot(snapshotProps.volume, props)
   let backupStatusObject = snapshotObject.backupStatusObject
   let backupStatusErrorMsg = backupStatusObject && backupStatusObject.backupError && backupStatusObject.backupError.length > 0 ? <div>{ backupStatusObject.backupError.map((ele, index) => {
     return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : 'Error'}: {ele.error}</p>
   }) }</div> : ''
 
+  /**
+   * Default color: #3085d5 only snapshot
+   * Backup color: #33AB65
+   * Create by system color: #F1C40
+   * Removed color: #cccccc
+   * Error color: #F15354
+   * Priority Error > Removed > Create by system > Backup color > Default color
+   */
   let backgroundColor = '#3085d5'
 
   if (snapshotObject.usercreated && backupStatusObject) {
@@ -118,11 +126,15 @@ function SnapshotIcon(props, snapshotProps) {
     backgroundColor = '#F1C40F'
   }
 
+  if (snapshotObject.removed) {
+    backgroundColor = '#cccccc'
+  }
+
   return (
     <Dropdown
       placement="bottomLeft"
       overlay={menu}
-      trigger={snapshotObject.removed ? [] : ['click']}
+      trigger={['click']}
       key={snapshotObject.name}
       getPopupContainer={() => {
         return document.getElementById('tree-snapshot') || document.body
@@ -214,9 +226,9 @@ const loop = (data, props) => data.map((item) => {
     return <TreeNode key={item} title={title} />
   }
   if (item.childrenNode && item.childrenNode.length) {
-    return <TreeNode key={item.name} title={title} disabled={item.removed}>{loop(item.childrenNode, props)}</TreeNode>
+    return <TreeNode key={item.name} title={title}>{loop(item.childrenNode, props)}</TreeNode>
   }
-  return <TreeNode isLeaf key={item.name} title={title} disabled={item.removed} />
+  return <TreeNode isLeaf key={item.name} title={title} />
 })
 
 class Snapshot extends React.Component {

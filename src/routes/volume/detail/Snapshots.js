@@ -44,21 +44,34 @@ class Snapshots extends React.Component {
         })
         return
       }
-      let actions
+
+      let additionalActions = []
+      let actionType = action.type
+      let url = this.props.volume.actions[action.type]
+      let params = {
+        name: action.payload && action.payload.snapshot ? action.payload.snapshot.name : undefined,
+      }
+
       if (action.type === 'snapshotDelete') {
-        actions = [{
+        additionalActions = [{
           url: this.props.volume.actions.snapshotPurge,
         }]
+        // Only snapshotPurge operations are performed when the snapshot status is marked as removed.
+        if (action.payload?.snapshot?.removed) {
+          additionalActions = []
+          actionType = 'snapshotPurge'
+          url = this.props.volume.actions?.snapshotPurge
+          params = {}
+        }
       }
+
       this.props.dispatch({
         type: 'snapshotModal/snapshotAction',
         payload: {
-          type: action.type,
-          actions,
-          url: this.props.volume.actions[action.type],
-          params: {
-            name: action.payload && action.payload.snapshot ? action.payload.snapshot.name : undefined,
-          },
+          type: actionType,
+          actions: additionalActions,
+          url,
+          params,
           querySnapShotUrl: this.props.volume.actions.snapshotList,
         },
       })
