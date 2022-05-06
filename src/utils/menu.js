@@ -55,6 +55,12 @@ module.exports = [
       },
       {
         show: true,
+        key: 'orphanedData',
+        name: 'Orphaned Data',
+        icon: 'profile',
+      },
+      {
+        show: true,
         key: 'backingImage',
         name: 'Backing Image',
         icon: 'file-image',
