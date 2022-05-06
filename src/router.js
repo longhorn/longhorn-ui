@@ -15,6 +15,7 @@ import engineimageComponent from './routes/engineimage/'
 import instanceManagerComponent from './routes/instanceManager/'
 import backingImageComponent from './routes/backingImage/'
 import recurringJobComponent from './routes/recurringJob/'
+import orphanedDataComponent from './routes/orphanedData/'
 import engineimageDetailComponent from './routes/engineimage/detail'
 
 const Routers = function ({ history, app }) {
@@ -83,6 +84,11 @@ const Routers = function ({ history, app }) {
     component: () => instanceManagerComponent,
   })
 
+  const orphanedData = dynamic({
+    app,
+    component: () => orphanedDataComponent,
+  })
+
   const path = '/'
 
   return (
@@ -102,7 +108,9 @@ const Routers = function ({ history, app }) {
             <Route exact path={`${path}instanceManager`} component={instanceManager} />
             <Route exact path={`${path}backingImage`} component={backingImage} />
             <Route exact path={`${path}recurringJob`} component={recurringJob} />
+            <Route exact path={`${path}recurringJob`} component={recurringJob} />
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
+            <Route path={`${path}orphanedData`} component={orphanedData} />
             <Route component={notfound} />
           </Switch>
         </App>
