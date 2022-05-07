@@ -10,6 +10,7 @@ export default {
   namespace: 'backingImage',
   state: {
     data: [],
+    resourceType: 'backingImage',
     selected: {},
     selectedRows: [],
     cleanUp: false,
