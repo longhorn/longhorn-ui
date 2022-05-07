@@ -8,6 +8,7 @@ export default {
   namespace: 'engineimage',
   state: {
     data: [],
+    resourceType: 'engineImage',
     createEngineImageModalVisible: false,
     createEngineImageModalKey: Math.random(),
     socketStatus: 'closed',
