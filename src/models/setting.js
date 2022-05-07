@@ -7,6 +7,7 @@ export default {
   namespace: 'setting',
   state: {
     data: [],
+    resourceType: 'setting',
     saving: false,
     socketStatus: 'closed',
   },

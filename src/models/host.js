@@ -10,6 +10,7 @@ export default {
   state: {
     ws: null,
     data: [],
+    resourceType: 'node',
     selected: {},
     selectedHostRows: [],
     selectedDiskID: '',
