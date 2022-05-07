@@ -9,6 +9,7 @@ export default {
   state: {
     data: [],
     selected: {},
+    resourceType: 'recurringJob',
     socketStatus: 'closed',
   },
   subscriptions: {

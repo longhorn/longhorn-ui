@@ -8,6 +8,7 @@ export default {
   namespace: 'eventlog',
   state: {
     data: [],
+    resourceType: 'event',
     socketStatus: 'closed',
     sorter: getSorter('eventlogList.sorter'),
   },

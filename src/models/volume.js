@@ -12,6 +12,7 @@ export default {
   state: {
     ws: null,
     data: [],
+    resourceType: 'volume',
     selected: null,
     selectedRows: [],
     WorkloadDetailModalItem: {},
