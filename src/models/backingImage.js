@@ -1,4 +1,4 @@
-import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk } from '../services/backingImage'
+import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download } from '../services/backingImage'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
@@ -73,7 +73,7 @@ export default {
             if (currentBackingImage && currentBackingImage.diskFileStatusMap) {
               let diskMap = currentBackingImage.diskFileStatusMap
               canUpload = Object.keys(diskMap).some((key) => {
-                return diskMap[key].state === 'starting'
+                return diskMap[key].state === 'pending'
               })
               if (canUpload) {
                 break
@@ -94,6 +94,12 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteBackingImage, payload)
+      yield put({ type: 'query' })
+    },
+    *downloadBackingImage({
+      payload,
+    }, { call, put }) {
+      yield call(download, payload)
       yield put({ type: 'query' })
     },
     *bulkDelete({
