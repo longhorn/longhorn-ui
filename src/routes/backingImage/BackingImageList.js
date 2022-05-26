@@ -5,10 +5,11 @@ import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formater'
 
-function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDiskStateMapDetail, rowSelection, height }) {
+function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
   const backingImageActionsProps = {
     deleteBackingImage,
     cleanUpDiskMap,
+    downloadBackingImage,
   }
   const state = (record) => {
     if (record.deletionTimestamp) {

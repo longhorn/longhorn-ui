@@ -95,6 +95,12 @@ class BackingImage extends React.Component {
           payload: { record, cleanUp: true },
         })
       },
+      downloadBackingImage(record) {
+        dispatch({
+          type: 'backingImage/downloadBackingImage',
+          payload: record,
+        })
+      },
       showDiskStateMapDetail(record) {
         dispatch({
           type: 'backingImage/showDiskStateMapDetailModal',

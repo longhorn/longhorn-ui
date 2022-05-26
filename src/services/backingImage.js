@@ -28,6 +28,12 @@ export async function deleteBackingImage(params) {
   }
 }
 
+export async function download(params) {
+  if (params && params.name) {
+    window.location.href = `${ window.__pathname_prefix__ }${ window.__pathname_prefix__.endsWith('/') ? '' : '/'}v1/backingimages/${params.name}/download` // eslint-disable-line
+  }
+}
+
 export async function deleteDisksOnBackingImage(params) {
   if (params.selected && params.selected.actions && params.selected.actions.backingImageCleanup) {
     return request({
