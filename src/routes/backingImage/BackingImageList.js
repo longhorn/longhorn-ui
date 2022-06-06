@@ -36,10 +36,20 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
         )
       },
     }, {
+      title: 'UUID',
+      dataIndex: 'uuid',
+      key: 'uuid',
+      width: 150,
+      render: (text) => {
+        return (
+          <div>{text}</div>
+        )
+      },
+    }, {
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 100,
+      width: 150,
       render: (text) => {
         return (
           <div>
