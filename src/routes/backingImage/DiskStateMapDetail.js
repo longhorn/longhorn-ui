@@ -138,6 +138,8 @@ const modal = ({
         { !cleanUp ? <div className={style.backingImageModalContainer}>
           <Card>
             <div className={style.parametersContainer} style={{ marginBottom: 0 }}>
+              <div>UUID: </div>
+              <span>{currentData.uuid}</span>
               <div>Created From: </div>
               <span>
                 {currentData.sourceType === 'download' && 'Download from URL'}
