@@ -142,7 +142,7 @@ class Salvage extends React.Component {
              replicas selected
           </p>
           {
-            this.state.showErrorMessage && this.selectedReplicaNames.length === 0 ? <p className="faulted">Plase select at least one replica.</p> : null
+            this.state.showErrorMessage && this.selectedReplicaNames.length === 0 ? <p className="faulted">Please select at least one replica.</p> : null
           }
         </div>
       </ModalBlur>
