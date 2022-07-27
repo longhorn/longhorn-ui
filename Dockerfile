@@ -26,6 +26,7 @@ EXPOSE 8000
 ENV LONGHORN_MANAGER_IP http://localhost:9500
 ENV LONGHORN_UI_PORT 8000
 
-USER nginx
+# Use the uid of the default user (nginx) from the installed nginx package
+USER 499
 
 CMD ["/bin/bash", "-c", "mkdir -p /var/config/nginx/ && cp -r /etc/nginx/* /var/config/nginx/; envsubst '${LONGHORN_MANAGER_IP},${LONGHORN_UI_PORT}' < /etc/nginx/nginx.conf.template > /var/config/nginx/nginx.conf && nginx -c /var/config/nginx/nginx.conf -g 'daemon off;'"]
