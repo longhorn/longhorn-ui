@@ -1,6 +1,7 @@
 FROM node:16 as builder
 RUN apt-get update -y && \
     apt-get install -y gettext-base
+RUN npm install --location=global npm@8.15.0
 RUN mkdir /web
 WORKDIR /web
 COPY . /web
