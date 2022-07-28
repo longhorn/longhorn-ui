@@ -20,7 +20,7 @@
     "history": "^4.7.2",
     "jquery": "^3.4.0",
     "meteor-later": "^1.2.0",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "nprogress": "0.2.0",
     "prettycron": "^0.10.0",
     "prop-types": "^15.7.2",
