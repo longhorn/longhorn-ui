@@ -183,10 +183,17 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       key: 'size',
       width: 100,
       sorter: (a, b) => sortTable(a, b, 'size'),
-      render: (text, record) => {
-        let oldSize = record && record.controllers && record.controllers[0] && record.controllers[0].size ? record.controllers[0].size : ''
-        let isExpanding = (text !== oldSize && record.state === 'attached')
-        let message = `The volume is in expansion progress from size ${formatMib(oldSize)} to size ${formatMib(text)}`
+      render: (expectedSize, record) => {
+        let currentSize = record?.controllers && record.controllers[0]?.size ? record.controllers[0].size : ''
+        let isExpanding = (parseInt(expectedSize, 10) > parseInt(currentSize, 10) || (record?.controllers && record.controllers[0]?.isExpanding)) && record.state === 'attached'
+        // The expected size of engine should not be smaller than the current size.
+        let expandingFailed = record?.controllers && !record.controllers[0]?.isExpanding && parseInt(expectedSize, 10) < parseInt(currentSize, 10) && record.state === 'attached'
+        let message = ''
+        if (isExpanding) {
+          message = `The volume is in expansion progress from size ${formatMib(currentSize)} to size ${formatMib(expectedSize)}`
+        } else if (expandingFailed) {
+          message = `The expected size ${formatMib(expectedSize)} of engine should not be smaller than the current size ${formatMib(currentSize)}`
+        }
 
         return (
           <div>
@@ -199,7 +206,7 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
                   <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
                 </div>
               </div>
-            </Tooltip> : <div>{formatMib(text)}</div>}
+            </Tooltip> : <Tooltip title={message}><div className={expandingFailed ? 'error' : ''}>{formatMib(expectedSize)}</div></Tooltip>}
           </div>
         )
       },
