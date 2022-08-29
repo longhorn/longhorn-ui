@@ -1,4 +1,4 @@
-FROM node:16 as builder
+FROM node:16.16 as builder
 RUN apt-get update -y && \
     apt-get install -y gettext-base
 RUN mkdir /web
