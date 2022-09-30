@@ -33,7 +33,7 @@
     "react-helmet": "^5.0.0",
     "react-markdown": "^v4.3.1",
     "react-resize-detector": "1.1.0",
-    "recharts": "^1.1.0",
+    "recharts": "^2.1.14",
     "robust-websocket": "^1.0.0",
     "semver": "^5.6.0"
   },
