@@ -41,6 +41,15 @@ export function wsChanges(dispatch, type, period, ns, search) {
       dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'connecting' })
       dispatch({ type: `${ns}/updateWsBackups`, payload: { rws, search }})
     }
+  } else if (ns === 'systemBackups') {
+    if (backupType === 'systembackups') {
+      dispatch({ type: `${ns}/updateSocketStatusSysteBackups`, payload: 'connecting' })
+      dispatch({ type: `${ns}/updateWsSystemBackups`, payload: rws })
+    }
+    if (backupType === 'systemrestores') {
+      dispatch({ type: `${ns}/updateSocketStatusSystemRestores`, payload: 'connecting' })
+      dispatch({ type: `${ns}/updateWsSystemRestores`, payload: rws })
+    }
   } else {
     dispatch({ type: `${ns}/updateSocketStatus`, payload: 'connecting' })
     dispatch({ type: `${ns}/updateWs`, payload: rws })
@@ -68,6 +77,15 @@ export function wsChanges(dispatch, type, period, ns, search) {
         type: `${ns}/updateBackgroundBackups`,
         payload: JSON.parse(msg.data),
       })
+    } else if (ns === 'systemBackups') {
+      if (backupType === 'systembackups') dispatch({
+        type: `${ns}/updateBackgroundSystemBackups`,
+        payload: JSON.parse(msg.data),
+      })
+      if (backupType === 'systemrestores') dispatch({
+        type: `${ns}/updateBackgroundSystemrestores`,
+        payload: JSON.parse(msg.data),
+      })
     } else {
       dispatch({
         type: `${ns}/updateBackground`,
@@ -79,6 +97,9 @@ export function wsChanges(dispatch, type, period, ns, search) {
     if (ns === 'backup') {
       if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'open' })
       if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'open' })
+    } else if (ns === 'systemBackups') {
+      if (backupType === 'systembackups') dispatch({ type: `${ns}/updateSocketStatusSysteBackups`, payload: 'open' })
+      if (backupType === 'systemrestores') dispatch({ type: `${ns}/updateSocketStatusSystemRestores`, payload: 'open' })
     } else {
       dispatch({ type: `${ns}/updateSocketStatus`, payload: 'open' })
     }
@@ -87,6 +108,9 @@ export function wsChanges(dispatch, type, period, ns, search) {
     if (ns === 'backup') {
       if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'closed' })
       if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'closed' })
+    } else if (ns === 'systemBackups') {
+      if (backupType === 'systembackups') dispatch({ type: `${ns}/updateSocketStatusSysteBackups`, payload: 'closed' })
+      if (backupType === 'systemrestores') dispatch({ type: `${ns}/updateSocketStatusSystemRestores`, payload: 'closed' })
     } else {
       dispatch({ type: `${ns}/updateSocketStatus`, payload: 'closed' })
     }
@@ -145,6 +169,38 @@ export function getBackupStatusIcon (resource, type) {
   const status = type === 'backupVolumes' ? resource.socketStatusBackupVolumes : resource.socketStatusBackups
 
   const title = type === 'backupVolumes' ? `BackupVolumes: ${status}` : `Backups: ${status}`
+
+  let src
+
+  switch (status) {
+    case 'connecting':
+      src = wsConnecting
+      break
+    case 'open':
+      src = wsOpen
+      break
+    case 'closed':
+      src = wsClosed
+      break
+    case 'error':
+    default:
+      src = wsError
+  }
+  return (
+    <Tooltip placement="topRight" title={title}>
+      <img src={src} alt="WS"></img>
+    </Tooltip>
+  )
+}
+
+// System Backup model has two websocket status.
+export function getSystemBackupStatusIcon (resource, type) {
+  if (resource === undefined) {
+    return
+  }
+  const status = type === 'systemBackup' ? resource.socketSystemBackupsStatus : resource.socketSystemRestoresStatus
+
+  const title = type === 'systemBackup' ? `System Backup: ${status}` : `System Restore: ${status}`
 
   let src
 

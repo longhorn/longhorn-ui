@@ -11,6 +11,7 @@ import snapshot from './models/snapshot'
 import recurringJob from './models/recurringJob'
 import instanceManager from './models/instanceManager'
 import orphanedData from './models/orphanedData'
+import systemBackups from './models/systemBackups'
 
 // import assets
 import './assets/iconfont/iconfont.eot'
@@ -38,6 +39,7 @@ app.model(volume)
 app.model(recurringJob)
 app.model(instanceManager)
 app.model(orphanedData)
+app.model(systemBackups)
 
 // 3. Router
 app.router(routerConfig)

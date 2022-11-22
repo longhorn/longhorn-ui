@@ -4,13 +4,13 @@ import { connect } from 'dva'
 import { Row, Col, Tooltip } from 'antd'
 import styles from './Footer.less'
 import { config } from '../../utils'
-import { getStatusIcon, getBackupStatusIcon } from '../../utils/websocket'
+import { getStatusIcon, getBackupStatusIcon, getSystemBackupStatusIcon } from '../../utils/websocket'
 import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
 import StableLonghornVersions from './StableLonghornVersions'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, systemBackups, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -130,6 +130,8 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(recurringJob)}
           {getBackupStatusIcon(backup, 'backupVolumes')}
           {getBackupStatusIcon(backup, 'backups')}
+          {getSystemBackupStatusIcon(systemBackups, 'systemBackup')}
+          {getSystemBackupStatusIcon(systemBackups, 'systemRestore')}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
         <StableLonghornVersions key={stableLonghornVersionsKey} {...stableLonghornVersionsProps} />
@@ -148,7 +150,8 @@ Footer.propTypes = {
   recurringJob: PropTypes.object,
   app: PropTypes.object,
   backup: PropTypes.object,
+  systemBackups: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, systemBackups }))(Footer)

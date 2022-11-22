@@ -78,3 +78,28 @@ export function formatSnapshot(selectVolume, snapshot) {
     backupStatusObject,
   }
 }
+
+export function formatSystemBackupData(state, systemBackupsData, systemRestoresData) {
+  systemRestoresData = systemRestoresData.map((restore) => {
+    restore.version = ''
+    let systemBackup = systemBackupsData.find((backup) => restore.systemBackup === backup.id)
+    if (systemBackup) restore.version = systemBackup.version
+
+    return restore
+  })
+  const systemBackupsField = state.systemBackupsField
+  const systemBackupsValue = state.systemBackupsValue
+  const systemRestoresField = state.systemRestoresField
+  const systemRestoresValue = state.systemRestoresValue
+  if (systemBackupsField && systemBackupsValue) {
+    systemBackupsData = systemBackupsData.filter((item) => item[systemBackupsField] === systemBackupsValue)
+  }
+  if (systemRestoresField && systemRestoresValue) {
+    systemRestoresData = systemRestoresData.filter((item) => item[systemRestoresField] === systemRestoresValue)
+  }
+
+  return {
+    systemBackupsData,
+    systemRestoresData,
+  }
+}

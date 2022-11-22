@@ -71,6 +71,12 @@ module.exports = [
         name: 'Instance Manager Image',
         icon: 'apartment',
       },
+      {
+        show: true,
+        key: 'systemBackups',
+        name: 'System Backup',
+        icon: 'file-sync',
+      },
     ],
   },
 ]
