@@ -108,6 +108,13 @@ const dependency = {
     path: '/orphanedData',
     runWs: [],
   },
+  systemBackups: {
+    path: '/systemBackups',
+    runWs: [{
+      ns: 'systemBackups',
+      key: 'systemBackups',
+    }],
+  },
 }
 const allWs = [{
   ns: 'volume',
@@ -136,6 +143,12 @@ const allWs = [{
 }, {
   ns: 'backup',
   key: 'backups',
+}, {
+  ns: 'systemBackups',
+  key: 'systembackups',
+}, {
+  ns: 'systemBackups',
+  key: 'systemrestores',
 }]
 
 const httpDataDependency = {
@@ -149,6 +162,7 @@ const httpDataDependency = {
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
+  '/systemBackups': ['systemBackups'],
 }
 
 export function getDataDependency(pathName) {
