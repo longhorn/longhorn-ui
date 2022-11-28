@@ -56,7 +56,7 @@ const modal = ({
     title: 'Create Volume',
     visible,
     onCancel,
-    width: 680,
+    width: 840,
     onOk: handleOk,
     style: { top: 0 },
   }
@@ -91,7 +91,7 @@ const modal = ({
           })(<Input />)}
         </FormItem>
         <div style={{ display: 'flex' }}>
-          <FormItem label="Size" style={{ flex: 0.8, paddingLeft: 92 }} {...formItemLayout}>
+          <FormItem label="Size" style={{ flex: 0.8, paddingLeft: 110 }} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
             {getFieldDecorator('size', {
               initialValue: item.size,
               rules: [
@@ -118,7 +118,7 @@ const modal = ({
                   },
                 },
               ],
-            })(<InputNumber style={{ width: '220px' }} />)}
+            })(<InputNumber style={{ width: '300px' }} />)}
           </FormItem>
           <FormItem>
             {getFieldDecorator('unit', {
@@ -205,6 +205,15 @@ const modal = ({
             <Option key={'disabled'} value={'disabled'}>disabled</Option>
             <Option key={'least-effort'} value={'least-effort'}>least-effort</Option>
             <Option key={'best-effort'} value={'best-effort'}>best-effort</Option>
+          </Select>)}
+        </FormItem>
+        <FormItem label="Allow snapshots removal during trim" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('unmapMarkSnapChainRemoved', {
+            initialValue: 'ignored',
+          })(<Select>
+            <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+            <Option key={'ignored'} value={'ignored'}>Ignored (Remove Current Snapshot Chain during File System Trim)</Option>
           </Select>)}
         </FormItem>
         <FormItem label="Disable Revision Counter" {...formItemLayout}>

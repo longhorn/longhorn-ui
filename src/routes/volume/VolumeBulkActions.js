@@ -6,7 +6,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage, showBulkUnmapMarkSnapChainRemovedModal, trimBulkFilesystem }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
@@ -101,6 +101,17 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       case 'updateReplicaAutoBalance':
         showUpdateReplicaAutoBalanceModal(selectedRows)
         break
+      case 'updateUnmapMarkSnapChainRemoved':
+        showBulkUnmapMarkSnapChainRemovedModal(selectedRows)
+        break
+      case 'trimFilesystem':
+        confirm({
+          title: `Are you sure you want to trim (${selectedRows.map(item => item.name).join(', ')}) Fileystem ?`,
+          onOk() {
+            trimBulkFilesystem(selectedRows)
+          },
+        })
+        break
       default:
     }
   }
@@ -132,6 +143,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
   }
   const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
   const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.engineImage)
+  const notAttached = () => selectedRows.some(item => item.state !== 'attached')
   /*
   * PV/PVC decides whether to disable it
   */
@@ -152,6 +164,8 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled() { return selectedRows.length === 0 || disableUpdateReplicaAutoBalance() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() || !hasAction('pvCreate') || !hasAction('pvcCreate') } },
     { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
+    { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled() { return selectedRows.length === 0 } },
+    { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
   ]
 
   const menu = (<Menu>
@@ -205,6 +219,8 @@ bulkActions.propTypes = {
   backupTargetAvailable: PropTypes.bool,
   backupTargetMessage: PropTypes.string,
   commandKeyDown: PropTypes.bool,
+  showBulkUnmapMarkSnapChainRemovedModal: PropTypes.func,
+  trimBulkFilesystem: PropTypes.func,
 }
 
 export default bulkActions
