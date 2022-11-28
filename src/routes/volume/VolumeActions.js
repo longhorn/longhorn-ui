@@ -5,7 +5,7 @@ import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, engineUpgradePerNodeLimit, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, showUnmapMarkSnapChainRemovedModal, engineUpgradePerNodeLimit, trimFilesystem, commandKeyDown }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -107,6 +107,17 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'updateReplicaAutoBalance':
         showUpdateReplicaAutoBalanceModal(record)
         break
+      case 'updateUnmapMarkSnapChainRemoved':
+        showUnmapMarkSnapChainRemovedModal(record)
+        break
+      case 'trimFilesystem':
+        confirm({
+          title: 'Are you sure you want to trim Fileystem ?',
+          onOk() {
+            trimFilesystem(record)
+          },
+        })
+        break
       default:
     }
   }
@@ -164,6 +175,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
+    { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 
@@ -183,6 +195,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
+  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' })
   toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions}
@@ -214,6 +227,8 @@ actions.propTypes = {
   showUpdateDataLocality: PropTypes.func,
   showUpdateAccessMode: PropTypes.func,
   showUpdateReplicaAutoBalanceModal: PropTypes.func,
+  showUnmapMarkSnapChainRemovedModal: PropTypes.func,
+  trimFilesystem: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
 }
 

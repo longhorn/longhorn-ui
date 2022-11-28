@@ -167,6 +167,70 @@ export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLoca
   }
 }
 
+export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch) {
+  let option = [
+    { key: 'Enabled', value: 'enabled' },
+    { key: 'Disabled', value: 'disabled' },
+    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+  ]
+
+  return {
+    item: volume,
+    option,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/updateUnmapMarkSnapChainRemoved',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateUnmapMarkSnapChainRemovedModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch) {
+  let option = [
+    { key: 'Enabled', value: 'enabled' },
+    { key: 'Disabled', value: 'disabled' },
+    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+  ]
+
+  return {
+    items: volumes,
+    option,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateBulkUnmapMarkSnapChainRemoved',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideBulkUpdateUnmapMarkSnapChainRemovedModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDataLocalityOption, dispatch) {
   let option = []
 

@@ -51,6 +51,8 @@ export default {
     updateBulkAccessModeModalVisible: false,
     confirmModalWithWorkloadVisible: false,
     updateReplicaAutoBalanceModalVisible: false,
+    unmapMarkSnapChainRemovedModalVisible: false,
+    bulkUnmapMarkSnapChainRemovedModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -83,6 +85,8 @@ export default {
     updateBulkAccessModeModalKey: Math.random(),
     confirmModalWithWorkloadKey: Math.random(),
     updateReplicaAutoBalanceModalKey: Math.random(),
+    unmapMarkSnapChainRemovedModalKey: Math.random(),
+    bulkUnmapMarkSnapChainRemovedModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -234,6 +238,24 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideUpdateBulkReplicaCountModal' })
       yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateUnmapMarkSnapChainRemoved({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateUnmapMarkSnapChainRemovedModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *updateBulkUnmapMarkSnapChainRemoved({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideBulkUpdateUnmapMarkSnapChainRemovedModal' })
+      if (payload?.urls?.length > 0) {
+        for (let i = 0; i < payload.urls.length; i++) {
+          yield call(execAction, payload.urls[i], payload.params)
+        }
+      }
       yield put({ type: 'query' })
     },
     *dataLocalityUpdate({
@@ -516,6 +538,20 @@ export default {
         if (callback) callback(recurringJobListResp.data)
       }
     },
+    *trimFilesystem({
+      payload,
+    }, { call, put }) {
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *trimBulkFilesystem({
+      payload,
+    }, { call, put }) {
+      for (let i = 0; i < payload.urls.length; i++) {
+        if (payload?.urls[i]) yield call(execAction, payload.urls[i], {})
+      }
+      yield put({ type: 'query' })
+    },
     *startWS({
       payload,
     }, { select }) {
@@ -660,6 +696,18 @@ export default {
     },
     showUpdateDataLocality(state, action) {
       return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalityModalKey: Math.random() }
+    },
+    showUnmapMarkSnapChainRemovedModal(state, action) {
+      return { ...state, ...action.payload, unmapMarkSnapChainRemovedModalVisible: true, unmapMarkSnapChainRemovedModalKey: Math.random() }
+    },
+    hideUpdateUnmapMarkSnapChainRemovedModal(state, action) {
+      return { ...state, ...action.payload, unmapMarkSnapChainRemovedModalVisible: false, unmapMarkSnapChainRemovedModalKey: Math.random() }
+    },
+    showBulkUnmapMarkSnapChainRemovedModal(state, action) {
+      return { ...state, ...action.payload, bulkUnmapMarkSnapChainRemovedModalVisible: true, bulkUnmapMarkSnapChainRemovedModalKey: Math.random() }
+    },
+    hideBulkUpdateUnmapMarkSnapChainRemovedModal(state, action) {
+      return { ...state, ...action.payload, bulkUnmapMarkSnapChainRemovedModalVisible: false, bulkUnmapMarkSnapChainRemovedModalKey: Math.random() }
     },
     showUpdateAccessMode(state, action) {
       return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }

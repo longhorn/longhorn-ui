@@ -294,6 +294,11 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         </Tooltip>
         {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.instanceManagerName !== '').map(item => <div key={item.hostId} style={{ fontFamily: 'monospace', margin: '2px 0px' }}> <span style={{ backgroundColor: '#f2f4f5' }}> {item.instanceManagerName} </span></div>) : ''}
       </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Allow snapshots removal during trim:</span>
+        <span style={{ marginRight: 5 }}>{selectedVolume.unmapMarkSnapChainRemoved ? selectedVolume.unmapMarkSnapChainRemoved : ''}</span>
+        {selectedVolume?.controllers && selectedVolume?.controllers[0] && `(${selectedVolume.controllers[0].unmapMarkSnapChainRemovedEnabled})`}
+      </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
