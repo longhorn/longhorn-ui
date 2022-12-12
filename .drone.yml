@@ -6,6 +6,12 @@ platform:
   os: linux
   arch: amd64
 
+trigger:
+  branch:
+  - master
+  - main
+  - v*
+
 steps:
 - name: fossa
   image: registry.suse.com/suse/sle15:15.3.17.8.1
@@ -93,6 +99,12 @@ platform:
   os: linux
   arch: arm64
 
+trigger:
+  branch:
+  - master
+  - main
+  - v*
+
 steps:
 - name: publish-image
   image: plugins/docker
@@ -161,6 +173,15 @@ platform:
 
 node:
   arch: s390x
+
+trigger:
+  event:
+    exclude:
+    - pull_request
+  branch:
+  - master
+  - main
+  - v*
 
 steps:
 - name: publish-image
@@ -234,6 +255,15 @@ name: manifest
 platform:
   os: linux
   arch: amd64
+
+trigger:
+  event:
+    exclude:
+    - pull_request
+  branch:
+  - master
+  - main
+  - v*
 
 steps:
 - name: manifest
