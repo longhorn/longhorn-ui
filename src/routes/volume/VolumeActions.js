@@ -5,7 +5,7 @@ import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, showUnmapMarkSnapChainRemovedModal, engineUpgradePerNodeLimit, trimFilesystem, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, showUnmapMarkSnapChainRemovedModal, engineUpgradePerNodeLimit, trimFilesystem, showUpdateSnapshotDataIntegrityModal, commandKeyDown }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -88,6 +88,9 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         break
       case 'updateDataLocality':
         showUpdateDataLocality(record)
+        break
+      case 'updateSnapshotDataIntegrity':
+        showUpdateSnapshotDataIntegrityModal(record)
         break
       case 'updateAccessMode':
         showUpdateAccessMode(record)
@@ -173,6 +176,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.engineImage !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
+    { key: 'updateSnapshotDataIntegrity', name: 'Update Snapshot Data Integrity', disabled: false },
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
@@ -229,6 +233,7 @@ actions.propTypes = {
   showUpdateReplicaAutoBalanceModal: PropTypes.func,
   showUnmapMarkSnapChainRemovedModal: PropTypes.func,
   trimFilesystem: PropTypes.func,
+  showUpdateSnapshotDataIntegrityModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
 }
 

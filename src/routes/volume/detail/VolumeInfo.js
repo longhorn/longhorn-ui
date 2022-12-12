@@ -289,6 +289,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {selectedVolume.replicaAutoBalance ? selectedVolume.replicaAutoBalance : ''}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Snapshot Data Integrity:</span>
+        {selectedVolume?.snapshotDataIntegrity || ''}
+      </div>
+      <div className={styles.row}>
         <Tooltip title={'Manages the engine/replica instances’ life cycle on the node.'}>
           <span className={styles.label}> Instance Manager:</span>
         </Tooltip>
