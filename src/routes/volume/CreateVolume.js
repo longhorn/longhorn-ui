@@ -24,6 +24,8 @@ const modal = ({
   defaultDataLocalityOption,
   defaultDataLocalityValue,
   defaultRevisionCounterValue,
+  defaultSnapshotDataIntegrityOption,
+  defaultSnapshotDataIntegrityValue,
   diskTags,
   backingImages,
   tagsLoading,
@@ -182,6 +184,13 @@ const modal = ({
           { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
+        <FormItem label="Update Snapshot Data Integrity" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('snapshotDataIntegrity', {
+            initialValue: defaultSnapshotDataIntegrityValue,
+          })(<Select>
+          { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
+          </Select>)}
+        </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: 'rwo',
@@ -261,8 +270,10 @@ modal.propTypes = {
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   defaultDataLocalityOption: PropTypes.array,
+  defaultSnapshotDataIntegrityOption: PropTypes.array,
   tagsLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
+  defaultSnapshotDataIntegrityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
   backingImages: PropTypes.array,
 }

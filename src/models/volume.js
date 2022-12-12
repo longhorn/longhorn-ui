@@ -53,6 +53,8 @@ export default {
     updateReplicaAutoBalanceModalVisible: false,
     unmapMarkSnapChainRemovedModalVisible: false,
     bulkUnmapMarkSnapChainRemovedModalVisible: false,
+    updateSnapshotDataIntegrityModalVisible: false,
+    updateBulkSnapshotDataIntegrityModalVisible: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -87,6 +89,8 @@ export default {
     updateReplicaAutoBalanceModalKey: Math.random(),
     unmapMarkSnapChainRemovedModalKey: Math.random(),
     bulkUnmapMarkSnapChainRemovedModalKey: Math.random(),
+    updateSnapshotDataIntegrityModalKey: Math.random(),
+    updateBulkSnapshotDataIntegrityModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -270,6 +274,20 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideUpdateBulkDataLocalityModal' })
       yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateBulkSnapshotDataIntegrity({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateBulkSnapshotDataIntegrityModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateSnapshotDataIntegrity({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateSnapshotDataIntegrityModal' })
+      yield call(execAction, payload.url, payload.params)
       yield put({ type: 'query' })
     },
     *accessModeUpdate({
@@ -709,6 +727,12 @@ export default {
     hideBulkUpdateUnmapMarkSnapChainRemovedModal(state, action) {
       return { ...state, ...action.payload, bulkUnmapMarkSnapChainRemovedModalVisible: false, bulkUnmapMarkSnapChainRemovedModalKey: Math.random() }
     },
+    showUpdateSnapshotDataIntegrityModal(state, action) {
+      return { ...state, ...action.payload, updateSnapshotDataIntegrityModalVisible: true, updateSnapshotDataIntegrityModalKey: Math.random() }
+    },
+    showUpdateBulkSnapshotDataIntegrityModal(state, action) {
+      return { ...state, ...action.payload, updateBulkSnapshotDataIntegrityModalVisible: true, updateBulkSnapshotDataIntegrityModalKey: Math.random() }
+    },
     showUpdateAccessMode(state, action) {
       return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }
     },
@@ -729,6 +753,12 @@ export default {
     },
     hideUpdateBulkDataLocalityModal(state) {
       return { ...state, updateBulkDataLocalityModalVisible: false }
+    },
+    hideUpdateSnapshotDataIntegrityModal(state) {
+      return { ...state, updateSnapshotDataIntegrityModalVisible: false }
+    },
+    hideUpdateBulkSnapshotDataIntegrityModal(state, action) {
+      return { ...state, ...action.payload, updateBulkSnapshotDataIntegrityModalVisible: false, updateBulkSnapshotDataIntegrityModalKey: Math.random() }
     },
     hideUpdateBulkAccessModeModal(state) {
       return { ...state, updateBulkAccessModeModalVisible: false }

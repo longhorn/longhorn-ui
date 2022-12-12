@@ -6,7 +6,7 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage, showBulkUnmapMarkSnapChainRemovedModal, trimBulkFilesystem }) {
+function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage, showBulkUnmapMarkSnapChainRemovedModal, trimBulkFilesystem, showUpdateBulkSnapshotDataIntegrityModal }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
@@ -89,6 +89,9 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       case 'updateBulkDataLocality':
         showUpdateBulkDataLocality(selectedRows)
         break
+      case 'updateSnapshotDataIntegrity':
+        showUpdateBulkSnapshotDataIntegrityModal(selectedRows)
+        break
       case 'updateBulkAccessMode':
         showUpdateBulkAccessMode(selectedRows)
         break
@@ -160,6 +163,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => item.state !== 'detached') || !conditionsScheduled() } },
     { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() || upgradingEngine() } },
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
+    { key: 'updateSnapshotDataIntegrity', name: 'Update Snapshot Data Integrity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled() { return selectedRows.length === 0 || disableUpdateReplicaAutoBalance() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() || !hasAction('pvCreate') || !hasAction('pvcCreate') } },
@@ -214,6 +218,7 @@ bulkActions.propTypes = {
   showUpdateBulkReplicaCount: PropTypes.func,
   showUpdateBulkDataLocality: PropTypes.func,
   showUpdateBulkAccessMode: PropTypes.func,
+  showUpdateBulkSnapshotDataIntegrityModal: PropTypes.func,
   showUpdateReplicaAutoBalanceModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
   backupTargetAvailable: PropTypes.bool,

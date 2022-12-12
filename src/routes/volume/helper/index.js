@@ -199,6 +199,38 @@ export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch
   }
 }
 
+export function getUpdateSnapshotDataIntegrityProps(volume, visible, defaultSnapshotDataIntegrityOption, dispatch) {
+  let options = []
+
+  if (defaultSnapshotDataIntegrityOption && defaultSnapshotDataIntegrityOption.length > 0) {
+    options = defaultSnapshotDataIntegrityOption
+  }
+
+  return {
+    item: volume,
+    options,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/updateSnapshotDataIntegrity',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateSnapshotDataIntegrityModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch) {
   let option = [
     { key: 'Enabled', value: 'enabled' },
@@ -222,6 +254,38 @@ export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dis
     onCancel() {
       dispatch({
         type: 'volume/hideBulkUpdateUnmapMarkSnapChainRemovedModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateBulkSnapshotDataIntegrityModalProps(volumes, visible, defaultSnapshotDataIntegrityOption, dispatch) {
+  let options = []
+
+  if (defaultSnapshotDataIntegrityOption && defaultSnapshotDataIntegrityOption.length > 0) {
+    options = defaultSnapshotDataIntegrityOption
+  }
+
+  return {
+    items: volumes,
+    options,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateBulkSnapshotDataIntegrity',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkSnapshotDataIntegrityModal',
       })
       dispatch({
         type: 'app/changeBlur',
