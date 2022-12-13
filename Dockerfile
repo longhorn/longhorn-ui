@@ -23,7 +23,7 @@ COPY --from=builder /web/dist /web/dist
 COPY --from=builder /web/nginx.conf.template /etc/nginx/nginx.conf.template
 
 EXPOSE 8000
-ENV LONGHORN_MANAGER_IP http://localhost:9500
+ENV LONGHORN_MANAGER_IP http://127.0.0.1:9500
 ENV LONGHORN_UI_PORT 8000
 
 # Use the uid of the default user (nginx) from the installed nginx package
