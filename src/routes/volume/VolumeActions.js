@@ -191,7 +191,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     }
   })
 
-  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected.state !== 'detached' || (selected.conditions && selected.conditions.scheduled && selected.conditions.scheduled.status && selected.conditions.scheduled.status.toLowerCase() === 'false') })
+  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.scheduled?.status?.toLowerCase() === 'false' })
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
     availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
   }

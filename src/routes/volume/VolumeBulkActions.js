@@ -160,7 +160,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
 
   const allDropDownActions = [
     { key: 'upgrade', name: 'Upgrade Engine', disabled() { return selectedRows.length === 0 || isAutomaticallyUpgradeEngine() || !hasAction('engineUpgrade') || hasDoingState() || hasMoreOptions() || hasVolumeRestoring() || canUpgradeEngine() } },
-    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => item.state !== 'detached') || !conditionsScheduled() } },
+    { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !conditionsScheduled() } },
     { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() || upgradingEngine() } },
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
     { key: 'updateSnapshotDataIntegrity', name: 'Update Snapshot Data Integrity', disabled() { return selectedRows.length === 0 } },
