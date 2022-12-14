@@ -7,10 +7,10 @@ const Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
-    span: 7,
+    span: 8,
   },
   wrapperCol: {
-    span: 15,
+    span: 14,
   },
 }
 
@@ -54,7 +54,7 @@ const modal = ({
     visible,
     onCancel,
     onOk: handleOk,
-    width: 600,
+    width: 700,
   }
 
   function onPreviousChange(value) {
@@ -131,6 +131,15 @@ const modal = ({
             valuePropName: 'encrypted',
             initialValue: false,
           })(<Checkbox></Checkbox>)}
+        </FormItem>
+        <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('restoreVolumeRecurringJob', {
+            initialValue: 'ignored',
+          })(<Select>
+            <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+            <Option key={'ignored'} value={'ignored'}>Ignored</Option>
+          </Select>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
