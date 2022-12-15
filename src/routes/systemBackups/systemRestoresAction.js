@@ -1,15 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal } from 'antd'
+import { Modal, Alert, Icon } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
 function actions({ selected, deleteSystemRestore }) {
   const handleMenuClick = (event, record) => {
+    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name} ?</div>
+    if (record.state === 'Pending' || record.state === 'Restoring' || record.state === 'Downloading') {
+      title = (<div>
+        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name}</div>
+        <Alert
+          message={'Deleting a restoring backup can mess up the Longhorn state'}
+          type="warning"
+        />
+      </div>)
+    }
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete System Restore ${record.name} ?`,
+          width: 600,
+          icon: '',
+          title,
           onOk() {
             deleteSystemRestore(record)
           },
