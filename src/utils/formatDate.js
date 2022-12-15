@@ -14,6 +14,10 @@ function utcStrToDate(utcStr) {
 }
 
 export function formatDate(date, hasTooltip = true) {
+  // Initial date return null
+  if (date === '0001-01-01 00:00:00 +0000 UTC') {
+    return ''
+  }
   let gmt = utcStrToDate(date)
   if (hasTooltip) {
     return <Tooltip title={`${moment(gmt).utc().format()}`}>
