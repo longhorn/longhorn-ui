@@ -11,7 +11,7 @@ function actions({ selected, deleteSystemRestore }) {
       title = (<div>
         <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name}</div>
         <Alert
-          message={'Deleting a restoring backup can mess up the Longhorn state'}
+          message={'Deleting restoring system backup will abort the remaining resource rollout. An incomplete restore may cause Longhorn system resource inconsistencies leading to unexpected behavior.'}
           type="warning"
         />
       </div>)
