@@ -1,12 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select, Checkbox, Spin } from 'antd'
+import { Form, Input, InputNumber, Select, Checkbox, Spin, Collapse } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 const FormItem = Form.Item
+const { Panel } = Collapse
 const { Option } = Select
 
 const formItemLayout = {
+  labelCol: {
+    span: 6,
+  },
+  wrapperCol: {
+    span: 13,
+  },
+}
+
+const formItemLayoutForAdvanced = {
   labelCol: {
     span: 8,
   },
@@ -58,7 +68,7 @@ const modal = ({
     title: 'Create Volume',
     visible,
     onCancel,
-    width: 840,
+    width: 880,
     onOk: handleOk,
     style: { top: 0 },
   }
@@ -93,7 +103,7 @@ const modal = ({
           })(<Input />)}
         </FormItem>
         <div style={{ display: 'flex' }}>
-          <FormItem label="Size" style={{ flex: 0.8, paddingLeft: 110 }} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+          <FormItem label="Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
             {getFieldDecorator('size', {
               initialValue: item.size,
               rules: [
@@ -120,7 +130,7 @@ const modal = ({
                   },
                 },
               ],
-            })(<InputNumber style={{ width: '300px' }} />)}
+            })(<InputNumber style={{ width: '250px' }} />)}
           </FormItem>
           <FormItem>
             {getFieldDecorator('unit', {
@@ -184,13 +194,6 @@ const modal = ({
           { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
-        <FormItem label="Update Snapshot Data Integrity" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('snapshotDataIntegrity', {
-            initialValue: defaultSnapshotDataIntegrityValue,
-          })(<Select>
-          { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
-          </Select>)}
-        </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: 'rwo',
@@ -205,31 +208,6 @@ const modal = ({
           })(<Select allowClear={true}>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
-        </FormItem>
-        <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('replicaAutoBalance', {
-            initialValue: 'ignored',
-          })(<Select>
-            <Option key={'ignored'} value={'ignored'}>ignored</Option>
-            <Option key={'disabled'} value={'disabled'}>disabled</Option>
-            <Option key={'least-effort'} value={'least-effort'}>least-effort</Option>
-            <Option key={'best-effort'} value={'best-effort'}>best-effort</Option>
-          </Select>)}
-        </FormItem>
-        <FormItem label="Allow snapshots removal during trim" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('unmapMarkSnapChainRemoved', {
-            initialValue: 'ignored',
-          })(<Select>
-            <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-            <Option key={'ignored'} value={'ignored'}>Ignored (Remove Current Snapshot Chain during File System Trim)</Option>
-          </Select>)}
-        </FormItem>
-        <FormItem label="Disable Revision Counter" {...formItemLayout}>
-          {getFieldDecorator('revisionCounterDisabled', {
-            valuePropName: 'checked',
-            initialValue: defaultRevisionCounterValue,
-          })(<Checkbox></Checkbox>)}
         </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
           {getFieldDecorator('encrypted', {
@@ -255,6 +233,43 @@ const modal = ({
             </Select>)}
           </FormItem>
         </Spin>
+        <Collapse>
+          <Panel header="Advanced Configurations" key="1">
+            <FormItem label="Update Snapshot Data Integrity" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('snapshotDataIntegrity', {
+                initialValue: defaultSnapshotDataIntegrityValue,
+              })(<Select>
+              { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
+              </Select>)}
+            </FormItem>
+            <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('replicaAutoBalance', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'ignored'} value={'ignored'}>ignored</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'least-effort'} value={'least-effort'}>least-effort</Option>
+                <Option key={'best-effort'} value={'best-effort'}>best-effort</Option>
+              </Select>)}
+            </FormItem>
+            <FormItem label="Allow Snapshot Removal During Trim" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('unmapMarkSnapChainRemoved', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>Ignored</Option>
+              </Select>)}
+            </FormItem>
+            <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('revisionCounterDisabled', {
+                valuePropName: 'checked',
+                initialValue: defaultRevisionCounterValue,
+              })(<Checkbox></Checkbox>)}
+            </FormItem>
+          </Panel>
+        </Collapse>
+
       </Form>
     </ModalBlur>
   )
