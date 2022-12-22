@@ -48,7 +48,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Snapshot Data Integrity',
+    title: 'Snapshot Data Integrity',
     visible,
     onCancel,
     onOk: handleOk,

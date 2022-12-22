@@ -126,7 +126,6 @@ class Volume extends React.Component {
     if (defaultSnapshotDataIntegrityOption.length > 0) {
       defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
     }
-    const defaultSnapshotDataIntegrityValue = defaultSnapshotDataIntegritySetting?.value ? defaultSnapshotDataIntegritySetting.value : 'disabled'
 
     const volumeFilterMap = {
       healthy: healthyVolume,
@@ -653,7 +652,6 @@ class Volume extends React.Component {
       defaultDataLocalityOption,
       defaultDataLocalityValue,
       defaultRevisionCounterValue,
-      defaultSnapshotDataIntegrityValue,
       defaultSnapshotDataIntegrityOption,
       diskTags,
       backingImages,
