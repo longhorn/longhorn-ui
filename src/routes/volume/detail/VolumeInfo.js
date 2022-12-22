@@ -301,7 +301,6 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}> Allow snapshots removal during trim:</span>
         <span style={{ marginRight: 5 }}>{selectedVolume.unmapMarkSnapChainRemoved ? selectedVolume.unmapMarkSnapChainRemoved : ''}</span>
-        {selectedVolume?.controllers && selectedVolume?.controllers[0] && `(${selectedVolume.controllers[0].unmapMarkSnapChainRemovedEnabled})`}
       </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
