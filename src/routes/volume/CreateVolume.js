@@ -35,7 +35,6 @@ const modal = ({
   defaultDataLocalityValue,
   defaultRevisionCounterValue,
   defaultSnapshotDataIntegrityOption,
-  defaultSnapshotDataIntegrityValue,
   diskTags,
   backingImages,
   tagsLoading,
@@ -235,9 +234,9 @@ const modal = ({
         </Spin>
         <Collapse>
           <Panel header="Advanced Configurations" key="1">
-            <FormItem label="Update Snapshot Data Integrity" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label="Snapshot Data Integrity" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('snapshotDataIntegrity', {
-                initialValue: defaultSnapshotDataIntegrityValue,
+                initialValue: 'ignored',
               })(<Select>
               { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
               </Select>)}
@@ -288,7 +287,6 @@ modal.propTypes = {
   defaultSnapshotDataIntegrityOption: PropTypes.array,
   tagsLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
-  defaultSnapshotDataIntegrityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
   backingImages: PropTypes.array,
 }

@@ -163,7 +163,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'expandVolume', name: 'Expand Volume', disabled() { return selectedRows.length === 0 || !conditionsScheduled() } },
     { key: 'updateBulkReplicaCount', name: 'Update Replicas Count', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkReplicaCount() || upgradingEngine() } },
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
-    { key: 'updateSnapshotDataIntegrity', name: 'Update Snapshot Data Integrity', disabled() { return selectedRows.length === 0 } },
+    { key: 'updateSnapshotDataIntegrity', name: 'Snapshot Data Integrity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled() { return selectedRows.length === 0 || disableUpdateReplicaAutoBalance() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() || !hasAction('pvCreate') || !hasAction('pvcCreate') } },
