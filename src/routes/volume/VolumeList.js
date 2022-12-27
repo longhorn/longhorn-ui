@@ -187,20 +187,23 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       width: 100,
       sorter: (a, b) => sortTable(a, b, 'size'),
       render: (expectedSize, record) => {
-        let currentSize = record?.controllers && record.controllers[0]?.size ? record.controllers[0].size : ''
-        let isExpanding = (parseInt(expectedSize, 10) > parseInt(currentSize, 10) || (record?.controllers && record.controllers[0]?.isExpanding)) && record.state === 'attached'
+        let currentSize = record?.controllers[0]?.size
+        let isExpanding = record?.controllers[0] && parseInt(expectedSize, 10) !== parseInt(currentSize, 10) && record.state === 'attached' && currentSize !== 0
         // The expected size of engine should not be smaller than the current size.
-        let expandingFailed = record?.controllers && !record.controllers[0]?.isExpanding && parseInt(expectedSize, 10) < parseInt(currentSize, 10) && record.state === 'attached'
+        let expandingFailed = isExpanding && record?.controllers[0]?.lastExpansionError !== ''
         let message = ''
-        if (isExpanding) {
+        if (expandingFailed) {
+          message = (<div>
+            <div>Expansion Error: {record?.controllers[0]?.lastExpansionError}</div>
+            <div>Note: You can cancel the expansion to avoid volume crash</div>
+          </div>)
+        } else if (isExpanding) {
           message = `The volume is in expansion progress from size ${formatMib(currentSize)} to size ${formatMib(expectedSize)}`
-        } else if (expandingFailed) {
-          message = `The expected size ${formatMib(expectedSize)} of engine should not be smaller than the current size ${formatMib(currentSize)}`
         }
 
         return (
-          <div>
-            {isExpanding ? <Tooltip title={message}>
+          <span>
+            {isExpanding && !expandingFailed ? <Tooltip title={message}>
               <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
                 <div className={style.expendVolumeIcon}>
                   <Icon type="loading" />
@@ -209,8 +212,22 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
                   <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
                 </div>
               </div>
-            </Tooltip> : <Tooltip title={message}><div className={expandingFailed ? 'error' : ''}>{formatMib(expectedSize)}</div></Tooltip>}
-          </div>
+            </Tooltip> : <Tooltip title={message}>
+              <div className={expandingFailed ? 'error' : ''}>
+                {expandingFailed ? <div>
+                  <Icon style={{ fontSize: '20px', marginRight: 5 }} type="info-circle" />
+                  <div className={'error'} style={{ position: 'relative', display: 'inline-block' }}>
+                    <div className={style.expendVolumeIcon}>
+                      <Icon type="loading" />
+                    </div>
+                    <div style={{ fontSize: '20px', marginLeft: '8px' }}>
+                      <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+                    </div>
+                  </div>
+                </div> : formatMib(expectedSize)}
+              </div>
+            </Tooltip>}
+          </span>
         )
       },
     },
