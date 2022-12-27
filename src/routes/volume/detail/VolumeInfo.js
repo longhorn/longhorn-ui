@@ -133,22 +133,49 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   }
 
   const volumeSizeEle = () => {
-    let oldSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].size ? selectedVolume.controllers[0].size : ''
-    let isExpanding = (selectedVolume.size !== oldSize && selectedVolume.state === 'attached')
-    let message = `The volume is in expansion progress from size ${formatMib(oldSize)} to size ${formatMib(selectedVolume.size)}`
+    let expectedSize = selectedVolume.size
+    let currentSize = selectedVolume?.controllers[0]?.size ? selectedVolume.controllers[0].size : ''
+    let isExpanding = selectedVolume?.controllers[0] && parseInt(expectedSize, 10) !== parseInt(currentSize, 10) && selectedVolume.state === 'attached' && parseInt(currentSize, 10) !== 0
+    // The expected size of engine should not be smaller than the current size.
+    let expandingFailed = isExpanding && selectedVolume?.controllers[0]?.lastExpansionError !== ''
+    let message = ''
+    if (expandingFailed) {
+      message = (<div>
+        <div>Expansion Error: {selectedVolume?.controllers[0]?.lastExpansionError}</div>
+        <div>Note: You can cancel the expansion to avoid volume crash</div>
+      </div>)
+    } else if (isExpanding) {
+      message = `The volume is in expansion progress from size ${formatMib(currentSize)} to size ${formatMib(expectedSize)}`
+    }
 
-    return (<div style={{ display: 'inline-block' }}>
-      {isExpanding ? <Tooltip title={message}>
-        <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
-          <div className={styles.expendVolumeIcon}>
-            <Icon type="loading" />
+    return (
+      <div style={{ display: 'inline-block' }}>
+        {isExpanding && !expandingFailed ? <Tooltip title={message}>
+          <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
+            <div className={styles.expendVolumeIcon}>
+              <Icon type="loading" />
+            </div>
+            <div style={{ fontSize: '20px' }}>
+              <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+            </div>
           </div>
-          <div style={{ fontSize: '20px' }}>
-            <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+        </Tooltip> : <Tooltip title={message}>
+          <div className={expandingFailed ? 'error' : ''}>
+            {expandingFailed ? <div>
+              <Icon style={{ fontSize: '20px', marginRight: '15px' }} type="info-circle" />
+              <div className={'error'} style={{ position: 'relative', display: 'inline-block' }}>
+                <div className={styles.expendVolumeIcon}>
+                  <Icon type="loading" />
+                </div>
+                <div style={{ fontSize: '20px' }}>
+                  <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+                </div>
+              </div>
+            </div> : formatMib(expectedSize)}
           </div>
-        </div>
-      </Tooltip> : <div>{formatMib(selectedVolume.size)}</div>}
-    </div>)
+        </Tooltip>}
+      </div>
+    )
   }
 
   return (
