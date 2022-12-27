@@ -151,6 +151,15 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
     </div>)
   }
 
+  const addGlobalSettingDescription = (text) => {
+    if (text) {
+      return (
+        <Tooltip title={text === 'ignored' ? 'The is the default option that instructs Longhorn to inherit from the global setting.' : ''}>{text}</Tooltip>
+      )
+    }
+    return text
+  }
+
   return (
     <div>
       {errorMsg}
@@ -286,11 +295,11 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Replicas Auto Balance:</span>
-        {selectedVolume.replicaAutoBalance ? selectedVolume.replicaAutoBalance : ''}
+        {addGlobalSettingDescription(selectedVolume?.replicaAutoBalance)}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Snapshot Data Integrity:</span>
-        {selectedVolume?.snapshotDataIntegrity || ''}
+        {addGlobalSettingDescription(selectedVolume?.snapshotDataIntegrity)}
       </div>
       <div className={styles.row}>
         <Tooltip title={'Manages the engine/replica instances’ life cycle on the node.'}>
@@ -300,7 +309,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Allow snapshots removal during trim:</span>
-        <span style={{ marginRight: 5 }}>{selectedVolume.unmapMarkSnapChainRemoved ? selectedVolume.unmapMarkSnapChainRemoved : ''}</span>
+        {addGlobalSettingDescription(selectedVolume?.unmapMarkSnapChainRemoved)}
       </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
