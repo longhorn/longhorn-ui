@@ -32,6 +32,9 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
+      if (data.name && typeof data.name === 'string') {
+        data.name = data.name.trimLeftAndRight()
+      }
       onOk(data)
     })
   }
