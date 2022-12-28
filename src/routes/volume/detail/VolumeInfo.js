@@ -134,14 +134,14 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
 
   const volumeSizeEle = () => {
     let expectedSize = selectedVolume.size
-    let currentSize = selectedVolume?.controllers[0]?.size ? selectedVolume.controllers[0].size : ''
+    let currentSize = selectedVolume?.controllers[0]?.size ?? ''
     let isExpanding = selectedVolume?.controllers[0] && parseInt(expectedSize, 10) !== parseInt(currentSize, 10) && selectedVolume.state === 'attached' && parseInt(currentSize, 10) !== 0
     // The expected size of engine should not be smaller than the current size.
     let expandingFailed = isExpanding && selectedVolume?.controllers[0]?.lastExpansionError !== ''
     let message = ''
     if (expandingFailed) {
       message = (<div>
-        <div>Expansion Error: {selectedVolume?.controllers[0]?.lastExpansionError}</div>
+        <div>Expansion Error: {selectedVolume.controllers[0].lastExpansionError}</div>
         <div>Note: You can cancel the expansion to avoid volume crash</div>
       </div>)
     } else if (isExpanding) {
