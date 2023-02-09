@@ -81,7 +81,11 @@ const form = ({
         break
     }
     let deprecatedSettings = setting.definition && setting.definition.type === 'deprecated'
-
+    // Convert * to a multiplication character that the browser can recognise
+    if (setting?.definition?.description) {
+      let reg = /\x20\*\x20/ig
+      setting.definition.description = setting.definition.description.replaceAll(reg, ' &times; ')
+    }
     return (
       <FormItem key={setting.id} className={'settings-container'} style={{ display: deprecatedSettings ? 'none' : 'block' }}>
         <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', fontWeight: 700, marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
@@ -90,7 +94,13 @@ const form = ({
           initialValue,
           valuePropName,
         })(genInputItem(setting))}
-        <div>{setting.definition.required && !setting.definition.readOnly ? <Icon style={{ mariginRight: 5 }} type="question-circle-o" /> : <Icon style={{ margin: '8px 5px 0px 0px', float: 'left' }} type="question-circle-o" />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
+        <div>
+          {setting.definition.required && !setting.definition.readOnly ? <Icon style={{ mariginRight: 5 }} type="question-circle-o" /> : <Icon style={{ margin: '8px 5px 0px 0px', float: 'left' }} type="question-circle-o" />}
+          <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>
+            {setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}
+            <ReactMarkdown source={setting.definition.description} />
+          </small>
+        </div>
       </FormItem>
     )
   }
