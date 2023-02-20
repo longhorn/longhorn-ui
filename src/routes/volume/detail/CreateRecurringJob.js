@@ -153,6 +153,17 @@ const modal = ({
     })
     cronProps.onCronCancel()
   }
+  const onChangeTask = (val) => {
+    if (val === 'snapshot-cleanup') {
+      setFieldsValue({
+        retain: 0,
+      })
+    } else if (getFieldValue('retain') === 0) {
+      setFieldsValue({
+        retain: 1,
+      })
+    }
+  }
 
   // init params
   getFieldDecorator('keys', { initialValue: isEdit && item.groups && item.groups.length > 0 ? item.groups.map((group, index) => { return { initialValue: group, index } }) : [{ index: 0, initialValue: '' }] })
@@ -286,9 +297,11 @@ const modal = ({
                       required: true,
                     },
                   ],
-                })(<Select disabled={isEdit} style={{ width: '80%' }}>
-                  <Option value="snapshot">Snapshot</Option>
-                  <Option value="backup">Backup</Option>
+                })(<Select disabled={isEdit} style={{ width: '80%' }} onChange={onChangeTask}>
+                    <Option value="backup">Backup</Option>
+                    <Option value="snapshot">Snapshot</Option>
+                    <Option value="snapshot-delete">Snapshot Delete</Option>
+                    <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
                 </Select>)}
               </FormItem>
               <FormItem label="Retain" hasFeedback {...formItemLayout}>
@@ -299,7 +312,7 @@ const modal = ({
                       required: true,
                     },
                   ],
-                })(<InputNumber style={{ width: '80%' }} min={1} />)}
+                })(<InputNumber disabled={getFieldValue('task') === 'snapshot-cleanup' || isEdit} style={{ width: '80%' }} min={0} />)}
               </FormItem>
               <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
                 {getFieldDecorator('concurrency', {
