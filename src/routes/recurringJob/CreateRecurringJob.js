@@ -278,7 +278,9 @@ const modal = ({
             ],
           })(<Select disabled={isEdit} style={{ width: '80%' }} onChange={onChangeTask}>
               <Option value="backup">Backup</Option>
+              <Option value="backup-force-create">Backup Force Create</Option>
               <Option value="snapshot">Snapshot</Option>
+              <Option value="snapshot-force-create">Snapshot Force Create</Option>
               <Option value="snapshot-delete">Snapshot Delete</Option>
               <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
           </Select>)}
