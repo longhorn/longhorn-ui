@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Icon, Button, Select, InputNumber, Tabs, Tooltip } from 'antd'
+import { Form, Input, Icon, Button, Select, Checkbox, InputNumber, Tabs, Tooltip } from 'antd'
 import { ModalBlur, ReactCron } from '../../../components'
 
 const Option = Select.Option
@@ -66,6 +66,14 @@ const modal = ({
       }
       const data = {
         ...getFieldsValue(),
+      }
+      if (data.fourceCreate) {
+        if (data.task === 'snapshot') {
+          data.task = 'snapshot-force-create'
+        }
+        if (data.task === 'backup') {
+          data.task = 'backup-force-create'
+        }
       }
       if (data.groups) {
         data.groups = data.groups.filter((group) => {
@@ -163,6 +171,9 @@ const modal = ({
         retain: 1,
       })
     }
+  }
+  const showForceCreateCheckbox = () => {
+    return getFieldValue('task') === 'backup' || getFieldValue('task') === 'snapshot'
   }
 
   // init params
@@ -289,23 +300,32 @@ const modal = ({
                   ],
                 })(<Input disabled={isEdit || addForVolume} style={{ width: '80%' }} />)}
               </FormItem>
-              <FormItem label="Task" hasFeedback {...formItemLayout}>
-                {getFieldDecorator('task', {
-                  initialValue: isEdit ? item.task : 'snapshot',
-                  rules: [
-                    {
-                      required: true,
-                    },
-                  ],
-                })(<Select disabled={isEdit} style={{ width: '80%' }} onChange={onChangeTask}>
-                    <Option value="backup">Backup</Option>
-                    <Option value="backup-force-create">Backup Force Create</Option>
-                    <Option value="snapshot">Snapshot</Option>
-                    <Option value="snapshot-force-create">Snapshot Force Create</Option>
-                    <Option value="snapshot-delete">Snapshot Delete</Option>
-                    <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
-                </Select>)}
-              </FormItem>
+              <div style={{ display: 'flex' }}>
+                <FormItem label="Task" hasFeedback style={{ flex: 1 }} labelCol={{ span: showForceCreateCheckbox() ? 7 : 4 }} wrapperCol={{ span: 17 }}>
+                  {getFieldDecorator('task', {
+                    initialValue: isEdit ? item.task : 'snapshot',
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Select disabled={isEdit} style={{ width: '80%' }} onChange={onChangeTask}>
+                      <Option value="backup">Backup</Option>
+                      <Option value="snapshot">Snapshot</Option>
+                      <Option value="snapshot-delete">Snapshot Delete</Option>
+                      <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
+                  </Select>)}
+                </FormItem>
+                {showForceCreateCheckbox() && <Tooltip
+                  placement="topLeft"
+                  title={`Create ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} periodically, even if expired ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} cannot be cleaned up.`}>
+                    <FormItem label="Force Create" style={{ width: 325 }} labelCol={{ span: 8 }} wrapperCol={{ span: 4 }}>
+                      {getFieldDecorator('fourceCreate', {
+                        initialValue: false,
+                      })(<Checkbox></Checkbox>)}
+                    </FormItem>
+                </Tooltip>}
+              </div>
               <FormItem label="Retain" hasFeedback {...formItemLayout}>
                 {getFieldDecorator('retain', {
                   initialValue: isEdit ? item.retain : 1,
