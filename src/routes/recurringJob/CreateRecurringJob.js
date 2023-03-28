@@ -40,6 +40,10 @@ const formItemLayoutWithOutForAddLabels = {
   },
 }
 
+const noRetain = (val) => {
+  return val === 'snapshot-cleanup' || val === 'filesystem-trim'
+}
+
 const modal = ({
   item,
   visible,
@@ -156,7 +160,7 @@ const modal = ({
     cronProps.onCronCancel()
   }
   const onChangeTask = (val) => {
-    if (val === 'snapshot-cleanup') {
+    if (noRetain(val)) {
       setFieldsValue({
         retain: 0,
       })
@@ -293,6 +297,7 @@ const modal = ({
                 <Option value="snapshot">Snapshot</Option>
                 <Option value="snapshot-delete">Snapshot Delete</Option>
                 <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
+                <Option value="filesystem-trim">Filesystem Trim</Option>
             </Select>)}
           </FormItem>
           {showForceCreateCheckbox() && <Tooltip
@@ -313,7 +318,7 @@ const modal = ({
                 required: true,
               },
             ],
-          })(<InputNumber disabled={getFieldValue('task') === 'snapshot-cleanup' || isEdit} style={{ width: '80%' }} min={0} />)}
+          })(<InputNumber disabled={noRetain(getFieldValue('task')) || isEdit} style={{ width: '80%' }} min={0} />)}
         </FormItem>
         <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
           {getFieldDecorator('concurrency', {
