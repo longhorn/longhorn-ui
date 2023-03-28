@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Button } from 'antd'
+import { Table } from 'antd'
 import { pagination } from '../../utils/page'
 import { sortTable } from '../../utils/sort'
 function list({ loading, dataSource, height, showRefCountVolumeModal }) {
@@ -13,11 +13,9 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
       sorter: (a, b) => sortTable(a, b, 'name'),
       render: (text, record) => {
         return (
-          <div>
-            <Button type="link" onClick={() => showRefCountVolumeModal(record.volume)}>
-              {text}
-            </Button>
-          </div>
+          <a className="ant-btn-link" onClick={() => showRefCountVolumeModal(record.volume)}>
+            {text}
+          </a>
         )
       },
     },
