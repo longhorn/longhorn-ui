@@ -6,6 +6,7 @@ import moment from 'moment'
 import { Row, Col, Button, Modal, Alert } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
+import CreateObjectEndpoint from './CreateObjectEndpoint'
 import CreateVolume from './CreateVolume'
 import CustomColumn from './CustomColumn'
 import ExpansionVolumeSizeModal from './ExpansionVolumeSizeModal'
@@ -188,6 +189,8 @@ class Volume extends React.Component {
       updateReplicaSoftAntiAffinityVisible,
       updateReplicaSoftAntiAffinityModalKey,
       isBulkDetach,
+      createObjectEndpointModalVisible,
+      createObjectEndpointModalKey,
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -699,6 +702,81 @@ class Volume extends React.Component {
       },
     }
 
+    const confirmModalWithWorkloadProps = {
+      visible: me.state.confirmModalWithWorkloadVisible,
+      title: me.state.confirmModalWithWorkloadTitle,
+      onOk() {
+        if (me.state.confirmModalWithWorkloadIsBluk) {
+          dispatch({
+            type: 'volume/bulkDetach',
+            payload: selectedRows.map(item => item.actions.detach),
+          })
+        } else {
+          dispatch({
+            type: 'volume/detach',
+            payload: {
+              url: me.state.confirmModalWithWorkloadActionUrl,
+            },
+          })
+        }
+        me.setState({
+          ...me.state,
+          confirmModalWithWorkloadVisible: false,
+          confirmModalWithWorkloadActionUrl: '',
+          confirmModalWithWorkloadTitle: '',
+          confirmModalWithWorkloadIsBluk: false,
+        })
+      },
+      onCancel() {
+        me.setState({
+          ...me.state,
+          confirmModalWithWorkloadVisible: false,
+          confirmModalWithWorkloadActionUrl: '',
+          confirmModalWithWorkloadTitle: '',
+          confirmModalWithWorkloadIsBluk: false,
+        })
+      },
+    }
+
+    const createObjectEndpointModalProps = {
+      item: {
+        numberOfReplicas: defaultNumberOfReplicas,
+        size: 20,
+        iops: 1000,
+        unit: 'Gi',
+        frontend: 'iscsi',
+        diskSelector: [],
+        nodeSelector: [],
+        accessKey: '',
+        secretKey: '',
+      },
+      nodeTags,
+      defaultDataLocalityOption,
+      defaultDataLocalityValue,
+      defaultRevisionCounterValue,
+      defaultSnapshotDataIntegrityOption,
+      diskTags,
+      backingImages,
+      tagsLoading,
+      hosts,
+      visible: createObjectEndpointModalVisible,
+      onOk(newVolume) {
+        dispatch({
+          type: 'volume/createObjectEndpoint',
+          payload: newVolume,
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideCreateObjectEndpointModal',
+        })
+        dispatch({
+          type: 'app/changeBlur',
+          payload: false,
+        })
+      },
+    }
+
     const createVolumeModalProps = {
       item: {
         numberOfReplicas: defaultNumberOfReplicas,
@@ -1060,6 +1138,12 @@ class Volume extends React.Component {
       },
     }
 
+    const addObjectEndpoint = () => {
+      dispatch({
+        type: 'volume/showCreateObjectEndpointModalBefore',
+      })
+    }
+
     const addVolume = () => {
       dispatch({
         type: 'volume/showCreateVolumeModalBefore',
@@ -1121,8 +1205,11 @@ class Volume extends React.Component {
             <Filter {...volumeFilterProps} />
           </Col>
         </Row>
-        <Button className="out-container-button" size="large" type="primary" onClick={addVolume}>Create Volume</Button>
-        <Button style={{ position: 'absolute', top: '-46px', right: '150px' }} size="large" type="primary" onClick={customColumn}>Custom Column</Button>
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '3px', position: 'absolute', top: '-46px', right: '0px' }}>
+          <Button size="large" type="primary" onClick={customColumn}>Custom Column</Button>
+          <Button size="large" type="primary" onClick={addVolume}>Create Volume</Button>
+          <Button size="large" type="primary" onClick={addObjectEndpoint}>Create Object Endpoint</Button>
+        </div>
         <VolumeList {...volumeListProps} />
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
         {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}
@@ -1153,6 +1240,7 @@ class Volume extends React.Component {
         {updateBulkSnapshotDataIntegrityModalVisible ? <UpdateBulkSnapshotDataIntegrityModal key={updateBulkSnapshotDataIntegrityModalKey} {...updateBulkSnapshotDataIntegrityModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <SoftAntiAffinityModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
+        {createObjectEndpointModalVisible ? <CreateObjectEndpoint key={createObjectEndpointModalKey} {...createObjectEndpointModalProps} /> : ''}
       </div>
     )
   }

@@ -1,4 +1,23 @@
-import { create, deleteVolume, query, execAction, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion, createRecurringJob, recurringJobAdd, getVolumeRecurringJobList, removeVolumeRecurringJob, updateRecurringJob } from '../services/volume'
+import {
+  create,
+  deleteVolume,
+  query,
+  execAction,
+  createVolumePV,
+  createVolumePVC,
+  createVolumeAllPVC,
+  volumeActivate,
+  getNodeTags,
+  getDiskTags,
+  expandVolume,
+  cancelExpansion,
+  createRecurringJob,
+  recurringJobAdd,
+  getVolumeRecurringJobList,
+  removeVolumeRecurringJob,
+  updateRecurringJob,
+  createObjectEndpoint,
+} from '../services/volume'
 import { query as getRecurringJob } from '../services/recurringJob'
 import { wsChanges, updateState } from '../utils/websocket'
 import { sortVolume } from '../utils/sort'
@@ -98,6 +117,8 @@ export default {
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
+    createObjectEndpointModalVisible: false,
+    createObjectEndpointModalKey: Math.random(),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -613,6 +634,25 @@ export default {
         ws.close(1000)
       }
     },
+    *createObjectEndpoint({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideCreateObjectEndpointModal' })
+      yield call(createObjectEndpoint, payload)
+      yield put({ type: 'query' })
+    },
+    *showCreateObjectEndpointModalBefore({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'showCreateObjectEndpointModal' })
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
+      if (nodeTags.status === 200 && diskTags.status === 200) {
+        yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
+      } else {
+        yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
+      }
+    },
   },
   reducers: {
     queryVolume(state, action) {
@@ -857,6 +897,12 @@ export default {
     },
     updateWs(state, action) {
       return { ...state, ws: action.payload }
+    },
+    showCreateObjectEndpointModal(state, action) {
+      return { ...state, ...action.payload, createObjectEndpointModalVisible: true, createObjectEndpointModalKey: Math.random() }
+    },
+    hideCreateObjectEndpointModal(state) {
+      return { ...state, createObjectEndpointModalVisible: false, tagsLoading: true }
     },
   },
 }

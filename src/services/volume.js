@@ -157,3 +157,15 @@ export async function updateRecurringJob(params) {
     },
   })
 }
+
+export async function createObjectEndpoint(params) {
+  return request({
+    url: '/v1/volumes',
+    method: 'post',
+    data: {
+      ...params,
+      staleReplicaTimeout: 20,
+      fromBackup: '',
+    },
+  })
+}
