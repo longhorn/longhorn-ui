@@ -168,7 +168,7 @@ module.exports = {
     fs: "empty",
     module: "empty"
   },
-  devtool: "source-map",
+  devtool: "eval-source-map",
   optimization: {
     splitChunks: {
       cacheGroups: {
