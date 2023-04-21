@@ -4,7 +4,7 @@ RUN apt-get update -y && \
 RUN mkdir /web
 WORKDIR /web
 COPY . /web
-RUN npm install
+RUN npm ci
 ARG VERSION
 ENV VERSION ${VERSION}
 RUN envsubst '${VERSION}' < /web/src/utils/config.js > /web/src/utils/config.js.subst && mv /web/src/utils/config.js.subst /web/src/utils/config.js

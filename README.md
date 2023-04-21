@@ -14,7 +14,7 @@ Setup:
 ```bash
   git clone 'https://github.com/rancher/longhorn-ui'
   cd 'longhorn-ui'
-  npm install
+  npm ci
 ```
 Run development server pointed at some Longhorn Manager API
 ```bash
