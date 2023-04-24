@@ -20,6 +20,12 @@ Run development server pointed at some Longhorn Manager API
 ```bash
   LONGHORN_MANAGER_IP="http://longhorn:9500/" npm run dev
 ```
+
+If you are using Gnome as desktop environment, then you should use
+```bash
+  DE=generic LONGHORN_MANAGER_IP="http://longhorn:9500/" npm run dev
+```
+
 Compiling for distribution
 ```bash
   npm run build
