@@ -38,13 +38,13 @@ module.exports = {
       timeout: 10 * 60 * 1000,
       "/v1/ws/**": {
         "target": endpoint,
-        "changeOrigin": false,
+        "changeOrigin": true,
         "ws": true,
         "secure": false
       },
       "/v1/": {
         "target": endpoint,
-        "changeOrigin": false
+        "changeOrigin": true
       },
     }
   },
