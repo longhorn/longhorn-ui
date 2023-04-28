@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import moment from 'moment'
-import { Row, Col, Button, Modal, Alert } from 'antd'
+import { Row, Col, Button, Modal, Alert, Dropdown, Icon, Menu } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
 import CreateObjectEndpoint from './CreateObjectEndpoint'
@@ -1181,6 +1181,30 @@ class Volume extends React.Component {
       },
     }
 
+
+    const createButtonActions = [
+      {
+        key: 'volume',
+        name: 'Volume',
+        onClick: addVolume,
+      },
+      {
+        key: 'objectEndpoint',
+        name: 'Object Endpoint',
+        onClick: addObjectEndpoint,
+      },
+    ]
+
+    const createButtonMenu = (<Menu>
+      {
+        createButtonActions.map((item) => {
+          return (<Menu.Item key={item.key}>
+            <Button size="large" type="link" onClick={item.onClick}>{item.name}</Button>
+          </Menu.Item>)
+        })
+      }
+    </Menu>)
+
     const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selected, selectedRows, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
     const updateBulKReplicaCountModalProps = getUpdateBulkReplicaCountModalProps(selectedRows, updateBulkReplicaCountModalVisible, dispatch)
@@ -1205,11 +1229,10 @@ class Volume extends React.Component {
             <Filter {...volumeFilterProps} />
           </Col>
         </Row>
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '3px', position: 'absolute', top: '-46px', right: '0px' }}>
-          <Button size="large" type="primary" onClick={customColumn}>Custom Column</Button>
-          <Button size="large" type="primary" onClick={addVolume}>Create Volume</Button>
-          <Button size="large" type="primary" onClick={addObjectEndpoint}>Create Object Endpoint</Button>
-        </div>
+        <Dropdown className="out-container-button" overlay={createButtonMenu} trigger={['click']}>
+          <Button type="primary" size="large">Create<Icon type="down" /></Button>
+        </Dropdown>
+        <Button style={{ position: 'absolute', top: '-46px', right: '106px' }} size="large" type="primary" onClick={customColumn}>Custom Column</Button>
         <VolumeList {...volumeListProps} />
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
         {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}
