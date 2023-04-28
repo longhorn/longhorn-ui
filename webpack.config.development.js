@@ -168,7 +168,7 @@ module.exports = {
     fs: "empty",
     module: "empty"
   },
-  devtool: "eval-source-map",
+  devtool: false,
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -201,6 +201,7 @@ module.exports = {
       }
     ]),
     new webpack.HotModuleReplacementPlugin(),
-    new ManifestPlugin()
+    new ManifestPlugin(),
+    new webpack.SourceMapDevToolPlugin({})
   ]
 };
