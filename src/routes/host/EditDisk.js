@@ -47,7 +47,12 @@ const modal = ({
         }
         disk.name ? updatedDisks[disk.name] = disk : updatedDisks[k] = disk
       })
-      let updateNode = Object.assign({}, node, { tags: values.tags, allowScheduling: values.nodeAllowScheduling, evictionRequested: values.evictionRequested, engineManagerCPURequest: values.engineManagerCPURequest, replicaManagerCPURequest: values.replicaManagerCPURequest })
+      let updateNode = Object.assign({}, node, {
+        tags: values.tags,
+        allowScheduling: values.nodeAllowScheduling,
+        evictionRequested: values.evictionRequested,
+        instanceManagerCPURequest: values.instanceManagerCPURequest,
+      })
       if (disabledSchedulingDiskIds.length > 0) {
         const disabledSchedulingDisks = {}
         Object.keys(node.disks).forEach(id => {

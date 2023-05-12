@@ -42,20 +42,19 @@ class InstanceManager extends React.Component {
 
     let data = instanceManagerData.map((item) => {
       item.volume = []
-      if (item.managerType === 'engine') {
-        volumeData.forEach(ele => {
-          if (ele && ele.controllers && ele.controllers[0] && item.name === ele.controllers[0].instanceManagerName) {
-            item.volume.push(ele)
-          }
-        })
-      }
-      if (item.managerType === 'replica') {
-        volumeData.forEach(ele => {
-          if (ele && ele.replicas && ele.replicas.length > 0 && ele.replicas.some((replica) => replica.instanceManagerName === item.name)) {
-            item.volume.push(ele)
-          }
-        })
-      }
+      volumeData.forEach(ele => {
+        let engineForVolume = ele?.controllers && ele?.controllers[0] && item.name === ele.controllers[0].instanceManagerName
+        let replicasForVolume = ele?.replicas?.length > 0 && ele.replicas.some((replica) => replica.instanceManagerName === item.name)
+        if (engineForVolume && item.managerType === 'engine') {
+          item.volume.push(ele)
+        }
+        if (replicasForVolume && item.managerType === 'replica') {
+          item.volume.push(ele)
+        }
+        if ((replicasForVolume || engineForVolume) && item.managerType === 'aio') {
+          item.volume.push(ele)
+        }
+      })
       return item
     })
 
