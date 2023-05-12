@@ -13,25 +13,30 @@ class InstanceManagerComponent extends React.Component {
 
     let data = []
     let engineimageObj = { name: 'Engine Image', image: defaultEngineImage.value, state: 'not deployed', id: 'engineRowKey' }
-    let instanceManagerObj = { name: 'Instance Manager', image: 'N/A', state: 'N/A', id: 'instanceRowKey' }
 
     engineimage.forEach((item) => {
       if (defaultEngineImage.value === item.image && item.nodeDeploymentMap && item.nodeDeploymentMap[currentNode.id]) {
         engineimageObj.state = 'deployed'
       }
     })
+    data.push(engineimageObj)
 
     instanceManagerData.forEach((item) => {
-      if (defaultInstanceManager.value === item.image && item.managerType === 'engine' && item.nodeID === currentNode.id) {
-        let replicaCurrentState = item.replicaCurrentState
+      let instanceManagerObj = { name: 'Instance Manager', image: 'N/A', state: 'N/A', id: 'instanceRowKey' }
+      if (defaultInstanceManager.value === item.image && item.nodeID === currentNode.id) {
         instanceManagerObj.image = item.image
-        !currentNode.disks ? replicaCurrentState = 'N/A' : ''
-        instanceManagerObj.state = `Engine: ${item.currentState}  |  Replica: ${replicaCurrentState}`
+        // Engine will deprecated in v1.6.x
+        if (item.managerType === 'engine') {
+          instanceManagerObj.name = `${instanceManagerObj.name} (Deprecated)`
+          let replicaCurrentState = item.replicaCurrentState
+          !currentNode.disks ? replicaCurrentState = 'N/A' : ''
+          instanceManagerObj.state = `Engine: ${item.currentState}  |  Replica: ${replicaCurrentState}`
+        } else if (item.managerType === 'aio') {
+          instanceManagerObj.state = item.currentState
+        }
       }
+      data.push(instanceManagerObj)
     })
-
-    data.push(engineimageObj)
-    data.push(instanceManagerObj)
 
     const columns = [
       {
