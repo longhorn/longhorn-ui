@@ -402,6 +402,73 @@ export function getUpdateReplicaAutoBalanceModalProps(volumes, visible, dispatch
   }
 }
 
+export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch) {
+  let replicaSoftAntiAffinityVolumes = []
+  let feilds = {}
+  switch (softAntiAffinityKey) {
+    case 'updateReplicaSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaSoftAntiAffinity',
+        key: 'replicaSoftAntiAffinity',
+        name: 'Replica Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = [volume]
+      break
+    case 'updateBulkReplicaSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaSoftAntiAffinity',
+        key: 'replicaSoftAntiAffinity',
+        name: 'Replica Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = volumes
+      break
+    case 'updateReplicaZoneSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaZoneSoftAntiAffinity',
+        key: 'replicaZoneSoftAntiAffinity',
+        name: 'Replica Zone Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = [volume]
+      break
+    case 'updateBulkReplicaZoneSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaZoneSoftAntiAffinity',
+        key: 'replicaZoneSoftAntiAffinity',
+        name: 'Replica Zone Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = volumes
+      break
+    default:
+  }
+  return {
+    items: replicaSoftAntiAffinityVolumes,
+    visible: updateReplicaSoftAntiAffinityVisible,
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateReplicaSoftAntiAffinityModal',
+      })
+    },
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateReplicaSoftAntiAffinityModal',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+      dispatch({
+        type: 'volume/hideUpdateReplicaSoftAntiAffinityModal',
+      })
+    },
+    options: [
+      { value: 'enabled', lable: 'Enabled' },
+      { value: 'disabled', lable: 'Disabled' },
+      { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+    ],
+    feilds,
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }

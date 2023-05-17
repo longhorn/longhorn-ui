@@ -5,7 +5,7 @@ import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, showUnmapMarkSnapChainRemovedModal, engineUpgradePerNodeLimit, trimFilesystem, showUpdateSnapshotDataIntegrityModal, commandKeyDown }) {
+function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, showUnmapMarkSnapChainRemovedModal, engineUpgradePerNodeLimit, trimFilesystem, showUpdateSnapshotDataIntegrityModal, showUpdateReplicaSoftAntiAffinityModal, showUpdateReplicaZoneSoftAntiAffinityModal, commandKeyDown }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -113,6 +113,12 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
       case 'updateUnmapMarkSnapChainRemoved':
         showUnmapMarkSnapChainRemovedModal(record)
         break
+      case 'updateReplicaSoftAntiAffinity':
+        showUpdateReplicaSoftAntiAffinityModal(record)
+        break
+      case 'updateReplicaZoneSoftAntiAffinity':
+        showUpdateReplicaZoneSoftAntiAffinityModal(record)
+        break
       case 'trimFilesystem':
         confirm({
           title: 'Are you sure you want to trim Fileystem ?',
@@ -180,6 +186,8 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
+    { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
+    { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 

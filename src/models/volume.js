@@ -62,6 +62,8 @@ export default {
     defaultPVCName: '',
     previousNamespace: '',
     recurringJobList: [],
+    softAntiAffinityKey: '',
+    updateReplicaSoftAntiAffinityVisible: false,
     changeVolumeModalKey: Math.random(),
     bulkChangeVolumeModalKey: Math.random(),
     bulkExpandVolumeModalKey: Math.random(),
@@ -91,6 +93,7 @@ export default {
     bulkUnmapMarkSnapChainRemovedModalKey: Math.random(),
     updateSnapshotDataIntegrityModalKey: Math.random(),
     updateBulkSnapshotDataIntegrityModalKey: Math.random(),
+    updateReplicaSoftAntiAffinityModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -308,6 +311,12 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideUpdateReplicaAutoBalanceModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateReplicaSoftAntiAffinityModal({
+      payload,
+    }, { call, put }) {
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
@@ -805,6 +814,31 @@ export default {
     },
     hideConfirmDetachWithWorkload(state) {
       return { ...state, confirmModalWithWorkloadVisible: false, confirmModalWithWorkloadKey: Math.random() }
+    },
+    showBulkUpdateReplicaSoftAntiAffinityModal(state, action) {
+      return {
+        ...state,
+        selectedRows: action?.payload?.volumes,
+        updateReplicaSoftAntiAffinityVisible: true,
+        softAntiAffinityKey: action?.payload?.softAntiAffinityKey,
+        updateReplicaSoftAntiAffinityModalKey: Math.random(),
+      }
+    },
+    showUpdateReplicaSoftAntiAffinityModal(state, action) {
+      return {
+        ...state,
+        selected: action?.payload?.volume,
+        updateReplicaSoftAntiAffinityVisible: true,
+        softAntiAffinityKey: action?.payload?.softAntiAffinityKey,
+        updateReplicaSoftAntiAffinityModalKey: Math.random(),
+      }
+    },
+    hideUpdateReplicaSoftAntiAffinityModal(state) {
+      return {
+        ...state,
+        softAntiAffinityKey: '',
+        updateReplicaSoftAntiAffinityVisible: false,
+      }
     },
     updateWs(state, action) {
       return { ...state, ws: action.payload }

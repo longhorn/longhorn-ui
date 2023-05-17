@@ -6,7 +6,32 @@ import style from './VolumeBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEngineUpgrade, showBulkChangeVolume, showBulkAttachHost, bulkDetach, bulkBackup, bulkExpandVolume, createPVAndPVC, confirmDetachWithWorkload, commandKeyDown, showUpdateBulkReplicaCount, showUpdateBulkDataLocality, showUpdateBulkAccessMode, engineUpgradePerNodeLimit, showUpdateReplicaAutoBalanceModal, backupTargetAvailable, backupTargetMessage, showBulkUnmapMarkSnapChainRemovedModal, trimBulkFilesystem, showUpdateBulkSnapshotDataIntegrityModal }) {
+function bulkActions({
+  selectedRows,
+  engineImages,
+  bulkDeleteVolume,
+  showBulkEngineUpgrade,
+  showBulkChangeVolume,
+  showBulkAttachHost,
+  bulkDetach,
+  bulkBackup,
+  bulkExpandVolume,
+  createPVAndPVC,
+  confirmDetachWithWorkload,
+  commandKeyDown,
+  showUpdateBulkReplicaCount,
+  showUpdateBulkDataLocality,
+  showUpdateBulkAccessMode,
+  engineUpgradePerNodeLimit,
+  showUpdateReplicaAutoBalanceModal,
+  backupTargetAvailable,
+  backupTargetMessage,
+  showBulkUnmapMarkSnapChainRemovedModal,
+  trimBulkFilesystem,
+  showUpdateBulkSnapshotDataIntegrityModal,
+  showUpdateReplicaSoftAntiAffinityModal,
+  showUpdateReplicaZoneSoftAntiAffinityModal,
+}) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
     let pvResources = []
@@ -107,6 +132,12 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       case 'updateUnmapMarkSnapChainRemoved':
         showBulkUnmapMarkSnapChainRemovedModal(selectedRows)
         break
+      case 'updateReplicaSoftAntiAffinity':
+        showUpdateReplicaSoftAntiAffinityModal(selectedRows)
+        break
+      case 'updateReplicaZoneSoftAntiAffinity':
+        showUpdateReplicaZoneSoftAntiAffinityModal(selectedRows)
+        break
       case 'trimFilesystem':
         confirm({
           title: `Are you sure you want to trim (${selectedRows.map(item => item.name).join(', ')}) Fileystem ?`,
@@ -169,6 +200,8 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() || !hasAction('pvCreate') || !hasAction('pvcCreate') } },
     { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled() { return selectedRows.length === 0 } },
+    { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
+    { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
   ]
 
