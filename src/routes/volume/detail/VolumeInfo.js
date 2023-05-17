@@ -338,6 +338,14 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Allow snapshots removal during trim:</span>
         {addGlobalSettingDescription(selectedVolume?.unmapMarkSnapChainRemoved)}
       </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Replica Soft Anti Affinity:</span>
+        {selectedVolume?.replicaSoftAntiAffinity}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Replica Zone Soft Anti Affinity:</span>
+        {selectedVolume?.replicaZoneSoftAntiAffinity}
+      </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
