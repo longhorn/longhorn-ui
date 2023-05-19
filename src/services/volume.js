@@ -59,14 +59,11 @@ export async function createVolumePVC(data, url) {
   })
 }
 
-export async function createVolumeAllPVC(namespace, pvcName, url) {
+export async function createVolumeAllPVC(data, url) {
   return request({
     url,
     method: 'post',
-    data: {
-      namespace,
-      pvcName,
-    },
+    data,
   })
 }
 
