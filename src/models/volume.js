@@ -368,6 +368,7 @@ export default {
         if (payload.params.previousChecked) {
           yield payload.action.map(item => {
             let namespace = payload.params.namespace
+            let storageClassName = payload.params.storageClassName
             let pvcname = item.name
             if (item.kubernetesStatus && item.kubernetesStatus.namespace) {
               namespace = item.kubernetesStatus.namespace
@@ -375,11 +376,19 @@ export default {
             if (item.kubernetesStatus && item.kubernetesStatus.pvcName) {
               pvcname = item.kubernetesStatus.pvcName
             }
-            return call(createVolumeAllPVC, namespace, pvcname, item.actions.pvcCreate)
+            return call(createVolumeAllPVC, {
+              namespace,
+              pvcname,
+              storageClassName,
+            }, item.actions.pvcCreate)
           })
         } else {
           yield payload.action.map(item => {
-            return call(createVolumeAllPVC, payload.params.namespace, item.name, item.actions.pvcCreate)
+            return call(createVolumeAllPVC, {
+              namespace: payload.params.namespace,
+              pvcname: item.name,
+              storageClassName: payload.params.storageClassName,
+            }, item.actions.pvcCreate)
           })
         }
       }
@@ -397,7 +406,7 @@ export default {
         yield call(createVolumePV, params, payload.selectedVolume.actions.pvCreate)
       }
       if (payload.params && payload.params.namespace && payload.params.pvcName) {
-        let params = { pvcName: payload.params.pvcName, namespace: payload.params.namespace }
+        let params = { pvcName: payload.params.pvcName, namespace: payload.params.namespace, storageClassName: payload.params.storageClassName }
         yield call(createVolumePVC, params, payload.selectedVolume.actions.pvcCreate)
       }
       yield put({ type: 'query' })
