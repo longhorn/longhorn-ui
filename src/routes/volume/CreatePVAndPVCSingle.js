@@ -16,7 +16,7 @@ const formItemLayout = {
 }
 const formItemLayout2 = {
   labelCol: {
-    span: 14,
+    span: 18,
   },
   wrapperCol: {
     span: 2,
@@ -98,6 +98,18 @@ const modal = ({
             initialValue: '',
           })(<Input disabled={false} />)}
         </FormItem>}
+        <FormItem label="Storage Class Name" {...formItemLayout}>
+          {getFieldDecorator('storageClassName', {
+            initialValue: '',
+          })(<div className={style.storageClassName}>
+            <Input disabled={item.pvNameDisabled} />
+            <Tooltip title={'If no value is provided, Longhorn will first utilize the storageClassName stored in the backup volume if the volume is being restored from a backup. Otherwise, Longhorn will use the storageClassName specified in the default setting.'}>
+              <span className={style.icon}>
+                <Icon type="info-circle" />
+              </span>
+            </Tooltip>
+          </div>)}
+        </FormItem>
         <FormItem label="File System" {...formItemLayout}>
           {getFieldDecorator('fsType', {
             initialValue: 'ext4',
@@ -141,18 +153,6 @@ const modal = ({
               },
             ],
           })(<Input disabled={nameSpaceDisabled} />)}
-        </FormItem>
-        <FormItem label="Storage Class Name" {...formItemLayout}>
-          {getFieldDecorator('storageClassName', {
-            initialValue: item.previousNamespace,
-          })(<div className={style.storageClassName}>
-            <Input disabled={nameSpaceDisabled} />
-            <Tooltip title={'If no value is provided, Longhorn will first utilize the storageClassName stored in the backup volume if the volume is being restored from a backup. Otherwise, Longhorn will use the storageClassName specified in the default setting.'}>
-              <span className={style.icon}>
-                <Icon type="info-circle" />
-              </span>
-            </Tooltip>
-          </div>)}
         </FormItem>
       </Form>
     </ModalBlur>

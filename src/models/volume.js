@@ -363,12 +363,12 @@ export default {
           pvAction.push(item)
         }
       })
-      yield pvAction.map(item => call(createVolumePV, { pvName: item.name, fsType }, item.actions.pvCreate))
+      const storageClassName = payload.params.storageClassName
+      yield pvAction.map(item => call(createVolumePV, { pvName: item.name, fsType, storageClassName }, item.actions.pvCreate))
       if (payload.params.createPvcChecked) {
         if (payload.params.previousChecked) {
           yield payload.action.map(item => {
             let namespace = payload.params.namespace
-            let storageClassName = payload.params.storageClassName
             let pvcname = item.name
             if (item.kubernetesStatus && item.kubernetesStatus.namespace) {
               namespace = item.kubernetesStatus.namespace
@@ -379,7 +379,6 @@ export default {
             return call(createVolumeAllPVC, {
               namespace,
               pvcname,
-              storageClassName,
             }, item.actions.pvcCreate)
           })
         } else {
@@ -387,7 +386,6 @@ export default {
             return call(createVolumeAllPVC, {
               namespace: payload.params.namespace,
               pvcname: item.name,
-              storageClassName: payload.params.storageClassName,
             }, item.actions.pvcCreate)
           })
         }
@@ -398,15 +396,15 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideCreatePVCAndPVSingleModal' })
-      if (payload.selectedVolume && payload.selectedVolume.kubernetesStatus && !payload.selectedVolume.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
-        let params = { pvName: payload.params.pvName, fsType: payload.params.fsType }
+      if (payload?.selectedVolume?.kubernetesStatus && !payload.selectedVolume.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
+        let params = { pvName: payload.params.pvName, fsType: payload.params.fsType, storageClassName: payload.params.storageClassName }
         if (payload.selectedVolume.encrypted) {
           Object.assign(params, { secretNamespace: payload.params.secretNamespace, secretName: payload.params.secretName })
         }
         yield call(createVolumePV, params, payload.selectedVolume.actions.pvCreate)
       }
       if (payload.params && payload.params.namespace && payload.params.pvcName) {
-        let params = { pvcName: payload.params.pvcName, namespace: payload.params.namespace, storageClassName: payload.params.storageClassName }
+        let params = { pvcName: payload.params.pvcName, namespace: payload.params.namespace }
         yield call(createVolumePVC, params, payload.selectedVolume.actions.pvcCreate)
       }
       yield put({ type: 'query' })
