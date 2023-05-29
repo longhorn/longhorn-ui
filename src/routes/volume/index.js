@@ -16,10 +16,10 @@ import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import WorkloadDetailModal from './WorkloadDetailModal'
 import RecurringJobModal from './RecurringJobModal'
 import AttachHost from './AttachHost'
+import DetachHost from './DetachHost'
 import EngineUgrade from './EngineUpgrade'
 import UpdateReplicaCount from './UpdateReplicaCount'
 import UpdateBulkReplicaCount from './UpdateBulkReplicaCount'
-import ConfirmModalWithWorkload from './ConfirmModalWithWorkload'
 import UpdateDataLocality from './UpdateDataLocality'
 import UpdateUnmapMarkSnapChainRemovedModal from './UpdateUnmapMarkSnapChainRemovedModal'
 import UpdateBulkUnmapMarkSnapChainRemovedModal from './UpdateBulkUnmapMarkSnapChainRemovedModal'
@@ -35,7 +35,7 @@ import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
 import SoftAntiAffinityModal from './components/SoftAntiAffinityModal.js'
 import {
-  genAttachHostModalProps,
+  getAttachHostModalProps,
   getEngineUpgradeModalProps,
   getBulkEngineUpgradeModalProps,
   getUpdateReplicaCountModalProps,
@@ -50,6 +50,7 @@ import {
   getUpdateBulkSnapshotDataIntegrityModalProps,
   getUpdateSnapshotDataIntegrityProps,
   getUpdateReplicaSoftAntiAffinityModalProps,
+  getDetachHostModalProps,
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -63,14 +64,8 @@ class Volume extends React.Component {
       height: 300,
       createBackModalKey: Math.random(),
       createBackModalVisible: false,
-      confirmModalWithWorkloadVisible: false,
-      confirmModalWithWorkloadKey: Math.random(),
-      // Used to record the currently selected volume that requires detach operation
-      confirmModalWithWorkloadActionUrl: '',
-      confirmModalWithWorkloadTitle: '',
       selectedRows: [],
       commandKeyDown: false,
-      confirmModalWithWorkloadIsBluk: false,
     }
   }
 
@@ -134,6 +129,8 @@ class Volume extends React.Component {
       recurringJobModalKey,
       attachHostModalVisible,
       attachHostModalKey,
+      detachHostModalVisible,
+      detachHostModalKey,
       bulkAttachHostModalVisible,
       bulkAttachHostModalKey,
       engineUpgradeModalVisible,
@@ -190,6 +187,7 @@ class Volume extends React.Component {
       softAntiAffinityKey,
       updateReplicaSoftAntiAffinityVisible,
       updateReplicaSoftAntiAffinityModalKey,
+      isBulkDetach,
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -326,11 +324,12 @@ class Volume extends React.Component {
           payload: record,
         })
       },
-      detach(url) {
+      showDetachHost(record) {
         dispatch({
-          type: 'volume/detach',
+          type: 'volume/showDetachHostModal',
           payload: {
-            url,
+            selected: record,
+            isBulkDetach: false,
           },
         })
       },
@@ -507,17 +506,6 @@ class Volume extends React.Component {
           },
         })
       },
-      confirmDetachWithWorkload(record) {
-        if (record && record.actions && record.name) {
-          me.setState({
-            ...me.state,
-            confirmModalWithWorkloadVisible: true,
-            confirmModalWithWorkloadActionUrl: record.actions.detach,
-            confirmModalWithWorkloadIsBluk: false,
-            confirmModalWithWorkloadTitle: `Detach volume ${record.name}`,
-          })
-        }
-      },
       trimFilesystem(record) {
         if (record?.actions?.trimFilesystem) {
           dispatch({
@@ -630,7 +618,7 @@ class Volume extends React.Component {
       },
     }
 
-    const attachHostModalProps = genAttachHostModalProps(selected ? [selected] : [], hosts, attachHostModalVisible, dispatch)
+    const attachHostModalProps = getAttachHostModalProps(selected ? [selected] : [], hosts, attachHostModalVisible, dispatch)
 
     const bulkAttachHostModalProps = {
       items: selectedRows,
@@ -711,41 +699,6 @@ class Volume extends React.Component {
       },
     }
 
-    const confirmModalWithWorkloadProps = {
-      visible: me.state.confirmModalWithWorkloadVisible,
-      title: me.state.confirmModalWithWorkloadTitle,
-      onOk() {
-        if (me.state.confirmModalWithWorkloadIsBluk) {
-          dispatch({
-            type: 'volume/bulkDetach',
-            payload: selectedRows.map(item => item.actions.detach),
-          })
-        } else {
-          dispatch({
-            type: 'volume/detach',
-            payload: {
-              url: me.state.confirmModalWithWorkloadActionUrl,
-            },
-          })
-        }
-        me.setState({
-          ...me.state,
-          confirmModalWithWorkloadVisible: false,
-          confirmModalWithWorkloadActionUrl: '',
-          confirmModalWithWorkloadTitle: '',
-          confirmModalWithWorkloadIsBluk: false,
-        })
-      },
-      onCancel() {
-        me.setState({
-          ...me.state,
-          confirmModalWithWorkloadVisible: false,
-          confirmModalWithWorkloadActionUrl: '',
-          confirmModalWithWorkloadTitle: '',
-          confirmModalWithWorkloadIsBluk: false,
-        })
-      },
-    }
     const createVolumeModalProps = {
       item: {
         numberOfReplicas: defaultNumberOfReplicas,
@@ -971,10 +924,12 @@ class Volume extends React.Component {
           type: 'volume/showBulkAttachHostModal',
         })
       },
-      bulkDetach(urls) {
+      showBulkDetachHost() {
         dispatch({
-          type: 'volume/bulkDetach',
-          payload: urls,
+          type: 'volume/showDetachHostModal',
+          payload: {
+            isBulkDetach: true,
+          },
         })
       },
       bulkBackup(actions) {
@@ -1037,14 +992,6 @@ class Volume extends React.Component {
           payload: {
             selectedRows: record,
           },
-        })
-      },
-      confirmDetachWithWorkload() {
-        me.setState({
-          ...me.state,
-          confirmModalWithWorkloadVisible: true,
-          confirmModalWithWorkloadIsBluk: true,
-          confirmModalWithWorkloadTitle: `Detach volume(s) ${selectedRows.map(item => item.name).join(', ')}`,
         })
       },
       showBulkUnmapMarkSnapChainRemovedModal(record) {
@@ -1162,6 +1109,7 @@ class Volume extends React.Component {
     const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps(selectedRows, updateReplicaAutoBalanceModalVisible, dispatch)
     const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selected, unmapMarkSnapChainRemovedModalVisible, dispatch)
     const bulkUnmapMarkSnapChainRemovedModalProps = getBulkUnmapMarkSnapChainRemovedModalProps(selectedRows, bulkUnmapMarkSnapChainRemovedModalVisible, dispatch)
+    const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
@@ -1188,6 +1136,7 @@ class Volume extends React.Component {
         {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
         {attachHostModalVisible ? <AttachHost key={attachHostModalKey} {...attachHostModalProps} /> : ''}
         {bulkAttachHostModalVisible ? <AttachHost key={bulkAttachHostModalKey} {...bulkAttachHostModalProps} /> : ''}
+        {detachHostModalVisible ? <DetachHost key={detachHostModalKey} {...detachHostModalProps} /> : ''}
         {engineUpgradeModalVisible ? <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} /> : ''}
         {bulkEngineUpgradeModalVisible ? <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} /> : ''}
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
@@ -1204,7 +1153,6 @@ class Volume extends React.Component {
         {updateBulkSnapshotDataIntegrityModalVisible ? <UpdateBulkSnapshotDataIntegrityModal key={updateBulkSnapshotDataIntegrityModalKey} {...updateBulkSnapshotDataIntegrityModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <SoftAntiAffinityModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
-        {me.state.confirmModalWithWorkloadVisible ? <ConfirmModalWithWorkload key={me.state.confirmModalWithWorkloadKey} {...confirmModalWithWorkloadProps} /> : ''}
       </div>
     )
   }
