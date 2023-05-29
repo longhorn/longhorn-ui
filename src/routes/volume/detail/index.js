@@ -9,6 +9,7 @@ import VolumeActions from '../VolumeActions'
 import VolumeInfo from './VolumeInfo'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
+import DetachHost from '../DetachHost'
 import EngineUpgrade from '../EngineUpgrade'
 import UpdateReplicaCount from '../UpdateReplicaCount'
 import UpdateDataLocality from '../UpdateDataLocality'
@@ -26,9 +27,8 @@ import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
 import SoftAntiAffinityModal from '../components/SoftAntiAffinityModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
-import ConfirmModalWithWorkload from '../ConfirmModalWithWorkload'
 import {
-  genAttachHostModalProps,
+  getAttachHostModalProps,
   getEngineUpgradeModalProps,
   getUpdateReplicaCountModalProps,
   getUpdateDataLocalityModalProps,
@@ -37,6 +37,7 @@ import {
   getUnmapMarkSnapChainRemovedModalProps,
   getUpdateSnapshotDataIntegrityProps,
   getUpdateReplicaSoftAntiAffinityModalProps,
+  getDetachHostModalProps,
 } from '../helper'
 
 const confirm = Modal.confirm
@@ -65,8 +66,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateDataLocalityModalKey,
     updateAccessModeModalVisible,
     updateAccessModeModalKey,
-    confirmModalWithWorkloadVisible,
-    confirmModalWithWorkloadKey,
     updateReplicaAutoBalanceModalVisible,
     updateReplicaAutoBalanceModalKey,
     volumeRecurringJobs,
@@ -77,6 +76,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     softAntiAffinityKey,
     updateReplicaSoftAntiAffinityVisible,
     updateReplicaSoftAntiAffinityModalKey,
+    detachHostModalVisible,
+    detachHostModalKey,
   } = volume
   const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -219,6 +220,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    showDetachHost(record) {
+      dispatch({
+        type: 'volume/showDetachHostModal',
+        payload: record,
+      })
+    },
     showSnapshots(record) {
       dispatch(routerRedux.push({
         pathname: `/volume/${record.name}/snapshots`,
@@ -236,14 +243,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       dispatch({
         type: 'volume/deleteAndRedirect',
         payload: record,
-      })
-    },
-    detach(url) {
-      dispatch({
-        type: 'volume/detach',
-        payload: {
-          url,
-        },
       })
     },
     showEngineUpgrade(record) {
@@ -381,11 +380,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
-    confirmDetachWithWorkload() {
-      dispatch({
-        type: 'volume/showConfirmDetachWithWorkload',
-      })
-    },
     showUnmapMarkSnapChainRemovedModal(record) {
       dispatch({
         type: 'volume/showUnmapMarkSnapChainRemovedModal',
@@ -425,7 +419,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
   }
 
-  const attachHostModalProps = genAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
+  const attachHostModalProps = getAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
+  const detachHostModalProps = getDetachHostModalProps([selectedVolume], detachHostModalVisible, dispatch)
   const engineUpgradeModalProps = getEngineUpgradeModalProps([selectedVolume], engineImages, engineUpgradePerNodeLimit, engineUpgradeModalVisible, dispatch)
   const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps([selectedVolume], updateReplicaAutoBalanceModalVisible, dispatch)
   const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selectedVolume, [], updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
@@ -578,32 +573,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
   }
 
-  const confirmModalWithWorkloadProps = {
-    visible: confirmModalWithWorkloadVisible,
-    title: `Detach volume ${selectedVolume.name}`,
-    onOk() {
-      if (selectedVolume.actions && selectedVolume.actions.detach) {
-        dispatch({
-          type: 'volume/detach',
-          payload: {
-            url: selectedVolume.actions.detach,
-          },
-        })
-      }
-      dispatch({
-        type: 'volume/hideConfirmDetachWithWorkload',
-      })
-      dispatch({
-        type: 'snapshotModal/stopPolling',
-      })
-    },
-    onCancel() {
-      dispatch({
-        type: 'volume/hideConfirmDetachWithWorkload',
-      })
-    },
-  }
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div>
@@ -637,6 +606,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
           </Col>
         </Row>
         {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
+        {detachHostModalVisible && <DetachHost key={detachHostModalKey} {...detachHostModalProps} />}
         {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
         {updateReplicaCountModalVisible && <UpdateReplicaCount {...updateReplicaCountModalProps} />}
         {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : ''}
@@ -647,7 +617,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
         {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
-        {confirmModalWithWorkloadVisible ? <ConfirmModalWithWorkload key={confirmModalWithWorkloadKey} {...confirmModalWithWorkloadProps} /> : ''}
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <SoftAntiAffinityModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
       </div>

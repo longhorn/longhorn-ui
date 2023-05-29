@@ -13,11 +13,10 @@ function bulkActions({
   showBulkEngineUpgrade,
   showBulkChangeVolume,
   showBulkAttachHost,
-  bulkDetach,
   bulkBackup,
   bulkExpandVolume,
   createPVAndPVC,
-  confirmDetachWithWorkload,
+  showBulkDetachHost,
   commandKeyDown,
   showUpdateBulkReplicaCount,
   showUpdateBulkDataLocality,
@@ -94,16 +93,7 @@ function bulkActions({
         showBulkChangeVolume(selectedRows)
         break
       case 'detach':
-        if (selectedRows.some((ele) => ele.kubernetesStatus && ele.kubernetesStatus.workloadsStatus && !ele.kubernetesStatus.lastPodRefAt)) {
-          confirmDetachWithWorkload()
-        } else {
-          confirm({
-            title: `Are you sure you want to detach volume(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
-            onOk() {
-              bulkDetach(selectedRows.map(item => item.actions.detach))
-            },
-          })
-        }
+        showBulkDetachHost(selectedRows)
         break
       case 'backup':
         bulkBackup(selectedRows)
@@ -242,12 +232,11 @@ bulkActions.propTypes = {
   showBulkEngineUpgrade: PropTypes.func,
   showBulkChangeVolume: PropTypes.func,
   showBulkAttachHost: PropTypes.func,
-  bulkDetach: PropTypes.func,
+  showBulkDetachHost: PropTypes.func,
   showBulkSalvage: PropTypes.func,
   bulkBackup: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   bulkExpandVolume: PropTypes.func,
-  confirmDetachWithWorkload: PropTypes.func,
   showUpdateBulkReplicaCount: PropTypes.func,
   showUpdateBulkDataLocality: PropTypes.func,
   showUpdateBulkAccessMode: PropTypes.func,

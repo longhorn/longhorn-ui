@@ -4,7 +4,7 @@ export function isSchedulingFailure(volume) {
   return volume.conditions && volume.conditions.scheduled && volume.conditions.scheduled.status.toLowerCase() === 'false'
 }
 
-export function genAttachHostModalProps(volumes, hosts, visible, dispatch) {
+export function getAttachHostModalProps(volumes, hosts, visible, dispatch) {
   return {
     items: volumes,
     visible,
@@ -22,6 +22,28 @@ export function genAttachHostModalProps(volumes, hosts, visible, dispatch) {
     onCancel() {
       dispatch({
         type: 'volume/hideAttachHostModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getDetachHostModalProps(volumes, visible, dispatch) {
+  return {
+    items: volumes,
+    visible,
+    onOk(record) {
+      dispatch({
+        type: 'volume/detach',
+        payload: record,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideDetachHostModal',
       })
       dispatch({
         type: 'app/changeBlur',

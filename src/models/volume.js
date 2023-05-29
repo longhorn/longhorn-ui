@@ -31,6 +31,7 @@ export default {
     recurringJobModalVisible: false,
     attachHostModalVisible: false,
     bulkAttachHostModalVisible: false,
+    detachHostModalVisible: false,
     engineUpgradeModalVisible: false,
     bulkEngineUpgradeModalVisible: false,
     updateReplicaCountModalVisible: false,
@@ -49,12 +50,12 @@ export default {
     updateBulkDataLocalityModalVisible: false,
     updateAccessModeModalVisible: false,
     updateBulkAccessModeModalVisible: false,
-    confirmModalWithWorkloadVisible: false,
     updateReplicaAutoBalanceModalVisible: false,
     unmapMarkSnapChainRemovedModalVisible: false,
     bulkUnmapMarkSnapChainRemovedModalVisible: false,
     updateSnapshotDataIntegrityModalVisible: false,
     updateBulkSnapshotDataIntegrityModalVisible: false,
+    isDetachBulk: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
     defaultNamespace: '',
@@ -76,6 +77,7 @@ export default {
     createPVCModalKey: Math.random(),
     createPVModalKey: Math.random(),
     attachHostModalKey: Math.random(),
+    detachHostModalKey: Math.random(),
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
@@ -87,7 +89,6 @@ export default {
     updateBulkDataLocalityModalKey: Math.random(),
     updateAccessModeModalKey: Math.random(),
     updateBulkAccessModeModalKey: Math.random(),
-    confirmModalWithWorkloadKey: Math.random(),
     updateReplicaAutoBalanceModalKey: Math.random(),
     unmapMarkSnapChainRemovedModalKey: Math.random(),
     bulkUnmapMarkSnapChainRemovedModalKey: Math.random(),
@@ -157,14 +158,21 @@ export default {
     *detach({
       payload,
     }, { call, put }) {
-      yield call(execAction, payload.url)
+      yield payload.map(item => call(execAction, item.url, item.data))
       yield put({ type: 'query' })
+      yield put({ type: 'hideDetachHostModal' })
     },
     *attach({
       payload,
     }, { call, put }) {
       yield put({ type: 'hideAttachHostModal' })
-      yield call(execAction, payload.url, { hostId: payload.host, disableFrontend: payload.disableFrontend })
+      yield call(execAction, payload.url, {
+        hostId: payload.host,
+        disableFrontend: payload.disableFrontend,
+        AttachedBy: '',
+        attacherType: '',
+        AttachmentID: 'longhorn-ui',
+      })
       yield put({ type: 'query' })
     },
     *salvage({
@@ -701,6 +709,12 @@ export default {
     hideBulkAttachHostModal(state) {
       return { ...state, bulkAttachHostModalVisible: false }
     },
+    showDetachHostModal(state, action) {
+      return { ...state, ...action.payload, detachHostModalVisible: true, detachHostModalKey: Math.random() }
+    },
+    hideDetachHostModal(state) {
+      return { ...state, detachHostModalVisible: false }
+    },
     showEngineUpgradeModal(state, action) {
       return { ...state, ...action.payload, engineUpgradeModalVisible: true, engineUpgradeModaKey: Math.random() }
     },
@@ -815,12 +829,6 @@ export default {
         window.sessionStorage.setItem('customColumnList', JSON.stringify(action.payload.columns))
       }
       return { ...state, customColumnList: action.payload.columns }
-    },
-    showConfirmDetachWithWorkload(state) {
-      return { ...state, confirmModalWithWorkloadVisible: true, confirmModalWithWorkloadKey: Math.random() }
-    },
-    hideConfirmDetachWithWorkload(state) {
-      return { ...state, confirmModalWithWorkloadVisible: false, confirmModalWithWorkloadKey: Math.random() }
     },
     showBulkUpdateReplicaSoftAntiAffinityModal(state, action) {
       return {

@@ -5,7 +5,32 @@ import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
 const confirm = Modal.confirm
 
-function actions({ selected, engineImages, showAttachHost, detach, showEngineUpgrade, deleteVolume, showBackups, showSalvage, rollback, showUpdateReplicaCount, showExpansionVolumeSizeModal, showCancelExpansionModal, createPVAndPVC, changeVolume, confirmDetachWithWorkload, showUpdateDataLocality, showUpdateAccessMode, showUpdateReplicaAutoBalanceModal, showUnmapMarkSnapChainRemovedModal, engineUpgradePerNodeLimit, trimFilesystem, showUpdateSnapshotDataIntegrityModal, showUpdateReplicaSoftAntiAffinityModal, showUpdateReplicaZoneSoftAntiAffinityModal, commandKeyDown }) {
+function actions({
+  selected,
+  engineImages,
+  showAttachHost,
+  showDetachHost,
+  showEngineUpgrade,
+  deleteVolume,
+  showBackups,
+  showSalvage,
+  rollback,
+  showUpdateReplicaCount,
+  showExpansionVolumeSizeModal,
+  showCancelExpansionModal,
+  createPVAndPVC,
+  changeVolume,
+  showUpdateDataLocality,
+  showUpdateAccessMode,
+  showUpdateReplicaAutoBalanceModal,
+  showUnmapMarkSnapChainRemovedModal,
+  engineUpgradePerNodeLimit,
+  trimFilesystem,
+  showUpdateSnapshotDataIntegrityModal,
+  showUpdateReplicaSoftAntiAffinityModal,
+  showUpdateReplicaZoneSoftAntiAffinityModal,
+  commandKeyDown,
+}) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
     let hasPvTooltipText = ''
@@ -58,16 +83,7 @@ function actions({ selected, engineImages, showAttachHost, detach, showEngineUpg
         }
         break
       case 'detach':
-        if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && !record.kubernetesStatus.lastPodRefAt) {
-          confirmDetachWithWorkload(record)
-        } else {
-          confirm({
-            title: `Are you sure you want to detach volume ${record.name} ?`,
-            onOk() {
-              detach(record.actions.detach)
-            },
-          })
-        }
+        showDetachHost(record)
         break
       case 'engineUpgrade':
         showEngineUpgrade(record)
@@ -232,7 +248,6 @@ actions.propTypes = {
   showUpdateReplicaCount: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   changeVolume: PropTypes.func,
-  confirmDetachWithWorkload: PropTypes.func,
   commandKeyDown: PropTypes.bool,
   showExpansionVolumeSizeModal: PropTypes.func,
   showCancelExpansionModal: PropTypes.func,
