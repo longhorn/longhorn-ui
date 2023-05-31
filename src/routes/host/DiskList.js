@@ -39,6 +39,18 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      key: 'diskType',
+      dataIndex: 'diskType',
+      width: 100,
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
+        )
+      },
+    },
+    {
       key: 'path',
       dataIndex: 'path',
       width: 360,

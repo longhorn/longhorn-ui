@@ -95,6 +95,10 @@ const modal = ({
       value: 'accessMode',
       label: 'Access Mode',
     },
+    {
+      value: 'backendStoreDriver',
+      label: 'Data Engine',
+    },
   ]
 
   const modalOpts = {

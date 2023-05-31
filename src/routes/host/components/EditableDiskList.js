@@ -43,7 +43,18 @@ class EditableDiskList extends React.Component {
     nameCount++
 
     uuid++
-    const disk = { id: `new_disk_${uuid}`, name: `disk-${nameCount}`, path: '', storageAvailable: 0, storageMaximum: 0, storageReserved: 0, storageScheduled: 0, allowScheduling: false, evictionRequested: false }
+    const disk = {
+      id: `new_disk_${uuid}`,
+      name: `disk-${nameCount}`,
+      path: '',
+      storageAvailable: 0,
+      storageMaximum: 0,
+      storageReserved: 0,
+      storageScheduled: 0,
+      allowScheduling: false,
+      evictionRequested: false,
+      diskType: 'filesystem',
+    }
     newData.push(disk)
     this.setState({ data: newData })
   }

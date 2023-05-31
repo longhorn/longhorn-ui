@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { formatDate } from '../../../utils/formatDate'
-import { Radio, Checkbox, Form, Tooltip, Input, Icon } from 'antd'
+import { Radio, Checkbox, Form, Tooltip, Input, Select, Icon } from 'antd'
 import styles from './EditableDiskItem.less'
 import StorageInput from './StorageInput'
 import DistTag from './TagComponent.js'
@@ -13,6 +13,7 @@ import { byteToGi } from '../helper/index'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
+const Option = Select.Option
 
 function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath, validateName = f => f }) {
   const { getFieldDecorator, getFieldsValue } = form
@@ -131,6 +132,19 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         </div>
         <div className={styles.control}>
           <div className={styles.label}>
+            Disk Type
+          </div>
+          <FormItem style={{ margin: 0 }}>
+            {getFieldDecorator(`disks['${disk.id}']['diskType']`, {
+              initialValue: disk.diskType,
+            })(<Select disabled={disk.deleted || !isNew}>
+              <Option value="filesystem">File System</Option>
+              <Option value="block">Block</Option>
+            </Select>)}
+          </FormItem>
+        </div>
+        <div className={styles.control}>
+          <div className={styles.label}>
             Path
           </div>
           <FormItem style={{ margin: 0 }}>
@@ -144,6 +158,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               initialValue: disk.path,
             })(<PathInput
               placeholder="Path mounted by the disk, e.g. /mnt/disk1"
+              diskTypeIsFilesystem={getFieldsValue().disks[disk.id].diskType === 'filesystem'}
               readOnly={disk.deleted || !isNew} />)}
           </FormItem>
         </div>

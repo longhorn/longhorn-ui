@@ -28,8 +28,10 @@ class PathInput extends React.Component {
   }
 
   handleBlur = (e) => {
-    const value = formatPath(e.target.value)
-    this.triggerChange(value)
+    if (this.props.diskTypeIsFilesystem) {
+      const value = formatPath(e.target.value)
+      this.triggerChange(value)
+    }
   }
 
   triggerChange = (changedValue) => {
@@ -42,7 +44,15 @@ class PathInput extends React.Component {
   render() {
     const state = this.state
     return (
-      <Input {...this.props} type="text" size="large" onBlur={this.handleBlur} onChange={this.handleValueChange} value={state.value} />
+      <Input
+        placeholder={this.props.placeholder}
+        readOnly={this.props.readOnly}
+        type="text"
+        size="large"
+        onBlur={this.handleBlur}
+        onChange={this.handleValueChange}
+        value={state.value}
+      />
     )
   }
 }
@@ -50,6 +60,9 @@ class PathInput extends React.Component {
 PathInput.propTypes = {
   value: PropTypes.string,
   defaultValue: PropTypes.string,
+  placeholder: PropTypes.string,
+  readOnly: PropTypes.bool,
+  diskTypeIsFilesystem: PropTypes.bool,
   onChange: PropTypes.func,
 }
 
