@@ -264,6 +264,20 @@ function list({ loading, dataSource, engineImages, hosts, showAttachHost, showEn
       },
     },
     {
+      title: 'Data Engine',
+      dataIndex: 'backendStoreDriver',
+      key: 'backendStoreDriver',
+      width: 220,
+      sorter: (a, b) => sortTable(a, b, 'backendStoreDriver'),
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
+        )
+      },
+    },
+    {
       title: 'PV/PVC',
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',

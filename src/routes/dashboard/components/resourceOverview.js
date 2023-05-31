@@ -19,8 +19,8 @@ class ResourceOverview extends React.Component {
   }
 
   handleResize = (width) => {
-    const rw = Math.min((width / 3) - 60, 440)
-    if (rw > 300) {
+    const rw = Math.min((width / 4) - 40, 440)
+    if (rw > 240) {
       this.setState({
         ...this.state,
         resourceWidth: rw,
@@ -33,63 +33,94 @@ class ResourceOverview extends React.Component {
     const { host: hostLoading, volume: volumeLoading } = loading.models
     this.hostLoading = hostLoading
     this.volumeLoading = volumeLoading
+
+    let hasBlockDiskType = host?.data.some((currentNode) => {
+      return Object.values(currentNode.disks).some((currentDisk) => {
+        return currentDisk.diskType === 'block'
+      })
+    })
     // Total storage (everything)
     // a. Total Storage = sum(node.MaximumStorage)
-    const computeTotalSpace = () => {
+    const computeTotalSpace = (blockDiskType) => {
       return host.data.reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).reduce((totalSpace, currentDisk) => {
-          return totalSpace + currentDisk.storageMaximum
+          if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
+            return totalSpace + currentDisk.storageMaximum
+          }
+          return totalSpace
         }, 0)
       }, 0)
     }
     // Disabled storage (grey)
     // a. Disabled storage = sum(disabledNodes.MaximumStorage) and sum(enabledNodes.disabledDisks.MaximumStorage)
-    const computeDisabledSpace = () => {
+    const computeDisabledSpace = (blockDiskType) => {
       return host.data.reduce((total, currentNode) => {
         if (currentNode.allowScheduling === false) {
           return total + Object.values(currentNode.disks).reduce((totalSpace, currentDisk) => {
-            return totalSpace + currentDisk.storageMaximum
+            if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
+              return totalSpace + currentDisk.storageMaximum
+            }
+            return totalSpace
           }, 0)
         }
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === false).reduce((totalSpace, currentDisk) => {
-          return totalSpace + currentDisk.storageMaximum
+          if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
+            return totalSpace + currentDisk.storageMaximum
+          }
+          return totalSpace
         }, 0)
       }, 0)
     }
     // Reserved storage (yellow)
     // a. Reserved storage = sum(enabledNodes.enabledDisks.ReservedStorage)
-    const computeReservedSpace = () => {
+    const computeReservedSpace = (blockDiskType) => {
       return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((reservedSpace, currentDisk) => {
-          return reservedSpace + currentDisk.storageReserved
+          if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
+            return reservedSpace + currentDisk.storageReserved
+          }
+          return reservedSpace
         }, 0)
       }, 0)
     }
     // Available (green)
     // a. AvailableForSchedulingStorage = sum(enabledNodes.enabledDisks.AvailableStorage - enabledNodes.enabledDisks.ReservedStorage)
-    const computeSchedulableSpace = () => {
+    const computeSchedulableSpace = (blockDiskType) => {
       const result = host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((availabeSpace, currentDisk) => {
-          return availabeSpace + (currentDisk.storageAvailable - currentDisk.storageReserved)
+          if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
+            return availabeSpace + (currentDisk.storageAvailable - currentDisk.storageReserved)
+          }
+          return availabeSpace
         }, 0)
       }, 0)
       return result < 0 ? 0 : result
     }
     // Used (blue)
     // a. UsedStorage = sum(enabledNodes.enabledDisk.MaximumStorage - enabledNodes.enabledDisks.AvailableStorage)
-    const computeUsedSpace = () => {
+    const computeUsedSpace = (blockDiskType) => {
       return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((usedSpace, currentDisk) => {
-          return usedSpace + (currentDisk.storageMaximum - currentDisk.storageAvailable)
+          if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
+            return usedSpace + (currentDisk.storageMaximum - currentDisk.storageAvailable)
+          }
+          return usedSpace
         }, 0)
       }, 0)
     }
     const storageSpaceInfo = {
-      totalSpace: computeTotalSpace(),
-      disabledSpace: computeDisabledSpace(),
-      resevedSpace: computeReservedSpace(),
-      schedulableSpace: computeSchedulableSpace(),
-      usedSpace: computeUsedSpace(),
+      totalSpace: computeTotalSpace('filesystem'),
+      disabledSpace: computeDisabledSpace('filesystem'),
+      resevedSpace: computeReservedSpace('filesystem'),
+      schedulableSpace: computeSchedulableSpace('filesystem'),
+      usedSpace: computeUsedSpace('filesystem'),
+    }
+    const storageBlockSpaceInfo = {
+      totalSpace: computeTotalSpace('block'),
+      disabledSpace: computeDisabledSpace('block'),
+      resevedSpace: computeReservedSpace('block'),
+      schedulableSpace: computeSchedulableSpace('block'),
+      usedSpace: computeUsedSpace('block'),
     }
     const volumeInfo = {
       total: volume.data.length,
@@ -116,13 +147,26 @@ class ResourceOverview extends React.Component {
       { name: 'Used storage', value: storageSpaceInfo.usedSpace },
       { name: 'Disabled storage', value: storageSpaceInfo.disabledSpace },
     ]
+    const storageBlockSpaceInfoData = [
+      { name: 'Schedulable storage', value: storageBlockSpaceInfo.schedulableSpace },
+      { name: 'Reserved storage', value: storageBlockSpaceInfo.resevedSpace },
+      { name: 'Used storage', value: storageBlockSpaceInfo.usedSpace },
+      { name: 'Disabled storage', value: storageBlockSpaceInfo.disabledSpace },
+    ]
     const storageSpaceInfoDetails = [
       { name: 'Schedulable', value: formatMib(storageSpaceInfo.schedulableSpace), color: storageSpaceInfoColors[0] },
       { name: 'Reserved', value: formatMib(storageSpaceInfo.resevedSpace), color: storageSpaceInfoColors[1] },
       { name: 'Used', value: formatMib(storageSpaceInfo.usedSpace), color: storageSpaceInfoColors[2] },
       { name: 'Disabled', value: formatMib(storageSpaceInfo.disabledSpace), color: storageSpaceInfoColors[3] },
     ]
+    const storageBlockSpaceInfoDetails = [
+      { name: 'Schedulable', value: formatMib(storageBlockSpaceInfo.schedulableSpace), color: storageSpaceInfoColors[0] },
+      { name: 'Reserved', value: formatMib(storageBlockSpaceInfo.resevedSpace), color: storageSpaceInfoColors[1] },
+      { name: 'Used', value: formatMib(storageBlockSpaceInfo.usedSpace), color: storageSpaceInfoColors[2] },
+      { name: 'Disabled', value: formatMib(storageBlockSpaceInfo.disabledSpace), color: storageSpaceInfoColors[3] },
+    ]
     const storageSpaceInfoTotal = { name: 'Total', value: formatMib(storageSpaceInfo.totalSpace) }
+    const storageBlockSpaceInfoTotal = { name: 'Total', value: formatMib(storageBlockSpaceInfo.totalSpace) }
     this.storageSpaceChartProps = {
       title: formatMib(storageSpaceInfo.schedulableSpace),
       subTitle: 'Storage Schedulable',
@@ -132,9 +176,23 @@ class ResourceOverview extends React.Component {
       empty: 'No Storage',
       width: this.state.resourceWidth,
     }
+    this.storageBlockSpaceChartProps = {
+      title: formatMib(storageBlockSpaceInfo.schedulableSpace),
+      subTitle: 'Storage Schedulable (Block)',
+      colors: storageSpaceInfoColors,
+      data: storageBlockSpaceInfoData,
+      loading: hostLoading,
+      empty: 'No Storage',
+      width: this.state.resourceWidth,
+    }
     this.storageSpaceDetailProps = {
       data: storageSpaceInfoDetails,
       total: storageSpaceInfoTotal,
+      width: this.state.resourceWidth,
+    }
+    this.storageBlockSpaceDetailProps = {
+      data: storageBlockSpaceInfoDetails,
+      total: storageBlockSpaceInfoTotal,
       width: this.state.resourceWidth,
     }
 
@@ -227,12 +285,16 @@ class ResourceOverview extends React.Component {
               <ResourceDetail {...this.volumeInfoDetailProps} />
             </div>
             <div>
-            <ResourceChart {...this.storageSpaceChartProps} />
-            <ResourceDetail {...this.storageSpaceDetailProps} />
+              <ResourceChart {...this.storageSpaceChartProps} />
+              <ResourceDetail {...this.storageSpaceDetailProps} />
             </div>
+            { hasBlockDiskType && <div>
+              <ResourceChart {...this.storageBlockSpaceChartProps} />
+              <ResourceDetail {...this.storageBlockSpaceDetailProps} />
+            </div> }
             <div>
-            <ResourceChart {...this.nodeInfoChartProps} />
-            <ResourceDetail {...this.nodeInfoDetailProps} />
+              <ResourceChart {...this.nodeInfoChartProps} />
+              <ResourceDetail {...this.nodeInfoDetailProps} />
             </div>
             <ReactResizeDetector handleWidth onResize={this.handleResize} />
           </div>

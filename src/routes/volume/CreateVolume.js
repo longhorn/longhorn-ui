@@ -208,6 +208,14 @@ const modal = ({
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
+        <FormItem label="Backend Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backendStoreDriver', {
+            initialValue: 'longhorn',
+          })(<Select>
+            <Option key={'longhorn'} value={'longhorn'}>Longhorn</Option>
+            <Option key={'spdk'} value={'spdk'}>SPDK</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'encrypted',
