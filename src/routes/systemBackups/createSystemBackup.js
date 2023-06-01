@@ -1,15 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input } from 'antd'
+import { Form, Input, Select } from 'antd'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
+const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
-    span: 7,
+    span: 9,
   },
   wrapperCol: {
-    span: 15,
+    span: 12,
   },
 }
 
@@ -59,6 +60,15 @@ const modal = ({
               },
             ],
           })(<Input />)}
+        </FormItem>
+        <FormItem label="Volume Backup Policy" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('volumeBackupPolicy', {
+            initialValue: 'if-not-present',
+          })(<Select>
+            <Option key={'present'} value={'if-not-present'}>If-Not-Present</Option>
+            <Option key={'always'} value={'always'}>Always</Option>
+            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+          </Select>)}
         </FormItem>
       </Form>
     </ModalBlur>
