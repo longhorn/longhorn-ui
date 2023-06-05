@@ -341,17 +341,17 @@ export default {
       yield payload.urls.map(url => call(execAction, url, { image: payload.image }))
       yield put({ type: 'query' })
     },
-    *bulkDetach({
-      payload,
-    }, { call, put }) {
-      yield payload.map(url => call(execAction, url))
-      yield put({ type: 'query' })
-    },
     *bulkAttach({
       payload,
     }, { call, put }) {
       yield put({ type: 'hideBulkAttachHostModal' })
-      yield payload.urls.map(url => call(execAction, url, { hostId: payload.host, disableFrontend: payload.disableFrontend }))
+      yield payload.urls.map(url => call(execAction, url, {
+        hostId: payload.host,
+        disableFrontend: payload.disableFrontend,
+        AttachedBy: '',
+        attacherType: '',
+        AttachmentID: 'longhorn-ui',
+      }))
       yield put({ type: 'query' })
     },
     *bulkBackup({
