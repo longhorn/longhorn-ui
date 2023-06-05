@@ -145,6 +145,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
   const volumeActionsProps = {
     engineImages,
+    engineUpgradePerNodeLimit,
     takeSnapshot(record) {
       dispatch({
         type: 'snapshotModal/snapshotAction',
