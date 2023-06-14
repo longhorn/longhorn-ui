@@ -24,7 +24,7 @@ import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
-import SoftAntiAffinityModal from '../components/SoftAntiAffinityModal'
+import CommonModal from '../components/CommonModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
 import {
@@ -38,6 +38,7 @@ import {
   getUpdateSnapshotDataIntegrityProps,
   getUpdateReplicaSoftAntiAffinityModalProps,
   getDetachHostModalProps,
+  getUpdateOfflineReplicaRebuildingModalProps,
 } from '../helper'
 
 const confirm = Modal.confirm
@@ -76,6 +77,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     softAntiAffinityKey,
     updateReplicaSoftAntiAffinityVisible,
     updateReplicaSoftAntiAffinityModalKey,
+    updateOfflineReplicaRebuildingVisible,
+    offlineReplicaRebuildingKey,
+    updateOfflineReplicaRebuildingModalKey,
     detachHostModalVisible,
     detachHostModalKey,
   } = volume
@@ -407,6 +411,15 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    showOfflineReplicaRebuildingModal(record) {
+      dispatch({
+        type: 'volume/showOfflineReplicaRebuildingModal',
+        payload: {
+          volumes: record,
+          offlineReplicaRebuildingKey: 'updateOfflineReplicaRebuilding',
+        },
+      })
+    },
     trimFilesystem(record) {
       if (record?.actions?.trimFilesystem) {
         dispatch({
@@ -425,6 +438,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const engineUpgradeModalProps = getEngineUpgradeModalProps([selectedVolume], engineImages, engineUpgradePerNodeLimit, engineUpgradeModalVisible, dispatch)
   const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps([selectedVolume], updateReplicaAutoBalanceModalVisible, dispatch)
   const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selectedVolume, [], updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
+  const updateOfflineReplicaRebuildingModalProps = getUpdateOfflineReplicaRebuildingModalProps(selectedVolume, [], updateOfflineReplicaRebuildingVisible, offlineReplicaRebuildingKey, dispatch)
 
   const recurringJobProps = {
     dataSource: volumeRecurringJobs,
@@ -619,7 +633,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
         {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
-        {updateReplicaSoftAntiAffinityVisible ? <SoftAntiAffinityModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
+        {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
+        {updateOfflineReplicaRebuildingVisible ? <CommonModal key={updateOfflineReplicaRebuildingModalKey} {...updateOfflineReplicaRebuildingModalProps} /> : ''}
       </div>
     </div>
   )

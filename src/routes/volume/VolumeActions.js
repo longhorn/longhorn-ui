@@ -29,6 +29,7 @@ function actions({
   showUpdateSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
+  showOfflineReplicaRebuildingModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -135,6 +136,9 @@ function actions({
       case 'updateReplicaZoneSoftAntiAffinity':
         showUpdateReplicaZoneSoftAntiAffinityModal(record)
         break
+      case 'updateOfflineReplicaRebuilding':
+        showOfflineReplicaRebuildingModal(record)
+        break
       case 'trimFilesystem':
         confirm({
           title: 'Are you sure you want to trim Fileystem ?',
@@ -204,6 +208,7 @@ function actions({
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
+    { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.backendStoreDriver !== 'v2' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 
