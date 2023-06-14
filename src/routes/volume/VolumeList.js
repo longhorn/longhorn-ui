@@ -54,6 +54,7 @@ function list({
   showUpdateSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
+  showOfflineReplicaRebuildingModal,
   onRowClick = f => f,
 }) {
   const volumeActionsProps = {
@@ -88,6 +89,7 @@ function list({
     showUpdateSnapshotDataIntegrityModal,
     showUpdateReplicaSoftAntiAffinityModal,
     showUpdateReplicaZoneSoftAntiAffinityModal,
+    showOfflineReplicaRebuildingModal,
     onRowClick,
   }
   /**
@@ -166,11 +168,28 @@ function list({
         let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
+            return (<div
+              className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
+              style={{ display: 'flex', alignItems: 'center' }}
+              >
+                {ha}{state}{ !record.ready ? statusForWorkload : '' }
+              </div>)
           } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
+            return (<Tooltip title={record.backendStoreDriver === 'v2' && 'Replica rebuilding will be automatically triggered when the degraded volume is detached'}>
+                <div
+                  className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  {ha}{state}{ !record.ready ? statusForWorkload : '' }
+                </div>
+              </Tooltip>)
           } else if (text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
-            return <div className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })} style={{ display: 'flex', alignItems: 'center' }}>{ha}{state}{ !record.ready ? statusForWorkload : '' }</div>
+            return (<div
+              className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
+              style={{ display: 'flex', alignItems: 'center' }}
+              >
+                {ha}{state}{ !record.ready ? statusForWorkload : '' }
+            </div>)
           }
           return text.hyphenToHump()
         })()
@@ -278,11 +297,11 @@ function list({
       width: 140,
       sorter: (a, b) => sortTableActualSize(a, b),
       render: (text, record) => {
-        let size = record && record.controllers && record.controllers[0] && record.controllers[0].actualSize ? parseInt(record.controllers[0].actualSize, 10) : 0
-
+        let size = record?.controllers && record.controllers[0] && record.controllers[0].actualSize ? parseInt(record.controllers[0].actualSize, 10) : 0
+        let isSpdkVolume = record?.backendStoreDriver === 'v2'
         return (
           <div>
-            <div>{formatMib(size)}</div>
+            <div>{!isSpdkVolume ? formatMib(size) : ''}</div>
           </div>
         )
       },

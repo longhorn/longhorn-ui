@@ -33,7 +33,7 @@ import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
 import CreateBackupModal from './detail/CreateBackupModal.js'
-import SoftAntiAffinityModal from './components/SoftAntiAffinityModal.js'
+import CommonModal from './components/CommonModal.js'
 import {
   getAttachHostModalProps,
   getEngineUpgradeModalProps,
@@ -50,6 +50,7 @@ import {
   getUpdateBulkSnapshotDataIntegrityModalProps,
   getUpdateSnapshotDataIntegrityProps,
   getUpdateReplicaSoftAntiAffinityModalProps,
+  getUpdateOfflineReplicaRebuildingModalProps,
   getDetachHostModalProps,
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
@@ -187,6 +188,9 @@ class Volume extends React.Component {
       softAntiAffinityKey,
       updateReplicaSoftAntiAffinityVisible,
       updateReplicaSoftAntiAffinityModalKey,
+      updateOfflineReplicaRebuildingVisible,
+      updateOfflineReplicaRebuildingModalKey,
+      offlineReplicaRebuildingKey,
       isBulkDetach,
     } = this.props.volume
     const hosts = this.props.host.data
@@ -203,14 +207,16 @@ class Volume extends React.Component {
     const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
+    const enableSPDKDataEngine = settings.find(s => s.id === 'v2-data-engine')
     let replicaSoftAntiAffinitySettingValue = false
     if (replicaSoftAntiAffinitySetting) {
-      replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting.value && replicaSoftAntiAffinitySetting.value.toLowerCase() === 'true'
+      replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting?.value.toLowerCase() === 'true'
     }
-    const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
-    const defaultDataLocalityValue = defaultDataLocalitySetting && defaultDataLocalitySetting.value ? defaultDataLocalitySetting.value : 'disabled'
-    const defaultRevisionCounterValue = defaultRevisionCounterSetting && defaultRevisionCounterSetting.value && defaultRevisionCounterSetting.value === 'true'
+    const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options ? defaultDataLocalitySetting.definition.options : []
+    const defaultDataLocalityValue = defaultDataLocalitySetting?.value ? defaultDataLocalitySetting.value : 'disabled'
+    const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
     const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
+    const enableSPDKDataEngineValue = enableSPDKDataEngine?.value === 'true'
     if (defaultSnapshotDataIntegrityOption.length > 0) {
       defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
     }
@@ -535,6 +541,15 @@ class Volume extends React.Component {
           },
         })
       },
+      showOfflineReplicaRebuildingModal(record) {
+        dispatch({
+          type: 'volume/showOfflineReplicaRebuildingModal',
+          payload: {
+            volume: record,
+            offlineReplicaRebuildingKey: 'updateOfflineReplicaRebuilding',
+          },
+        })
+      },
       rowSelection: {
         selectedRowKeys: selectedRows.map(item => item.id),
         onChange(_, records) {
@@ -714,6 +729,7 @@ class Volume extends React.Component {
       defaultDataLocalityValue,
       defaultRevisionCounterValue,
       defaultSnapshotDataIntegrityOption,
+      enableSPDKDataEngineValue,
       diskTags,
       backingImages,
       tagsLoading,
@@ -1020,6 +1036,15 @@ class Volume extends React.Component {
           },
         })
       },
+      showOfflineReplicaRebuildingModal(record) {
+        dispatch({
+          type: 'volume/showBulkOfflineReplicaRebuildingModal',
+          payload: {
+            volumes: record,
+            offlineReplicaRebuildingKey: 'updateBulkOfflineReplicaRebuilding',
+          },
+        })
+      },
       trimBulkFilesystem(record) {
         if (record?.length > 0) {
           dispatch({
@@ -1098,6 +1123,7 @@ class Volume extends React.Component {
     }
 
     const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selected, selectedRows, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
+    const updateOfflineReplicaRebuildingModalProps = getUpdateOfflineReplicaRebuildingModalProps(selected, selectedRows, updateOfflineReplicaRebuildingVisible, offlineReplicaRebuildingKey, dispatch)
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
     const updateBulKReplicaCountModalProps = getUpdateBulkReplicaCountModalProps(selectedRows, updateBulkReplicaCountModalVisible, dispatch)
     const updateDataLocalityModalProps = getUpdateDataLocalityModalProps(selected, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
@@ -1151,7 +1177,8 @@ class Volume extends React.Component {
         {bulkUnmapMarkSnapChainRemovedModalVisible ? <UpdateBulkUnmapMarkSnapChainRemovedModal key={bulkUnmapMarkSnapChainRemovedModalKey} {...bulkUnmapMarkSnapChainRemovedModalProps} /> : ''}
         {updateSnapshotDataIntegrityModalVisible ? <UpdateSnapshotDataIntegrityModal key={updateSnapshotDataIntegrityModalKey} {...updateSnapshotDataIntegrityModalProps} /> : ''}
         {updateBulkSnapshotDataIntegrityModalVisible ? <UpdateBulkSnapshotDataIntegrityModal key={updateBulkSnapshotDataIntegrityModalKey} {...updateBulkSnapshotDataIntegrityModalProps} /> : ''}
-        {updateReplicaSoftAntiAffinityVisible ? <SoftAntiAffinityModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
+        {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
+        {updateOfflineReplicaRebuildingVisible ? <CommonModal key={updateOfflineReplicaRebuildingModalKey} {...updateOfflineReplicaRebuildingModalProps} /> : ''}
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
       </div>
     )

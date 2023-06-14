@@ -491,12 +491,71 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
   }
 }
 
+export function getUpdateOfflineReplicaRebuildingModalProps(volume, volumes, updateOfflineReplicaRebuildingVisible, key, dispatch) {
+  let offlineReplicaRebuildingVolumes = []
+  let feilds = {}
+  switch (key) {
+    case 'updateOfflineReplicaRebuilding':
+      feilds = {
+        actionKey: 'updateOfflineReplicaRebuilding',
+        key: 'offlineReplicaRebuilding',
+        name: 'Offline Replica Rebuilding',
+      }
+      offlineReplicaRebuildingVolumes = [volume]
+      break
+    case 'updateBulkOfflineReplicaRebuilding':
+      feilds = {
+        actionKey: 'updateOfflineReplicaRebuilding',
+        key: 'offlineReplicaRebuilding',
+        name: 'Offline Replica Rebuilding',
+      }
+      offlineReplicaRebuildingVolumes = volumes
+      break
+    default:
+  }
+  return {
+    items: offlineReplicaRebuildingVolumes,
+    visible: updateOfflineReplicaRebuildingVisible,
+    onCancel() {
+      dispatch({
+        type: 'volume/hideOfflineReplicaRebuildingModal',
+      })
+    },
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateOfflineReplicaRebuildingModal',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+      dispatch({
+        type: 'volume/hideOfflineReplicaRebuildingModal',
+      })
+    },
+    options: [
+      { value: 'enabled', lable: 'Enabled' },
+      { value: 'disabled', lable: 'Disabled' },
+      { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+    ],
+    feilds,
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }
 
 export function needToWaitDone(state, replicas) {
   return state === '' || state.endsWith('ing') || replicas.findIndex(item => item.mode.toLowerCase() === 'wo') > -1
+}
+
+export function getOfflineRebuiltStatus(volume) {
+  return volume.disableFrontend && volume.backendStoreDriver === 'v2' && volume.offlineReplicaRebuildingRequired && volume.state === 'attached'
+}
+
+export function getOfflineRebuiltStatusWithoutFrontend(volume) {
+  return !volume.disableFrontend && volume.backendStoreDriver === 'v2' && volume.state === 'attached' && volume.robustness === 'degraded'
 }
 
 export const frontends = [
