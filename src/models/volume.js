@@ -64,8 +64,11 @@ export default {
     previousNamespace: '',
     recurringJobList: [],
     softAntiAffinityKey: '',
+    offlineReplicaRebuildingKey: '',
     updateReplicaSoftAntiAffinityVisible: false,
+    updateOfflineReplicaRebuildingVisible: false,
     changeVolumeModalKey: Math.random(),
+    updateOfflineReplicaRebuildingModalKey: Math.random(),
     bulkChangeVolumeModalKey: Math.random(),
     bulkExpandVolumeModalKey: Math.random(),
     createPVAndPVCModalSingleKey: Math.random(),
@@ -323,6 +326,12 @@ export default {
       yield put({ type: 'query' })
     },
     *updateReplicaSoftAntiAffinityModal({
+      payload,
+    }, { call, put }) {
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateOfflineReplicaRebuildingModal({
       payload,
     }, { call, put }) {
       yield payload.urls.map(url => call(execAction, url, payload.params))
@@ -853,6 +862,31 @@ export default {
         ...state,
         softAntiAffinityKey: '',
         updateReplicaSoftAntiAffinityVisible: false,
+      }
+    },
+    showBulkOfflineReplicaRebuildingModal(state, action) {
+      return {
+        ...state,
+        selectedRows: action?.payload?.volumes,
+        updateOfflineReplicaRebuildingVisible: true,
+        offlineReplicaRebuildingKey: action?.payload?.offlineReplicaRebuildingKey,
+        updateOfflineReplicaRebuildingModalKey: Math.random(),
+      }
+    },
+    showOfflineReplicaRebuildingModal(state, action) {
+      return {
+        ...state,
+        selected: action?.payload?.volume,
+        updateOfflineReplicaRebuildingVisible: true,
+        offlineReplicaRebuildingKey: action?.payload?.offlineReplicaRebuildingKey,
+        updateOfflineReplicaRebuildingModalKey: Math.random(),
+      }
+    },
+    hideOfflineReplicaRebuildingModal(state) {
+      return {
+        ...state,
+        offlineReplicaRebuildingKey: '',
+        updateOfflineReplicaRebuildingVisible: false,
       }
     },
     updateWs(state, action) {

@@ -4,7 +4,15 @@ import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
 import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
 import { formatMib } from '../../../utils/formater'
-import { isSchedulingFailure, getHealthState, needToWaitDone, frontends, extractImageVersion } from '../helper/index'
+import {
+  isSchedulingFailure,
+  getHealthState,
+  needToWaitDone,
+  frontends,
+  extractImageVersion,
+  getOfflineRebuiltStatus,
+  getOfflineRebuiltStatusWithoutFrontend,
+} from '../helper/index'
 import styles from './VolumeInfo.less'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
 import IconSnapshot from '../../../components/Icon/IconSnapshot'
@@ -190,6 +198,20 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   return (
     <div>
       {errorMsg}
+      {getOfflineRebuiltStatus(selectedVolume) && <Alert
+        style={{ marginTop: 5 }}
+        message="Offline Rebuilding"
+        description="The volume is being offline rebuilding"
+        type="warning"
+        showIcon
+      />}
+      {getOfflineRebuiltStatusWithoutFrontend(selectedVolume) && <Alert
+        style={{ marginTop: 5 }}
+        message="Offline Rebuilding"
+        description="The volume rebuilding will be automatically triggered after detachment"
+        type="warning"
+        showIcon
+      />}
       {restoreProgress}
       <div className={styles.row}>
         <span className={styles.label}> State:</span>
@@ -259,6 +281,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}> Backend Data Engine:</span>
         {selectedVolume.backendStoreDriver}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Offline Replica Rebuilding:</span>
+        {selectedVolume.offlineReplicaRebuilding}
       </div>
       {!selectedVolume.disableFrontend ? <div className={styles.row}>
         <span className={styles.label}> Attached Node &amp; Endpoint:</span>
