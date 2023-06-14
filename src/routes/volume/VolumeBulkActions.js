@@ -30,6 +30,7 @@ function bulkActions({
   showUpdateBulkSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
+  showOfflineReplicaRebuildingModal,
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -128,6 +129,9 @@ function bulkActions({
       case 'updateReplicaZoneSoftAntiAffinity':
         showUpdateReplicaZoneSoftAntiAffinityModal(selectedRows)
         break
+      case 'updateOfflineReplicaRebuilding':
+        showOfflineReplicaRebuildingModal(selectedRows)
+        break
       case 'trimFilesystem':
         confirm({
           title: `Are you sure you want to trim (${selectedRows.map(item => item.name).join(', ')}) Fileystem ?`,
@@ -192,6 +196,7 @@ function bulkActions({
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
+    { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => item.backendStoreDriver !== 'v2') } },
     { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
   ]
 

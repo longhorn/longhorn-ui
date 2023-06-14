@@ -38,6 +38,7 @@ const modal = ({
   diskTags,
   backingImages,
   tagsLoading,
+  enableSPDKDataEngineValue,
   form: {
     getFieldDecorator,
     validateFields,
@@ -210,10 +211,20 @@ const modal = ({
         </FormItem>
         <FormItem label="Backend Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backendStoreDriver', {
-            initialValue: 'longhorn',
+            initialValue: 'v1',
+            rules: [
+              {
+                validator: (rule, value, callback) => {
+                  if (value === 'v2' && !enableSPDKDataEngineValue) {
+                    callback('SPDK data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
           })(<Select>
-            <Option key={'longhorn'} value={'longhorn'}>Longhorn</Option>
-            <Option key={'spdk'} value={'spdk'}>SPDK</Option>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
@@ -286,6 +297,15 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
+            { getFieldsValue().backendStoreDriver === 'v2' && <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('offlineReplicaRebuilding', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+              </Select>)}
+            </FormItem>}
             <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
               {getFieldDecorator('revisionCounterDisabled', {
                 valuePropName: 'checked',
@@ -294,7 +314,6 @@ const modal = ({
             </FormItem>
           </Panel>
         </Collapse>
-
       </Form>
     </ModalBlur>
   )
@@ -314,6 +333,7 @@ modal.propTypes = {
   tagsLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
+  enableSPDKDataEngineValue: PropTypes.bool,
   backingImages: PropTypes.array,
 }
 
