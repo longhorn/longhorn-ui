@@ -208,7 +208,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       {getOfflineRebuiltStatusWithoutFrontend(selectedVolume) && <Alert
         style={{ marginTop: 5 }}
         message="Offline Rebuilding"
-        description="The volume rebuilding will be automatically triggered after detachment"
+        description={selectedVolume.offlineReplicaRebuildingRequired ? 'The volume rebuilding will be automatically triggered after detachment' : 'Offline Replica Rebuilding is disabled, the volume rebuilding will not be automatically triggered after detachment'}
         type="warning"
         showIcon
       />}
