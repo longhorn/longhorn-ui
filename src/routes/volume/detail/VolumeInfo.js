@@ -285,7 +285,9 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>
-        {(frontends.find(item => item.value === selectedVolume.frontend) || '').label}
+        {selectedVolume.disableFrontend ? <Tooltip title={'Attach volume without enabling frontend. Volume data will not be accessible while attached.'}>
+            <Icon type="disconnect" className="healthy" />
+          </Tooltip> : (frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Backend Data Engine:</span>
