@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import queryString from 'query-string'
 import { connect } from 'dva'
 import { Row, Col, Button } from 'antd'
 import { Filter } from '../../components/index'
@@ -29,10 +30,18 @@ class ObjectEndpoint extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
+    const { data } = this.props.objectendpoint
+    const { field, value } = queryString.parse(this.props.location.search)
 
-    const objectEndpointListProps = {
-      loading,
-      dataSource: [],
+    let objectendpoints = data.filter((item) => {
+      if (field === 'name') {
+        return item[field] && item[field].indexOf(value.trim()) > -1
+      }
+      return true
+    })
+
+    if (objectendpoints && objectendpoints.length > 0) {
+      objectendpoints.sort((a, b) => a.name.localeCompare(b.name))
     }
 
     const createObjectEndpointModalProps = {
@@ -43,6 +52,21 @@ class ObjectEndpoint extends React.Component {
           ...this.state,
           createObjectEndpointModalVisible: false,
         })
+      },
+    }
+
+    const objectEndpointListProps = {
+      dataSource: objectendpoints,
+      height: this.state.height,
+      loading,
+      rowSelection: {
+        selectedRowKeys: this.state.selectedRows.map(item => item.id),
+        onChange(_, records) {
+          me.setState({
+            ...me.state,
+            selectedRows: records,
+          })
+        },
       },
     }
 
@@ -58,7 +82,7 @@ class ObjectEndpoint extends React.Component {
           type: 'objectEndpoint/bulkDelete',
           payload: record,
           callback: () => {
-            this.setState({
+            me.setState({
               ...this.state,
               selectedRows: [],
             })
