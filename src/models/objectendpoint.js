@@ -1,4 +1,6 @@
 import { listObjectEndpoints, getObjectEndpoint, createObjectEndpoint, deleteObjectEndpoint } from '../services/objectendpoint'
+import queryString from 'query-string'
+import { enableQueryData } from '../utils/dataDependency'
 
 export default {
   namespace: 'objectstorage',
@@ -8,7 +10,18 @@ export default {
     resourceType: 'objectEndpoint',
     socketStatus: 'closed',
   },
-  subscriptions: {},
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        if (enableQueryData(location.pathname, 'objectendpoint')) {
+          dispatch({
+            type: 'listObjectEndpoints',
+            payload: location.pathname.startsWith('/objectendpoint') ? queryString.parse(location.search) : {},
+          })
+        }
+      })
+    },
+  },
   effects: {
     *list({
       payload,
