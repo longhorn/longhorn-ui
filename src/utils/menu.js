@@ -31,6 +31,11 @@ module.exports = [
     icon: 'copy',
   },
   {
+    key: 'objectendpoint',
+    name: 'Object Storage',
+    icon: 'file',
+  },
+  {
     key: 'setting',
     name: 'Setting',
     icon: 'setting',

@@ -97,6 +97,15 @@ const dependency = {
       key: 'backups',
     }],
   },
+  objectEndpoint: {
+    path: '/objectendpoint',
+    runWs: [
+      {
+        ns: 'objectendpoint',
+        key: 'objectendpoints',
+      },
+    ],
+  },
   instanceManager: {
     path: '/instanceManager',
     runWs: [{

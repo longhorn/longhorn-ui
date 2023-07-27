@@ -18,6 +18,7 @@ import recurringJobComponent from './routes/recurringJob/'
 import orphanedDataComponent from './routes/orphanedData/'
 import engineimageDetailComponent from './routes/engineimage/detail'
 import systemBackupsComponent from './routes/systemBackups/'
+import objectEndpointComponent from './routes/objectEndpoint/'
 
 const Routers = function ({ history, app }) {
   const App = dynamic({
@@ -95,6 +96,11 @@ const Routers = function ({ history, app }) {
     component: () => systemBackupsComponent,
   })
 
+  const objectEndpoints = dynamic({
+    app,
+    component: () => objectEndpointComponent,
+  })
+
   const path = '/'
 
   return (
@@ -114,10 +120,10 @@ const Routers = function ({ history, app }) {
             <Route exact path={`${path}instanceManager`} component={instanceManager} />
             <Route exact path={`${path}backingImage`} component={backingImage} />
             <Route exact path={`${path}recurringJob`} component={recurringJob} />
-            <Route exact path={`${path}recurringJob`} component={recurringJob} />
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
             <Route path={`${path}orphanedData`} component={orphanedData} />
             <Route path={`${path}systemBackups`} component={systemBackups} />
+            <Route path={`${path}objectendpoint`} component={objectEndpoints} />
             <Route component={notfound} />
           </Switch>
         </App>
