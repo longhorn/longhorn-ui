@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import queryString from 'query-string'
 import { connect } from 'dva'
+import { routerRedux } from 'dva/router'
 import { Row, Col, Button } from 'antd'
 import { Filter } from '../../components/index'
 import CreateObjectEndpoint from './CreateObjectEndpoint'
@@ -12,6 +13,7 @@ class ObjectEndpoint extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      height: 300,
       selectedRows: [],
       createObjectEndpointModalVisible: false,
       createObjectEndpointModalKey: Math.random(),
@@ -30,7 +32,7 @@ class ObjectEndpoint extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { data } = this.props.objectendpoint
+    const { data } = this.props.objectEndpoint
     const { field, value } = queryString.parse(this.props.location.search)
 
     let objectendpoints = data.filter((item) => {
@@ -60,7 +62,7 @@ class ObjectEndpoint extends React.Component {
       height: this.state.height,
       loading,
       rowSelection: {
-        selectedRowKeys: this.state.selectedRows.map(item => item.id),
+        selectedRowKeys: this.state.selectedRows.map(item => item.name),
         onChange(_, records) {
           me.setState({
             ...me.state,
@@ -68,11 +70,34 @@ class ObjectEndpoint extends React.Component {
           })
         },
       },
+      deleteObjectEndpoint(record) {
+        dispatch({
+          type: 'objectEndpoint/delete',
+          payload: record,
+        })
+      },
     }
 
     const objectEndpointFilterProps = {
       location,
-      fieldOption: [],
+      defaultField: 'name',
+      fieldOption: [
+        { value: 'name', name: 'Name' },
+      ],
+      onSearch(filter) {
+        const { field: filterField, value: filterValue } = filter
+        filterField && filterValue ? dispatch(routerRedux.push({
+          pathname: '/objectEndpoint',
+          search: queryString.stringify({
+            ...queryString.parse(location.search),
+            field: filterField,
+            value: filterValue,
+          }),
+        })) : dispatch(routerRedux.push({
+          pathname: '/objectEndpoint',
+          search: queryString.stringify({}),
+        }))
+      },
     }
 
     const objectEndpointBulkActionsProps = {
@@ -110,12 +135,12 @@ class ObjectEndpoint extends React.Component {
 }
 
 ObjectEndpoint.propTypes = {
-  objectendpoint: PropTypes.object,
+  objectEndpoint: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
 export default connect(
-  ({ objectendpoint, loading }) => ({ objectendpoint, loading: loading.models.objectEndpoint })
+  ({ objectEndpoint, loading }) => ({ objectEndpoint, loading: loading.models.objectEndpoint })
 )(ObjectEndpoint)

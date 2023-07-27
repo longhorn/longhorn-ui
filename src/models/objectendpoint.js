@@ -1,10 +1,12 @@
 import { listObjectEndpoints, getObjectEndpoint, createObjectEndpoint, deleteObjectEndpoint } from '../services/objectendpoint'
+import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
 
 export default {
-  namespace: 'objectstorage',
+  namespace: 'objectEndpoint',
   state: {
+    ws: null,
     data: [],
     selected: {},
     resourceType: 'objectEndpoint',
@@ -13,21 +15,21 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (enableQueryData(location.pathname, 'objectendpoint')) {
+        if (enableQueryData(location.pathname, 'objectEndpoint')) {
           dispatch({
-            type: 'listObjectEndpoints',
-            payload: location.pathname.startsWith('/objectendpoint') ? queryString.parse(location.search) : {},
+            type: 'query',
+            payload: location.pathname.startsWith('/objectEndpoint') ? queryString.parse(location.search) : {},
           })
         }
       })
     },
   },
   effects: {
-    *list({
+    *query({
       payload,
-    }, { call, get }) {
+    }, { call, put }) {
       const data = yield call(listObjectEndpoints, payload)
-      yield get({ type: 'listObjectEndpoints', payload: { ...data } })
+      yield put({ type: 'listObjectEndpoints', payload: { ...data } })
     },
     *get({
       payload,
@@ -45,6 +47,25 @@ export default {
     }, { call }) {
       yield call(deleteObjectEndpoint, payload)
     },
+    *startWS({
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.objectEndpoint.ws)
+      if (ws) {
+        ws.open()
+      } else {
+        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      }
+    },
+    *stopWS({
+      // eslint-disable-next-line no-unused-vars
+      payload,
+    }, { select }) {
+      let ws = yield select(state => state.objectEndpoint.ws)
+      if (ws) {
+        ws.close(1000)
+      }
+    },
   },
   reducers: {
     listObjectEndpoints(state, action) {
@@ -52,6 +73,15 @@ export default {
         ...state,
         ...action.payload,
       }
+    },
+    updateBackground(state, action) {
+      return updateState(state, action)
+    },
+    updateSocketStatus(state, action) {
+      return { ...state, socketStatus: action.payload }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }

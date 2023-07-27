@@ -96,7 +96,7 @@ const Routers = function ({ history, app }) {
     component: () => systemBackupsComponent,
   })
 
-  const objectEndpoints = dynamic({
+  const objectEndpoint = dynamic({
     app,
     component: () => objectEndpointComponent,
   })
@@ -123,7 +123,7 @@ const Routers = function ({ history, app }) {
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
             <Route path={`${path}orphanedData`} component={orphanedData} />
             <Route path={`${path}systemBackups`} component={systemBackups} />
-            <Route path={`${path}objectendpoint`} component={objectEndpoints} />
+            <Route path={`${path}objectEndpoint`} component={objectEndpoint} />
             <Route component={notfound} />
           </Switch>
         </App>

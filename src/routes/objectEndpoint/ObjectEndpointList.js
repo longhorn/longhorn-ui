@@ -4,7 +4,7 @@ import { Table } from 'antd'
 import { pagination } from '../../utils/page'
 import ObjectEndpointActions from './ObjectEndpointActions'
 
-function list({ loading, dataSource, rowSelection, height, deleteObjectEndpoint }) {
+function list({ dataSource, height, loading, rowSelection, deleteObjectEndpoint }) {
   const objectEndpointActionsProps = {
     deleteObjectEndpoint,
   }
@@ -61,10 +61,10 @@ function list({ loading, dataSource, rowSelection, height, deleteObjectEndpoint 
 }
 
 list.propTypes = {
-  loading: PropTypes.bool,
   dataSource: PropTypes.array,
-  rowSelection: PropTypes.object,
   heigth: PropTypes.number,
+  loading: PropTypes.bool,
+  rowSelection: PropTypes.object,
   deleteObjectEndpoint: PropTypes.func,
 }
 

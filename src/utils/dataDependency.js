@@ -98,7 +98,7 @@ const dependency = {
     }],
   },
   objectEndpoint: {
-    path: '/objectendpoint',
+    path: '/objectEndpoint',
     runWs: [
       {
         ns: 'objectstorage',
@@ -175,7 +175,7 @@ const httpDataDependency = {
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
   '/systemBackups': ['systemBackups'],
-  '/objectendpoint': ['objectstorage'],
+  '/objectEndpoint': ['objectEndpoint'],
 }
 
 export function getDataDependency(pathName) {
