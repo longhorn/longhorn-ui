@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Select, Checkbox, Spin, Collapse } from 'antd'
-import { ModalBlur } from '../../components'
+import { ModalBlur, SizeInput } from '../../components'
 import { frontends } from './helper/index'
 const FormItem = Form.Item
 const { Panel } = Collapse
@@ -73,19 +73,11 @@ const modal = ({
     style: { top: 0 },
   }
 
-  function unitChange(value) {
-    let currentSize = getFieldsValue().size
-
-    if (value === 'Gi') {
-      currentSize /= 1024
-    } else {
-      currentSize *= 1024
-    }
-    setFieldsValue({
-      ...getFieldsValue(),
-      unit: value,
-      size: currentSize,
-    })
+  const sizeInputProps = {
+    state: item,
+    getFieldDecorator,
+    getFieldsValue,
+    setFieldsValue,
   }
 
   return (
@@ -102,52 +94,10 @@ const modal = ({
             ],
           })(<Input />)}
         </FormItem>
-        <div style={{ display: 'flex' }}>
-          <FormItem label="Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-            {getFieldDecorator('size', {
-              initialValue: item.size,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input volume size',
-                }, {
-                  validator: (rule, value, callback) => {
-                    if (value === '' || typeof value !== 'number') {
-                      callback()
-                      return
-                    }
-                    if (value < 0 || value > 65536) {
-                      callback('The value should be between 0 and 65535')
-                    } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
-                      callback('This value should have at most two decimal places')
-                    } else if (value < 10 && getFieldsValue().unit === 'Mi') {
-                      callback('The volume size must be greater than 10 Mi')
-                    } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
-                      callback('Decimals are not allowed')
-                    } else {
-                      callback()
-                    }
-                  },
-                },
-              ],
-            })(<InputNumber style={{ width: '250px' }} />)}
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('unit', {
-              initialValue: item.unit,
-              rules: [{ required: true, message: 'Please select your unit!' }],
-            })(
-              <Select
-                style={{ width: '100px' }}
-                onChange={unitChange}
-              >
-                <Option value="Mi">Mi</Option>
-                <Option value="Gi">Gi</Option>
-              </Select>,
-            )}
-          </FormItem>
+        <div style={{ paddingLeft: 75 }}>
+        <SizeInput {...sizeInputProps}>
+        </SizeInput>
         </div>
-
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: item.numberOfReplicas,
