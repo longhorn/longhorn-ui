@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input } from 'antd'
+import { Form, Input, Collapse } from 'antd'
 import { ModalBlur, SizeInput } from '../../components'
 
 const FormItem = Form.Item
+const Panel = Collapse.Panel
 
 const formItemLayout = {
   labelCol: {
@@ -72,6 +73,32 @@ const modal = ({
         </FormItem>
         <SizeInput {...sizeInputProps}>
         </SizeInput>
+        <FormItem label="Access Key" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('accesskey', {
+            initialValue: item.accesskey,
+            rules: [
+              {
+                required: true,
+                message: 'Please input an access key',
+              },
+            ],
+          })(<Input style={{ width: '80%' }} />)}
+        </FormItem>
+        <FormItem label="Secret Key" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('secretkey', {
+            initialValue: item.secretkey,
+            rules: [
+              {
+                required: true,
+                message: 'Please input a secret key',
+              },
+            ],
+          })(<Input style={{ width: '80%' }} />)}
+        </FormItem>
+        <Collapse>
+          <Panel header="Advanced Configuration" key="1">
+          </Panel>
+        </Collapse>
       </Form>
     </ModalBlur>
   )

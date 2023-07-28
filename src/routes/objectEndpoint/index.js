@@ -47,7 +47,10 @@ class ObjectEndpoint extends React.Component {
     }
 
     const createObjectEndpointModalProps = {
-      item: {},
+      item: {
+        accesskey: Math.random().toString(36).substr(2, 6),
+        secretkey: Math.random().toString(36).substr(2, 6),
+      },
       visible: this.state.createObjectEndpointModalVisible,
       onCancel() {
         me.setState({
