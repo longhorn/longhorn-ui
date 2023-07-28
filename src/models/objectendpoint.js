@@ -33,11 +33,22 @@ export default {
       const data = yield call(getObjectEndpoint, payload)
       yield get({ type: 'getObjectEndpoint', payload: { ...data } })
     },
-    *create({ payload }, { call }) {
+    *create({ payload, callback }, { call, put }) {
       yield call(createObjectEndpoint, payload)
+      if (callback) callback()
+      yield put({ type: 'quey' })
     },
-    *delete({ payload }, { call }) {
+    *delete({ payload, callback }, { call, put }) {
       yield call(deleteObjectEndpoint, payload)
+      if (callback) callback()
+      yield put({ type: 'query' })
+    },
+    *bulkDelete({ payload, callback }, { call, put }) {
+      if (payload && payload.length > 0) {
+        yield payload.map(item => call(deleteObjectEndpoint, item))
+      }
+      if (callback) callback()
+      yield put({ type: 'query' })
     },
     *startWS({ payload }, { select }) {
       let ws = yield select(state => state.objectEndpoint.ws)

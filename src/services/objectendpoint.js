@@ -17,14 +17,16 @@ export async function getObjectEndpoint(name) {
 export async function createObjectEndpoint(params) {
   return request({
     url: '/v1/objectendpoints',
-    method: 'put',
+    method: 'post',
     data: params,
   })
 }
 
-export async function deleteObjectEndpoint(name) {
-  return request({
-    url: `/v1/objectendpoints/${name}`,
-    method: 'delete',
-  })
+export async function deleteObjectEndpoint(params) {
+  if (params.name) {
+    return request({
+      url: `/v1/objectendpoints/${params.name}`,
+      method: 'delete',
+    })
+  }
 }
