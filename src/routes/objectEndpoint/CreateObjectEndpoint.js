@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input } from 'antd'
+import { Form, Input, InputNumber, Select } from 'antd'
 import { ModalBlur } from '../../components'
 
 const FormItem = Form.Item
+const Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
@@ -17,6 +18,7 @@ const formItemLayout = {
 const modal = ({
   form: {
     getFieldDecorator,
+    getFieldsValue,
   },
   item,
   visible,
@@ -24,7 +26,10 @@ const modal = ({
   onOk,
 }) => {
   function handleOk() {
-    onOk({})
+    const data = {
+      ...getFieldsValue(),
+    }
+    onOk(data)
   }
 
   const modalOpts = {
@@ -49,6 +54,46 @@ const modal = ({
             ],
           })(<Input style={{ width: '80%' }} />)}
         </FormItem>
+        <div style={{ display: 'flex' }}>
+          <FormItem label="Size" style={{ flex: 0.6, paddingLeft: 75 }}>
+            {getFieldDecorator('size', {
+              initialValue: item.size,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input size',
+                },
+                {
+                  validator: (rule, value, callback) => {
+                    if (value === '' || typeof value !== 'number') {
+                      callback()
+                      return
+                    }
+                    if (value < 0 || value > 65536) {
+                      callback('The value should be between 0 and 65536')
+                    }
+                  },
+                },
+              ],
+            })(<InputNumber style={{ width: '250px' }} />)}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('unit', {
+              initialValue: item.unit,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input unit',
+                },
+              ],
+            })(
+              <Select style={{ width: '100px' }}>
+                <Option value="Mi">Mi</Option>
+                <Option value="Gi">Gi</Option>
+              </Select>
+            )}
+          </FormItem>
+        </div>
       </Form>
     </ModalBlur>
   )

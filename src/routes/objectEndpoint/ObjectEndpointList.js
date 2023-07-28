@@ -11,6 +11,17 @@ function list({ dataSource, height, loading, rowSelection, deleteObjectEndpoint 
 
   const columns = [
     {
+      title: 'State',
+      dataIndex: 'state',
+      key: 'state',
+      width: 160,
+      render: (text, record) => {
+        return (
+          <div>{record.state}</div>
+        )
+      },
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',

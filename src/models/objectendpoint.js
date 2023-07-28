@@ -25,31 +25,21 @@ export default {
     },
   },
   effects: {
-    *query({
-      payload,
-    }, { call, put }) {
+    *query({ payload }, { call, put }) {
       const data = yield call(listObjectEndpoints, payload)
       yield put({ type: 'listObjectEndpoints', payload: { ...data } })
     },
-    *get({
-      payload,
-    }, { call, get }) {
+    *get({ payload }, { call, get }) {
       const data = yield call(getObjectEndpoint, payload)
       yield get({ type: 'getObjectEndpoint', payload: { ...data } })
     },
-    *create({
-      payload,
-    }, { call }) {
+    *create({ payload }, { call }) {
       yield call(createObjectEndpoint, payload)
     },
-    *delete({
-      payload,
-    }, { call }) {
+    *delete({ payload }, { call }) {
       yield call(deleteObjectEndpoint, payload)
     },
-    *startWS({
-      payload,
-    }, { select }) {
+    *startWS({ payload }, { select }) {
       let ws = yield select(state => state.objectEndpoint.ws)
       if (ws) {
         ws.open()
@@ -57,10 +47,8 @@ export default {
         wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
       }
     },
-    *stopWS({
-      // eslint-disable-next-line no-unused-vars
-      payload,
-    }, { select }) {
+    // eslint-disable-next-line no-unused-vars
+    *stopWS({ payload }, { select }) {
       let ws = yield select(state => state.objectEndpoint.ws)
       if (ws) {
         ws.close(1000)

@@ -51,8 +51,18 @@ class ObjectEndpoint extends React.Component {
       visible: this.state.createObjectEndpointModalVisible,
       onCancel() {
         me.setState({
-          ...this.state,
+          ...me.state,
           createObjectEndpointModalVisible: false,
+        })
+      },
+      onOk(newObjectEndpoint) {
+        me.setState({
+          ...me.state,
+          createObjectEndpointModalVisible: false,
+        })
+        dispatch({
+          type: 'objectEndpoint/create',
+          payload: newObjectEndpoint,
         })
       },
     }

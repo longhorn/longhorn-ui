@@ -101,7 +101,7 @@ const dependency = {
     path: '/objectEndpoint',
     runWs: [
       {
-        ns: 'objectstorage',
+        ns: 'objectEndpoint',
         key: 'objectendpoints',
       },
     ],
@@ -159,7 +159,7 @@ const allWs = [{
   ns: 'systemBackups',
   key: 'systemrestores',
 }, {
-  ns: 'objectstorage',
+  ns: 'objectEndpoint',
   key: 'objectendpoints',
 }]
 
