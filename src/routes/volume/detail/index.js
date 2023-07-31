@@ -411,6 +411,15 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    showUpdateReplicaDiskSoftAntiAffinityModal(record) {
+      dispatch({
+        type: 'volume/showUpdateReplicaSoftAntiAffinityModal',
+        payload: {
+          volume: record,
+          softAntiAffinityKey: 'updateReplicaDiskSoftAntiAffinity',
+        },
+      })
+    },
     showOfflineReplicaRebuildingModal(record) {
       dispatch({
         type: 'volume/showOfflineReplicaRebuildingModal',

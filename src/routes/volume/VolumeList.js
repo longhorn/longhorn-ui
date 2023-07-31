@@ -54,6 +54,7 @@ function list({
   showUpdateSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
+  showUpdateReplicaDiskSoftAntiAffinityModal,
   showOfflineReplicaRebuildingModal,
   onRowClick = f => f,
 }) {
@@ -89,6 +90,7 @@ function list({
     showUpdateSnapshotDataIntegrityModal,
     showUpdateReplicaSoftAntiAffinityModal,
     showUpdateReplicaZoneSoftAntiAffinityModal,
+    showUpdateReplicaDiskSoftAntiAffinityModal,
     showOfflineReplicaRebuildingModal,
     onRowClick,
   }

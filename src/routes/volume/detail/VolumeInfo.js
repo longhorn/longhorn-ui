@@ -387,6 +387,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Replica Zone Soft Anti Affinity:</span>
         {selectedVolume?.replicaZoneSoftAntiAffinity}
       </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Replica Disk Soft Anti Affinity:</span>
+        {selectedVolume?.replicaDiskSoftAntiAffinity}
+      </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>

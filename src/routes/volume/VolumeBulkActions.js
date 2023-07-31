@@ -30,6 +30,7 @@ function bulkActions({
   showUpdateBulkSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
+  showUpdateReplicaDiskSoftAntiAffinityModal,
   showOfflineReplicaRebuildingModal,
 }) {
   const deleteWranElement = (rows) => {
@@ -129,6 +130,9 @@ function bulkActions({
       case 'updateReplicaZoneSoftAntiAffinity':
         showUpdateReplicaZoneSoftAntiAffinityModal(selectedRows)
         break
+      case 'updateReplicaDiskSoftAntiAffinity':
+        showUpdateReplicaDiskSoftAntiAffinityModal(selectedRows)
+        break
       case 'updateOfflineReplicaRebuilding':
         showOfflineReplicaRebuildingModal(selectedRows)
         break
@@ -196,6 +200,7 @@ function bulkActions({
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
+    { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => item.backendStoreDriver !== 'v2') } },
     { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
   ]
