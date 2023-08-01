@@ -1,12 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table } from 'antd'
+import { Table, Tooltip } from 'antd'
 import { pagination } from '../../utils/page'
 import ObjectEndpointActions from './ObjectEndpointActions'
 
 function list({ dataSource, height, loading, rowSelection, deleteObjectEndpoint }) {
   const objectEndpointActionsProps = {
     deleteObjectEndpoint,
+  }
+
+  const endpointStateColorMap = {
+    Unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
+    Starting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
+    Running: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
+    Stopping: { color: '#DEE1E3', bg: 'rgba(222,225,227,.05)' },
+    Error: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
   }
 
   const columns = [
@@ -16,8 +24,14 @@ function list({ dataSource, height, loading, rowSelection, deleteObjectEndpoint 
       key: 'state',
       width: 160,
       render: (text, record) => {
+        const tooltip = `Endpoint ${record.name} is ${record.state}`
+        const colormap = endpointStateColorMap[record.state] || { color: '', bg: '' }
         return (
-          <div>{record.state}</div>
+          <Tooltip title={tooltip}>
+            <div style={{ display: 'inline-block', padding: '0 4px', color: colormap.color, border: `1px solid ${colormap.color}`, backgroundColor: colormap.bg }}>
+              {record.state}
+            </div>
+          </Tooltip>
         )
       },
     },
