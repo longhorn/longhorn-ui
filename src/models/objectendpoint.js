@@ -1,4 +1,5 @@
 import { listObjectEndpoints, getObjectEndpoint, createObjectEndpoint, deleteObjectEndpoint } from '../services/objectendpoint'
+import { listStorageClasses } from '../services/storageclass'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
@@ -8,6 +9,7 @@ export default {
   state: {
     ws: null,
     data: [],
+    storageclasses: [],
     selected: {},
     resourceType: 'objectEndpoint',
     socketStatus: 'closed',
@@ -27,7 +29,9 @@ export default {
   effects: {
     *query({ payload }, { call, put }) {
       const data = yield call(listObjectEndpoints, payload)
+      const classes = yield call(listStorageClasses, payload)
       yield put({ type: 'listObjectEndpoints', payload: { ...data } })
+      yield put({ type: 'listStorageClasses', payload: { ...classes } })
     },
     *get({ payload }, { call, get }) {
       const data = yield call(getObjectEndpoint, payload)
@@ -71,6 +75,12 @@ export default {
       return {
         ...state,
         ...action.payload,
+      }
+    },
+    listStorageClasses(state, action) {
+      return {
+        ...state,
+        storageclasses: action.payload.data,
       }
     },
     updateBackground(state, action) {

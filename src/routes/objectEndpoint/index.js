@@ -32,7 +32,7 @@ class ObjectEndpoint extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { data } = this.props.objectEndpoint
+    const { data, storageclasses } = this.props.objectEndpoint
     const { field, value } = queryString.parse(this.props.location.search)
 
     let objectendpoints = data.filter((item) => {
@@ -48,6 +48,7 @@ class ObjectEndpoint extends React.Component {
 
     const createObjectEndpointModalProps = {
       item: {
+        storageclasses,
         accesskey: Math.random().toString(36).substr(2, 6),
         secretkey: Math.random().toString(36).substr(2, 6),
       },

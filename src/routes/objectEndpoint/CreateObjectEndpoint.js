@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Collapse } from 'antd'
-import { ModalBlur, SizeInput } from '../../components'
+import { Form, Input } from 'antd'
+import { ModalBlur, SizeInput, StorageClassInput } from '../../components'
 
 const FormItem = Form.Item
-const Panel = Collapse.Panel
 
 const formItemLayout = {
   labelCol: {
@@ -57,6 +56,14 @@ const modal = ({
     setFieldsValue,
   }
 
+  const storageclassInputProps = {
+    classes: item.storageclasses,
+    state: item,
+    getFieldDecorator,
+    getFieldsValue,
+    setFieldsValue,
+  }
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -73,6 +80,8 @@ const modal = ({
         </FormItem>
         <SizeInput {...sizeInputProps}>
         </SizeInput>
+        <StorageClassInput {...storageclassInputProps}>
+        </StorageClassInput>
         <FormItem label="Access Key" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accesskey', {
             initialValue: item.accesskey,
@@ -95,10 +104,6 @@ const modal = ({
             ],
           })(<Input style={{ width: '80%' }} />)}
         </FormItem>
-        <Collapse>
-          <Panel header="Advanced Configuration" key="1">
-          </Panel>
-        </Collapse>
       </Form>
     </ModalBlur>
   )
