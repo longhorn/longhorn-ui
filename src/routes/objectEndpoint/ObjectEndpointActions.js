@@ -29,8 +29,8 @@ function actions({ selected, deleteObjectEndpoint, editObjectEndpoint }) {
   }
 
   const availableActions = [
-    { key: 'delete', name: 'Delete' },
     { key: 'edit', name: 'Edit' },
+    { key: 'delete', name: 'Delete' },
   ]
 
   return (
@@ -42,8 +42,8 @@ function actions({ selected, deleteObjectEndpoint, editObjectEndpoint }) {
 
 actions.propTypes = {
   selected: PropTypes.object,
-  deleteRecurringJob: PropTypes.func,
-  editRecurringJob: PropTypes.func,
+  editObjectEndpoint: PropTypes.func,
+  deleteObjectEndpoint: PropTypes.func,
 }
 
 export default actions

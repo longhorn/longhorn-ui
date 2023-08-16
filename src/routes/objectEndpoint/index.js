@@ -6,6 +6,7 @@ import { routerRedux } from 'dva/router'
 import { Row, Col, Button } from 'antd'
 import { Filter } from '../../components/index'
 import CreateObjectEndpoint from './CreateObjectEndpoint'
+import EditObjectEndpoint from './EditObjectEndpoint'
 import ObjectEndpointList from './ObjectEndpointList'
 import ObjectEndpointBulkActions from './ObjectEndpointBulkActions'
 
@@ -17,6 +18,8 @@ class ObjectEndpoint extends React.Component {
       selectedRows: [],
       createObjectEndpointModalVisible: false,
       createObjectEndpointModalKey: Math.random(),
+      editObjectEndpointModalVisible: false,
+      editObjectEndpointModalKey: Math.random(),
     }
   }
 
@@ -26,6 +29,14 @@ class ObjectEndpoint extends React.Component {
       selected: {},
       createObjectEndpointModalVisible: true,
       createObjectEndpointModalKey: Math.random(),
+    })
+  }
+
+  showEditObjectEndpointModal = () => {
+    this.setState({
+      ...this.state,
+      editObjectEndpointModalVisible: true,
+      editObjectEndpointModalKey: Math.random(),
     })
   }
 
@@ -71,6 +82,27 @@ class ObjectEndpoint extends React.Component {
       },
     }
 
+    const editObjectEndpointModalProps = {
+      selected: {},
+      visible: this.state.editObjectEndpointModalVisible,
+      onCancel() {
+        me.setState({
+          ...me.state,
+          editObjectEndpointModalVisible: false,
+        })
+      },
+      onOk(record) {
+        me.setState({
+          ...me.state,
+          editObjectEndpointModalVisible: false,
+        })
+        dispatch({
+          type: 'objectEndpoint/update',
+          payload: record,
+        })
+      },
+    }
+
     const objectEndpointListProps = {
       dataSource: objectendpoints,
       height: this.state.height,
@@ -84,6 +116,7 @@ class ObjectEndpoint extends React.Component {
           })
         },
       },
+      editObjectEndpoint: this.showEditObjectEndpointModal,
       deleteObjectEndpoint(record) {
         dispatch({
           type: 'objectEndpoint/delete',
@@ -142,6 +175,7 @@ class ObjectEndpoint extends React.Component {
         </Row>
         <Button className="out-container-button" size="large" type="primary" onClick={this.showCreateObjectEndpointModal}>Create Object Endpoint</Button>
         {this.state.createObjectEndpointModalVisible && <CreateObjectEndpoint key={this.createObjectEndpointModalKey} {...createObjectEndpointModalProps} />}
+        {this.state.editObjectEndpointModalVisible && <EditObjectEndpoint key={this.editObjectEndpointModalKey} {...editObjectEndpointModalProps} />}
         <ObjectEndpointList {...objectEndpointListProps} />
       </div>
     )

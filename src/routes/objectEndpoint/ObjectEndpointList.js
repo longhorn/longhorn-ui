@@ -4,8 +4,16 @@ import { Table, Tooltip } from 'antd'
 import { pagination } from '../../utils/page'
 import ObjectEndpointActions from './ObjectEndpointActions'
 
-function list({ dataSource, height, loading, rowSelection, deleteObjectEndpoint }) {
+function list({
+  dataSource,
+  height,
+  loading,
+  rowSelection,
+  editObjectEndpoint,
+  deleteObjectEndpoint,
+}) {
   const objectEndpointActionsProps = {
+    editObjectEndpoint,
     deleteObjectEndpoint,
   }
 
@@ -90,6 +98,7 @@ list.propTypes = {
   heigth: PropTypes.number,
   loading: PropTypes.bool,
   rowSelection: PropTypes.object,
+  editObjectEndpoint: PropTypes.func,
   deleteObjectEndpoint: PropTypes.func,
 }
 

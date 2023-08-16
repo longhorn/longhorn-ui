@@ -42,6 +42,7 @@ const modal = ({
   }
 
   const modalOpts = {
+    title: 'Create Object Endpoint',
     visible,
     onCancel,
     width: 800,
