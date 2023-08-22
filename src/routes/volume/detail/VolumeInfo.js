@@ -25,15 +25,24 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   })
 
   if (isSchedulingFailure(selectedVolume)) {
-    errorMsg = (
-      <Alert
-        message="Scheduling Failure"
-        description={selectedVolume.conditions.scheduled.reason.replace(/([A-Z])/g, ' $1')}
-        type="warning"
-        className="ant-alert-error"
-        showIcon
-      />
-    )
+    const scheduledConditions = selectedVolume?.conditions?.scheduled
+    if (scheduledConditions) {
+      const { reason, message } = scheduledConditions
+      errorMsg = (
+        <Alert
+          message="Scheduling Failure"
+          description={
+            <div>
+              {reason && <div>{reason.replace(/([A-Z])/g, ' $1')}</div>}
+              {message && <div>{`Error Message: ${message}`}</div>}
+            </div>
+          }
+          type="warning"
+          className="ant-alert-error"
+          showIcon
+        />
+      )
+    }
   }
   const computeActualSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].actualSize ? selectedVolume.controllers[0].actualSize : ''
   const defaultImage = engineImages.find(image => image.default === true)
