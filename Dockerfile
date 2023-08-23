@@ -26,6 +26,8 @@ EXPOSE 8000
 ENV LONGHORN_MANAGER_IP http://localhost:9500
 ENV LONGHORN_UI_PORT 8000
 
+RUN mkdir -p /var/config/ && touch /var/run/nginx.pid && chown -R 499 /var/config /var/run/nginx.pid
+
 # Use the uid of the default user (nginx) from the installed nginx package
 USER 499
 
