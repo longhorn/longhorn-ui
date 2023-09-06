@@ -33,7 +33,7 @@ module.exports = [
   {
     key: 'objectstorage',
     name: 'Object Storage',
-    icon: 'file',
+    icon: 'build',
   },
   {
     key: 'setting',
