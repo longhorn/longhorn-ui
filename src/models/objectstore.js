@@ -1,26 +1,24 @@
-import { listObjectEndpoints, getObjectEndpoint, createObjectEndpoint, deleteObjectEndpoint } from '../services/objectendpoint'
-import { listStorageClasses } from '../services/storageclass'
+import { listObjectStores, getObjectStore, createObjectStore, deleteObjectStore } from '../services/objectstore'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
 
 export default {
-  namespace: 'objectEndpoint',
+  namespace: 'objectstorage',
   state: {
     ws: null,
     data: [],
-    storageclasses: [],
     selected: {},
-    resourceType: 'objectEndpoint',
+    resourceType: 'objectstore',
     socketStatus: 'closed',
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (enableQueryData(location.pathname, 'objectEndpoint')) {
+        if (enableQueryData(location.pathname, 'objectstore')) {
           dispatch({
             type: 'query',
-            payload: location.pathname.startsWith('/objectEndpoint') ? queryString.parse(location.search) : {},
+            payload: location.pathname.startsWith('/objectstore') ? queryString.parse(location.search) : {},
           })
         }
       })
@@ -28,34 +26,32 @@ export default {
   },
   effects: {
     *query({ payload }, { call, put }) {
-      const data = yield call(listObjectEndpoints, payload)
-      const classes = yield call(listStorageClasses, payload)
-      yield put({ type: 'listObjectEndpoints', payload: { ...data } })
-      yield put({ type: 'listStorageClasses', payload: { ...classes } })
+      const data = yield call(listObjectStores, payload)
+      yield put({ type: 'listObjectStores', payload: { ...data } })
     },
     *get({ payload }, { call, get }) {
-      const data = yield call(getObjectEndpoint, payload)
-      yield get({ type: 'getObjectEndpoint', payload: { ...data } })
+      const data = yield call(getObjectStore, payload)
+      yield get({ type: 'getObjectStore', payload: { ...data } })
     },
     *create({ payload, callback }, { call, put }) {
-      yield call(createObjectEndpoint, payload)
+      yield call(createObjectStore, payload)
       if (callback) callback()
       yield put({ type: 'quey' })
     },
     *delete({ payload, callback }, { call, put }) {
-      yield call(deleteObjectEndpoint, payload)
+      yield call(deleteObjectStore, payload)
       if (callback) callback()
       yield put({ type: 'query' })
     },
     *bulkDelete({ payload, callback }, { call, put }) {
       if (payload && payload.length > 0) {
-        yield payload.map(item => call(deleteObjectEndpoint, item))
+        yield payload.map(item => call(deleteObjectStore, item))
       }
       if (callback) callback()
       yield put({ type: 'query' })
     },
     *startWS({ payload }, { select }) {
-      let ws = yield select(state => state.objectEndpoint.ws)
+      let ws = yield select(state => state.objectStore.ws)
       if (ws) {
         ws.open()
       } else {
@@ -64,23 +60,17 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     *stopWS({ payload }, { select }) {
-      let ws = yield select(state => state.objectEndpoint.ws)
+      let ws = yield select(state => state.objectStore.ws)
       if (ws) {
         ws.close(1000)
       }
     },
   },
   reducers: {
-    listObjectEndpoints(state, action) {
+    listObjectStores(state, action) {
       return {
         ...state,
         ...action.payload,
-      }
-    },
-    listStorageClasses(state, action) {
-      return {
-        ...state,
-        storageclasses: action.payload.data,
       }
     },
     updateBackground(state, action) {

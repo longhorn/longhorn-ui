@@ -5,24 +5,24 @@ import { DropOption } from '../../components'
 
 const confirm = Modal.confirm
 
-function actions({ selected, deleteObjectEndpoint, editObjectEndpoint }) {
+function actions({ selected, deleteObjectStore, editObjectStore }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Object Endpoint ${record.name} ?`,
+          title: `Are you sure you want to delete Object Store ${record.name} ?`,
           content: <Alert
             description={`Longhorn will delete the volume associated with ${record.name} automatically.`}
             type="warning"
           />,
           width: 760,
           onOk() {
-            deleteObjectEndpoint(record)
+            deleteObjectStore(record)
           },
         })
         break
       case 'edit':
-        editObjectEndpoint(record)
+        editObjectStore(record)
         break
       default:
     }
@@ -42,8 +42,8 @@ function actions({ selected, deleteObjectEndpoint, editObjectEndpoint }) {
 
 actions.propTypes = {
   selected: PropTypes.object,
-  editObjectEndpoint: PropTypes.func,
-  deleteObjectEndpoint: PropTypes.func,
+  editObjectStore: PropTypes.func,
+  deleteObjectStore: PropTypes.func,
 }
 
 export default actions

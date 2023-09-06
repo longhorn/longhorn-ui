@@ -4,19 +4,19 @@ import { Button, Modal, Alert } from 'antd'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, deleteObjectEndpoint }) {
+function bulkActions({ selectedRows, deleteObjectStore }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Object Endpoint ${selectedRows.map(item => item.name).join(',')} ?`,
+          title: `Are you sure you want to delete Object Store(s) ${selectedRows.map(item => item.name).join(',')} ?`,
           content: <Alert
             description={'Longhorn will remove the volume automatically.'}
             type="warning"
           />,
           width: 760,
           onOk() {
-            deleteObjectEndpoint(selectedRows)
+            deleteObjectStore(selectedRows)
           },
         })
         break
@@ -44,7 +44,7 @@ function bulkActions({ selectedRows, deleteObjectEndpoint }) {
 
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
-  deleteObjectEndpoint: PropTypes.func,
+  deleteObjectStore: PropTypes.func,
 }
 
 export default bulkActions

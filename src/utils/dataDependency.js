@@ -97,12 +97,12 @@ const dependency = {
       key: 'backups',
     }],
   },
-  objectEndpoint: {
-    path: '/objectEndpoint',
+  objectstorage: {
+    path: '/objectstore',
     runWs: [
       {
-        ns: 'objectEndpoint',
-        key: 'objectendpoints',
+        ns: 'objectstorage',
+        key: 'objectstores',
       },
     ],
   },
@@ -123,15 +123,6 @@ const dependency = {
       ns: 'systemBackups',
       key: 'systemBackups',
     }],
-  },
-  storageClass: {
-    path: '/storageClass',
-    runWs: [
-      {
-        ns: 'storageClass',
-        key: 'storageclasses',
-      },
-    ],
   },
 }
 const allWs = [{
@@ -168,11 +159,8 @@ const allWs = [{
   ns: 'systemBackups',
   key: 'systemrestores',
 }, {
-  ns: 'objectEndpoint',
-  key: 'objectendpoints',
-}, {
-  ns: 'storageClass',
-  key: 'storageclasses',
+  ns: 'objectstorage',
+  key: 'objectstores',
 }]
 
 const httpDataDependency = {
@@ -187,7 +175,7 @@ const httpDataDependency = {
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
   '/systemBackups': ['systemBackups'],
-  '/objectEndpoint': ['objectEndpoint', 'storageClass'],
+  '/objectstorage': ['objectstore'],
 }
 
 export function getDataDependency(pathName) {

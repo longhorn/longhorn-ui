@@ -12,7 +12,7 @@ import recurringJob from './models/recurringJob'
 import instanceManager from './models/instanceManager'
 import orphanedData from './models/orphanedData'
 import systemBackups from './models/systemBackups'
-import objectEndpoint from './models/objectendpoint'
+import objectStore from './models/objectstore'
 
 // import assets
 import './assets/iconfont/iconfont.eot'
@@ -41,7 +41,7 @@ app.model(recurringJob)
 app.model(instanceManager)
 app.model(orphanedData)
 app.model(systemBackups)
-app.model(objectEndpoint)
+app.model(objectStore)
 
 // 3. Router
 app.router(routerConfig)

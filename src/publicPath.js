@@ -18,7 +18,7 @@ let columnArr = [
 	'lastBackupAt',
 	'actualSize',
 	'backendStoreDriver',
-	'objectEndpoint',
+	'objectStore',
 ]
 let pageSizeCollectionObject = {
   volumePageSize: 10,
@@ -27,7 +27,7 @@ let pageSizeCollectionObject = {
   hostPageSize: 10,
   instanceManagerSize: 10,
   orphanedDataSize: 10,
-  objectEndpointSize: 10,
+  objectStoreSize: 10,
 }
 if (column) {
   columnArr = JSON.parse(column)

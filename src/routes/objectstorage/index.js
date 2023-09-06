@@ -5,106 +5,108 @@ import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import { Row, Col, Button } from 'antd'
 import { Filter } from '../../components/index'
-import CreateObjectEndpoint from './CreateObjectEndpoint'
-import EditObjectEndpoint from './EditObjectEndpoint'
-import ObjectEndpointList from './ObjectEndpointList'
-import ObjectEndpointBulkActions from './ObjectEndpointBulkActions'
+import CreateObjectStore from './CreateObjectStore'
+import EditObjectStore from './EditObjectStore'
+import ObjectStoreList from './ObjectStoreList'
+import ObjectStoreBulkActions from './ObjectStoreBulkActions'
 
-class ObjectEndpoint extends React.Component {
+class ObjectStore extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       height: 300,
       selectedRows: [],
-      createObjectEndpointModalVisible: false,
-      createObjectEndpointModalKey: Math.random(),
-      editObjectEndpointModalVisible: false,
-      editObjectEndpointModalKey: Math.random(),
+      createModalVisible: false,
+      createModalKey: Math.random(),
+      editModalVisible: false,
+      editModalKey: Math.random(),
     }
   }
 
-  showCreateObjectEndpointModal = () => {
+  showCreateModal = () => {
     this.setState({
       ...this.state,
       selected: {},
-      createObjectEndpointModalVisible: true,
-      createObjectEndpointModalKey: Math.random(),
+      createModalVisible: true,
+      createModalKey: Math.random(),
     })
   }
 
-  showEditObjectEndpointModal = () => {
+  showEditModal = () => {
     this.setState({
       ...this.state,
-      editObjectEndpointModalVisible: true,
-      editObjectEndpointModalKey: Math.random(),
+      editModalVisible: true,
+      editModalKey: Math.random(),
     })
   }
 
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { data, storageclasses } = this.props.objectEndpoint
+    const { data } = this.props.objectstorage
     const { field, value } = queryString.parse(this.props.location.search)
 
-    let objectendpoints = data.filter((item) => {
+    let objectstores = data.filter((item) => {
       if (field === 'name') {
         return item[field] && item[field].indexOf(value.trim()) > -1
       }
       return true
     })
 
-    if (objectendpoints && objectendpoints.length > 0) {
-      objectendpoints.sort((a, b) => a.name.localeCompare(b.name))
+    if (objectstores && objectstores.length > 0) {
+      objectstores.sort((a, b) => a.name.localeCompare(b.name))
     }
 
-    const createObjectEndpointModalProps = {
+    const createModalProps = {
       item: {
-        storageclasses,
         accesskey: Math.random().toString(36).substr(2, 6),
         secretkey: Math.random().toString(36).substr(2, 6),
       },
-      visible: this.state.createObjectEndpointModalVisible,
+      visible: this.state.createModalVisible,
+      diskTags: [],
+      nodeTags: [],
+      tagsLoading: false,
       onCancel() {
         me.setState({
           ...me.state,
-          createObjectEndpointModalVisible: false,
+          createModalVisible: false,
         })
       },
-      onOk(newObjectEndpoint) {
+      onOk(newObjectStore) {
         me.setState({
           ...me.state,
-          createObjectEndpointModalVisible: false,
+          createModalVisible: false,
         })
         dispatch({
-          type: 'objectEndpoint/create',
-          payload: newObjectEndpoint,
+          type: 'objectstorage/create',
+          payload: newObjectStore,
         })
       },
     }
 
-    const editObjectEndpointModalProps = {
+    const editModalProps = {
       selected: {},
-      visible: this.state.editObjectEndpointModalVisible,
+      visible: this.state.editModalVisible,
       onCancel() {
         me.setState({
           ...me.state,
-          editObjectEndpointModalVisible: false,
+          editModalVisible: false,
         })
       },
       onOk(record) {
         me.setState({
           ...me.state,
-          editObjectEndpointModalVisible: false,
+          editModalVisible: false,
         })
         dispatch({
-          type: 'objectEndpoint/update',
+          type: 'objectstorage/update',
           payload: record,
         })
       },
     }
 
-    const objectEndpointListProps = {
-      dataSource: objectendpoints,
+    const listProps = {
+      dataSource: objectstores,
       height: this.state.height,
       loading,
       rowSelection: {
@@ -116,16 +118,16 @@ class ObjectEndpoint extends React.Component {
           })
         },
       },
-      editObjectEndpoint: this.showEditObjectEndpointModal,
-      deleteObjectEndpoint(record) {
+      editObjectStore: this.showEditModal,
+      deleteObjectStore(record) {
         dispatch({
-          type: 'objectEndpoint/delete',
+          type: 'objectstorage/delete',
           payload: record,
         })
       },
     }
 
-    const objectEndpointFilterProps = {
+    const filterProps = {
       location,
       defaultField: 'name',
       fieldOption: [
@@ -134,24 +136,24 @@ class ObjectEndpoint extends React.Component {
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
         filterField && filterValue ? dispatch(routerRedux.push({
-          pathname: '/objectEndpoint',
+          pathname: '/objectstores',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: filterField,
             value: filterValue,
           }),
         })) : dispatch(routerRedux.push({
-          pathname: '/objectEndpoint',
+          pathname: '/objectstores',
           search: queryString.stringify({}),
         }))
       },
     }
 
-    const objectEndpointBulkActionsProps = {
+    const bulkActionsProps = {
       selectedRows: this.state.selectedRows,
-      deleteObjectEndpoint(record) {
+      deleteObjectStore(record) {
         dispatch({
-          type: 'objectEndpoint/bulkDelete',
+          type: 'objectstorage/bulkDelete',
           payload: record,
           callback: () => {
             me.setState({
@@ -167,28 +169,28 @@ class ObjectEndpoint extends React.Component {
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
         <Row gutter={24} className="filter-input">
           <Col lg={{ span: 4 }} md={{ span: 6 }} sm={24} xs={24}>
-            <ObjectEndpointBulkActions {...objectEndpointBulkActionsProps} />
+            <ObjectStoreBulkActions {...bulkActionsProps} />
           </Col>
           <Col lg={{ offset: 13, span: 7 }} md={{ offset: 8, span: 10 }} sm={24} xs={24}>
-            <Filter {...objectEndpointFilterProps} />
+            <Filter {...filterProps} />
           </Col>
         </Row>
-        <Button className="out-container-button" size="large" type="primary" onClick={this.showCreateObjectEndpointModal}>Create Object Endpoint</Button>
-        {this.state.createObjectEndpointModalVisible && <CreateObjectEndpoint key={this.createObjectEndpointModalKey} {...createObjectEndpointModalProps} />}
-        {this.state.editObjectEndpointModalVisible && <EditObjectEndpoint key={this.editObjectEndpointModalKey} {...editObjectEndpointModalProps} />}
-        <ObjectEndpointList {...objectEndpointListProps} />
+        <Button className="out-container-button" size="large" type="primary" onClick={this.showCreateModal}>Create Object Store</Button>
+        {this.state.createModalVisible && <CreateObjectStore key={this.createModalKey} {...createModalProps} />}
+        {this.state.editModalVisible && <EditObjectStore key={this.editModalKey} {...editModalProps} />}
+        <ObjectStoreList {...listProps} />
       </div>
     )
   }
 }
 
-ObjectEndpoint.propTypes = {
-  objectEndpoint: PropTypes.object,
+ObjectStore.propTypes = {
+  objectstorage: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
 export default connect(
-  ({ objectEndpoint, loading }) => ({ objectEndpoint, loading: loading.models.objectEndpoint })
-)(ObjectEndpoint)
+  ({ objectstorage, loading }) => ({ objectstorage, loading: loading.models.objectStore })
+)(ObjectStore)

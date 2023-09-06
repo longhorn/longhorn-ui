@@ -2,22 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Tooltip } from 'antd'
 import { pagination } from '../../utils/page'
-import ObjectEndpointActions from './ObjectEndpointActions'
+import ObjectStoreActions from './ObjectStoreActions'
 
 function list({
   dataSource,
   height,
   loading,
   rowSelection,
-  editObjectEndpoint,
-  deleteObjectEndpoint,
+  editObjectStore,
+  deleteObjectStore,
 }) {
-  const objectEndpointActionsProps = {
-    editObjectEndpoint,
-    deleteObjectEndpoint,
+  const actionsProps = {
+    editObjectStore,
+    deleteObjectStore,
   }
 
-  const endpointStateColorMap = {
+  const storeStateColorMap = {
     Unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
     Starting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
     Running: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
@@ -32,8 +32,8 @@ function list({
       key: 'state',
       width: 160,
       render: (text, record) => {
-        const tooltip = `Endpoint ${record.name} is ${record.state}`
-        const colormap = endpointStateColorMap[record.state] || { color: '', bg: '' }
+        const tooltip = `Object Store ${record.name} is ${record.state}`
+        const colormap = storeStateColorMap[record.state] || { color: '', bg: '' }
         return (
           <Tooltip title={tooltip}>
             <div style={{ display: 'inline-block', padding: '0 4px', color: colormap.color, border: `1px solid ${colormap.color}`, backgroundColor: colormap.bg }}>
@@ -54,12 +54,12 @@ function list({
       },
     },
     {
-      title: 'Endpoint',
-      dataIndex: 'endpoint',
-      key: 'endpoint',
+      title: 'Endpoints',
+      dataIndex: 'endpoints',
+      key: 'endpoints',
       render: (text, record) => {
         return (
-          <div>{record.endpoint}</div>
+          <div>{record.endpoints}</div>
         )
       },
     },
@@ -69,14 +69,14 @@ function list({
       width: 120,
       render: (text, record) => {
         return (
-          <ObjectEndpointActions {...objectEndpointActionsProps} selected={record} />
+          <ObjectStoreActions {...actionsProps} selected={record} />
         )
       },
     },
   ]
 
   return (
-    <div id="objectEndpointTable">
+    <div id="objectStoreTable">
       <Table
         className="common-table-class"
         bordered={false}
@@ -98,8 +98,8 @@ list.propTypes = {
   heigth: PropTypes.number,
   loading: PropTypes.bool,
   rowSelection: PropTypes.object,
-  editObjectEndpoint: PropTypes.func,
-  deleteObjectEndpoint: PropTypes.func,
+  editObjectStore: PropTypes.func,
+  deleteObjectStore: PropTypes.func,
 }
 
 export default list

@@ -42,7 +42,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Edit Object Endpoint',
+    title: 'Edit Object Store',
     visible,
     onCancel,
     width: 800,

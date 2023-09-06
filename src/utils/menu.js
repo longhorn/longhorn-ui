@@ -31,7 +31,7 @@ module.exports = [
     icon: 'copy',
   },
   {
-    key: 'objectEndpoint',
+    key: 'objectstorage',
     name: 'Object Storage',
     icon: 'file',
   },
