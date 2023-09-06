@@ -10,6 +10,11 @@ import EditObjectStore from './EditObjectStore'
 import ObjectStoreList from './ObjectStoreList'
 import ObjectStoreBulkActions from './ObjectStoreBulkActions'
 
+// See https://docs.aws.amazon.com/IAM/latest/APIReference/API_AccessKey.html
+const generateRandomKey = (length = 16, allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_') => Array.from(window.crypto.getRandomValues(new Uint32Array(length)))
+  .map((x) => allowedChars[x % allowedChars.length])
+  .join('')
+
 class ObjectStore extends React.Component {
   constructor(props) {
     super(props)
@@ -46,21 +51,22 @@ class ObjectStore extends React.Component {
     const { data } = this.props.objectstorage
     const { field, value } = queryString.parse(this.props.location.search)
 
-    let objectstores = data.filter((item) => {
+    let objectStores = data.filter((item) => {
       if (field === 'name') {
         return item[field] && item[field].indexOf(value.trim()) > -1
       }
       return true
     })
 
-    if (objectstores && objectstores.length > 0) {
-      objectstores.sort((a, b) => a.name.localeCompare(b.name))
+    if (objectStores) {
+      objectStores.sort((a, b) => a.name.localeCompare(b.name))
     }
 
     const createModalProps = {
       item: {
-        accesskey: Math.random().toString(36).substr(2, 6),
-        secretkey: Math.random().toString(36).substr(2, 6),
+        accesskey: generateRandomKey(),
+        secretkey: generateRandomKey(),
+        numberOfReplicas: 3,
       },
       visible: this.state.createModalVisible,
       diskTags: [],
@@ -106,7 +112,7 @@ class ObjectStore extends React.Component {
     }
 
     const listProps = {
-      dataSource: objectstores,
+      dataSource: objectStores,
       height: this.state.height,
       loading,
       rowSelection: {

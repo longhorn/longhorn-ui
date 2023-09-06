@@ -12,7 +12,7 @@ import recurringJob from './models/recurringJob'
 import instanceManager from './models/instanceManager'
 import orphanedData from './models/orphanedData'
 import systemBackups from './models/systemBackups'
-import objectStore from './models/objectstore'
+import objectStore from './models/objectStore'
 
 // import assets
 import './assets/iconfont/iconfont.eot'

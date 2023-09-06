@@ -1,4 +1,4 @@
-import { listObjectStores, getObjectStore, createObjectStore, deleteObjectStore } from '../services/objectstore'
+import { listObjectStores, getObjectStore, createObjectStore, deleteObjectStore } from '../services/objectStore'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'

@@ -18,7 +18,7 @@ import recurringJobComponent from './routes/recurringJob/'
 import orphanedDataComponent from './routes/orphanedData/'
 import engineimageDetailComponent from './routes/engineimage/detail'
 import systemBackupsComponent from './routes/systemBackups/'
-import objectstorageComponent from './routes/objectstorage/'
+import objectStorageComponent from './routes/objectStorage/'
 
 const Routers = function ({ history, app }) {
   const App = dynamic({
@@ -96,9 +96,9 @@ const Routers = function ({ history, app }) {
     component: () => systemBackupsComponent,
   })
 
-  const objectstorage = dynamic({
+  const objectStorage = dynamic({
     app,
-    component: () => objectstorageComponent,
+    component: () => objectStorageComponent,
   })
 
   const path = '/'
@@ -123,7 +123,7 @@ const Routers = function ({ history, app }) {
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
             <Route path={`${path}orphanedData`} component={orphanedData} />
             <Route path={`${path}systemBackups`} component={systemBackups} />
-            <Route path={`${path}objectstorage`} component={objectstorage} />
+            <Route path={`${path}objectstorage`} component={objectStorage} />
             <Route component={notfound} />
           </Switch>
         </App>

@@ -9,7 +9,7 @@ const Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
-    span: 4,
+    span: 5,
   },
   wrapperCol: {
     span: 17,
@@ -81,13 +81,17 @@ const modal = ({
             rules: [
               {
                 required: true,
-                message: 'Please input Object Store name',
+                message: 'Please input the object store name',
               },
             ],
-          })(<Input style={{ width: '80%' }} />)}
+          })(<Input />)}
         </FormItem>
-        <SizeInput {...sizeInputProps}>
-        </SizeInput>
+
+        <div style={{ paddingLeft: 35 }}>
+          <SizeInput {...sizeInputProps}>
+          </SizeInput>
+        </div>
+
         <FormItem label="Access Key" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accesskey', {
             initialValue: item.accesskey,
@@ -96,9 +100,22 @@ const modal = ({
                 required: true,
                 message: 'Please input an access key',
               },
+              {
+                pattern: /^[\w]+/,
+                message: 'The access key contains invalid characters',
+              },
+              {
+                min: 16,
+                message: 'Minimum length is 16 characters',
+              },
+              {
+                max: 128,
+                message: 'Maximum length is 128 characters',
+              },
             ],
-          })(<Input style={{ width: '80%' }} />)}
+          })(<Input />)}
         </FormItem>
+
         <FormItem label="Secret Key" hasFeedback {...formItemLayout}>
           {getFieldDecorator('secretkey', {
             initialValue: item.secretkey,
@@ -107,9 +124,14 @@ const modal = ({
                 required: true,
                 message: 'Please input a secret key',
               },
+              {
+                min: 16,
+                message: 'Minimum length is 16 characters',
+              },
             ],
-          })(<Input style={{ width: '80%' }} />)}
+          })(<Input.Password />)}
         </FormItem>
+
         <Collapse>
           <Panel header="Advanced Configurations" key="1">
             <FormItem label="Number of Replicas" hasFeedback {...formItemLayoutForAdvanced}>
@@ -140,7 +162,7 @@ const modal = ({
             </FormItem>
 
             <Spin spinning={tagsLoading}>
-              <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
+              <FormItem label="Node Tag" hasFeedback {...formItemLayoutForAdvanced}>
                 {getFieldDecorator('nodeSelector', {
                   initialValue: [],
                 })(<Select mode="tags">
@@ -148,8 +170,9 @@ const modal = ({
                 </Select>)}
               </FormItem>
             </Spin>
+
             <Spin spinning={tagsLoading}>
-              <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
+              <FormItem label="Disk Tag" hasFeedback {...formItemLayoutForAdvanced}>
                 {getFieldDecorator('diskSelector', {
                   initialValue: [],
                 })(<Select mode="tags">
@@ -167,6 +190,7 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
+
             <FormItem label="Replica Zone Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaZoneSoftAntiAffinity', {
                 initialValue: 'ignored',
