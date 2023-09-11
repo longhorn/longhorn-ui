@@ -9,7 +9,7 @@ function actions({ selected, deleteRecurringJob, editRecurringJob }) {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Recurring Job ${record.name} ?`,
+          title: `Are you sure you want to delete Recurring Job ${record.name}?`,
           content: <Alert
             description={`If the recurring job ${record.name} is the last one of a job group, Longhorn will remove the group from all volumes automatically.`}
             type="warning"

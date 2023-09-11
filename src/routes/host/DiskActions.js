@@ -16,7 +16,7 @@ function actions({ node, selected, updateDisk }) {
       }
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete disk which mounted on ${record.path}`,
+          title: `Are you sure you want to delete the disk that's mounted on ${record.path}?`,
           onOk() {
             const disks = Object.keys(node.disks)
               .filter(id => record.id !== id)
