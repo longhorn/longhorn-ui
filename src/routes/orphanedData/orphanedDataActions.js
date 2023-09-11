@@ -9,7 +9,7 @@ function actions({ selected, deleteOrphanedData }) {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete ${record.name} ?`,
+          title: `Are you sure you want to delete ${record.name}?`,
           width: 560,
           onOk() {
             deleteOrphanedData(record)
