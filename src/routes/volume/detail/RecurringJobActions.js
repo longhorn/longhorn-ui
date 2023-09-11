@@ -9,7 +9,7 @@ function actions({ selected, deleteVolumeRecurringJob, editRecurringJob, isGroup
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Recurring Job ${record.name} ?`,
+          title: `Are you sure you want to delete Recurring Job ${record.name}?`,
           onOk() {
             deleteVolumeRecurringJob(record)
           },

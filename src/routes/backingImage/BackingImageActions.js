@@ -9,7 +9,7 @@ function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBacking
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete backing image ${record.name} ?`,
+          title: `Are you sure you want to delete backing image ${record.name}?`,
           onOk() {
             deleteBackingImage(record)
           },
