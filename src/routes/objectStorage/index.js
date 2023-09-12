@@ -37,9 +37,10 @@ class ObjectStore extends React.Component {
     })
   }
 
-  showEditModal = () => {
+  showEditModal = (record) => {
     this.setState({
       ...this.state,
+      selected: record,
       editModalVisible: true,
       editModalKey: Math.random(),
     })
@@ -107,7 +108,7 @@ class ObjectStore extends React.Component {
     }
 
     const editModalProps = {
-      selected: {},
+      selected: this.state.selected,
       visible: this.state.editModalVisible,
       onCancel() {
         me.setState({
