@@ -21,7 +21,9 @@ function list({
     Unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
     Starting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
     Running: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
-    Stopping: { color: '#DEE1E3', bg: 'rgba(222,225,227,.05)' },
+    Stopping: { color: '#DEE1E3', bg: 'rgba(241,241,241,.05)' },
+    Stopped: { color: '#959CA6', bg: 'rgba(241,241,241,.05)' },
+    Terminating: { color: '#DEE1E3', bg: 'rgba(222,225,227,.05)' },
     Error: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
   }
 

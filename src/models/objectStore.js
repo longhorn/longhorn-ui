@@ -51,7 +51,7 @@ export default {
       yield put({ type: 'query' })
     },
     *startWS({ payload }, { select }) {
-      let ws = yield select(state => state.objectStore.ws)
+      let ws = yield select(state => state.objectstorage.ws)
       if (ws) {
         ws.open()
       } else {
@@ -60,7 +60,7 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     *stopWS({ payload }, { select }) {
-      let ws = yield select(state => state.objectStore.ws)
+      let ws = yield select(state => state.objectstorage.ws)
       if (ws) {
         ws.close(1000)
       }
