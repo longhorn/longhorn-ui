@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Collapse, Select, Spin } from 'antd'
+import { Form, Input, InputNumber, Collapse, Select, Spin, Checkbox } from 'antd'
 import { ModalBlur, SizeInput } from '../../components'
 
 const FormItem = Form.Item
@@ -34,8 +34,6 @@ const modal = ({
   },
   item,
   visible,
-  diskTags,
-  nodeTags,
   tagsLoading,
   onCancel,
   onOk,
@@ -133,7 +131,7 @@ const modal = ({
         </FormItem>
 
         <Collapse>
-          <Panel header="Advanced Configurations" key="1">
+          <Panel header="Data Placement" key="1">
             <FormItem label="Number of Replicas" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('numberOfReplicas', {
                 initialValue: item.numberOfReplicas,
@@ -164,9 +162,9 @@ const modal = ({
             <Spin spinning={tagsLoading}>
               <FormItem label="Node Tag" hasFeedback {...formItemLayoutForAdvanced}>
                 {getFieldDecorator('nodeSelector', {
-                  initialValue: [],
+                  initialValue: item.nodeTags,
                 })(<Select mode="tags">
-                { nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+                { item.nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
                 </Select>)}
               </FormItem>
             </Spin>
@@ -174,9 +172,9 @@ const modal = ({
             <Spin spinning={tagsLoading}>
               <FormItem label="Disk Tag" hasFeedback {...formItemLayoutForAdvanced}>
                 {getFieldDecorator('diskSelector', {
-                  initialValue: [],
+                  initialValue: item.diskTags,
                 })(<Select mode="tags">
-                { diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+                { item.diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
                 </Select>)}
               </FormItem>
             </Spin>
@@ -200,6 +198,75 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
+
+            <FormItem label="Replica Disk Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('replicaDiskSoftAntiAffinity', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+              </Select>)}
+            </FormItem>
+
+            <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
+              {getFieldDecorator('dataLocality', {
+                initialValue: item.defaultDataLocalityValue,
+              })(<Select>
+              { item.defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
+              </Select>)}
+            </FormItem>
+          </Panel>
+        </Collapse>
+
+        <Collapse>
+          <Panel header="Advanced Configurations" key="2">
+            <FormItem label="Backend Data Engine" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('backendStoreDriver', {
+                initialValue: 'v1',
+                rules: [
+                  {
+                    validator: (rule, value, callback) => {
+                      if (value === 'v2' && !item.enableSPDKDataEngineValue) {
+                        callback('SPDK data engine is not enabled')
+                      }
+                      callback()
+                    },
+                  },
+                ],
+              })(<Select>
+                <Option key={'v1'} value={'v1'}>v1</Option>
+                <Option key={'v2'} value={'v2'}>v2</Option>
+              </Select>)}
+            </FormItem>
+
+            <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('revisionCounterDisabled', {
+                valuePropName: 'checked',
+                initialValue: item.defaultRevisionCounterValue,
+              })(<Checkbox></Checkbox>)}
+            </FormItem>
+
+            <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('replicaAutoBalance', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'least-effort'} value={'least-effort'}>Least-Effort</Option>
+                <Option key={'best-effort'} value={'best-effort'}>Best-Effort</Option>
+              </Select>)}
+            </FormItem>
+
+            <FormItem label="Allow Snapshot Removal During Trim" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('unmapMarkSnapChainRemoved', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+              </Select>)}
+            </FormItem>
           </Panel>
         </Collapse>
       </Form>
@@ -210,8 +277,6 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   item: PropTypes.object,
-  diskTags: PropTypes.array,
-  nodeTags: PropTypes.array,
   visible: PropTypes.bool,
   tagsLoading: PropTypes.bool,
   onCancel: PropTypes.func,

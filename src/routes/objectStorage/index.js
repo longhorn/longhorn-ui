@@ -51,6 +51,18 @@ class ObjectStore extends React.Component {
     const { data } = this.props.objectstorage
     const { field, value } = queryString.parse(this.props.location.search)
 
+    const settings = this.props.setting.data
+    const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
+    const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
+    const defaultRevisionCounterSetting = settings.find(s => s.id === 'disable-revision-counter')
+    const enableSPDKDataEngineSetting = settings.find(s => s.id === 'v2-data-engine')
+
+    const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+    const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options ? defaultDataLocalitySetting.definition.options : []
+    const defaultDataLocalityValue = defaultDataLocalitySetting?.value ? defaultDataLocalitySetting.value : 'disabled'
+    const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
+    const enableSPDKDataEngineValue = enableSPDKDataEngineSetting?.value === 'true'
+
     let objectStores = data.filter((item) => {
       if (field === 'name') {
         return item[field] && item[field].indexOf(value.trim()) > -1
@@ -66,11 +78,15 @@ class ObjectStore extends React.Component {
       item: {
         accesskey: generateRandomKey(),
         secretkey: generateRandomKey(),
-        numberOfReplicas: 3,
+        numberOfReplicas: defaultNumberOfReplicas,
+        diskTags: [],
+        nodeTags: [],
+        defaultDataLocalityOption,
+        defaultDataLocalityValue,
+        defaultRevisionCounterValue,
+        enableSPDKDataEngineValue,
       },
       visible: this.state.createModalVisible,
-      diskTags: [],
-      nodeTags: [],
       tagsLoading: false,
       onCancel() {
         me.setState({
@@ -195,8 +211,9 @@ ObjectStore.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  setting: PropTypes.object,
 }
 
 export default connect(
-  ({ objectstorage, loading }) => ({ objectstorage, loading: loading.models.objectStore })
+  ({ objectstorage, loading, setting }) => ({ objectstorage, loading: loading.models.objectStore, setting })
 )(ObjectStore)
