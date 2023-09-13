@@ -51,6 +51,7 @@ function list({
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: 200,
       render: (text, record) => {
         return (
           <div>{record.name}</div>
@@ -61,6 +62,7 @@ function list({
       title: 'Endpoints',
       dataIndex: 'endpoints',
       key: 'endpoints',
+      width: 500,
       render: (text, record) => {
         return (
           <div>{record.endpoints}</div>
@@ -70,7 +72,8 @@ function list({
     {
       title: 'Operation',
       key: 'operation',
-      width: 120,
+      width: 110,
+      fixed: 'right',
       render: (text, record) => {
         return (
           <ObjectStoreActions {...actionsProps} selected={record} />
