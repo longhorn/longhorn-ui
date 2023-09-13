@@ -36,7 +36,7 @@ export default {
     *create({ payload, callback }, { call, put }) {
       yield call(createObjectStore, payload)
       if (callback) callback()
-      yield put({ type: 'quey' })
+      yield put({ type: 'query' })
     },
     *delete({ payload, callback }, { call, put }) {
       yield call(deleteObjectStore, payload)

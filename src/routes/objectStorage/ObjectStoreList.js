@@ -10,10 +10,12 @@ function list({
   loading,
   rowSelection,
   editObjectStore,
+  administrateObjectStore,
   deleteObjectStore,
 }) {
   const actionsProps = {
     editObjectStore,
+    administrateObjectStore,
     deleteObjectStore,
   }
 
@@ -101,6 +103,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   rowSelection: PropTypes.object,
   editObjectStore: PropTypes.func,
+  administrateObjectStore: PropTypes.func,
   deleteObjectStore: PropTypes.func,
 }
 

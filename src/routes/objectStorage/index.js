@@ -9,11 +9,7 @@ import CreateObjectStore from './CreateObjectStore'
 import EditObjectStore from './EditObjectStore'
 import ObjectStoreList from './ObjectStoreList'
 import ObjectStoreBulkActions from './ObjectStoreBulkActions'
-
-// See https://docs.aws.amazon.com/IAM/latest/APIReference/API_AccessKey.html
-const generateRandomKey = (length = 16, allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_') => Array.from(window.crypto.getRandomValues(new Uint32Array(length)))
-  .map((x) => allowedChars[x % allowedChars.length])
-  .join('')
+import { generateRandomKey } from './helper/index'
 
 class ObjectStore extends React.Component {
   constructor(props) {
@@ -34,15 +30,6 @@ class ObjectStore extends React.Component {
       selected: {},
       createModalVisible: true,
       createModalKey: Math.random(),
-    })
-  }
-
-  showEditModal = (record) => {
-    this.setState({
-      ...this.state,
-      selected: record,
-      editModalVisible: true,
-      editModalKey: Math.random(),
     })
   }
 
@@ -141,8 +128,20 @@ class ObjectStore extends React.Component {
           })
         },
       },
-      editObjectStore: this.showEditModal,
-      deleteObjectStore(record) {
+      editObjectStore: (record) => {
+        this.setState({
+          ...this.state,
+          selected: record,
+          editModalVisible: true,
+          editModalKey: Math.random(),
+        })
+      },
+      administrateObjectStore: (record) => {
+        if (record.endpoints?.length) {
+          window.open(record.endpoints[0], '_blank', 'noreferrer')
+        }
+      },
+      deleteObjectStore: (record) => {
         dispatch({
           type: 'objectstorage/delete',
           payload: record,
@@ -174,7 +173,7 @@ class ObjectStore extends React.Component {
 
     const bulkActionsProps = {
       selectedRows: this.state.selectedRows,
-      deleteObjectStore(record) {
+      deleteObjectStore: (record) => {
         dispatch({
           type: 'objectstorage/bulkDelete',
           payload: record,

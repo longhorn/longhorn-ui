@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Alert } from 'antd'
 import { DropOption } from '../../components'
+import { isObjectStoreAdministrable, isObjectStoreDeletable, isObjectStoreEditable } from './helper'
 
 const confirm = Modal.confirm
 
-function actions({ selected, deleteObjectStore, editObjectStore }) {
+function actions({ selected, deleteObjectStore, editObjectStore, administrateObjectStore }) {
   const handleMenuClick = (event, record) => {
     switch (event.key) {
       case 'delete':
@@ -24,13 +25,17 @@ function actions({ selected, deleteObjectStore, editObjectStore }) {
       case 'edit':
         editObjectStore(record)
         break
+      case 'administrate':
+        administrateObjectStore(record)
+        break
       default:
     }
   }
 
   const availableActions = [
-    { key: 'edit', name: 'Edit' },
-    { key: 'delete', name: 'Delete' },
+    { key: 'edit', name: 'Edit', disabled: !isObjectStoreEditable(selected) },
+    { key: 'administrate', name: 'Administrate', disabled: !isObjectStoreAdministrable(selected) },
+    { key: 'delete', name: 'Delete', disabled: !isObjectStoreDeletable(selected) },
   ]
 
   return (
@@ -43,6 +48,7 @@ function actions({ selected, deleteObjectStore, editObjectStore }) {
 actions.propTypes = {
   selected: PropTypes.object,
   editObjectStore: PropTypes.func,
+  administrateObjectStore: PropTypes.func,
   deleteObjectStore: PropTypes.func,
 }
 
