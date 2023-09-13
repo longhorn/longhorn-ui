@@ -4,6 +4,9 @@ import { Dropdown, Button, Icon, Menu, Tooltip } from 'antd'
 
 const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps, tooltipProps }) => {
   const menu = menuOptions.map(item => {
+    if (item.type === 'divider') {
+      return (<Menu.Divider />)
+    }
     const tooltip = item.tooltip !== undefined ? item.tooltip : ''
     return (
       <Menu.Item key={item.key} disabled={!!item.disabled}>

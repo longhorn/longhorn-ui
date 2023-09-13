@@ -34,8 +34,9 @@ function actions({ selected, deleteObjectStore, editObjectStore, administrateObj
 
   const availableActions = [
     { key: 'edit', name: 'Edit', disabled: !isObjectStoreEditable(selected) },
-    { key: 'administrate', name: 'Administrate', disabled: !isObjectStoreAdministrable(selected) },
     { key: 'delete', name: 'Delete', disabled: !isObjectStoreDeletable(selected) },
+    { type: 'divider' },
+    { key: 'administrate', name: 'Administrate', disabled: !isObjectStoreAdministrable(selected) },
   ]
 
   return (
