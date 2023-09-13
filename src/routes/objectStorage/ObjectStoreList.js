@@ -20,13 +20,13 @@ function list({
   }
 
   const storeStateColorMap = {
-    Unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
-    Starting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
-    Running: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
-    Stopping: { color: '#DEE1E3', bg: 'rgba(241,241,241,.05)' },
-    Stopped: { color: '#959CA6', bg: 'rgba(241,241,241,.05)' },
-    Terminating: { color: '#DEE1E3', bg: 'rgba(222,225,227,.05)' },
-    Error: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
+    unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
+    starting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
+    running: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
+    stopping: { color: '#DEE1E3', bg: 'rgba(241,241,241,.05)' },
+    stopped: { color: '#959CA6', bg: 'rgba(241,241,241,.05)' },
+    terminating: { color: '#DEE1E3', bg: 'rgba(222,225,227,.05)' },
+    error: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
   }
 
   const columns = [
@@ -40,7 +40,7 @@ function list({
         const colormap = storeStateColorMap[record.state] || { color: '', bg: '' }
         return (
           <Tooltip title={tooltip}>
-            <div style={{ display: 'inline-block', padding: '0 4px', color: colormap.color, border: `1px solid ${colormap.color}`, backgroundColor: colormap.bg }}>
+            <div className="capitalize" style={{ display: 'inline-block', padding: '0 4px', color: colormap.color, border: `1px solid ${colormap.color}`, backgroundColor: colormap.bg }}>
               {record.state}
             </div>
           </Tooltip>
