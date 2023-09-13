@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Alert } from 'antd'
+import { isObjectStoreDeletable } from './helper'
 
 const confirm = Modal.confirm
 
@@ -25,7 +26,7 @@ function bulkActions({ selectedRows, deleteObjectStore }) {
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
+    { key: 'delete', name: 'Delete', disabled: () => selectedRows.length === 0 || !selectedRows.every(isObjectStoreDeletable) },
   ]
 
   return (
