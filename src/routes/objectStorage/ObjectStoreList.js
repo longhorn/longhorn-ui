@@ -80,7 +80,7 @@ function list({
   ]
 
   return (
-    <div id="objectStoreTable">
+    <div id="objectStoreTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
         className="common-table-class"
         bordered={false}
@@ -99,7 +99,7 @@ function list({
 
 list.propTypes = {
   dataSource: PropTypes.array,
-  heigth: PropTypes.number,
+  height: PropTypes.number,
   loading: PropTypes.bool,
   rowSelection: PropTypes.object,
   editObjectStore: PropTypes.func,

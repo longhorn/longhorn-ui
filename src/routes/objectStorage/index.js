@@ -10,6 +10,7 @@ import EditObjectStore from './EditObjectStore'
 import ObjectStoreList from './ObjectStoreList'
 import ObjectStoreBulkActions from './ObjectStoreBulkActions'
 import { generateRandomKey } from './helper/index'
+import C from '../../utils/constants'
 
 class ObjectStore extends React.Component {
   constructor(props) {
@@ -21,6 +22,20 @@ class ObjectStore extends React.Component {
       createModalKey: Math.random(),
       editModalVisible: false,
       editModalKey: Math.random(),
+    }
+  }
+
+  componentDidMount() {
+    let height = document.getElementById('objectStoreTable').offsetHeight - C.ContainerMarginHeight
+    this.setState({
+      height,
+    })
+    window.onresize = () => {
+      height = document.getElementById('objectStoreTable').offsetHeight - C.ContainerMarginHeight
+      this.setState({
+        height,
+      })
+      this.props.dispatch({ type: 'app/changeNavbar' })
     }
   }
 
