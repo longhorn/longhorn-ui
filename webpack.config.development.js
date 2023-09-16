@@ -4,7 +4,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const theme = require("./src/theme");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
@@ -202,7 +202,7 @@ module.exports = {
       ]
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new ManifestPlugin(),
+    new WebpackManifestPlugin(),
     new webpack.SourceMapDevToolPlugin({})
   ]
 };

@@ -7,7 +7,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 
 const os = require("os");
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
@@ -152,7 +152,7 @@ module.exports = {
   },
   plugins: [
     new ProgressBarPlugin(),
-    new ManifestPlugin(),
+    new WebpackManifestPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css"
     }),
