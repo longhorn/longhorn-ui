@@ -7,7 +7,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const theme = require("./src/theme");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 
@@ -164,9 +163,10 @@ module.exports = {
   externals: {
     jquery: "jQuery"
   },
-  node: {
-    fs: "empty",
-    module: "empty"
+  resolve: {
+    fallback: {
+      fs: false
+    }
   },
   devtool: false,
   optimization: {
@@ -182,7 +182,6 @@ module.exports = {
     }
   },
   plugins: [
-    new OpenBrowserPlugin({url: 'http://localhost:8080/'}),
     new ProgressBarPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new MiniCssExtractPlugin({
