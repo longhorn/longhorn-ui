@@ -2,7 +2,6 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ManifestPlugin = require("webpack-manifest-plugin");
@@ -53,7 +52,8 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
     chunkFilename: "[name].async.js",
-    library: "[name]_dll"
+    library: "[name]_dll",
+    clean: true
   },
   resolve: {
     alias: {
@@ -194,7 +194,6 @@ module.exports = {
       filename: "index.html",
       hash: true
     }),
-    new CleanWebpackPlugin(["dist"]),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, "public")

@@ -3,7 +3,6 @@ const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HappyPack = require("happypack");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -23,7 +22,8 @@ module.exports = {
     filename: "[name].[chunkhash:8].js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "./",
-    chunkFilename: "[name].[chunkhash:8].async.js"
+    chunkFilename: "[name].[chunkhash:8].async.js",
+    clean: true,
   },
   resolve: {
     alias: {
@@ -161,7 +161,6 @@ module.exports = {
       filename: "index.html",
       hash: true
     }),
-    new CleanWebpackPlugin(["dist"]),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, "public")
