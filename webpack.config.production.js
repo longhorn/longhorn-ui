@@ -7,7 +7,7 @@ const HappyPack = require("happypack");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+// const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ManifestPlugin = require("webpack-manifest-plugin");
 
@@ -168,12 +168,12 @@ module.exports = {
         from: path.resolve(__dirname, "public")
       }
     ]),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: /\.css$/g,
-      cssProcessor: require("cssnano"),
-      cssProcessorOptions: { discardComments: { removeAll: true } },
-      canPrint: true
-    }),
+    // new OptimizeCssAssetsPlugin({
+    //   assetNameRegExp: /\.css$/g,
+    //   cssProcessor: require("cssnano"),
+    //   cssProcessorOptions: { discardComments: { removeAll: true } },
+    //   canPrint: true
+    // }),
     new HappyPack({
       id: "babel",
       loaders: ["babel-loader?cacheDirectory"],

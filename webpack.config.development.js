@@ -9,7 +9,7 @@ const ManifestPlugin = require("webpack-manifest-plugin");
 const theme = require("./src/theme");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
-var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+var FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 
 
@@ -184,7 +184,7 @@ module.exports = {
   plugins: [
     new OpenBrowserPlugin({url: 'http://localhost:8080/'}),
     new ProgressBarPlugin(),
-    new FriendlyErrorsWebpackPlugin(),
+    // new FriendlyErrorsWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: '[id].css'
