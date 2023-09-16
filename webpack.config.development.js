@@ -194,11 +194,13 @@ module.exports = {
       filename: "index.html",
       hash: true
     }),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, "public")
-      }
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "public")
+        }
+      ]
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new ManifestPlugin(),
     new webpack.SourceMapDevToolPlugin({})
