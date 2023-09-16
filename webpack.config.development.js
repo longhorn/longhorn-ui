@@ -19,18 +19,7 @@ module.exports = {
     port: 8080,
     open: false,
     hot: true,
-    quiet: true,
-    disableHostCheck: true,
     historyApiFallback: true,
-    overlay: {
-      errors: true
-    },
-    stats: {
-      children: false,
-      chunks: false,
-      assets: false,
-      modules: false
-    },
     proxy: {
       proxyTimeout: 10 * 60 * 1000,
       timeout: 10 * 60 * 1000,
@@ -70,7 +59,10 @@ module.exports = {
         test: /\.js$/,
         include: [path.resolve(__dirname, "src")],
         exclude: [],
-        loader: "babel-loader?cacheDirectory",
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true
+        }
       },
       {
         test: /\.css$/,
