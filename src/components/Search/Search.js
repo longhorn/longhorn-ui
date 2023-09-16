@@ -67,7 +67,6 @@ class Search extends React.Component {
   }
 }
 
-
 Search.propTypes = {
   size: PropTypes.string,
   select: PropTypes.bool,

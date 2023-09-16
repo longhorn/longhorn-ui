@@ -150,12 +150,14 @@ class List extends React.Component {
     }
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   collapseAll = () => {
     this.setState({
       expandedRowKeys: [],
     })
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   expandAll = () => {
     const { dataSource } = this.props
     this.setState({

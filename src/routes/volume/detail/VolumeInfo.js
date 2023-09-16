@@ -80,7 +80,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             <span className={styles.label}>{selectedVolume.kubernetesStatus.lastPodRefAt ? 'Last ' : ''} Pod Name:</span>
             {item.podName}
           </div>
-          {!selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
+          {
+            !selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Pod Status:</span>
               {item.podStatus}
             </div> : ''
@@ -387,13 +388,16 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Replica Zone Soft Anti Affinity:</span>
         {selectedVolume?.replicaZoneSoftAntiAffinity}
       </div>
-      { selectedVolume.kubernetesStatus ? <div>
-          { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
+      {
+        selectedVolume.kubernetesStatus ? <div>
+          {
+            selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
               {selectedVolume.kubernetesStatus.lastPVCRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPVCRefAt) : ''}
             </div> : ''
           }
-          {selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
+          {
+            selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time used by Pod:</span>
               {selectedVolume.kubernetesStatus.lastPodRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPodRefAt) : ''}
             </div> : ''
@@ -419,8 +423,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             {selectedVolume.revisionCounterDisabled ? 'True' : 'False'}
           </div>
           {podList}
-        </div>
-        : ''
+        </div> : ''
       }
     </div>
   )

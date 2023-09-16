@@ -79,6 +79,7 @@ class EngineImage extends React.Component {
         type: 'engineimage/showCreateEngineImageModal',
       })
       this.setState({
+        // eslint-disable-next-line react/no-unstable-nested-components
         CreateEngineImageGen() {
           return <CreateEngineImage {...createEngineImageModalProps} />
         },

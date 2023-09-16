@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'antd'
 import { Filter } from '../../components/index'
 
-const VolumeFilter = ({
+function VolumeFilter({
   location,
   onSearch,
   onAdd,
   stateOption,
   fieldOption,
-}) => {
+}) {
   const FilterProps = {
     location,
     stateOption,

@@ -265,7 +265,6 @@ class Schedule extends React.Component {
   }
 }
 
-
 Schedule.propTypes = {
   cron: PropTypes.string,
   editing: PropTypes.bool,

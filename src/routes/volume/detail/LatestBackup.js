@@ -4,8 +4,11 @@ import { Progress } from 'antd'
 import moment from 'moment'
 
 class LatestBackup extends React.Component {
-  state = {
-    progress: 0,
+  constructor(props) {
+    super(props)
+    this.state = {
+      progress: 0,
+    }
   }
 
   UNSAFE_componentWillMount() {
@@ -50,7 +53,6 @@ class LatestBackup extends React.Component {
       </div>)
   }
 }
-
 
 LatestBackup.propTypes = {
   backupStatus: PropTypes.object,

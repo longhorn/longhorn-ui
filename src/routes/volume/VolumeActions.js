@@ -213,6 +213,7 @@ function actions({
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 
   allActions.forEach(action => {
+    // eslint-disable-next-line no-unused-vars
     for (const key of Object.keys(selected.actions)) {
       if (key === action.key) {
         availableActions.push(action)

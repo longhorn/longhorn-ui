@@ -1090,6 +1090,7 @@ class Volume extends React.Component {
         type: 'volume/showCreateVolumeModalBefore',
       })
       this.setState({
+        // eslint-disable-next-line react/no-unstable-nested-components
         CreateVolumeGen() {
           return <CreateVolume {...createVolumeModalProps} />
         },

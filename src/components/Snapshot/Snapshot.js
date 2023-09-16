@@ -247,7 +247,8 @@ class Snapshot extends React.Component {
     previousCreated: '',
   }
 
-  showReomve = () => {
+  // eslint-disable-next-line react/no-unused-class-component-methods
+  showRemove = () => {
     this.state.key = Math.random()
   }
 

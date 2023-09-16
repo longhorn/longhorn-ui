@@ -5,7 +5,6 @@ import styles from './Bread.less'
 import { menu } from '../../utils'
 import { LinkTo } from '../../components'
 
-
 let pathSet = []
 const getPathSet = function (menuArray, parentPath) {
   parentPath = parentPath || '/'

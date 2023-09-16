@@ -95,7 +95,7 @@ export default {
       payload,
     }, { call, put }) {
       if (payload && payload.selectedHostRows) {
-        const hostList = payload.selectedHostRows.map((item) => Object.assign({}, item, { allowScheduling: false }))
+        const hostList = payload.selectedHostRows.map((item) => ({ ...item, allowScheduling: false }))
         let replicas = []
         payload.selectedHostRows.forEach((item) => {
           item.replicas.forEach((ele) => {

@@ -13,7 +13,7 @@ const formItemLayout = {
   },
 }
 
-const modal = ({
+function modal({
   item,
   visible,
   onCancel,
@@ -23,7 +23,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
-}) => {
+}) {
   function handleOk() {
     validateFields((errors) => {
       if (errors) {

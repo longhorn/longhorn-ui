@@ -26,7 +26,7 @@ class Filter extends React.Component {
 
   handleSubmit = () => {
     if (this.props.onSearch) {
-      this.props.onSearch(Object.assign({}, this.state))
+      this.props.onSearch({ ...this.state })
     }
   }
 
@@ -59,6 +59,7 @@ class Filter extends React.Component {
     this.setState({ ...this.state, revisionCounterValue })
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   handleIsGroupValueChange = (isGroupValue) => {
     this.setState({ ...this.state, isGroupValue })
   }
@@ -158,6 +159,7 @@ class Filter extends React.Component {
     let content = ''
     let popoverVsible = false
 
+    // eslint-disable-next-line no-unused-vars
     for (let key in defaultContent) {
       if (defaultContent[key] !== '' && key !== 'field' && this.state[key] !== defaultContent[key]) {
         content = (<div style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{`Current Filter: ${defaultContent[key]}`}</div>)

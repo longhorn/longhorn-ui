@@ -46,6 +46,7 @@ const noRetain = (val) => {
   return val === 'snapshot-cleanup' || val === 'filesystem-trim'
 }
 
+// eslint-disable-next-line react/function-component-definition
 const modal = ({
   item,
   recurringJobOptions,

@@ -48,7 +48,6 @@ class SystemBackups extends React.Component {
     }
   }
 
-
   render() {
     const { loading, dispatch, location } = this.props
     const me = this

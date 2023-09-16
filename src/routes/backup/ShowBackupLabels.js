@@ -27,6 +27,7 @@ const modal = ({
 
   let backupLabels = []
 
+  // eslint-disable-next-line no-unused-vars
   for (let key in item) {
     if (key !== 'KubernetesStatus' && key !== 'snapshotCreated') {
       backupLabels.push(key)

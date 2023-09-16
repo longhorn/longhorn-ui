@@ -201,7 +201,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               <RadioGroup disabled={disk.deleted}>
                 <Radio value>Enable</Radio>
                 <Radio value={false}>Disable</Radio>
-              </RadioGroup>
+              </RadioGroup>,
             )}
           </FormItem>
         </div>
@@ -218,7 +218,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               <RadioGroup disabled={disk.deleted}>
                 <Radio value={true}>True</Radio>
                 <Radio value={false}>False</Radio>
-              </RadioGroup>
+              </RadioGroup>,
             )}
           </FormItem>
         </div>

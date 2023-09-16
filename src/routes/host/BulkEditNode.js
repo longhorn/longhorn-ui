@@ -75,7 +75,7 @@ const modal = ({
                 <RadioGroup>
                   <Radio value={true}>Enable</Radio>
                   <Radio value={false}>Disable</Radio>
-                </RadioGroup>
+                </RadioGroup>,
               )}
             </FormItem>
           </div>
@@ -98,7 +98,7 @@ const modal = ({
                 <RadioGroup>
                   <Radio value={true}>True</Radio>
                   <Radio value={false}>False</Radio>
-                </RadioGroup>
+                </RadioGroup>,
               )}
             </FormItem>
           </div>

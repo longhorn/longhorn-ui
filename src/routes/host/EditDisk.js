@@ -47,6 +47,7 @@ const modal = ({
         }
         disk.name ? updatedDisks[disk.name] = disk : updatedDisks[k] = disk
       })
+      // eslint-disable-next-line prefer-object-spread
       let updateNode = Object.assign({}, node, {
         tags: values.tags,
         allowScheduling: values.nodeAllowScheduling,

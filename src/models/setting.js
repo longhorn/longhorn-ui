@@ -32,6 +32,7 @@ export default {
     },
     *update({ payload }, { call, put, select }) {
       yield put({ type: 'showSaving' })
+      // eslint-disable-next-line no-unused-vars
       for (const key of Object.keys(payload)) {
         const data = yield select(({ setting }) => setting.data)
         const found = data.find(setting => setting.name === key)

@@ -45,10 +45,16 @@
     "react/self-closing-comp": 0,
     "generator-star-spacing": 0,
     "import/extensions": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "react/jsx-curly-newline": 0,
+    "react/function-component-definition": 0,
+    "react/state-in-constructor": 0,
     "react/jsx-boolean-value": 0,
     "react/jsx-closing-bracket-location": 0,
     "react/no-string-refs": 0,
     "react/no-find-dom-node": 0,
+    "react/jsx-props-no-spreading": 0,
     "arrow-parens": 0,
     "import/order": 0,
     "import/no-cycle": 0,
@@ -63,7 +69,7 @@
         "allowTernary": true
       }
     ],
-    no-plusplus: "off",
+    "no-plusplus": "off",
     "no-continue": "off",
     "arrow-body-style": [
       0,

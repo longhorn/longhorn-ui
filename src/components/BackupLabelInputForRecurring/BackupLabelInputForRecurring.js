@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Icon, Button } from 'antd'
 
-
 class BackupLabelInputForRecurring extends React.Component {
   constructor(props) {
     super(props)
@@ -21,6 +20,7 @@ class BackupLabelInputForRecurring extends React.Component {
     let keys = []
     let value = []
 
+    // eslint-disable-next-line no-unused-vars
     for (let item in labelsProps) {
       if (labelsProps[item]) {
         key.push(item)

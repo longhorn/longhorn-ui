@@ -142,7 +142,7 @@ class EditableDiskList extends React.Component {
                   <RadioGroup>
                     <Radio value>Enable</Radio>
                     <Radio value={false}>Disable</Radio>
-                  </RadioGroup>
+                  </RadioGroup>,
                 )}
               </FormItem>
             </div>
@@ -153,14 +153,16 @@ class EditableDiskList extends React.Component {
             </div>
             <div className={styles.control} style={{ width: '210px' }}>
               <FormItem style={{ margin: '3px 0px 0px 0px' }}>
-                {getFieldDecorator('evictionRequested', {
-                  initialValue: node.evictionRequested,
-                })(
-                  <RadioGroup>
-                    <Radio value={true}>True</Radio>
-                    <Radio value={false}>False</Radio>
-                  </RadioGroup>
-                )}
+                {
+                  getFieldDecorator('evictionRequested', {
+                    initialValue: node.evictionRequested,
+                  })(
+                    <RadioGroup>
+                      <Radio value={true}>True</Radio>
+                      <Radio value={false}>False</Radio>
+                    </RadioGroup>,
+                  )
+                }
               </FormItem>
             </div>
           </div>

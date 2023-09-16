@@ -4,7 +4,7 @@ import { Form, Icon } from 'antd'
 import { ModalBlur } from '../../../components'
 import { BackupLabelInput } from '../../../components'
 
-const modal = ({
+function modal({
   visible,
   onCancel,
   onOk,
@@ -15,7 +15,7 @@ const modal = ({
     getFieldValue,
     setFieldsValue,
   },
-}) => {
+}) {
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
