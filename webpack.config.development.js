@@ -184,7 +184,7 @@ module.exports = {
   plugins: [
     new OpenBrowserPlugin({url: 'http://localhost:8080/'}),
     new ProgressBarPlugin(),
-    // new FriendlyErrorsWebpackPlugin(),
+    new FriendlyErrorsWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: '[id].css'
