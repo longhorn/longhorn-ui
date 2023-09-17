@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.22.15",
-    "antd": "3.26.20",
+    "antd": "5.9.1",
     "axios": "^0.27.2",
     "classnames": "^2.3.2",
     "cron-parser": "^4.9.0",
