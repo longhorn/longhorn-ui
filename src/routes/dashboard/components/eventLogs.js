@@ -10,7 +10,7 @@ class EventLogs extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterDropdownVisible: false,
+      filterDropdownOpen: false,
       filterNameDropdownVisible: false,
       filterSourceDropdownVisible: false,
       data: props.data,
@@ -46,7 +46,7 @@ class EventLogs extends React.Component {
     const searchText = this.state.searchInput[searchField]
     const filteredData = this.filterData(data, searchField, searchText)
     this.setState({
-      filterDropdownVisible: false,
+      filterDropdownOpen: false,
       filterNameDropdownVisible: false,
       filterSourceDropdownVisible: false,
       data: filteredData,
@@ -167,8 +167,8 @@ class EventLogs extends React.Component {
             <Button type="link" onClick={this.onReset}>Reset</Button>
           </div>
         ),
-        filterDropdownVisible: this.state.filterNameDropdownVisible,
-        onFilterDropdownVisibleChange: (visible) => {
+        filterDropdownOpen: this.state.filterNameDropdownVisible,
+        onFilterDropdownOpenChange: (visible) => {
           this.setState({
             filterNameDropdownVisible: visible,
           }, () => this.searchNameInput.focus())
@@ -248,8 +248,8 @@ class EventLogs extends React.Component {
             <Button type="link" onClick={this.onReset}>Reset</Button>
           </div>
         ),
-        filterDropdownVisible: this.state.filterSourceDropdownVisible,
-        onFilterDropdownVisibleChange: (visible) => {
+        filterDropdownOpen: this.state.filterSourceDropdownVisible,
+        onFilterDropdownOpenChange: (visible) => {
           this.setState({
             filterSourceDropdownVisible: visible,
           }, () => this.searchSourceInput.focus())
