@@ -1,11 +1,11 @@
-import createHistory from 'history/createHashHistory'
+import { createHashHistory } from 'history'
 import createLoading from 'dva-loading'
 import dva from 'dva'
 
 // 1. Initialize
 const app = dva({
   ...createLoading(),
-  history: createHistory({
+  history: createHashHistory({
     queryKey: false,
   }),
   onError() {
