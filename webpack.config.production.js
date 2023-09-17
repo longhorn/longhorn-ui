@@ -12,9 +12,6 @@ const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const os = require("os");
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
-const theme = require("./src/theme");
-
-
 module.exports = {
   devtool: 'source-map',
   entry: path.resolve(__dirname, "src", "index.js"),
@@ -73,7 +70,6 @@ module.exports = {
             options: {
               // sourceMap: true,
               javascriptEnabled: true,
-              modifyVars: theme()
             }
           }
         ],
@@ -95,7 +91,6 @@ module.exports = {
             options: {
               // sourceMap: true,
               javascriptEnabled: true,
-              modifyVars: theme()
             }
           }
         ],

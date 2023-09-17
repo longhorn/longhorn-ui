@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const theme = require("./src/theme");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
@@ -100,7 +99,6 @@ module.exports = {
                 sourceMap: true,
                 javascriptEnabled: true,
                 math: "always",
-                // modifyVars: theme()
               }
             }
           }
@@ -128,7 +126,6 @@ module.exports = {
                 sourceMap: true,
                 javascriptEnabled: true,
                 math: "always",
-                // modifyVars: theme()
               } 
             }
           }
