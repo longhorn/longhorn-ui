@@ -51,6 +51,10 @@ module.exports = {
       services: path.resolve(__dirname, "src/services/"),
       routes: path.resolve(__dirname, "src/routes/"),
       models: path.resolve(__dirname, "src/models/")
+    },
+    fallback: {
+      fs: false,
+      path: false,
     }
   },
   module: {
@@ -78,31 +82,26 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          'css-hot-loader',
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: true,
-                // if hmr does not work, this is a forceful method.
-              reloadAll: true,
-              modifyVars: theme()
-            },
-          },
+          "style-loader",
           {
             loader: "css-loader",
             options: {
               sourceMap: true,
               importLoaders: 1,
-              modules: true,
-              localIdentName: "[name]_[local]-[hash:base64:5]"
+              modules: {
+                localIdentName: "[name]_[local]-[hash:base64:5]"
+              },
             }
           },
           {
             loader: "less-loader",
             options: {
-              sourceMap: true,
-              javascriptEnabled: true,
-              modifyVars: theme()
+              lessOptions: {
+                sourceMap: true,
+                javascriptEnabled: true,
+                math: "always",
+                modifyVars: theme()
+              } 
             }
           }
         ],
@@ -111,29 +110,26 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          'css-hot-loader',
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: true,
-                // if hmr does not work, this is a forceful method.
-              reloadAll: true,
-              modifyVars: theme()
-            },
-          },
+          "style-loader",
           {
             loader: "css-loader",
             options: {
               sourceMap: true,
-              importLoaders: 1
+              importLoaders: 1,
+              modules: {
+                localIdentName: "[name]_[local]-[hash:base64:5]"
+              },
             }
           },
           {
             loader: "less-loader",
             options: {
-              sourceMap: true,
-              javascriptEnabled: true,
-              modifyVars: theme()
+              lessOptions: {
+                sourceMap: true,
+                javascriptEnabled: true,
+                math: "always",
+                modifyVars: theme()
+              } 
             }
           }
         ],
@@ -154,11 +150,6 @@ module.exports = {
   },
   externals: {
     jquery: "jQuery"
-  },
-  resolve: {
-    fallback: {
-      fs: false
-    }
   },
   devtool: false,
   optimization: {
