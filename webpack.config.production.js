@@ -2,15 +2,13 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const HappyPack = require("happypack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 
 const os = require("os");
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
 module.exports = {
   devtool: 'source-map',
@@ -30,6 +28,10 @@ module.exports = {
       services: path.resolve(__dirname, "src/services/"),
       routes: path.resolve(__dirname, "src/routes/"),
       models: path.resolve(__dirname, "src/models/")
+    },
+    fallback: {
+      fs: false,
+      path: false,
     }
   },
   module: {
@@ -37,8 +39,11 @@ module.exports = {
       {
         test: /\.js$/,
         include: [path.resolve(__dirname, "src")],
-        exclude: /node_modules/,
-        use: ["happypack/loader?id=babel"]
+        exclude: [],
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true
+        }
       },
       {
         test: /\.css$/,
@@ -59,17 +64,21 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              // sourceMap: true,
+              sourceMap: true,
               importLoaders: 1,
-              modules: true,
-              localIdentName: "[name]_[local]-[hash:base64:5]"
+              modules: {
+                localIdentName: "[name]_[local]-[hash:base64:5]"
+              },
             }
           },
           {
             loader: "less-loader",
             options: {
-              // sourceMap: true,
-              javascriptEnabled: true,
+              lessOptions: {
+                // sourceMap: true,
+                javascriptEnabled: true,
+                math: "always",
+              }
             }
           }
         ],
@@ -90,7 +99,9 @@ module.exports = {
             loader: "less-loader",
             options: {
               // sourceMap: true,
-              javascriptEnabled: true,
+              lessOptions: {
+                javascriptEnabled: true,
+              }
             }
           }
         ],
@@ -118,11 +129,6 @@ module.exports = {
   externals: {
     jquery: "jQuery"
   },
-  resolve: {
-    fallback: {
-      fs: false
-    }
-  },
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -144,7 +150,11 @@ module.exports = {
         }
       }
     },
-    runtimeChunk: true
+    runtimeChunk: true,
+    minimizer: [
+      new CssMinimizerPlugin(),
+    ],
+    moduleIds: 'deterministic'
   },
   plugins: [
     new ProgressBarPlugin(),
@@ -164,17 +174,6 @@ module.exports = {
         }
       ]
     }),
-    // new OptimizeCssAssetsPlugin({
-    //   assetNameRegExp: /\.css$/g,
-    //   cssProcessor: require("cssnano"),
-    //   cssProcessorOptions: { discardComments: { removeAll: true } },
-    //   canPrint: true
-    // }),
-    new HappyPack({
-      id: "babel",
-      loaders: ["babel-loader?cacheDirectory"],
-      threadPool: happyThreadPool
-    }),
-    new webpack.HashedModuleIdsPlugin()
+    new MiniCssExtractPlugin()
   ]
 };

@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 
 
