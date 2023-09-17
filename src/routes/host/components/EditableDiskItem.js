@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { formatDate } from '../../../utils/formatDate'
-import { Radio, Checkbox, Form, Tooltip, Input, Select, Icon } from 'antd'
+import { Radio, Checkbox, Form, Tooltip, Input, Select } from 'antd'
 import styles from './EditableDiskItem.less'
 import StorageInput from './StorageInput'
 import DistTag from './TagComponent.js'
@@ -10,6 +10,7 @@ import IconRemove from '../../../components/Icon/IconRemove'
 import IconRestore from '../../../components/Icon/IconRestore'
 import PathInput from './PathInput'
 import { byteToGi } from '../helper/index'
+import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
@@ -52,7 +53,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
                 {disk.conditions[key] && disk.conditions[key].status && disk.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {disk.conditions[key].status}</div> : ''}
               </div>)
               return (<Tooltip key={key} title={title}><div style={{ marginRight: 40 }}>
-                  {disk.conditions[key].status && disk.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" /> }
+                  {disk.conditions[key].status && disk.conditions[key].status.toLowerCase() === 'true' ? <CheckCircleOutlined className="healthy" style={{ marginRight: 5 }} /> : <ExclamationCircleOutlined className="faulted" style={{ marginRight: 5 }} /> }
                   {disk.conditions[key].type}
                 </div></Tooltip>)
             })}

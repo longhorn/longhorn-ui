@@ -1,15 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Alert, Icon } from 'antd'
+import { Modal, Alert } from 'antd'
 import { DropOption } from '../../components'
+import { InfoCircleOutlined } from '@ant-design/icons'
 const confirm = Modal.confirm
 
 function actions({ selected, deleteSystemRestore }) {
   const handleMenuClick = (event, record) => {
-    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name} ?</div>
+    let title = <div><InfoCircleOutlined style={{ marginRight: 5 }} className="color-warning" />Are you sure you want to delete System Restore {record.name} ?</div>
     if (record.state === 'Pending' || record.state === 'Restoring' || record.state === 'Downloading') {
       title = (<div>
-        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name}</div>
+        <div style={{ marginBottom: 10 }}><InfoCircleOutlined style={{ marginRight: 5 }} className="color-warning" />Are you sure you want to delete System Restore {record.name}</div>
         <Alert
           message={'Deleting restoring system backup will abort the remaining resource rollout. An incomplete restore may cause Longhorn system resource inconsistencies leading to unexpected behavior.'}
           type="warning"

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal, Icon, message, Tooltip, Progress } from 'antd'
+import { Table, Modal, message, Tooltip, Progress } from 'antd'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DropOption } from '../../components'
 import { formatDate } from '../../utils/formatDate'
@@ -10,6 +10,7 @@ import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import style from './backupList.less'
 import C from '../../utils/constants'
+import { CopyOutlined, TagsOutlined, WarningOutlined } from '@ant-design/icons'
 
 const confirm = Modal.confirm
 
@@ -29,10 +30,9 @@ const BackupUrl = ({ url = '' }) => {
         {url}
         {
           url ? <CopyToClipboard onCopy={onCopy} text={url}>
-            <Icon
+            <CopyOutlined
               className="color-link"
               style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
-              type="copy"
             />
           </CopyToClipboard> : 'URL no available'
         }
@@ -156,7 +156,7 @@ class List extends React.Component {
           return (
             <Tooltip title={errorMessage}>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {errorMessage ? <Icon type="warning" style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
+                {errorMessage ? <WarningOutlined style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
                 <CopyToClipboard onCopy={this.onCopy} text={text}>
                   <p style={{ color: '#108ee9', cursor: 'pointer', margin: '0px' }}>{text}</p>
                 </CopyToClipboard>
@@ -319,7 +319,7 @@ class List extends React.Component {
           }
           return (
             <div onClick={() => { showBackupLabels(obj) }}>
-              <Icon style={{ fontSize: '18px', color: obj ? '#108eb9' : '#cccccc', cursor: 'pointer' }} type="tags" />
+              <TagsOutlined style={{ fontSize: '18px', color: obj ? '#108eb9' : '#cccccc', cursor: 'pointer' }} />
             </div>
           )
         },

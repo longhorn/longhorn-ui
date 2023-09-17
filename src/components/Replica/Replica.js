@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, Modal, Tooltip, Progress, Icon } from 'antd'
+import { Card, Modal, Tooltip, Progress } from 'antd'
 import { DropOption } from '../../components'
 import diskHealthyImage from '../../assets/images/disk-healthy.png'
 import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
+import { EnvironmentOutlined, WarningOutlined } from '@ant-design/icons'
 const confirm = Modal.confirm
 
 class Replica extends React.Component {
@@ -77,7 +78,7 @@ class Replica extends React.Component {
         progress = Math.floor(total / progressArr.length)
       }
       if (rebuildError) {
-        return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={rebuildError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
+        return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={rebuildError}><WarningOutlined style={{ color: '#faad14' }} /></Tooltip></div>
       } else {
         return progress === 0 || progress === 100 ? '' : <Tooltip title={`${state === 'restore' ? 'Restoring' : 'Deleting Snapshot'} ${progress}%`}><Progress status={state === 'restore' ? 'success' : 'exception'} percent={progress} showInfo={false} /></Tooltip>
       }
@@ -112,7 +113,7 @@ class Replica extends React.Component {
         progress = Math.floor(total / progressArr.length)
       }
       if (restoreError) {
-        return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={restoreError}><Icon style={{ color: '#faad14' }} type="warning" /></Tooltip></div>
+        return <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: '20px' }}><Tooltip title={restoreError}><WarningOutlined style={{ color: '#faad14' }} /></Tooltip></div>
       } else {
         return progress === 0 || progress === 100 ? '' : <Tooltip title={<div>{state} {progress}% {fromReplica(progressArr)}</div>}><Progress status={'success'} percent={progress} showInfo={false} /></Tooltip>
       }
@@ -130,7 +131,7 @@ class Replica extends React.Component {
               />
             <span style={{ marginLeft: 20, verticalAlign: '100%', fontSize: 15 }}>
               {this.getReplicaShortName(item.name)}
-              {host && (host.region || host.zone) ? <Tooltip title={<span> region: {host.region} <br></br> zone: {host.zone} </span>}><Icon style={{ marginLeft: '5px' }} type="environment" /></Tooltip> : '' }
+              {host && (host.region || host.zone) ? <Tooltip title={<span> region: {host.region} <br></br> zone: {host.zone} </span>}><EnvironmentOutlined style={{ marginLeft: '5px' }} /></Tooltip> : '' }
             </span>
             <div style={{ width: '50%', position: 'absolute', top: '57px', left: '44%', height: '44px', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
               {restoreProgress(item.name, restoreStatus, 'restore')}

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Breadcrumb, Icon } from 'antd'
+import { Breadcrumb } from 'antd'
 import styles from './Bread.less'
 import { menu } from '../../utils'
 import { LinkTo } from '../../components'
@@ -12,7 +12,6 @@ const getPathSet = function (menuArray, parentPath) {
     pathSet[(parentPath + item.key).replace(/\//g, '-').hyphenToHump()] = {
       path: parentPath + item.key,
       name: item.name,
-      icon: item.icon || '',
       clickable: item.clickable === undefined,
     }
     if (item.child) {
@@ -57,9 +56,6 @@ function Bread({ location }) {
     }
     return (
       <Breadcrumb.Item key={key}>
-        {pathSet[item].icon
-          ? <Icon type={pathSet[item].icon} />
-          : ''}
         {
           ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{pathSet[item].name}</span> : <LinkTo to={{ pathname: pathSet[item].path }}>
               {pathSet[item].name}

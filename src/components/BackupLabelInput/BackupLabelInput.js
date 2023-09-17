@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Icon, Button } from 'antd'
+import { Form, Input, Button } from 'antd'
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 let id = 0
 
@@ -79,10 +80,9 @@ class BackupLabelInput extends React.Component {
           ],
         })(<Input placeholder="Labels Value" style={{ marginRight: 8 }} />)}
       </Form.Item>{keys.length > 0 ? (
-        <Icon
+        <MinusCircleOutlined
           style={{ marginTop: '12px' }}
           className="dynamic-delete-button"
-          type="minus-circle-o"
           onClick={() => this.remove(k)}
         />) : null}
       </div>
@@ -92,7 +92,7 @@ class BackupLabelInput extends React.Component {
         {formItems}
         <Form.Item {...formItemLayoutWithOutLabel}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add Labels for Backup
+            <PlusCircleOutlined /> Add Labels for Backup
           </Button>
         </Form.Item>
       </Form>

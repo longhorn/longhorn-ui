@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ReactMarkdown from 'react-markdown/with-html'
-import { Form, Input, Button, Spin, Icon, Checkbox, Select, InputNumber } from 'antd'
+import { Form, Input, Button, Spin, Checkbox, Select, InputNumber } from 'antd'
 import styles from './setting.less'
 import { classnames } from '../../utils'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -90,7 +91,7 @@ const form = ({
           initialValue,
           valuePropName,
         })(genInputItem(setting))}
-        <div>{setting.definition.required && !setting.definition.readOnly ? <Icon style={{ mariginRight: 5 }} type="question-circle-o" /> : <Icon style={{ margin: '8px 5px 0px 0px', float: 'left' }} type="question-circle-o" />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
+        <div>{setting.definition.required && !setting.definition.readOnly ? <QuestionCircleOutlined style={{ mariginRight: 5 }} /> : <QuestionCircleOutlined style={{ margin: '8px 5px 0px 0px', float: 'left' }} />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
       </FormItem>
     )
   }

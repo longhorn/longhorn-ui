@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Tag, Input, Tooltip, Icon } from 'antd'
+import { Tag, Input, Tooltip } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons';
 
 class DistTag extends React.Component {
   state = {
@@ -75,7 +76,7 @@ class DistTag extends React.Component {
         )}
         {!inputVisible && (
           <Tag onClick={this.showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
-            <Icon type="plus" /> {this.props.nodeBoolean ? 'New Node Tag' : 'New Disk Tag'}
+            <PlusCircleOutlined /> {this.props.nodeBoolean ? 'New Node Tag' : 'New Disk Tag'}
           </Tag>
         )}
       </div>

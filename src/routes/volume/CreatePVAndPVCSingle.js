@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Checkbox, Radio, Select, Icon, Tooltip } from 'antd'
+import { Form, Input, Checkbox, Radio, Select, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
 import style from './CreatePVAndPVC.less'
+import { InfoCircleOutlined } from '@ant-design/icons'
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -105,7 +106,7 @@ const modal = ({
             <Input disabled={item.pvNameDisabled} />
             <Tooltip title={'If no value is provided, Longhorn will first utilize the storageClassName stored in the backup volume if the volume is being restored from a backup. Otherwise, Longhorn will use the storageClassName specified in the default setting.'}>
               <span className={style.icon}>
-                <Icon type="info-circle" />
+                <InfoCircleOutlined />
               </span>
             </Tooltip>
           </div>)}

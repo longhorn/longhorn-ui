@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'dva'
-import { Row, Col, Icon } from 'antd'
+import { Row, Col } from 'antd'
 import PropTypes from 'prop-types'
 import SystemBackupsList from './systemBackupsList'
 import SystemRestoresList from './systemRestoresList'
@@ -11,6 +11,7 @@ import C from '../../utils/constants'
 import CreateSystemBackup from './createSystemBackup'
 import CreateSystemRestore from './createSystemRestore'
 import { Filter } from '../../components/index'
+import { FileDoneOutlined } from '@ant-design/icons'
 
 class SystemBackups extends React.Component {
   constructor(props) {
@@ -239,7 +240,7 @@ class SystemBackups extends React.Component {
           <SystemBackupsList {...systemBackupsListProps} />
         </div>
         <div className={style.systemRestores}>
-          <Icon type="file-done" />
+          <FileDoneOutlined />
           <span style={{ marginLeft: '4px' }}>System Restore</span>
         </div>
         <div id="systemRestoresTable" style={{ height: '43%', padding: '8px 12px 0px' }}>

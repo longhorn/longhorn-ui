@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Card, Icon, Tooltip } from 'antd'
+import { Table, Card, Tooltip } from 'antd'
 import moment from 'moment'
 import styles from './index.less'
 import { formatDate } from '../../../utils/formatDate'
 import { formatSnapshot, formatMib } from '../../../utils/formater'
+import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons'
 
 class SnapshotList extends React.Component {
   constructor(props) {
@@ -113,7 +114,16 @@ class SnapshotList extends React.Component {
       title={<div className={styles.header}>
       <div className="title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Tooltip title={this.state.toggleSnapshotListVisible ? 'Click to Collapse' : 'Click to Expand'}>
-          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleSnapshotList()} />Snapshots and Backups List</div>
+          <div>
+            {
+              this.state.iconType === 'plus-square' ? (
+                <PlusSquareOutlined style={{ marginRight: 10 }} onClick={() => this.toggleSnapshotList()} />
+              ) : (
+                <MinusSquareOutlined style={{ marginRight: 10 }} onClick={() => this.toggleSnapshotList()} />
+              )
+            }
+            Snapshots and Backups List
+          </div>
         </Tooltip>
       </div></div>}
       bordered={false}>{this.state.toggleSnapshotListVisible ? <div style={{ padding: 24 }}>

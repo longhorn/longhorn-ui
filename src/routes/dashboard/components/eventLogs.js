@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Input, Button, Icon } from 'antd'
+import { Table, Input, Button } from 'antd'
 import { sortTable, sortTableByISODate } from '../../../utils/sort'
 import { setSortOrder } from '../../../utils/store'
 import './eventLogs.less'
+import { FilterOutlined } from '@ant-design/icons'
 
 class EventLogs extends React.Component {
   constructor(props) {
@@ -152,7 +153,7 @@ class EventLogs extends React.Component {
         dataIndex: 'nameText',
         key: 'nameText',
         className: 'name',
-        filterIcon: <Icon type="filter" style={{ color: this.state.searchField === 'nameText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
+        filterIcon: <FilterOutlined style={{ color: this.state.searchField === 'nameText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
         filterDropdown: (
           <div className="filter-dropdown">
             <Input
@@ -233,7 +234,7 @@ class EventLogs extends React.Component {
         key: 'sourceText',
         className: 'text',
         sorter: (a, b) => sortTable(a, b, 'sourceText'),
-        filterIcon: <Icon type="filter" style={{ color: this.state.searchField === 'sourceText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
+        filterIcon: <FilterOutlined style={{ color: this.state.searchField === 'sourceText' && this.state.searchText ? '#108ee9' : '#aaa' }} />,
         filterDropdown: (
           <div className="filter-dropdown">
             <Input

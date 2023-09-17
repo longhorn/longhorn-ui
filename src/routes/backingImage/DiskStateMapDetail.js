@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal, Progress, Tooltip, Card, Icon } from 'antd'
+import { Table, Modal, Progress, Tooltip, Card } from 'antd'
 import DiskStateMapActions from './DiskStateMapActions'
 import { ModalBlur, DropOption } from '../../components'
 import style from './BackingImage.less'
+import { MessageOutlined, StopOutlined } from '@ant-design/icons'
 const confirm = Modal.confirm
 
 // As the back-end field changes from diskStateMap to diskFileStatusMap
@@ -81,7 +82,7 @@ const modal = ({
           <div>
             { text === 'in-progress' ? <Tooltip title={`${record.progress}%`}><div><Progress showInfo={false} percent={record.progress} /></div></Tooltip> : ''}
             <Tooltip title={record.message}>
-              <div>{text} {record.message ? <Icon type="message" className="color-warning" /> : ''}</div>
+              <div>{text} {record.message ? <MessageOutlined className="color-warning" /> : ''}</div>
             </Tooltip>
           </div>
         )
@@ -153,7 +154,7 @@ const modal = ({
                     <div style={{ minWidth: 60, fontWeight: 'normal' }}>{key}:</div>
                     <div style={{ marginLeft: 10, fontWeight: 'normal' }}>{currentData.parameters[key]}</div>
                   </div>
-                }) : <Tooltip title="empty"><Icon type="stop" className="color-warning" /></Tooltip>}
+                }) : <Tooltip title="empty"><StopOutlined className="color-warning" /></Tooltip>}
               </div>
             </div>
           </Card>
@@ -164,7 +165,7 @@ const modal = ({
               <div className={style.currentChecksum}>
                 { currentData.expectedChecksum === currentData.currentChecksum && currentData.currentChecksum !== '' && isReady ? <Tooltip title={'Current checksum is the same as the expected value'}>
                   <summary className="color-success">Verified</summary>
-                </Tooltip> : ((currentData.expectedChecksum !== '' && isReady) && <Tooltip title={'Current checksum doesn’t match the expected value'}>
+                </Tooltip> : ((currentData.expectedChecksum !== '' && isReady) && <Tooltip title={'Current checksum doesn\'t match the expected value'}>
                   <summary className="color-error">Failed</summary>
                 </Tooltip>)}
                 Current SHA512 Checksum:

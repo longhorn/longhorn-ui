@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal, Menu, Dropdown, Icon, Tooltip } from 'antd'
+import { Button, Modal, Menu, Dropdown, Tooltip } from 'antd'
 import { detachable, attachable, isRestoring } from './helper'
 import style from './VolumeBulkActions.less'
+import { DownOutlined, UnorderedListOutlined } from '@ant-design/icons'
 
 const confirm = Modal.confirm
 
@@ -224,7 +225,7 @@ function bulkActions({
       }) }
       &nbsp;
       <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft" disabled={selectedRows.length === 0}>
-        <Button type="primary" size="large"><Icon type="unordered-list" style={{ marginRight: '3px' }} /><Icon type="down" /></Button>
+        <Button type="primary" size="large"><UnorderedListOutlined style={{ marginRight: '3px' }} /><DownOutlined /></Button>
       </Dropdown>
     </div>
   )

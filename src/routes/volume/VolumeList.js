@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Icon, Tooltip, Progress } from 'antd'
+import { Table, Tooltip, Progress } from 'antd'
 import { formatDate } from '../../utils/formatDate'
 import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
@@ -15,6 +15,7 @@ import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
+import { ApiOutlined, ArrowsAltOutlined, ExclamationCircleOutlined, InfoCircleOutlined, LoadingOutlined, LockOutlined, WarningOutlined } from '@ant-design/icons'
 
 function list({
   loading,
@@ -165,7 +166,7 @@ function list({
           return item.hostId !== attachedNode
         })
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
-        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
+        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><ExclamationCircleOutlined className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
             return (<div
@@ -204,13 +205,13 @@ function list({
               {restoreProgress}
               {rebuildProgress}
             </div>
-            {isEncrypted ? <Tooltip title={'Encrypted Volume'}><Icon className="color-warning" style={{ marginRight: 5, marginBottom: 2 }} type="lock" /></Tooltip> : null}
+            {isEncrypted ? <Tooltip title={'Encrypted Volume'}><LockOutlined style={{ marginRight: 5, marginBottom: 2 }} /></Tooltip> : null}
             {statusUpgradingEngine(record)}
             {upgrade}
-            {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
+            {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><ApiOutlined className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} /></Tooltip> : ''}
             {stateText}
-            {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
-            {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
+            {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><WarningOutlined style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" /></Tooltip> : ''}
+            {needToWaitDone(text, record.replicas) ? <LoadingOutlined /> : null}
           </div>
         )
       },
@@ -230,7 +231,7 @@ function list({
               </div>
             </Tooltip> : ''}
             {isSchedulingFailure(record) ? <Tooltip title={'The volume cannot be scheduled'}>
-              <Icon style={{ marginRight: 5 }} type="exclamation-circle-o" className={'error'} />
+              <ExclamationCircleOutlined style={{ marginRight: 5 }} className={'error'} />
             </Tooltip> : null}
             <LinkTo style={{ display: 'flex', alignItems: 'center', wordBreak: 'break-all' }} to={{ pathname: `/volume/${text}` }}>
               {text}
@@ -265,22 +266,22 @@ function list({
             {isExpanding && !expandingFailed ? <Tooltip title={message}>
               <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
                 <div className={style.expendVolumeIcon}>
-                  <Icon type="loading" />
+                  <LoadingOutlined />
                 </div>
                 <div style={{ fontSize: '20px' }}>
-                  <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+                  <ArrowsAltOutlined style={{ transform: 'rotate(45deg)' }} />
                 </div>
               </div>
             </Tooltip> : <Tooltip title={message}>
               <div className={expandingFailed ? 'error' : ''}>
                 {expandingFailed ? <div>
-                  <Icon style={{ fontSize: '20px', marginRight: 5 }} type="info-circle" />
+                  <InfoCircleOutlined style={{ fontSize: '20px', marginRight: 5 }} type="info-circle" />
                   <div className={'error'} style={{ position: 'relative', display: 'inline-block' }}>
                     <div className={style.expendVolumeIcon}>
-                      <Icon type="loading" />
+                      <LoadingOutlined />
                     </div>
                     <div style={{ fontSize: '20px', marginLeft: '8px' }}>
-                      <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+                      <ArrowsAltOutlined style={{ transform: 'rotate(45deg)' }} />
                     </div>
                   </div>
                 </div> : formatMib(expectedSize)}

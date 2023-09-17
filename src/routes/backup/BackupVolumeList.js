@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Icon, Tooltip } from 'antd'
+import { Table, Tooltip } from 'antd'
 import { formatDate } from '../../utils/formatDate'
 import { Link } from 'dva/router'
 import { formatMib } from '../../utils/formater'
@@ -11,6 +11,7 @@ import { pagination } from '../../utils/page'
 import queryString from 'query-string'
 import style from './backupList.less'
 import C from '../../utils/constants'
+import { WarningOutlined } from '@ant-design/icons'
 
 class List extends React.Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class List extends React.Component {
           return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Tooltip title={errorMessage}>
-                {errorMessage ? <Icon type="warning" style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
+                {errorMessage ? <WarningOutlined style={{ marginRight: 10, color: '#f5222d' }} /> : ''}
                 <Link
                   to={{
                     pathname: `/backup/${id}`,

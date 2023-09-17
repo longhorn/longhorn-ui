@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { formatDate } from '../../../utils/formatDate'
-import { Form, Button, Radio, Icon, Tooltip, InputNumber } from 'antd'
+import { Form, Button, Radio, Tooltip, InputNumber } from 'antd'
 import styles from './EditableDiskItem.less'
 import EditableDiskItem from './EditableDiskItem'
 import { formatPath } from '../helper/index'
 import DistTag from './TagComponent.js'
+import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
@@ -211,7 +212,7 @@ class EditableDiskList extends React.Component {
                   {node.conditions[key] && node.conditions[key].status && node.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {node.conditions[key].status}</div> : ''}
                 </div>)
                 return (<Tooltip key={key} title={title}><div style={{ marginRight: 40 }}>
-                    {node.conditions[key].status && node.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" /> }
+                    {node.conditions[key].status && node.conditions[key].status.toLowerCase() === 'true' ? <CheckCircleOutlined className="healthy" style={{ marginRight: 5 }} /> : <ExclamationCircleOutlined className="faulted" style={{ marginRight: 5 }} /> }
                     {node.conditions[key].type}
                   </div></Tooltip>)
               })}
