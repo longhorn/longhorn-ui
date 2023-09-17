@@ -58,7 +58,13 @@ const getMenus = function (menuArray, siderFold) {
         <SubMenu key={linkTo.pathname}
           title={
             <span>
-              {item.icon ? getIcon(item.icon) : ''}
+              {
+                item.icon ? (
+                <span style={{ marginRight: '10px' }}>
+                  { getIcon(item.icon) }
+                </span>
+                ) : ''
+              }
               {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
               <DownCircleOutlined />
             </span>
@@ -70,7 +76,13 @@ const getMenus = function (menuArray, siderFold) {
       menus = (
         <Menu.Item key={linkTo.pathname}>
           <LinkTo to={linkTo}>
-            {item.icon ? getIcon(item.icon) : ''}
+            {
+                item.icon ? (
+                <span style={{ marginRight: '10px' }}>
+                  { getIcon(item.icon) }
+                </span>
+                ) : ''
+              }
             {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
           </LinkTo>
         </Menu.Item>
