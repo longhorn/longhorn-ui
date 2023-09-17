@@ -100,8 +100,8 @@ module.exports = {
                 sourceMap: true,
                 javascriptEnabled: true,
                 math: "always",
-                modifyVars: theme()
-              } 
+                // modifyVars: theme()
+              }
             }
           }
         ],
@@ -110,7 +110,7 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {
@@ -128,7 +128,7 @@ module.exports = {
                 sourceMap: true,
                 javascriptEnabled: true,
                 math: "always",
-                modifyVars: theme()
+                // modifyVars: theme()
               } 
             }
           }
