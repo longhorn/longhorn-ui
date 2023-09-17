@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Tag, Input, Tooltip } from 'antd'
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons'
 
 class DistTag extends React.Component {
   state = {
