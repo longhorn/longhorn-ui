@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Select } from 'antd'
+import { Select } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { groupBy } from './helper'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item

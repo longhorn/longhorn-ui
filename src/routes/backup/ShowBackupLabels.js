@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { formatDate } from '../../utils/formatDate'
-import { Form, Descriptions } from 'antd'
+import { Descriptions } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 
 const modal = ({

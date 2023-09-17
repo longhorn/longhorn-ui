@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@ant-design/compatible": "^5.1.2",
     "@ant-design/icons": "^5.2.6",
     "@babel/runtime-corejs2": "^7.22.15",
     "antd": "5.9.1",

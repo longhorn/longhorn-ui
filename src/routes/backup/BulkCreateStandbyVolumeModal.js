@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber, Select, Spin } from 'antd'
+import { InputNumber, Select, Spin } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formater'
 const FormItem = Form.Item

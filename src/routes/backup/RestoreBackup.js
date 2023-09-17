@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert } from 'antd'
+import { Input, InputNumber, Checkbox, Spin, Select, Popover, Alert } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 const Option = Select.Option

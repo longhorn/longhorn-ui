@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Checkbox, Alert, Radio, Tooltip } from 'antd'
+import { Input, Checkbox, Alert, Radio, Tooltip } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import style from './CreatePVAndPVC.less'
 import { InfoCircleOutlined } from '@ant-design/icons'

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Upload, Button } from 'antd'
+import { Input, Select, Upload, Button } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur, AutoComplete } from '../../components'
 import { UploadOutlined } from '@ant-design/icons'
 const FormItem = Form.Item

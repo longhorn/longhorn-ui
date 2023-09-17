@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import EditableDiskList from './components/EditableDiskList'
 import { byteToGi, giToByte } from './helper/index'

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Button, Select, Checkbox, InputNumber, Tooltip } from 'antd'
+import { Input, Button, Select, Checkbox, InputNumber, Tooltip } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur, ReactCron } from '../../components'
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 

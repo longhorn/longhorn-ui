@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../../components'
 import { BackupLabelInput } from '../../../components'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
