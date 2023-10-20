@@ -335,7 +335,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <Tooltip title={'Provides the binary to start and communicate with the volume engine/replicas.'}>
           <span className={styles.label}> Engine Image:</span>
         </Tooltip>
-        {selectedVolume.engineImage}
+        {selectedVolume.image}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Created:</span>

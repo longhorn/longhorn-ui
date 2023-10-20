@@ -144,7 +144,7 @@ function bulkActions({
     }
   }
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
-  const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.engineImage)
+  const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.image)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
   const disableUpdateBulkDataLocality = () => selectedRows.some(item => !item.actions || !item.actions.updateDataLocality)
@@ -162,7 +162,7 @@ function bulkActions({
       if (engineUpgradePerNodeLimit && engineUpgradePerNodeLimit.value !== '0') {
         let defaultEngineImage = engineImages.find(engineImage => engineImage.default)
         if (defaultEngineImage) {
-          return item.engineImage === defaultEngineImage.image
+          return item.image === defaultEngineImage.image
         }
         return true
       }
@@ -170,12 +170,12 @@ function bulkActions({
     })
   }
   const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
-  const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.engineImage)
+  const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.image)
   const notAttached = () => selectedRows.some(item => item.state !== 'attached')
   /*
   * PV/PVC decides whether to disable it
   */
-  const hasMoreOptions = () => engineImages.findIndex(engineImage => selectedRows.findIndex(item => item.engineImage === engineImage.image) === -1) === -1
+  const hasMoreOptions = () => engineImages.findIndex(engineImage => selectedRows.findIndex(item => item.image === engineImage.image) === -1) === -1
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
