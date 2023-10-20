@@ -13,8 +13,9 @@ RUN npm run build
 FROM registry.suse.com/bci/bci-base:15.4
 
 RUN zypper -n ref && \
-	zypper -n install curl libxml2 bash gettext shadow nginx && \
-    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+	zypper -n install curl libxml2 bash gettext shadow nginx
+
+SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
 RUN mkdir -p web/dist
 WORKDIR /web
@@ -26,9 +27,12 @@ EXPOSE 8000
 ENV LONGHORN_MANAGER_IP http://localhost:9500
 ENV LONGHORN_UI_PORT 8000
 
-RUN mkdir -p /var/config/ && touch /var/run/nginx.pid && chown -R 499 /var/config /var/run/nginx.pid
+RUN mkdir -p /var/config/nginx/ \
+ && cp -r /etc/nginx/* /var/config/nginx/ \
+ && touch /var/run/nginx.pid \
+ && chown -R 499 /var/config /var/run/nginx.pid
 
 # Use the uid of the default user (nginx) from the installed nginx package
 USER 499
 
-CMD ["/bin/bash", "-c", "mkdir -p /var/config/nginx/ && cp -r /etc/nginx/* /var/config/nginx/; envsubst '${LONGHORN_MANAGER_IP},${LONGHORN_UI_PORT}' < /etc/nginx/nginx.conf.template > /var/config/nginx/nginx.conf && nginx -c /var/config/nginx/nginx.conf -g 'daemon off;'"]
+CMD ["/bin/bash", "-c", "envsubst '${LONGHORN_MANAGER_IP},${LONGHORN_UI_PORT}' < /etc/nginx/nginx.conf.template > /var/config/nginx/nginx.conf && nginx -c /var/config/nginx/nginx.conf -g 'daemon off;'"]
