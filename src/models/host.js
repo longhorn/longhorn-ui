@@ -127,7 +127,7 @@ export default {
         })
         engineImageData.forEach((item) => {
           replicaData.forEach((ele) => {
-            if (item.engineImage === ele.engineImage) {
+            if (item.image === ele.image) {
               item.replicaCurrentState = ele.currentState
             }
           })

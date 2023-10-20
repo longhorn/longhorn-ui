@@ -220,7 +220,7 @@ class Snapshots extends React.Component {
         return false
       }
     }
-    const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.engineImage
+    const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.image
 
     const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable
 
