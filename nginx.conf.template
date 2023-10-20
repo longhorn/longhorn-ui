@@ -34,16 +34,15 @@ http {
             client_max_body_size 0;
         }
 
+        location ~ ^/.(images|javascript|js|css|flash|media|static)/ {
+             root /web/dist;
+        }
+
         location / {
             root /web/dist;
             index  index.html;
             add_header Cache-Control "max-age=0";
             try_files $uri $uri/ /index.html =404;
         }
-
-        location ~ ^/.(images|javascript|js|css|flash|media|static)/ {
-             root /web/dist;
-        }
-
     }
 }
