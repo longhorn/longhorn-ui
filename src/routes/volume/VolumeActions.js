@@ -141,7 +141,7 @@ function actions({
         break
       case 'trimFilesystem':
         confirm({
-          title: 'Are you sure you want to trim the fileystem?',
+          title: 'Are you sure you want to trim the filesystem?',
           onOk() {
             trimFilesystem(record)
           },
