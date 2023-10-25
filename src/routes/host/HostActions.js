@@ -13,7 +13,7 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
         break
       case 'deleteHost':
         confirm({
-          title: `Are you sure you want to delete node ${selected.name} ?`,
+          title: `Are you sure you want to delete node ${selected.name}?`,
           onOk() {
             deleteHost(record)
           },

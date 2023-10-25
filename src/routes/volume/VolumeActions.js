@@ -94,7 +94,7 @@ function actions({
         break
       case 'rollback':
         confirm({
-          title: `Are you sure you want to rollback volume ${record.name} ?`,
+          title: `Are you sure you want to rollback volume ${record.name}?`,
           onOk() {
             rollback(record)
           },
@@ -141,7 +141,7 @@ function actions({
         break
       case 'trimFilesystem':
         confirm({
-          title: 'Are you sure you want to trim Fileystem ?',
+          title: 'Are you sure you want to trim the filesystem?',
           onOk() {
             trimFilesystem(record)
           },

@@ -9,7 +9,7 @@ function actions({ selected, deleteEngineImage }) {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete engine image ${record.name} ?`,
+          title: `Are you sure you want to delete engine image ${record.name}?`,
           onOk() {
             deleteEngineImage(record)
           },

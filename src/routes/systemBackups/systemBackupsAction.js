@@ -9,7 +9,7 @@ function actions({ selected, deleteSystemBackup, createSystemRestore }) {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete System Backup ${record.name} ?`,
+          title: `Are you sure you want to delete System Backup ${record.name}?`,
           onOk() {
             deleteSystemBackup({ name: record.id })
           },

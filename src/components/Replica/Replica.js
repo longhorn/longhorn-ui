@@ -19,7 +19,7 @@ class Replica extends React.Component {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete replica ${record.name} ?`,
+          title: `Are you sure you want to delete replica ${record.name}?`,
           onOk() {
             deleteReplicas([record])
           },
