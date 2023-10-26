@@ -5,7 +5,7 @@ import { Dropdown, Button, Icon, Menu, Tooltip } from 'antd'
 const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps, tooltipProps }) => {
   const menu = menuOptions.map(item => {
     if (item.type === 'divider') {
-      return (<Menu.Divider />)
+      return (<Menu.Divider key={Math.random()} />)
     }
     const tooltip = item.tooltip !== undefined ? item.tooltip : ''
     return (

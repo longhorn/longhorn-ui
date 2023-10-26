@@ -29,9 +29,9 @@ export default {
       const data = yield call(listObjectStores, payload)
       yield put({ type: 'listObjectStores', payload: { ...data } })
     },
-    *get({ payload }, { call, get }) {
+    *get({ payload }, { call, put }) {
       const data = yield call(getObjectStore, payload)
-      yield get({ type: 'getObjectStore', payload: { ...data } })
+      yield put({ type: 'getObjectStore', payload: { ...data } })
     },
     *create({ payload, callback }, { call, put }) {
       yield call(createObjectStore, payload)
