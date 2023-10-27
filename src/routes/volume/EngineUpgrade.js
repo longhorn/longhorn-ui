@@ -51,9 +51,9 @@ const modal = ({
   const options = engineImages.filter((engineImage) => {
     return items.findIndex((item) => {
       if (engineUpgradePerNodeLimit && engineUpgradePerNodeLimit.value !== '0') {
-        return item.engineImage === engineImage.image || !engineImage.default
+        return item.image === engineImage.image || !engineImage.default
       }
-      return item.engineImage === engineImage.image
+      return item.image === engineImage.image
     }) === -1
   }).map(engineImage => <Select.Option key={engineImage.image} value={engineImage.image}>{engineImage.image}</Select.Option>)
 
