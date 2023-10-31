@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Collapse, Select, Spin, Checkbox } from 'antd'
-import { ModalBlur, SizeInput } from '../../components'
+import { ModalBlur, SizeInput, EndpointInput } from '../../components'
 
 const FormItem = Form.Item
 const Panel = Collapse.Panel
@@ -70,6 +70,14 @@ const modal = ({
     setFieldsValue,
   }
 
+  const endpointInputProps = {
+    state: item,
+    tlsSecrets: item.tlsSecrets,
+    getFieldDecorator,
+    getFieldsValue,
+    setFieldsValue,
+  }
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -131,7 +139,14 @@ const modal = ({
         </FormItem>
 
         <Collapse>
-          <Panel header="Data Placement" key="1">
+          <Panel header="Endpoints" key="1">
+            <EndpointInput {...endpointInputProps}>
+            </EndpointInput>
+          </Panel>
+        </Collapse>
+
+        <Collapse>
+          <Panel header="Data Placement" key="2">
             <FormItem label="Number of Replicas" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('numberOfReplicas', {
                 initialValue: item.numberOfReplicas,
@@ -220,7 +235,7 @@ const modal = ({
         </Collapse>
 
         <Collapse>
-          <Panel header="Advanced Configurations" key="2">
+          <Panel header="Advanced Configurations" key="3">
             <FormItem label="Backend Data Engine" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('backendStoreDriver', {
                 initialValue: 'v1',

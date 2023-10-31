@@ -17,6 +17,7 @@ import BackupLabelInputForRecurring from './BackupLabelInputForRecurring/BackupL
 import ExpansionErrorDetail from './ExpansionErrorDetail/ExpansionErrorDetail'
 import AutoComplete from './AutoComplete/AutoComplete'
 import SizeInput from './SizeInput/SizeInput'
+import EndpointInput from './EndpointInput/EndpointInput'
 
 export {
   DropOption,
@@ -38,4 +39,5 @@ export {
   ExpansionErrorDetail,
   AutoComplete,
   SizeInput,
+  EndpointInput,
 }

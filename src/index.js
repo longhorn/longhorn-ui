@@ -13,6 +13,7 @@ import instanceManager from './models/instanceManager'
 import orphanedData from './models/orphanedData'
 import systemBackups from './models/systemBackups'
 import objectStore from './models/objectStore'
+import secret from './models/secret'
 
 // import assets
 import './assets/iconfont/iconfont.eot'
@@ -42,6 +43,7 @@ app.model(instanceManager)
 app.model(orphanedData)
 app.model(systemBackups)
 app.model(objectStore)
+app.model(secret)
 
 // 3. Router
 app.router(routerConfig)

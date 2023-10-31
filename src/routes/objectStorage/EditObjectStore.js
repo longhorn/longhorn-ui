@@ -63,7 +63,7 @@ const modal = ({
         <FormItem label="Name" {...formItemLayout}>
           {getFieldDecorator('name', {
             initialValue: selected.name,
-          })(<Input disabled="true" style={{ width: '80%' }} />)}
+          })(<Input disabled={true} style={{ width: '80%' }} />)}
         </FormItem>
         <SizeInput {...sizeInputProps}>
         </SizeInput>

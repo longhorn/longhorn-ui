@@ -66,6 +66,8 @@ class ObjectStore extends React.Component {
     const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
     const enableSPDKDataEngineValue = enableSPDKDataEngineSetting?.value === 'true'
 
+    const secret = this.props.secret.data
+
     let objectStores = data.filter((item) => {
       if (field === 'name') {
         return item[field] && item[field].indexOf(value.trim()) > -1
@@ -88,6 +90,7 @@ class ObjectStore extends React.Component {
         defaultDataLocalityValue,
         defaultRevisionCounterValue,
         enableSPDKDataEngineValue,
+        tlsSecrets: secret,
       },
       visible: this.state.createModalVisible,
       tagsLoading: false,
@@ -227,8 +230,9 @@ ObjectStore.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   setting: PropTypes.object,
+  secret: PropTypes.object,
 }
 
 export default connect(
-  ({ objectstorage, loading, setting }) => ({ objectstorage, loading: loading.models.objectStore, setting })
+  ({ objectstorage, loading, setting, secret }) => ({ objectstorage, loading: loading.models.objectStore, setting, secret })
 )(ObjectStore)
