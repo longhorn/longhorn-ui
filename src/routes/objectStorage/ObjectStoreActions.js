@@ -8,6 +8,11 @@ const confirm = Modal.confirm
 
 function actions({ selected, deleteObjectStore, editObjectStore, administrateObjectStore }) {
   const handleMenuClick = (event, record) => {
+    // Stop event propagation, otherwise the click will be processed by
+    // other UI components, e.g. the table row below the clicked menu,
+    // which is not wanted in that case.
+    event.domEvent.stopPropagation()
+
     switch (event.key) {
       case 'delete':
         confirm({

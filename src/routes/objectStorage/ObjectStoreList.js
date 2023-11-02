@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Table, Tooltip } from 'antd'
 import { pagination } from '../../utils/page'
 import ObjectStoreActions from './ObjectStoreActions'
+import { sortTable } from '../../utils/sort'
+import { setSortOrder } from '../../utils/store'
 
 function list({
   dataSource,
@@ -12,6 +14,9 @@ function list({
   editObjectStore,
   administrateObjectStore,
   deleteObjectStore,
+  onSorterChange,
+  sorter,
+  onRowClick,
 }) {
   const actionsProps = {
     editObjectStore,
@@ -35,6 +40,7 @@ function list({
       dataIndex: 'state',
       key: 'state',
       width: 160,
+      sorter: (a, b) => sortTable(a, b, 'state'),
       render: (text, record) => {
         const tooltip = `Object Store ${record.name} is ${record.state}`
         const colormap = storeStateColorMap[record.state] || { color: '', bg: '' }
@@ -52,6 +58,7 @@ function list({
       dataIndex: 'name',
       key: 'name',
       width: 200,
+      sorter: (a, b) => sortTable(a, b, 'name'),
       render: (text, record) => {
         return (
           <div>{record.name}</div>
@@ -82,17 +89,21 @@ function list({
     },
   ]
 
+  setSortOrder(columns, sorter)
+
   return (
     <div id="objectStoreTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
         className="common-table-class"
         bordered={false}
         columns={columns}
+        onChange={(p, f, s) => onSorterChange(s)}
         rowSelection={rowSelection}
         dataSource={dataSource}
         loading={loading}
+        onRowClick={onRowClick}
         simple
-        pagination={pagination}
+        pagination={pagination('objectStoreSize')}
         rowKey={record => record.id}
         scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
       />
@@ -108,6 +119,9 @@ list.propTypes = {
   editObjectStore: PropTypes.func,
   administrateObjectStore: PropTypes.func,
   deleteObjectStore: PropTypes.func,
+  sorter: PropTypes.object,
+  onSorterChange: PropTypes.func,
+  onRowClick: PropTypes.func,
 }
 
 export default list

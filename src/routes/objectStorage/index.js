@@ -22,6 +22,7 @@ class ObjectStore extends React.Component {
       createModalKey: Math.random(),
       editModalVisible: false,
       editModalKey: Math.random(),
+      commandKeyDown: false,
     }
   }
 
@@ -37,12 +38,38 @@ class ObjectStore extends React.Component {
       })
       this.props.dispatch({ type: 'app/changeNavbar' })
     }
+    window.addEventListener('keydown', this.onKeyDown)
+    window.addEventListener('keyup', this.onKeyUp)
+  }
+
+  componentWillUnmount() {
+    window.onresize = () => {
+      this.props.dispatch({ type: 'app/changeNavbar' })
+    }
+    window.removeEventListener('keydown', this.onKeyDown)
+    window.removeEventListener('keyup', this.onKeyUp)
+  }
+
+  onKeyUp = () => {
+    this.setState({
+      ...this.state,
+      commandKeyDown: false,
+    })
+  }
+
+  onKeyDown = (e) => {
+    if ((e.keyCode === 91 || e.keyCode === 17) && !this.state.commandKeyDown) {
+      this.setState({
+        ...this.state,
+        commandKeyDown: true,
+      })
+    }
   }
 
   showCreateModal = () => {
     this.setState({
       ...this.state,
-      selected: {},
+      selectedRows: [],
       createModalVisible: true,
       createModalKey: Math.random(),
     })
@@ -51,7 +78,7 @@ class ObjectStore extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { data } = this.props.objectstorage
+    const { data, sorter } = this.props.objectstorage
     const { field, value } = queryString.parse(this.props.location.search)
 
     const settings = this.props.setting.data
@@ -113,7 +140,7 @@ class ObjectStore extends React.Component {
     }
 
     const editModalProps = {
-      selected: this.state.selected,
+      selected: this.state.selectedRows[0],
       visible: this.state.editModalVisible,
       onCancel() {
         me.setState({
@@ -142,14 +169,14 @@ class ObjectStore extends React.Component {
         onChange(_, records) {
           me.setState({
             ...me.state,
-            selectedRows: records,
+            selectedRows: [...records],
           })
         },
       },
       editObjectStore: (record) => {
-        this.setState({
-          ...this.state,
-          selected: record,
+        me.setState({
+          ...me.state,
+          selectedRows: [record],
           editModalVisible: true,
           editModalKey: Math.random(),
         })
@@ -163,6 +190,33 @@ class ObjectStore extends React.Component {
         dispatch({
           type: 'objectstorage/delete',
           payload: record,
+        })
+      },
+      onSorterChange: (s) => {
+        dispatch({
+          type: 'objectstorage/updateSorter',
+          payload: { field: s.field, order: s.order, columnKey: s.columnKey },
+        })
+      },
+      sorter,
+      onRowClick: (record) => {
+        let selecteRowByClick = [record]
+        if (me.state.commandKeyDown) {
+          me.state.selectedRows.forEach((item) => {
+            if (selecteRowByClick.every((ele) => {
+              return ele.id !== item.id
+            })) {
+              selecteRowByClick.push(item)
+            } else {
+              selecteRowByClick = selecteRowByClick.filter((ele) => {
+                return ele.id !== item.id
+              })
+            }
+          })
+        }
+        me.setState({
+          ...me.state,
+          selectedRows: [...selecteRowByClick],
         })
       },
     }
@@ -197,7 +251,7 @@ class ObjectStore extends React.Component {
           payload: record,
           callback: () => {
             me.setState({
-              ...this.state,
+              ...me.state,
               selectedRows: [],
             })
           },

@@ -2,15 +2,16 @@ import { listObjectStores, getObjectStore, createObjectStore, deleteObjectStore 
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import { getSorter, saveSorter } from '../utils/store'
 
 export default {
   namespace: 'objectstorage',
   state: {
     ws: null,
     data: [],
-    selected: {},
     resourceType: 'objectstore',
     socketStatus: 'closed',
+    sorter: getSorter('objectstoreList.sorter'),
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -81,6 +82,10 @@ export default {
     },
     updateWs(state, action) {
       return { ...state, ws: action.payload }
+    },
+    updateSorter(state, action) {
+      saveSorter('objectstoreList.sorter', action.payload)
+      return { ...state, sorter: action.payload }
     },
   },
 }
