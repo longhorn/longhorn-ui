@@ -19,7 +19,7 @@ function actions({ selected, deleteEngineImage }) {
     }
   }
 
-  const availableActions = [{ key: 'delete', name: 'Delete' }]
+  const availableActions = [{ key: 'delete', name: 'Delete', disabled: selected.default }]
 
   return (
     <DropOption menuOptions={availableActions}
