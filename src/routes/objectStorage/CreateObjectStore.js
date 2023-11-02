@@ -46,6 +46,12 @@ const modal = ({
         ...getFieldsValue(),
         size: `${getFieldsValue().size}${getFieldsValue().unit}`,
         staleReplicaTimeout: 2880,
+        endpoints: [
+          {
+            domainName: `${getFieldsValue().domainName}`,
+            secretName: `${getFieldsValue().tlsSecret}`,
+          },
+        ],
       }
 
       if (data.unit) { delete data.unit }

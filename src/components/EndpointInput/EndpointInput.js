@@ -12,20 +12,30 @@ class EndpointInput extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator, getFieldsValue, setFieldsValue } = this.props
     const { tlsSecrets } = this.props
+
+    function secretSelect(value) {
+      setFieldsValue({
+        ...getFieldsValue(),
+        tlsSecret: value,
+      })
+    }
 
     return (
       <div style={{ display: 'flex' }}>
         <FormItem label="Domain Name" style={{ flex: 0.6 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-          <Input placeholder={this.state.domainName} />
+          {getFieldDecorator('domainName', {})(<Input placeholder={this.state.domainName} />)}
         </FormItem>
 
-        <FormItem label="TLS Secret" style={{ flex: 0.6 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-          <Select>
-            {tlsSecrets.map((opt) => {
-              return (<Option key={opt.name}>{opt.name}</Option>)
-            })}
-          </Select>
+        <FormItem label="TLS Secret" style={{ flex: 0.6 }} labelCol={{ span: 8 }} apperCol={{ span: 14 }}>
+          {getFieldDecorator('tlsSecret', {})(
+            <Select onChange={secretSelect}>
+              {tlsSecrets.map((opt) => {
+                return (<Option key={opt.name}>{opt.name}</Option>)
+              })}
+            </Select>
+          )}
         </FormItem>
       </div>
     )

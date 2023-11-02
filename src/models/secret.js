@@ -27,7 +27,6 @@ export default {
   effects: {
     *query({ payload }, { call, put }) {
       const data = yield call(listSecrets, payload)
-      console.log(data)
       yield put({ type: 'listSecrets', payload: { ...data } })
     },
     *startWS({ payload }, { select }) {
