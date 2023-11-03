@@ -7,6 +7,7 @@ const confirm = Modal.confirm
 
 function actions({ selected, showEditDisksModal, deleteHost }) {
   const handleMenuClick = (event, record) => {
+    event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'editDisk':
         showEditDisksModal(record)

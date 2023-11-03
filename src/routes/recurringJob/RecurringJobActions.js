@@ -6,6 +6,7 @@ const confirm = Modal.confirm
 
 function actions({ selected, deleteRecurringJob, editRecurringJob }) {
   const handleMenuClick = (event, record) => {
+    event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'delete':
         confirm({

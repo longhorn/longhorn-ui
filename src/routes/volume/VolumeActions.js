@@ -62,6 +62,7 @@ function actions({
     </div>)
   }
   const handleMenuClick = (event, record) => {
+    event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'attach':
         showAttachHost(record)
