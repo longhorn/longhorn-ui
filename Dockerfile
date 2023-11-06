@@ -13,7 +13,7 @@ RUN npm run build
 FROM registry.suse.com/bci/bci-base:15.4
 
 RUN zypper -n ref && \
-	zypper -n install curl libxml2 bash gettext shadow nginx
+	zypper -n install curl libxml2 bash gettext shadow nginx awk
 
 SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
@@ -21,11 +21,13 @@ RUN mkdir -p web/dist
 WORKDIR /web
 
 COPY --from=builder /web/dist /web/dist
-COPY --from=builder /web/nginx.conf.template /etc/nginx/nginx.conf.template
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
+COPY entrypoint.sh /entrypoint.sh
 
 EXPOSE 8000
 ENV LONGHORN_MANAGER_IP http://localhost:9500
 ENV LONGHORN_UI_PORT 8000
+ENV LONGHORN_NAMESPACE longhorn-system
 
 RUN mkdir -p /var/config/nginx/ \
  && cp -r /etc/nginx/* /var/config/nginx/ \
@@ -35,4 +37,4 @@ RUN mkdir -p /var/config/nginx/ \
 # Use the uid of the default user (nginx) from the installed nginx package
 USER 499
 
-CMD ["/bin/bash", "-c", "envsubst '${LONGHORN_MANAGER_IP},${LONGHORN_UI_PORT}' < /etc/nginx/nginx.conf.template > /var/config/nginx/nginx.conf && nginx -c /var/config/nginx/nginx.conf -g 'daemon off;'"]
+ENTRYPOINT ["/entrypoint.sh"]

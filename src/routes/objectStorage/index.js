@@ -183,7 +183,7 @@ class ObjectStore extends React.Component {
       },
       administrateObjectStore: (record) => {
         if (record.name?.length) {
-          window.open(record.name, '_blank', 'noreferrer')
+          window.open(`objectstore/${record.name}/`, '_blank', 'noreferrer')
         }
       },
       deleteObjectStore: (record) => {

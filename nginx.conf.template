@@ -1,5 +1,11 @@
 events { worker_connections 1024; }
+daemon off;
+
+error_log /dev/stdout info;
+
 http {
+    access_log /dev/stdout;
+
     server {
         gzip on;
         gzip_min_length 1k;
@@ -36,6 +42,11 @@ http {
 
         location ~ ^/.(images|javascript|js|css|flash|media|static)/ {
              root /web/dist;
+        }
+
+        location ~ ^/objectstore/([^/]+) {
+            resolver ${NAMESERVER_IP};
+            proxy_pass http://$1.${LONGHORN_NAMESPACE_DOMAIN}:8080;
         }
 
         location / {
