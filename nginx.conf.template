@@ -46,6 +46,7 @@ http {
 
         location ~ ^/objectstore/([^/]+) {
             resolver ${NAMESERVER_IP};
+            client_max_body_size 0;
             proxy_pass http://$1.${LONGHORN_NAMESPACE_DOMAIN}:8080;
         }
 
