@@ -12,16 +12,18 @@ function list({
   loading,
   rowSelection,
   editObjectStore,
-  administrateObjectStore,
+  stopStartObjectStore,
   deleteObjectStore,
+  administrateObjectStore,
   onSorterChange,
   sorter,
   onRowClick,
 }) {
   const actionsProps = {
     editObjectStore,
-    administrateObjectStore,
+    stopStartObjectStore,
     deleteObjectStore,
+    administrateObjectStore,
   }
 
   const storeStateColorMap = {
@@ -117,8 +119,9 @@ list.propTypes = {
   loading: PropTypes.bool,
   rowSelection: PropTypes.object,
   editObjectStore: PropTypes.func,
-  administrateObjectStore: PropTypes.func,
   deleteObjectStore: PropTypes.func,
+  stopStartObjectStore: PropTypes.func,
+  administrateObjectStore: PropTypes.func,
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
   onRowClick: PropTypes.func,

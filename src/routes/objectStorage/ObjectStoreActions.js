@@ -6,7 +6,13 @@ import { isObjectStoreAdministrable, isObjectStoreDeletable, isObjectStoreEditab
 
 const confirm = Modal.confirm
 
-function actions({ selected, deleteObjectStore, editObjectStore, administrateObjectStore }) {
+function actions({
+  selected,
+  editObjectStore,
+  stopStartObjectStore,
+  deleteObjectStore,
+  administrateObjectStore,
+}) {
   const handleMenuClick = (event, record) => {
     // Stop event propagation, otherwise the click will be processed by
     // other UI components, e.g. the table row below the clicked menu,
@@ -30,6 +36,9 @@ function actions({ selected, deleteObjectStore, editObjectStore, administrateObj
       case 'edit':
         editObjectStore(record)
         break
+      case 'stopstart':
+        stopStartObjectStore(record)
+        break
       case 'administrate':
         administrateObjectStore(record)
         break
@@ -37,8 +46,18 @@ function actions({ selected, deleteObjectStore, editObjectStore, administrateObj
     }
   }
 
+  const stopStartName = (record) => {
+    switch (record.state) {
+      case 'stopped':
+        return 'Start'
+      default:
+        return 'Stop'
+    }
+  }
+
   const availableActions = [
     { key: 'edit', name: 'Edit', disabled: !isObjectStoreEditable(selected) },
+    { key: 'stopstart', name: stopStartName(selected), disabled: !isObjectStoreEditable(selected) },
     { key: 'delete', name: 'Delete', disabled: !isObjectStoreDeletable(selected) },
     { type: 'divider' },
     { key: 'administrate', name: 'Administrate', disabled: !isObjectStoreAdministrable(selected) },
@@ -54,6 +73,7 @@ function actions({ selected, deleteObjectStore, editObjectStore, administrateObj
 actions.propTypes = {
   selected: PropTypes.object,
   editObjectStore: PropTypes.func,
+  stopStartObjectStore: PropTypes.func,
   administrateObjectStore: PropTypes.func,
   deleteObjectStore: PropTypes.func,
 }

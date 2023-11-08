@@ -181,16 +181,31 @@ class ObjectStore extends React.Component {
           editModalKey: Math.random(),
         })
       },
-      administrateObjectStore: (record) => {
-        if (record.name?.length) {
-          window.open(`objectstore/${record.name}/`, '_blank', 'noreferrer')
+      stopStartObjectStore: (record) => {
+        record.endpoints = [] // Don't update any endpoints
+        switch (record.state) {
+          case 'stopped':
+            record.targetState = 'running'
+            break
+          default:
+            record.targetState = 'stopped'
+            break
         }
+        dispatch({
+          type: 'objectstorage/update',
+          payload: record,
+        })
       },
       deleteObjectStore: (record) => {
         dispatch({
           type: 'objectstorage/delete',
           payload: record,
         })
+      },
+      administrateObjectStore: (record) => {
+        if (record.name?.length) {
+          window.open(`objectstore/${record.name}/`, '_blank', 'noreferrer')
+        }
       },
       onSorterChange: (s) => {
         dispatch({
