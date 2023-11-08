@@ -1,5 +1,5 @@
 import { listSecrets } from '../services/secret'
-import { wsChanges } from '../utils/websocket'
+import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
 
@@ -51,6 +51,15 @@ export default {
         ...state,
         ...action.payload,
       }
+    },
+    updateBackground(state, action) {
+      return updateState(state, action)
+    },
+    updateSocketStatus(state, action) {
+      return { ...state, socketStatus: action.payload }
+    },
+    updateWs(state, action) {
+      return { ...state, ws: action.payload }
     },
   },
 }

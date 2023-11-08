@@ -9,17 +9,17 @@ export default {
   state: {
     ws: null,
     data: [],
-    resourceType: 'objectstore',
+    resourceType: 'objectStore',
     socketStatus: 'closed',
     sorter: getSorter('objectstoreList.sorter'),
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (enableQueryData(location.pathname, 'objectstore')) {
+        if (enableQueryData(location.pathname, 'objectstorage')) {
           dispatch({
             type: 'query',
-            payload: location.pathname.startsWith('/objectstore') ? queryString.parse(location.search) : {},
+            payload: location.pathname.startsWith('/objectstorage') ? queryString.parse(location.search) : {},
           })
         }
       })

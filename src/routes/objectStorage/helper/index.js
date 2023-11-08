@@ -5,6 +5,6 @@ export const generateRandomKey = (length = 16, allowedChars = 'abcdefghijklmnopq
 
 export const isObjectStoreEditable = (record) => !['unknown', 'terminating'].includes(record.state)
 
-export const isObjectStoreAdministrable = (record) => isObjectStoreEditable(record) && record.endpoints?.length
+export const isObjectStoreAdministrable = (record) => ['running'].includes(record.state)
 
 export const isObjectStoreDeletable = (record) => !['terminating'].includes(record.state)

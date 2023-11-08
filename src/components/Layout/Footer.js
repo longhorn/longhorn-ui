@@ -10,7 +10,7 @@ import semver from 'semver'
 import BundlesModel from './BundlesModel'
 import StableLonghornVersions from './StableLonghornVersions'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, objectstores, backup, systemBackups, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, objectstorage, secret, backup, systemBackups, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -128,7 +128,8 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(eventlog)}
           {getStatusIcon(backingImage)}
           {getStatusIcon(recurringJob)}
-          {getStatusIcon(objectstores)}
+          {getStatusIcon(objectstorage)}
+          {getStatusIcon(secret)}
           {getBackupStatusIcon(backup, 'backupVolumes')}
           {getBackupStatusIcon(backup, 'backups')}
           {getSystemBackupStatusIcon(systemBackups, 'systemBackup')}
@@ -149,11 +150,12 @@ Footer.propTypes = {
   eventlog: PropTypes.object,
   backingImage: PropTypes.object,
   recurringJob: PropTypes.object,
-  objectstores: PropTypes.object,
+  objectstorage: PropTypes.object,
+  secret: PropTypes.object,
   app: PropTypes.object,
   backup: PropTypes.object,
   systemBackups: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, objectstores, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, objectstores, backup, systemBackups }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, objectstorage, secret, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, objectstorage, secret, backup, systemBackups }))(Footer)

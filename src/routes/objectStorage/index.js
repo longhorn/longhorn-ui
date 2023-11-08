@@ -230,14 +230,14 @@ class ObjectStore extends React.Component {
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
         filterField && filterValue ? dispatch(routerRedux.push({
-          pathname: '/objectstores',
+          pathname: '/objectstorage',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: filterField,
             value: filterValue,
           }),
         })) : dispatch(routerRedux.push({
-          pathname: '/objectstores',
+          pathname: '/objectstorage',
           search: queryString.stringify({}),
         }))
       },
@@ -280,13 +280,13 @@ class ObjectStore extends React.Component {
 
 ObjectStore.propTypes = {
   objectstorage: PropTypes.object,
+  secret: PropTypes.object,
+  setting: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
-  setting: PropTypes.object,
-  secret: PropTypes.object,
 }
 
 export default connect(
-  ({ objectstorage, loading, setting, secret }) => ({ objectstorage, loading: loading.models.objectStore, setting, secret })
+  ({ objectstorage, secret, setting, loading }) => ({ objectstorage, secret, setting, loading: loading.models.objectStore })
 )(ObjectStore)
