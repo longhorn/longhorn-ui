@@ -23,6 +23,8 @@ class ObjectStore extends React.Component {
       editModalVisible: false,
       editModalKey: Math.random(),
       commandKeyDown: false,
+      initialAccessKey: generateRandomKey(),
+      initialSecretKey: generateRandomKey(),
     }
   }
 
@@ -72,6 +74,8 @@ class ObjectStore extends React.Component {
       selectedRows: [],
       createModalVisible: true,
       createModalKey: Math.random(),
+      initialAccessKey: generateRandomKey(),
+      initialSecretKey: generateRandomKey(),
     })
   }
 
@@ -112,8 +116,8 @@ class ObjectStore extends React.Component {
 
     const createModalProps = {
       item: {
-        accesskey: generateRandomKey(),
-        secretkey: generateRandomKey(),
+        accesskey: this.state.initialAccessKey,
+        secretkey: this.state.initialSecretKey,
         numberOfReplicas: defaultNumberOfReplicas,
         diskTags: [],
         nodeTags: [],
