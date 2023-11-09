@@ -79,7 +79,7 @@ class ObjectStore extends React.Component {
     const me = this
     const { dispatch, loading, location } = this.props
     const { data, sorter } = this.props.objectstorage
-    const { field, value } = queryString.parse(this.props.location.search)
+    const { field, value, stateValue } = queryString.parse(this.props.location.search)
 
     const settings = this.props.setting.data
     const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -98,6 +98,10 @@ class ObjectStore extends React.Component {
     let objectStores = data.filter((item) => {
       if (field === 'name') {
         return item[field] && item[field].indexOf(value.trim()) > -1
+      } else if (field === 'status') {
+        return item.state && item.state === stateValue.trim()
+      } else if (field === 'endpoints') {
+        return item.endpoints && item.endpoints.some((endpoint) => endpoint.includes(value.trim()))
       }
       return true
     })
@@ -239,17 +243,29 @@ class ObjectStore extends React.Component {
     const filterProps = {
       location,
       defaultField: 'name',
+      stateOption: [
+        { value: 'running', name: 'Running' },
+        { value: 'stopped', name: 'Stopped' },
+      ],
+
       fieldOption: [
+        { value: 'status', name: 'State' },
         { value: 'name', name: 'Name' },
+        { value: 'endpoints', name: 'Endpoint' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue } = filter
-        filterField && filterValue ? dispatch(routerRedux.push({
+        const {
+          field: filterField,
+          value: filterValue,
+          stateValue: filterStateValue,
+        } = filter
+        filterField && (filterValue || filterStateValue) ? dispatch(routerRedux.push({
           pathname: '/objectstorage',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: filterField,
             value: filterValue,
+            stateValue: filterStateValue,
           }),
         })) : dispatch(routerRedux.push({
           pathname: '/objectstorage',

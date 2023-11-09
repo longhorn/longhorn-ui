@@ -8,3 +8,18 @@ export const isObjectStoreEditable = (record) => !['unknown', 'terminating'].inc
 export const isObjectStoreAdministrable = (record) => ['running'].includes(record.state)
 
 export const isObjectStoreDeletable = (record) => !['terminating'].includes(record.state)
+
+export function bytesToGi(value) {
+  const val = Number(value)
+  return Math.round(val / (1024 * 1024 * 1024))
+}
+
+export function getStorageStatus(percent) {
+  if (percent > 100 || percent < 0) {
+    return 'exception'
+  }
+  if (percent > 95) {
+    return 'active'
+  }
+  return 'success'
+}

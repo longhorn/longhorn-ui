@@ -1,10 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Tooltip } from 'antd'
+import { Progress, Table, Tooltip } from 'antd'
 import { pagination } from '../../utils/page'
 import ObjectStoreActions from './ObjectStoreActions'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
+import styles from './ObjectStoreList.less'
+import { bytesToGi, getStorageStatus } from './helper/index'
 
 function list({
   dataSource,
@@ -36,6 +38,10 @@ function list({
     error: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
   }
 
+  const computeUsage = (record) => {
+    return Math.round(record.occupiedSize / record.allocatedSize * 100)
+  }
+
   const columns = [
     {
       title: 'State',
@@ -64,6 +70,29 @@ function list({
       render: (text, record) => {
         return (
           <div>{record.name}</div>
+        )
+      },
+    },
+    {
+      title: 'Usage',
+      dataIndex: 'storageUsed',
+      key: 'usage',
+      width: 160,
+      className: styles.allocated,
+      sorter: (a, b) => computeUsage(a) - computeUsage(b),
+      render: (text, record) => {
+        const p = computeUsage(record)
+        return (
+          <div>
+            <div>
+              <Tooltip title={`${p}%`}>
+                <Progress strokeWidth={14} status={getStorageStatus(p)} percent={p > 100 ? 100 : p} showInfo={false} />
+              </Tooltip>
+            </div>
+            <div className={styles.secondLabel}>
+              {bytesToGi(record.occupiedSize)} / {bytesToGi(record.allocatedSize)} Gi
+            </div>
+          </div>
         )
       },
     },
