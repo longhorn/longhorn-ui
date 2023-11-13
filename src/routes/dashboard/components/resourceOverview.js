@@ -131,6 +131,7 @@ class ResourceOverview extends React.Component {
       faulted: faultedVolume(volume.data).length,
     }
 
+    // We do not represent autoEvicting in the resource overview. autoEvicting nodes are also unschedulable.
     const nodeInfo = {
       // Total. The total number of nodes.
       total: host.data.length,
@@ -238,6 +239,7 @@ class ResourceOverview extends React.Component {
       },
     }
 
+    // We do not represent autoEvicting in the resource overview. autoEvicting nodes are also unschedulable.
     const nodeInfoColors = [nodeStatusColorMap.schedulable.color, nodeStatusColorMap.unschedulable.color, nodeStatusColorMap.down.color, nodeStatusColorMap.disabled.color]
     const nodeInfoData = [
       { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable },
