@@ -6,6 +6,7 @@ const confirm = Modal.confirm
 
 function actions({ selected, deleteSystemRestore }) {
   const handleMenuClick = (event, record) => {
+    event.domEvent?.stopPropagation?.()
     let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name} ?</div>
     if (record.state === 'Pending' || record.state === 'Restoring' || record.state === 'Downloading') {
       title = (<div>

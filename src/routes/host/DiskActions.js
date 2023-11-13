@@ -6,6 +6,7 @@ const confirm = Modal.confirm
 
 function actions({ node, selected, updateDisk }) {
   const handleMenuClick = (event, record) => {
+    event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'togglingScheduling':
       {
