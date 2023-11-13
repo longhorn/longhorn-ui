@@ -9,7 +9,7 @@ import EditDisk from './EditDisk'
 import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
 import BulkEditNode from './BulkEditNode'
-import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus } from '../../utils/filter'
+import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus, autoEvictingNode } from '../../utils/filter'
 
 function Host({ host, volume, setting, loading, dispatch, location }) {
   let hostList = null
@@ -74,6 +74,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   const nodeFilterMap = {
     schedulable: schedulableNode,
     unschedulable: unschedulableNode,
+    autoEvicting: autoEvictingNode,
     schedulingDisabled: schedulingDisabledNode,
     down: downNode,
   }
@@ -321,6 +322,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     stateOption: [
       { value: 'schedulable', name: 'Schedulable' },
       { value: 'unschedulable', name: 'Unschedulable' },
+      { value: 'autoEvicting', name: 'AutoEvicting' },
       { value: 'schedulingDisabled', name: 'Disabled' },
       { value: 'down', name: 'Down' },
     ],
