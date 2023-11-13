@@ -54,23 +54,19 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backDetailTable').offsetHeight - C.ContainerMarginHeight
-    this.setState({
-      height,
-    })
-    window.onresize = () => {
-      height = document.getElementById('backDetailTable').offsetHeight - C.ContainerMarginHeight
-      this.setState({
-        height,
-      })
-      this.props.dispatch({ type: 'app/changeNavbar' })
-    }
+    this.onResize()
+    window.addEventListener('resize', this.onResize)
   }
 
   componentWillUnmount() {
-    window.onresize = () => {
-      this.props.dispatch({ type: 'app/changeNavbar' })
-    }
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  onResize = () => {
+    const height = document.getElementById('backDetailTable').offsetHeight - C.ContainerMarginHeight
+    this.setState({
+      height,
+    })
   }
 
   fomartData = (data, key) => {
