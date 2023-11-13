@@ -18,19 +18,26 @@ const isSchedulable = (node) => node.conditions && node.conditions.Schedulable &
                                                 && node.conditions.Ready && node.conditions.Ready.status.toLowerCase() === 'true'
                                                 && node.allowScheduling === true
                                                 && (Object.values(node.disks).some(d => d.allowScheduling === true) && Object.values(node.disks).some(d => d.conditions && d.conditions.Schedulable.status.toLowerCase() === 'true'))
+const isUnschedulable = (node) => (node.conditions && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === false || (d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status.toLowerCase() === 'false') || (d.conditions && d.conditions.Ready && d.conditions.Ready.status.toLowerCase() === 'false'))) || (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status.toLowerCase() === 'false')
+const isAutoEvicting = (node) => node.conditions && node.conditions.Ready && node.conditions.Ready.status.toLowerCase() === 'true'
+                                                 && node.conditions.Schedulable && node.conditions.Schedulable.status.toLowerCase() === 'false'
+                                                 && node.allowScheduling === true
+                                                 && node.autoEvicting === true
 const isDisabled = (node) => node.conditions && node.conditions.Ready && node.conditions.Ready.status.toLowerCase() === 'true'
                                              && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))
-const isUnschedulable = (node) => (node.conditions && node.allowScheduling === true && Object.values(node.disks).every(d => d.allowScheduling === false || (d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status.toLowerCase() === 'false') || (d.conditions && d.conditions.Ready && d.conditions.Ready.status.toLowerCase() === 'false'))) || (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status.toLowerCase() === 'false')
 const isDown = (node) => node.conditions && node.conditions.Ready && node.conditions.Ready.status.toLowerCase() === 'false'
 export const nodeStatusColorMap = {
   schedulable: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
   unschedulable: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
+  // autoEvicting nodes are a subset of unschedulable nodes. We use the same color to represent both.
+  autoEvicting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
   down: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
   disabled: { color: '#dee1e3', bg: 'rgba(222,225,227,.05)' },
   unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
 }
 export function getNodeStatus(node) {
-  const p = [{ key: 'down', name: 'Down', determine: isDown }, { key: 'disabled', name: 'Disabled', determine: isDisabled }, { key: 'unschedulable', name: 'Unschedulable', determine: isUnschedulable }, { key: 'schedulable', name: 'Schedulable', determine: isSchedulable }]
+  // autoEvicting nodes are a subset of unschedulable nodes and the autoEvicting status takes precedence for display.
+  const p = [{ key: 'down', name: 'Down', determine: isDown }, { key: 'disabled', name: 'Disabled', determine: isDisabled }, { key: 'autoEvicting', name: 'AutoEvicting', determine: isAutoEvicting }, { key: 'unschedulable', name: 'Unschedulable', determine: isUnschedulable }, { key: 'schedulable', name: 'Schedulable', determine: isSchedulable }]
   for (let i = 0; i < p.length; i++) {
     if (p[i].determine(node)) {
       return { key: p[i].key, name: p[i].name }
@@ -40,16 +47,19 @@ export function getNodeStatus(node) {
 }
 
 // Schedulable (green)
-// a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, and ANY of THOSE disk.state == Schedulable).
+// Node is Ready and Schedulable by condition. Node is Schedulable by policy. At least one disk is schedulable by policy and condition.
 export function schedulableNode(data) { return data.filter(node => isSchedulable(node)) }
 // Unschedulable (yellow)
-// a. Node.Status == UP, and Node.AllowScheduling == true, and (ANY of the node.disk.AllowScheduling == true, but ALL of THOSE disks.State == Unschedulable).
+// Node is Ready by condition. Node is Schedulable by policy. Either node is not Schedulable by condition or all disks are not Ready or not Schedulable by condition.
 export function unschedulableNode(data) { return data.filter(node => (isUnschedulable(node) && !isDisabled(node) && !isDown(node))) }
+// AutoEvicting (also yellow)
+// Node is Ready but not Schedulable by condition. Node is Schedulable by policy. Node is AutoEvicting.
+export function autoEvictingNode(data) { return data.filter(node => (isAutoEvicting(node))) }
 // Scheduling disabled (grey)
-// a. Node.Status == UP, and (either node.AllowScheduling == false, or ALL of the disk.AllowScheduling == false)
+// Node is Ready by condition. Either node is not Schedulable by policy or all disks are not Schedulable by policy.
 export function schedulingDisabledNode(data) { return data.filter(node => isDisabled(node)) }
 // Down (red)
-// Node.Status == Down.
+// Node is not ready by condition.
 export function downNode(data) { return data.filter(node => isDown(node)) }
 
 function filterData(data, field, value) {
