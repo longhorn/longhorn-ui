@@ -9,10 +9,12 @@ class SizeInput extends React.Component {
   state = {
     size: 1,
     unit: 'Gi',
+    mustExpand: false,
   }
 
   render() {
     const { getFieldDecorator, getFieldsValue, setFieldsValue } = this.props
+    const { size, unit, mustExpand } = this.props.state
 
     function unitChange(value) {
       const unitmap = new Map([
@@ -41,7 +43,7 @@ class SizeInput extends React.Component {
       <div style={{ display: 'flex' }}>
         <FormItem label="Size" style={{ flex: 0.6 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
           {getFieldDecorator('size', {
-            initialValue: this.state.size,
+            initialValue: size,
             rules: [
               {
                 required: true,
@@ -56,6 +58,8 @@ class SizeInput extends React.Component {
                     callback('The value should be between 0 and 65535')
                   } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
                     callback('This value should have at most two decimal places')
+                  } else if (mustExpand && value < size) {
+                    callback(`Size should be larger than ${size} ${unit}`)
                   } else if (value < 10 && getFieldsValue().unit === 'Mi') {
                     callback('The volume size must be greater than 10 Mi')
                   } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
@@ -70,13 +74,13 @@ class SizeInput extends React.Component {
         </FormItem>
         <FormItem>
           {getFieldDecorator('unit', {
-            initialValue: this.state.unit,
+            initialValue: unit,
             rules: [{ required: true, message: 'Please select your unit!' }],
           })(
-            <Select style={{ width: '100px' }} onChange={unitChange} placeholder="Gi">
-              <Option value="Mi">Mi</Option>
-              <Option value="Gi">Gi</Option>
-              <Option value="Ti">Ti</Option>
+            <Select style={{ width: '100px' }} onChange={unitChange} placeholder="GiB">
+              <Option value="Mi">MiB</Option>
+              <Option value="Gi">GiB</Option>
+              <Option value="Ti">TiB</Option>
             </Select>,
           )}
         </FormItem>

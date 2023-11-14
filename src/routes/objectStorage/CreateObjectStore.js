@@ -288,6 +288,13 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
+
+            <FormItem label="From Backup" hasFeedback {...formItemLayout}>
+              {getFieldDecorator('fromBackup', {
+                initialValue: item.fromBackup,
+                rules: [],
+              })(<Input />)}
+            </FormItem>
           </Panel>
         </Collapse>
       </Form>

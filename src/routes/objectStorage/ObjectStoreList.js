@@ -6,7 +6,7 @@ import ObjectStoreActions from './ObjectStoreActions'
 import { sortTable } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import styles from './ObjectStoreList.less'
-import { bytesToGi, getStorageStatus } from './helper/index'
+import { bytesToGiB, getStorageStatus } from './helper/index'
 
 function list({
   dataSource,
@@ -90,7 +90,7 @@ function list({
               </Tooltip>
             </div>
             <div className={styles.secondLabel}>
-              {bytesToGi(record.occupiedSize)} / {bytesToGi(record.allocatedSize)} Gi
+              {bytesToGiB(record.occupiedSize)} / {bytesToGiB(record.allocatedSize)} GiB
             </div>
           </div>
         )

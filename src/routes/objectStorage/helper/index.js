@@ -9,7 +9,7 @@ export const isObjectStoreAdministrable = (record) => ['running'].includes(recor
 
 export const isObjectStoreDeletable = (record) => !['terminating'].includes(record.state)
 
-export function bytesToGi(value) {
+export function bytesToGiB(value) {
   const val = Number(value)
   return Math.round(val / (1024 * 1024 * 1024))
 }

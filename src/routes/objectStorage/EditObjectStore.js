@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input } from 'antd'
 import { ModalBlur, SizeInput } from '../../components'
+import { bytesToGiB } from './helper'
 
 const FormItem = Form.Item
 
@@ -36,6 +37,9 @@ const modal = ({
       }
 
       if (data.unit) { delete data.unit }
+      // don't send data if it's not changed
+      if (data.image === selected.image) { delete data.image }
+      if (data.uiImage === selected.uiImage) { delete data.uiImage }
 
       onOk(data)
     })
@@ -51,7 +55,11 @@ const modal = ({
   }
 
   const sizeInputProps = {
-    state: selected,
+    state: {
+      size: bytesToGiB(selected.allocatedSize),
+      unit: 'Gi',
+      mustExpand: true,
+    },
     getFieldDecorator,
     getFieldsValue,
     setFieldsValue,
@@ -67,6 +75,16 @@ const modal = ({
         </FormItem>
         <SizeInput {...sizeInputProps}>
         </SizeInput>
+        <FormItem label="Image" {...formItemLayout}>
+          {getFieldDecorator('image', {
+            initialValue: selected.image,
+          })(<Input style={{ width: '80%' }} />)}
+        </FormItem>
+        <FormItem label="UI Image" {...formItemLayout}>
+          {getFieldDecorator('uiImage', {
+            initialValue: selected.uiImage,
+          })(<Input style={{ width: '80%' }} />)}
+        </FormItem>
       </Form>
     </ModalBlur>
   )
