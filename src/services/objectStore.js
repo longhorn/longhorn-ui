@@ -7,13 +7,6 @@ export async function listObjectStores() {
   })
 }
 
-export async function getObjectStore(name) {
-  return request({
-    url: `/v1/objectstores/${name}`,
-    method: 'get',
-  })
-}
-
 export async function createObjectStore(params) {
   return request({
     url: '/v1/objectstores',

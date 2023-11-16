@@ -56,7 +56,7 @@ const modal = ({
 
   const sizeInputProps = {
     state: {
-      size: bytesToGiB(selected.allocatedSize),
+      size: bytesToGiB(selected.size),
       unit: 'Gi',
       mustExpand: true,
     },

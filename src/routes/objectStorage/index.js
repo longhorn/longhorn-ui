@@ -193,7 +193,11 @@ class ObjectStore extends React.Component {
         })
       },
       stopStartObjectStore: (record) => {
-        record.endpoints = [] // Don't update any endpoints
+        // don't update any properties besides the target state
+        delete record.endpoints
+        delete record.size
+        delete record.image
+        delete record.uiImage
         switch (record.state) {
           case 'stopped':
             record.targetState = 'running'

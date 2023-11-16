@@ -1,4 +1,4 @@
-import { listObjectStores, getObjectStore, createObjectStore, updateObjectStore, deleteObjectStore } from '../services/objectStore'
+import { listObjectStores, createObjectStore, updateObjectStore, deleteObjectStore } from '../services/objectStore'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
@@ -29,10 +29,6 @@ export default {
     *query({ payload }, { call, put }) {
       const data = yield call(listObjectStores, payload)
       yield put({ type: 'listObjectStores', payload: { ...data } })
-    },
-    *get({ payload }, { call, put }) {
-      const data = yield call(getObjectStore, payload)
-      yield put({ type: 'getObjectStore', payload: { ...data } })
     },
     *create({ payload, callback }, { call, put }) {
       yield call(createObjectStore, payload)

@@ -39,7 +39,7 @@ function list({
   }
 
   const computeUsage = (record) => {
-    return Math.round(record.occupiedSize / record.allocatedSize * 100)
+    return Math.round(record.actualSize / record.size * 100)
   }
 
   const columns = [
@@ -90,7 +90,7 @@ function list({
               </Tooltip>
             </div>
             <div className={styles.secondLabel}>
-              {bytesToGiB(record.occupiedSize)} / {bytesToGiB(record.allocatedSize)} GiB
+              {bytesToGiB(record.actualSize)} / {bytesToGiB(record.size)} GiB
             </div>
           </div>
         )
