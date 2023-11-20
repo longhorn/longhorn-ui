@@ -29,6 +29,7 @@ function actions({
   showUpdateSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
+  showUpdateReplicaDiskSoftAntiAffinityModal,
   showOfflineReplicaRebuildingModal,
   commandKeyDown,
 }) {
@@ -137,6 +138,9 @@ function actions({
       case 'updateReplicaZoneSoftAntiAffinity':
         showUpdateReplicaZoneSoftAntiAffinityModal(record)
         break
+      case 'updateReplicaDiskSoftAntiAffinity':
+        showUpdateReplicaDiskSoftAntiAffinityModal(record)
+        break
       case 'updateOfflineReplicaRebuilding':
         showOfflineReplicaRebuildingModal(record)
         break
@@ -209,6 +213,7 @@ function actions({
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
+    { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
     { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.backendStoreDriver !== 'v2' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]

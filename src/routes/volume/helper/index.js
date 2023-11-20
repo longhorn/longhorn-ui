@@ -460,6 +460,22 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       }
       replicaSoftAntiAffinityVolumes = volumes
       break
+    case 'updateReplicaDiskSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaDiskSoftAntiAffinity',
+        key: 'replicaDiskSoftAntiAffinity',
+        name: 'Replica Disk Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = [volume]
+      break
+    case 'updateBulkReplicaDiskSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaDiskSoftAntiAffinity',
+        key: 'replicaDiskSoftAntiAffinity',
+        name: 'Replica Disk Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = volumes
+      break
     default:
   }
   return {

@@ -537,6 +537,15 @@ class Volume extends React.Component {
           },
         })
       },
+      showUpdateReplicaDiskSoftAntiAffinityModal(record) {
+        dispatch({
+          type: 'volume/showUpdateReplicaSoftAntiAffinityModal',
+          payload: {
+            volume: record,
+            softAntiAffinityKey: 'updateReplicaDiskSoftAntiAffinity',
+          },
+        })
+      },
       showOfflineReplicaRebuildingModal(record) {
         dispatch({
           type: 'volume/showOfflineReplicaRebuildingModal',
@@ -1029,6 +1038,15 @@ class Volume extends React.Component {
           payload: {
             volumes: record,
             softAntiAffinityKey: 'updateBulkReplicaZoneSoftAntiAffinity',
+          },
+        })
+      },
+      showUpdateReplicaDiskSoftAntiAffinityModal(record) {
+        dispatch({
+          type: 'volume/showBulkUpdateReplicaSoftAntiAffinityModal',
+          payload: {
+            volumes: record,
+            softAntiAffinityKey: 'updateBulkReplicaDiskSoftAntiAffinity',
           },
         })
       },
