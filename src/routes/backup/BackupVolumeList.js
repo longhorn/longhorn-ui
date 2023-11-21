@@ -23,27 +23,23 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backTable').offsetHeight - C.ContainerMarginHeight
-    this.setState({
-      height,
-    })
-    window.onresize = () => {
-      height = document.getElementById('backTable').offsetHeight - C.ContainerMarginHeight
-      this.setState({
-        height,
-      })
-      this.props.dispatch({ type: 'app/changeNavbar' })
-    }
+    this.onResize()
+    window.addEventListener('resize', this.onResize)
     window.addEventListener('keydown', this.onkeydown)
     window.addEventListener('keyup', this.onkeyup)
   }
 
   componentWillUnmount() {
-    window.onresize = () => {
-      this.props.dispatch({ type: 'app/changeNavbar' })
-    }
+    window.removeEventListener('resize', this.onResize)
     window.removeEventListener('keydown', this.onkeydown)
     window.removeEventListener('keyup', this.onkeyup)
+  }
+
+  onResize = () => {
+    const height = document.getElementById('backTable').offsetHeight - C.ContainerMarginHeight
+    this.setState({
+      height,
+    })
   }
 
   fomartData = (data, key) => {

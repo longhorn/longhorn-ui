@@ -352,7 +352,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <Tooltip title={'Provides the binary to start and communicate with the volume engine/replicas.'}>
           <span className={styles.label}> Engine Image:</span>
         </Tooltip>
-        {selectedVolume.engineImage}
+        {selectedVolume.image}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Created:</span>
@@ -404,10 +404,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Replica Zone Soft Anti Affinity:</span>
         {selectedVolume?.replicaZoneSoftAntiAffinity}
       </div>
-      {
-        selectedVolume.kubernetesStatus ? <div>
-          {
-            selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
+      <div className={styles.row}>
+        <span className={styles.label}> Replica Disk Soft Anti Affinity:</span>
+        {selectedVolume?.replicaDiskSoftAntiAffinity}
+      </div>
+      { selectedVolume.kubernetesStatus ? <div>
+          { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
               {selectedVolume.kubernetesStatus.lastPVCRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPVCRefAt) : ''}
             </div> : ''

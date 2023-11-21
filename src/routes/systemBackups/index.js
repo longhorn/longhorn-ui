@@ -30,23 +30,22 @@ class SystemBackups extends React.Component {
   }
 
   componentDidMount() {
-    let systemBackupsHeight = document.getElementById('systemBackupsTable').offsetHeight - C.ContainerMarginHeight - 60
-    let systemRestoresHeight = document.getElementById('systemRestoresTable').offsetHeight - C.ContainerMarginHeight + 5
+    this.onResize()
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  onResize = () => {
+    const systemBackupsHeight = document.getElementById('systemBackupsTable').offsetHeight - C.ContainerMarginHeight - 60
+    const systemRestoresHeight = document.getElementById('systemRestoresTable').offsetHeight - C.ContainerMarginHeight + 5
     this.setState({
       ...this.state,
       systemBackupsHeight,
       systemRestoresHeight,
     })
-    window.onresize = () => {
-      systemBackupsHeight = document.getElementById('systemBackupsTable').offsetHeight - C.ContainerMarginHeight - 60
-      systemRestoresHeight = document.getElementById('systemRestoresTable').offsetHeight - C.ContainerMarginHeight + 5
-      this.setState({
-        ...this.state,
-        systemBackupsHeight,
-        systemRestoresHeight,
-      })
-      this.props.dispatch({ type: 'app/changeNavbar' })
-    }
   }
 
   render() {

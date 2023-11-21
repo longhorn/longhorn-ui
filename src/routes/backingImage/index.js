@@ -22,17 +22,19 @@ class BackingImage extends React.Component {
   }
 
   componentDidMount() {
-    let height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
+    this.onResize()
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  onResize = () => {
+    const height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
-    window.onresize = () => {
-      height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
-      this.setState({
-        height,
-      })
-      this.props.dispatch({ type: 'app/changeNavbar' })
-    }
   }
 
   uploadFile = (file, record) => {

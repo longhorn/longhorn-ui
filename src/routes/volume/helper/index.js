@@ -460,6 +460,22 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       }
       replicaSoftAntiAffinityVolumes = volumes
       break
+    case 'updateReplicaDiskSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaDiskSoftAntiAffinity',
+        key: 'replicaDiskSoftAntiAffinity',
+        name: 'Replica Disk Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = [volume]
+      break
+    case 'updateBulkReplicaDiskSoftAntiAffinity':
+      feilds = {
+        actionKey: 'updateReplicaDiskSoftAntiAffinity',
+        key: 'replicaDiskSoftAntiAffinity',
+        name: 'Replica Disk Soft Anti Affinity',
+      }
+      replicaSoftAntiAffinityVolumes = volumes
+      break
     default:
   }
   return {
@@ -564,7 +580,7 @@ export const frontends = [
 ]
 
 export function disabledSnapshotAction(volume, modelState) {
-  return !volume.actions || !volume.actions.snapshotCreate || !modelState || volume.currentImage !== volume.engineImage || volume.standby
+  return !volume.actions || !volume.actions.snapshotCreate || !modelState || volume.currentImage !== volume.image || volume.standby
 }
 
 export function extractImageVersion(image) {

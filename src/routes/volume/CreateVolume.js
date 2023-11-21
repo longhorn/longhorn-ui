@@ -298,6 +298,15 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
+            <FormItem label="Replica Disk Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('replicaDiskSoftAntiAffinity', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+              </Select>)}
+            </FormItem>
             { getFieldsValue().backendStoreDriver === 'v2' && <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('offlineReplicaRebuilding', {
                 initialValue: 'ignored',
