@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Progress, Table, Tooltip } from 'antd'
+import { Progress, Table, Tooltip, Tag } from 'antd'
 import { pagination } from '../../utils/page'
 import ObjectStoreActions from './ObjectStoreActions'
 import { sortTable } from '../../utils/sort'
@@ -102,8 +102,16 @@ function list({
       key: 'endpoints',
       width: 500,
       render: (text, record) => {
+        let tags = []
+        if (record.endpoints !== null && record.endpoints.length > 0) {
+          for (const endpoint of record.endpoints) {
+            tags.push(<Tag>{endpoint}</Tag>)
+          }
+        }
         return (
-          <div>{record.endpoints}</div>
+          <div>
+          {tags}
+          </div>
         )
       },
     },

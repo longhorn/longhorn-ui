@@ -46,12 +46,21 @@ const modal = ({
         ...getFieldsValue(),
         size: `${getFieldsValue().size}${getFieldsValue().unit}`,
         staleReplicaTimeout: 2880,
-        endpoints: [
-          {
-            domainName: `${getFieldsValue().domainName}`,
-            secretName: `${getFieldsValue().tlsSecret}`,
-          },
-        ],
+        endpoints: [],
+      }
+
+      if (getFieldsValue().domainName) {
+        let endpoint = {
+          domainName: `${getFieldsValue().domainName}`,
+        }
+
+        if (getFieldsValue().tlsSecret) {
+          endpoint.secretName = `${getFieldsValue().tlsSecret}`
+        } else {
+          endpoint.secretName = ''
+        }
+
+        data.endpoints.push(endpoint)
       }
 
       if (data.unit) { delete data.unit }
