@@ -25,7 +25,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   })
 
   if (isSchedulingFailure(selectedVolume)) {
-    const scheduledConditions = selectedVolume?.conditions?.scheduled
+    const scheduledConditions = selectedVolume?.conditions?.Scheduled
     if (scheduledConditions) {
       const { reason, message } = scheduledConditions
       errorMsg = (
@@ -44,6 +44,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       )
     }
   }
+
   const computeActualSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].actualSize ? selectedVolume.controllers[0].actualSize : ''
   const defaultImage = engineImages.find(image => image.default === true)
   const healthState = getHealthState(selectedVolume.robustness)
