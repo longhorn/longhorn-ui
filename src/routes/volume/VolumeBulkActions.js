@@ -144,7 +144,7 @@ function bulkActions({ selectedRows, engineImages, bulkDeleteVolume, showBulkEng
       return false
     })
   }
-  const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.scheduled && item.conditions.scheduled.status && item.conditions.scheduled.status.toLowerCase() === 'true')
+  const conditionsScheduled = () => selectedRows.some(item => item.conditions && item.conditions.Scheduled && item.conditions.Scheduled.status && item.conditions.Scheduled.status.toLowerCase() === 'true')
   const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.engineImage)
   const notAttached = () => selectedRows.some(item => item.state !== 'attached')
   /*
