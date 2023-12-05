@@ -14,7 +14,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       return (<span className="disabled">Disabled</span>)
     }
     if (node.conditions && node.conditions.Schedulable && node.conditions.Schedulable.status && node.conditions.Schedulable.status.toLowerCase() === 'false') {
-      return (<span className="disabled">Unschedulable</span>)
+      return (<span className="unschedulable">Unschedulable</span>)
     }
     const status = d.conditions && d.conditions.Schedulable && d.conditions.Schedulable.status && d.conditions.Schedulable.status.toLowerCase() === 'true'
     if (status) {
