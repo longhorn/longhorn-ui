@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Select, Input, Button, Form, Popover } from 'antd'
+import { Select, Input, Button, Form, Popover, Space } from 'antd'
 import queryString from 'query-string'
 import styles from './Filter.less'
 
@@ -169,7 +169,7 @@ class Filter extends React.Component {
 
     return (
       <Form>
-        <Input.Group compact className={styles.filter}>
+        <Space.Compact compact className={styles.filter}>
           <Popover placement="topLeft" content={content} visible={popoverVisible}>
             <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
               {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
@@ -177,7 +177,7 @@ class Filter extends React.Component {
           </Popover>
           { valueForm }
           <Button size="large" style={{ height: '40px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
-        </Input.Group>
+        </Space.Compact>
       </Form>
     )
   }

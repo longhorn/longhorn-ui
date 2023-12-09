@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './Search.less'
-import { Form, Input, Select, Button } from 'antd'
+import { Form, Select, Button, Space } from 'antd'
 
 class Search extends React.Component {
   state = {
@@ -45,7 +45,7 @@ class Search extends React.Component {
     const { size, select, selectOptions, selectProps, style, keyword } = this.props
     return (
       <Form>
-        <Input.Group compact size={size} className={styles.search} style={style} onKeyPress={this.handleSearch}>
+        <Space.Compact compact size={size} className={styles.search} style={style} onKeyPress={this.handleSearch}>
           {select && <Select className={styles.searchSelect} ref="searchSelect" onChange={this.handeleSelectChange} size={size} {...selectProps}>
             {selectOptions && selectOptions.map((item, key) => <Select.Option value={item.value} key={key}>{item.name || item.value}</Select.Option>)}
           </Select>}
@@ -61,7 +61,7 @@ class Search extends React.Component {
             {this.state.options}
           </Select>
           <Button htmlType="submit" size={size} type="primary" onClick={this.handleSearch}>Go</Button>
-        </Input.Group>
+        </Space.Compact>
       </Form>
     )
   }
