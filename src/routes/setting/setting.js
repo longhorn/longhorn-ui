@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ReactMarkdown from 'react-markdown/with-html'
+import Markdown from 'react-markdown'
 import { Input, Button, Spin, Checkbox, Select, InputNumber } from 'antd'
 import { Form } from '@ant-design/compatible'
 import styles from './setting.less'
@@ -92,7 +92,12 @@ const form = ({
           initialValue,
           valuePropName,
         })(genInputItem(setting))}
-        <div>{setting.definition.required && !setting.definition.readOnly ? <QuestionCircleOutlined style={{ mariginRight: 5 }} /> : <QuestionCircleOutlined style={{ margin: '8px 5px 0px 0px', float: 'left' }} />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}<ReactMarkdown source={setting.definition.description} /></small></div>
+        <div>
+          {
+            setting.definition.required && !setting.definition.readOnly ? <QuestionCircleOutlined style={{ mariginRight: 5 }} /> : <QuestionCircleOutlined style={{ margin: '8px 5px 0px 0px', float: 'left' }} />} <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>{setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''
+          }
+          <Markdown source={setting.definition.description} /></small>
+        </div>
       </FormItem>
     )
   }
