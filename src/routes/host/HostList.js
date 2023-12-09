@@ -403,12 +403,15 @@ class List extends React.Component {
     return (
       <div id="hostTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
-          className="common-table-class"
           bordered={false}
           columns={columns}
           dataSource={dataSource}
-          expandedRowRender={disks}
-          onExpand={this.onExpand}
+          expandable={{
+            expandedRowKeys: this.state.expandedRowKeys,
+            expandedRowRender: disks,
+            onExpand: this.onExpand,
+            onExpandedRowsChange: this.onExpandedRowsChange,
+          }}
           onRow={record => {
             return {
               onClick: () => {
@@ -416,8 +419,6 @@ class List extends React.Component {
               },
             }
           }}
-          expandedRowKeys={this.state.expandedRowKeys}
-          onExpandedRowsChange={this.onExpandedRowsChange}
           loading={loading}
           onChange={onChange}
           simple

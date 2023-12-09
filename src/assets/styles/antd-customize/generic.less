@@ -25,13 +25,13 @@
     height: 3000px;
   }
   .ant-table {
-    .ant-table-thead > tr > th, .ant-table-thead > tr > th.ant-table-column-sort {
+    .ant-table-thead > tr > td, .ant-table-thead > tr > th, .ant-table-thead > tr > th.ant-table-column-sort {
       text-align: center;
-      background: @color-primary-light;
+      background: @color-primary-light !important;
       color: white;
     }
     .ant-table-thead > tr > th.ant-table-column-has-actions.ant-table-column-has-sorters:hover {
-      background: #108eb9 !important;
+      background: @color-primary-light !important;
     }
     .ant-table-tbody > tr > td {
       text-align: center;
@@ -44,7 +44,7 @@
     }
     &.ant-table-small {
       .ant-table-thead > tr > th {
-        background: #108eb9 !important;
+        background: @color-primary-light !important;
       }
       .ant-table-body {
         margin: 0 0 !important;
