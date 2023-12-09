@@ -20,7 +20,7 @@ export function formatDate(date, hasTooltip = true) {
   }
   let gmt = utcStrToDate(date)
   if (hasTooltip) {
-    return <Tooltip title={`${dayjs(gmt).utc().format()}`}>
+    return <Tooltip title={`${dayjs.utc(gmt).format()}`}>
       {dayjs(gmt).fromNow()}
     </Tooltip>
   }

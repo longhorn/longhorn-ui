@@ -142,7 +142,7 @@ function SnapshotIcon(props, snapshotProps) {
   return (
     <Dropdown
       placement="bottomLeft"
-      overlay={menu}
+      menu={menu}
       trigger={['click']}
       key={snapshotObject.name}
       getPopupContainer={() => {
@@ -211,7 +211,7 @@ function CurrentPoint(props) {
   )
   return (
     <Dropdown
-      overlay={menu}
+      menu={menu}
       trigger={['click']}
       key={props.volume.id}
     >

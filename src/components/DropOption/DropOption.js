@@ -13,7 +13,7 @@ const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps,
     )
   })
   return (<Dropdown
-    overlay={<Menu onClick={onMenuClick}>{menu}</Menu>}
+    menu={<Menu onClick={onMenuClick}>{menu}</Menu>}
     {...dropdownProps}
   >
     <Button style={{ border: 'none', ...buttonStyle }}>

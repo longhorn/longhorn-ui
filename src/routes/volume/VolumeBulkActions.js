@@ -229,7 +229,7 @@ function bulkActions({
         )
       }) }
       &nbsp;
-      <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft" disabled={selectedRows.length === 0}>
+      <Dropdown menu={menu} trigger={['click']} placement="bottomLeft" disabled={selectedRows.length === 0}>
         <Button type="primary" size="large"><UnorderedListOutlined style={{ marginRight: '3px' }} /><DownOutlined /></Button>
       </Dropdown>
     </div>
