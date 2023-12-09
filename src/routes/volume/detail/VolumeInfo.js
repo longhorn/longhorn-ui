@@ -43,7 +43,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   })
 
   if (isSchedulingFailure(selectedVolume)) {
-    const scheduledConditions = selectedVolume?.conditions?.scheduled
+    const scheduledConditions = selectedVolume?.conditions?.Scheduled
     if (scheduledConditions) {
       const { reason, message } = scheduledConditions
       errorMsg = (
@@ -62,6 +62,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       )
     }
   }
+
   const computeActualSize = selectedVolume && selectedVolume.controllers && selectedVolume.controllers[0] && selectedVolume.controllers[0].actualSize ? selectedVolume.controllers[0].actualSize : ''
   const defaultImage = engineImages.find(image => image.default === true)
   const healthState = getHealthState(selectedVolume.robustness)
@@ -264,7 +265,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           </span>
           <div className={styles.control} style={{ display: 'flex' }}>
             {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).filter((key) => {
-              return key === 'restore' || key === 'scheduled' || key === 'toomanysnapshots'
+              return key === 'Restore' || key === 'Scheduled' || key === 'TooManySnapshots'
             }).map((key) => {
               let title = selectedVolume.conditions[key] ? (<div>
                 {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
@@ -275,7 +276,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
                 {selectedVolume.conditions[key].status && <div style={{ marginBottom: 5 }}>Status: {selectedVolume.conditions[key].status}</div>}
               </div>) : ''
               let icon = ''
-              if (key === 'toomanysnapshots') {
+              if (key === 'TooManySnapshots') {
                 if (selectedVolume.conditions[key] && selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'false' || selectedVolume.conditions[key].reason === '')) {
                   icon = <IconSnapshot fill="#27ae60" />
                   title = (<div>
@@ -286,12 +287,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
                 } else {
                   icon = <IconSnapshot fill="#f15354" />
                 }
-              } else if (key === 'restore') {
+              } else if (key === 'Restore') {
                 icon = selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'true' || selectedVolume.conditions[key].reason === '') ? <CheckCircleOutlined className="healthy" style={{ marginRight: 5, color: selectedVolume.conditions[key].reason === '' && selectedVolume.conditions[key].status.toLowerCase() === 'false' ? '#666666' : '#27ae60' }} /> : <ExclamationCircleOutlined className="faulted" style={{ marginRight: 5 }} />
               } else {
                 icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <CheckCircleOutlined className="healthy" style={{ marginRight: 5 }} /> : <ExclamationCircleOutlined className="faulted" style={{ marginRight: 5 }} />
               }
-              let text = key !== 'toomanysnapshots' ? selectedVolume.conditions[key].type : ''
+              let text = key !== 'TooManySnapshots' ? selectedVolume.conditions[key].type : ''
 
               return (<Tooltip key={key} title={title}><div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
                   {icon}{text}
