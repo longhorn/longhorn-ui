@@ -4,7 +4,7 @@ import { connect } from 'dva'
 import { Row, Col, Card, Modal, Alert } from 'antd'
 import { routerRedux } from 'dva/router'
 import queryString from 'query-string'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import VolumeActions from '../VolumeActions'
 import VolumeInfo from './VolumeInfo'
 import styles from './index.less'
@@ -361,7 +361,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
       if (record && record.controllers && record.controllers[0] && record.controllers[0].lastExpansionError && record.controllers[0].lastExpansionFailedAt) {
         lastExpansionError = record.controllers[0].lastExpansionError
-        lastExpansionFailedAt = moment(record.controllers[0].lastExpansionFailedAt).fromNow()
+        lastExpansionFailedAt = dayjs(record.controllers[0].lastExpansionFailedAt).fromNow()
       }
 
       let content = (<div>

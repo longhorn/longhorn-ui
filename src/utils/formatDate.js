@@ -1,5 +1,5 @@
 import React from 'react'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { Tooltip } from 'antd'
 
 function utcStrToDate(utcStr) {
@@ -20,9 +20,9 @@ export function formatDate(date, hasTooltip = true) {
   }
   let gmt = utcStrToDate(date)
   if (hasTooltip) {
-    return <Tooltip title={`${moment(gmt).utc().format()}`}>
-      {moment(gmt).fromNow()}
+    return <Tooltip title={`${dayjs(gmt).utc().format()}`}>
+      {dayjs(gmt).fromNow()}
     </Tooltip>
   }
-  return moment(gmt).fromNow()
+  return dayjs(gmt).fromNow()
 }

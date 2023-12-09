@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Card, Tooltip } from 'antd'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import styles from './index.less'
 import { formatDate } from '../../../utils/formatDate'
 import { formatSnapshot, formatMib } from '../../../utils/formater'
@@ -103,7 +103,7 @@ class SnapshotList extends React.Component {
     if (this.state.toggleSnapshotListVisible) {
       dataSource = this.state.dataSource.map((item) => formatSnapshot(this.props.selectedVolume, item))
         .filter((item) => item.id !== 'volume-head')
-        .sort((a, b) => moment(b.created).valueOf() - moment(a.created).valueOf())
+        .sort((a, b) => dayjs(b.created).valueOf() - dayjs(a.created).valueOf())
     }
 
     const parentIdElement = (snapshot) => {

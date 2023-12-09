@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { Row, Col, Button, Modal, Alert } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
@@ -446,7 +446,7 @@ class Volume extends React.Component {
 
         if (record && record.controllers && record.controllers[0] && record.controllers[0].lastExpansionError && record.controllers[0].lastExpansionFailedAt) {
           lastExpansionError = record.controllers[0].lastExpansionError
-          lastExpansionFailedAt = moment(record.controllers[0].lastExpansionFailedAt).fromNow()
+          lastExpansionFailedAt = dayjs(record.controllers[0].lastExpansionFailedAt).fromNow()
         }
 
         let content = (<div>

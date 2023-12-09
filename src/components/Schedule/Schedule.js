@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Select, TimePicker } from 'antd'
-import moment from 'moment'
+import dayjs from 'dayjs'
 const Option = Select.Option
 
 class Schedule extends React.Component {
@@ -144,13 +144,13 @@ class Schedule extends React.Component {
 
         {scheduleType === 'hour' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(mins, 'mm')} format={'mm'} />
+            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={dayjs(mins, 'mm')} format={'mm'} />
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>minutes past the hour</span>
           </span>}
 
         {scheduleType === 'day' && <span>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
+            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={dayjs(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
         {scheduleType === 'week' && <span>
@@ -165,7 +165,7 @@ class Schedule extends React.Component {
               <Option value="6">Saturday</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
+            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={dayjs(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
         {scheduleType === 'month' && <span>
@@ -204,7 +204,7 @@ class Schedule extends React.Component {
               <Option value="31">31st</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
+            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={dayjs(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
 
         {scheduleType === 'year' && <span>
@@ -258,7 +258,7 @@ class Schedule extends React.Component {
               <Option value="12">December</Option>
             </Select>
             <span style={{ marginRight: '10px', marginLeft: '10px' }}>at</span>
-            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={moment(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
+            <TimePicker onChange={(momentValue, value) => this.onChange(value, 'time')} disabled={!editing} value={dayjs(`${hour}:${mins}`, 'HH:mm')} format={'HH:mm'} />
           </span>}
       </div>
     )

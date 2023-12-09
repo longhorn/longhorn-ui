@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 class Schedule extends React.Component {
   state = {
@@ -70,14 +70,14 @@ class Schedule extends React.Component {
         </span>
         {scheduleType === 'hour' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
-            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(mins, 'mm').format('HH:mm') }</span>
+            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ dayjs(mins, 'mm').format('HH:mm') }</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>minutes past the hour</span>
           </span>
         }
 
         {scheduleType === 'day' && <span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
-            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
+            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ dayjs(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
           </span>
         }
 
@@ -85,7 +85,7 @@ class Schedule extends React.Component {
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>on</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{dow}</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
-            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
+            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ dayjs(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
           </span>
         }
 
@@ -93,7 +93,7 @@ class Schedule extends React.Component {
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>on the</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{dom}</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
-            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
+            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ dayjs(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
           </span>
         }
 
@@ -103,7 +103,7 @@ class Schedule extends React.Component {
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>of</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>{dom}</span>
             <span style={{ marginRight: '3px', marginLeft: '3px' }}>at</span>
-            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ moment(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
+            <span style={{ marginRight: '3px', marginLeft: '3px' }}>{ dayjs(`${hour}:${mins}`, 'HH:mm').format('HH:mm')}</span>
           </span>
         }
       </div>
