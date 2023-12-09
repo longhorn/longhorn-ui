@@ -15,6 +15,7 @@ import {
   ProfileOutlined,
   ApartmentOutlined,
   FileSyncOutlined,
+  DownOutlined,
 } from '@ant-design/icons'
 
 const SubMenu = Menu.SubMenu
@@ -66,7 +67,7 @@ const getMenus = function (menuArray, siderFold) {
                 ) : ''
               }
               {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
-              <DownCircleOutlined />
+              <DownOutlined />
             </span>
           }>
         {getMenus(item.child, false)}
