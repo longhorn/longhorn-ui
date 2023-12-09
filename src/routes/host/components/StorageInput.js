@@ -11,7 +11,7 @@ class StorageInput extends React.Component {
     }
   }
 
-  componentDidUpdate(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if ('value' in nextProps) {
       const value = nextProps.value
       this.setState({ value })

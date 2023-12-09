@@ -14,13 +14,12 @@ class Schedule extends React.Component {
     dow: '',
   }
 
-  constructor(props) {
-    super(props)
-    const { cron } = props
-    this.state = this.parseCron(cron)
+  UNSAFE_componentWillMount() {
+    const { cron } = this.props
+    this.setState(this.parseCron(cron))
   }
 
-  componentDidUpdate(nextProp) {
+  UNSAFE_componentWillReceiveProps(nextProp) {
     const { cron } = nextProp
     this.setState(this.parseCron(cron))
   }

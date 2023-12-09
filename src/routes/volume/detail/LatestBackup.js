@@ -6,27 +6,31 @@ import dayjs from 'dayjs'
 class LatestBackup extends React.Component {
   constructor(props) {
     super(props)
-    const { queryBackupStatus, backupStatus } = props
-
     this.state = {
       progress: 0,
-      updateProgress: setInterval(() => {
-        const { progress } = this.state
-        if (progress < 60 && backupStatus.inProgress) {
-          this.setState({
-            progress: progress + 1,
-          })
-        }
-        if (!backupStatus.inProgress) {
-          this.setState({
-            progress: 0,
-          })
-        }
-      }, 500),
-      updateBackupStatus: setInterval(() => {
-        queryBackupStatus()
-      }, 10000),
     }
+  }
+
+  UNSAFE_componentWillMount() {
+    const { queryBackupStatus, backupStatus } = this.props
+
+    this.state.updateProgress = setInterval(() => {
+      const { progress } = this.state
+      if (progress < 60 && backupStatus.inProgress) {
+        this.setState({
+          progress: progress + 1,
+        })
+      }
+      if (!backupStatus.inProgress) {
+        this.setState({
+          progress: 0,
+        })
+      }
+    }, 500)
+
+    this.state.updateBackupStatus = setInterval(() => {
+      queryBackupStatus()
+    }, 10000)
     queryBackupStatus()
   }
 
