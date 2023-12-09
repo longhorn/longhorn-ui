@@ -503,17 +503,19 @@ class RecurringJob extends React.Component {
         })
       }
 
-      return <Table
-        bordered={false}
-        columns={columnsForJob.filter((column) => column.key !== 'operation')}
-        dataSource={dataSourceForExpandTable || []}
-        simple
-        loading={this.props.loading}
-        pagination={false}
-        rowKey={row => row.id}
-        height={`${220}px`}
-        scroll={{ x: 600, y: 220 }}
-      />
+      return (
+        <Table
+          bordered={false}
+          columns={columnsForJob.filter((column) => column.key !== 'operation')}
+          dataSource={dataSourceForExpandTable || []}
+          simple
+          loading={this.props.loading}
+          pagination={false}
+          rowKey={row => row.id}
+          height={`${220}px`}
+          scroll={{ x: 600, y: 220 }}
+        />
+      )
     }
 
     const columnsForJobGroup = [
