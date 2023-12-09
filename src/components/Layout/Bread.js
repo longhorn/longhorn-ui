@@ -55,21 +55,19 @@ function Bread({ location }) {
       }
     }
     return (
-      <Breadcrumb.Item key={key}>
-        {
-          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{pathSet[item].name}</span> : <LinkTo to={{ pathname: pathSet[item].path }}>
-              {pathSet[item].name}
-            </LinkTo>
-        }
-      </Breadcrumb.Item>
+      ((pathNames.length - 1 === key) || !pathSet[item].clickable)
+        ? <span>{pathSet[item].name}</span>
+        : (
+          <LinkTo to={{ pathname: pathSet[item].path }}>
+            {pathSet[item].name}
+          </LinkTo>
+        )
     )
   })
 
   return (
     <div className={styles.bread}>
-      <Breadcrumb>
-        {breads}
-      </Breadcrumb>
+      <Breadcrumb items={breads} />
     </div>
   )
 }
