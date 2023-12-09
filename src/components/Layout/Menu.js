@@ -5,7 +5,6 @@ import { LinkTo } from '../../components'
 import { menu } from '../../utils'
 import {
   BarChartOutlined, DatabaseOutlined,
-  DownCircleOutlined,
   FileImageOutlined,
   LaptopOutlined,
   SettingOutlined,
