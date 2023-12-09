@@ -176,7 +176,7 @@ class Filter extends React.Component {
         </Select>
       </Popover>
       { valueForm }
-        <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
+        <Button size="large" style={{ height: '40px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
       </Input.Group>
       </Form>
     )
