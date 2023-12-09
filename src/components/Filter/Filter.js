@@ -9,7 +9,17 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroupValue = '' } = queryString.parse(props.location.search)
+    const {
+      field = props.defaultField || 'name',
+      value = '',
+      stateValue = '',
+      nodeRedundancyValue = '',
+      engineImageUpgradableValue = '',
+      scheduleValue = '',
+      pvStatusValue = '',
+      revisionCounterValue = '',
+      isGroupValue = '',
+    } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
@@ -169,7 +179,7 @@ class Filter extends React.Component {
 
     return (
       <Form>
-        <Space.Compact compact className={styles.filter}>
+        <Space.Compact className={styles.filter}>
           <Popover placement="topLeft" content={content} visible={popoverVisible}>
             <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
               {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}

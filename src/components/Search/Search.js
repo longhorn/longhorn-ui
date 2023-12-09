@@ -33,7 +33,7 @@ class Search extends React.Component {
     })
   }
 
-  handeleSelectChange = value => {
+  handleSelectChange = value => {
     this.setState({
       ...this.state,
       selectValue: value,
@@ -45,8 +45,8 @@ class Search extends React.Component {
     const { size, select, selectOptions, selectProps, style, keyword } = this.props
     return (
       <Form>
-        <Space.Compact compact size={size} className={styles.search} style={style} onKeyPress={this.handleSearch}>
-          {select && <Select className={styles.searchSelect} ref="searchSelect" onChange={this.handeleSelectChange} size={size} {...selectProps}>
+        <Space.Compact size={size} className={styles.search} style={style} onKeyPress={this.handleSearch}>
+          {select && <Select className={styles.searchSelect} ref="searchSelect" onChange={this.handleSelectChange} size={size} {...selectProps}>
             {selectOptions && selectOptions.map((item, key) => <Select.Option value={item.value} key={key}>{item.name || item.value}</Select.Option>)}
           </Select>}
           <Select size={size}
