@@ -93,16 +93,16 @@ class List extends React.Component {
   }
 
   onRowClick = (record, flag) => {
-    let selecteRowByClick = [record]
+    let selectRowByClick = [record]
 
     if (flag) {
       this.state.selectedRows.forEach((item) => {
-        if (selecteRowByClick.every((ele) => {
+        if (selectRowByClick.every((ele) => {
           return ele.id !== item.id
         })) {
-          selecteRowByClick.push(item)
+          selectRowByClick.push(item)
         } else {
-          selecteRowByClick = selecteRowByClick.filter((ele) => {
+          selectRowByClick = selectRowByClick.filter((ele) => {
             return ele.id !== item.id
           })
         }
@@ -111,17 +111,17 @@ class List extends React.Component {
 
     this.setState({
       ...this.state,
-      selectedRows: selecteRowByClick,
+      selectedRows: selectRowByClick,
       rowSelection: {
         ...this.state.rowSelection,
-        selectedRowKeys: selecteRowByClick.map((item) => item.id),
+        selectedRowKeys: selectRowByClick.map((item) => item.id),
       },
     })
 
     this.props.dispatch({
       type: 'host/changeSelection',
       payload: {
-        selectedHostRows: selecteRowByClick,
+        selectedHostRows: selectRowByClick,
       },
     })
   }

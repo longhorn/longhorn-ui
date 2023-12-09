@@ -157,27 +157,27 @@ class Filter extends React.Component {
     }
 
     let content = ''
-    let popoverVsible = false
+    let popoverVisible = false
 
     // eslint-disable-next-line no-unused-vars
     for (let key in defaultContent) {
       if (defaultContent[key] !== '' && key !== 'field' && this.state[key] !== defaultContent[key]) {
         content = (<div style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{`Current Filter: ${defaultContent[key]}`}</div>)
-        popoverVsible = true
+        popoverVisible = true
       }
     }
 
     return (
       <Form>
-      <Input.Group compact className={styles.filter}>
-      <Popover placement="topLeft" content={content} visible={popoverVsible}>
-        <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
-          {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-        </Select>
-      </Popover>
-      { valueForm }
-        <Button size="large" style={{ height: '40px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
-      </Input.Group>
+        <Input.Group compact className={styles.filter}>
+          <Popover placement="topLeft" content={content} visible={popoverVisible}>
+            <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
+              {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+            </Select>
+          </Popover>
+          { valueForm }
+          <Button size="large" style={{ height: '40px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
+        </Input.Group>
       </Form>
     )
   }
