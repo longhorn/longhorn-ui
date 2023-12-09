@@ -1,6 +1,8 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import { Tooltip } from 'antd'
+const relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
 function utcStrToDate(utcStr) {
   const reg = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) \+\d{4} UTC$/

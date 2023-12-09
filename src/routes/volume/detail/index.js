@@ -40,6 +40,8 @@ import {
   getDetachHostModalProps,
   getUpdateOfflineReplicaRebuildingModalProps,
 } from '../helper'
+const relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
 const confirm = Modal.confirm
 

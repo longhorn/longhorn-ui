@@ -1,6 +1,8 @@
 
 import dayjs from 'dayjs'
 import later from 'meteor-later'
+const utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
   
 var numberList = function(numbers) {
   if (numbers.length < 2) {
