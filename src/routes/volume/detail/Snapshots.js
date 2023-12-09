@@ -76,9 +76,7 @@ class Snapshots extends React.Component {
         },
       })
     }
-  }
 
-  UNSAFE_componentWillMount() {
     this.props.dispatch({
       type: 'snapshotModal/queryVolume',
       payload: { volume: this.props.volume },
@@ -92,7 +90,7 @@ class Snapshots extends React.Component {
     })
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (nextProps.volume.state !== this.props.volume.state) {
       this.props.dispatch({
         type: 'snapshotModal/queryVolume',

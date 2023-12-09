@@ -16,7 +16,7 @@ class ModalBlur extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (this.props.visible === nextProps.visible) {
       return
     }

@@ -23,7 +23,7 @@ class EventLogs extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     const { searchField, searchText } = this.state
     const data = this.parseData(nextProps.data)
     if (searchField && searchText) {
