@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { hasReadyBackingDisk } from '../../utils/status'
 const confirm = Modal.confirm
 
 function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBackingImage }) {
@@ -25,9 +26,11 @@ function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBacking
     }
   }
 
+  const disableDownloadAction = !hasReadyBackingDisk(selected)
+
   const availableActions = [
     { key: 'delete', name: 'Delete' },
-    { key: 'download', name: 'Download' },
+    { key: 'download', name: 'Download', disabled: disableDownloadAction, tooltip: disableDownloadAction ? 'Missing disk with ready state' : '' },
     { key: 'cleanUp', name: 'Clean Up' },
   ]
 
