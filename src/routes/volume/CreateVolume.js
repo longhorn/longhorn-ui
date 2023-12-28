@@ -209,8 +209,8 @@ const modal = ({
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
-        <FormItem label="Backend Data Engine" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('backendStoreDriver', {
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
             initialValue: 'v1',
             rules: [
               {
@@ -306,7 +306,7 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
-            { getFieldsValue().backendStoreDriver === 'v2' && <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
+            { getFieldsValue().dataEngine === 'v2' && <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('offlineReplicaRebuilding', {
                 initialValue: 'ignored',
               })(<Select>
