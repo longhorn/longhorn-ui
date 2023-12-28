@@ -177,7 +177,7 @@ function list({
                 {ha}{state}{ !record.ready ? statusForWorkload : '' }
               </div>)
           } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
-            return (<Tooltip title={record.backendStoreDriver === 'v2' && 'Replica rebuilding will be automatically triggered when the degraded volume is detached'}>
+            return (<Tooltip title={record.dataEngine === 'v2' && 'Replica rebuilding will be automatically triggered when the degraded volume is detached'}>
                 <div
                   className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
                   style={{ display: 'flex', alignItems: 'center' }}
@@ -300,7 +300,7 @@ function list({
       sorter: (a, b) => sortTableActualSize(a, b),
       render: (text, record) => {
         let size = record?.controllers && record.controllers[0] && record.controllers[0].actualSize ? parseInt(record.controllers[0].actualSize, 10) : 0
-        let isSpdkVolume = record?.backendStoreDriver === 'v2'
+        let isSpdkVolume = record?.dataEngine === 'v2'
         return (
           <div>
             <div>{!isSpdkVolume ? formatMib(size) : ''}</div>
@@ -324,10 +324,10 @@ function list({
     },
     {
       title: 'Data Engine',
-      dataIndex: 'backendStoreDriver',
-      key: 'backendStoreDriver',
+      dataIndex: 'dataEngine',
+      key: 'dataEngine',
       width: 220,
-      sorter: (a, b) => sortTable(a, b, 'backendStoreDriver'),
+      sorter: (a, b) => sortTable(a, b, 'dataEngine'),
       render: (text) => {
         return (
           <div>

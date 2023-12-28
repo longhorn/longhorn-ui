@@ -567,11 +567,11 @@ export function needToWaitDone(state, replicas) {
 }
 
 export function getOfflineRebuiltStatus(volume) {
-  return volume.disableFrontend && volume.backendStoreDriver === 'v2' && volume.offlineReplicaRebuildingRequired && volume.state === 'attached'
+  return volume.disableFrontend && volume.dataEngine === 'v2' && volume.offlineReplicaRebuildingRequired && volume.state === 'attached'
 }
 
 export function getOfflineRebuiltStatusWithoutFrontend(volume) {
-  return !volume.disableFrontend && volume.backendStoreDriver === 'v2' && volume.state === 'attached' && volume.robustness === 'degraded'
+  return !volume.disableFrontend && volume.dataEngine === 'v2' && volume.state === 'attached' && volume.robustness === 'degraded'
 }
 
 export const frontends = [
