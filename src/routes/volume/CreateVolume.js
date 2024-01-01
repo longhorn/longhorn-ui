@@ -38,7 +38,8 @@ const modal = ({
   diskTags,
   backingImages,
   tagsLoading,
-  enableSPDKDataEngineValue,
+  v1DataEngineEnabled,
+  v2DataEngineEnabled,
   form: {
     getFieldDecorator,
     validateFields,
@@ -215,8 +216,10 @@ const modal = ({
             rules: [
               {
                 validator: (rule, value, callback) => {
-                  if (value === 'v2' && !enableSPDKDataEngineValue) {
-                    callback('SPDK data engine is not enabled')
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
                   }
                   callback()
                 },
@@ -342,7 +345,8 @@ modal.propTypes = {
   tagsLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
-  enableSPDKDataEngineValue: PropTypes.bool,
+  v1DataEngineEnabled: PropTypes.bool,
+  v2DataEngineEnabled: PropTypes.bool,
   backingImages: PropTypes.array,
 }
 

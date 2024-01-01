@@ -300,10 +300,10 @@ function list({
       sorter: (a, b) => sortTableActualSize(a, b),
       render: (text, record) => {
         let size = record?.controllers && record.controllers[0] && record.controllers[0].actualSize ? parseInt(record.controllers[0].actualSize, 10) : 0
-        let isSpdkVolume = record?.dataEngine === 'v2'
+        let isV2Volume = record?.dataEngine === 'v2'
         return (
           <div>
-            <div>{!isSpdkVolume ? formatMib(size) : ''}</div>
+            <div>{!isV2Volume ? formatMib(size) : ''}</div>
           </div>
         )
       },
