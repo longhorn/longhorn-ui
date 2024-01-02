@@ -26,6 +26,8 @@ const modal = ({
   backingImages,
   backupVolumes,
   setPreviousChange,
+  v1DataEngineEnabled,
+  v2DataEngineEnabled,
   isBulk = false,
   form: {
     getFieldDecorator,
@@ -111,6 +113,30 @@ const modal = ({
               ],
             })(<InputNumber min={1} />)}
           </FormItem>}
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: 'v1',
+            rules: [
+              {
+                required: true,
+                message: 'Please select the data engine',
+              },
+              {
+                validator: (rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode,
@@ -177,6 +203,8 @@ modal.propTypes = {
   diskTags: PropTypes.array,
   backingImages: PropTypes.array,
   backupVolumes: PropTypes.array,
+  v1DataEngineEnabled: PropTypes.bool,
+  v2DataEngineEnabled: PropTypes.bool,
   isBulk: PropTypes.bool,
   tagsLoading: PropTypes.bool,
 }
