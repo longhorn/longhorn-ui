@@ -25,6 +25,8 @@ const modal = ({
   tagsLoading,
   backupVolumes,
   backingImages,
+  v1DataEngineEnabled,
+  v2DataEngineEnabled,
   form: {
     getFieldDecorator,
     validateFields,
@@ -97,6 +99,30 @@ const modal = ({
               },
             ],
           })(<Input disabled={true} />)}
+        </FormItem>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: 'v1',
+            rules: [
+              {
+                required: true,
+                message: 'Please select the data engine',
+              },
+              {
+                validator: (rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
         </FormItem>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
@@ -193,6 +219,8 @@ modal.propTypes = {
   backupVolumes: PropTypes.array,
   tagsLoading: PropTypes.bool,
   backingImages: PropTypes.array,
+  v1DataEngineEnabled: PropTypes.bool,
+  v2DataEngineEnabled: PropTypes.bool,
 }
 
 export default Form.create()(modal)
