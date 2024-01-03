@@ -310,10 +310,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {/* {formatMib(selectedVolume.size)} */}
         {volumeSizeEle()}
       </div>
-      {selectedVolume?.dataEngine !== 'v2' && <div className={styles.row}>
+      <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
         {state ? formatMib(computeActualSize) : 'Unknown'}
-      </div>}
+      </div>
       <div className={styles.row}>
         <span className={styles.label}>Data Locality:</span>
         {selectedVolume.dataLocality}
