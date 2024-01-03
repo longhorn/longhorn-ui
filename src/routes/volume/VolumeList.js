@@ -208,7 +208,7 @@ function list({
             </div>
             {isEncrypted ? <Tooltip title={'Encrypted Volume'}><Icon className="color-warning" style={{ marginRight: 5, marginBottom: 2 }} type="lock" /></Tooltip> : null}
             {statusUpgradingEngine(record)}
-            {upgrade}
+            { upgrade }
             {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
             {stateText}
             {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
