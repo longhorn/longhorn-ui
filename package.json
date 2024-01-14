@@ -72,7 +72,7 @@
     "babel-plugin-dva-hmr": "^0.4.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "body-parser": "^1.20.2",
-    "copy-webpack-plugin": "^11.0.0",
+    "copy-webpack-plugin": "^12.0.1",
     "cross-env": "^7.0.3",
     "cross-port-killer": "^1.4.0",
     "css-hot-loader": "^1.4.4",
