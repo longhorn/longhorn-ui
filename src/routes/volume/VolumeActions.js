@@ -204,7 +204,7 @@ function actions({
     { key: 'attach', name: 'Attach', disabled: !attachable(selected) },
     { key: 'detach', name: 'Detach', disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring(selected) },
-    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.image !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') },
+    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.image !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') || selected?.dataEngine === 'v2' },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateSnapshotDataIntegrity', name: 'Snapshot Data Integrity', disabled: false },
@@ -214,7 +214,7 @@ function actions({
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
-    { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.backendStoreDriver !== 'v2' },
+    { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.dataEngine !== 'v2' },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 

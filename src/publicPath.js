@@ -17,7 +17,7 @@ let columnArr = [
 	'recurringJobs',
 	'lastBackupAt',
 	'actualSize',
-	'backendStoreDriver',
+	'dataEngine',
 ]
 let pageSizeCollectionObject = {
   volumePageSize: 10,

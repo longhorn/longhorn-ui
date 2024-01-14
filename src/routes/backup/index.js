@@ -26,6 +26,10 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+  const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
+  const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
+  const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
+  const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
   const showDeleteConfirm = (record) => {
     confirm({
       title: 'Are you sure delete all the backups?',
@@ -165,6 +169,8 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     backingImages,
     previousChecked,
     backupVolumes,
+    v1DataEngineEnabled,
+    v2DataEngineEnabled,
     isBulk: isBulkRestore,
     visible: restoreBackupModalVisible,
     onOk(selectedBackup) {
@@ -233,6 +239,8 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     tagsLoading,
     backingImages,
     backupVolumes,
+    v1DataEngineEnabled,
+    v2DataEngineEnabled,
     onOk(newVolume) {
       let data = Object.assign(newVolume, { standby: true, frontend: '' })
       data.size = data.size.replace(/\s/ig, '')
@@ -261,6 +269,8 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     diskTags,
     tagsLoading,
     backingImages,
+    v1DataEngineEnabled,
+    v2DataEngineEnabled,
     onOk(params, newVolumes) {
       let data = newVolumes.map((item) => ({
         ...item,

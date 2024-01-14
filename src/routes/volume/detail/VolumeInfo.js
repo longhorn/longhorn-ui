@@ -308,8 +308,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           </Tooltip> : (frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Backend Data Engine:</span>
-        {selectedVolume.backendStoreDriver}
+        <span className={styles.label}> Data Engine:</span>
+        {selectedVolume.dataEngine}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Offline Replica Rebuilding:</span>
@@ -327,10 +327,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {/* {formatMib(selectedVolume.size)} */}
         {volumeSizeEle()}
       </div>
-      {selectedVolume?.backendStoreDriver !== 'v2' && <div className={styles.row}>
+      <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
         {state ? formatMib(computeActualSize) : 'Unknown'}
-      </div>}
+      </div>
       <div className={styles.row}>
         <span className={styles.label}>Data Locality:</span>
         {selectedVolume.dataLocality}

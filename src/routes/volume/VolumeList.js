@@ -160,7 +160,7 @@ function list({
         } else if (isVolumeRelicaLimited(record) && replicaSoftAntiAffinitySettingValue) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
-        let attchedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
+        let attachedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
           return record.controllers && record.controllers[0] && host.id === record.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
         })
         let dataLocalityWarn = record.dataLocality === 'best-effort' && record.state === 'attached' && record.replicas && record.replicas.every((item) => {
@@ -178,7 +178,7 @@ function list({
                 {ha}{state}{ !record.ready ? statusForWorkload : '' }
               </div>)
           } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
-            return (<Tooltip title={record.backendStoreDriver === 'v2' && 'Replica rebuilding will be automatically triggered when the degraded volume is detached'}>
+            return (<Tooltip title={record.dataEngine === 'v2' && 'Replica rebuilding will be automatically triggered when the degraded volume is detached'}>
                 <div
                   className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
                   style={{ display: 'flex', alignItems: 'center' }}
@@ -209,8 +209,8 @@ function list({
             </div>
             {isEncrypted ? <Tooltip title={'Encrypted Volume'}><LockOutlined style={{ marginRight: 5, marginBottom: 2 }} /></Tooltip> : null}
             {statusUpgradingEngine(record)}
-            {upgrade}
-            {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><ApiOutlined className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} /></Tooltip> : ''}
+            { upgrade }
+            {attachedNodeIsDown ? <Tooltip title={'The attached node is down'}><ApiOutlined className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} /></Tooltip> : ''}
             {stateText}
             {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><WarningOutlined style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" /></Tooltip> : ''}
             {needToWaitDone(text, record.replicas) ? <LoadingOutlined /> : null}
@@ -301,10 +301,9 @@ function list({
       sorter: (a, b) => sortTableActualSize(a, b),
       render: (text, record) => {
         let size = record?.controllers && record.controllers[0] && record.controllers[0].actualSize ? parseInt(record.controllers[0].actualSize, 10) : 0
-        let isSpdkVolume = record?.backendStoreDriver === 'v2'
         return (
           <div>
-            <div>{!isSpdkVolume ? formatMib(size) : ''}</div>
+            <div>{formatMib(size)}</div>
           </div>
         )
       },
@@ -325,10 +324,10 @@ function list({
     },
     {
       title: 'Data Engine',
-      dataIndex: 'backendStoreDriver',
-      key: 'backendStoreDriver',
+      dataIndex: 'dataEngine',
+      key: 'dataEngine',
       width: 220,
-      sorter: (a, b) => sortTable(a, b, 'backendStoreDriver'),
+      sorter: (a, b) => sortTable(a, b, 'dataEngine'),
       render: (text) => {
         return (
           <div>

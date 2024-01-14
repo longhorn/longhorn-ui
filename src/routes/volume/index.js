@@ -205,7 +205,8 @@ class Volume extends React.Component {
     const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
-    const enableSPDKDataEngine = settings.find(s => s.id === 'v2-data-engine')
+    const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
+    const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
     let replicaSoftAntiAffinitySettingValue = false
     if (replicaSoftAntiAffinitySetting) {
       replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting?.value.toLowerCase() === 'true'
@@ -214,7 +215,8 @@ class Volume extends React.Component {
     const defaultDataLocalityValue = defaultDataLocalitySetting?.value ? defaultDataLocalitySetting.value : 'disabled'
     const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
     const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
-    const enableSPDKDataEngineValue = enableSPDKDataEngine?.value === 'true'
+    const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
+    const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
     if (defaultSnapshotDataIntegrityOption.length > 0) {
       defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
     }
@@ -736,7 +738,8 @@ class Volume extends React.Component {
       defaultDataLocalityValue,
       defaultRevisionCounterValue,
       defaultSnapshotDataIntegrityOption,
-      enableSPDKDataEngineValue,
+      v1DataEngineEnabled,
+      v2DataEngineEnabled,
       diskTags,
       backingImages,
       tagsLoading,
