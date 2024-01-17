@@ -55,6 +55,9 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
         size: `${getFieldsValue().size}${getFieldsValue().unit}`,
+        snapshotMaxSize: `${getFieldsValue().snapshotMaxSize}${
+          getFieldsValue().snapshotSizeUnit
+        }`,
       }
 
       if (data.unit) {
@@ -265,7 +268,7 @@ const modal = ({
             </FormItem>
              <FormItem label="Snapshot Max Count" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
             {getFieldDecorator('snapshotMaxCount', {
-              initialValue: 0,
+              initialValue: 2,
               rules: [
                 {
                   validator: (rule, value, callback) => {
@@ -273,7 +276,7 @@ const modal = ({
                       callback()
                       return
                     }
-                    if (value < 1 || value > 250) {
+                    if (value < 2 || value > 250) {
                       callback('The value should be between 2 and 250')
                     } else {
                       callback()
@@ -283,11 +286,28 @@ const modal = ({
               ],
             })(<InputNumber style={{ width: '250px' }} />) }
             </FormItem>
-             <FormItem label="Snapshot Max Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-            {getFieldDecorator('snapshotMaxSize', {
-              initialValue: '0',
-            })(<Input style={{ width: '250px' }} />)}
-          </FormItem>
+            <div>
+               <FormItem label="Snapshot Max Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                {getFieldDecorator('snapshotMaxSize', {
+                  initialValue: '0',
+                })(<Input style={{ width: '250px' }} />) }
+              </FormItem>
+
+               <FormItem>
+                {getFieldDecorator('snapshotSizeUnit', {
+                  initialValue: item.unit,
+                  rules: [{ required: true, message: 'Please select your unit!' }],
+                })(
+                  <Select
+                    style={{ width: '100px' }}
+                    onChange={unitChange}
+                  >
+                    <Option value="Mi">Mi</Option>
+                    <Option value="Gi">Gi</Option>
+                  </Select>,
+                )}
+              </FormItem>
+            </div>
             <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaAutoBalance', {
                 initialValue: 'ignored',
