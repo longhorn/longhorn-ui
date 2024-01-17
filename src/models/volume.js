@@ -47,6 +47,10 @@ export default {
     updateBulkReplicaCountModalVisible: false,
     customColumnVisible: false,
     updateDataLocalityModalVisible: false,
+    updateSnapshotMaxCountModalVisible: false,
+    updateSnapshotMaxCountModalKey: Math.random(),
+    updateSnapshotMaxSizeModalVisible: false,
+    updateSnapshotMaxSizeModalKey: Math.random(),
     updateBulkDataLocalityModalVisible: false,
     updateAccessModeModalVisible: false,
     updateBulkAccessModeModalVisible: false,
@@ -248,6 +252,20 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideUpdateReplicaCountModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *snapshotMaxCountUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateSnapshotMaxCountModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *snapshotMaxSizeUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateSnapshotMaxSizeModal' })
       yield call(execAction, payload.url, payload.params)
       yield put({ type: 'query' })
     },
@@ -753,6 +771,18 @@ export default {
     },
     showUpdateDataLocality(state, action) {
       return { ...state, ...action.payload, updateDataLocalityModalVisible: true, updateDataLocalityModalKey: Math.random() }
+    },
+    showUpdateSnapshotMaxCountModal(state, action) {
+      return { ...state, ...action.payload, updateSnapshotMaxCountModalVisible: true, updateSnapshotMaxCountModalKey: Math.random() }
+    },
+    hideUpdateSnapshotMaxCountModal(state) {
+      return { ...state, updateSnapshotMaxCountModalVisible: false }
+    },
+    showUpdateSnapshotMaxSizeModal(state, action) {
+      return { ...state, ...action.payload, updateSnapshotMaxSizeModalVisible: true, updateSnapshotMaxSizeModalKey: Math.random() }
+    },
+    hideUpdateSnapshotMaxSizeModal(state) {
+      return { ...state, updateSnapshotMaxSizeModalVisible: false }
     },
     showUnmapMarkSnapChainRemovedModal(state, action) {
       return { ...state, ...action.payload, unmapMarkSnapChainRemovedModalVisible: true, unmapMarkSnapChainRemovedModalKey: Math.random() }

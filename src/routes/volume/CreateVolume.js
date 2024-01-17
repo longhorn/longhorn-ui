@@ -263,6 +263,31 @@ const modal = ({
               { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
               </Select>)}
             </FormItem>
+             <FormItem label="Snapshot Max Count" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+            {getFieldDecorator('snapshotMaxCount', {
+              initialValue: 0,
+              rules: [
+                {
+                  validator: (rule, value, callback) => {
+                    if (value === '' || typeof value !== 'number') {
+                      callback()
+                      return
+                    }
+                    if (value < 1 || value > 250) {
+                      callback('The value should be between 2 and 250')
+                    } else {
+                      callback()
+                    }
+                  },
+                },
+              ],
+            })(<InputNumber style={{ width: '250px' }} />) }
+            </FormItem>
+             <FormItem label="Snapshot Max Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+            {getFieldDecorator('snapshotMaxSize', {
+              initialValue: '0',
+            })(<Input style={{ width: '250px' }} />)}
+          </FormItem>
             <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaAutoBalance', {
                 initialValue: 'ignored',

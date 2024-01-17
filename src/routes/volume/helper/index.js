@@ -157,6 +157,56 @@ export function getUpdateReplicaCountModalProps(volume, visible, dispatch) {
   }
 }
 
+export function getUpdateSnapshotMaxCountModalProps(volume, visible, dispatch) {
+  return {
+    item: volume,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/snapshotMaxCountUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateSnapshotMaxCountModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateSnapshotMaxSizeModalProps(volume, visible, dispatch) {
+  return {
+    item: volume,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/snapshotMaxSizeUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateSnapshotMaxSizeModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLocalityOption, dispatch) {
   let option = []
 
