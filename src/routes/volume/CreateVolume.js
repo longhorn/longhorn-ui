@@ -286,8 +286,8 @@ const modal = ({
               ],
             })(<InputNumber style={{ width: '250px' }} />) }
             </FormItem>
-            <div>
-               <FormItem label="Snapshot Max Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+               <FormItem label="Snapshot Max Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
                 {getFieldDecorator('snapshotMaxSize', {
                   initialValue: '0',
                 })(<Input style={{ width: '250px' }} />) }
