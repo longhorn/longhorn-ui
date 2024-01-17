@@ -27,7 +27,7 @@ function EngineImageInfo({ selectedEngineImage }) {
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Status:</span>
-        <span className={classnames({ [selectedEngineImage.state.toLowerCase()]: true, capitalize: true })}>{selectedEngineImage.state.hyphenToHump()}</span>
+        <span className={classnames({ [selectedEngineImage.incompatible ? 'incompatible' : selectedEngineImage.state.toLowerCase()]: true, capitalize: true })}>{selectedEngineImage.incompatible ? 'Incompatible' : selectedEngineImage.state.hyphenToHump()}</span>
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Default:</span>
