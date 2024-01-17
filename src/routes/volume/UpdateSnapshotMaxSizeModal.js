@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber } from 'antd'
+import { Form, InputNumber, Select } from 'antd'
+const { Option } = Select
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 
@@ -18,16 +19,43 @@ const modal = ({
   visible,
   onCancel,
   onOk,
-  form: { getFieldDecorator, getFieldsValue },
+  form: { getFieldDecorator, getFieldsValue, setFieldsValue },
 }) => {
   function handleOk() {
+    const { snapshotMaxSize, unit } = getFieldsValue()
     const url = item && item.actions && item.actions.updateSnapshotMaxSize
     const data = {
-      snapshotMaxSize: `${getFieldsValue().snapshotMaxSize}Gi`,
+      snapshotMaxSize: `${snapshotMaxSize}${unit}`,
     }
 
     onOk(data, url)
   }
+
+  // Convert Units Bi to Gi
+  function formatSize() {
+    if (item?.snapshotMaxSize && item?.snapshotMaxSize) {
+      let sizeMi = parseInt(item?.snapshotMaxSize, 10) / (1024 * 1024)
+
+      return getFieldsValue().unit === 'Gi'
+        ? sizeMi / 1024
+        : parseInt(sizeMi, 10)
+    }
+    return 0
+  }
+
+  let minValue = formatSize()
+
+  function unitChange(value) {
+    let currentSize = getFieldsValue().snapshotMaxSize
+
+    if (value === 'Gi') {
+      currentSize /= 1024
+    } else {
+      currentSize *= 1024
+    }
+    setFieldsValue({ snapshotMaxSize: currentSize, unit: value })
+  }
+
   const modalOpts = {
     title: 'Update Snapshot Max Size',
     visible,
@@ -35,13 +63,16 @@ const modal = ({
     onOk: handleOk,
   }
 
-
   return (
     <ModalBlur {...modalOpts}>
-      <Form layout="horizontal" {...formItemLayout} style={{ display: 'flex' }}>
+      <Form
+        layout="horizontal"
+        {...formItemLayout}
+        style={{ display: 'flex', flexDirection: 'column' }}
+      >
         <FormItem label="Max Count">
           {getFieldDecorator('snapshotMaxSize', {
-            initialValue: item.snapshotMaxSize,
+            initialValue: minValue,
             rules: [
               {
                 required: true,
@@ -49,6 +80,17 @@ const modal = ({
               },
             ],
           })(<InputNumber style={{ width: '270px' }} />)}
+        </FormItem>
+        <FormItem label="Unit">
+          {getFieldDecorator('unit', {
+            initialValue: 'Gi',
+            rules: [{ required: true, message: 'Please select a value!' }],
+          })(
+            <Select placeholder="Select a value" onChange={unitChange}>
+              <Option value="Gi">Gi</Option>
+              <Option value="Mi">Mi</Option>
+            </Select>
+          )}
         </FormItem>
       </Form>
     </ModalBlur>
