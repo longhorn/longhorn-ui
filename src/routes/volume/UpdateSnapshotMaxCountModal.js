@@ -55,29 +55,6 @@ const modal = ({
                 required: true,
                 message: 'Please input volume snapshotMaxCount',
               },
-              {
-                validator: (rule, value, callback) => {
-                  if (value === '' || typeof value !== 'number') {
-                    callback()
-                    return
-                  }
-                  if (value === 0) {
-                    callback()
-                  }
-                  if (value === 1) {
-                    callback(
-                      'Set 0 to inherit global settings, or a value from 2 to 250'
-                    )
-                  }
-                  if (value < 2 || value > 250) {
-                    callback(
-                      'Set 0 to inherit global settings, or a value from 2 to 250'
-                    )
-                  } else {
-                    callback()
-                  }
-                },
-              },
             ],
           })(<InputNumber style={{ width: '270px' }} />)}
         </FormItem>
