@@ -331,7 +331,7 @@ const modal = ({
                     </Tooltip>
                   </span>
                 </span>}
-                style={{ paddingLeft: 100 }}
+                style={{ paddingLeft: 93 }}
                 labelCol={{ span: 12 }}
                 wrapperCol={{ span: 12 }}
               >
