@@ -1,6 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select, Checkbox, Spin, Collapse } from 'antd'
+import {
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Checkbox,
+  Spin,
+  Collapse,
+  Tooltip,
+  Icon,
+} from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 const FormItem = Form.Item
@@ -266,31 +276,56 @@ const modal = ({
               { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
               </Select>)}
             </FormItem>
-             <FormItem label="Snapshot Max Count" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-            {getFieldDecorator('snapshotMaxCount', {
-              initialValue: 2,
-              rules: [
-                {
-                  validator: (rule, value, callback) => {
-                    if (value === '' || typeof value !== 'number') {
-                      callback()
-                      return
-                    }
-                    if (value < 2 || value > 250) {
-                      callback('The value should be between 2 and 250')
-                    } else {
-                      callback()
-                    }
+            <FormItem label={
+              <span>
+                Snapshot Max Count
+                <span style={{
+                  marginLeft: 10,
+                  color: '#faad14',
+                }}>
+                  <Tooltip title="A value of 0 will inherit from global settings">
+                    <Icon type="question-circle-o" />
+                  </Tooltip>
+                </span>
+                </span>
+            }
+              style={{ flex: 0.6 }}
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 14 }}>
+              {getFieldDecorator('snapshotMaxCount', {
+                initialValue: 0,
+                rules: [
+                  {
+                    validator: (rule, value, callback) => {
+                      if (value === '' || typeof value !== 'number') {
+                        callback()
+                        return
+                      }
+                      if (value < 2 || value > 250) {
+                        callback('The value should be between 2 and 250')
+                      } else {
+                        callback()
+                      }
+                    },
                   },
-                },
-              ],
-            })(<InputNumber style={{ width: '250px' }} />) }
+                ],
+              })(<InputNumber style={{ width: '250px' }} />) }
             </FormItem>
             <div style={{ display: 'flex', gap: 10 }}>
-               <FormItem label="Snapshot Max Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
+              <FormItem
+                label={
+                  <span style={{
+                  }}>
+                    Snapshot Max Size
+                  </span>
+                }
+                style={{ paddingLeft: 105 }}
+                labelCol={{ span: 12 }}
+                wrapperCol={{ span: 12 }}
+              >
                 {getFieldDecorator('snapshotMaxSize', {
                   initialValue: '0',
-                })(<Input style={{ width: '250px' }} />) }
+                })(<Input style={{ maxWidth: '250px' }} />)}
               </FormItem>
 
                <FormItem>
