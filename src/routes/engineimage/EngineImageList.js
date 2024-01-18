@@ -32,10 +32,10 @@ function list({ loading, dataSource, deleteEngineImage }) {
       dataIndex: 'state',
       key: 'state',
       width: 100,
-      render: (text) => {
+      render: (text, record) => {
         return (
-          <div className={classnames({ [text.toLowerCase()]: true, capitalize: true })}>
-            {text.hyphenToHump()}
+          <div className={classnames({ [record.incompatible ? 'incompatible' : text.toLowerCase()]: true, capitalize: true })}>
+            {record.incompatible ? 'Incompatible' : text.hyphenToHump()}
           </div>
         )
       },

@@ -16,6 +16,8 @@ import UpdateDataLocality from '../UpdateDataLocality'
 import UpdateSnapshotDataIntegrityModal from '../UpdateSnapshotDataIntegrityModal'
 import UpdateAccessMode from '../UpdateAccessMode'
 import UpdateUnmapMarkSnapChainRemovedModal from '../UpdateUnmapMarkSnapChainRemovedModal'
+import UpdateSnapshotMaxCountModal from '../UpdateSnapshotMaxCountModal.js'
+import UpdateSnapshotMaxSizeModal from '../UpdateSnapshotMaxSizeModal.js'
 import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
 import EventList from './EventList'
@@ -39,6 +41,8 @@ import {
   getUpdateReplicaSoftAntiAffinityModalProps,
   getDetachHostModalProps,
   getUpdateOfflineReplicaRebuildingModalProps,
+  getUpdateSnapshotMaxCountModalProps,
+  getUpdateSnapshotMaxSizeModalProps,
 } from '../helper'
 const relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime)
@@ -84,6 +88,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateOfflineReplicaRebuildingModalKey,
     detachHostModalVisible,
     detachHostModalKey,
+    updateSnapshotMaxCountModalVisible,
+    updateSnapshotMaxSizeModalVisible,
   } = volume
   const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -283,6 +289,22 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         payload: {
           image: record.currentImage,
           url: record.actions.engineUpgrade,
+        },
+      })
+    },
+    updateSnapshotMaxCount(record) {
+      dispatch({
+        type: 'volume/showUpdateSnapshotMaxCountModal',
+        payload: {
+          selected: record,
+        },
+      })
+    },
+    updateSnapshotMaxSize(record) {
+      dispatch({
+        type: 'volume/showUpdateSnapshotMaxSizeModal',
+        payload: {
+          selected: record,
         },
       })
     },
@@ -516,6 +538,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selectedVolume, unmapMarkSnapChainRemovedModalVisible, dispatch)
   const updateSnapshotDataIntegrityModalProps = getUpdateSnapshotDataIntegrityProps(selectedVolume, updateSnapshotDataIntegrityModalVisible, defaultSnapshotDataIntegrityOption, dispatch)
   const updateAccessModeModalProps = getUpdateAccessModeModalProps(selectedVolume, updateAccessModeModalVisible, dispatch)
+  const updateSnapshotMaxCountModalProps = getUpdateSnapshotMaxCountModalProps(selectedVolume,
+    updateSnapshotMaxCountModalVisible, dispatch)
+  const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selectedVolume, updateSnapshotMaxSizeModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
@@ -642,7 +667,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
-        {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : ''}
+        { createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : '' }
+        { updateSnapshotMaxCountModalVisible ? <UpdateSnapshotMaxCountModal {...updateSnapshotMaxCountModalProps} /> : '' }
+        { updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {updateOfflineReplicaRebuildingVisible ? <CommonModal key={updateOfflineReplicaRebuildingModalKey} {...updateOfflineReplicaRebuildingModalProps} /> : ''}

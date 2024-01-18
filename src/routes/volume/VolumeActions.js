@@ -16,6 +16,8 @@ function actions({
   showSalvage,
   rollback,
   showUpdateReplicaCount,
+  updateSnapshotMaxCount,
+  updateSnapshotMaxSize,
   showExpansionVolumeSizeModal,
   showCancelExpansionModal,
   createPVAndPVC,
@@ -104,6 +106,12 @@ function actions({
         break
       case 'updateReplicaCount':
         showUpdateReplicaCount(record)
+        break
+      case 'updateSnapshotMaxCount':
+        updateSnapshotMaxCount(record)
+        break
+      case 'updateSnapshotMaxSize':
+        updateSnapshotMaxSize(record)
         break
       case 'updateDataLocality':
         showUpdateDataLocality(record)
@@ -213,6 +221,8 @@ function actions({
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
+    { key: 'updateSnapshotMaxCount', name: 'Update Snapshot Max Count', disabled: false },
+    { key: 'updateSnapshotMaxSize', name: 'Update Snapshot Max Size', disabled: false },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
     { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.dataEngine !== 'v2' },
   ]
@@ -258,6 +268,8 @@ actions.propTypes = {
   showSalvage: PropTypes.func,
   rollback: PropTypes.func,
   showUpdateReplicaCount: PropTypes.func,
+  updateSnapshotMaxCount: PropTypes.func,
+  updateSnapshotMaxSize: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   changeVolume: PropTypes.func,
   commandKeyDown: PropTypes.bool,

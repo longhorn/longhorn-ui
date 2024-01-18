@@ -387,6 +387,14 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Snapshot Data Integrity:</span>
         {addGlobalSettingDescription(selectedVolume?.snapshotDataIntegrity)}
       </div>
+       <div className={styles.row}>
+        <span className={styles.label}> Snapshot Max Count:</span>
+        {selectedVolume.snapshotMaxCount}
+      </div>
+      <div className={styles.row}>
+        <span className={styles.label}> Snapshot Max Size:</span>
+        {formatMib(selectedVolume.snapshotMaxSize)}
+      </div>
       <div className={styles.row}>
         <Tooltip title={'Manages the engine/replica instances’ life cycle on the node.'}>
           <span className={styles.label}> Instance Manager:</span>

@@ -1,6 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Input, InputNumber, Select, Checkbox, Spin, Collapse } from 'antd'
+import {
+  Input,
+  InputNumber,
+  Select,
+  Checkbox,
+  Spin,
+  Collapse,
+  Tooltip,
+  Icon,
+} from 'antd'
 import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
@@ -56,6 +65,9 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
         size: `${getFieldsValue().size}${getFieldsValue().unit}`,
+        snapshotMaxSize: `${getFieldsValue().snapshotMaxSize}${
+          getFieldsValue().snapshotSizeUnit
+        }`,
       }
 
       if (data.unit) {
@@ -264,6 +276,73 @@ const modal = ({
               { defaultSnapshotDataIntegrityOption.map(option => <Option key={option.key} value={option.value}>{option.key}</Option>) }
               </Select>)}
             </FormItem>
+            <FormItem label={
+              <span>
+                Snapshot Max Count
+                <span style={{
+                  marginLeft: 10,
+                  color: '#faad14',
+                }}>
+                  <Tooltip title="A value of 0 will inherit from global settings">
+                    <Icon type="question-circle-o" />
+                  </Tooltip>
+                </span>
+                </span>
+            }
+              style={{ flex: 0.6 }}
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 14 }}>
+              {getFieldDecorator('snapshotMaxCount', {
+                initialValue: 0,
+                rules: [
+                  {
+                    validator: (rule, value, callback) => {
+                      if (value === '' || typeof value !== 'number') {
+                        callback()
+                        return
+                      }
+                      if (value < 2 || value > 250) {
+                        callback('The value should be between 2 and 250')
+                      } else {
+                        callback()
+                      }
+                    },
+                  },
+                ],
+              })(<InputNumber style={{ width: '250px' }} />) }
+            </FormItem>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <FormItem
+                label={
+                  <span style={{
+                  }}>
+                    Snapshot Max Size
+                  </span>
+                }
+                style={{ paddingLeft: 105 }}
+                labelCol={{ span: 12 }}
+                wrapperCol={{ span: 12 }}
+              >
+                {getFieldDecorator('snapshotMaxSize', {
+                  initialValue: '0',
+                })(<Input style={{ maxWidth: '250px' }} />)}
+              </FormItem>
+
+               <FormItem>
+                {getFieldDecorator('snapshotSizeUnit', {
+                  initialValue: item.unit,
+                  rules: [{ required: true, message: 'Please select your unit!' }],
+                })(
+                  <Select
+                    style={{ width: '100px' }}
+                    onChange={unitChange}
+                  >
+                    <Option value="Mi">Mi</Option>
+                    <Option value="Gi">Gi</Option>
+                  </Select>,
+                )}
+              </FormItem>
+            </div>
             <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaAutoBalance', {
                 initialValue: 'ignored',

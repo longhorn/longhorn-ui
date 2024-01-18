@@ -21,6 +21,8 @@ import EngineUgrade from './EngineUpgrade'
 import UpdateReplicaCount from './UpdateReplicaCount'
 import UpdateBulkReplicaCount from './UpdateBulkReplicaCount'
 import UpdateDataLocality from './UpdateDataLocality'
+import UpdateSnapshotMaxCountModal from './UpdateSnapshotMaxCountModal.js'
+import UpdateSnapshotMaxSizeModal from './UpdateSnapshotMaxSizeModal.js'
 import UpdateUnmapMarkSnapChainRemovedModal from './UpdateUnmapMarkSnapChainRemovedModal'
 import UpdateBulkUnmapMarkSnapChainRemovedModal from './UpdateBulkUnmapMarkSnapChainRemovedModal'
 import UpdateSnapshotDataIntegrityModal from './UpdateSnapshotDataIntegrityModal'
@@ -52,6 +54,8 @@ import {
   getUpdateReplicaSoftAntiAffinityModalProps,
   getUpdateOfflineReplicaRebuildingModalProps,
   getDetachHostModalProps,
+  getUpdateSnapshotMaxCountModalProps,
+  getUpdateSnapshotMaxSizeModalProps,
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -190,6 +194,8 @@ class Volume extends React.Component {
       updateOfflineReplicaRebuildingModalKey,
       offlineReplicaRebuildingKey,
       isBulkDetach,
+      updateSnapshotMaxCountModalVisible,
+      updateSnapshotMaxSizeModalVisible,
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -368,6 +374,22 @@ class Volume extends React.Component {
       showUpdateDataLocality(record) {
         dispatch({
           type: 'volume/showUpdateDataLocality',
+          payload: {
+            selected: record,
+          },
+        })
+      },
+      updateSnapshotMaxCount(record) {
+        dispatch({
+          type: 'volume/showUpdateSnapshotMaxCountModal',
+          payload: {
+            selected: record,
+          },
+        })
+      },
+      updateSnapshotMaxSize(record) {
+        dispatch({
+          type: 'volume/showUpdateSnapshotMaxSizeModal',
           payload: {
             selected: record,
           },
@@ -1147,6 +1169,8 @@ class Volume extends React.Component {
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
     const updateBulKReplicaCountModalProps = getUpdateBulkReplicaCountModalProps(selectedRows, updateBulkReplicaCountModalVisible, dispatch)
     const updateDataLocalityModalProps = getUpdateDataLocalityModalProps(selected, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
+    const updateSnapshotMaxCountModalProps = getUpdateSnapshotMaxCountModalProps(selected, updateSnapshotMaxCountModalVisible, dispatch)
+    const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selected, updateSnapshotMaxSizeModalVisible, dispatch)
     const updateSnapshotDataIntegrityModalProps = getUpdateSnapshotDataIntegrityProps(selected, updateSnapshotDataIntegrityModalVisible, defaultSnapshotDataIntegrityOption, dispatch)
     const updateBulkSnapshotDataIntegrityModalProps = getUpdateBulkSnapshotDataIntegrityModalProps(selectedRows, updateBulkSnapshotDataIntegrityModalVisible, defaultSnapshotDataIntegrityOption, dispatch)
     const updateBulkDataLocalityModalProps = getUpdateBulkDataLocalityModalProps(selectedRows, updateBulkDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
@@ -1188,7 +1212,9 @@ class Volume extends React.Component {
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {updateReplicaCountModalVisible ? <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} /> : ''}
         {updateBulkReplicaCountModalVisible ? <UpdateBulkReplicaCount key={updateBulkReplicaCountModalKey} {...updateBulKReplicaCountModalProps} /> : ''}
-        {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : ''}
+        { updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : '' }
+        { updateSnapshotMaxCountModalVisible ? <UpdateSnapshotMaxCountModal {...updateSnapshotMaxCountModalProps} /> : '' }
+        { updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
         {updateBulkDataLocalityModalVisible ? <UpdateBulkDataLocality key={updateBulkDataLocalityModalKey} {...updateBulkDataLocalityModalProps} /> : ''}
         {updateAccessModeModalVisible ? <UpdateAccessMode key={updateAccessModeModalKey} {...updateAccessModeModalProps} /> : ''}
         {updateBulkAccessModeModalVisible ? <UpdateBulkAccessMode key={updateBulkAccessModeModalKey} {...updateBulkAccessModeModalProps} /> : ''}
