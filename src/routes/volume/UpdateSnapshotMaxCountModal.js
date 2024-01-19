@@ -55,17 +55,6 @@ const modal = ({
                 required: true,
                 message: 'Please input volume snapshotMaxCount',
               },
-              {
-                validator: (rule, value, callback) => {
-                  if (value < 2 || value > 250 || !/^\d+$/.test(value)) {
-                    callback(
-                      'The value should be an integer between 2 and 250',
-                    )
-                  } else {
-                    callback()
-                  }
-                },
-              },
             ],
           })(<InputNumber style={{ width: '270px' }} />)}
         </FormItem>

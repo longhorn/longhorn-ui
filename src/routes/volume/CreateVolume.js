@@ -283,43 +283,34 @@ const modal = ({
                   marginLeft: 10,
                   color: '#faad14',
                 }}>
-                  <Tooltip title="A value of 0 will inherit from global settings">
+                  <Tooltip title="Set '0' to inherit global settings">
                     <QuestionCircleOutlined />
                   </Tooltip>
                 </span>
-                </span>
+              </span>
             }
               style={{ flex: 0.6 }}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 14 }}>
               {getFieldDecorator('snapshotMaxCount', {
                 initialValue: 0,
-                rules: [
-                  {
-                    validator: (rule, value, callback) => {
-                      if (value === '' || typeof value !== 'number') {
-                        callback()
-                        return
-                      }
-                      if (value < 2 || value > 250) {
-                        callback('The value should be between 2 and 250')
-                      } else {
-                        callback()
-                      }
-                    },
-                  },
-                ],
               })(<InputNumber style={{ width: '250px' }} />) }
             </FormItem>
             <div style={{ display: 'flex', gap: 10 }}>
               <FormItem
                 label={
+                <span>
+                  Snapshot Max Size
                   <span style={{
+                    marginLeft: 10,
+                    color: '#faad14',
                   }}>
-                    Snapshot Max Size
+                    <Tooltip title="Set '0' for unrestricted size or at least twice volume size">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
                   </span>
-                }
-                style={{ paddingLeft: 105 }}
+                </span>}
+                style={{ paddingLeft: 93 }}
                 labelCol={{ span: 12 }}
                 wrapperCol={{ span: 12 }}
               >
