@@ -16,7 +16,7 @@ export function statusUpgradingEngine(volume) {
 export function hasReadyBackingDisk(data) {
   try {
     return Object.keys(data.diskFileStatusMap).some(
-      (key) => data.diskFileStatusMap[key]?.state === 'ready'
+      (key) => data.diskFileStatusMap[key]?.state === 'ready',
     )
   } catch (error) {
     return false

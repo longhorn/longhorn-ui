@@ -538,8 +538,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selectedVolume, unmapMarkSnapChainRemovedModalVisible, dispatch)
   const updateSnapshotDataIntegrityModalProps = getUpdateSnapshotDataIntegrityProps(selectedVolume, updateSnapshotDataIntegrityModalVisible, defaultSnapshotDataIntegrityOption, dispatch)
   const updateAccessModeModalProps = getUpdateAccessModeModalProps(selectedVolume, updateAccessModeModalVisible, dispatch)
-  const updateSnapshotMaxCountModalProps = getUpdateSnapshotMaxCountModalProps(selectedVolume,
-    updateSnapshotMaxCountModalVisible, dispatch)
+  const updateSnapshotMaxCountModalProps = getUpdateSnapshotMaxCountModalProps(
+    selectedVolume,
+    updateSnapshotMaxCountModalVisible,
+    dispatch,
+  )
   const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selectedVolume, updateSnapshotMaxSizeModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {

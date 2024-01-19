@@ -89,7 +89,7 @@ const modal = ({
             <Select placeholder="Select a value" onChange={unitChange}>
               <Option value="Gi">Gi</Option>
               <Option value="Mi">Mi</Option>
-            </Select>
+            </Select>,
           )}
         </FormItem>
       </Form>
