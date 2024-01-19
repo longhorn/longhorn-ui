@@ -294,27 +294,6 @@ const modal = ({
               wrapperCol={{ span: 14 }}>
               {getFieldDecorator('snapshotMaxCount', {
                 initialValue: 0,
-                rules: [
-                  {
-                    validator: (rule, value, callback) => {
-                      if (value === '' || typeof value !== 'number') {
-                        callback()
-                        return
-                      }
-                      if (value === 0) {
-                        callback()
-                      }
-                      if (value === 1) {
-                        callback('Set 0 to inherit global settings, or a value from 2 to 250')
-                      }
-                      if (value < 2 || value > 250) {
-                        callback('Set 0 to inherit global settings, or a value from 2 to 250')
-                      } else {
-                        callback()
-                      }
-                    },
-                  },
-                ],
               })(<InputNumber style={{ width: '250px' }} />) }
             </FormItem>
             <div style={{ display: 'flex', gap: 10 }}>
