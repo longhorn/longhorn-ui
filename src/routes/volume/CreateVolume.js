@@ -8,8 +8,8 @@ import {
   Spin,
   Collapse,
   Tooltip,
-  Icon,
 } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
@@ -284,7 +284,7 @@ const modal = ({
                   color: '#faad14',
                 }}>
                   <Tooltip title="A value of 0 will inherit from global settings">
-                    <Icon type="question-circle-o" />
+                    <QuestionCircleOutlined />
                   </Tooltip>
                 </span>
                 </span>
