@@ -77,7 +77,7 @@
     "cross-port-killer": "^1.4.0",
     "css-hot-loader": "^1.4.4",
     "css-loader": "^6.9.0",
-    "css-minimizer-webpack-plugin": "^5.0.1",
+    "css-minimizer-webpack-plugin": "^6.0.0",
     "cssnano": "^6.0.3",
     "es5-imcompatible-versions": "^0.1.88",
     "escope": "^4.0.0",
