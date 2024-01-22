@@ -37,7 +37,7 @@ const modal = ({
       let sizeMi = parseInt(item?.snapshotMaxSize, 10) / (1024 * 1024)
 
       return getFieldsValue().unit === 'Gi'
-        ? sizeMi / 1024
+        ? (sizeMi / 1024).toFixed(2)
         : parseInt(sizeMi, 10)
     }
     return 0
