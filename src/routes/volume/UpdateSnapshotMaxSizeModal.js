@@ -70,7 +70,7 @@ const modal = ({
         {...formItemLayout}
         style={{ display: 'flex', flexDirection: 'column' }}
       >
-        <FormItem label="Max Count">
+        <FormItem label="Max Size">
           {getFieldDecorator('snapshotMaxSize', {
             initialValue: minValue,
             rules: [
