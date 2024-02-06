@@ -53,7 +53,9 @@ function modal({
     if (selected && selected.size) {
       let sizeMi = parseInt(selected.size, 10) / (1024 * 1024)
 
-      return getFieldsValue().unit === 'Gi' ? sizeMi / 1024 : parseInt(sizeMi, 10)
+      return getFieldsValue().unit === 'Gi'
+        ? (sizeMi / 1024).toFixed(2)
+        : parseInt(sizeMi, 10)
     }
     return 0
   }
@@ -68,7 +70,7 @@ function modal({
     } else {
       currentSize *= 1024
     }
-    setFieldsValue({ size: currentSize, unit: value })
+    setFieldsValue({ size: currentSize.toFixed(2), unit: value })
   }
 
   const messageDisableFrontend = selected && selected.disableFrontend ? 'Longhorn will not expand the filesystem for the volume in maintenance mode. There is no available frontend for filesystem expansion' : ''
