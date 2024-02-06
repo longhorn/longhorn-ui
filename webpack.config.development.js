@@ -65,7 +65,8 @@ module.exports = {
         exclude: [],
         loader: "babel-loader",
         options: {
-          cacheDirectory: true
+          cacheDirectory: true,
+          sourceMap: true
         }
       },
       {
@@ -74,7 +75,8 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              importLoaders: 1
+              importLoaders: 1,
+              sourceMap: true
             }
           }
         ]
@@ -139,6 +141,7 @@ module.exports = {
           {
             loader: "url-loader",
             options: {
+              sourceMap: true,
               limit: 8192
             }
           }
