@@ -180,7 +180,7 @@ class Filter extends React.Component {
     return (
       <Form>
         <Space.Compact className={styles.filter}>
-          <Popover placement="topLeft" content={content} visible={popoverVisible}>
+          <Popover placement="topLeft" content={content} open={popoverVisible}>
             <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
               {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
             </Select>

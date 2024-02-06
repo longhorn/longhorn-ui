@@ -74,7 +74,7 @@ const modal = ({
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <Popover placement="right"
-          visible={showWarning}
+          open={showWarning}
           content={<div style={{ maxWidth: 200 }}>
             <Alert message={message} type="warning" />
           </div>}>

@@ -101,9 +101,8 @@ function Menus({ location, isNavbar, switchMenuPopover }) {
       mode={isNavbar ? 'inline' : 'horizontal'}
       onSelect={switchMenuPopover}
       selectedKeys={[activeClass]}
-    >
-      {menuItems}
-    </Menu>
+      items={menuItems}
+    />
   )
 }
 
