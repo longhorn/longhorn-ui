@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber, Select } from 'antd'
-const { Option } = Select
+import { InputNumber, Select } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
+const { Option } = Select
 const FormItem = Form.Item
 
 const formItemLayout = {
