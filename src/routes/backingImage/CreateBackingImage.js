@@ -209,7 +209,7 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input placeholder="Ask Longhorn to validate the SHA512 checksum if it’s specified here." />)}
+          })(<Input placeholder="Ask Longhorn to validate the SHA512 checksum if it is specified here." />)}
         </FormItem>
       </Form>
     </ModalBlur>
