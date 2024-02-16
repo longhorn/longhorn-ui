@@ -1,0 +1,21 @@
+name: Codespell
+
+on:
+  pull_request:
+    branches:
+    - master
+    - "v*.*.*"
+
+jobs:
+  codespell:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: Check code spell
+      uses: codespell-project/actions-codespell@v2
+      with:
+        check_filenames: true
+        skip: "*/**.yaml,*/**.yml,./scripts,./vendor,MAINTAINERS,LICENSE,go.mod,go.sum"
