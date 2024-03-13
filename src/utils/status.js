@@ -1,9 +1,10 @@
 import React from 'react'
-import { Tooltip, Icon } from 'antd'
+import { Tooltip } from 'antd'
+import { SyncOutlined } from '@ant-design/icons'
 
 export function statusUpgradingEngine(volume) {
   if (volume && volume.image && volume.currentImage && volume.image !== volume.currentImage) {
-    return (<Tooltip title={`Volume engine is being upgraded from ${volume.currentImage} to ${volume.image}`}><Icon style={{ marginRight: 5 }} type="sync" spin /></Tooltip>)
+    return (<Tooltip title={`Volume engine is being upgraded from ${volume.currentImage} to ${volume.image}`}><SyncOutlined style={{ marginRight: 5 }} spin /></Tooltip>)
   }
   return ''
 }
@@ -15,7 +16,7 @@ export function statusUpgradingEngine(volume) {
 export function hasReadyBackingDisk(data) {
   try {
     return Object.keys(data.diskFileStatusMap).some(
-      (key) => data.diskFileStatusMap[key]?.state === 'ready'
+      (key) => data.diskFileStatusMap[key]?.state === 'ready',
     )
   } catch (error) {
     return false

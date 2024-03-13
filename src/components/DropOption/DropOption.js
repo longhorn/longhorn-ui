@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Dropdown, Button, Icon, Menu, Tooltip } from 'antd'
+import { Dropdown, Button, Menu, Tooltip } from 'antd'
+import { BarsOutlined, DownOutlined } from '@ant-design/icons'
 
 const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps, tooltipProps }) => {
   const menu = menuOptions.map(item => {
@@ -12,12 +13,12 @@ const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps,
     )
   })
   return (<Dropdown
-    overlay={<Menu onClick={onMenuClick}>{menu}</Menu>}
+    menu={<Menu onClick={onMenuClick}>{menu}</Menu>}
     {...dropdownProps}
   >
     <Button style={{ border: 'none', ...buttonStyle }}>
-      <Icon style={{ marginRight: 2 }} type="bars" />
-      <Icon type="down" />
+      <BarsOutlined style={{ marginRight: 2 }} />
+      <DownOutlined />
     </Button>
   </Dropdown>)
 }

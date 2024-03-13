@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import { formatDate } from '../../utils/formatDate'
 import { ModalBlur } from '../../components'
 
-const modal = ({
+function modal({
   visible,
   onCancel,
   onOk,
   item,
-}) => {
+}) {
   const modalOpts = {
     title: item.snapshotCreated ? 'Workload/Pod Status When Backup Created' : 'Workload/Pod',
     visible,

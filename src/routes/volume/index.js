@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { Row, Col, Button, Modal, Alert } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
@@ -59,6 +59,8 @@ import {
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
+const relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
 const confirm = Modal.confirm
 
@@ -470,7 +472,7 @@ class Volume extends React.Component {
 
         if (record && record.controllers && record.controllers[0] && record.controllers[0].lastExpansionError && record.controllers[0].lastExpansionFailedAt) {
           lastExpansionError = record.controllers[0].lastExpansionError
-          lastExpansionFailedAt = moment(record.controllers[0].lastExpansionFailedAt).fromNow()
+          lastExpansionFailedAt = dayjs(record.controllers[0].lastExpansionFailedAt).fromNow()
         }
 
         let content = (<div>
@@ -1129,6 +1131,7 @@ class Volume extends React.Component {
         type: 'volume/showCreateVolumeModalBefore',
       })
       this.setState({
+        // eslint-disable-next-line react/no-unstable-nested-components
         CreateVolumeGen() {
           return <CreateVolume {...createVolumeModalProps} />
         },

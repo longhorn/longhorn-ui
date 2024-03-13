@@ -5,9 +5,12 @@ import { AutoComplete } from 'antd'
 const { Option } = AutoComplete
 
 class Complete extends React.Component {
-  state = {
-    result: [],
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      result: [],
+    }
+  }
 
   handleSearch = value => {
     let result = this.props.options.filter((option) => {

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Checkbox, Alert } from 'antd'
+import { Checkbox, Alert } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 
 const FormItem = Form.Item

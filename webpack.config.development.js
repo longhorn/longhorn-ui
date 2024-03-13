@@ -2,14 +2,12 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const ManifestPlugin = require("webpack-manifest-plugin");
-const theme = require("./src/theme");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
-var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+var FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 
 
@@ -21,18 +19,7 @@ module.exports = {
     port: 8080,
     open: false,
     hot: true,
-    quiet: true,
-    disableHostCheck: true,
     historyApiFallback: true,
-    overlay: {
-      errors: true
-    },
-    stats: {
-      children: false,
-      chunks: false,
-      assets: false,
-      modules: false
-    },
     proxy: {
       proxyTimeout: 10 * 60 * 1000,
       timeout: 10 * 60 * 1000,
@@ -53,7 +40,8 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
     chunkFilename: "[name].async.js",
-    library: "[name]_dll"
+    library: "[name]_dll",
+    clean: true
   },
   resolve: {
     alias: {
@@ -63,6 +51,10 @@ module.exports = {
       services: path.resolve(__dirname, "src/services/"),
       routes: path.resolve(__dirname, "src/routes/"),
       models: path.resolve(__dirname, "src/models/")
+    },
+    fallback: {
+      fs: false,
+      path: false,
     }
   },
   module: {
@@ -71,7 +63,11 @@ module.exports = {
         test: /\.js$/,
         include: [path.resolve(__dirname, "src")],
         exclude: [],
-        loader: "babel-loader?cacheDirectory",
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true,
+          sourceMap: true
+        }
       },
       {
         test: /\.css$/,
@@ -79,7 +75,8 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              importLoaders: 1
+              importLoaders: 1,
+              sourceMap: true
             }
           }
         ]
@@ -87,31 +84,25 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          'css-hot-loader',
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: true,
-                // if hmr does not work, this is a forceful method.
-              reloadAll: true,
-              modifyVars: theme()
-            },
-          },
+          "style-loader",
           {
             loader: "css-loader",
             options: {
               sourceMap: true,
               importLoaders: 1,
-              modules: true,
-              localIdentName: "[name]_[local]-[hash:base64:5]"
+              modules: {
+                localIdentName: "[name]_[local]-[hash:base64:5]"
+              },
             }
           },
           {
             loader: "less-loader",
             options: {
-              sourceMap: true,
-              javascriptEnabled: true,
-              modifyVars: theme()
+              lessOptions: {
+                sourceMap: true,
+                javascriptEnabled: true,
+                math: "always",
+              }
             }
           }
         ],
@@ -120,29 +111,25 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          'css-hot-loader',
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: true,
-                // if hmr does not work, this is a forceful method.
-              reloadAll: true,
-              modifyVars: theme()
-            },
-          },
+          MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {
               sourceMap: true,
-              importLoaders: 1
+              importLoaders: 1,
+              modules: {
+                localIdentName: "[name]_[local]-[hash:base64:5]"
+              },
             }
           },
           {
             loader: "less-loader",
             options: {
-              sourceMap: true,
-              javascriptEnabled: true,
-              modifyVars: theme()
+              lessOptions: {
+                sourceMap: true,
+                javascriptEnabled: true,
+                math: "always",
+              } 
             }
           }
         ],
@@ -154,6 +141,7 @@ module.exports = {
           {
             loader: "url-loader",
             options: {
+              sourceMap: true,
               limit: 8192
             }
           }
@@ -163,10 +151,6 @@ module.exports = {
   },
   externals: {
     jquery: "jQuery"
-  },
-  node: {
-    fs: "empty",
-    module: "empty"
   },
   devtool: false,
   optimization: {
@@ -182,7 +166,6 @@ module.exports = {
     }
   },
   plugins: [
-    new OpenBrowserPlugin({url: 'http://localhost:8080/'}),
     new ProgressBarPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new MiniCssExtractPlugin({
@@ -194,14 +177,15 @@ module.exports = {
       filename: "index.html",
       hash: true
     }),
-    new CleanWebpackPlugin(["dist"]),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, "public")
-      }
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "public")
+        }
+      ]
+    }),
     new webpack.HotModuleReplacementPlugin(),
-    new ManifestPlugin(),
+    new WebpackManifestPlugin(),
     new webpack.SourceMapDevToolPlugin({})
   ]
 };

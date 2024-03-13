@@ -1,6 +1,8 @@
 import React from 'react'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { Tooltip } from 'antd'
+const relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
 function utcStrToDate(utcStr) {
   const reg = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) \+\d{4} UTC$/
@@ -20,9 +22,9 @@ export function formatDate(date, hasTooltip = true) {
   }
   let gmt = utcStrToDate(date)
   if (hasTooltip) {
-    return <Tooltip title={`${moment(gmt).utc().format()}`}>
-      {moment(gmt).fromNow()}
+    return <Tooltip title={`${dayjs.utc(gmt).format()}`}>
+      {dayjs(gmt).fromNow()}
     </Tooltip>
   }
-  return moment(gmt).fromNow()
+  return dayjs(gmt).fromNow()
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Modal } from 'antd'
+import { Input, Modal } from 'antd'
+import { Form } from '@ant-design/compatible'
 const FormItem = Form.Item
 
 const formItemLayout = {

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Progress } from 'antd'
+import { Input, Progress } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../index'
 const FormItem = Form.Item
 const { TextArea } = Input

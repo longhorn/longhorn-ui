@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Radio } from 'antd'
+import { Radio } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import styles from './BulkEditNode.less'
 
@@ -75,7 +76,7 @@ const modal = ({
                 <RadioGroup>
                   <Radio value={true}>Enable</Radio>
                   <Radio value={false}>Disable</Radio>
-                </RadioGroup>
+                </RadioGroup>,
               )}
             </FormItem>
           </div>
@@ -98,7 +99,7 @@ const modal = ({
                 <RadioGroup>
                   <Radio value={true}>True</Radio>
                   <Radio value={false}>False</Radio>
-                </RadioGroup>
+                </RadioGroup>,
               )}
             </FormItem>
           </div>

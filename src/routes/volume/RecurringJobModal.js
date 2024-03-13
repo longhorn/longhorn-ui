@@ -33,7 +33,6 @@ const modal = ({
     dispatch,
   }
 
-
   return (
     <ModalBlur {...modalOpts}>
       <div style={{ width: '100%', overflow: 'auto' }}>

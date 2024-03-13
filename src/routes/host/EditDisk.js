@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import EditableDiskList from './components/EditableDiskList'
 import { byteToGi, giToByte } from './helper/index'
@@ -47,6 +47,7 @@ const modal = ({
         }
         disk.name ? updatedDisks[disk.name] = disk : updatedDisks[k] = disk
       })
+      // eslint-disable-next-line prefer-object-spread
       let updateNode = Object.assign({}, node, {
         tags: values.tags,
         allowScheduling: values.nodeAllowScheduling,

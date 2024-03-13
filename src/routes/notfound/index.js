@@ -1,10 +1,10 @@
 import React from 'react'
-import { Icon } from 'antd'
 import styles from './index.less'
+import { FrownOutlined } from '@ant-design/icons'
 
 const Notfound = () => <div className="content-inner">
     <div className={styles.notfound}>
-      <Icon type="frown-o" />
+      <FrownOutlined />
     </div>
   </div>
 

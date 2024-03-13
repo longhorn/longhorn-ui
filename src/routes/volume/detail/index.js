@@ -4,7 +4,7 @@ import { connect } from 'dva'
 import { Row, Col, Card, Modal, Alert } from 'antd'
 import { routerRedux } from 'dva/router'
 import queryString from 'query-string'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import VolumeActions from '../VolumeActions'
 import VolumeInfo from './VolumeInfo'
 import styles from './index.less'
@@ -44,6 +44,8 @@ import {
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
 } from '../helper'
+const relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
 const confirm = Modal.confirm
 
@@ -383,7 +385,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
       if (record && record.controllers && record.controllers[0] && record.controllers[0].lastExpansionError && record.controllers[0].lastExpansionFailedAt) {
         lastExpansionError = record.controllers[0].lastExpansionError
-        lastExpansionFailedAt = moment(record.controllers[0].lastExpansionFailedAt).fromNow()
+        lastExpansionFailedAt = dayjs(record.controllers[0].lastExpansionFailedAt).fromNow()
       }
 
       let content = (<div>
@@ -536,8 +538,11 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selectedVolume, unmapMarkSnapChainRemovedModalVisible, dispatch)
   const updateSnapshotDataIntegrityModalProps = getUpdateSnapshotDataIntegrityProps(selectedVolume, updateSnapshotDataIntegrityModalVisible, defaultSnapshotDataIntegrityOption, dispatch)
   const updateAccessModeModalProps = getUpdateAccessModeModalProps(selectedVolume, updateAccessModeModalVisible, dispatch)
-  const updateSnapshotMaxCountModalProps = getUpdateSnapshotMaxCountModalProps(selectedVolume,
-    updateSnapshotMaxCountModalVisible, dispatch)
+  const updateSnapshotMaxCountModalProps = getUpdateSnapshotMaxCountModalProps(
+    selectedVolume,
+    updateSnapshotMaxCountModalVisible,
+    dispatch,
+  )
   const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selectedVolume, updateSnapshotMaxSizeModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {

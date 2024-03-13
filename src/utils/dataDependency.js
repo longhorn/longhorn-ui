@@ -190,6 +190,7 @@ export function getDataDependency(pathName) {
 
 export function enableQueryData(pathName, ns) {
   let canQueryData = false
+  if (!pathName) return false
 
   // Determining whether other dependencies model need to request data
   if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key) && httpDataDependency[key].find((item) => item === ns))) {

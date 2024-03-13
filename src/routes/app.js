@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Helmet } from 'react-helmet'
 import { ConfigProvider } from 'antd'
-import enUS from 'antd/lib/locale-provider/en_US'
+import enUS from 'antd/es/calendar/locale/en_US'
 import { Layout } from '../components'
 import { classnames, config } from '../utils'
 

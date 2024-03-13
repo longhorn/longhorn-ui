@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Input } from 'antd'
 
-
 class StorageInput extends React.Component {
   constructor(props) {
     super(props)
@@ -33,7 +32,7 @@ class StorageInput extends React.Component {
   triggerChange = (changedValue) => {
     const onChange = this.props.onChange
     if (onChange) {
-      onChange(Object.assign({}, this.state, changedValue))
+      onChange({ ...this.state, ...changedValue })
     }
   }
 

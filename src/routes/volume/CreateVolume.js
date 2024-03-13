@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  Form,
   Input,
   InputNumber,
   Select,
@@ -9,8 +8,9 @@ import {
   Spin,
   Collapse,
   Tooltip,
-  Icon,
 } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 const FormItem = Form.Item
@@ -284,7 +284,7 @@ const modal = ({
                   color: '#faad14',
                 }}>
                   <Tooltip title="Set '0' to inherit global settings">
-                    <Icon type="question-circle-o" />
+                    <QuestionCircleOutlined />
                   </Tooltip>
                 </span>
               </span>
@@ -306,7 +306,7 @@ const modal = ({
                     color: '#faad14',
                   }}>
                     <Tooltip title="Set '0' for unrestricted size or at least twice volume size">
-                      <Icon type="question-circle-o" />
+                      <QuestionCircleOutlined />
                     </Tooltip>
                   </span>
                 </span>}

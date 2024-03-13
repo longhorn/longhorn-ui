@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Form } from 'antd'
+import { Button } from 'antd'
+import { Form } from '@ant-design/compatible'
 import ReplicaActions from './ReplicaActions'
 import ReplicaList from './ReplicaList'
 import { ModalBlur } from '../../components'

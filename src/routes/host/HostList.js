@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Progress, Tooltip, Tag, Icon } from 'antd'
+import { Table, Progress, Tooltip, Tag } from 'antd'
 import classnames from 'classnames'
 import styles from './HostList.less'
 import { sortTable } from '../../utils/sort'
@@ -13,6 +13,7 @@ import { formatMib } from '../../utils/formater'
 import { pagination } from '../../utils/page'
 import { ModalBlur } from '../../components'
 import C from '../../utils/constants'
+import { EnvironmentOutlined } from '@ant-design/icons'
 
 class List extends React.Component {
   constructor(props) {
@@ -92,16 +93,16 @@ class List extends React.Component {
   }
 
   onRowClick = (record, flag) => {
-    let selecteRowByClick = [record]
+    let selectRowByClick = [record]
 
     if (flag) {
       this.state.selectedRows.forEach((item) => {
-        if (selecteRowByClick.every((ele) => {
+        if (selectRowByClick.every((ele) => {
           return ele.id !== item.id
         })) {
-          selecteRowByClick.push(item)
+          selectRowByClick.push(item)
         } else {
-          selecteRowByClick = selecteRowByClick.filter((ele) => {
+          selectRowByClick = selectRowByClick.filter((ele) => {
             return ele.id !== item.id
           })
         }
@@ -110,17 +111,17 @@ class List extends React.Component {
 
     this.setState({
       ...this.state,
-      selectedRows: selecteRowByClick,
+      selectedRows: selectRowByClick,
       rowSelection: {
         ...this.state.rowSelection,
-        selectedRowKeys: selecteRowByClick.map((item) => item.id),
+        selectedRowKeys: selectRowByClick.map((item) => item.id),
       },
     })
 
     this.props.dispatch({
       type: 'host/changeSelection',
       payload: {
-        selectedHostRows: selecteRowByClick,
+        selectedHostRows: selectRowByClick,
       },
     })
   }
@@ -146,12 +147,14 @@ class List extends React.Component {
     }
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   collapseAll = () => {
     this.setState({
       expandedRowKeys: [],
     })
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   expandAll = () => {
     const { dataSource } = this.props
     this.setState({
@@ -261,7 +264,7 @@ class List extends React.Component {
         render: (text, record) => {
           return (
             <div style={{ textAlign: 'center' }}>
-              <div>{text} {record && (record.region || record.zone) ? <Tooltip title={<span> region: {record.region} <br></br> zone: {record.zone} </span>}><Icon style={{ marginLeft: '5px', color: '#108ee9' }} type="environment" /></Tooltip> : '' } </div>
+              <div>{text} {record && (record.region || record.zone) ? <Tooltip title={<span> region: {record.region} <br></br> zone: {record.zone} </span>}><EnvironmentOutlined style={{ marginLeft: '5px', color: '#108ee9' }} /></Tooltip> : '' } </div>
               <div className={styles.secondLabel} style={{ color: '#b9b9b9' }}>{record.address}</div>
             </div>
           )
@@ -400,12 +403,15 @@ class List extends React.Component {
     return (
       <div id="hostTable" style={{ overflow: 'hidden', flex: 1 }}>
         <Table
-          className="common-table-class"
           bordered={false}
           columns={columns}
           dataSource={dataSource}
-          expandedRowRender={disks}
-          onExpand={this.onExpand}
+          expandable={{
+            expandedRowKeys: this.state.expandedRowKeys,
+            expandedRowRender: disks,
+            onExpand: this.onExpand,
+            onExpandedRowsChange: this.onExpandedRowsChange,
+          }}
           onRow={record => {
             return {
               onClick: () => {
@@ -413,8 +419,6 @@ class List extends React.Component {
               },
             }
           }}
-          expandedRowKeys={this.state.expandedRowKeys}
-          onExpandedRowsChange={this.onExpandedRowsChange}
           loading={loading}
           onChange={onChange}
           simple

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Select, Input, Button, Form, Popover } from 'antd'
+import { Select, Input, Button, Form, Popover, Space } from 'antd'
 import queryString from 'query-string'
 import styles from './Filter.less'
 
@@ -9,7 +9,17 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroupValue = '' } = queryString.parse(props.location.search)
+    const {
+      field = props.defaultField || 'name',
+      value = '',
+      stateValue = '',
+      nodeRedundancyValue = '',
+      engineImageUpgradableValue = '',
+      scheduleValue = '',
+      pvStatusValue = '',
+      revisionCounterValue = '',
+      isGroupValue = '',
+    } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
@@ -26,7 +36,7 @@ class Filter extends React.Component {
 
   handleSubmit = () => {
     if (this.props.onSearch) {
-      this.props.onSearch(Object.assign({}, this.state))
+      this.props.onSearch({ ...this.state })
     }
   }
 
@@ -59,6 +69,7 @@ class Filter extends React.Component {
     this.setState({ ...this.state, revisionCounterValue })
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   handleIsGroupValueChange = (isGroupValue) => {
     this.setState({ ...this.state, isGroupValue })
   }
@@ -156,26 +167,27 @@ class Filter extends React.Component {
     }
 
     let content = ''
-    let popoverVsible = false
+    let popoverVisible = false
 
+    // eslint-disable-next-line no-unused-vars
     for (let key in defaultContent) {
       if (defaultContent[key] !== '' && key !== 'field' && this.state[key] !== defaultContent[key]) {
         content = (<div style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{`Current Filter: ${defaultContent[key]}`}</div>)
-        popoverVsible = true
+        popoverVisible = true
       }
     }
 
     return (
       <Form>
-      <Input.Group compact className={styles.filter}>
-      <Popover placement="topLeft" content={content} visible={popoverVsible}>
-        <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
-          {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-        </Select>
-      </Popover>
-      { valueForm }
-        <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
-      </Input.Group>
+        <Space.Compact className={styles.filter}>
+          <Popover placement="topLeft" content={content} open={popoverVisible}>
+            <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
+              {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+            </Select>
+          </Popover>
+          { valueForm }
+          <Button size="large" style={{ height: '40px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
+        </Space.Compact>
       </Form>
     )
   }

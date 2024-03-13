@@ -1,14 +1,16 @@
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 import later from 'meteor-later'
+const utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
   
 var numberList = function(numbers) {
   if (numbers.length < 2) {
-    return moment()._locale.ordinal(numbers)
+    return dayjs()._locale.ordinal(numbers)
   }
 
   var last_val = numbers.pop()
-  return numbers.join(', ') + ' and ' + moment()._locale.ordinal(last_val)
+  return numbers.join(', ') + ' and ' + dayjs()._locale.ordinal(last_val)
 }
 
 /*
@@ -17,9 +19,9 @@ var numberList = function(numbers) {
   */
 var numberToDateName = function(value, type) {
   if (type === 'dow') {
-    return moment().day(value - 1).format('ddd')
+    return dayjs().day(value - 1).format('ddd')
   } else if (type === 'mon') {
-    return moment().month(value - 1).format('MMM')
+    return dayjs().month(value - 1).format('MMM')
   }
 }
 
@@ -151,7 +153,7 @@ var getNextDate = function(cronspec, sixth) {
   * (This is just a wrapper for later.js and moment.js)
   */
 var getNext = function(cronspec, sixth) {
-  return moment( getNextDate( cronspec, sixth ) ).calendar()
+  return dayjs( getNextDate( cronspec, sixth ) ).calendar()
 }
 
 //----------------

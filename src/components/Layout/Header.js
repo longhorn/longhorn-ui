@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col, Popover, Icon } from 'antd'
+import { Row, Col, Popover } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'
 import longhornLogo from '../../assets/images/longhorn-logo.svg'
+import { BarsOutlined } from '@ant-design/icons'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   const menusProps = {
@@ -22,9 +23,9 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
         </Col>
         <Col lg={0} md={0} sm={16} xs={12}>
           {isNavbar ? <div className={styles.popupMenu}>
-              <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} visible={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
+              <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} open={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
                 <div className={styles.button}>
-                  <Icon type="bars" />
+                  <BarsOutlined />
                 </div>
               </Popover>
             </div> : ''}

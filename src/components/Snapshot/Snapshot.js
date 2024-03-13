@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Tree, Icon, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } from 'antd'
+import { Tree, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } from 'antd'
 import { formatSnapshot, formatMib } from '../../utils/formater'
 import { formatDate } from '../../utils/formatDate'
 import { disabledSnapshotAction } from '../../routes/volume/helper/index'
 import './Snapshot.less'
+import { CameraOutlined, CaretRightOutlined } from '@ant-design/icons'
 
 const TreeNode = Tree.TreeNode
 
@@ -27,12 +28,12 @@ function VolumeHead(props) {
     </div>}>
     <div className="snapshot-current-desc">
       <Button>
-        <Icon type="caret-right" />Volume Head
+        <CaretRightOutlined />Volume Head
         </Button>
     </div>
     </Tooltip>) : (<div className="snapshot-current-desc">
         <Button>
-          <Icon type="caret-right" />Volume Head
+          <CaretRightOutlined />Volume Head
           </Button>
       </div>)
   )
@@ -141,7 +142,7 @@ function SnapshotIcon(props, snapshotProps) {
   return (
     <Dropdown
       placement="bottomLeft"
-      overlay={menu}
+      menu={menu}
       trigger={['click']}
       key={snapshotObject.name}
       getPopupContainer={() => {
@@ -167,7 +168,7 @@ function SnapshotIcon(props, snapshotProps) {
       </div>}>
         <div>
           <div className="tree-snapshot-icon" style={{ background: backgroundColor }}>
-            <Icon className="snapshot-icon" type="camera" />
+            <CameraOutlined className="snapshot-icon" />
             { backupStatusObject && backupStatusObject.progress > 0 && backupStatusObject.progress < 100 && !backupStatusHasError ? <div style={{ position: 'absolute', background: 'rgba(255,255,255,1)', top: '-5px', left: '-5px' }}>
                 <Progress type="circle" percent={backupStatusObject.progress} width={40} />
               </div> : ''
@@ -210,7 +211,7 @@ function CurrentPoint(props) {
   )
   return (
     <Dropdown
-      overlay={menu}
+      menu={menu}
       trigger={['click']}
       key={props.volume.id}
     >
@@ -247,7 +248,8 @@ class Snapshot extends React.Component {
     previousCreated: '',
   }
 
-  showReomve = () => {
+  // eslint-disable-next-line react/no-unused-class-component-methods
+  showRemove = () => {
     this.state.key = Math.random()
   }
 

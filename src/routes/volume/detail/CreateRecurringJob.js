@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Icon, Button, Select, Checkbox, InputNumber, Tabs, Tooltip } from 'antd'
+import { Input, Button, Select, Checkbox, InputNumber, Tabs, Tooltip } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur, ReactCron } from '../../../components'
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 const Option = Select.Option
 const FormItem = Form.Item
@@ -46,6 +48,7 @@ const noRetain = (val) => {
   return val === 'snapshot-cleanup' || val === 'filesystem-trim'
 }
 
+// eslint-disable-next-line react/function-component-definition
 const modal = ({
   item,
   recurringJobOptions,
@@ -204,9 +207,8 @@ const modal = ({
         ],
       })(<Input placeholder="Group name" style={{ width: '80%', marginRight: 8 }} />)}
       {keys.length > 1 ? (
-        <Icon
+        <MinusCircleOutlined
           className="dynamic-delete-button"
-          type="minus-circle-o"
           onClick={() => remove(k)}
         />
       ) : null}
@@ -275,9 +277,8 @@ const modal = ({
             ],
           })(<Input placeholder="label value" style={{ width: '80%', marginRight: 8 }} />)}
           {keysForlabels.length > 1 ? (
-            <Icon
+            <MinusCircleOutlined
               className="dynamic-delete-button"
-              type="minus-circle-o"
               onClick={() => removeLabel(k)}
             />
           ) : null}
@@ -367,13 +368,13 @@ const modal = ({
               <Form.Item {...formItemLayoutWithOutLabel}>
                 <span style={{ width: '38%', display: 'inline-block', marginRight: 10 }}>
                   <Button type="dashed" style={{ width: '100%' }} onClick={add}>
-                    <Icon type="plus" /> Add Group
+                    <PlusCircleOutlined /> Add Group
                   </Button>
                 </span>
                 <span style={{ width: '38%', display: 'inline-block', marginLeft: 10 }}>
                   <Button type="dashed" style={{ width: '100%' }} disabled={disableAddDefaultGroup} onClick={addDefaultGroup}>
                     <Tooltip title={'Volume with no recurring jobs or groups will automatically apply to the recurring jobs in the default group.'}>
-                      <Icon type="plus" /> Add to default group
+                      <PlusCircleOutlined /> Add to default group
                     </Tooltip>
                   </Button>
                 </span>
@@ -381,7 +382,7 @@ const modal = ({
               {formLabels}
               <Form.Item {...formItemLayoutWithOutLabel}>
                 <Button type="dashed" onClick={addLabel} style={{ width: '60%' }}>
-                  <Icon type="plus" /> Add Label
+                  <PlusCircleOutlined /> Add Label
                 </Button>
               </Form.Item>
             </Form>

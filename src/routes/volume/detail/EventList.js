@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Card, Icon, Tooltip } from 'antd'
+import { Table, Card, Tooltip } from 'antd'
 import { formatDate } from '../../../utils/formatDate'
 import styles from './index.less'
+import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons'
 
 class EventList extends React.Component {
   constructor(props) {
@@ -101,7 +102,16 @@ class EventList extends React.Component {
       title={<div className={styles.header}>
       <div className="title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Tooltip title={this.state.toggleEventLogVisible ? 'Click to Collapse' : 'Click to Expand'}>
-          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} /> Event Log</div>
+          <div>
+            {
+              this.state.iconType === 'plus-square' ? (
+                <PlusSquareOutlined style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} />
+              ) : (
+                <MinusSquareOutlined style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} />
+              )
+            }
+            Event Log
+          </div>
         </Tooltip>
       </div></div>}
       bordered={false}>{this.state.toggleEventLogVisible ? <div style={{ padding: 24 }}>

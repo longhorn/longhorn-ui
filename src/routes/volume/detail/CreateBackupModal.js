@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Icon } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../../components'
 import { BackupLabelInput } from '../../../components'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
-const modal = ({
+function modal({
   visible,
   onCancel,
   onOk,
@@ -15,7 +16,7 @@ const modal = ({
     getFieldValue,
     setFieldsValue,
   },
-}) => {
+}) {
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -48,7 +49,7 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <p type="warning"><Icon style={{ marginRight: '10px' }} type="exclamation-circle" />This could take a while depending on the actual size of the volume and network bandwidth.</p>
+      <p type="warning"><ExclamationCircleOutlined style={{ marginRight: '10px' }} type="exclamation-circle" />This could take a while depending on the actual size of the volume and network bandwidth.</p>
       <BackupLabelInput form={form} />
     </ModalBlur>
   )

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Select } from 'antd'
+import { Select } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 const { Option } = Select
@@ -14,7 +15,7 @@ const formItemLayout = {
   },
 }
 
-const modal = ({
+function modal({
   item,
   option,
   visible,
@@ -25,7 +26,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
-}) => {
+}) {
   function handleOk() {
     validateFields((errors) => {
       if (errors) {

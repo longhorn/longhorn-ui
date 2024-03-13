@@ -6,14 +6,14 @@ class Store {
 
   get(key, optionalDefaultValue) {
     let data = this.storage.getItem(this.namespacePrefix + key)
-    return this.deserialize(data, optionalDefaultValue)
+    return Store.deserialize(data, optionalDefaultValue)
   }
 
   set(key, value) {
     if (value === undefined) {
       return this.storage.removeItem(this.namespacePrefix + key)
     }
-    this.storage.setItem(this.namespacePrefix + key, this.serialize(value))
+    this.storage.setItem(this.namespacePrefix + key, Store.serialize(value))
     return value
   }
 
@@ -25,11 +25,11 @@ class Store {
     this.storage.clear()
   }
 
-  serialize = (obj) => {
+  static serialize = (obj) => {
     return JSON.stringify(obj)
   }
 
-  deserialize = (strVal, defaultVal) => {
+  static deserialize = (strVal, defaultVal) => {
     if (!strVal) {
       return defaultVal
     }

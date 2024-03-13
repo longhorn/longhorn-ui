@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Icon } from 'antd'
+import { Table } from 'antd'
 import classnames from 'classnames'
 import { formatDate } from '../../utils/formatDate'
 import EngineImageActions from './EngineImageActions'
 import { LinkTo } from '../../components'
+import { StarOutlined } from '@ant-design/icons'
 
 function list({ loading, dataSource, deleteEngineImage }) {
   const engineImageActionsProps = {
@@ -45,7 +46,7 @@ function list({ loading, dataSource, deleteEngineImage }) {
       width: 200,
       render: (defualt) => {
         return (
-          defualt ? <Icon type="star" /> : <div></div>
+          defualt ? <StarOutlined /> : <div></div>
         )
       },
     }, {

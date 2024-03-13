@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Button, Icon, Tooltip } from 'antd'
+import { Table, Button, Tooltip } from 'antd'
 import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formater'
+import { SyncOutlined, WarningOutlined } from '@ant-design/icons'
 
 function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
   const backingImageActionsProps = {
@@ -14,10 +15,10 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
   const state = (record) => {
     if (record.deletionTimestamp) {
       // Deleting
-      return (<Tooltip title={'Deleting'}><Icon type="sync" style={{ marginLeft: 10, color: '#f5222d' }} spin /></Tooltip>)
+      return (<Tooltip title={'Deleting'}><SyncOutlined style={{ marginLeft: 10, color: '#f5222d' }} spin /></Tooltip>)
     }
     if (record.diskStateMap && Object.keys(record.diskStateMap).every((key) => record.diskStateMap[key] === 'failed')) {
-      return (<Tooltip title={'The backingImage is unavailable'}><Icon type="warning" style={{ marginLeft: 10, color: '#f5222d' }} /></Tooltip>)
+      return (<Tooltip title={'The backingImage is unavailable'}><WarningOutlined style={{ marginLeft: 10, color: '#f5222d' }} /></Tooltip>)
     }
     return ''
   }

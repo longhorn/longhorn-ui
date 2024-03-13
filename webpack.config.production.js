@@ -1,21 +1,14 @@
-
 /* eslint-disable */
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const HappyPack = require("happypack");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 
 const os = require("os");
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-
-const theme = require("./src/theme");
-
 
 module.exports = {
   devtool: 'source-map',
@@ -24,7 +17,8 @@ module.exports = {
     filename: "[name].[chunkhash:8].js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "./",
-    chunkFilename: "[name].[chunkhash:8].async.js"
+    chunkFilename: "[name].[chunkhash:8].async.js",
+    clean: true,
   },
   resolve: {
     alias: {
@@ -34,6 +28,10 @@ module.exports = {
       services: path.resolve(__dirname, "src/services/"),
       routes: path.resolve(__dirname, "src/routes/"),
       models: path.resolve(__dirname, "src/models/")
+    },
+    fallback: {
+      fs: false,
+      path: false,
     }
   },
   module: {
@@ -41,8 +39,11 @@ module.exports = {
       {
         test: /\.js$/,
         include: [path.resolve(__dirname, "src")],
-        exclude: /node_modules/,
-        use: ["happypack/loader?id=babel"]
+        exclude: [],
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true
+        }
       },
       {
         test: /\.css$/,
@@ -63,18 +64,21 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              // sourceMap: true,
+              sourceMap: true,
               importLoaders: 1,
-              modules: true,
-              localIdentName: "[name]_[local]-[hash:base64:5]"
+              modules: {
+                localIdentName: "[name]_[local]-[hash:base64:5]"
+              },
             }
           },
           {
             loader: "less-loader",
             options: {
-              // sourceMap: true,
-              javascriptEnabled: true,
-              modifyVars: theme()
+              lessOptions: {
+                // sourceMap: true,
+                javascriptEnabled: true,
+                math: "always",
+              }
             }
           }
         ],
@@ -95,8 +99,9 @@ module.exports = {
             loader: "less-loader",
             options: {
               // sourceMap: true,
-              javascriptEnabled: true,
-              modifyVars: theme()
+              lessOptions: {
+                javascriptEnabled: true,
+              }
             }
           }
         ],
@@ -124,10 +129,6 @@ module.exports = {
   externals: {
     jquery: "jQuery"
   },
-  node: {
-    fs: "empty",
-    module: "empty"
-  },
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -149,11 +150,15 @@ module.exports = {
         }
       }
     },
-    runtimeChunk: true
+    runtimeChunk: true,
+    minimizer: [
+      new CssMinimizerPlugin(),
+    ],
+    moduleIds: 'deterministic'
   },
   plugins: [
     new ProgressBarPlugin(),
-    new ManifestPlugin(),
+    new WebpackManifestPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css"
     }),
@@ -162,23 +167,13 @@ module.exports = {
       filename: "index.html",
       hash: true
     }),
-    new CleanWebpackPlugin(["dist"]),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, "public")
-      }
-    ]),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: /\.css$/g,
-      cssProcessor: require("cssnano"),
-      cssProcessorOptions: { discardComments: { removeAll: true } },
-      canPrint: true
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "public")
+        }
+      ]
     }),
-    new HappyPack({
-      id: "babel",
-      loaders: ["babel-loader?cacheDirectory"],
-      threadPool: happyThreadPool
-    }),
-    new webpack.HashedModuleIdsPlugin()
+    new MiniCssExtractPlugin()
   ]
 };

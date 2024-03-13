@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber, Select } from 'antd'
-const { Option } = Select
+import { InputNumber, Select } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
+const { Option } = Select
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -89,7 +90,7 @@ const modal = ({
             <Select placeholder="Select a value" onChange={unitChange}>
               <Option value="Gi">Gi</Option>
               <Option value="Mi">Mi</Option>
-            </Select>
+            </Select>,
           )}
         </FormItem>
       </Form>

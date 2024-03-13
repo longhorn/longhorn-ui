@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber, Alert, Select } from 'antd'
+import { InputNumber, Alert, Select } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 const FormItem = Form.Item
 const { Option } = Select
@@ -14,7 +15,7 @@ const formItemLayout = {
   },
 }
 
-const modal = ({
+function modal({
   item,
   visible,
   onCancel,
@@ -26,7 +27,7 @@ const modal = ({
     getFieldsValue,
     setFieldsValue,
   },
-}) => {
+}) {
   function handleOk() {
     validateFields((errors) => {
       if (errors) {

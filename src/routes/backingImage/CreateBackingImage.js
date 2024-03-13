@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Upload, Button, Icon } from 'antd'
+import { Input, Select, Upload, Button } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur, AutoComplete } from '../../components'
+import { UploadOutlined } from '@ant-design/icons'
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -196,7 +198,7 @@ const modal = ({
             ],
           })(<Upload {...uploadProps}>
             <Button disabled={!(creationType === 'upload')}>
-              <Icon type="upload" /> Upload
+              <UploadOutlined /> Upload
             </Button>
           </Upload>)}
           <span style={{ marginLeft: 10 }}>{ getFieldsValue().fileContainer && getFieldsValue().fileContainer.file ? getFieldsValue().fileContainer.file.name : ''}</span>

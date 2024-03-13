@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, Tabs, Button, Table, message, Icon, Tooltip, Modal } from 'antd'
+import { Card, Tabs, Button, Table, message, Tooltip, Modal } from 'antd'
 import prettyCron from '../../../utils/prettycron'
 import { ModalBlur } from '../../../components'
 import CreateRecurringJob from './CreateRecurringJob'
@@ -8,6 +8,7 @@ import EditRecurringJob from '../../recurringJob/CreateRecurringJob'
 import RecurringJobActions from './RecurringJobActions'
 import AddRecurringJobOrGroupModal from './AddRecurringJobOrGroupModal'
 import styles from './index.less'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 const confirm = Modal.confirm
 
@@ -414,7 +415,7 @@ class RecurringJob extends React.Component {
           return (
             <div>
               {record.name}
-              {record.isAlreadyDeleted ? <Tooltip title={'Recurring Job doesn\'t exist'}><Icon className="faulted" style={{ marginLeft: 5 }} type="exclamation-circle" /></Tooltip> : ''}
+              {record.isAlreadyDeleted ? <Tooltip title={'Recurring Job doesn\'t exist'}><ExclamationCircleOutlined className="faulted" style={{ marginLeft: 5 }} /></Tooltip> : ''}
             </div>
           )
         },
@@ -502,17 +503,19 @@ class RecurringJob extends React.Component {
         })
       }
 
-      return <Table
-        bordered={false}
-        columns={columnsForJob.filter((column) => column.key !== 'operation')}
-        dataSource={dataSourceForExpandTable || []}
-        simple
-        loading={this.props.loading}
-        pagination={false}
-        rowKey={row => row.id}
-        height={`${220}px`}
-        scroll={{ x: 600, y: 220 }}
-      />
+      return (
+        <Table
+          bordered={false}
+          columns={columnsForJob.filter((column) => column.key !== 'operation')}
+          dataSource={dataSourceForExpandTable || []}
+          simple
+          loading={this.props.loading}
+          pagination={false}
+          rowKey={row => row.id}
+          height={`${220}px`}
+          scroll={{ x: 600, y: 220 }}
+        />
+      )
     }
 
     const columnsForJobGroup = [
@@ -525,7 +528,7 @@ class RecurringJob extends React.Component {
           return (
             <div onClick={() => this.showModalGroupDeatil(record)} style={{ width: '100%', cursor: 'pointer' }}>
               <Button type={'link'}>{text}</Button>
-              {record.isAlreadyDeleted ? <Tooltip title={record.name === 'default' ? 'No Recurring job is set to default Group' : 'Recurring Job Group doesn\'t exist'}><Icon className="faulted" style={{ marginLeft: 5 }} type="exclamation-circle" /></Tooltip> : ''}
+              {record.isAlreadyDeleted ? <Tooltip title={record.name === 'default' ? 'No Recurring job is set to default Group' : 'Recurring Job Group doesn\'t exist'}><ExclamationCircleOutlined className="faulted" style={{ marginLeft: 5 }} /></Tooltip> : ''}
             </div>
           )
         },

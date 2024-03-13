@@ -1,17 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal, Alert, Icon } from 'antd'
+import { Button, Modal, Alert } from 'antd'
 import style from './systemBackupsBulkActions.less'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 const confirm = Modal.confirm
 
 function bulkActions({ selectedRows, deleteSystemRestores }) {
   const handleClick = (action) => {
-    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {selectedRows.map(item => item.name).join(',')} ?</div>
+    let title = <div><InfoCircleOutlined style={{ marginRight: 5 }} className="color-warning" />Are you sure you want to delete System Restore {selectedRows.map(item => item.name).join(',')} ?</div>
     let restoring = selectedRows.some((item) => item.state === 'Pending' || item.state === 'Restoring' || item.state === 'Downloading')
     if (restoring) {
       title = (<div>
-        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {selectedRows.map(item => item.name).join(',')}</div>
+        <div style={{ marginBottom: 10 }}><InfoCircleOutlined style={{ marginRight: 5 }} className="color-warning" />Are you sure you want to delete System Restore {selectedRows.map(item => item.name).join(',')}</div>
         <Alert
           message={'Deleting restoring system backup will abort the remaining resource rollout. An incomplete restore may cause Longhorn system resource inconsistencies leading to unexpected behavior.'}
           type="warning"

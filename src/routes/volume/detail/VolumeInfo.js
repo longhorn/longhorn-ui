@@ -1,6 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
+import { Alert, Tag, Progress, Tooltip } from 'antd'
+import {
+  LoadingOutlined,
+  ArrowsAltOutlined,
+  InfoCircleOutlined,
+  ApiOutlined,
+  WarningOutlined,
+  DisconnectOutlined,
+  ExclamationCircleOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons'
 import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
 import { formatMib } from '../../../utils/formater'
@@ -81,7 +91,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             <span className={styles.label}>{selectedVolume.kubernetesStatus.lastPodRefAt ? 'Last ' : ''} Pod Name:</span>
             {item.podName}
           </div>
-          {!selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
+          {
+            !selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Pod Status:</span>
               {item.podStatus}
             </div> : ''
@@ -171,22 +182,22 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {isExpanding && !expandingFailed ? <Tooltip title={message}>
           <div style={{ position: 'relative', color: 'rgb(16, 142, 233)' }}>
             <div className={styles.expendVolumeIcon}>
-              <Icon type="loading" />
+              <LoadingOutlined />
             </div>
             <div style={{ fontSize: '20px' }}>
-              <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+              <ArrowsAltOutlined style={{ transform: 'rotate(45deg)' }} />
             </div>
           </div>
         </Tooltip> : <Tooltip title={message}>
           <div className={expandingFailed ? 'error' : ''}>
             {expandingFailed ? <div>
-              <Icon style={{ fontSize: '20px', marginRight: '15px' }} type="info-circle" />
+              <InfoCircleOutlined style={{ fontSize: '20px', marginRight: '15px' }} />
               <div className={'error'} style={{ position: 'relative', display: 'inline-block' }}>
                 <div className={styles.expendVolumeIcon}>
-                  <Icon type="loading" />
+                  <LoadingOutlined />
                 </div>
                 <div style={{ fontSize: '20px' }}>
-                  <Icon type="arrows-alt" style={{ transform: 'rotate(45deg)' }} />
+                  <ArrowsAltOutlined style={{ transform: 'rotate(45deg)' }} />
                 </div>
               </div>
             </div> : formatMib(expectedSize)}
@@ -226,16 +237,22 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}> State:</span>
         <span className={classnames({ [selectedVolume.state.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
-          {upgrade} {selectedVolume.state.hyphenToHump()} {needToWaitDone(selectedVolume.state, selectedVolume.replicas) ? <Icon type="loading" /> : null}
+          {upgrade} {selectedVolume.state.hyphenToHump()} {needToWaitDone(selectedVolume.state, selectedVolume.replicas) ? <LoadingOutlined /> : null}
         </span>
       </div>
       <div className={styles.row} style={{ display: 'flex', alignItems: 'center' }}>
         <span className={styles.label}> Health:</span>
-        {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 8 }} type="api" /></Tooltip> : ''}
+        {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}>
+          <ApiOutlined className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 8 }} />
+          </Tooltip> : ''}
         <span className={classnames({ [selectedVolume.robustness.toLowerCase()]: true, capitalize: true }, styles.volumeState)}>
           {ha} {healthState}
         </span>
-        {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
+        {
+          dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}>
+          <WarningOutlined style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" />
+          </Tooltip> : ''
+        }
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Ready for workload:</span>
@@ -271,9 +288,9 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
                   icon = <IconSnapshot fill="#f15354" />
                 }
               } else if (key === 'Restore') {
-                icon = selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'true' || selectedVolume.conditions[key].reason === '') ? <Icon className="healthy" style={{ marginRight: 5, color: selectedVolume.conditions[key].reason === '' && selectedVolume.conditions[key].status.toLowerCase() === 'false' ? '#666666' : '#27ae60' }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
+                icon = selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'true' || selectedVolume.conditions[key].reason === '') ? <CheckCircleOutlined className="healthy" style={{ marginRight: 5, color: selectedVolume.conditions[key].reason === '' && selectedVolume.conditions[key].status.toLowerCase() === 'false' ? '#666666' : '#27ae60' }} /> : <ExclamationCircleOutlined className="faulted" style={{ marginRight: 5 }} />
               } else {
-                icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
+                icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <CheckCircleOutlined className="healthy" style={{ marginRight: 5 }} /> : <ExclamationCircleOutlined className="faulted" style={{ marginRight: 5 }} />
               }
               let text = key !== 'TooManySnapshots' ? selectedVolume.conditions[key].type : ''
 
@@ -287,7 +304,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}> Frontend:</span>
         {selectedVolume.disableFrontend ? <Tooltip title={'Attach volume without enabling frontend. Volume data will not be accessible while attached.'}>
-            <Icon type="disconnect" className="healthy" />
+            <DisconnectOutlined className="healthy" />
           </Tooltip> : (frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
       <div className={styles.row}>
@@ -406,7 +423,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
               {selectedVolume.kubernetesStatus.lastPVCRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPVCRefAt) : ''}
             </div> : ''
           }
-          {selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
+          {
+            selectedVolume.kubernetesStatus.lastPodRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time used by Pod:</span>
               {selectedVolume.kubernetesStatus.lastPodRefAt ? formatDate(selectedVolume.kubernetesStatus.lastPodRefAt) : ''}
             </div> : ''
@@ -432,8 +450,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             {selectedVolume.revisionCounterDisabled ? 'True' : 'False'}
           </div>
           {podList}
-        </div>
-        : ''
+        </div> : ''
       }
     </div>
   )

@@ -1,11 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Progress } from 'antd'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 class LatestBackup extends React.Component {
-  state = {
-    progress: 0,
+  constructor(props) {
+    super(props)
+    this.state = {
+      progress: 0,
+    }
   }
 
   UNSAFE_componentWillMount() {
@@ -46,11 +49,10 @@ class LatestBackup extends React.Component {
       <div>
         {backupStatus.actions && !backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>no backup yet</div>}
         {backupStatus.started && <Progress percent={backupStatus.inProgress ? progress : 100} status={backupStatus.inProgress ? 'active' : 'success'} />}
-        {backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>{moment(backupStatus.started).calendar()}</div>}
+        {backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>{dayjs(backupStatus.started).calendar()}</div>}
       </div>)
   }
 }
-
 
 LatestBackup.propTypes = {
   backupStatus: PropTypes.object,

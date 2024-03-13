@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { formatDate } from '../../utils/formatDate'
-import { Form, Descriptions } from 'antd'
+import { Descriptions } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 
 const modal = ({
@@ -27,6 +28,7 @@ const modal = ({
 
   let backupLabels = []
 
+  // eslint-disable-next-line no-unused-vars
   for (let key in item) {
     if (key !== 'KubernetesStatus' && key !== 'snapshotCreated') {
       backupLabels.push(key)

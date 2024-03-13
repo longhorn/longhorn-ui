@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from 'antd'
+import { Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from 'antd'
+import { Form } from '@ant-design/compatible'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formater'
 const FormItem = Form.Item
@@ -59,7 +60,7 @@ const modal = ({
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <Popover placement="right"
-          visible={showWarning}
+          open={showWarning}
           content={<div style={{ maxWidth: 200 }}>
             <Alert message={message} type="warning" />
           </div>}>
