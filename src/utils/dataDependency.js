@@ -116,7 +116,7 @@ const dependency = {
     }],
   },
 }
-const allWs = [{
+const list = [{
   ns: 'volume',
   key: 'volumes',
 }, {
@@ -176,7 +176,7 @@ export function getDataDependency(pathName) {
 
   if (keys && keys.length === 1) {
     let modal = dependency[keys[0]]
-    modal.stopWs = allWs.filter((item) => {
+    modal.stopWs = list.filter((item) => {
       return modal.runWs.every((ele) => {
         return ele.ns !== item.ns
       })

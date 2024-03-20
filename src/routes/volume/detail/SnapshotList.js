@@ -4,7 +4,7 @@ import { Table, Card, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import styles from './index.less'
 import { formatDate } from '../../../utils/formatDate'
-import { formatSnapshot, formatMib } from '../../../utils/formater'
+import { formatSnapshot, formatMib } from '../../../utils/formatter'
 
 class SnapshotList extends React.Component {
   constructor(props) {

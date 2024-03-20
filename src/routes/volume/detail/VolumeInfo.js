@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
 import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
-import { formatMib } from '../../../utils/formater'
+import { formatMib } from '../../../utils/formatter'
 import {
   isSchedulingFailure,
   getHealthState,
@@ -124,7 +124,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
     tagNodeChild = selectedVolume.nodeSelector.map(forMapNode)
   }
 
-  // resotring progress
+  // resorting progress
   let restoreProgress = null
   if (selectedVolume.restoreStatus && selectedVolume.restoreStatus.length > 0) {
     let total = 0

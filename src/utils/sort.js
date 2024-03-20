@@ -1,4 +1,4 @@
-import { isoStrToDate, utcStrToDate } from './formater'
+import { isoStrToDate, utcStrToDate } from './formatter'
 
 const getStateWeight = (state) => {
   switch (state) {

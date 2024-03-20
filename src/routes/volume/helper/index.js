@@ -476,10 +476,10 @@ export function getUpdateReplicaAutoBalanceModalProps(volumes, visible, dispatch
 
 export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch) {
   let replicaSoftAntiAffinityVolumes = []
-  let feilds = {}
+  let fields = {}
   switch (softAntiAffinityKey) {
     case 'updateReplicaSoftAntiAffinity':
-      feilds = {
+      fields = {
         actionKey: 'updateReplicaSoftAntiAffinity',
         key: 'replicaSoftAntiAffinity',
         name: 'Replica Soft Anti Affinity',
@@ -487,7 +487,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       replicaSoftAntiAffinityVolumes = [volume]
       break
     case 'updateBulkReplicaSoftAntiAffinity':
-      feilds = {
+      fields = {
         actionKey: 'updateReplicaSoftAntiAffinity',
         key: 'replicaSoftAntiAffinity',
         name: 'Replica Soft Anti Affinity',
@@ -495,7 +495,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       replicaSoftAntiAffinityVolumes = volumes
       break
     case 'updateReplicaZoneSoftAntiAffinity':
-      feilds = {
+      fields = {
         actionKey: 'updateReplicaZoneSoftAntiAffinity',
         key: 'replicaZoneSoftAntiAffinity',
         name: 'Replica Zone Soft Anti Affinity',
@@ -503,7 +503,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       replicaSoftAntiAffinityVolumes = [volume]
       break
     case 'updateBulkReplicaZoneSoftAntiAffinity':
-      feilds = {
+      fields = {
         actionKey: 'updateReplicaZoneSoftAntiAffinity',
         key: 'replicaZoneSoftAntiAffinity',
         name: 'Replica Zone Soft Anti Affinity',
@@ -511,7 +511,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       replicaSoftAntiAffinityVolumes = volumes
       break
     case 'updateReplicaDiskSoftAntiAffinity':
-      feilds = {
+      fields = {
         actionKey: 'updateReplicaDiskSoftAntiAffinity',
         key: 'replicaDiskSoftAntiAffinity',
         name: 'Replica Disk Soft Anti Affinity',
@@ -519,7 +519,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       replicaSoftAntiAffinityVolumes = [volume]
       break
     case 'updateBulkReplicaDiskSoftAntiAffinity':
-      feilds = {
+      fields = {
         actionKey: 'updateReplicaDiskSoftAntiAffinity',
         key: 'replicaDiskSoftAntiAffinity',
         name: 'Replica Disk Soft Anti Affinity',
@@ -549,20 +549,20 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       })
     },
     options: [
-      { value: 'enabled', lable: 'Enabled' },
-      { value: 'disabled', lable: 'Disabled' },
-      { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+      { value: 'enabled', label: 'Enabled' },
+      { value: 'disabled', label: 'Disabled' },
+      { value: 'ignored', label: 'Ignored (Follow the global setting)' },
     ],
-    feilds,
+    fields,
   }
 }
 
 export function getUpdateOfflineReplicaRebuildingModalProps(volume, volumes, updateOfflineReplicaRebuildingVisible, key, dispatch) {
   let offlineReplicaRebuildingVolumes = []
-  let feilds = {}
+  let fields = {}
   switch (key) {
     case 'updateOfflineReplicaRebuilding':
-      feilds = {
+      fields = {
         actionKey: 'updateOfflineReplicaRebuilding',
         key: 'offlineReplicaRebuilding',
         name: 'Offline Replica Rebuilding',
@@ -570,7 +570,7 @@ export function getUpdateOfflineReplicaRebuildingModalProps(volume, volumes, upd
       offlineReplicaRebuildingVolumes = [volume]
       break
     case 'updateBulkOfflineReplicaRebuilding':
-      feilds = {
+      fields = {
         actionKey: 'updateOfflineReplicaRebuilding',
         key: 'offlineReplicaRebuilding',
         name: 'Offline Replica Rebuilding',
@@ -600,11 +600,11 @@ export function getUpdateOfflineReplicaRebuildingModalProps(volume, volumes, upd
       })
     },
     options: [
-      { value: 'enabled', lable: 'Enabled' },
-      { value: 'disabled', lable: 'Disabled' },
-      { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+      { value: 'enabled', label: 'Enabled' },
+      { value: 'disabled', label: 'Disabled' },
+      { value: 'ignored', label: 'Ignored (Follow the global setting)' },
     ],
-    feilds,
+    fields,
   }
 }
 

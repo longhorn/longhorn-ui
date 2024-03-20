@@ -138,7 +138,7 @@ function bulkActions({
         break
       case 'trimFilesystem':
         confirm({
-          title: `Are you sure you want to trim (${selectedRows.map(item => item.name).join(', ')}) Fileystem ?`,
+          title: `Are you sure you want to trim (${selectedRows.map(item => item.name).join(', ')}) Filesystem ?`,
           onOk() {
             trimBulkFilesystem(selectedRows)
           },

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Tree, Icon, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } from 'antd'
-import { formatSnapshot, formatMib } from '../../utils/formater'
+import { formatSnapshot, formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
 import { disabledSnapshotAction } from '../../routes/volume/helper/index'
 import './Snapshot.less'

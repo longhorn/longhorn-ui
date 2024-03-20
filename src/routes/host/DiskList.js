@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Progress, Tooltip, Tag } from 'antd'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
-import { formatMib } from '../../utils/formater'
+import { formatMib } from '../../utils/formatter'
 import './DiskList.less'
 
 function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal }) {

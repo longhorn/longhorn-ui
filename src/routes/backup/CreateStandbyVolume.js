@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from 'antd'
 import { ModalBlur } from '../../components'
-import { formatMib } from '../../utils/formater'
+import { formatMib } from '../../utils/formatter'
 const FormItem = Form.Item
 const { Option } = Select
 
