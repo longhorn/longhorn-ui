@@ -64,14 +64,14 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     okText,
     modalButtonDisabled,
     progressPercentage,
-    onOk(datas) {
+    onOk(_data) {
       dispatch({
         type: 'app/changeOkText',
-        payload: datas,
+        payload: _data,
       })
       dispatch({
         type: 'app/supportbundles',
-        payload: datas,
+        payload: _data,
       })
     },
     onCancel() {

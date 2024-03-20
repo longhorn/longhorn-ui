@@ -85,7 +85,7 @@ const modal = ({
         })
         data.groups = data.groups && new Set(data.groups)
       } else {
-        // If gorups is null change it to empty array
+        // If groups is null change it to empty array
         data.groups = []
       }
       if (data.labels) {

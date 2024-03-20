@@ -21,7 +21,7 @@ const modal = ({
   onCancel,
   onOk,
   options,
-  feilds,
+  fields,
   form: {
     getFieldDecorator,
     validateFields,
@@ -40,8 +40,8 @@ const modal = ({
 
       if (items && items.length > 0) {
         items.forEach((ele) => {
-          if (feilds?.actionKey && ele?.actions[feilds.actionKey]) {
-            actionUrls.push(ele.actions[feilds.actionKey])
+          if (fields?.actionKey && ele?.actions[fields.actionKey]) {
+            actionUrls.push(ele.actions[fields.actionKey])
           }
         })
       }
@@ -51,7 +51,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: `Update ${feilds?.name}`,
+    title: `Update ${fields?.name}`,
     visible,
     onCancel,
     width: 710,
@@ -62,11 +62,11 @@ const modal = ({
   }
   let initialValue = 'ignored'
 
-  if (feilds.key) {
+  if (fields.key) {
     if (items.length === 1) {
-      initialValue = items[0][feilds.key]
+      initialValue = items[0][fields.key]
     } else {
-      let obj = groupBy(items, feilds.key) || {}
+      let obj = groupBy(items, fields.key) || {}
       if (Object.keys(obj) && Object.keys(obj).length === 1) {
         initialValue = Object.keys(obj)[0]
       }
@@ -76,12 +76,12 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label={feilds?.name} {...formItemLayout}>
-        {getFieldDecorator(feilds?.key, {
+        <FormItem label={fields?.name} {...formItemLayout}>
+        {getFieldDecorator(fields?.key, {
           initialValue,
         })(<Select>
             { options?.map((item) => {
-              return <Option key={item.value} value={item.value}>{item.lable}</Option>
+              return <Option key={item.value} value={item.value}>{item.label}</Option>
             }) }
           </Select>)}
         </FormItem>
@@ -97,7 +97,7 @@ modal.propTypes = {
   items: PropTypes.array,
   onOk: PropTypes.func,
   options: PropTypes.array,
-  feilds: PropTypes.object,
+  fields: PropTypes.object,
 }
 
 export default Form.create()(modal)

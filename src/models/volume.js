@@ -651,8 +651,8 @@ export default {
     updateBackground(state, action) {
       return updateState(state, action)
     },
-    showChangeVolumeModal(state, aciton) {
-      return { ...state, changeVolumeActivate: aciton.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
+    showChangeVolumeModal(state, action) {
+      return { ...state, changeVolumeActivate: action.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
     },
     hideChangeVolumeModal(state) {
       return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }

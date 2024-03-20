@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { formatMib } from '../../../utils/formater'
+import { formatMib } from '../../../utils/formatter'
 import styles from './StorageInfo.less'
 
 function StorageInfo({ storage }) {

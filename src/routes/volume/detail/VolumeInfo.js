@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Alert, Icon, Tag, Progress, Tooltip } from 'antd'
 import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
-import { formatMib } from '../../../utils/formater'
+import { formatMib } from '../../../utils/formatter'
 import {
   isSchedulingFailure,
   getHealthState,
