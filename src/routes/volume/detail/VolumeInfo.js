@@ -124,7 +124,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
     tagNodeChild = selectedVolume.nodeSelector.map(forMapNode)
   }
 
-  // resotring progress
+  // resorting progress
   let restoreProgress = null
   if (selectedVolume.restoreStatus && selectedVolume.restoreStatus.length > 0) {
     let total = 0
