@@ -43,9 +43,9 @@ function list({ loading, dataSource, deleteEngineImage }) {
       dataIndex: 'default',
       key: 'default',
       width: 200,
-      render: (defualt) => {
+      render: _default => {
         return (
-          defualt ? <Icon type="star" /> : <div></div>
+          _default ? <Icon type="star" /> : <div></div>
         )
       },
     }, {

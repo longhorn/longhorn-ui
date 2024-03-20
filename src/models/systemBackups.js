@@ -1,7 +1,7 @@
 import { querySystembackups, querySystemrestores, createSystembackups, deleteSystembackups, createSystemRestore, deleteSystemRestores } from '../services/systemBackups'
 import { enableQueryData } from '../utils/dataDependency'
 import { wsChanges } from '../utils/websocket'
-import { formatSystemBackupData } from '../utils/formater'
+import { formatSystemBackupData } from '../utils/formatter'
 import queryString from 'query-string'
 
 export default {

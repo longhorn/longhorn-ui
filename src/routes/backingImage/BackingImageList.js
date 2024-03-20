@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Button, Icon, Tooltip } from 'antd'
 import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
-import { formatMib } from '../../utils/formater'
+import { formatMib } from '../../utils/formatter'
 
 function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
   const backingImageActionsProps = {

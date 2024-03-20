@@ -158,7 +158,7 @@ const modal = ({
       </Form>
 
       {previousChecked ? <div style={{ marginTop: 20 }}>
-        <Alert message="If volume has a default namespace, pvc uses this namepace, if not, it uses the newly entered namespace" type="info" showIcon />
+        <Alert message="If volume has a default namespace, pvc uses this namespace, if not, it uses the newly entered namespace" type="info" showIcon />
       </div> : ''}
     </ModalBlur>
   )
