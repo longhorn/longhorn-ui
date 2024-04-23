@@ -399,6 +399,70 @@ export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDat
   }
 }
 
+export function getUpdateFreezeFSForSnapshotModalProps(volume, visible, dispatch) {
+  let option = [
+    { key: 'Enabled', value: 'enabled' },
+    { key: 'Disabled', value: 'disabled' },
+    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+  ]
+
+  return {
+    item: volume,
+    option,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/updateFreezeFSForSnapshot',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateFreezeFSForSnapshotModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateBulkFreezeFSForSnapshotModalProps(volumes, visible, dispatch) {
+  let option = [
+    { key: 'Enabled', value: 'enabled' },
+    { key: 'Disabled', value: 'disabled' },
+    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+  ]
+
+  return {
+    items: volumes,
+    option,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateBulkFreezeFSForSnapshot',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkFreezeFSForSnapshotModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getUpdateAccessModeModalProps(volume, visible, dispatch) {
   return {
     item: volume,

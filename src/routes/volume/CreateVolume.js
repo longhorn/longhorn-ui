@@ -389,6 +389,15 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>}
+            <FormItem label="Freeze File System For Snapshot" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('freezeFSForSnapshot', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+              </Select>)}
+            </FormItem>
             <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
               {getFieldDecorator('revisionCounterDisabled', {
                 valuePropName: 'checked',

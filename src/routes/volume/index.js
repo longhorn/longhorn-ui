@@ -27,6 +27,8 @@ import UpdateUnmapMarkSnapChainRemovedModal from './UpdateUnmapMarkSnapChainRemo
 import UpdateBulkUnmapMarkSnapChainRemovedModal from './UpdateBulkUnmapMarkSnapChainRemovedModal'
 import UpdateSnapshotDataIntegrityModal from './UpdateSnapshotDataIntegrityModal'
 import UpdateBulkSnapshotDataIntegrityModal from './UpdateBulkSnapshotDataIntegrityModal'
+import UpdateFreezeFSForSnapshotModal from './UpdateFreezeFSForSnapshotModal'
+import UpdateBulkFreezeFSForSnapshotModal from './UpdateBulkFreezeFSForSnapshotModal'
 import UpdateAccessMode from './UpdateAccessMode'
 import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
@@ -56,6 +58,8 @@ import {
   getDetachHostModalProps,
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
+  getUpdateFreezeFSForSnapshotModalProps,
+  getUpdateBulkFreezeFSForSnapshotModalProps,
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -194,6 +198,10 @@ class Volume extends React.Component {
       isBulkDetach,
       updateSnapshotMaxCountModalVisible,
       updateSnapshotMaxSizeModalVisible,
+      updateFreezeFSForSnapshotModalVisible,
+      updateFreezeFSForSnapshotModalKey,
+      updateBulkFreezeFSForSnapshotModalVisible,
+      updateBulkFreezeFSForSnapshotModalKey,
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -426,6 +434,14 @@ class Volume extends React.Component {
             },
           })
         }
+      },
+      showUpdateFreezeFSForSnapshotModal(record) {
+        dispatch({
+          type: 'volume/showUpdateFreezeFSForSnapshotModal',
+          payload: {
+            selected: record,
+          },
+        })
       },
       rollback(record) {
         dispatch({
@@ -1094,6 +1110,14 @@ class Volume extends React.Component {
           })
         }
       },
+      showUpdateBulkFreezeFSForSnapshotModal(record) {
+        dispatch({
+          type: 'volume/showUpdateBulkFreezeFSForSnapshotModal',
+          payload: {
+            selectedRows: record,
+          },
+        })
+      },
     }
 
     const createBackModalProps = {
@@ -1176,6 +1200,8 @@ class Volume extends React.Component {
     const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps(selectedRows, updateReplicaAutoBalanceModalVisible, dispatch)
     const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selected, unmapMarkSnapChainRemovedModalVisible, dispatch)
     const bulkUnmapMarkSnapChainRemovedModalProps = getBulkUnmapMarkSnapChainRemovedModalProps(selectedRows, bulkUnmapMarkSnapChainRemovedModalVisible, dispatch)
+    const updateFreezeFSForSnapshotModalProps = getUpdateFreezeFSForSnapshotModalProps(selected, updateFreezeFSForSnapshotModalVisible, dispatch)
+    const updateBulkFreezeFSForSnapshotModalProps = getUpdateBulkFreezeFSForSnapshotModalProps(selectedRows, updateBulkFreezeFSForSnapshotModalVisible, dispatch)
     const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
 
     return (
@@ -1222,6 +1248,8 @@ class Volume extends React.Component {
         {updateBulkSnapshotDataIntegrityModalVisible ? <UpdateBulkSnapshotDataIntegrityModal key={updateBulkSnapshotDataIntegrityModalKey} {...updateBulkSnapshotDataIntegrityModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {updateOfflineReplicaRebuildingVisible ? <CommonModal key={updateOfflineReplicaRebuildingModalKey} {...updateOfflineReplicaRebuildingModalProps} /> : ''}
+        {updateFreezeFSForSnapshotModalVisible ? <UpdateFreezeFSForSnapshotModal key={updateFreezeFSForSnapshotModalKey} {...updateFreezeFSForSnapshotModalProps} /> : ''}
+        {updateBulkFreezeFSForSnapshotModalVisible ? <UpdateBulkFreezeFSForSnapshotModal key={updateBulkFreezeFSForSnapshotModalKey} {...updateBulkFreezeFSForSnapshotModalProps} /> : ''}
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
       </div>
     )
