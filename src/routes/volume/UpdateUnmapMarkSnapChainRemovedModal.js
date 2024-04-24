@@ -61,7 +61,7 @@ const modal = ({
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may overwrite the global setting “Remove Snapshots During Filesystem Trim”"
+            message="This action may override the global setting “Remove Snapshots During Filesystem Trim”"
             type="warning"
           />
         </FormItem>
