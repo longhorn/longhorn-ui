@@ -17,11 +17,13 @@ const form = ({
   loading,
   onSubmit,
   onInputChange,
+  resetChangedSettings,
 }) => {
   const handleOnSubmit = () => {
     const fields = getFieldsValue()
     Object.keys(fields).forEach(key => { fields[key] = fields[key].toString() })
     onSubmit(fields)
+    resetChangedSettings()
   }
   const parseSettingRules = (setting) => {
     const definition = setting.definition
@@ -147,7 +149,7 @@ const form = ({
   ))
 
   return (
-    <Spin spinning={saving || loading}>
+    <Spin spinning={saving || loading} style={{ height: '100vh' }}>
       <Form className={styles.setting}>
         {settings}
       </Form>
@@ -174,6 +176,7 @@ form.propTypes = {
   saving: PropTypes.bool,
   loading: PropTypes.bool,
   onInputChange: PropTypes.func,
+  resetChangedSettings: PropTypes.func,
 }
 
 export default Form.create()(form)
