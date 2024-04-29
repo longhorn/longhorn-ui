@@ -33,7 +33,7 @@ function actions({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showOfflineReplicaRebuildingModal,
-  showUpdateFreezeFSForSnapshotModal,
+  showUpdateFreezeFilesystemForSnapshotModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -153,8 +153,8 @@ function actions({
       case 'updateOfflineReplicaRebuilding':
         showOfflineReplicaRebuildingModal(record)
         break
-      case 'updateFreezeFSForSnapshot':
-        showUpdateFreezeFSForSnapshotModal(record)
+      case 'updateFreezeFilesystemForSnapshot':
+        showUpdateFreezeFilesystemForSnapshotModal(record)
         break
       case 'trimFilesystem':
         confirm({
@@ -229,7 +229,7 @@ function actions({
     { key: 'updateSnapshotMaxSize', name: 'Update Snapshot Max Size', disabled: false },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
     { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.dataEngine !== 'v2' },
-    { key: 'updateFreezeFSForSnapshot', name: 'Update Freeze File System For Snapshot', disabled: false },
+    { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled: false },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
 
@@ -286,7 +286,7 @@ actions.propTypes = {
   trimFilesystem: PropTypes.func,
   showUpdateSnapshotDataIntegrityModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
-  showUpdateFreezeFSForSnapshotModal: PropTypes.func,
+  showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
 }
 
 export default actions

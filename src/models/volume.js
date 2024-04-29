@@ -59,8 +59,8 @@ export default {
     bulkUnmapMarkSnapChainRemovedModalVisible: false,
     updateSnapshotDataIntegrityModalVisible: false,
     updateBulkSnapshotDataIntegrityModalVisible: false,
-    updateFreezeFSForSnapshotModalVisible: false,
-    updateBulkFreezeFSForSnapshotModalVisible: false,
+    updateFreezeFilesystemForSnapshotModalVisible: false,
+    updateBulkFreezeFilesystemForSnapshotModalVisible: false,
     isDetachBulk: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
@@ -104,8 +104,8 @@ export default {
     updateSnapshotDataIntegrityModalKey: Math.random(),
     updateBulkSnapshotDataIntegrityModalKey: Math.random(),
     updateReplicaSoftAntiAffinityModalKey: Math.random(),
-    updateFreezeFSForSnapshotModalKey: Math.random(),
-    updateBulkFreezeFSForSnapshotModalKey: Math.random(),
+    updateFreezeFilesystemForSnapshotModalKey: Math.random(),
+    updateBulkFreezeFilesystemForSnapshotModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -326,17 +326,17 @@ export default {
       yield call(execAction, payload.url, payload.params)
       yield put({ type: 'query' })
     },
-    *updateFreezeFSForSnapshot({
+    *updateFreezeFilesystemForSnapshot({
       payload,
     }, { call, put }) {
-      yield put({ type: 'hideUpdateFreezeFSForSnapshotModal' })
+      yield put({ type: 'hideUpdateFreezeFilesystemForSnapshotModal' })
       yield call(execAction, payload.url, payload.params)
       yield put({ type: 'query' })
     },
-    *updateBulkFreezeFSForSnapshot({
+    *updateBulkFreezeFilesystemForSnapshot({
       payload,
     }, { call, put }) {
-      yield put({ type: 'hideUpdateBulkFreezeFSForSnapshotModal' })
+      yield put({ type: 'hideUpdateBulkFreezeFilesystemForSnapshotModal' })
       if (payload?.urls?.length > 0) {
         for (let i = 0; i < payload.urls.length; i++) {
           yield call(execAction, payload.urls[i], payload.params)
@@ -824,17 +824,17 @@ export default {
     showUpdateBulkSnapshotDataIntegrityModal(state, action) {
       return { ...state, ...action.payload, updateBulkSnapshotDataIntegrityModalVisible: true, updateBulkSnapshotDataIntegrityModalKey: Math.random() }
     },
-    showUpdateFreezeFSForSnapshotModal(state, action) {
-      return { ...state, ...action.payload, updateFreezeFSForSnapshotModalVisible: true, updateFreezeFSForSnapshotModalKey: Math.random() }
+    showUpdateFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateFreezeFilesystemForSnapshotModalVisible: true, updateFreezeFilesystemForSnapshotModalKey: Math.random() }
     },
-    hideUpdateFreezeFSForSnapshotModal(state, action) {
-      return { ...state, ...action.payload, updateFreezeFSForSnapshotModalVisible: false, updateFreezeFSForSnapshotModalKey: Math.random() }
+    hideUpdateFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateFreezeFilesystemForSnapshotModalVisible: false, updateFreezeFilesystemForSnapshotModalKey: Math.random() }
     },
-    showUpdateBulkFreezeFSForSnapshotModal(state, action) {
-      return { ...state, ...action.payload, updateBulkFreezeFSForSnapshotModalVisible: true, updateBulkFreezeFSForSnapshotModalKey: Math.random() }
+    showUpdateBulkFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateBulkFreezeFilesystemForSnapshotModalVisible: true, updateBulkFreezeFilesystemForSnapshotModalKey: Math.random() }
     },
-    hideUpdateBulkFreezeFSForSnapshotModal(state, action) {
-      return { ...state, ...action.payload, updateBulkFreezeFSForSnapshotModalVisible: false, updateBulkFreezeFSForSnapshotModalKey: Math.random() }
+    hideUpdateBulkFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateBulkFreezeFilesystemForSnapshotModalVisible: false, updateBulkFreezeFilesystemForSnapshotModalKey: Math.random() }
     },
     showUpdateAccessMode(state, action) {
       return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }

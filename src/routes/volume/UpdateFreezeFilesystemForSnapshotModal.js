@@ -15,7 +15,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  items,
+  item,
   option,
   visible,
   onCancel,
@@ -34,34 +34,34 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      let urls = items.map((item) => item?.actions?.updateFreezeFSForSnapshot)
+      let url = item?.actions?.updateFreezeFilesystemForSnapshot
 
-      onOk(data, urls)
+      onOk(data, url)
     })
   }
 
   const modalOpts = {
-    title: 'Update Freeze File System For Snapshot',
+    title: 'Update Freeze Filesystem For Snapshot',
     visible,
     onCancel,
     width: 600,
     onOk: handleOk,
   }
-  if (!items || items?.length === 0) {
+  if (!item) {
     return null
   }
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Option" {...formItemLayout}>
-          {getFieldDecorator('freezeFSForSnapshot', {
-            initialValue: 'ignored',
+          {getFieldDecorator('freezeFilesystemForSnapshot', {
+            initialValue: item?.freezeFilesystemForSnapshot,
           })(<Select>
           { option.map(ele => <Option key={ele.key} value={ele.value}>{ele.key}</Option>) }
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may override the global setting “Freeze File System For Snapshot”"
+            message="This action may override the global setting “Freeze Filesystem For Snapshot”"
             type="warning"
           />
         </FormItem>
@@ -75,7 +75,7 @@ modal.propTypes = {
   visible: PropTypes.bool,
   option: PropTypes.array,
   onCancel: PropTypes.func,
-  items: PropTypes.array,
+  item: PropTypes.object,
   onOk: PropTypes.func,
 }
 

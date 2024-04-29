@@ -58,7 +58,7 @@ function list({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showOfflineReplicaRebuildingModal,
-  showUpdateFreezeFSForSnapshotModal,
+  showUpdateFreezeFilesystemForSnapshotModal,
   onRowClick = f => f,
 }) {
   const volumeActionsProps = {
@@ -97,7 +97,7 @@ function list({
     showUpdateReplicaZoneSoftAntiAffinityModal,
     showUpdateReplicaDiskSoftAntiAffinityModal,
     showOfflineReplicaRebuildingModal,
-    showUpdateFreezeFSForSnapshotModal,
+    showUpdateFreezeFilesystemForSnapshotModal,
     onRowClick,
   }
   /**
@@ -581,7 +581,7 @@ list.propTypes = {
   showUpdateSnapshotDataIntegrityModal: PropTypes.func,
   replicaSoftAntiAffinitySettingValue: PropTypes.bool,
   engineUpgradePerNodeLimit: PropTypes.object,
-  showUpdateFreezeFSForSnapshotModal: PropTypes.func,
+  showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
 }
 
 export default list

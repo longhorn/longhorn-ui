@@ -399,7 +399,7 @@ export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDat
   }
 }
 
-export function getUpdateFreezeFSForSnapshotModalProps(volume, visible, dispatch) {
+export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, dispatch) {
   let option = [
     { key: 'Enabled', value: 'enabled' },
     { key: 'Disabled', value: 'disabled' },
@@ -412,7 +412,7 @@ export function getUpdateFreezeFSForSnapshotModalProps(volume, visible, dispatch
     visible,
     onOk(v, url) {
       dispatch({
-        type: 'volume/updateFreezeFSForSnapshot',
+        type: 'volume/updateFreezeFilesystemForSnapshot',
         payload: {
           params: v,
           url,
@@ -421,7 +421,7 @@ export function getUpdateFreezeFSForSnapshotModalProps(volume, visible, dispatch
     },
     onCancel() {
       dispatch({
-        type: 'volume/hideUpdateFreezeFSForSnapshotModal',
+        type: 'volume/hideUpdateFreezeFilesystemForSnapshotModal',
       })
       dispatch({
         type: 'app/changeBlur',
@@ -431,7 +431,7 @@ export function getUpdateFreezeFSForSnapshotModalProps(volume, visible, dispatch
   }
 }
 
-export function getUpdateBulkFreezeFSForSnapshotModalProps(volumes, visible, dispatch) {
+export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visible, dispatch) {
   let option = [
     { key: 'Enabled', value: 'enabled' },
     { key: 'Disabled', value: 'disabled' },
@@ -444,7 +444,7 @@ export function getUpdateBulkFreezeFSForSnapshotModalProps(volumes, visible, dis
     visible,
     onOk(v, urls) {
       dispatch({
-        type: 'volume/updateBulkFreezeFSForSnapshot',
+        type: 'volume/updateBulkFreezeFilesystemForSnapshot',
         payload: {
           params: v,
           urls,
@@ -453,7 +453,7 @@ export function getUpdateBulkFreezeFSForSnapshotModalProps(volumes, visible, dis
     },
     onCancel() {
       dispatch({
-        type: 'volume/hideUpdateBulkFreezeFSForSnapshotModal',
+        type: 'volume/hideUpdateBulkFreezeFilesystemForSnapshotModal',
       })
       dispatch({
         type: 'app/changeBlur',

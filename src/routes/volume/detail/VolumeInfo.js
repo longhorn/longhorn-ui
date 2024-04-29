@@ -401,8 +401,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {selectedVolume?.replicaDiskSoftAntiAffinity}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}> Freeze File System For Snapshot:</span>
-        {addGlobalSettingDescription(selectedVolume?.freezeFSForSnapshot)}
+        <span className={styles.label}> Freeze Filesystem For Snapshot:</span>
+        {addGlobalSettingDescription(selectedVolume?.freezeFilesystemForSnapshot)}
       </div>
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
