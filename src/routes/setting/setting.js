@@ -14,7 +14,9 @@ const form = ({
   },
   data,
   saving,
+  loading,
   onSubmit,
+  onInputChange,
 }) => {
   const handleOnSubmit = () => {
     const fields = getFieldsValue()
@@ -39,20 +41,26 @@ const form = ({
     }
   }
   const genInputItem = (setting) => {
+    const settingType = setting.definition.type
+    const settingName = setting.definition.displayName
+
     if (setting.definition && setting.definition.options) {
-      return (<Select getPopupContainer={triggerNode => triggerNode.parentElement}>
-        {setting.definition.options.map((item, index) => {
-          return <Option key={index} value={item}>{item}</Option>
-        })}
-      </Select>)
+      return (
+        <Select onChange={value => onInputChange(settingName, value)} getPopupContainer={triggerNode => triggerNode.parentElement}>
+          {setting.definition.options.map((item, index) => (
+            <Option key={index} value={item}>{item}</Option>
+          ))}
+        </Select>
+      )
     }
-    switch (setting.definition.type) {
+
+    switch (settingType) {
       case 'bool':
-        return (<Checkbox disabled={setting.definition.readOnly} />)
+        return (<Checkbox disabled={setting.definition.readOnly} onChange={e => onInputChange(settingName, e.target.checked)} />)
       case 'int':
-        return (<InputNumber style={{ width: '100%' }} parser={limitNumber} disabled={setting.definition.readOnly} min={0} />)
+        return (<InputNumber onChange={value => onInputChange(settingName, value)} style={{ width: '100%' }} parser={limitNumber} disabled={setting.definition.readOnly} min={0} />)
       default:
-        return (<Input readOnly={setting.definition.readOnly} />)
+        return (<Input readOnly={setting.definition.readOnly} onChange={e => onInputChange(settingName, e.target.value)} />)
     }
   }
   const genFormItem = (setting) => {
@@ -94,6 +102,7 @@ const form = ({
       </FormItem>
     )
   }
+
   const getCategoryWeight = (category) => {
     switch (category) {
       case 'general':
@@ -128,22 +137,32 @@ const form = ({
       return 1
     }
     return 0
-  }).map(item => <div key={item}> <div className={classnames(styles.fieldset, { [styles.dangerZone]: item === 'danger Zone' })}><span className={styles.fieldsetLabel}>{item}</span> { settingsGrouped[item].map(setting => genFormItem(setting))}</div></div>)
+  }).map(item => (
+    <div key={item}>
+      <div className={classnames(styles.fieldset, { [styles.dangerZone]: item === 'danger Zone' })}>
+        <span className={styles.fieldsetLabel}>{item}</span>
+        {settingsGrouped[item].map(setting => genFormItem(setting))}
+      </div>
+    </div>
+  ))
 
   return (
-    <Spin spinning={saving}>
-      {<Form className={styles.setting}>
+    <Spin spinning={saving || loading}>
+      <Form className={styles.setting}>
         {settings}
-        <FormItem style={{ textAlign: 'center' }}>
-          <Button
-            onClick={handleOnSubmit}
-            loading={saving}
-            type="primary"
-            htmlType="submit">
-            Save
-          </Button>
-        </FormItem>
-      </Form>}
+      </Form>
+       {settings.length > 0 && (
+          <div style={{ textAlign: 'center', position: 'sticky', marginTop: '1rem' }}>
+            <Button
+              onClick={handleOnSubmit}
+              loading={saving}
+              type="primary"
+              htmlType="submit"
+            >
+              Save
+            </Button>
+          </div>
+       )}
     </Spin>
   )
 }
@@ -154,6 +173,7 @@ form.propTypes = {
   onSubmit: PropTypes.func,
   saving: PropTypes.bool,
   loading: PropTypes.bool,
+  onInputChange: PropTypes.func,
 }
 
 export default Form.create()(form)
