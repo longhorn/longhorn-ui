@@ -28,7 +28,7 @@ class Setting extends React.Component {
     const { confirmedNavigation, changedSettings } = this.state
     const isDirty = Object.keys(changedSettings).length > 0
 
-    if (nextLocation.pathname !== '/settings' && isDirty && !confirmedNavigation) {
+    if (isDirty && !confirmedNavigation) {
       this.showModal(nextLocation)
       return false // disallow navigation
     }
@@ -72,6 +72,13 @@ class Setting extends React.Component {
     }
   }
 
+  resetChangedSettings = () => {
+    this.setState({
+      ...this.state,
+      changedSettings: {},
+    })
+  }
+
   render() {
     const { setting, dispatch, loading } = this.props
     const { modalVisible, changedSettings } = this.state
@@ -87,6 +94,7 @@ class Setting extends React.Component {
           payload,
         })
       },
+      resetChangedSettings: this.resetChangedSettings,
       onInputChange: this.onInputChange,
     }
 
