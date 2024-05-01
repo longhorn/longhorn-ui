@@ -1,7 +1,7 @@
 pull_request_rules:
 - name: Automatically merge PRs
   conditions:
-  - check-success=continuous-integration/drone/pr
+  - check-success="Build and push image"
   - "#approved-reviews-by>=2"
   - approved-reviews-by=@longhorn/maintainer
   - approved-reviews-by=@longhorn/ui
@@ -11,7 +11,7 @@ pull_request_rules:
       
 - name: Automatically merge Renovate PRs
   conditions:
-  - check-success=continuous-integration/drone/pr
+  - check-success="Build and push image"
   - author = renovate[bot]
   actions:
     merge:
@@ -19,7 +19,7 @@ pull_request_rules:
 
 - name: Automatically approve Renovate PRs
   conditions:
-  - check-success=continuous-integration/drone/pr
+  - check-success="Build and push image"
   - author = renovate[bot]
   actions:
     review:
