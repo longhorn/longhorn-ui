@@ -34,7 +34,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      let urls = items.map((item) => item?.actions?.updateFreezeFilesystemForSnapshot)
+      const urls = items.map((item) => item?.actions?.updateFreezeFilesystemForSnapshot)
 
       onOk(data, urls)
     })

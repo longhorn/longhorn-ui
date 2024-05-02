@@ -432,7 +432,7 @@ export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, 
 }
 
 export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visible, dispatch) {
-  let option = [
+  const option = [
     { key: 'Enabled', value: 'enabled' },
     { key: 'Disabled', value: 'disabled' },
     { key: 'Ignored (Follow the global setting)', value: 'ignored' },
