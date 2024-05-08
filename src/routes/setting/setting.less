@@ -1,30 +1,37 @@
-.setting {
-  max-height: 78vh;
-  overflow-y: auto;
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 200px);
 
-  :global .ant-input-group-addon {
-    text-transform: capitalize;
-  }
-  .fieldset {
-    border: 1px solid #f2f4f5;
-    position: relative;
-    margin: 24px 0px;
-    padding: 16px 16px 0 16px;
-    > .fieldsetLabel {
-      position: absolute;
-      transform: translateY(-120%);
+  .setting {
+    max-height: fit-content;
+    overflow-y: auto;
+
+    :global .ant-input-group-addon {
       text-transform: capitalize;
-      display: inline-block;
-      padding: 0 24px;
-      white-space: nowrap;
-      text-align: center;
-      font-weight: 700;
-      color: rgb(173, 172, 172);
-      font-size: 18px;
-      background-color: #ffffff;
+    }
+    .fieldset {
+      border: 1px solid #f2f4f5;
+      position: relative;
+      margin: 24px 0px;
+      padding: 16px 16px 0 16px;
+      > .fieldsetLabel {
+        position: absolute;
+        transform: translateY(-120%);
+        text-transform: capitalize;
+        display: inline-block;
+        padding: 0 24px;
+        white-space: nowrap;
+        text-align: center;
+        font-weight: 700;
+        color: rgb(173, 172, 172);
+        font-size: 18px;
+        background-color: #ffffff;
+      }
+    }
+    .dangerZone {
+      border: 1px solid #f15354;
     }
   }
-  .dangerZone {
-    border: 1px solid #f15354;
-  }
 }
+
