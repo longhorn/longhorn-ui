@@ -150,21 +150,23 @@ const form = ({
 
   return (
     <Spin spinning={saving || loading} style={{ height: '100vh' }}>
-      <Form className={styles.setting}>
-        {settings}
-      </Form>
-       {settings.length > 0 && (
-          <div style={{ textAlign: 'center', position: 'sticky', marginTop: '1rem' }}>
-            <Button
-              onClick={handleOnSubmit}
-              loading={saving}
-              type="primary"
-              htmlType="submit"
-            >
-              Save
-            </Button>
-          </div>
-       )}
+      <div className={styles.wrapper}>
+        <Form className={styles.setting}>
+          {settings}
+        </Form>
+        {settings.length > 0 && (
+            <div style={{ textAlign: 'center', position: 'sticky', marginTop: '1rem' }}>
+              <Button
+                onClick={handleOnSubmit}
+                loading={saving}
+                type="primary"
+                htmlType="submit"
+              >
+                Save
+              </Button>
+            </div>
+        )}
+       </div>
     </Spin>
   )
 }
