@@ -50,7 +50,7 @@ class Setting extends React.Component {
   onInputChange = (displayName, newValue) => {
     const { setting: { data } } = this.props
     const targetSettingOldValue = data.find(d => d.definition.displayName === displayName)?.value
-    if (targetSettingOldValue && targetSettingOldValue.toString() !== newValue.toString()) {
+    if (targetSettingOldValue !== undefined && targetSettingOldValue.toString() !== newValue.toString()) {
       this.setState(prevState => ({
         changedSettings: {
           ...prevState.changedSettings,
