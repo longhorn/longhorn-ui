@@ -87,6 +87,8 @@ class List extends React.Component {
       this.props.DeleteAllBackups(record)
     } else if (e.key === 'restoreLatestBackup') {
       this.props.restoreLatestBackup(record)
+    } else if (e.key === 'syncBackupVolume') {
+      this.props.syncBackupVolume(record)
     } else if (e.key === 'backingImageInfo') {
       this.props.showBackingImageInfo(record)
     }
@@ -248,6 +250,7 @@ class List extends React.Component {
             <DropOption menuOptions={[
               { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
               { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
+              { key: 'syncBackupVolume', name: 'Sync Backup Volume' },
               { key: 'deleteAll', name: 'Delete All Backups' },
               { key: 'backingImageInfo', name: 'Backing Image Info', disabled: !hasBackingImage, tooltip: hasBackingImage ? '' : 'No backing image is used' },
             ]}
@@ -313,6 +316,7 @@ List.propTypes = {
   DeleteAllBackups: PropTypes.func,
   dispatch: PropTypes.func,
   restoreLatestBackup: PropTypes.func,
+  syncBackupVolume: PropTypes.func,
   showBackingImageInfo: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
 }
