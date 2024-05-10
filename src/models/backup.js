@@ -1,4 +1,4 @@
-import { query, queryBackupList, execAction, restore, deleteBackup, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
+import { query, queryBackupList, execAction, restore, deleteBackup, syncVolume, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
 import { message } from 'antd'
 import { wsChanges } from '../utils/websocket'
 import queryString from 'query-string'
@@ -245,6 +245,11 @@ export default {
       yield call(createVolume, payload)
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
+    },
+    *syncBackupVolume({
+      payload,
+    }, { call }) {
+      yield call(syncVolume, payload.name)
     },
     *bulkCreateVolume({
       payload,

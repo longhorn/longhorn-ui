@@ -82,6 +82,12 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     showBackingImageInfo(record) {
       showBackingImageInfo(record)
     },
+    syncBackupVolume(record) {
+      dispatch({
+        type: 'backup/syncBackupVolume',
+        payload: record,
+      })
+    },
     restoreLatestBackup(record) {
       dispatch({
         type: 'backup/restoreLatestBackup',
