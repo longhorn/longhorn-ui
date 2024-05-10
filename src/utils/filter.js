@@ -70,7 +70,7 @@ export function schedulingDisabledNode(data) { return data.filter(node => isDisa
 // Node is not ready by condition.
 export function downNode(data) { return data.filter(node => isDown(node)) }
 
-function filterData(data, field, value) {
+export function filterData(data, field, value) {
   return data.filter(item => (item[field] || '').toLowerCase().indexOf(value.toLowerCase()) > -1)
 }
 
