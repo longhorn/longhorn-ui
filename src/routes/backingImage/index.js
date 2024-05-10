@@ -70,13 +70,25 @@ class BackingImage extends React.Component {
     const { data: volumeData } = this.props.volume
     const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows } = this.props.backingImage
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
-    const { field, value } = queryString.parse(this.props.location.search)
-    let backingImages = data.filter((item) => {
-      if (field && value) {
-        return item[field] && item[field].indexOf(value.trim()) > -1
+    const { field, value, createdFromValue } = queryString.parse(this.props.location.search)
+
+    let backingImages = data
+    if (field && (value || createdFromValue)) {
+      switch (field) {
+        case 'name':
+          backingImages = backingImages.filter((image) => image.name.includes(value.trim()))
+          break
+        case 'uuid':
+          backingImages = backingImages.filter((image) => image.uuid.includes(value.trim()))
+          break
+        case 'sourceType':
+          backingImages = backingImages.filter((image) => image.sourceType === createdFromValue.trim())
+          break
+        default:
+          break
       }
-      return true
-    })
+    }
+
     if (backingImages && backingImages.length > 0) {
       backingImages.sort((a, b) => a.name.localeCompare(b.name))
     }
@@ -232,20 +244,32 @@ class BackingImage extends React.Component {
       defaultField: 'name',
       fieldOption: [
         { value: 'name', name: 'Name' },
+        { value: 'uuid', name: 'UUID' },
+        { value: 'sourceType', name: 'Created From' },
+      ],
+      createdFromOption: [
+        { value: 'download', name: 'download' },
+        { value: 'upload', name: 'upload' },
+        { value: 'export-from-volume', name: 'export-from-volume' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue } = filter
-        filterField && filterValue ? dispatch(routerRedux.push({
-          pathname: '/backingImage',
-          search: queryString.stringify({
-            ...queryString.parse(location.search),
-            field: filterField,
-            value: filterValue,
-          }),
-        })) : dispatch(routerRedux.push({
-          pathname: '/backingImage',
-          search: queryString.stringify({}),
-        }))
+        const { field: filterField, value: filterValue, createdFromValue: createdFromPropValue } = filter
+        if (filterField && (filterValue || createdFromPropValue)) {
+          dispatch(routerRedux.push({
+            pathname: '/backingImage',
+            search: queryString.stringify({
+              ...queryString.parse(location.search),
+              field: filterField,
+              value: filterValue,
+              createdFromValue: createdFromPropValue,
+            }),
+          }))
+        } else {
+          dispatch(routerRedux.push({
+            pathname: '/backingImage',
+            search: queryString.stringify({}),
+          }))
+        }
       },
     }
 
@@ -277,13 +301,17 @@ class BackingImage extends React.Component {
             <Filter {...backingImageFilterProps} />
           </Col>
         </Row>
-        { inUploadProgress ? <div className={style.backingImageUploadingContainer}>
-          <div>
-            <Progress percent={backingImageUploadPercent} />
-            <span>Uploading</span>
+        { inUploadProgress ? (
+          <div className={style.backingImageUploadingContainer}>
+            <div>
+              <Progress percent={backingImageUploadPercent} />
+              <span>Uploading</span>
+            </div>
           </div>
-        </div> : ''}
-        <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>Create Backing Image</Button>
+        ) : ''}
+        <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
+          Create Backing Image
+        </Button>
         <BackingImageList {...backingImageListProps} />
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}
