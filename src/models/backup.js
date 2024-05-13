@@ -252,7 +252,7 @@ export default {
       const backVolName = payload.name
       const resp = yield call(syncVolume, backVolName)
       if (resp && resp.status === 200) {
-        message.success(`Successfully synced backup volume ${backVolName}`, 3)
+        message.success(`Successfully trigger backup volume ${backVolName} synchronization`, 5)
       }
     },
     *bulkCreateVolume({
