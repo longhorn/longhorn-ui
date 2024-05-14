@@ -31,12 +31,22 @@ export async function createVolume(params) {
   })
 }
 
-export async function syncVolume(volumeName) {
+export async function syncBackupVolume(volumeName) {
   return request({
     url: `/v1/backupvolumes/${volumeName}?action=backupVolumeSync`,
     method: 'post',
     data: {
       syncBackupVolume: true,
+    },
+  })
+}
+
+export async function syncAllBackupVolumes() {
+  return request({
+    url: '/v1/backupvolumes',
+    method: 'put',
+    data: {
+      syncAllBackupVolumes: true,
     },
   })
 }
