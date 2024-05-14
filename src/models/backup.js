@@ -1,4 +1,4 @@
-import { query, queryBackupList, execAction, restore, deleteBackup, syncVolume, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
+import { query, queryBackupList, execAction, restore, deleteBackup, syncBackupVolume, syncAllBackupVolumes, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
 import { message } from 'antd'
 import { wsChanges } from '../utils/websocket'
 import queryString from 'query-string'
@@ -250,9 +250,17 @@ export default {
       payload,
     }, { call }) {
       const backVolName = payload.name
-      const resp = yield call(syncVolume, backVolName)
+      const resp = yield call(syncBackupVolume, backVolName)
       if (resp && resp.status === 200) {
         message.success(`Successfully trigger backup volume ${backVolName} synchronization`, 5)
+      }
+    },
+    *syncAllBackupVolumes({
+      // eslint-disable-next-line no-unused-vars
+      _payload }, { call }) {
+      const resp = yield call(syncAllBackupVolumes)
+      if (resp && resp.status === 200) {
+        message.success('Successfully trigger all backup volumes synchronization', 5)
       }
     },
     *bulkCreateVolume({

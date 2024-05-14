@@ -208,6 +208,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
 
   const backupBulkActionsProps = {
     selectedRows,
+    backupVolumes,
     restoreLatestBackup() {
       dispatch({
         type: 'backup/queryBackupDetailBulkData',
@@ -223,6 +224,11 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
         payload: {
           backupVolume: selectedRows,
         },
+      })
+    },
+    syncAllBackupVolumes() {
+      dispatch({
+        type: 'backup/syncAllBackupVolumes',
       })
     },
   }
