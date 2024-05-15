@@ -35,13 +35,13 @@ export const diskStatusColorMap = {
 }
 
 export const nodeStatusColorMap = {
-  schedulable: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
-  unschedulable: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
+  schedulable: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' }, // green
+  unschedulable: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
   // autoEvicting nodes are a subset of unschedulable nodes. We use the same color to represent both.
-  autoEvicting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
-  down: { color: '#F15354', bg: 'rgba(241,83,84,.1)' },
-  disabled: { color: '#dee1e3', bg: 'rgba(222,225,227,.05)' },
-  unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' },
+  autoEvicting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
+  down: { color: '#F15354', bg: 'rgba(241,83,84,.1)' }, // red
+  disabled: { color: '#dee1e3', bg: 'rgba(222,225,227,.05)' }, // grey
+  unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' }, // red
 }
 export function getNodeStatus(node) {
   // autoEvicting nodes are a subset of unschedulable nodes and the autoEvicting status takes precedence for display.
@@ -70,7 +70,7 @@ export function schedulingDisabledNode(data) { return data.filter(node => isDisa
 // Node is not ready by condition.
 export function downNode(data) { return data.filter(node => isDown(node)) }
 
-export function filterData(data, field, value) {
+function filterData(data, field, value) {
   return data.filter(item => (item[field] || '').toLowerCase().indexOf(value.toLowerCase()) > -1)
 }
 
