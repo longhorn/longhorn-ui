@@ -6,7 +6,6 @@ on:
     - v*
     tags:
     - v*
-  pull_request:
 jobs:
   build_push_image:
     name: Build and push image
