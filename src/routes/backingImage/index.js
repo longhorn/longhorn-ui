@@ -76,13 +76,13 @@ class BackingImage extends React.Component {
     if (field && (value || createdFromValue)) {
       switch (field) {
         case 'name':
-          backingImages = backingImages.filter((image) => image.name.includes(value.trim()))
+          backingImages = backingImages.filter((image) => (value ? image.name.includes(value.trim()) : true))
           break
         case 'uuid':
-          backingImages = backingImages.filter((image) => image.uuid.includes(value.trim()))
+          backingImages = backingImages.filter((image) => (value ? image.uuid.includes(value.trim()) : true))
           break
         case 'sourceType':
-          backingImages = backingImages.filter((image) => image.sourceType === createdFromValue.trim())
+          backingImages = backingImages.filter((image) => (createdFromValue ? image.sourceType === createdFromValue?.trim() : true))
           break
         default:
           break
