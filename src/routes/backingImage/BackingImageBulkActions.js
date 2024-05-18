@@ -1,34 +1,74 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
+import { hasReadyBackingDisk } from '../../utils/status'
+import { diskStatusColorMap } from '../../utils/filter'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, deleteBackingImages }) {
+
+function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackingImages }) {
   const handleClick = (action) => {
+    const count = selectedRows.length
     switch (action) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Backing Image ${selectedRows.map(item => item.name).join(',')} ?`,
+          width: 'fit-content',
+          title: (<>
+                    <p>Are you sure to delete below {count} Backing {count === 1 ? 'Image' : 'Images' } ?</p>
+                    <ul>
+                      {selectedRows.map(item => <li>{item.name}</li>)},
+                    </ul>
+                  </>),
           onOk() {
             deleteBackingImages(selectedRows)
           },
         })
         break
+      case 'download': {
+        const downloadableImages = selectedRows.filter(row => hasReadyBackingDisk(row))
+        const readyColor = diskStatusColorMap.ready
+        const readyTextStyle = {
+          display: 'inline-block',
+          width: 'max-content',
+          padding: '0 4px',
+          marginRight: '5px',
+          color: '#27AE5F',
+          border: `1px solid ${readyColor.color}`,
+          backgroundColor: readyColor.bg,
+          textTransform: 'capitalize',
+        }
+        confirm({
+          okText: 'Download',
+          width: 'fit-content',
+          title: (<>
+                    <p>Below <strong style={readyTextStyle}>Ready</strong> status Backing {count === 1 ? 'Image' : 'Images' } will be downloaded.</p>
+                    <ul>
+                      {downloadableImages.map(item => <li>{item.name}</li>)}
+                    </ul>
+                    <p>Note. You need allow <strong>Automatic Download</strong> permission<br />in browser settings to download multiple files at once.</p>
+                  </>),
+          onOk() {
+            downloadSelectedBackingImages(downloadableImages)
+          },
+        })
+        break
+      }
       default:
+        // show nothing
     }
   }
 
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
+    { key: 'download', name: 'Download', disabled() { return (selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row))) } },
   ]
 
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       { allActions.map(item => {
         return (
-          <div key={item.key}>
-            &nbsp;
+          <div key={item.key} style={{ marginRight: '10px' }}>
             <Button size="large" type="primary" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
           </div>
         )

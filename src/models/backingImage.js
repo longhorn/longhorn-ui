@@ -1,4 +1,4 @@
-import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download } from '../services/backingImage'
+import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
@@ -101,6 +101,13 @@ export default {
     }, { call, put }) {
       yield call(download, payload)
       yield put({ type: 'query' })
+    },
+    *bulkDownload({
+      payload,
+    }, { call }) {
+      if (payload && payload.length > 0) {
+        yield call(bulkDownload, payload)
+      }
     },
     *bulkDelete({
       payload,
