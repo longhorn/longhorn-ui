@@ -26,6 +26,14 @@ const isAutoEvicting = (node) => node.conditions && node.conditions.Ready && nod
 const isDisabled = (node) => node.conditions && node.conditions.Ready && node.conditions.Ready.status.toLowerCase() === 'true'
                                              && (node.allowScheduling === false || Object.values(node.disks).every(d => d.allowScheduling === false))
 const isDown = (node) => node.conditions && node.conditions.Ready && node.conditions.Ready.status.toLowerCase() === 'false'
+
+export const diskStatusColorMap = {
+  ready: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' }, // green
+  'in-progress': { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
+  'ready-for-transfer': { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
+  'failed-and-cleanup': { color: '#F15354', bg: 'rgba(241,83,84,.05)' }, // red
+}
+
 export const nodeStatusColorMap = {
   schedulable: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' },
   unschedulable: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' },
