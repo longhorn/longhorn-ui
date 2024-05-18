@@ -264,6 +264,12 @@ class BackingImage extends React.Component {
           payload: record,
         })
       },
+      downloadSelectedBackingImages(record) {
+        dispatch({
+          type: 'backingImage/bulkDownload',
+          payload: record,
+        })
+      },
     }
 
     let inUploadProgress = backingImageUploadStarted
