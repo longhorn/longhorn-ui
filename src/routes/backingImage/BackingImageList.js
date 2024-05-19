@@ -5,10 +5,9 @@ import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formater'
 
-function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
+function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
   const backingImageActionsProps = {
     deleteBackingImage,
-    cleanUpDiskMap,
     downloadBackingImage,
   }
   const state = (record) => {
@@ -28,6 +27,7 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
       dataIndex: 'name',
       key: 'name',
       width: 200,
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => {
         return (
           <div onClick={() => { showDiskStateMapDetail(record) }} style={{ width: '100%', cursor: 'pointer' }}>
@@ -40,6 +40,7 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
       dataIndex: 'uuid',
       key: 'uuid',
       width: 150,
+      sorter: (a, b) => a.uuid.localeCompare(b.uuid),
       render: (text) => {
         return (
           <div>{text}</div>
@@ -50,6 +51,7 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
       dataIndex: 'size',
       key: 'size',
       width: 150,
+      sorter: (a, b) => a.size - b.size,
       render: (text) => {
         return (
           <div>
@@ -62,6 +64,7 @@ function list({ loading, dataSource, deleteBackingImage, cleanUpDiskMap, showDis
       dataIndex: 'sourceType',
       key: 'sourceType',
       width: 200,
+      sorter: (a, b) => a.sourceType.localeCompare(b.sourceType),
       render: (text) => {
         return (
           <div>
@@ -104,7 +107,6 @@ list.propTypes = {
   dataSource: PropTypes.array,
   deleteBackingImage: PropTypes.func,
   showDiskStateMapDetail: PropTypes.func,
-  cleanUpDiskMap: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
 }

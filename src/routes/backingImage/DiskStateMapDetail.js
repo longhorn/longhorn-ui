@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Modal, Progress, Tooltip, Card, Icon } from 'antd'
 import DiskStateMapActions from './DiskStateMapActions'
 import { ModalBlur, DropOption } from '../../components'
+import { diskStatusColorMap } from '../../utils/filter'
 import style from './BackingImage.less'
 const confirm = Modal.confirm
 
@@ -21,8 +22,6 @@ const modal = ({
   rowSelection,
   diskStateMapDeleteDisabled,
   diskStateMapDeleteLoading,
-  // CleanUp is true if this popup is for a delete operation
-  cleanUp,
 }) => {
   // update detail list
   let currentData = backingImages.find((item) => {
@@ -30,7 +29,7 @@ const modal = ({
   })
 
   const modalOpts = {
-    title: cleanUp ? 'Operate files in disks' : currentData.name,
+    title: <p style={{ fontWeight: '700', fontSize: '18px', marginBottom: 0 }}>{currentData.name}</p>,
     visible,
     onCancel,
     hasOnCancel: true,
@@ -46,9 +45,9 @@ const modal = ({
 
   const handleMenuClick = (record, event) => {
     switch (event.key) {
-      case 'delete':
+      case 'cleanUp':
         confirm({
-          title: `Are you sure to delete the images image file from the disk ${record.disk} ?`,
+          title: `Are you sure to clean up the image file from the disk (${record.disk}) ?`,
           onOk() {
             deleteDisksOnBackingImage([record])
           },
@@ -74,14 +73,36 @@ const modal = ({
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      width: 150,
+      width: 200,
       className: 'active',
       render: (text, record) => {
+        const defaultGreyColor = { color: '#dee1e3', bg: 'rgba(222,225,227,.05)' }
+        const colorMap = diskStatusColorMap[text] || defaultGreyColor
         return (
           <div>
-            { text === 'in-progress' ? <Tooltip title={`${record.progress}%`}><div><Progress showInfo={false} percent={record.progress} /></div></Tooltip> : ''}
+            { text === 'in-progress' && (
+              <Tooltip title={`${record.progress}%`}>
+                <div>
+                  <Progress showInfo={false} percent={record.progress} />
+                </div>
+              </Tooltip>
+            )}
             <Tooltip title={record.message}>
-              <div>{text} {record.message ? <Icon type="message" className="color-warning" /> : ''}</div>
+              {text ? (
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: 'max-content',
+                    padding: '0 4px',
+                    marginRight: '5px',
+                    color: colorMap.color,
+                    border: `1px solid ${colorMap.color}`,
+                    backgroundColor: colorMap.bg,
+                    textTransform: 'capitalize',
+                  }}
+                >{text}</div>
+              ) : <Icon type="sync" style={{ color: '#0077ea' }} spin />}
+              {record.message ? <Icon type="message" className="color-warning" /> : ''}
             </Tooltip>
           </div>
         )
@@ -98,26 +119,21 @@ const modal = ({
     },
   ]
 
-  // If cleanUp is true tableRowSelection will equal props rowSelection, to support select rows.
-  let tableRowSelection = null
-
-  if (cleanUp) {
-    tableRowSelection = rowSelection
-    columns.push({
-      title: 'Operation',
-      key: 'operation',
-      width: 100,
-      render: (text, record) => {
-        return (
+  const tableRowSelection = rowSelection
+  columns.push({
+    title: 'Operation',
+    key: 'operation',
+    width: 100,
+    render: (_text, record) => {
+      return (
           <DropOption menuOptions={[
-            { key: 'delete', name: 'Delete' },
+            { key: 'cleanUp', name: 'Clean Up' },
           ]}
             onMenuClick={e => handleMenuClick(record, e)}
           />
-        )
-      },
-    })
-  }
+      )
+    },
+  })
 
   const diskStateMapProps = {
     selectedRows,
@@ -135,23 +151,23 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <div style={{ width: '100%', overflow: 'auto', padding: '10px 20px 10px' }}>
-        { !cleanUp ? <div className={style.backingImageModalContainer}>
+        <div className={style.backingImageModalContainer}>
           <Card>
             <div className={style.parametersContainer} style={{ marginBottom: 0 }}>
-              <div>UUID: </div>
+              <div>UUID</div>
               <span>{currentData.uuid}</span>
-              <div>Created From: </div>
+              <div>Created From</div>
               <span>
                 {currentData.sourceType === 'download' && 'Download from URL'}
                 {currentData.sourceType === 'upload' && 'Upload'}
                 {currentData.sourceType === 'export-from-volume' && 'Export from a Longhorn volume'}
               </span>
-              <div style={{ textAlign: 'left' }}>Parameters During Creation:</div>
+              <div style={{ textAlign: 'left' }}>Parameters During Creation</div>
               <div>
                 {currentData.parameters && Object.keys(currentData.parameters).length > 0 ? Object.keys(currentData.parameters).map((key) => {
                   return <div style={{ display: 'flex' }} key={key}>
-                    <div style={{ minWidth: 60, fontWeight: 'normal' }}>{key}:</div>
-                    <div style={{ marginLeft: 10, fontWeight: 'normal' }}>{currentData.parameters[key]}</div>
+                    <div style={{ minWidth: 'fit-content', fontWeight: 'normal' }}>{key}:</div>
+                    <div style={{ marginLeft: 5, fontWeight: 'normal' }}>{currentData.parameters[key]}</div>
                   </div>
                 }) : <Tooltip title="empty"><Icon type="stop" className="color-warning" /></Tooltip>}
               </div>
@@ -167,14 +183,14 @@ const modal = ({
                 </Tooltip> : ((currentData.expectedChecksum !== '' && isReady) && <Tooltip title={'Current checksum doesn’t match the expected value'}>
                   <summary className="color-error">Failed</summary>
                 </Tooltip>)}
-                Current SHA512 Checksum:
+                Current SHA512 Checksum
               </div>
               <span>{currentData.currentChecksum ? currentData.currentChecksum : ''}</span>
             </div>
           </Card>
-        </div> : ''}
+        </div>
         <div style={{ marginBottom: 12 }}>
-          { cleanUp ? <DiskStateMapActions {...diskStateMapProps} /> : '' }
+          <DiskStateMapActions {...diskStateMapProps} />
         </div>
         <Table
           bordered={false}
@@ -193,7 +209,6 @@ const modal = ({
 
 modal.propTypes = {
   visible: PropTypes.bool,
-  cleanUp: PropTypes.bool,
   diskStateMapDeleteDisabled: PropTypes.bool,
   diskStateMapDeleteLoading: PropTypes.bool,
   selected: PropTypes.object,
