@@ -42,11 +42,11 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
           okText: 'Download',
           width: 'fit-content',
           title: (<>
-                    <p>Below <strong style={readyTextStyle}>Ready</strong> status Backing {count === 1 ? 'Image' : 'Images' } will be downloaded.</p>
+                    <p>Below backing {count === 1 ? 'image' : 'images' } with <strong style={readyTextStyle}>Ready</strong> status disk will be downloaded</p>
                     <ul>
                       {downloadableImages.map(item => <li>{item.name}</li>)}
                     </ul>
-                    <p>Note. You need allow <strong>Automatic Download</strong> permission<br />in browser settings to download multiple files at once.</p>
+                    <p>Note. You need allow <strong>Automatic Downloads</strong> permission<br />in browser settings to download multiple files at once.</p>
                   </>),
           onOk() {
             downloadSelectedBackingImages(downloadableImages)

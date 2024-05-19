@@ -6,7 +6,7 @@ const confirm = Modal.confirm
 function DiskStateMapActions({ selectedRows, deleteButtonDisabled, deleteButtonLoading, deleteDisksOnBackingImage }) {
   const deleteButtonClick = () => {
     confirm({
-      title: `Are you sure to delete the image files from the disks (${selectedRows.map(item => item.disk).join(',')}) ?`,
+      title: `Are you sure to clean up the image file from the disks (${selectedRows.map(item => item.disk).join(',')}) ?`,
       onOk() {
         deleteDisksOnBackingImage(selectedRows)
       },
@@ -21,7 +21,7 @@ function DiskStateMapActions({ selectedRows, deleteButtonDisabled, deleteButtonL
   }
 
   return (
-    <Button {...deleteButtonProps}>Delete</Button>
+    <Button {...deleteButtonProps}>Clean Up</Button>
   )
 }
 
