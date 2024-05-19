@@ -5,7 +5,7 @@ import { DropOption } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBackingImage }) {
+function actions({ selected, deleteBackingImage, downloadBackingImage }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -20,9 +20,6 @@ function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBacking
       case 'download':
         downloadBackingImage(record)
         break
-      case 'cleanUp':
-        cleanUpDiskMap(record)
-        break
       default:
     }
   }
@@ -32,7 +29,6 @@ function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBacking
   const availableActions = [
     { key: 'delete', name: 'Delete' },
     { key: 'download', name: 'Download', disabled: disableDownloadAction, tooltip: disableDownloadAction ? 'Missing disk with ready state' : '' },
-    { key: 'cleanUp', name: 'Clean Up' },
   ]
 
   return (
@@ -45,7 +41,6 @@ function actions({ selected, deleteBackingImage, cleanUpDiskMap, downloadBacking
 actions.propTypes = {
   selected: PropTypes.object,
   deleteBackingImage: PropTypes.func,
-  cleanUpDiskMap: PropTypes.func,
   downloadBackingImage: PropTypes.func,
 }
 
