@@ -15,8 +15,9 @@ import {
 } from '../helper/index'
 import styles from './VolumeInfo.less'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
-import IconSnapshot from '../../../components/Icon/IconSnapshot'
+import ConditionTooltip from './ConditionTooltip'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
+
 
 function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, currentBackingImage }) {
   let errorMsg = null
@@ -247,41 +248,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             Conditions:
           </span>
           <div className={styles.control} style={{ display: 'flex' }}>
-            {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).filter((key) => {
-              return key === 'Restore' || key === 'Scheduled' || key === 'TooManySnapshots'
-            }).map((key) => {
-              let title = selectedVolume.conditions[key] ? (<div>
-                {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
-                {selectedVolume.conditions[key].lastProbeTime && <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(selectedVolume.conditions[key].lastProbeTime)}</div>}
-                {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(selectedVolume.conditions[key].lastTransitionTime)}</div>}
-                {selectedVolume.conditions[key].message && <div style={{ marginBottom: 5 }}>Message: {selectedVolume.conditions[key].message}</div>}
-                {selectedVolume.conditions[key].reason && <div style={{ marginBottom: 5 }}>Reason: {selectedVolume.conditions[key].reason}</div>}
-                {selectedVolume.conditions[key].status && <div style={{ marginBottom: 5 }}>Status: {selectedVolume.conditions[key].status}</div>}
-              </div>) : ''
-              let icon = ''
-              if (key === 'TooManySnapshots') {
-                if (selectedVolume.conditions[key] && selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'false' || selectedVolume.conditions[key].reason === '')) {
-                  icon = <IconSnapshot fill="#27ae60" />
-                  title = (<div>
-                    {selectedVolume.conditions[key].type && <div style={{ marginBottom: 5 }}>Name: {selectedVolume.conditions[key].type}</div>}
-                    {selectedVolume.conditions[key].lastTransitionTime && <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(selectedVolume.conditions[key].lastTransitionTime)}</div>}
-                    <div style={{ marginBottom: 5 }}>Status: The snapshot number threshold has not been exceeded</div>
-                  </div>)
-                } else {
-                  icon = <IconSnapshot fill="#f15354" />
-                }
-              } else if (key === 'Restore') {
-                icon = selectedVolume.conditions[key].status && (selectedVolume.conditions[key].status.toLowerCase() === 'true' || selectedVolume.conditions[key].reason === '') ? <Icon className="healthy" style={{ marginRight: 5, color: selectedVolume.conditions[key].reason === '' && selectedVolume.conditions[key].status.toLowerCase() === 'false' ? '#666666' : '#27ae60' }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
-              } else {
-                icon = selectedVolume.conditions[key].status && selectedVolume.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" />
-              }
-              let text = key !== 'TooManySnapshots' ? selectedVolume.conditions[key].type : ''
-
-              return (<Tooltip key={key} title={title}><div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
-                  {icon}{text}
-                </div></Tooltip>)
-            })}
-            </div>
+            {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).filter((key) => ['Restore', 'Scheduled', 'TooManySnapshots'].includes(key)).map((key) => <ConditionTooltip key={key} selectedVolume={selectedVolume} conditionKey={key} />)}
+          </div>
         </div>
       </div>
       <div className={styles.row}>
