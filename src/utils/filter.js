@@ -29,9 +29,12 @@ const isDown = (node) => node.conditions && node.conditions.Ready && node.condit
 
 export const diskStatusColorMap = {
   ready: { color: '#27AE5F', bg: 'rgba(39,174,95,.05)' }, // green
+  starting: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
+  pending: { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
   'in-progress': { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
   'ready-for-transfer': { color: '#F1C40F', bg: 'rgba(241,196,15,.05)' }, // yellow
   'failed-and-cleanup': { color: '#F15354', bg: 'rgba(241,83,84,.05)' }, // red
+  failed: { color: '#F15354', bg: 'rgba(241,83,84,.05)' }, // red
 }
 
 export const nodeStatusColorMap = {
