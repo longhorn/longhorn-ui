@@ -88,7 +88,7 @@ const modal = ({
               </Tooltip>
             )}
             <Tooltip title={record.message}>
-              {text ? (
+              {text && (
                 <div
                   style={{
                     display: 'inline-block',
@@ -101,8 +101,9 @@ const modal = ({
                     textTransform: 'capitalize',
                   }}
                 >{text}</div>
-              ) : <Icon type="sync" style={{ color: '#0077ea' }} spin />}
-              {record.message ? <Icon type="message" className="color-warning" /> : ''}
+              )}
+              {record.message && <Icon type="message" className="color-warning" />}
+              {!text && !record.message && <Icon type="sync" style={{ color: '#0077ea' }} spin />}
             </Tooltip>
           </div>
         )
