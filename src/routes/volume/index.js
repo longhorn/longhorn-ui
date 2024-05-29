@@ -59,6 +59,7 @@ import {
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
+import { hasReadyBackingDisk } from '../../utils/status'
 
 const confirm = Modal.confirm
 
@@ -761,7 +762,7 @@ class Volume extends React.Component {
       v1DataEngineEnabled,
       v2DataEngineEnabled,
       diskTags,
-      backingImages,
+      backingImages: backingImages?.filter(image => hasReadyBackingDisk(image)) || [],
       tagsLoading,
       hosts,
       visible: createVolumeModalVisible,
