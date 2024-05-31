@@ -5,21 +5,23 @@ import { routerRedux } from 'dva/router'
 import { Row, Col, Modal, Descriptions } from 'antd'
 import BackupVolumeList from './BackupVolumeList'
 import queryString from 'query-string'
-import RestoreBackup from './RestoreBackup'
-import CreateStandbyVolume from './CreateStandbyVolume'
+import RestoreBackupModal from './RestoreBackupModal'
+import BulkRestoreBackupModal from './BulkRestoreBackupModal'
+import CreateStandbyVolumeModal from './CreateStandbyVolumeModal'
 import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
+
 import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
 import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 
 const { confirm, info } = Modal
 
-function Backup({ host, backup, loading, setting, backingImage, dispatch, location }) {
+function Backup({ backup, loading, setting, backingImage, dispatch, location }) {
   location.search = location.search ? location.search : ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
-  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, isBulkRestore, bulkRestoreData, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
-  const hosts = host.data
+  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
+
   const settings = setting.data
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -66,7 +68,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
         payload: { field: s.field, order: s.order, columnKey: s.columnKey },
       })
     },
-    Create(record) {
+    Create(record) { // to create DR volume
       dispatch({
         type: 'backup/CreateStandVolume',
         payload: record,
@@ -106,16 +108,15 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
       })
     },
     onRowClick(record, flag) {
-      let selecteRowByClick = [record]
-
+      let selectedRowByClick = [record]
       if (flag) {
         selectedRows.forEach((item) => {
-          if (selecteRowByClick.every((ele) => {
+          if (selectedRowByClick.every((ele) => {
             return ele.id !== item.id
           })) {
-            selecteRowByClick.push(item)
+            selectedRowByClick.push(item)
           } else {
-            selecteRowByClick = selecteRowByClick.filter((ele) => {
+            selectedRowByClick = selectedRowByClick.filter((ele) => {
               return ele.id !== item.id
             })
           }
@@ -125,7 +126,7 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
       dispatch({
         type: 'backup/changeSelection',
         payload: {
-          selectedRows: selecteRowByClick,
+          selectedRows: selectedRowByClick,
         },
       })
     },
@@ -164,9 +165,31 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     },
   }
 
+  const bulkRestoreBackupModalProps = {
+    items: currentItem,
+    tagsLoading,
+    nodeTags,
+    diskTags,
+    backingImages,
+    backupVolumes,
+    v1DataEngineEnabled,
+    v2DataEngineEnabled,
+    visible: restoreBackupModalVisible,
+    onOk(selectedBackupConfigs) {
+      dispatch({
+        type: 'backup/restoreBulkBackup',
+        payload: selectedBackupConfigs,
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'backup/hideRestoreBackupModal',
+      })
+    },
+  }
+
   const restoreBackupModalProps = {
-    item: currentItem,
-    hosts,
+    item: currentItem[0] || {},
     tagsLoading,
     nodeTags,
     diskTags,
@@ -175,23 +198,12 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     backupVolumes,
     v1DataEngineEnabled,
     v2DataEngineEnabled,
-    isBulk: isBulkRestore,
     visible: restoreBackupModalVisible,
     onOk(selectedBackup) {
-      if (isBulkRestore) {
-        dispatch({
-          type: 'backup/restoreBulkBackup',
-          payload: {
-            bulkRestoreData,
-            selectedBackup,
-          },
-        })
-      } else {
-        dispatch({
-          type: 'backup/restore',
-          payload: selectedBackup,
-        })
-      }
+      dispatch({
+        type: 'backup/restore',
+        payload: selectedBackup,
+      })
     },
     setPreviousChange(checked) {
       dispatch({
@@ -237,11 +249,9 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
     item: {
       numberOfReplicas: defaultNumberOfReplicas,
       size,
-      iops: 1000,
-      baseImage,
       fromBackup: lastBackupUrl,
       name: volumeName,
-      backingImage: currentBackupVolume ? currentBackupVolume.backingImageName : '',
+      backingImage: currentBackupVolume?.backingImageName || '',
     },
     visible: createVolumeStandModalVisible,
     nodeTags,
@@ -269,29 +279,23 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
   const bulkCreateVolumeStandModalProps = {
     items: backupVolumesForBulkCreate.map((item) => ({
       size: item.size,
-      // baseImage: item.baseImage,
       fromBackup: item.lastBackupUrl,
-      name: item.volumeName,
+      volumeName: item.volumeName,
+      backingImage: item.backingImage,
     })),
     numberOfReplicas: defaultNumberOfReplicas,
     visible: bulkCreateVolumeStandModalVisible,
     nodeTags,
     diskTags,
     tagsLoading,
+    backupVolumes,
     backingImages,
     v1DataEngineEnabled,
     v2DataEngineEnabled,
-    onOk(params, newVolumes) {
-      let data = newVolumes.map((item) => ({
-        ...item,
-        ...params,
-        standby: true,
-        frontend: '',
-        size: item.size.replace(/\s/ig, ''),
-      }))
+    onOk(drVolumeConfigs) {
       dispatch({
         type: 'backup/bulkCreateVolume',
-        payload: data,
+        payload: drVolumeConfigs,
       })
     },
     onCancel() {
@@ -323,8 +327,9 @@ function Backup({ host, backup, loading, setting, backingImage, dispatch, locati
         </Col>
       </Row>
       <BackupVolumeList {...backupVolumesProps} />
-      { restoreBackupModalVisible ? <RestoreBackup key={restoreBackupModalKey} {...restoreBackupModalProps} /> : ''}
-      { createVolumeStandModalVisible ? <CreateStandbyVolume key={createVolumeStandModalKey} {...createVolumeStandModalProps} /> : ''}
+      { restoreBackupModalVisible && currentItem.length === 1 && <RestoreBackupModal key={restoreBackupModalKey} {...restoreBackupModalProps} />}
+      { restoreBackupModalVisible && currentItem.length > 1 && <BulkRestoreBackupModal key={restoreBackupModalKey} {...bulkRestoreBackupModalProps} />}
+      { createVolumeStandModalVisible ? <CreateStandbyVolumeModal key={createVolumeStandModalKey} {...createVolumeStandModalProps} /> : ''}
       { bulkCreateVolumeStandModalVisible ? <BulkCreateStandbyVolumeModal key={bulkCreateVolumeStandModalKey} {...bulkCreateVolumeStandModalProps} /> : ''}
       { workloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...workloadDetailModalProps} /> : ''}
     </div>
@@ -336,7 +341,6 @@ Backup.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
-  host: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
   nodeTags: PropTypes.array,
@@ -344,4 +348,4 @@ Backup.propTypes = {
   tagsLoading: PropTypes.bool,
 }
 
-export default connect(({ host, backup, setting, backingImage, loading }) => ({ host, backup, setting, backingImage, loading: loading.models.backup }))(Backup)
+export default connect(({ backup, setting, backingImage, loading }) => ({ backup, setting, backingImage, loading: loading.models.backup }))(Backup)

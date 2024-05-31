@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert } from 'antd'
+import { Form, Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from 'antd'
 import { ModalBlur } from '../../components'
+import { formatMib } from '../../utils/formater'
 const FormItem = Form.Item
-const Option = Select.Option
+const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
@@ -19,21 +20,17 @@ const modal = ({
   visible,
   onCancel,
   onOk,
-  previousChecked,
   nodeTags,
   diskTags,
   tagsLoading,
-  backingImages,
   backupVolumes,
-  setPreviousChange,
+  backingImages,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
-  isBulk = false,
   form: {
     getFieldDecorator,
     validateFields,
     getFieldsValue,
-    setFieldsValue,
   },
 }) => {
   function handleOk() {
@@ -43,31 +40,21 @@ const modal = ({
       }
       const data = {
         ...getFieldsValue(),
-        fromBackup: item.fromBackup,
-      }
-      if (data.name && typeof data.name === 'string') {
-        data.name = data.name.trimLeftAndRight()
       }
       onOk(data)
     })
   }
+
   const modalOpts = {
-    title: isBulk ? 'Restore Backup' : `Restore Backup ${item.backupName}`,
+    title: 'Create Disaster Recovery Volume',
     visible,
     onCancel,
     onOk: handleOk,
     width: 700,
   }
 
-  function onPreviousChange(value) {
-    if (item.volumeName) {
-      value.target.checked ? setFieldsValue({ name: item.volumeName }) : setFieldsValue({ name: '' })
-    }
-    setPreviousChange(value.target.checked)
-  }
-
   const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
-  const message = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
+  const message = `The DR volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
 
   return (
     <ModalBlur {...modalOpts}>
@@ -82,37 +69,38 @@ const modal = ({
               initialValue: item.name,
               rules: [
                 {
-                  required: true && !isBulk,
-                  message: 'Please input volume name',
+                  required: true,
+                  message: 'Volume name is required',
                 },
               ],
-            })(<Input disabled={isBulk} />)}
+            })(<Input />)}
           </FormItem>
         </Popover>
-          {!isBulk ? <FormItem label="Use Previous Name" hasFeedback {...formItemLayout}>
-              <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange}></Checkbox>
-            </FormItem> : ''}
-          {!isBulk ? <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('numberOfReplicas', {
-              initialValue: item.numberOfReplicas,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input the number of replicas',
+        <FormItem label="Size" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('size', {
+            initialValue: formatMib(item.size),
+            rules: [
+              {
+                required: true,
+                message: 'Please input volume size',
+              }, {
+                validator: (rule, value, callback) => {
+                  if (value === '' || typeof value !== 'number') {
+                    callback()
+                    return
+                  }
+                  if (value < 1 || value > 65536) {
+                    callback('The value should be between 1 and 65535')
+                  } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
+                    callback('This value should have at most two decimal places')
+                  } else {
+                    callback()
+                  }
                 },
-              ],
-            })(<InputNumber min={1} />)}
-          </FormItem> : <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('numberOfReplicas', {
-              initialValue: item.numberOfReplicas,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input the number of replicas',
-                },
-              ],
-            })(<InputNumber min={1} />)}
-          </FormItem>}
+              },
+            ],
+          })(<Input disabled />)}
+        </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: 'v1',
@@ -137,9 +125,35 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('numberOfReplicas', {
+            initialValue: item.numberOfReplicas,
+            rules: [
+              {
+                required: true,
+                message: 'Please input the number of replicas',
+              },
+              {
+                validator: (_rule, value, callback) => {
+                  if (value === '' || typeof value !== 'number') {
+                    callback()
+                    return
+                  }
+                  if (value < 1 || value > 10) {
+                    callback('The value should be between 1 and 10')
+                  } else if (!/^\d+$/.test(value)) {
+                    callback('The value must be a positive integer')
+                  } else {
+                    callback()
+                  }
+                },
+              },
+            ],
+          })(<InputNumber />)}
+        </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
-            initialValue: item.accessMode,
+            initialValue: 'rwo',
           })(<Select>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
@@ -148,24 +162,15 @@ const modal = ({
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,
-          })(<Select allowClear={true}>
+          })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
-          {getFieldDecorator('encrypted', {
-            valuePropName: 'encrypted',
-            initialValue: false,
-          })(<Checkbox></Checkbox>)}
-        </FormItem>
-        <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('restoreVolumeRecurringJob', {
-            initialValue: 'ignored',
-          })(<Select>
-            <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-            <Option key={'ignored'} value={'ignored'}>Ignored</Option>
-          </Select>)}
+        {getFieldDecorator('encrypted', {
+          valuePropName: 'encrypted',
+          initialValue: false,
+        })(<Checkbox />)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
@@ -185,6 +190,19 @@ const modal = ({
             </Select>)}
           </FormItem>
         </Spin>
+        <div style={{ display: 'none' }}>
+          <FormItem label="Backup Url" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('fromBackup', {
+              initialValue: item.fromBackup,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input Backup Url',
+                },
+              ],
+            })(<Input disabled={true} />)}
+          </FormItem>
+        </div>
       </Form>
     </ModalBlur>
   )
@@ -193,20 +211,16 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
-  previousChecked: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
-  setPreviousChange: PropTypes.func,
-  hosts: PropTypes.array,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
-  backingImages: PropTypes.array,
   backupVolumes: PropTypes.array,
+  tagsLoading: PropTypes.bool,
+  backingImages: PropTypes.array,
   v1DataEngineEnabled: PropTypes.bool,
   v2DataEngineEnabled: PropTypes.bool,
-  isBulk: PropTypes.bool,
-  tagsLoading: PropTypes.bool,
 }
 
 export default Form.create()(modal)
