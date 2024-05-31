@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert, Tabs, Button } from 'antd'
 import { ModalBlur } from '../../components'
-import './BulkRestoreBackupModal.less'
 
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -42,7 +41,7 @@ const modal = ({
     numberOfReplicas: i.numberOfReplicas,
     dataEngine: 'v1',
     accessMode: i.accessMode || null,
-    backupVolume: i.volumeName,
+    latestBackup: i.backupName,
     backingImage: i.backingImage,
     encrypted: false,
     restoreVolumeRecurringJob: 'ignored',
@@ -55,7 +54,6 @@ const modal = ({
   const lastIndex = items.length - 1
 
   useEffect(() => {
-    // console.log('in useEffect done:', done)
     if (currentTab === lastIndex && done) {
       onOk(restoreBackupConfigs)
     }
@@ -85,7 +83,7 @@ const modal = ({
           numberOfReplicas: nextConfig.numberOfReplicas,
           dataEngine: nextConfig.dataEngine,
           accessMode: nextConfig.accessMode,
-          backupVolume: nextConfig.backupVolume,
+          latestBackup: nextConfig.latestBackup,
           backingImage: nextConfig.backingImage,
           encrypted: nextConfig.encrypted,
           restoreVolumeRecurringJob: nextConfig.restoreVolumeRecurringJob,
@@ -135,7 +133,7 @@ const modal = ({
       numberOfReplicas: prevConfig.numberOfReplicas,
       dataEngine: prevConfig.dataEngine,
       accessMode: prevConfig.accessMode,
-      backupVolume: prevConfig.backupVolume,
+      latestBackup: prevConfig.latestBackup,
       backingImage: prevConfig.backingImage,
       encrypted: prevConfig.encrypted,
       restoreVolumeRecurringJob: prevConfig.restoreVolumeRecurringJob,
@@ -145,7 +143,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Restore Multiple Backups',
+    title: 'Restore Multiple Latest Backups',
     visible,
     onOk: handleOk,
     onCancel,
@@ -167,12 +165,12 @@ const modal = ({
   const message = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
 
   const item = restoreBackupConfigs[currentTab] || {}
-  const activeKey = items[currentTab].backupName // backupName is unique name for each backup
+  const activeKey = item.latestBackup
 
   return (
     <ModalBlur {...modalOpts}>
       <Tabs className="restoreBackupTab" activeKey={activeKey} type="card">
-        {items.map(i => <TabPane tab={i.backupName} key={i.backupName} />)}
+        {items.map(i => <TabPane tab={i.volumeName} key={i.backupName} />)}
       </Tabs>
       <Form key={currentTab} layout="horizontal">
         <Popover
@@ -184,7 +182,7 @@ const modal = ({
             <Alert message={message} type="warning" />
           </div>
         }>
-          <FormItem label="Name" hasFeedback {...formItemLayout}>
+          <FormItem label="Volume Name" hasFeedback {...formItemLayout}>
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -204,7 +202,7 @@ const modal = ({
                 message: 'Please input the number of replicas',
               },
             ],
-          })(<InputNumber min={1} onChange={handleFieldChange} />)
+          })(<InputNumber min={1} max={10} onChange={handleFieldChange} />)
           }
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
@@ -239,9 +237,9 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
-        <FormItem label="Backup Volume" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('backupVolume', {
-            initialValue: item.backupVolume,
+        <FormItem label="Latest Backup" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('latestBackup', {
+            initialValue: item.latestBackup,
           })(<Input disabled />)}
         </FormItem>
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>

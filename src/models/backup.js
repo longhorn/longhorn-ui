@@ -5,6 +5,7 @@ import queryString from 'query-string'
 import { sortTable } from '../utils/sort'
 import { getSorter, saveSorter, getBackupVolumeName } from '../utils/store'
 import { enableQueryData } from '../utils/dataDependency'
+import { routerRedux } from 'dva/router'
 
 export default {
   namespace: 'backup',
@@ -19,7 +20,6 @@ export default {
     currentItem: [],
     currentBackupVolume: {},
     lastBackupUrl: '',
-    baseImage: '',
     volumeName: '',
     backupTargetMessage: '',
     previousChecked: false,
@@ -189,11 +189,11 @@ export default {
     *restore({
       payload,
     }, { call, put, select }) {
-      // console.log('🚀model restore single payload:', payload)
       yield put({ type: 'hideRestoreBackupModal' })
       yield call(restore, payload)
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
+      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *queryDiskTagsAndGetNodeTags({
       payload,
@@ -218,6 +218,7 @@ export default {
       }
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
+      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *delete({
       payload,
@@ -233,6 +234,7 @@ export default {
       yield call(createVolume, payload)
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
+      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *syncBackupVolume({
       payload,
@@ -258,6 +260,7 @@ export default {
       yield payload.map((item) => call(createVolume, item))
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
+      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *CreateStandVolume({
       payload,
@@ -276,12 +279,12 @@ export default {
       const data = yield payload.backupVolume.map((item) => call(execAction, item.actions.backupList))
       const volumes = data.map((item, index) => {
         const volume = payload.backupVolume[index]
-        const found = item.data.find((backup) => backup.id === volume.lastBackupName)
+        const lastBackup = item.data.find((backup) => backup.id === volume.lastBackupName)
         return {
-          lastBackupUrl: found.url,
           volumeName: volume.id,
-          baseImage: volume.baseImage,
-          size: found.volumeSize,
+          lastBackupUrl: lastBackup.url,
+          size: lastBackup.volumeSize,
+          backingImage: lastBackup.volumeBackingImageName,
         }
       })
       // For DR Volume
@@ -414,7 +417,7 @@ export default {
       return { ...state, showBackuplabelsModalVisible: false, createVolumeStandModalKey: Math.random() }
     },
     initModalUrl(state, action) {
-      return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, baseImage: action.payload.baseImage, size: action.found.volumeSize }
+      return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, size: action.found.volumeSize }
     },
     initBulkCreateModalUrl(state, action) {
       return { ...state, backupVolumesForBulkCreate: action.volumes }
