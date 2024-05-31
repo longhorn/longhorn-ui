@@ -69,7 +69,7 @@ const modal = ({
               rules: [
                 {
                   required: true,
-                  message: 'Please input volume name',
+                  message: 'Volume name is required',
                 },
               ],
             })(<Input />)}
@@ -161,7 +161,7 @@ const modal = ({
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,
-          })(<Select allowClear={true}>
+          })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
@@ -213,7 +213,6 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
-  hosts: PropTypes.array,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   backupVolumes: PropTypes.array,

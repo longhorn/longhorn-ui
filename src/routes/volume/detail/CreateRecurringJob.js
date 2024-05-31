@@ -290,7 +290,7 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <Tabs tabPosition={'top'} type={'card'} onChange={changeTab} defaultActiveKey="1">
+      <Tabs tabPosition={'top'} type="card" onChange={changeTab} defaultActiveKey="1">
           <TabPane tab="New" key="new">
             <Form layout="horizontal">
               <FormItem label="Name" hasFeedback {...formItemLayout}>

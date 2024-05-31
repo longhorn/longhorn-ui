@@ -60,6 +60,7 @@ export async function execAction(url, params) {
 }
 
 export async function restore(params) {
+  // console.log('🚀 ~ restore ~ params:', params)
   return request({
     url: '/v1/volumes',
     method: 'post',

@@ -28,7 +28,6 @@ const modal = ({
   setPreviousChange,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
-  isBulk = false,
   form: {
     getFieldDecorator,
     validateFields,
@@ -52,7 +51,7 @@ const modal = ({
     })
   }
   const modalOpts = {
-    title: isBulk ? 'Restore Backup' : `Restore Backup ${item.backupName}`,
+    title: `Restore Backup ${item.backupName}`,
     visible,
     onCancel,
     onOk: handleOk,
@@ -74,7 +73,7 @@ const modal = ({
       <Form layout="horizontal">
         <Popover placement="right"
           visible={showWarning}
-          content={<div style={{ maxWidth: 200 }}>
+          content={<div style={{ maxWidth: 250 }}>
             <Alert message={message} type="warning" />
           </div>}>
           <FormItem label="Name" hasFeedback {...formItemLayout}>
@@ -82,37 +81,27 @@ const modal = ({
               initialValue: item.name,
               rules: [
                 {
-                  required: true && !isBulk,
-                  message: 'Please input volume name',
+                  required: true,
+                  message: 'Volume name is required',
                 },
               ],
-            })(<Input disabled={isBulk} />)}
+            })(<Input />)}
           </FormItem>
         </Popover>
-          {!isBulk ? <FormItem label="Use Previous Name" hasFeedback {...formItemLayout}>
-              <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange}></Checkbox>
-            </FormItem> : ''}
-          {!isBulk ? <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('numberOfReplicas', {
-              initialValue: item.numberOfReplicas,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input the number of replicas',
-                },
-              ],
-            })(<InputNumber min={1} />)}
-          </FormItem> : <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('numberOfReplicas', {
-              initialValue: item.numberOfReplicas,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input the number of replicas',
-                },
-              ],
-            })(<InputNumber min={1} />)}
-          </FormItem>}
+        <FormItem label="Use Previous Name" hasFeedback {...formItemLayout}>
+          <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange} />
+        </FormItem>
+        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('numberOfReplicas', {
+            initialValue: item.numberOfReplicas,
+            rules: [
+              {
+                required: true,
+                message: 'Please input the number of replicas',
+              },
+            ],
+          })(<InputNumber min={1} />)}
+        </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: 'v1',
@@ -148,7 +137,7 @@ const modal = ({
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,
-          })(<Select allowClear={true}>
+          })(<Select allowClear={true} disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
@@ -191,22 +180,20 @@ const modal = ({
 }
 
 modal.propTypes = {
-  form: PropTypes.object.isRequired,
+  item: PropTypes.object,
   visible: PropTypes.bool,
   previousChecked: PropTypes.bool,
   onCancel: PropTypes.func,
-  item: PropTypes.object,
   onOk: PropTypes.func,
   setPreviousChange: PropTypes.func,
-  hosts: PropTypes.array,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   backingImages: PropTypes.array,
   backupVolumes: PropTypes.array,
   v1DataEngineEnabled: PropTypes.bool,
   v2DataEngineEnabled: PropTypes.bool,
-  isBulk: PropTypes.bool,
   tagsLoading: PropTypes.bool,
+  form: PropTypes.object.isRequired,
 }
 
 export default Form.create()(modal)
