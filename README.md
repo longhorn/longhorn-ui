@@ -1,5 +1,5 @@
 # Longhorn UI
-[![Build Status](https://drone-publish.longhorn.io/api/badges/longhorn/longhorn-ui/status.svg)](https://drone-publish.longhorn.io/longhorn/longhorn-ui)
+[![Build Status](https://github.com/longhorn/longhorn-ui/actions/workflows/build.yml/badge.svg)](https://github.com/longhorn/longhorn-ui/actions/workflows/build.yml)
 --------
 
 Admin UI for Longhorn Manager
