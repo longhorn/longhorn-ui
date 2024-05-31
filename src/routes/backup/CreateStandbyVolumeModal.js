@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from 'antd'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formatter'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -50,6 +51,7 @@ const modal = ({
     visible,
     onCancel,
     onOk: handleOk,
+    width: 700,
   }
 
   const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
@@ -98,7 +100,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Input disabled={true} />)}
+          })(<Input disabled />)}
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
@@ -133,7 +135,7 @@ const modal = ({
                 message: 'Please input the number of replicas',
               },
               {
-                validator: (rule, value, callback) => {
+                validator: (_rule, value, callback) => {
                   if (value === '' || typeof value !== 'number') {
                     callback()
                     return
@@ -169,7 +171,7 @@ const modal = ({
           {getFieldDecorator('encrypted', {
             valuePropName: 'encrypted',
             initialValue: false,
-          })(<Checkbox></Checkbox>)}
+          })(<Checkbox />)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>

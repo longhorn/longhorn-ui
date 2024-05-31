@@ -20,7 +20,7 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
   location.search = location.search ? location.search : ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
-  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, baseImage, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
+  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
 
   const settings = setting.data
   const backingImages = backingImage.data
@@ -249,11 +249,9 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
     item: {
       numberOfReplicas: defaultNumberOfReplicas,
       size,
-      iops: 1000,
-      baseImage,
       fromBackup: lastBackupUrl,
-      name: volumeName,
-      backingImage: currentBackupVolume ? currentBackupVolume.backingImageName : '',
+      name: `dr-${volumeName}`,
+      backingImage: currentBackupVolume?.backingImageName || '',
     },
     visible: createVolumeStandModalVisible,
     nodeTags,
@@ -281,9 +279,9 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
   const bulkCreateVolumeStandModalProps = {
     items: backupVolumesForBulkCreate.map((item) => ({
       size: item.size,
-      // baseImage: item.baseImage,
       fromBackup: item.lastBackupUrl,
-      name: item.volumeName,
+      volumeName: item.volumeName,
+      backingImage: item.backingImage,
     })),
     numberOfReplicas: defaultNumberOfReplicas,
     visible: bulkCreateVolumeStandModalVisible,
@@ -293,17 +291,10 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
     backingImages,
     v1DataEngineEnabled,
     v2DataEngineEnabled,
-    onOk(params, newVolumes) {
-      let data = newVolumes.map((item) => ({
-        ...item,
-        ...params,
-        standby: true,
-        frontend: '',
-        size: item.size.replace(/\s/ig, ''),
-      }))
+    onOk(drVolumeConfigs) {
       dispatch({
         type: 'backup/bulkCreateVolume',
-        payload: data,
+        payload: drVolumeConfigs,
       })
     },
     onCancel() {
