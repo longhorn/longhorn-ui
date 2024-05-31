@@ -318,7 +318,7 @@ const modal = ({
                 required: true,
               },
             ],
-          })(<InputNumber disabled={noRetain(getFieldValue('task')) || isEdit} style={{ width: '80%' }} min={0} />)}
+          })(<InputNumber disabled={noRetain(getFieldValue('task'))} style={{ width: '80%' }} min={0} />)}
         </FormItem>
         <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
           {getFieldDecorator('concurrency', {
