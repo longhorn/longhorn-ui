@@ -158,15 +158,13 @@ const form = ({
             message={
             <div className={styles.description}>
               <span>
-              Some danger zone settings won&apos;t applied immediately if there is any attached volume exists.
-              To make sure your changed settings are applied immediately, please detach all the volumes before saving the settings.<br />
-              For more information, please refer to <a target="blank" href="https://longhorn.io/docs/1.6.2/references/settings/#danger-zone">Longhorn danger zone document</a>
+              Some <a target="blank" href="https://longhorn.io/docs/1.6.2/references/settings/#danger-zone">Danger Zone settings</a> are not immediately applied when one or more volumes are still attached. Ensure that all volumes are detached before configuring the settings.
               </span>
               {unAppliedDangerZoneSettings.length > 0 && (
                 <>
                   <br />
                   <br />
-                  Below danger zone {unAppliedDangerZoneSettings.length === 1 ? 'setting has not' : 'settings have not'} not applied yet
+                  The following {unAppliedDangerZoneSettings.length === 1 ? 'setting has not' : 'settings have not'} been applied:
                   <ul>
                     {unAppliedDangerZoneSettings.map(settingName => <li key={settingName}>{settingName}</li>)}
                   </ul>
