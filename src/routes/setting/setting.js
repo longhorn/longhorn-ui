@@ -4,6 +4,8 @@ import ReactMarkdown from 'react-markdown/with-html'
 import { Form, Input, Button, Spin, Icon, Checkbox, Select, InputNumber, Alert } from 'antd'
 import styles from './setting.less'
 import { classnames } from '../../utils'
+import { LH_UI_VERSION } from '../../utils/constants'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -158,7 +160,7 @@ const form = ({
             message={
             <div className={styles.description}>
               <span>
-              Some <a target="blank" href="https://longhorn.io/docs/1.6.2/references/settings/#danger-zone">Danger Zone settings</a> are not immediately applied when one or more volumes are still attached. Ensure that all volumes are detached before configuring the settings.
+              Some <a target="blank" href={`https://longhorn.io/docs/${LH_UI_VERSION}/references/settings/#danger-zone`}>Danger Zone settings</a> are not immediately applied when one or more volumes are still attached. Ensure that all volumes are detached before configuring the settings.
               </span>
               {unAppliedDangerZoneSettings.length > 0 && (
                 <>
