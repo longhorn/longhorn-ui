@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber, Select, Spin, Tabs, Button, Input, Checkbox } from 'antd'
+import { Form, InputNumber, Select, Spin, Tabs, Button, Input } from 'antd'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formatter'
 
@@ -44,7 +44,6 @@ const modal = ({
     dataEngine: 'v1',
     accessMode: i.accessMode || null,
     backingImage: i.backingImage,
-    encrypted: false,
     nodeSelector: [],
     diskSelector: [],
   }))
@@ -91,7 +90,6 @@ const modal = ({
           dataEngine: nextConfig.dataEngine,
           accessMode: nextConfig.accessMode,
           backingImage: nextConfig.backingImage,
-          encrypted: nextConfig.encrypted,
           nodeSelector: nextConfig.nodeSelector,
           diskSelector: nextConfig.diskSelector,
         })
@@ -112,23 +110,8 @@ const modal = ({
       dataEngine: prevConfig.dataEngine,
       accessMode: prevConfig.accessMode,
       backingImage: prevConfig.backingImage,
-      encrypted: prevConfig.encrypted,
       nodeSelector: prevConfig.nodeSelector,
       diskSelector: prevConfig.diskSelector,
-    })
-  }
-
-  const handleEncryptedCheck = (e) => {
-    const isChecked = e.target.checked
-    setDrVolumeConfigs(prev => {
-      const newConfigs = [...prev]
-      const data = {
-        ...getFieldsValue(),
-        encrypted: isChecked,
-        name: getFieldValue('name')?.trimLeftAndRight() || '',
-      }
-      newConfigs.splice(currentTab, 1, data)
-      return newConfigs
     })
   }
 
@@ -243,12 +226,6 @@ const modal = ({
           })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
-        </FormItem>
-        <FormItem label="Encrypted" {...formItemLayout}>
-          {getFieldDecorator('encrypted', {
-            valuePropName: 'checked',
-            initialValue: item.encrypted || false,
-          })(<Checkbox onChange={handleEncryptedCheck} />)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>

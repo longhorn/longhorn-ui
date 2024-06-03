@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert, Tabs, Button } from 'antd'
+import { Form, Input, InputNumber, Spin, Select, Popover, Alert, Tabs, Button } from 'antd'
 import { ModalBlur } from '../../components'
 
 const TabPane = Tabs.TabPane
@@ -43,7 +43,6 @@ const modal = ({
     accessMode: i.accessMode || null,
     latestBackup: i.backupName,
     backingImage: i.backingImage,
-    encrypted: false,
     restoreVolumeRecurringJob: 'ignored',
     nodeSelector: [],
     diskSelector: [],
@@ -85,7 +84,6 @@ const modal = ({
           accessMode: nextConfig.accessMode,
           latestBackup: nextConfig.latestBackup,
           backingImage: nextConfig.backingImage,
-          encrypted: nextConfig.encrypted,
           restoreVolumeRecurringJob: nextConfig.restoreVolumeRecurringJob,
           nodeSelector: nextConfig.nodeSelector,
           diskSelector: nextConfig.diskSelector,
@@ -93,21 +91,6 @@ const modal = ({
       } else if (currentTab === lastIndex) {
         setDone(true)
       }
-    })
-  }
-
-  const handleEncryptedCheck = (e) => {
-    const isChecked = e.target.checked
-    setRestoreBackupConfigs(prev => {
-      const newConfigs = [...prev]
-      const data = {
-        ...getFieldsValue(),
-        encrypted: isChecked,
-        name: getFieldValue('name')?.trimLeftAndRight() || '',
-        fromBackup: items[currentTab]?.fromBackup || '',
-      }
-      newConfigs.splice(currentTab, 1, data)
-      return newConfigs
     })
   }
 
@@ -135,7 +118,6 @@ const modal = ({
       accessMode: prevConfig.accessMode,
       latestBackup: prevConfig.latestBackup,
       backingImage: prevConfig.backingImage,
-      encrypted: prevConfig.encrypted,
       restoreVolumeRecurringJob: prevConfig.restoreVolumeRecurringJob,
       nodeSelector: prevConfig.nodeSelector,
       diskSelector: prevConfig.diskSelector,
@@ -248,12 +230,6 @@ const modal = ({
           })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
-        </FormItem>
-        <FormItem label="Encrypted" {...formItemLayout}>
-          {getFieldDecorator('encrypted', {
-            valuePropName: 'checked',
-            initialValue: item.encrypted || false,
-          })(<Checkbox onChange={handleEncryptedCheck} />)}
         </FormItem>
         <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
           {getFieldDecorator('restoreVolumeRecurringJob', {
