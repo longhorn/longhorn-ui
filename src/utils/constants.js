@@ -1,3 +1,5 @@
+const { LH_UI_VERSION } = process.env
+
 const C = {
   RegExp: {
     // Regular expressions ensure that only the correct request path is included
@@ -7,3 +9,4 @@ const C = {
 }
 
 export default C
+export { LH_UI_VERSION }

@@ -11,7 +11,8 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
-
+const versionText = require('fs').readFileSync('./version', 'utf8');
+const longhornVersion = versionText ? versionText.trim().substring(1).split('-')[0]: '1.7.0';
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "index.js"),
@@ -182,6 +183,11 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        LH_UI_VERSION: JSON.stringify(longhornVersion),
+      }
+    }),
     new OpenBrowserPlugin({url: 'http://localhost:8080/'}),
     new ProgressBarPlugin(),
     new FriendlyErrorsWebpackPlugin(),
