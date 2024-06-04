@@ -12,7 +12,7 @@ Prerequisites:
 
 Setup:
 ```bash
-  git clone 'https://github.com/rancher/longhorn-ui'
+  git clone 'https://github.com/longhorn/longhorn-ui'
   cd 'longhorn-ui'
   npm ci
 ```
@@ -31,7 +31,7 @@ Compiling for distribution
   npm run build
 ```
 
-Build and run a docker image
+Build and run a docker image, longhorn UI will listen on localhost:8000
 ```bash
   make
   make LONGHORN_MANAGER_IP=http://longhorn:9500 run
