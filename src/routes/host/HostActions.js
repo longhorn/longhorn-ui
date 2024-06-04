@@ -47,7 +47,6 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
   const tooltipProps = { placement: 'left' }
   return (
     <DropOption
-      buttonStyle={{ padding: '0 0' }}
       menuOptions={menuOptions}
       tooltipProps={tooltipProps}
       onMenuClick={(e) => handleMenuClick(e, selected)}
