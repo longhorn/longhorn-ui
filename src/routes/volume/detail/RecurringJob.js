@@ -580,7 +580,7 @@ class RecurringJob extends React.Component {
         }
         bordered={false}
       >
-        <Tabs className="recurringJobsTabs" tabPosition="left" type="card" defaultActiveKey="1">
+        <Tabs className="recurring-jobs-tabs" tabPosition="left" type="card" defaultActiveKey="1">
           <TabPane tab="Job" key="1">
             <div className={styles.tabHeader}>
               <div>

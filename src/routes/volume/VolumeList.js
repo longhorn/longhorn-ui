@@ -172,7 +172,6 @@ function list({
         })
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
         let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: 5 }} /></Tooltip>
-        console.log('🚀 ~ statusForWorkloadMessage:', statusForWorkloadMessage)
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
             return (<div

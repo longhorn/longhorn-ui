@@ -134,8 +134,6 @@ function list({ loading, dataSource, height, rowSelection, deleteOrphanedData })
     columnWidth += ele.width
   })
 
-  const scroll = dataSource.length > 0 ? { x: columnWidth, y: height } : { x: columnWidth }
-
   return (
     <div id="orphanedDataTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
       <Table
@@ -147,7 +145,7 @@ function list({ loading, dataSource, height, rowSelection, deleteOrphanedData })
         rowKey={record => record.name}
         loading={loading}
         height={`${dataSource.length > 0 ? height : 1}px`}
-        scroll={scroll}
+        scroll={{ x: columnWidth, y: dataSource.length > 0 ? height : 1 }}
         pagination={pagination('orphanedDataSize')}
         simple
       />
