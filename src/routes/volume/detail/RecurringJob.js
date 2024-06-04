@@ -572,11 +572,15 @@ class RecurringJob extends React.Component {
     const canAddJobToVolume = selectedVolume.actions && selectedVolume.actions.recurringJobList && selectedVolume.actions.recurringJobAdd
 
     return (
-      <Card title={<div className={styles.header}>
-          <div>Recurring Jobs Schedule</div>
-        </div>}
-        bordered={false}>
-        <Tabs tabPosition={'left'} type={'card'} defaultActiveKey="1">
+      <Card
+        title={
+          <div className={styles.header}>
+            <div>Recurring Jobs Schedule</div>
+          </div>
+        }
+        bordered={false}
+      >
+        <Tabs className="recurringJobsTabs" tabPosition="left" type="card" defaultActiveKey="1">
           <TabPane tab="Job" key="1">
             <div className={styles.tabHeader}>
               <div>
