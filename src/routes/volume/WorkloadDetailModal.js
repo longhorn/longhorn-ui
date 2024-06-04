@@ -21,7 +21,7 @@ const modal = ({
   if (item.podList) {
     CardItem = item.podList.map((ele, index) => {
       return (
-        <div style={{ border: '1px solid #f4f4f4', padding: 24, marginRight: 5, marginBottom: 10 }} key={index}>
+        <div style={{ width: '100%', border: '1px solid #f4f4f4', padding: 24, marginRight: 5, marginBottom: 10 }} key={index}>
           {item.snapshotCreated ? <div style={{ marginBottom: '10px' }}> <b>Created Time</b> : {formatDate(item.snapshotCreated)}</div> : ''}
           <div> {item.lastPodRefAt ? <div><b>Last time used by Pod</b> : {formatDate(item.lastPodRefAt)}</div> : ''}</div>
           <div style={{ marginTop: item.lastPodRefAt ? '10px' : '0px' }}> <b>{item.lastPodRefAt ? 'Last ' : ''}Workload Name</b> : {ele.workloadName}</div>
@@ -36,7 +36,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <div style={{ width: '100%', overflow: 'auto' }}>
-        <div style={{ display: 'flex', width: 1, whiteSpace: 'nowrap' }}>
+        <div style={{ display: 'flex', whiteSpace: 'nowrap', width: '100%' }}>
           {CardItem}
         </div>
       </div>

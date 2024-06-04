@@ -18,7 +18,7 @@ const getMenus = function (menuArray, siderFold) {
             <span>
               {item.icon ? <Icon type={item.icon} /> : ''}
               {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
-              <Icon type="down" style={{ marginLeft: 3.5 }} />
+              <Icon type="down" style={{ marginLeft: 5 }} />
             </span>
           }>
         {getMenus(item.child, false)}
