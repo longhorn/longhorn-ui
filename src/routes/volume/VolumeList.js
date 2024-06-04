@@ -163,7 +163,7 @@ function list({
         } else if (isVolumeRelicaLimited(record) && replicaSoftAntiAffinitySettingValue) {
           ha = (<ReplicaHATooltip type="warning" />)
         }
-        let attchedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
+        let attachedNodeIsDown = record.state === 'attached' && record.robustness === 'unknown' && hosts.some((host) => {
           return record.controllers && record.controllers[0] && host.id === record.controllers[0].hostId && host.conditions && host.conditions.Ready && host.conditions.Ready.status === 'False'
         })
         let dataLocalityWarn = record.dataLocality === 'best-effort' && record.state === 'attached' && record.replicas && record.replicas.every((item) => {
@@ -171,7 +171,8 @@ function list({
           return item.hostId !== attachedNode
         })
         let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
-        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: '5px' }} /></Tooltip>
+        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: 5 }} /></Tooltip>
+        console.log('🚀 ~ statusForWorkloadMessage:', statusForWorkloadMessage)
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
             return (<div
@@ -210,13 +211,21 @@ function list({
               {restoreProgress}
               {rebuildProgress}
             </div>
-            {isEncrypted ? <Tooltip title={'Encrypted Volume'}><Icon className="color-warning" style={{ marginRight: 5, marginBottom: 2 }} type="lock" /></Tooltip> : null}
+            {isEncrypted ? <Tooltip title={'Encrypted Volume'}><Icon className="color-warning" style={{ marginLeft: 5, marginRight: 5, marginBottom: 2 }} type="lock" /></Tooltip> : null}
             {statusUpgradingEngine(record)}
             { upgrade }
-            {attchedNodeIsDown ? <Tooltip title={'The attached node is down'}><Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5 }} type="api" /></Tooltip> : ''}
+            {attachedNodeIsDown && (
+              <Tooltip title={'The attached node is down'}>
+                <Icon className="faulted" style={{ transform: 'rotate(45deg)', marginRight: 5, marginLeft: 5 }} type="api" />
+              </Tooltip>
+            )}
             {stateText}
-            {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
-            {needToWaitDone(text, record.replicas) ? <Icon type="loading" /> : null}
+            {dataLocalityWarn && (
+              <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}>
+                <Icon style={{ fontSize: '16px', marginLeft: 10 }} className="color-warning" type="warning" />
+              </Tooltip>
+            )}
+            {needToWaitDone(text, record.replicas) ? <Icon type="loading" style={{ marginLeft: 5 }} /> : null}
           </div>
         )
       },
