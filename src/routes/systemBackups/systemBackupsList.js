@@ -103,6 +103,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
     columnWidth += ele.width
   })
 
+  const scroll = dataSource.length > 0 ? { x: columnWidth, y: height } : { x: columnWidth }
   return (
     <Table
       className="common-table-class"
@@ -113,7 +114,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
       rowKey={record => record.name}
       loading={loading}
       height={`${dataSource.length > 0 ? height : 1}px`}
-      scroll={{ x: columnWidth, y: dataSource.length > 0 ? height : 1 }}
+      scroll={scroll}
       pagination={pagination('systemBackupSize')}
       simple
     />
