@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal, Icon, message, Tooltip, Progress } from 'antd'
+import { Table, Modal, Icon, message, Tooltip, Progress, Input, Button } from 'antd'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DropOption } from '../../components'
 import { formatDate } from '../../utils/formatDate'
@@ -14,29 +14,22 @@ import C from '../../utils/constants'
 const confirm = Modal.confirm
 
 const BackupUrl = ({ url = '' }) => {
-  const onCopy = (text, copySuccess) => { // eslint-disable-line no-unused-vars
+  const onCopy = (_text, copySuccess) => {
     if (copySuccess) {
       message.success('Copied', 1.5)
     } else {
       message.error('Copy failed', 1.5)
     }
   }
-
   return (
     <div>
-      <h3> Backup URL: </h3>
-      <p style={{ marginTop: 20, display: 'inline-block', wordBreak: 'break-all', fontSize: '1.2em' }}>
-        {url}
-        {
-          url ? <CopyToClipboard onCopy={onCopy} text={url}>
-            <Icon
-              className="color-link"
-              style={{ marginLeft: 5, fontSize: '1.2em', cursor: 'pointer' }}
-              type="copy"
-            />
-          </CopyToClipboard> : 'URL no available'
-        }
-      </p>
+      <h3> Backup URL </h3>
+      <div>
+        <Input defaultValue={url} style={{ width: '95%' }} />
+        <CopyToClipboard onCopy={onCopy} text={url}>
+          <Button type="primary" icon="copy" />
+        </CopyToClipboard>
+      </div>
     </div>
   )
 }
