@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Form, InputNumber, Select, Spin, Tabs, Button, Input } from 'antd'
+import { Form, InputNumber, Select, message, Spin, Checkbox, Tooltip, Tabs, Button, Input } from 'antd'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formatter'
 
@@ -34,84 +34,46 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
+    getFieldsError,
     setFieldsValue,
   },
 }) => {
   const initConfigs = items.map((i) => ({
-    name: `dr-${i.volumeName}`,
+    name: i.volumeName,
     size: formatMib(i.size),
     numberOfReplicas,
     dataEngine: 'v1',
     accessMode: i.accessMode || null,
     backingImage: i.backingImage,
+    encrypted: false,
     nodeSelector: [],
     diskSelector: [],
   }))
   const [currentTab, setCurrentTab] = useState(0)
   const [drVolumeConfigs, setDrVolumeConfigs] = useState(initConfigs)
-  const [done, setDone] = useState(false)
-  const lastIndex = items.length - 1
 
-  useEffect(() => {
-    if (currentTab === lastIndex && done) {
-      const data = drVolumeConfigs.map((config, index) => ({
-        ...config,
-        standby: true,
-        frontend: '',
-        fromBackup: items[index].fromBackup,
-        size: config.size.replace(/\s/ig, ''),
-      }))
-      onOk(data)
-    }
-  }, [drVolumeConfigs])
-
-  const handleOk = () => {
-    validateFields((errors) => {
-      if (errors) {
-        return
-      }
-      const data = {
-        ...getFieldsValue(),
-        name: getFieldValue('name').trimLeftAndRight(),
-      }
-      setDrVolumeConfigs(prev => {
-        const newConfigs = [...prev]
-        newConfigs.splice(currentTab, 1, data)
-        return newConfigs
-      })
-      if (currentTab !== lastIndex) {
-        const nextIndex = currentTab + 1
-        setCurrentTab(nextIndex)
-        const nextConfig = drVolumeConfigs[nextIndex]
-        setFieldsValue({
-          name: nextConfig.name,
-          size: nextConfig.size,
-          numberOfReplicas,
-          dataEngine: nextConfig.dataEngine,
-          accessMode: nextConfig.accessMode,
-          backingImage: nextConfig.backingImage,
-          nodeSelector: nextConfig.nodeSelector,
-          diskSelector: nextConfig.diskSelector,
-        })
-      } else if (currentTab === lastIndex) {
-        setDone(true)
-      }
-    })
+  function handleOk() {
+    const data = drVolumeConfigs.map((config, index) => ({
+      ...config,
+      standby: true,
+      frontend: '',
+      fromBackup: items[index].fromBackup,
+      size: items[index].size.replace(/\s/ig, ''),
+    }))
+    onOk(data)
   }
 
-  const handlePrevious = () => {
-    const prevIdx = currentTab - 1
-    setCurrentTab(prevIdx)
-    const prevConfig = drVolumeConfigs[prevIdx]
-    setFieldsValue({
-      name: prevConfig.name,
-      size: prevConfig.size,
-      numberOfReplicas: prevConfig.numberOfReplicas,
-      dataEngine: prevConfig.dataEngine,
-      accessMode: prevConfig.accessMode,
-      backingImage: prevConfig.backingImage,
-      nodeSelector: prevConfig.nodeSelector,
-      diskSelector: prevConfig.diskSelector,
+  const handleEncryptedCheck = (e) => {
+    const isChecked = e.target.checked
+    setDrVolumeConfigs(prev => {
+      const newConfigs = [...prev]
+      const data = {
+        ...getFieldsValue(),
+        encrypted: isChecked,
+        name: getFieldValue('name')?.trimLeftAndRight() || '',
+      }
+      newConfigs.splice(currentTab, 1, data)
+      return newConfigs
     })
   }
 
@@ -127,6 +89,73 @@ const modal = ({
     })
   }
 
+  const handleApplyAll = () => {
+    // only apply below configs to other configs
+    const currentConfig = {
+      numberOfReplicas: getFieldValue('numberOfReplicas'),
+      dataEngine: getFieldValue('dataEngine'),
+      accessMode: getFieldValue('accessMode'),
+      encrypted: getFieldValue('encrypted') || false,
+      nodeSelector: getFieldValue('nodeSelector'),
+      diskSelector: getFieldValue('diskSelector'),
+    }
+    setDrVolumeConfigs(prev => {
+      const newConfigs = [...prev]
+      newConfigs.forEach((config, index) => {
+        if (index !== currentTab) {
+          newConfigs.splice(index, 1, { ...config, ...currentConfig })
+        }
+      })
+      return newConfigs
+    })
+    message.success(`Successfully apply ${getFieldValue('name')} config to all other disaster recovery volumes`, 5)
+  }
+
+  const allFieldsError = { ...getFieldsError() }
+  const hasFieldsError = Object.values(allFieldsError).some(fieldError => fieldError !== undefined) || false
+
+
+  const handleTabClick = (key) => {
+    if (hasFieldsError) {
+      message.error('Please fill in all required fields before switching to another disaster recover volume tab', 5)
+      return
+    }
+    validateFields((errors) => {
+      if (errors) {
+        return
+      }
+      const data = {
+        ...getFieldsValue(),
+        name: getFieldValue('name').trimLeftAndRight(),
+        fromBackup: items[currentTab]?.fromBackup || '',
+      }
+      // replace this config with the current form data when click tab
+      setDrVolumeConfigs(prev => {
+        const newConfigs = [...prev]
+        newConfigs.splice(currentTab, 1, data)
+        return newConfigs
+      })
+    })
+    const newIndex = items.findIndex(i => i.volumeName === key)
+
+    if (newIndex !== -1) {
+      setCurrentTab(newIndex)
+      const nextConfig = drVolumeConfigs[newIndex]
+      setFieldsValue({
+        name: nextConfig.name,
+        size: nextConfig.size,
+        numberOfReplicas: nextConfig.numberOfReplicas,
+        dataEngine: nextConfig.dataEngine,
+        accessMode: nextConfig.accessMode,
+        backingImage: nextConfig.backingImage,
+        encrypted: nextConfig.encrypted,
+        nodeSelector: nextConfig.nodeSelector,
+        diskSelector: nextConfig.diskSelector,
+      })
+    }
+  }
+
+  const tooltipTitle = `Apply this ${getFieldValue('name')} config to all the other disaster recovery volumes, this action will overwrite your previous filled in configs`
   const modalOpts = {
     title: 'Create Multiple Disaster Recovery Volumes',
     visible,
@@ -134,14 +163,14 @@ const modal = ({
     onCancel,
     width: 700,
     footer: [
-      <Button key="cancel" onClick={onCancel}>
+     <Button key="cancel" onClick={onCancel}>
         Cancel
       </Button>,
-      <Button key="back" onClick={handlePrevious} disabled={currentTab === 0}>
-        Previous
-      </Button>,
-      <Button key="submit" type="success" onClick={handleOk}>
-        {currentTab === lastIndex ? 'OK' : 'Next'}
+      <Tooltip key="applyAllTooltip" overlayStyle={{ width: 300 }} placement="top" title={tooltipTitle}>
+        <Button key="applyAll" style={{ marginLeft: 8 }} onClick={handleApplyAll} disabled={hasFieldsError}> Apply All </Button>
+      </Tooltip>,
+      <Button key="submit" style={{ marginLeft: 8 }} type="success" onClick={handleOk} disabled={hasFieldsError}>
+        Ok
       </Button>,
     ],
   }
@@ -151,7 +180,7 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <Tabs className="drVolumeTab" activeKey={activeKey} type="card">
+      <Tabs className="drVolumeTab" activeKey={activeKey} onTabClick={handleTabClick} type="card">
         {items.map(i => <TabPane tab={i.volumeName} key={i.volumeName} />)}
       </Tabs>
       <Form layout="horizontal">
@@ -226,6 +255,12 @@ const modal = ({
           })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
+        </FormItem>
+        <FormItem label="Encrypted" {...formItemLayout}>
+          {getFieldDecorator('encrypted', {
+            valuePropName: 'checked',
+            initialValue: item.encrypted || false,
+          })(<Checkbox onChange={handleEncryptedCheck} />)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>

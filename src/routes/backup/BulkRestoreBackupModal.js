@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Spin, Select, Popover, Alert, Tabs, Button } from 'antd'
+import { Form, Input, InputNumber, Spin, Select, message, Popover, Alert, Tabs, Button, Checkbox, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
 
 const TabPane = Tabs.TabPane
@@ -31,67 +31,30 @@ const modal = ({
   form: {
     getFieldDecorator,
     validateFields,
+    getFieldsError,
     getFieldsValue,
     getFieldValue,
     setFieldsValue,
   },
 }) => {
   const initConfigs = items.map((i) => ({
-    name: '',
+    name: i.volumeName,
     numberOfReplicas: i.numberOfReplicas,
     dataEngine: 'v1',
     accessMode: i.accessMode || null,
     latestBackup: i.backupName,
     backingImage: i.backingImage,
+    encrypted: false,
     restoreVolumeRecurringJob: 'ignored',
     nodeSelector: [],
     diskSelector: [],
   }))
+
   const [currentTab, setCurrentTab] = useState(0)
   const [restoreBackupConfigs, setRestoreBackupConfigs] = useState(initConfigs)
-  const [done, setDone] = useState(false)
-  const lastIndex = items.length - 1
-
-  useEffect(() => {
-    if (currentTab === lastIndex && done) {
-      onOk(restoreBackupConfigs)
-    }
-  }, [restoreBackupConfigs])
 
   function handleOk() {
-    validateFields((errors) => {
-      if (errors) {
-        return
-      }
-      const data = {
-        ...getFieldsValue(),
-        name: getFieldValue('name').trimLeftAndRight(),
-        fromBackup: items[currentTab]?.fromBackup || '',
-      }
-      setRestoreBackupConfigs(prev => {
-        const newConfigs = [...prev]
-        newConfigs.splice(currentTab, 1, data)
-        return newConfigs
-      })
-      if (currentTab !== lastIndex) {
-        const nextIndex = currentTab + 1
-        setCurrentTab(nextIndex)
-        const nextConfig = restoreBackupConfigs[nextIndex]
-        setFieldsValue({
-          name: nextConfig.name,
-          numberOfReplicas: nextConfig.numberOfReplicas,
-          dataEngine: nextConfig.dataEngine,
-          accessMode: nextConfig.accessMode,
-          latestBackup: nextConfig.latestBackup,
-          backingImage: nextConfig.backingImage,
-          restoreVolumeRecurringJob: nextConfig.restoreVolumeRecurringJob,
-          nodeSelector: nextConfig.nodeSelector,
-          diskSelector: nextConfig.diskSelector,
-        })
-      } else if (currentTab === lastIndex) {
-        setDone(true)
-      }
-    })
+    onOk(restoreBackupConfigs)
   }
 
   const handleFieldChange = () => {
@@ -107,23 +70,92 @@ const modal = ({
     })
   }
 
-  const handlePrevious = () => {
-    const prevIdx = currentTab - 1
-    setCurrentTab(prevIdx)
-    const prevConfig = restoreBackupConfigs[prevIdx]
-    setFieldsValue({
-      name: prevConfig.name,
-      numberOfReplicas: prevConfig.numberOfReplicas,
-      dataEngine: prevConfig.dataEngine,
-      accessMode: prevConfig.accessMode,
-      latestBackup: prevConfig.latestBackup,
-      backingImage: prevConfig.backingImage,
-      restoreVolumeRecurringJob: prevConfig.restoreVolumeRecurringJob,
-      nodeSelector: prevConfig.nodeSelector,
-      diskSelector: prevConfig.diskSelector,
+  const handleApplyAll = () => {
+    // only apply below configs to other configs
+    const currentConfig = {
+      numberOfReplicas: getFieldValue('numberOfReplicas'),
+      dataEngine: getFieldValue('dataEngine'),
+      accessMode: getFieldValue('accessMode'),
+      encrypted: getFieldValue('encrypted') || false,
+      restoreVolumeRecurringJob: getFieldValue('restoreVolumeRecurringJob'),
+      nodeSelector: getFieldValue('nodeSelector'),
+      diskSelector: getFieldValue('diskSelector'),
+    }
+    setRestoreBackupConfigs(prev => {
+      const newConfigs = [...prev]
+      newConfigs.forEach((config, index) => {
+        if (index !== currentTab) {
+          newConfigs.splice(index, 1, { ...config, ...currentConfig })
+        }
+      })
+      return newConfigs
+    })
+    message.success(`Successfully apply ${getFieldValue('name')} config to all other restore volumes`, 5)
+  }
+
+  const handleEncryptedCheck = (e) => {
+    const isChecked = e.target.checked
+    setRestoreBackupConfigs(prev => {
+      const newConfigs = [...prev]
+      const data = {
+        ...getFieldsValue(),
+        encrypted: isChecked,
+        name: getFieldValue('name')?.trimLeftAndRight() || '',
+        fromBackup: items[currentTab]?.fromBackup || '',
+      }
+      newConfigs.splice(currentTab, 1, data)
+      return newConfigs
     })
   }
 
+  const allFieldsError = { ...getFieldsError() }
+  const hasFieldsError = Object.values(allFieldsError).some(fieldError => fieldError !== undefined) || false
+
+  const handleTabClick = (key) => {
+    if (hasFieldsError) {
+      message.error('Please fill in all required fields before switching to another restore volume tab', 5)
+      return
+    }
+    validateFields((errors) => {
+      if (errors) {
+        return
+      }
+      const data = {
+        ...getFieldsValue(),
+        name: getFieldValue('name').trimLeftAndRight(),
+        fromBackup: items[currentTab]?.fromBackup || '',
+      }
+      // replace this config with the current form data when click tab
+      setRestoreBackupConfigs(prev => {
+        const newConfigs = [...prev]
+        newConfigs.splice(currentTab, 1, data)
+        return newConfigs
+      })
+    })
+
+    const newIndex = items.findIndex(i => i.backupName === key)
+
+    if (newIndex !== -1) {
+      setCurrentTab(newIndex)
+      const nextConfig = restoreBackupConfigs[newIndex]
+      setFieldsValue({
+        name: nextConfig.name,
+        numberOfReplicas: nextConfig.numberOfReplicas,
+        dataEngine: nextConfig.dataEngine,
+        accessMode: nextConfig.accessMode,
+        latestBackup: nextConfig.latestBackup,
+        backingImage: nextConfig.backingImage,
+        encrypted: nextConfig.encrypted,
+        restoreVolumeRecurringJob: nextConfig.restoreVolumeRecurringJob,
+        nodeSelector: nextConfig.nodeSelector,
+        diskSelector: nextConfig.diskSelector,
+      })
+    }
+  }
+
+  const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
+  const alertMessage = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
+  const tooltipTitle = `Apply this ${getFieldValue('name')} config to all the other restore volumes, this action will overwrite your previous filled in configs`
   const modalOpts = {
     title: 'Restore Multiple Latest Backups',
     visible,
@@ -134,24 +166,21 @@ const modal = ({
       <Button key="cancel" onClick={onCancel}>
         Cancel
       </Button>,
-      <Button key="back" onClick={handlePrevious} disabled={currentTab === 0}>
-        Previous
-      </Button>,
-      <Button key="submit" type="success" onClick={handleOk}>
-        {currentTab === lastIndex ? 'OK' : 'Next'}
+      <Tooltip key="applyAllTooltip" overlayStyle={{ width: 300 }} placement="top" title={tooltipTitle}>
+        <Button key="applyAll" style={{ marginLeft: 8 }} onClick={handleApplyAll} disabled={hasFieldsError}> Apply All </Button>
+      </Tooltip>,
+      <Button key="submit" style={{ marginLeft: 8 }} type="success" onClick={handleOk} disabled={hasFieldsError}>
+        Ok
       </Button>,
     ],
   }
-
-  const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
-  const message = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
 
   const item = restoreBackupConfigs[currentTab] || {}
   const activeKey = item.latestBackup
 
   return (
     <ModalBlur {...modalOpts}>
-      <Tabs className="restoreBackupTab" activeKey={activeKey} type="card">
+      <Tabs className="restoreBackupTab" activeKey={activeKey} onTabClick={handleTabClick} type="card">
         {items.map(i => <TabPane tab={i.volumeName} key={i.backupName} />)}
       </Tabs>
       <Form key={currentTab} layout="horizontal">
@@ -161,11 +190,12 @@ const modal = ({
           visible={showWarning}
           content={
           <div style={{ maxWidth: 250 }}>
-            <Alert message={message} type="warning" />
+            <Alert message={alertMessage} type="warning" />
           </div>
         }>
           <FormItem label="Volume Name" hasFeedback {...formItemLayout}>
             {getFieldDecorator('name', {
+              initialValue: item.name,
               rules: [
                 {
                   required: true,
@@ -230,6 +260,12 @@ const modal = ({
           })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
+        </FormItem>
+        <FormItem label="Encrypted" {...formItemLayout}>
+          {getFieldDecorator('encrypted', {
+            valuePropName: 'checked',
+            initialValue: item.encrypted || false,
+          })(<Checkbox onChange={handleEncryptedCheck} />)}
         </FormItem>
         <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
           {getFieldDecorator('restoreVolumeRecurringJob', {

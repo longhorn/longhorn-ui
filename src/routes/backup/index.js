@@ -250,7 +250,7 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
       numberOfReplicas: defaultNumberOfReplicas,
       size,
       fromBackup: lastBackupUrl,
-      name: `dr-${volumeName}`,
+      name: volumeName,
       backingImage: currentBackupVolume?.backingImageName || '',
     },
     visible: createVolumeStandModalVisible,

@@ -50,6 +50,7 @@ const modal = ({
       onOk(data)
     })
   }
+
   const modalOpts = {
     title: `Restore Backup ${item.backupName}`,
     visible,
@@ -140,6 +141,12 @@ const modal = ({
           })(<Select allowClear={true} disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
+        </FormItem>
+        <FormItem label="Encrypted" {...formItemLayout}>
+        {getFieldDecorator('encrypted', {
+          valuePropName: 'encrypted',
+          initialValue: false,
+        })(<Checkbox></Checkbox>)}
         </FormItem>
         <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
           {getFieldDecorator('restoreVolumeRecurringJob', {
