@@ -13,7 +13,9 @@ RUN npm run build
 FROM registry.suse.com/bci/bci-base:15.5
 
 RUN zypper -n ref && \
-	zypper -n install curl libxml2 bash gettext shadow nginx && \
+    zypper update -y
+
+RUN zypper -n install curl libxml2 bash gettext shadow nginx && \
     rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN mkdir -p web/dist
