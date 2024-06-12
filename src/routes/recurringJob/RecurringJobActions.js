@@ -29,8 +29,8 @@ function actions({ selected, deleteRecurringJob, editRecurringJob }) {
   }
 
   const availableActions = [
-    { key: 'delete', name: 'Delete' },
     { key: 'edit', name: 'Edit' },
+    { key: 'delete', name: 'Delete' },
   ]
 
   return (

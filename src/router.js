@@ -14,6 +14,7 @@ import settingComponent from './routes/setting/'
 import engineimageComponent from './routes/engineimage/'
 import instanceManagerComponent from './routes/instanceManager/'
 import backingImageComponent from './routes/backingImage/'
+import backupTargetComponent from './routes/backupTarget/'
 import recurringJobComponent from './routes/recurringJob/'
 import orphanedDataComponent from './routes/orphanedData/'
 import engineimageDetailComponent from './routes/engineimage/detail'
@@ -70,6 +71,11 @@ const Routers = function ({ history, app }) {
     component: () => backingImageComponent,
   })
 
+  const backupTarget = dynamic({
+    app,
+    component: () => backupTargetComponent,
+  })
+
   const recurringJob = dynamic({
     app,
     component: () => recurringJobComponent,
@@ -113,6 +119,7 @@ const Routers = function ({ history, app }) {
             <Route exact path={`${path}engineimage`} component={engineimage} />
             <Route exact path={`${path}instanceManager`} component={instanceManager} />
             <Route exact path={`${path}backingImage`} component={backingImage} />
+            <Route exact path={`${path}backupTarget`} component={backupTarget} />
             <Route exact path={`${path}recurringJob`} component={recurringJob} />
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
             <Route path={`${path}orphanedData`} component={orphanedData} />

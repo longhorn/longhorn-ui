@@ -46,6 +46,9 @@ const dependency = {
     }, {
       ns: 'recurringJob',
       key: 'recurringjobs',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
   engineimage: {
@@ -60,6 +63,16 @@ const dependency = {
     runWs: [{
       ns: 'recurringJob',
       key: 'recurringjobs',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
+    }],
+  },
+  backupTarget: {
+    path: '/backupTarget',
+    runWs: [{
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
   backingImage: {
@@ -76,6 +89,9 @@ const dependency = {
     }, {
       ns: 'setting',
       key: 'settings',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
   settings: {
@@ -148,6 +164,9 @@ const list = [{
   ns: 'engineimage',
   key: 'engineimages',
 }, {
+  ns: 'backupTarget',
+  key: 'backuptargets',
+}, {
   ns: 'recurringJob',
   key: 'recurringjobs',
 }, {
@@ -167,10 +186,11 @@ const list = [{
 const httpDataDependency = {
   '/dashboard': ['volume', 'host', 'eventlog'],
   '/node': ['volume', 'host', 'setting'],
-  '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
+  '/volume': ['volume', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
-  '/recurringJob': ['recurringJob'],
-  '/backingImage': ['volume', 'backingImage', 'setting', 'backup'],
+  '/backingImage': ['volume', 'backingImage', 'backupTarget'],
+  '/recurringJob': ['recurringJob', 'backupTarget'],
+  '/backupTarget': ['backupTarget'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
@@ -181,8 +201,10 @@ const httpDataDependency = {
 export function getDataDependency(pathName) {
   let keys = Object.keys(dependency).filter((key) => {
     if (pathName && dependency[key].path) {
-      let max = dependency[key].path.length
-      return dependency[key].path === pathName.substring(0, max)
+      /* /backup will be mis-included in /backupTarget path if using the following condition */
+      // let max = dependency[key].path.length
+      // return dependency[key].path === pathName.substring(0, max)
+      return dependency[key].path === pathName
     }
     return false
   })
@@ -201,7 +223,9 @@ export function enableQueryData(pathName, ns) {
   let canQueryData = false
 
   // Determining whether other dependencies model need to request data
-  if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key) && httpDataDependency[key].find((item) => item === ns))) {
+  if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key)
+    && httpDataDependency[key].find((item) => item === ns))
+  ) {
     canQueryData = true
   }
 

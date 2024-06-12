@@ -105,6 +105,7 @@ class SystemBackups extends React.Component {
     const SystemBackupsBulkActionProps = {
       selectedRows: this.state.selectedSystemBackupsRows,
       backupProps: this.props.backup,
+      backupTarget: this.props.backupTarget,
       deleteSystemBackups() {
         dispatch({
           type: 'systemBackups/bulkDeleteSystemBackup',
@@ -266,6 +267,7 @@ SystemBackups.propTypes = {
   systemBackups: PropTypes.object,
   backup: PropTypes.object,
   location: PropTypes.object,
+  backupTarget: PropTypes.object,
 }
 
-export default connect(({ systemBackups, backup, loading }) => ({ systemBackups, backup, loading: loading.models.systemBackups }))(SystemBackups)
+export default connect(({ systemBackups, backup, loading, backupTarget }) => ({ systemBackups, backup, backupTarget, loading: loading.models.systemBackups }))(SystemBackups)

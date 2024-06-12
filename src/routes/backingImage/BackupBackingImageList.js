@@ -6,6 +6,7 @@ import BackupBackingImageActions from './BackupBackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
+import { sortTable } from '../../utils/sort'
 import styles from './BackupBackingImageList.less'
 
 function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height }) {
@@ -27,7 +28,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 180,
+      width: 120,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => {
         const isEncrypted = Boolean(record.secret || record.secretNamespace)
@@ -46,11 +47,24 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 120,
+      width: 80,
       sorter: (a, b) => a.state.localeCompare(b.state),
       render: (text) => {
         return (
           <div>{text}</div>
+        )
+      },
+    }, {
+      title: 'Backup Target',
+      dataIndex: 'backupTargetName',
+      key: 'backupTargetName',
+      width: 100,
+      sorter: (a, b) => sortTable(a, b, 'backupTargetName'),
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
         )
       },
     }, {

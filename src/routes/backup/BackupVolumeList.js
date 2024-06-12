@@ -41,7 +41,7 @@ class List extends React.Component {
     })
   }
 
-  fomartData = (data, key) => {
+  formatData = (data, key) => {
     if (this.isJson(data)) {
       let obj = JSON.parse(data)
 
@@ -101,10 +101,10 @@ class List extends React.Component {
     const columns = [
       {
         title: 'Name',
-        dataIndex: 'id',
-        key: 'id',
+        dataIndex: 'volumeName',
+        key: 'volumeName',
         width: 200,
-        sorter: (a, b) => sortTable(a, b, 'id'),
+        sorter: (a, b) => sortTable(a, b, 'volumeName'),
         render: (id, record) => {
           let errorMessage = record.messages && record.messages.error ? record.messages.error : ''
           return (
@@ -129,13 +129,25 @@ class List extends React.Component {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
-        width: 100,
+        width: 80,
         sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text) => {
           return (
             <div>
               {formatMib(text)}
             </div>
+          )
+        },
+      },
+      {
+        title: 'Backup Target',
+        dataIndex: 'backupTargetName',
+        key: 'backupTargetName',
+        width: 200,
+        sorter: (a, b) => sortTable(a, b, 'backupTargetName'),
+        render: (text) => {
+          return (
+            <div>{text}</div>
           )
         },
       },
@@ -177,7 +189,7 @@ class List extends React.Component {
           let storageObj = {}
 
           if (record) {
-            storageObj = this.fomartData(record.KubernetesStatus)
+            storageObj = this.formatData(record.KubernetesStatus)
           }
           let title = (<div>
             <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
@@ -218,7 +230,7 @@ class List extends React.Component {
           let storageObj = {}
 
           if (record) {
-            storageObj = this.fomartData(record.KubernetesStatus)
+            storageObj = this.formatData(record.KubernetesStatus)
             storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 

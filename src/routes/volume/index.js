@@ -211,6 +211,7 @@ class Volume extends React.Component {
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
     const engineImages = this.props.engineimage.data
+    const backupTargets = this.props.backupTarget.data.map(item => item.name)
     const { backupTargetAvailable, backupTargetMessage } = this.props.backup
     const recurringJobData = this.props.recurringJob.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)
@@ -790,6 +791,7 @@ class Volume extends React.Component {
       diskTags,
       backingImageOptions,
       tagsLoading,
+      backupTargets,
       hosts,
       visible: createVolumeModalVisible,
       getSnapshot: (volume) => {
@@ -1318,6 +1320,7 @@ Volume.propTypes = {
   loading: PropTypes.bool,
   host: PropTypes.object,
   backup: PropTypes.object,
+  backupTarget: PropTypes.object,
   engineimage: PropTypes.object,
   recurringJob: PropTypes.object,
   setting: PropTypes.object,
@@ -1325,4 +1328,15 @@ Volume.propTypes = {
   snapshotModal: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, recurringJob, loading }) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, recurringJob, loading: loading.models.volume }))(Volume)
+export default connect(({
+  snapshotModal,
+  engineimage,
+  host,
+  volume,
+  setting,
+  backingImage,
+  backup,
+  backupTarget,
+  recurringJob,
+  loading
+}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, loading: loading.models.volume }))(Volume)

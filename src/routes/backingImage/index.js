@@ -5,11 +5,13 @@ import { Row, Col, Button, Progress, notification, Icon } from 'antd'
 import CreateBackingImage from './CreateBackingImage'
 import BackingImageList from './BackingImageList'
 import DiskStateMapDetail from './DiskStateMapDetail'
+import CreateBackupBackingImageModal from './CreateBackupBackingImageModal'
 import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
 import UpdateMinCopiesCount from './UpdateMinCopiesCount'
 import BackupBackingImage from './BackupBackingImage'
 import { filterBackingImage } from './utils'
+import { getAvailableBackupTargets } from '../../utils/backupTarget'
 import style from './BackingImage.less'
 
 class BackingImage extends React.Component {
@@ -18,6 +20,8 @@ class BackingImage extends React.Component {
     this.state = {
       height: 300,
       message: null,
+      backupBackingImageModalVisible: false,
+      selectedBackingImage: {},
     }
   }
 
@@ -43,6 +47,21 @@ class BackingImage extends React.Component {
     })
   }
 
+  handleBackupBackingImageModalOpen = (record) => {
+    this.setState({
+      ...this.state,
+      backupBackingImageModalVisible: true,
+      selectedBackingImage: record,
+    })
+  }
+
+  handleBackupBackingImageModalClose = () => {
+    this.setState({
+      ...this.state,
+      backupBackingImageModalVisible: false,
+      selectedBackingImage: {},
+    })
+  }
 
   uploadFile = (file, record) => {
     let totalSize = file.size
@@ -72,9 +91,10 @@ class BackingImage extends React.Component {
   }
 
   render() {
-    const { dispatch, loading, location } = this.props
-    const { uploadFile } = this
     const { data: settingData } = this.props.setting
+    const { dispatch, loading, location, backupTarget } = this.props
+    const { uploadFile, handleBackupBackingImageModalOpen, handleBackupBackingImageModalClose } = this
+    const { backupBackingImageModalVisible, selectedBackingImage } = this.state
     const { data: volumeData } = this.props.volume
     const {
       data,
@@ -126,6 +146,9 @@ class BackingImage extends React.Component {
           payload: record,
         })
       },
+      openBackupBackingImageModal: (record) => {
+        handleBackupBackingImageModalOpen(record)
+      },
       downloadBackingImage(record) {
         dispatch({
           type: 'backingImage/downloadBackingImage',
@@ -148,6 +171,23 @@ class BackingImage extends React.Component {
             },
           })
         },
+      },
+    }
+
+    const createBackupBackingImageModalProps = {
+      backingImage: selectedBackingImage,
+      availBackupTargets: getAvailableBackupTargets(backupTarget),
+      visible: backupBackingImageModalVisible,
+      onOk(url, payload) {
+        dispatch({
+          type: 'backingImage/createBackingImageBackup',
+          url,
+          payload,
+        })
+        handleBackupBackingImageModalClose()
+      },
+      onCancel() {
+        handleBackupBackingImageModalClose()
       },
     }
 
@@ -356,6 +396,7 @@ class BackingImage extends React.Component {
         { minCopiesCountModalVisible && <UpdateMinCopiesCount {...minCopiesCountProps} />}
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}
+        <CreateBackupBackingImageModal {...createBackupBackingImageModalProps} />
       </div>
     )
   }
@@ -365,6 +406,7 @@ BackingImage.propTypes = {
   app: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
+  backupTarget: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
   volume: PropTypes.object,
@@ -372,4 +414,4 @@ BackingImage.propTypes = {
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, setting, backup, volume, backingImage, loading }) => ({ app, setting, volume, backup, backingImage, loading: loading.models.backingImage }))(BackingImage)
+export default connect(({ app, setting, backup, backupTarget, volume, backingImage, loading }) => ({ app, setting, backupTarget, volume, backup, backingImage, loading: loading.models.backingImage }))(BackingImage)

@@ -96,6 +96,7 @@ const genOkData = (getFieldsValue, getFieldValue, volumeOptions) => {
   return data
 }
 
+
 const modal = ({
   item,
   volumeOptions = [],
@@ -111,6 +112,7 @@ const modal = ({
   diskTags,
   backingImageOptions,
   tagsLoading,
+  backupTargets,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
   getSnapshot,
@@ -381,6 +383,14 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backupTargetName', {
+            // init backup target is the default one
+            initialValue: backupTargets.find(bt=> bt === 'default') || '',
+          })(<Select allowClear>
+            { backupTargets.map(bt => <Option key={bt} value={bt}>{bt}</Option>)}
+          </Select>)}
+        </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'checked',
@@ -555,6 +565,7 @@ modal.propTypes = {
   defaultDataLocalityOption: PropTypes.array,
   defaultSnapshotDataIntegrityOption: PropTypes.array,
   tagsLoading: PropTypes.bool,
+  backupTargets: PropTypes.array,
   defaultDataLocalityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
   v1DataEngineEnabled: PropTypes.bool,

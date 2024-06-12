@@ -10,7 +10,7 @@ import semver from 'semver'
 import BundlesModel from './BundlesModel'
 import StableLonghornVersions from './StableLonghornVersions'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, systemBackups, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -128,6 +128,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(eventlog)}
           {getStatusIcon(backingImage, 'backingImages')}
           {getStatusIcon(backingImage, 'backupBackingImages')}
+          {getStatusIcon(backupTarget)}
           {getStatusIcon(recurringJob)}
           {getStatusIcon(backup, 'backupVolumes')}
           {getStatusIcon(backup, 'backups')}
@@ -146,6 +147,7 @@ Footer.propTypes = {
   volume: PropTypes.object,
   setting: PropTypes.object,
   engineimage: PropTypes.object,
+  backupTarget: PropTypes.object,
   eventlog: PropTypes.object,
   backingImage: PropTypes.object,
   recurringJob: PropTypes.object,
@@ -155,4 +157,4 @@ Footer.propTypes = {
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, recurringJob, backup, systemBackups }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups }))(Footer)

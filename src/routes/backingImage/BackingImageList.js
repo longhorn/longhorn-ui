@@ -7,12 +7,25 @@ import { formatMib } from '../../utils/formatter'
 import { nodeTagColor, diskTagColor } from '../../utils/constants'
 import styles from './BackingImageList.less'
 
-function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskStateMapDetail, rowSelection, createBackupBackingImage, downloadBackingImage, showUpdateMinCopiesCount, height }) {
+function list({
+  loading,
+  dataSource,
+  openBackupBackingImageModal,
+  backupProps,
+  deleteBackingImage,
+  showDiskStateMapDetail,
+  rowSelection,
+  createBackupBackingImage,
+  downloadBackingImage,
+  showUpdateMinCopiesCount,
+  height,
+}) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
     createBackupBackingImage,
     showUpdateMinCopiesCount,
+    openBackupBackingImageModal,
     backupProps,
   }
 
@@ -177,7 +190,7 @@ function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskSt
       dataSource={dataSource}
       loading={loading}
       simple
-      pagination={pagination('backingImage')}
+      pagination={pagination('backingImagePageSize')}
       rowKey={record => record.id}
       scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
     />
@@ -191,9 +204,11 @@ list.propTypes = {
   deleteBackingImage: PropTypes.func,
   showDiskStateMapDetail: PropTypes.func,
   showUpdateMinCopiesCount: PropTypes.func,
+  openBackupBackingImageModal: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
   backupProps: PropTypes.object,
+  // hasWritableBackupTargets: PropTypes.bool,
 }
 
 export default list

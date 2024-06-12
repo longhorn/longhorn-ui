@@ -9,7 +9,6 @@ import RestoreBackupModal from './RestoreBackupModal'
 import BulkRestoreBackupModal from './BulkRestoreBackupModal'
 import CreateStandbyVolumeModal from './CreateStandbyVolumeModal'
 import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
-
 import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
 import WorkloadDetailModal from '../volume/WorkloadDetailModal'
@@ -17,12 +16,26 @@ import styles from './BackupVolume.less'
 
 const { confirm, info } = Modal
 
+const filterBackupVolumes = (backupVolumes, field, value) => {
+  if (!field || !value) {
+    return backupVolumes
+  }
+
+  return backupVolumes.filter(vol => {
+    if (vol[field]) {
+      return vol[field].toLowerCase().includes(value.toLowerCase())
+    } else {
+      return false
+    }
+  })
+}
 function BackupVolume({ backup, loading, setting, backingImage, dispatch, location }) {
-  location.search = location.search ? location.search : ''
+  location.search = location.search || ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
   const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
-
+  const { field, value } = queryString.parse(location.search)
+  const backupVolumesData = filterBackupVolumes(backupVolumes, field, value)
   const settings = setting.data
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
@@ -59,7 +72,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
     })
   }
   const backupVolumesProps = {
-    backup: backupVolumes,
+    backup: backupVolumesData,
     search: location.search,
     loading,
     dispatch,
@@ -147,8 +160,10 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
 
   const volumeFilterProps = {
     location,
+    defaultField: 'volumeName',
     fieldOption: [
-      { value: 'name', name: 'Name' },
+      { value: 'volumeName', name: 'Name' },
+      { value: 'backupTargetName', name: 'Backup Target' },
     ],
     onSearch(filter) {
       const { field: filterField, value: filterValue } = filter
