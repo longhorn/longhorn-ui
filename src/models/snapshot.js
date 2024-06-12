@@ -1,4 +1,5 @@
 /* eslint no-unused-vars: "off" */
+import backupTarget from '../routes/backupTarget'
 import { execAction } from '../services/volume'
 import { delay } from 'dva/saga'
 
@@ -205,7 +206,7 @@ export default (namespace) => {
         if (Object.getOwnPropertyNames(payload.labels).length === 0) {
           yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
         } else {
-          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels })
+          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels, backupTargetName: 'andy-minio-backupstore' })
         }
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })

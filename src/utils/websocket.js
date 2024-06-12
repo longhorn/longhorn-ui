@@ -23,14 +23,19 @@ export function wsChanges(dispatch, type, period, ns, search) {
   const url = constructWebsocketURL(type, period)
   const options = {
     timeout: 4000,
-    shouldReconnect: function(event, ws) {
+    shouldReconnect(event, ws) {
       if (event.code === 1008 || event.code === 1011) return
       return [0, 3000, 10000][ws.attempts]
     },
     automaticOpen: true,
   }
   // To do. Because two ws connections will be maintained under backup ns.
-  const backupType = type ? type : ''
+  const backupType = type || ''
+  // console.log('🚀 ~ wsChanges ~ search:', search)
+  // console.log('🚀 ~ wsChanges ~ type:', type)
+  // console.log('🚀 ~ wsChanges ~ url:', url)
+  // console.log('🚀 ~ wsChanges ~ backupType:', backupType)
+  // console.log('🚀 ~ wsChanges ~ ns:', ns)
   const rws = new RobustWebSocket(url, [], options)
   if (ns === 'backup') {
     if (backupType === 'backupvolumes') {
@@ -39,7 +44,7 @@ export function wsChanges(dispatch, type, period, ns, search) {
     }
     if (backupType === 'backups') {
       dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'connecting' })
-      dispatch({ type: `${ns}/updateWsBackups`, payload: { rws, search }})
+      dispatch({ type: `${ns}/updateWsBackups`, payload: { rws, search } })
     }
   } else if (ns === 'systemBackups') {
     if (backupType === 'systembackups') {
@@ -69,24 +74,33 @@ export function wsChanges(dispatch, type, period, ns, search) {
   rws.addEventListener('message', (msg) => {
     recentWrite = true
     if (ns === 'backup') {
-      if (backupType === 'backupvolumes') dispatch({
-        type: `${ns}/updateBackgroundBackupVolumes`,
-        payload: JSON.parse(msg.data),
-      })
-      if (backupType === 'backups') dispatch({
-        type: `${ns}/updateBackgroundBackups`,
-        payload: JSON.parse(msg.data),
-      })
+      if (backupType === 'backupvolumes') {
+        dispatch({
+          type: `${ns}/updateBackgroundBackupVolumes`,
+          payload: JSON.parse(msg.data),
+        })
+      }
+      if (backupType === 'backups') {
+        dispatch({
+          type: `${ns}/updateBackgroundBackups`,
+          payload: JSON.parse(msg.data),
+        })
+      }
     } else if (ns === 'systemBackups') {
-      if (backupType === 'systembackups') dispatch({
-        type: `${ns}/updateBackgroundSystemBackups`,
-        payload: JSON.parse(msg.data),
-      })
-      if (backupType === 'systemrestores') dispatch({
-        type: `${ns}/updateBackgroundSystemrestores`,
-        payload: JSON.parse(msg.data),
-      })
+      if (backupType === 'systembackups') {
+        dispatch({
+          type: `${ns}/updateBackgroundSystemBackups`,
+          payload: JSON.parse(msg.data),
+        })
+      }
+      if (backupType === 'systemrestores') {
+        dispatch({
+          type: `${ns}/updateBackgroundSystemrestores`,
+          payload: JSON.parse(msg.data),
+        })
+      }
     } else {
+      console.log('dispatch ns/updateBackground')
       dispatch({
         type: `${ns}/updateBackground`,
         payload: JSON.parse(msg.data),
@@ -118,13 +132,11 @@ export function wsChanges(dispatch, type, period, ns, search) {
   rws.addEventListener('error', () => {
     if (expectError) {
       expectError = false
+    } else if (ns === 'backup') {
+      if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'error' })
+      if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'error' })
     } else {
-      if (ns === 'backup') {
-        if (backupType === 'backupvolumes') dispatch({ type: `${ns}/updateSocketStatusBackupVolumes`, payload: 'error' })
-        if (backupType === 'backups') dispatch({ type: `${ns}/updateSocketStatusBackups`, payload: 'error' })
-      } else {
-        dispatch({ type: `${ns}/updateSocketStatus`, payload: 'error' })
-      }
+      dispatch({ type: `${ns}/updateSocketStatus`, payload: 'error' })
     }
   })
 }
@@ -162,7 +174,7 @@ export function getStatusIcon(resource) {
 }
 
 // Backup model has two websocket status.
-export function getBackupStatusIcon (resource, type) {
+export function getBackupStatusIcon(resource, type) {
   if (resource === undefined) {
     return
   }
@@ -194,7 +206,7 @@ export function getBackupStatusIcon (resource, type) {
 }
 
 // System Backup model has two websocket status.
-export function getSystemBackupStatusIcon (resource, type) {
+export function getSystemBackupStatusIcon(resource, type) {
   if (resource === undefined) {
     return
   }

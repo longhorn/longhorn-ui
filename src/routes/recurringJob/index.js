@@ -121,7 +121,6 @@ class RecurringJob extends React.Component {
     if (recurringJobs && recurringJobs.length > 0) {
       recurringJobs.sort((a, b) => a.name.localeCompare(b.name))
     }
-
     const createRecurringJobModalProps = {
       item: this.state.selected,
       visible: this.state.createRecurringJobModalVisible,

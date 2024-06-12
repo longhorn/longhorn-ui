@@ -94,7 +94,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
         dataSource={dataSource}
         loading={loading}
         simple
-        pagination={pagination}
+        pagination={pagination('backingImagePageSize')}
         rowKey={record => record.id}
         scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
       />

@@ -6,6 +6,7 @@ import setting from './models/setting'
 import eventlog from './models/eventlog'
 import engineimage from './models/engineimage'
 import backingImage from './models/backingImage'
+import backupTarget from './models/backupTarget'
 import backup from './models/backup'
 import snapshot from './models/snapshot'
 import recurringJob from './models/recurringJob'
@@ -34,6 +35,7 @@ app.model(setting)
 app.model(eventlog)
 app.model(engineimage)
 app.model(backingImage)
+app.model(backupTarget)
 app.model(backup)
 app.model(volume)
 app.model(recurringJob)

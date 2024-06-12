@@ -155,6 +155,7 @@ export default {
     *startWS({
       payload,
     }, { select }) {
+      // console.log('🚀 ~ backing images payload:', payload)
       let ws = yield select(state => state.backingImage.ws)
       if (ws) {
         ws.open()

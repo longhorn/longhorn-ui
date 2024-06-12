@@ -61,6 +61,13 @@ const dependency = {
       key: 'recurringjobs',
     }],
   },
+  backupTarget: {
+    path: '/backupTarget',
+    runWs: [{
+      ns: 'backupTarget',
+      key: 'backuptargets',
+    }],
+  },
   backingImage: {
     path: '/backingImage',
     runWs: [{
@@ -135,6 +142,9 @@ const list = [{
   ns: 'engineimage',
   key: 'engineimages',
 }, {
+  ns: 'backupTarget',
+  key: 'backuptargets',
+}, {
   ns: 'recurringJob',
   key: 'recurringjobs',
 }, {
@@ -158,6 +168,7 @@ const httpDataDependency = {
   '/engineimage': ['engineimage'],
   '/recurringJob': ['recurringJob'],
   '/backingImage': ['volume', 'backingImage'],
+  '/backupTarget': ['backupTarget'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
@@ -168,23 +179,18 @@ const httpDataDependency = {
 export function getDataDependency(pathName) {
   let keys = Object.keys(dependency).filter((key) => {
     if (pathName && dependency[key].path) {
-      let max = dependency[key].path.length
-      return dependency[key].path === pathName.substring(0, max)
+      // let max = dependency[key].path.length
+      return dependency[key].path === pathName
     }
     return false
   })
-
   if (keys && keys.length === 1) {
     let modal = dependency[keys[0]]
     modal.stopWs = list.filter((item) => {
-      return modal.runWs.every((ele) => {
-        return ele.ns !== item.ns
-      })
+      return modal.runWs.every((ele) => ele.ns !== item.ns)
     })
-
     return dependency[keys[0]]
   }
-
   return null
 }
 
