@@ -19,6 +19,27 @@ function formatSi(val, increment = 1024) {
   return `${out} ${units[exp]}`
 }
 
+export function timeDurationStrToInt(time) {
+  if (time === undefined || time === null || typeof time !== 'string') {
+    return
+  }
+  let timeInSeconds = 0
+  const re = /((\d+)h)?((\d+)m)?((\d+)s)?/m
+  let match = re.exec(time)
+  if (match != null) {
+    if (typeof (match[2]) !== 'undefined') {
+      timeInSeconds += parseInt(match[2], 10) * 60 * 60
+    }
+    if (typeof (match[4]) !== 'undefined') {
+      timeInSeconds += parseInt(match[4], 10) * 60
+    }
+    if (typeof (match[6]) !== 'undefined') {
+      timeInSeconds += parseInt(match[6], 10)
+    }
+  }
+  return timeInSeconds
+}
+
 export function formatMib(...args) {
   return formatSi(...args)
 }

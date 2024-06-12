@@ -85,6 +85,7 @@ function BackupBackingImage({
       { value: 'name', name: 'Name' },
       { value: 'state', name: 'State' },
       { value: 'url', name: 'URL' },
+      { value: 'backupTargetName', name: 'Backup Target' },
     ],
     onSearch(filter) {
       const { field, value } = filter

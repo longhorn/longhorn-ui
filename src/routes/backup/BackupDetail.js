@@ -20,15 +20,19 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+
   const volumeName = queryString.parse(location.search).keyword
   const currentBackUp = backupVolumes.find((item) => { return item.id === volumeName })
   const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
   const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
   const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
+
+  const backups = volumeName ? backupData.filter(bk => bk.volumeName === volumeName) : backupData
   sortBackups(backupData)
+
   const backupProps = {
-    backup: backupData,
+    backup: backups,
     volumeList,
     loading,
     dispatch,

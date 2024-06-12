@@ -54,7 +54,7 @@ class BackupLabelInput extends React.Component {
                 message: 'key is required',
               },
             ],
-          })(<Input placeholder="Key" style={{ marginRight: 8 }} />)}
+          })(<Input placeholder="Labels Key" style={{ marginRight: 8 }} />)}
         </Form.Item>
         <Form.Item
           required={false}
@@ -86,12 +86,12 @@ class BackupLabelInput extends React.Component {
     ))
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item label="Labels" {...formItemLayout}>
+        <Form.Item label="Labels" style={{ display: 'flex' }} {...formItemLayout}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add Label
+            <Icon type="plus" /> Add Labels
           </Button>
         </Form.Item>
-        {formItems}
+         {formItems}
       </Form>
     )
   }

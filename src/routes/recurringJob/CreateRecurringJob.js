@@ -46,6 +46,7 @@ const noRetain = (val) => {
 
 const modal = ({
   item,
+  availBackupTargets,
   visible,
   isEdit,
   onCancel,
@@ -60,9 +61,11 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const isBackupTask = () => getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
+
   function handleOk() {
     validateFields((errors) => {
-      if (errors) {
+      if (errors || (isBackupTask() && getFieldValue('backupTargetName') === '')) {
         return
       }
       // TODO: extract below logic to getData function
@@ -132,9 +135,9 @@ const modal = ({
   }
   const add = () => {
     const currentKeys = getFieldValue('keys')
-    const nextkeys = currentKeys.concat({ index: id++, initialValue: '' })
+    const nextKeys = currentKeys.concat({ index: id++, initialValue: '' })
     setFieldsValue({
-      keys: nextkeys,
+      keys: nextKeys,
     })
   }
   const addDefaultGroup = () => {
@@ -142,9 +145,9 @@ const modal = ({
     let currentId = groups ? groups.length - 1 : 0
     if (getFieldValue('groups')[currentId]) {
       const currentKeys = getFieldValue('keys')
-      const nextkeys = currentKeys.concat({ index: id++, initialValue: 'default' })
+      const nextKeys = currentKeys.concat({ index: id++, initialValue: 'default' })
       setFieldsValue({
-        keys: nextkeys,
+        keys: nextKeys,
       })
     } else {
       groups[currentId] = 'default'
@@ -184,6 +187,7 @@ const modal = ({
   const showForceCreateCheckbox = () => {
     return getFieldValue('task') === 'backup' || getFieldValue('task') === 'snapshot'
   }
+
 
   // init params
   getFieldDecorator('keys', { initialValue: isEdit && item.groups && item.groups.length > 0 ? item.groups.map((group, index) => { return { initialValue: group, index } }) : [{ index: 0, initialValue: '' }] })
@@ -227,9 +231,9 @@ const modal = ({
   }
   const addLabel = () => {
     const currentKeys = getFieldValue('keysForlabels')
-    const nextkeys = currentKeys.concat(id++)
+    const nextKeys = currentKeys.concat(id++)
     setFieldsValue({
-      keysForlabels: nextkeys,
+      keysForlabels: nextKeys,
     })
   }
   const keysForlabels = getFieldValue('keysForlabels')
@@ -324,6 +328,26 @@ const modal = ({
               </FormItem>
           </Tooltip>}
         </div>
+        <div>
+          {isBackupTask()
+          && <FormItem label="Backup Target" {...formItemLayout}>
+              {getFieldDecorator('backupTargetName', {
+                // eslint-disable-next-line no-nested-ternary
+                initialValue: isEdit ? item.backupTargetName : availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please select a backup target',
+                  },
+                ],
+              })(
+              <Select disabled={isEdit} style={{ width: '80%' }}>
+                {availBackupTargets.map(bkTarget => <Option key={bkTarget.name} value={bkTarget.name}>{bkTarget.name}</Option>)}
+              </Select>
+              )}
+            </FormItem>
+          }
+        </div>
         <FormItem label="Retain" hasFeedback {...formItemLayout}>
           {getFieldDecorator('retain', {
             initialValue: isEdit ? item.retain : 1,
@@ -409,6 +433,7 @@ const modal = ({
 
 modal.propTypes = {
   form: PropTypes.object.isRequired,
+  availBackupTargets: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,

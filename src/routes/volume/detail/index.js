@@ -162,7 +162,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
   const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
-
   const backingImageOptions = backingImage?.data?.filter(image => hasReadyBackingDisk(image)) || []
   const settings = setting.data
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')

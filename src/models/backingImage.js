@@ -167,6 +167,16 @@ export default {
       yield delay(1000)
       yield put({ type: 'queryBackupBackingImage' })
     },
+    *createBackingImageBackup({
+      url,
+      payload,
+    }, { call, put }) {
+      const resp = yield call(execAction, url, payload)
+      if (resp && resp.status === 200) {
+        message.success(`Successfully backup backing image ${payload.backingImageName}`, 5)
+      }
+      yield put({ type: 'query' })
+    },
     *delete({
       payload,
     }, { call, put }) {

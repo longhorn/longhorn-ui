@@ -3,9 +3,17 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
+
 const confirm = Modal.confirm
 
-function actions({ selected, backupProps, deleteBackingImage, downloadBackingImage, showUpdateMinCopiesCount, createBackupBackingImage }) {
+function actions({
+  selected,
+  backupProps,
+  deleteBackingImage,
+  downloadBackingImage,
+  showUpdateMinCopiesCount,
+  openBackupBackingImageModal,
+}) {
   const { backupTargetAvailable, backupTargetMessage } = backupProps
 
   const handleMenuClick = (event, record) => {
@@ -24,18 +32,18 @@ function actions({ selected, backupProps, deleteBackingImage, downloadBackingIma
       case 'download':
         downloadBackingImage(record)
         break
-      case 'backup':
-        createBackupBackingImage(record)
-        break
       case 'updateMinCopies':
         showUpdateMinCopiesCount(record)
         break
+      case 'backup': {
+        openBackupBackingImageModal(record)
+        break
+      }
       default:
     }
   }
 
   const disableAction = !hasReadyBackingDisk(selected)
-
   const getBackupActionTooltip = () => {
     if (!backupTargetAvailable) {
       return backupTargetMessage
@@ -62,8 +70,8 @@ actions.propTypes = {
   deleteBackingImage: PropTypes.func,
   downloadBackingImage: PropTypes.func,
   showUpdateMinCopiesCount: PropTypes.func,
-  createBackupBackingImage: PropTypes.func,
   backupProps: PropTypes.object,
+  openBackupBackingImageModal: PropTypes.func,
 }
 
 export default actions

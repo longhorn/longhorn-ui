@@ -2,10 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
 import style from './systemBackupsBulkActions.less'
+import { getAvailableBackupTargets } from '../../utils/backupTarget'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSystemBackup }) {
+function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSystemBackup, backupTarget }) {
+  const createBtnDisable = getAvailableBackupTargets(backupTarget).length === 0
   const handleClick = (action) => {
     switch (action) {
       case 'create':
@@ -25,7 +27,7 @@ function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSys
 
   const { backupTargetAvailable, backupTargetMessage } = backupProps
   const allActions = [
-    { key: 'create', name: 'Create', disabled: backupTargetAvailable === false, tooltip: backupTargetAvailable === false ? backupTargetMessage : '' },
+    { key: 'create', name: 'Create', disabled: createBtnDisable || backupTargetAvailable === false, tooltip: backupTargetAvailable === false ? backupTargetMessage : '' },
     { key: 'delete', name: 'Delete', disabled: selectedRows.length === 0 },
   ]
 
@@ -48,6 +50,7 @@ bulkActions.propTypes = {
   backupProps: PropTypes.object,
   deleteSystemBackups: PropTypes.func,
   createSystemBackup: PropTypes.func,
+  backupTarget: PropTypes.object,
 }
 
 export default bulkActions

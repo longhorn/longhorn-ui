@@ -31,6 +31,7 @@ export const filterBackupBackingImage = (bbiData, field, value) => {
       case 'name':
       case 'state':
       case 'url':
+      case 'backupTargetName':
         result = result.filter((image) => (value ? image[field].toLowerCase().includes(value.toLowerCase().trim()) : true))
         break
       default:

@@ -250,6 +250,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           </Tooltip> : (frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Backup Target:</span>
+        {selectedVolume.backupTargetName || ''}
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Data Engine:</span>
         {selectedVolume.dataEngine}
       </div>

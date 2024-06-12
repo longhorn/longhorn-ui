@@ -6,10 +6,25 @@ import styles from './Filter.less'
 
 const Option = Select.Option
 
+const BOOLEAN_OPTIONS = { True: true, False: false }
+
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroupValue = '' } = queryString.parse(props.location.search)
+    const {
+      field = props.defaultField || 'Name',
+      value = '',
+      stateValue = '',
+      nodeRedundancyValue = '',
+      engineImageUpgradableValue = '',
+      scheduleValue = '',
+      pvStatusValue = '',
+      revisionCounterValue = '',
+      isGroupValue = '',
+      createdFromValue = '',
+      booleanValue = BOOLEAN_OPTIONS.True,
+    } = queryString.parse(props.location.search)
+
     this.state = {
       field,
       stateValue,
@@ -21,6 +36,8 @@ class Filter extends React.Component {
       revisionCounterValue,
       isGroupValue,
       keyword: value,
+      createdFromValue,
+      booleanValue,
     }
   }
 
@@ -63,6 +80,10 @@ class Filter extends React.Component {
     this.setState({ ...this.state, isGroupValue })
   }
 
+  handleBooleanValueChange = (booleanValue) => {
+    this.setState({ ...this.state, booleanValue })
+  }
+
   handleCreatedFromValueChange = (createdFromValue) => {
     this.setState({ ...this.state, value: createdFromValue })
   }
@@ -72,7 +93,18 @@ class Filter extends React.Component {
   }
 
   render() {
-    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroup = '' } = queryString.parse(this.props.location.search)
+    const { booleanFields = [] } = this.props
+    const {
+      field = this.props.defaultField || 'Name',
+      value = '',
+      stateValue = '',
+      nodeRedundancyValue = '',
+      engineImageUpgradableValue = '',
+      scheduleValue = '',
+      pvStatusValue = '',
+      revisionCounterValue = '',
+      isGroup = '',
+    } = queryString.parse(this.props.location.search)
 
     let defaultContent = {
       field,
@@ -158,15 +190,29 @@ class Filter extends React.Component {
     {this.props.revisionCounterOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
     </Select>)
     } else if (this.state.field === 'sourceType' && this.props.createdFromOption) {
-      valueForm = (<Select key="sourceType"
-        style={{ width: '100%' }}
-        size="large"
-        allowClear
-        defaultValue={this.props.createdFromOption[0]?.value || ''}
-        onChange={this.handleCreatedFromValueChange}
-    >
-    {this.props.createdFromOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-    </Select>)
+      valueForm = (
+        <Select key="sourceType"
+          style={{ width: '100%' }}
+          size="large"
+          allowClear
+          defaultValue={this.state.createdFromValue}
+          onChange={this.handleCreatedFromValueChange}
+        >
+          {this.props.createdFromOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+        </Select>
+      )
+    } else if (booleanFields.includes(this.state.field)) {
+      valueForm = (
+        <Select key="boolean"
+          style={{ width: '100%' }}
+          size="large"
+          allowClear
+          defaultValue={BOOLEAN_OPTIONS.True}
+          onChange={this.handleBooleanValueChange}
+        >
+          {Object.keys(BOOLEAN_OPTIONS).map(key => (<Option key={key} value={BOOLEAN_OPTIONS[key]}>{key}</Option>))}
+        </Select>
+      )
     }
 
     let content = ''
@@ -181,15 +227,15 @@ class Filter extends React.Component {
 
     return (
       <Form>
-      <Input.Group compact className={styles.filter}>
-      <Popover placement="topLeft" content={content} visible={popoverVisible}>
-        <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
-          {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
-        </Select>
-      </Popover>
-      { valueForm }
-        <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
-      </Input.Group>
+        <Input.Group compact className={styles.filter}>
+          <Popover placement="topLeft" content={content} visible={popoverVisible}>
+            <Select size="large" defaultValue={this.state.field} className={styles.filterSelect} onChange={this.handleFieldChange}>
+              {this.props.fieldOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+            </Select>
+          </Popover>
+          { valueForm }
+          <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
+        </Input.Group>
       </Form>
     )
   }
@@ -202,6 +248,7 @@ Filter.propTypes = {
   stateOption: PropTypes.array,
   fieldOption: PropTypes.array,
   defaultField: PropTypes.string,
+  booleanFields: PropTypes.array,
   scheduleOption: PropTypes.array,
   replicaNodeRedundancyOption: PropTypes.array,
   engineImageUpgradableOption: PropTypes.array,
