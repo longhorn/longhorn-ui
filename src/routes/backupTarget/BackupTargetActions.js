@@ -14,6 +14,8 @@ function actions({ selected, deleteBackupTarget, editBackupTarget }) {
       case 'delete':
         confirm({
           width: 'fit-content',
+          okText: 'Delete',
+          okType: 'danger',
           title: <p>Are you sure you want to delete <strong>{record.name}</strong> backup target ?</p>,
           onOk() {
             deleteBackupTarget(record)
@@ -26,7 +28,7 @@ function actions({ selected, deleteBackupTarget, editBackupTarget }) {
 
   const availableActions = [
     { key: 'edit', name: 'Edit' },
-    { key: 'delete', name: 'Delete' },
+    { key: 'delete', name: 'Delete', disabled: selected.default === true, tooltip: selected.default === true ? 'Default backup target can not be deleted' : '' },
   ]
 
   return (

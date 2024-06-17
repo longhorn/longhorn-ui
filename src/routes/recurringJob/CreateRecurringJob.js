@@ -131,9 +131,9 @@ const modal = ({
   }
   const add = () => {
     const currentKeys = getFieldValue('keys')
-    const nextkeys = currentKeys.concat({ index: id++, initialValue: '' })
+    const nextKeys = currentKeys.concat({ index: id++, initialValue: '' })
     setFieldsValue({
-      keys: nextkeys,
+      keys: nextKeys,
     })
   }
   const addDefaultGroup = () => {
@@ -141,9 +141,9 @@ const modal = ({
     let currentId = groups ? groups.length - 1 : 0
     if (getFieldValue('groups')[currentId]) {
       const currentKeys = getFieldValue('keys')
-      const nextkeys = currentKeys.concat({ index: id++, initialValue: 'default' })
+      const nextKeys = currentKeys.concat({ index: id++, initialValue: 'default' })
       setFieldsValue({
-        keys: nextkeys,
+        keys: nextKeys,
       })
     } else {
       groups[currentId] = 'default'
@@ -175,7 +175,7 @@ const modal = ({
   }
 
   const showBackupTargetDropdown = () => {
-    return getFieldValue('task') === 'backup'
+    return getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
   }
 
   // init params
@@ -220,9 +220,9 @@ const modal = ({
   }
   const addLabel = () => {
     const currentKeys = getFieldValue('keysForlabels')
-    const nextkeys = currentKeys.concat(id++)
+    const nextKeys = currentKeys.concat(id++)
     setFieldsValue({
-      keysForlabels: nextkeys,
+      keysForlabels: nextKeys,
     })
   }
   const keysForlabels = getFieldValue('keysForlabels')
@@ -319,7 +319,12 @@ const modal = ({
           && <FormItem label="Backup Target" {...formItemLayout}>
               {getFieldDecorator('backupTargetName', {
                 // eslint-disable-next-line no-nested-ternary
-                initialValue: isEdit ? item.backupTarget : availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
+                initialValue: isEdit ? item.backupTargetName : availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
+                rules: [
+                  {
+                    required: true,
+                  },
+                ],
               })(
               <Select disabled={isEdit} style={{ width: '80%' }}>
                 {availBackupTargets.map(bkTarget => <Option key={bkTarget.name} value={bkTarget.name}>{bkTarget.name}</Option>)}

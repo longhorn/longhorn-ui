@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
+
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackingImage, downloadBackingImage }) {
+function actions({ selected, deleteBackingImage, downloadBackingImage, openBackupBackingImageModal }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -20,6 +21,10 @@ function actions({ selected, deleteBackingImage, downloadBackingImage }) {
       case 'download':
         downloadBackingImage(record)
         break
+      case 'backup': {
+        openBackupBackingImageModal(record)
+        break
+      }
       default:
     }
   }
@@ -27,8 +32,9 @@ function actions({ selected, deleteBackingImage, downloadBackingImage }) {
   const disableDownloadAction = !hasReadyBackingDisk(selected)
 
   const availableActions = [
-    { key: 'delete', name: 'Delete' },
     { key: 'download', name: 'Download', disabled: disableDownloadAction, tooltip: disableDownloadAction ? 'Missing disk with ready state' : '' },
+    { key: 'backup', name: 'Backup' },
+    { key: 'delete', name: 'Delete' },
   ]
 
   return (
@@ -42,6 +48,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   deleteBackingImage: PropTypes.func,
   downloadBackingImage: PropTypes.func,
+  openBackupBackingImageModal: PropTypes.func,
 }
 
 export default actions

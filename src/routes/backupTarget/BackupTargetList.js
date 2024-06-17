@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Icon, Tooltip } from 'antd'
 import BackupTargetActions from './BackupTargetActions'
 import { pagination } from '../../utils/page'
+import readOnly from '../../assets/images/read-only.svg'
 
 function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSelection, height }) {
   const columns = [
@@ -58,7 +59,17 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
       sorter: (a, b) => a.readOnly - b.readOnly,
       render: (text) => {
         return (
-          <div>{text.toString().firstUpperCase()}</div>
+          <>
+            {text === false ? (
+              <Tooltip title="This backup target is writable">
+                <Icon type="edit" theme="outlined" style={{ color: 'green', alignSelf: 'center' }} />
+              </Tooltip>
+            ) : (
+              <Tooltip title="This backup target is read-only, so it does not allow any backups to synchronize to it.">
+                <img style={{ width: 20, height: 20 }} src={readOnly} alt="readOnlyIcon" />
+              </Tooltip>)
+            }
+          </>
         )
       },
     }, {
@@ -69,7 +80,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
       sorter: (a, b) => a.default - b.default,
       render: (text) => {
         return (
-          <div>{text.toString().firstUpperCase()}</div>
+          <>{text === true ? (<Icon type="pushpin" theme="filled" style={{ color: '#00558b', alignSelf: 'center' }} />) : ''}</>
         )
       },
     }, {
@@ -81,10 +92,13 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
       render: (text) => {
         return (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div>{text.toString().firstUpperCase()}</div>
-            {text === false && (
+            {text === true ? (
+               <Tooltip title="This backup target is available to sync backup to it">
+                <Icon type="check-square" style={{ color: 'green', alignSelf: 'center' }} />
+              </Tooltip>
+            ) : (
               <Tooltip title="This backup target is unavailable, please check the URL and credential secret are all correct.">
-                <Icon type="exclamation-circle" style={{ color: 'red', marginLeft: 4, alignSelf: 'center' }} />
+                <Icon type="exclamation-circle" style={{ color: 'red', alignSelf: 'center' }} />
               </Tooltip>
             )}
           </div>

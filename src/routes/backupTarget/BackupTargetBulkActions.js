@@ -10,8 +10,10 @@ function bulkActions({ selectedRows, bulkDeleteBackupTargets }) {
       case 'delete':
         confirm({
           width: 'fit-content',
+          okText: 'Delete',
+          okType: 'danger',
           title: (<>
-                    <p>Are you sure to you want to delete below {count} Backup {count === 1 ? 'Target' : 'Targets' } ?</p>
+                    <p>Are you sure to you want to delete below {count} backup {count === 1 ? 'target' : 'targets' } ?</p>
                     <ul>
                       {selectedRows.map(item => <li key={item.name}>{item.name}</li>)}
                     </ul>

@@ -62,10 +62,6 @@ const modal = ({
     setFieldsValue,
   }
 
-  const onChangeTask = () => {
-
-  }
-
   return (
     <ModalBlur {...modalOpts}>
       <Alert showIcon message="Create backup action could take a while depending on the actual size of the volume and network bandwidth." type="warning" />
@@ -74,7 +70,7 @@ const modal = ({
           {getFieldDecorator('backupTargetName', {
             initialValue: availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
           })(
-          <Select style={{ width: '100%' }} onChange={onChangeTask}>
+          <Select style={{ width: '100%' }}>
             {availBackupTargets.map(bkTarget => <Option key={bkTarget.name} value={bkTarget.name}>{bkTarget.name}</Option>)}
           </Select>
           )}

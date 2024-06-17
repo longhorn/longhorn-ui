@@ -34,7 +34,7 @@ const modal = ({
         ...getFieldsValue(),
         credentialSecret: getFieldValue('credentialSecret')?.trim() || '',
         backupTargetURL: getFieldValue('backupTargetURL')?.trim() || '',
-        pollInterval: getFieldValue('pollInterval')?.toString() || item.pollInterval.toString(), // pollInterval is a string type
+        pollInterval: getFieldValue('pollInterval')?.toString() || item.pollInterval.toString(), // pollInterval should be second number and in string type
       }
       onOk(data)
     })

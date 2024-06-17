@@ -350,7 +350,7 @@ export default {
       if (volumeName && action.payload && action.payload.data) {
         let backupData = action.payload.data.filter((item) => {
           if (item.backupTargetName) {
-            // after support multiple backup targets feature volumeName is composed by ${volumeName}-${backupTargetName}
+            // after implement multiple backup targets feature, backup volume name in backup page is composed by ${volumeName}-${backupTargetName}
             return volumeName === `${item.volumeName}-${item.backupTargetName}`
           } else {
             return item.volumeName === volumeName

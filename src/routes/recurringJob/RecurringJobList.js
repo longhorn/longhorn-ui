@@ -36,7 +36,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       title: 'Type',
       dataIndex: 'task',
       key: 'task',
-      width: 100,
+      width: 150,
       render: (text, record) => {
         return (
           <div>{record.task}</div>
@@ -69,7 +69,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
     }, {
       title: 'Retain',
       key: 'retain',
-      width: 120,
+      width: 80,
       render: (record) => {
         return (
           <div>{record.retain}</div>
@@ -78,7 +78,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
     }, {
       title: 'Concurrency',
       key: 'concurrency',
-      width: 120,
+      width: 80,
       render: (record) => {
         return (
           <div>{record.concurrency}</div>

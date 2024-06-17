@@ -375,7 +375,6 @@ class List extends React.Component {
         title: 'Operation',
         key: 'operation',
         width: 120,
-        fixed: 'right',
         render: (text, record) => {
           return (
             <HostActions {...hostActionsProps} selected={record} />

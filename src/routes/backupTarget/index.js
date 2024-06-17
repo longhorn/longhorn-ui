@@ -216,7 +216,7 @@ class BackupTarget extends React.Component {
         <Button className="out-container-button" size="large" type="primary" disabled={loading} onClick={() => this.handleCreateModalOpen()}>
           Create Backup Target
         </Button>
-        <BackupTargetList {...backupTargetListProps} />
+        <BackupTargetList key={Math.random()} {...backupTargetListProps} />
         {createBackupTargetModalVisible && <CreateBackupTargetModal {...createBackupTargetModalProps} />}
         {editBackupTargetModalVisible && <EditBackupTargetModal {...editBackupTargetModalProps} />}
       </div>

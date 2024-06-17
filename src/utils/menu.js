@@ -69,7 +69,7 @@ module.exports = [
         show: true,
         key: 'backupTarget',
         name: 'Backup Target',
-        icon: 'diff',
+        icon: 'cloud-server',
       },
       {
         show: true,

@@ -31,11 +31,6 @@ export function wsChanges(dispatch, type, period, ns, search) {
   }
   // To do. Because two ws connections will be maintained under backup ns.
   const backupType = type || ''
-  // console.log('🚀 ~ wsChanges ~ search:', search)
-  // console.log('🚀 ~ wsChanges ~ type:', type)
-  // console.log('🚀 ~ wsChanges ~ url:', url)
-  // console.log('🚀 ~ wsChanges ~ backupType:', backupType)
-  // console.log('🚀 ~ wsChanges ~ ns:', ns)
   const rws = new RobustWebSocket(url, [], options)
   if (ns === 'backup') {
     if (backupType === 'backupvolumes') {
@@ -100,7 +95,6 @@ export function wsChanges(dispatch, type, period, ns, search) {
         })
       }
     } else {
-      console.log('dispatch ns/updateBackground')
       dispatch({
         type: `${ns}/updateBackground`,
         payload: JSON.parse(msg.data),

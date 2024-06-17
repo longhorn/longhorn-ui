@@ -19,7 +19,6 @@ function formatSi(val, increment = 1024) {
   return `${out} ${units[exp]}`
 }
 
-
 export function timeDurationStrToInt(time) {
   if (time === undefined || time === null || typeof time !== 'string') {
     return

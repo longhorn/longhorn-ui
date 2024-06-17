@@ -213,8 +213,6 @@ class Snapshots extends React.Component {
       return null
     }
 
-    // console.log('🚀 ~ Snapshots ~ render ~ createBackModalVisible:', this.state.createBackModalVisible)
-    // console.log('🚀 ~ Snapshots ~ render ~ createBackBySnapshotModalVisible:', this.state.createBackBySnapshotModalVisible)
     const isRestoring = () => {
       if (this.props.volume.restoreStatus && this.props.volume.restoreStatus.length > 0) {
         let flag = this.props.volume.restoreStatus.every((item) => {
