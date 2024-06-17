@@ -46,6 +46,7 @@ const noRetain = (val) => {
 
 const modal = ({
   item,
+  availBackupTargets,
   visible,
   isEdit,
   onCancel,
@@ -107,7 +108,6 @@ const modal = ({
         delete data.keysForlabels
       }
       delete data.defaultGroup
-
       onOk(data)
     })
   }
@@ -172,6 +172,10 @@ const modal = ({
   }
   const showForceCreateCheckbox = () => {
     return getFieldValue('task') === 'backup' || getFieldValue('task') === 'snapshot'
+  }
+
+  const showBackupTargetDropdown = () => {
+    return getFieldValue('task') === 'backup'
   }
 
   // init params
@@ -310,6 +314,20 @@ const modal = ({
               </FormItem>
           </Tooltip>}
         </div>
+        <div>
+          {showBackupTargetDropdown()
+          && <FormItem label="Backup Target" {...formItemLayout}>
+              {getFieldDecorator('backupTargetName', {
+                // eslint-disable-next-line no-nested-ternary
+                initialValue: isEdit ? item.backupTarget : availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
+              })(
+              <Select disabled={isEdit} style={{ width: '80%' }}>
+                {availBackupTargets.map(bkTarget => <Option key={bkTarget.name} value={bkTarget.name}>{bkTarget.name}</Option>)}
+              </Select>
+              )}
+            </FormItem>
+          }
+        </div>
         <FormItem label="Retain" hasFeedback {...formItemLayout}>
           {getFieldDecorator('retain', {
             initialValue: isEdit ? item.retain : 1,
@@ -373,6 +391,7 @@ const modal = ({
 
 modal.propTypes = {
   form: PropTypes.object.isRequired,
+  availBackupTargets: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,

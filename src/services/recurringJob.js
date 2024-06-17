@@ -14,7 +14,6 @@ export async function create(params) {
     method: 'post',
     data: {
       ...params,
-      backupTargetName: 'default',
     },
   })
 }

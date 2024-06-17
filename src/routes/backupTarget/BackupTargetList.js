@@ -69,7 +69,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
       sorter: (a, b) => a.default - b.default,
       render: (text) => {
         return (
-          <div style={{ color: `${text === true ? '#27ae60' : 'auto'}` }}>{text.toString().firstUpperCase()}</div>
+          <div>{text.toString().firstUpperCase()}</div>
         )
       },
     }, {
@@ -81,7 +81,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
       render: (text) => {
         return (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{ color: `${text === false ? 'red' : 'auto'}` }}>{text.toString().firstUpperCase()}</div>
+            <div>{text.toString().firstUpperCase()}</div>
             {text === false && (
               <Tooltip title="This backup target is unavailable, please check the URL and credential secret are all correct.">
                 <Icon type="exclamation-circle" style={{ color: 'red', marginLeft: 4, alignSelf: 'center' }} />

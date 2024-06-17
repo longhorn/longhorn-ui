@@ -204,9 +204,9 @@ export default (namespace) => {
         yield put({ type: 'setLoading', payload: true })
         const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
         if (Object.getOwnPropertyNames(payload.labels).length === 0) {
-          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name })
+          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, backupTargetName: payload.backupTargetName })
         } else {
-          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels, backupTargetName: 'andy-minio-backupstore' })
+          yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels, backupTargetName: payload.backupTargetName })
         }
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
@@ -216,9 +216,9 @@ export default (namespace) => {
       }, { call, put }) {
         yield put({ type: 'setLoading', payload: true })
         if (Object.getOwnPropertyNames(payload.labels).length === 0) {
-          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName })
+          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, backupTargetName: payload.backupTargetName })
         } else {
-          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, labels: payload.labels })
+          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, labels: payload.labels, backupTargetName: payload.backupTargetName })
         }
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
