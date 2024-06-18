@@ -60,7 +60,7 @@ const modal = ({
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may overwrite the global setting “Snapshot Data Integrity”"
+            message="This action may override the global setting “Snapshot Data Integrity”"
             type="warning"
           />
         </FormItem>

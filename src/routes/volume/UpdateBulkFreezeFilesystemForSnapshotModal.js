@@ -15,7 +15,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
+  items,
   option,
   visible,
   onCancel,
@@ -34,34 +34,34 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      let url = item?.actions?.updateUnmapMarkSnapChainRemoved
+      const urls = items.map((item) => item?.actions?.updateFreezeFilesystemForSnapshot)
 
-      onOk(data, url)
+      onOk(data, urls)
     })
   }
 
   const modalOpts = {
-    title: 'Allow snapshots removal during trim',
+    title: 'Update Freeze Filesystem For Snapshot',
     visible,
     onCancel,
     width: 600,
     onOk: handleOk,
   }
-  if (!item) {
+  if (!items || items?.length === 0) {
     return null
   }
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Option" {...formItemLayout}>
-          {getFieldDecorator('unmapMarkSnapChainRemoved', {
-            initialValue: item?.unmapMarkSnapChainRemoved,
+          {getFieldDecorator('freezeFilesystemForSnapshot', {
+            initialValue: 'ignored',
           })(<Select>
           { option.map(ele => <Option key={ele.key} value={ele.value}>{ele.key}</Option>) }
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may override the global setting “Remove Snapshots During Filesystem Trim”"
+            message="This action may override the global setting “Freeze Filesystem For Snapshot”"
             type="warning"
           />
         </FormItem>
@@ -75,7 +75,7 @@ modal.propTypes = {
   visible: PropTypes.bool,
   option: PropTypes.array,
   onCancel: PropTypes.func,
-  item: PropTypes.object,
+  items: PropTypes.array,
   onOk: PropTypes.func,
 }
 

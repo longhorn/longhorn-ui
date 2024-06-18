@@ -59,6 +59,8 @@ export default {
     bulkUnmapMarkSnapChainRemovedModalVisible: false,
     updateSnapshotDataIntegrityModalVisible: false,
     updateBulkSnapshotDataIntegrityModalVisible: false,
+    updateFreezeFilesystemForSnapshotModalVisible: false,
+    updateBulkFreezeFilesystemForSnapshotModalVisible: false,
     isDetachBulk: false,
     changeVolumeActivate: '',
     defaultPvOrPvcName: '',
@@ -102,6 +104,8 @@ export default {
     updateSnapshotDataIntegrityModalKey: Math.random(),
     updateBulkSnapshotDataIntegrityModalKey: Math.random(),
     updateReplicaSoftAntiAffinityModalKey: Math.random(),
+    updateFreezeFilesystemForSnapshotModalKey: Math.random(),
+    updateBulkFreezeFilesystemForSnapshotModalKey: Math.random(),
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
@@ -320,6 +324,24 @@ export default {
     }, { call, put }) {
       yield put({ type: 'hideUpdateSnapshotDataIntegrityModal' })
       yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *updateFreezeFilesystemForSnapshot({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateFreezeFilesystemForSnapshotModal' })
+      yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *updateBulkFreezeFilesystemForSnapshot({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateBulkFreezeFilesystemForSnapshotModal' })
+      if (payload?.urls?.length > 0) {
+        for (let i = 0; i < payload.urls.length; i++) {
+          yield call(execAction, payload.urls[i], payload.params)
+        }
+      }
       yield put({ type: 'query' })
     },
     *accessModeUpdate({
@@ -801,6 +823,18 @@ export default {
     },
     showUpdateBulkSnapshotDataIntegrityModal(state, action) {
       return { ...state, ...action.payload, updateBulkSnapshotDataIntegrityModalVisible: true, updateBulkSnapshotDataIntegrityModalKey: Math.random() }
+    },
+    showUpdateFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateFreezeFilesystemForSnapshotModalVisible: true, updateFreezeFilesystemForSnapshotModalKey: Math.random() }
+    },
+    hideUpdateFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateFreezeFilesystemForSnapshotModalVisible: false, updateFreezeFilesystemForSnapshotModalKey: Math.random() }
+    },
+    showUpdateBulkFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateBulkFreezeFilesystemForSnapshotModalVisible: true, updateBulkFreezeFilesystemForSnapshotModalKey: Math.random() }
+    },
+    hideUpdateBulkFreezeFilesystemForSnapshotModal(state, action) {
+      return { ...state, ...action.payload, updateBulkFreezeFilesystemForSnapshotModalVisible: false, updateBulkFreezeFilesystemForSnapshotModalKey: Math.random() }
     },
     showUpdateAccessMode(state, action) {
       return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }

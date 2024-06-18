@@ -34,14 +34,14 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      let url = item?.actions?.updateUnmapMarkSnapChainRemoved
+      let url = item?.actions?.updateFreezeFilesystemForSnapshot
 
       onOk(data, url)
     })
   }
 
   const modalOpts = {
-    title: 'Allow snapshots removal during trim',
+    title: 'Update Freeze Filesystem For Snapshot',
     visible,
     onCancel,
     width: 600,
@@ -54,14 +54,14 @@ const modal = ({
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem label="Option" {...formItemLayout}>
-          {getFieldDecorator('unmapMarkSnapChainRemoved', {
-            initialValue: item?.unmapMarkSnapChainRemoved,
+          {getFieldDecorator('freezeFilesystemForSnapshot', {
+            initialValue: item?.freezeFilesystemForSnapshot,
           })(<Select>
           { option.map(ele => <Option key={ele.key} value={ele.value}>{ele.key}</Option>) }
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may override the global setting “Remove Snapshots During Filesystem Trim”"
+            message="This action may override the global setting “Freeze Filesystem For Snapshot”"
             type="warning"
           />
         </FormItem>

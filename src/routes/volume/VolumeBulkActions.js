@@ -32,6 +32,7 @@ function bulkActions({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showOfflineReplicaRebuildingModal,
+  showUpdateBulkFreezeFilesystemForSnapshotModal,
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -136,6 +137,9 @@ function bulkActions({
       case 'updateOfflineReplicaRebuilding':
         showOfflineReplicaRebuildingModal(selectedRows)
         break
+      case 'updateFreezeFilesystemForSnapshot':
+        showUpdateBulkFreezeFilesystemForSnapshotModal(selectedRows)
+        break
       case 'trimFilesystem':
         confirm({
           title: `Are you sure you want to trim (${selectedRows.map(item => item.name).join(', ')}) Filesystem ?`,
@@ -203,6 +207,7 @@ function bulkActions({
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => item.dataEngine !== 'v2') } },
     { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
+    { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled() { return selectedRows.length === 0 } },
   ]
 
   const menu = (<Menu>
@@ -258,6 +263,7 @@ bulkActions.propTypes = {
   commandKeyDown: PropTypes.bool,
   showBulkUnmapMarkSnapChainRemovedModal: PropTypes.func,
   trimBulkFilesystem: PropTypes.func,
+  showUpdateBulkFreezeFilesystemForSnapshotModal: PropTypes.func,
 }
 
 export default bulkActions
