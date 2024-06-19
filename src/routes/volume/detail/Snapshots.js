@@ -225,11 +225,13 @@ class Snapshots extends React.Component {
     }
     const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.image
 
-    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable
+    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || this.props.availBackupTargets.length === 0
+
+    const createSnapshotDisabled = disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()
 
     const createBackupTooltipMessage = () => {
-      if (!this.props.backupTargetAvailable) {
-        return this.props.backupTargetMessage
+      if (this.props.availBackupTargets.length === 0) {
+        return 'No backup target is available and writable.'
       }
       if (this.props.volume.standby) {
         return 'Unable to create backup for DR volume.'
@@ -285,7 +287,7 @@ class Snapshots extends React.Component {
         <div>Snapshots and Backups</div>
         <div>
           <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create snapshot for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
-              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()}
+              <Button disabled={createSnapshotDisabled}
                 icon="scan"
                 onClick={() => { this.onAction({ type: 'snapshotCreate' }) }}
                 type="primary">
@@ -326,8 +328,6 @@ Snapshots.propTypes = {
   snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
   showRemoved: PropTypes.bool,
-  backupTargetAvailable: PropTypes.bool,
-  backupTargetMessage: PropTypes.string,
   volumeHead: PropTypes.object,
   availBackupTargets: PropTypes.array,
 }

@@ -10,7 +10,7 @@ import CreateBackupBackingImageModal from './CreateBackupBackingImageModal'
 import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
 import queryString from 'query-string'
-import { getAvailBackupTargets } from '../../utils/backupTarget'
+import { getAvailBackupTargets, hasWritableBackupTargets } from '../../utils/backupTarget'
 import style from './BackingImage.less'
 import C from '../../utils/constants'
 
@@ -117,6 +117,7 @@ class BackingImage extends React.Component {
     const backingImageListProps = {
       dataSource: backingImages,
       height: this.state.height,
+      hasWritableBackupTargets: hasWritableBackupTargets(backupTarget),
       loading,
       deleteBackingImage(record) {
         dispatch({

@@ -61,9 +61,11 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const isBackupTask = () => getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
+
   function handleOk() {
     validateFields((errors) => {
-      if (errors) {
+      if (errors || (isBackupTask() && getFieldValue('backupTargetName') === '')) {
         return
       }
       const data = {
@@ -108,6 +110,7 @@ const modal = ({
         delete data.keysForlabels
       }
       delete data.defaultGroup
+
       onOk(data)
     })
   }
@@ -174,9 +177,6 @@ const modal = ({
     return getFieldValue('task') === 'backup' || getFieldValue('task') === 'snapshot'
   }
 
-  const showBackupTargetDropdown = () => {
-    return getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
-  }
 
   // init params
   getFieldDecorator('keys', { initialValue: isEdit && item.groups && item.groups.length > 0 ? item.groups.map((group, index) => { return { initialValue: group, index } }) : [{ index: 0, initialValue: '' }] })
@@ -315,7 +315,7 @@ const modal = ({
           </Tooltip>}
         </div>
         <div>
-          {showBackupTargetDropdown()
+          {isBackupTask()
           && <FormItem label="Backup Target" {...formItemLayout}>
               {getFieldDecorator('backupTargetName', {
                 // eslint-disable-next-line no-nested-ternary
@@ -323,6 +323,7 @@ const modal = ({
                 rules: [
                   {
                     required: true,
+                    message: 'Please select a backup target',
                   },
                 ],
               })(

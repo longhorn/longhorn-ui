@@ -70,7 +70,6 @@ class BackupTarget extends React.Component {
       selectedEditRow: record,
       editBackupTargetModalVisible: true,
     })
-    this.handleEditModalOpen()
   }
 
   handleEditModalClose = () => {
@@ -216,7 +215,7 @@ class BackupTarget extends React.Component {
         <Button className="out-container-button" size="large" type="primary" disabled={loading} onClick={() => this.handleCreateModalOpen()}>
           Create Backup Target
         </Button>
-        <BackupTargetList key={Math.random()} {...backupTargetListProps} />
+        <BackupTargetList {...backupTargetListProps} />
         {createBackupTargetModalVisible && <CreateBackupTargetModal {...createBackupTargetModalProps} />}
         {editBackupTargetModalVisible && <EditBackupTargetModal {...editBackupTargetModalProps} />}
       </div>

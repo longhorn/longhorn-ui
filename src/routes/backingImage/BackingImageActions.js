@@ -6,7 +6,7 @@ import { hasReadyBackingDisk } from '../../utils/status'
 
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackingImage, downloadBackingImage, openBackupBackingImageModal }) {
+function actions({ selected, deleteBackingImage, downloadBackingImage, openBackupBackingImageModal, hasWritableBackupTargets }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -29,11 +29,14 @@ function actions({ selected, deleteBackingImage, downloadBackingImage, openBacku
     }
   }
 
-  const disableDownloadAction = !hasReadyBackingDisk(selected)
+  const disableAction = !hasReadyBackingDisk(selected)
+
+  const disabledBackupAction = !hasWritableBackupTargets || !hasReadyBackingDisk(selected)
+  const backupTargetMessageTooltip = !hasWritableBackupTargets ? 'No backup target is available and writable' : 'Missing disk with ready state'
 
   const availableActions = [
-    { key: 'download', name: 'Download', disabled: disableDownloadAction, tooltip: disableDownloadAction ? 'Missing disk with ready state' : '' },
-    { key: 'backup', name: 'Backup' },
+    { key: 'download', name: 'Download', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
+    { key: 'backup', name: 'Backup', disabled: disabledBackupAction, tooltip: disabledBackupAction ? backupTargetMessageTooltip : '' },
     { key: 'delete', name: 'Delete' },
   ]
 

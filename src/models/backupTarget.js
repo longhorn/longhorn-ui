@@ -3,6 +3,7 @@ import { message } from 'antd'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import { delay } from 'dva/saga'
 
 export default {
   ws: null,
@@ -58,6 +59,7 @@ export default {
       payload,
     }, { call, put }) {
       yield call(updateBackupTarget, payload)
+      yield delay(1000)
       yield put({ type: 'query' })
     },
     *bulkDelete({

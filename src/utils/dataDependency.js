@@ -129,6 +129,9 @@ const dependency = {
     runWs: [{
       ns: 'systemBackups',
       key: 'systemBackups',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
 }
@@ -182,7 +185,7 @@ const httpDataDependency = {
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
-  '/systemBackups': ['systemBackups'],
+  '/systemBackups': ['systemBackups', 'backupTarget'],
 }
 
 export function getDataDependency(pathName) {

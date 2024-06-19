@@ -46,6 +46,7 @@ import {
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
 } from '../helper'
+import { getAvailBackupTargets } from '../../../utils/backupTarget'
 
 const confirm = Modal.confirm
 
@@ -93,14 +94,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, backupTarg
     updateFreezeFilesystemForSnapshotModalKey,
     updateFreezeFilesystemForSnapshotModalVisible,
   } = volume
-  const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
+  const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
   const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
-  const availBackupTargets = backupTarget.data.filter(item => item.available && !item.readOnly)
+  const availBackupTargets = getAvailBackupTargets(backupTarget)
   const settings = setting.data
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
   const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
@@ -508,8 +509,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, backupTarg
     volumeId,
     dispatch,
     availBackupTargets,
-    backupTargetAvailable,
-    backupTargetMessage,
     volumeHead: snapshotData.find(d => d.name === 'volume-head'),
   }
 

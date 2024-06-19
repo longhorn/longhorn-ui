@@ -23,6 +23,7 @@ export default {
     lastBackupUrl: '',
     volumeName: '',
     backupTargetMessage: '',
+    backupTargetAvailable: false,
     previousChecked: false,
     tagsLoading: true,
     size: '',
@@ -32,7 +33,6 @@ export default {
     backupVolumesForBulkCreate: [],
     search: {},
     restoreBackupModalVisible: false,
-    backupTargetAvailable: false,
     workloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
     bulkCreateVolumeStandModalVisible: false,
@@ -104,9 +104,14 @@ export default {
       payload,
     }, { call, put }) {
       const resp = yield call(queryBackupTarget)
-      if (resp && resp.data && resp.data[0]) {
-        const backupTargetAvailable = resp.data.some(d => d.available === true)
-        const backupTargetMessage = backupTargetAvailable ? '' : 'No backup target available'
+      if (resp && resp.status === 200) {
+        const backupTargetAvailable = resp?.data?.some(d => d.available === true) || false
+        const backupTargetMessage = backupTargetAvailable ? '' : 'No backup target is available, please go to Setting -> Backup Target page to create one'
+        if (payload.history.location.pathname === '/backup' && !backupTargetAvailable) {
+          message.error(backupTargetMessage, 5)
+        } else {
+          message.destroy()
+        }
         yield put({ type: 'setBackupTargetAvailable', payload: { backupTargetAvailable, backupTargetMessage } })
       }
     },

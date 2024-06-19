@@ -5,11 +5,22 @@ import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 
-function list({ loading, dataSource, openBackupBackingImageModal, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
+function list({
+  loading,
+  dataSource,
+  openBackupBackingImageModal,
+  deleteBackingImage,
+  showDiskStateMapDetail,
+  rowSelection,
+  downloadBackingImage,
+  height,
+  hasWritableBackupTargets,
+}) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
     openBackupBackingImageModal,
+    hasWritableBackupTargets,
   }
   const state = (record) => {
     if (record.deletionTimestamp) {
@@ -111,6 +122,7 @@ list.propTypes = {
   openBackupBackingImageModal: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
+  hasWritableBackupTargets: PropTypes.bool,
 }
 
 export default list

@@ -37,11 +37,11 @@ const modal = ({
   function handleOk() {
     validateFields((errors) => {
       if (errors) return
-
       const labels = getLabels(getFieldsValue)
+      const backupTargetName = getFieldValue('backupTargetName')
       const data = {
         labels,
-        backupTargetName: getFieldValue('backupTargetName'),
+        backupTargetName,
       }
       onOk(data)
     })
