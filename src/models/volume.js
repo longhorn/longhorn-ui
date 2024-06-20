@@ -46,6 +46,7 @@ export default {
     bulkExpandVolumeModalVisible: false,
     updateBulkReplicaCountModalVisible: false,
     customColumnVisible: false,
+    volumeCloneModalVisible: false,
     updateDataLocalityModalVisible: false,
     updateSnapshotMaxCountModalVisible: false,
     updateSnapshotMaxCountModalKey: Math.random(),
@@ -89,6 +90,7 @@ export default {
     detachHostModalKey: Math.random(),
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
+    volumeCloneModalKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
     expansionVolumeSizeModalKey: Math.random(),
     updateReplicaCountModalKey: Math.random(),
@@ -197,6 +199,13 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideCreateVolumeModal' })
+      yield call(create, payload)
+      yield put({ type: 'query' })
+    },
+    *createClonedVolume({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideVolumeCloneModal' })
       yield call(create, payload)
       yield put({ type: 'query' })
     },
@@ -746,6 +755,9 @@ export default {
     hideRecurringJobModal(state) {
       return { ...state, recurringJobModalVisible: false, recurringJobModalKey: Math.random() }
     },
+    showVolumeCloneModal(state, action) {
+      return { ...state, ...action.payload, volumeCloneModalVisible: true, volumeCloneModalKey: Math.random() }
+    },
     showAttachHostModal(state, action) {
       return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }
     },
@@ -769,6 +781,9 @@ export default {
     },
     showBulkEngineUpgradeModal(state, action) {
       return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true, bulkEngineUpgradeModalKey: Math.random() }
+    },
+    hideVolumeCloneModal(state) {
+      return { ...state, volumeCloneModalVisible: false }
     },
     hideEngineUpgradeModal(state) {
       return { ...state, engineUpgradeModalVisible: false }

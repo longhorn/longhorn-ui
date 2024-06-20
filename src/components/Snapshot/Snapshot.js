@@ -55,6 +55,7 @@ function SnapshotIcon(props, snapshotProps) {
       },
     })
   }
+
   function onClick({ key }) {
     if (key === 'snapshotRevert' && snapshotProps && snapshotProps.volume) {
       const title = (
@@ -103,6 +104,9 @@ function SnapshotIcon(props, snapshotProps) {
           { !snapshotProps.disableBackup ? <div style={{ padding: '0px 12px' }}>Backup</div> : <Tooltip title={snapshotProps.disableBackupMessage}><div className="disable-dropdown-menu">Backup</div></Tooltip>}
         </Menu.Item> : ''
       }
+      <Menu.Item key="volumeClonedFromSnapshot">
+        <div style={{ padding: '0px 12px' }}>Clone Volume</div>
+      </Menu.Item>
       <Menu.Item key="snapshotDelete">
         <div style={{ padding: '0px 12px' }}>Delete</div>
       </Menu.Item>
@@ -200,9 +204,7 @@ function CurrentPoint(props) {
     })
   }
   const menu = (
-    <Menu
-      onClick={onClick}
-    >
+    <Menu onClick={onClick}>
       <Menu.Item key="1" disabled={disabledSnapshotAction(props.volume, props.state)}>
         <span>Take Snapshot</span>
       </Menu.Item>
@@ -214,7 +216,7 @@ function CurrentPoint(props) {
       trigger={['click']}
       key={props.volume.id}
     >
-    {VolumeHead(props.volumeHead)}
+      {VolumeHead(props.volumeHead)}
     </Dropdown>
   )
 }
@@ -254,7 +256,7 @@ class Snapshot extends React.Component {
   render() {
     let props = this.props
     let children = null
-
+    console.log('props.snapshotTree', this.props.snapshotTree)
     if (props.snapshotTree) {
       children = props.snapshotTree.length > 0 ? loop(props.snapshotTree, props) : <TreeNode key="1" title={CurrentPoint(props)} />
       if (props.loading || this.state.loadingState !== props.loading) {

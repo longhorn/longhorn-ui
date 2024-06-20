@@ -19,12 +19,12 @@ class Snapshots extends React.Component {
       snapshotListUrl: '',
     }
     this.onAction = (action) => {
+      console.log('🚀 ~ Snapshots ~ constructor ~ action:', action)
       if (action.type === 'backup') {
         this.setState({
           ...this.state,
           createBackModalVisible: true,
         })
-        return
       }
       if (action.type === 'toggleShowRemoved') {
         this.props.dispatch({
@@ -32,7 +32,14 @@ class Snapshots extends React.Component {
           payload: !this.props.showRemoved,
         })
         this.refs.Snapshot.showReomve()
-        return
+      }
+      if (action.type === 'createVolumeFromSnapshot') {
+        this.props.dispatch({
+          type: 'volume/createClonedVolume',
+          payload: {
+
+          },
+        })
       }
       if (action.type === 'snapshotBackup') {
         this.setState({
@@ -42,7 +49,6 @@ class Snapshots extends React.Component {
           snapshotBackupUrl: action.payload && action.payload.volume && action.payload.volume.actions && action.payload.volume.actions.snapshotBackup ? action.payload.volume.actions.snapshotBackup : '',
           snapshotListUrl: action.payload && action.payload.volume && action.payload.volume.actions && action.payload.volume.actions.snapshotList ? action.payload.volume.actions.snapshotList : '',
         })
-        return
       }
 
       let additionalActions = []

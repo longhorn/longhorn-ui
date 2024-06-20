@@ -36,8 +36,9 @@ import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
-import CreateBackupModal from './detail/CreateBackupModal.js'
-import CommonModal from './components/CommonModal.js'
+import CreateBackupModal from './detail/CreateBackupModal'
+import CommonModal from './components/CommonModal'
+import VolumeCloneModal from './VolumeCloneModal'
 import {
   getAttachHostModalProps,
   getEngineUpgradeModalProps,
@@ -171,6 +172,8 @@ class Volume extends React.Component {
       customColumnKey,
       customColumnVisible,
       customColumnList,
+      volumeCloneModalVisible,
+      volumeCloneModalKey,
       updateDataLocalityModalVisible,
       updateDataLocalityModalKey,
       updateBulkDataLocalityModalVisible,
@@ -280,6 +283,9 @@ class Volume extends React.Component {
         return flag === revisionCounterValue
       })
     }
+
+    console.log('🚀 ~ Volume ~ render ~ all volumes:', volumes)
+
     const volumeListProps = {
       dataSource: volumes,
       loading,
@@ -305,6 +311,14 @@ class Volume extends React.Component {
             params: {
               name: '',
             },
+          },
+        })
+      },
+      showVolumeCloneModal(record) {
+        dispatch({
+          type: 'volume/showVolumeCloneModal',
+          payload: {
+            selected: record,
           },
         })
       },
@@ -609,6 +623,7 @@ class Volume extends React.Component {
       },
     }
 
+
     const volumeFilterProps = {
       location,
       stateOption: [
@@ -770,6 +785,7 @@ class Volume extends React.Component {
         diskSelector: [],
         nodeSelector: [],
       },
+      volumes,
       nodeTags,
       defaultDataLocalityOption,
       defaultDataLocalityValue,
@@ -1149,6 +1165,28 @@ class Volume extends React.Component {
       },
     }
 
+    const volumeCloneModalProps = {
+      selectedVolume: selected,
+      visible: volumeCloneModalVisible,
+      onOk(volume) {
+        if (selected.name && volume) {
+          dispatch({
+            type: 'volume/createClonedVolume',
+            payload: {
+              ...volume,
+              name: volume.name,
+              dataSource: `vol://${selected.name}`,
+            },
+          })
+        }
+      },
+      onCancel() {
+        dispatch({
+          type: 'volume/hideVolumeCloneModal',
+        })
+      },
+    }
+
     const addVolume = () => {
       dispatch({
         type: 'volume/showCreateVolumeModalBefore',
@@ -1222,8 +1260,8 @@ class Volume extends React.Component {
         {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
         {bulkChangeVolumeModalVisible ? <BulkChangeVolumeModal key={bulkChangeVolumeModalKey} {...bulkChangeVolumeModalProps} /> : ''}
-        {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
-        {bulkExpandVolumeModalVisible ? <ExpansionVolumeSizeModal key={bulkExpandVolumeModalKey} {...bulkExpansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : '' }
+        {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps} /> : ''}
+        {bulkExpandVolumeModalVisible ? <ExpansionVolumeSizeModal key={bulkExpandVolumeModalKey} {...bulkExpansionVolumeSizeModalProps} /> : '' }
         {createVolumeModalVisible ? <CreateVolume key={createVolumeModalKey} {...createVolumeModalProps} /> : ''}
         {customColumnVisible ? <CustomColumn key={customColumnKey} {...customColumnModalProps} /> : ''}
         {createPVAndPVCVisible ? <CreatePVAndPVC key={createPVAndPVCModalKey} {...createPVAndPVCProps} /> : ''}
@@ -1233,12 +1271,13 @@ class Volume extends React.Component {
         {detachHostModalVisible ? <DetachHost key={detachHostModalKey} {...detachHostModalProps} /> : ''}
         {engineUpgradeModalVisible ? <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} /> : ''}
         {bulkEngineUpgradeModalVisible ? <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} /> : ''}
+        {volumeCloneModalVisible ? <VolumeCloneModal key={volumeCloneModalKey} {...volumeCloneModalProps} /> : ''}
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {updateReplicaCountModalVisible ? <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} /> : ''}
         {updateBulkReplicaCountModalVisible ? <UpdateBulkReplicaCount key={updateBulkReplicaCountModalKey} {...updateBulKReplicaCountModalProps} /> : ''}
-        { updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : '' }
-        { updateSnapshotMaxCountModalVisible ? <UpdateSnapshotMaxCountModal {...updateSnapshotMaxCountModalProps} /> : '' }
-        { updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
+        {updateDataLocalityModalVisible ? <UpdateDataLocality key={updateDataLocalityModalKey} {...updateDataLocalityModalProps} /> : '' }
+        {updateSnapshotMaxCountModalVisible ? <UpdateSnapshotMaxCountModal {...updateSnapshotMaxCountModalProps} /> : '' }
+        {updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
         {updateBulkDataLocalityModalVisible ? <UpdateBulkDataLocality key={updateBulkDataLocalityModalKey} {...updateBulkDataLocalityModalProps} /> : ''}
         {updateAccessModeModalVisible ? <UpdateAccessMode key={updateAccessModeModalKey} {...updateAccessModeModalProps} /> : ''}
         {updateBulkAccessModeModalVisible ? <UpdateBulkAccessMode key={updateBulkAccessModeModalKey} {...updateBulkAccessModeModalProps} /> : ''}
