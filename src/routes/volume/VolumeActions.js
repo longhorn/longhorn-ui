@@ -15,6 +15,7 @@ function actions({
   showBackups,
   showSalvage,
   rollback,
+  showVolumeCloneModal,
   showUpdateReplicaCount,
   updateSnapshotMaxCount,
   updateSnapshotMaxSize,
@@ -81,6 +82,8 @@ function actions({
           let title = deleteWranElement(record)
           confirm({
             width: 700,
+            okType: 'danger',
+            okText: 'Delete',
             title,
             onOk() {
               deleteVolume(record)
@@ -96,6 +99,9 @@ function actions({
         break
       case 'backups':
         showBackups(record)
+        break
+      case 'cloneVolume':
+        showVolumeCloneModal(record)
         break
       case 'rollback':
         confirm({
@@ -241,6 +247,7 @@ function actions({
     }
   })
 
+  availableActions.push({ key: 'cloneVolume', name: 'Clone Volume', disabled: selected.standby || isRestoring(selected) })
   availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() === 'false' })
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
     availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
@@ -271,6 +278,7 @@ actions.propTypes = {
   takeSnapshot: PropTypes.func,
   showSalvage: PropTypes.func,
   rollback: PropTypes.func,
+  showCloneVolume: PropTypes.func,
   showUpdateReplicaCount: PropTypes.func,
   updateSnapshotMaxCount: PropTypes.func,
   updateSnapshotMaxSize: PropTypes.func,

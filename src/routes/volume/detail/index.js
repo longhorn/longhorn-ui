@@ -227,6 +227,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    // showVolumeCloneModal(record) {
+    //   dispatch({
+    //     type: 'volume/showVolumeCloneModal',
+    //     payload: {
+    //       selected: record,
+    //     },
+    //   })
+    // },
     showAttachHost(record) {
       dispatch({
         type: 'volume/showAttachHostModal',

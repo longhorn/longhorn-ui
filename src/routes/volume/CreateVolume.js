@@ -13,6 +13,7 @@ import {
 } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
+
 const FormItem = Form.Item
 const { Panel } = Collapse
 const { Option } = Select
@@ -35,8 +36,11 @@ const formItemLayoutForAdvanced = {
   },
 }
 
+const dataSourceOptions = ['Volume', 'Volume Snapshot']
+
 const modal = ({
   item,
+  volumes,
   visible,
   onCancel,
   onOk,
@@ -54,26 +58,42 @@ const modal = ({
     getFieldDecorator,
     validateFields,
     getFieldsValue,
+    getFieldValue,
     setFieldsValue,
   },
 }) => {
+  console.log('🚀 ~ createVolumes volumes:', volumes)
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
         return
       }
+      let dataSourceValue = ''
+      if (getFieldValue('dataSource')) {
+        switch (getFieldValue('dataSourceType')) {
+          case 'Volume':
+            dataSourceValue = `vol://${getFieldValue('dataSource')}`
+            break
+          case 'Volume Snapshot':
+            dataSourceValue = `snap://${123}/${getFieldValue('dataSource')}`
+            break
+          default:
+        }
+      }
       const data = {
         ...getFieldsValue(),
+        dataSource: dataSourceValue,
         size: `${getFieldsValue().size}${getFieldsValue().unit}`,
-        snapshotMaxSize: `${getFieldsValue().snapshotMaxSize}${
-          getFieldsValue().snapshotSizeUnit
-        }`,
+        snapshotMaxSize: `${getFieldsValue().snapshotMaxSize}${getFieldsValue().snapshotSizeUnit}`,
       }
 
+      if (data.dataSourceType) {
+        delete data.dataSourceType
+      }
       if (data.unit) {
         delete data.unit
       }
-
+      console.log('🚀 ~ validateFields ~ data:', data)
       onOk(data)
     })
   }
@@ -117,7 +137,7 @@ const modal = ({
           })(<Input />)}
         </FormItem>
         <div style={{ display: 'flex' }}>
-          <FormItem label="Size" style={{ flex: 0.6, paddingLeft: 75 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+          <FormItem label="Size" style={{ flex: '1 0 65%', paddingLeft: 30 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
             {getFieldDecorator('size', {
               initialValue: item.size,
               rules: [
@@ -144,9 +164,9 @@ const modal = ({
                   },
                 },
               ],
-            })(<InputNumber style={{ width: '250px' }} />)}
+            })(<InputNumber min={0} max={65535} style={{ width: '330px' }} />)}
           </FormItem>
-          <FormItem>
+          <FormItem style={{ flex: '1 0 30%' }}>
             {getFieldDecorator('unit', {
               initialValue: item.unit,
               rules: [{ required: true, message: 'Please select your unit!' }],
@@ -222,6 +242,22 @@ const modal = ({
           })(<Select allowClear={true}>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
+        </FormItem>
+        <FormItem label="Data Source" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataSourceType', {
+            initialValue: dataSourceOptions[0],
+          })(
+            <Select>
+               {dataSourceOptions.map(value => <Option key={value} value={value}>{value}</Option>) }
+            </Select>
+          )}
+          {getFieldDecorator('dataSource', {
+            initialValue: '',
+          })(
+            <Select>
+              {volumes.map(vol => <Option key={vol.name} value={vol.name}>{vol.name}</Option>) }
+            </Select>
+          )}
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
@@ -413,6 +449,7 @@ const modal = ({
 
 modal.propTypes = {
   form: PropTypes.object.isRequired,
+  volumes: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,
