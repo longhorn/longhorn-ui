@@ -163,7 +163,6 @@ export default (namespace) => {
       *queryVolume({
         payload,
       }, { put }) {
-        console.log('🚀 ~queryVolume  payload:', payload)
         const data = payload.volume
         if (data && data.actions) {
           yield put({ type: 'setVolume', payload: data })
@@ -173,7 +172,6 @@ export default (namespace) => {
       *querySnapShot({
         payload,
       }, { call, put }) {
-        console.log('🚀 ~querySnapShot  payload:', payload)
         if (!payload.url) {
           yield put({ type: 'setSnapshotData', payload: [] })
           yield put({ type: 'setSnapshot', payload: [] })

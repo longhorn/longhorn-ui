@@ -23,6 +23,15 @@ export function formatMib(...args) {
   return formatSi(...args)
 }
 
+// Convert selected size Bi to Gi, return size in Gi
+export function formatSize(selected, unit = 'Gi') {
+  if (selected && selected.size) {
+    const sizeMi = parseInt(selected.size, 10) / (1024 * 1024)
+    return unit === 'Gi' ? Number((sizeMi / 1024).toFixed(2)) : parseInt(sizeMi, 10)
+  }
+  return 0
+}
+
 export function utcStrToDate(utcStr) {
   const reg = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) \+\d{4} UTC$/
   const results = utcStr.match(reg)

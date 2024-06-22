@@ -1,11 +1,13 @@
 import { create, deleteVolume, query, execAction, createVolumePV, createVolumePVC, createVolumeAllPVC, volumeActivate, getNodeTags, getDiskTags, expandVolume, cancelExpansion, createRecurringJob, recurringJobAdd, getVolumeRecurringJobList, removeVolumeRecurringJob, updateRecurringJob } from '../services/volume'
 import { query as getRecurringJob } from '../services/recurringJob'
 import { wsChanges, updateState } from '../utils/websocket'
+import { message } from 'antd'
 import { sortVolume } from '../utils/sort'
 import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import { sortSnapshots } from '../utils/sort'
 
 export default {
   namespace: 'volume',
@@ -13,7 +15,11 @@ export default {
     ws: null,
     data: [],
     resourceType: 'volume',
+    cloneVolumeType: 'volume', // volume or snapshot
+    snapshotsOptions: {},
+    snapshotLoading: true,
     selected: null,
+    selectSnapshot: null,
     selectedRows: [],
     WorkloadDetailModalItem: {},
     volumeRecurringJobs: [],
@@ -205,16 +211,48 @@ export default {
     *createClonedVolume({
       payload,
     }, { call, put }) {
-      yield put({ type: 'hideVolumeCloneModal' })
-      yield call(create, payload)
-      yield put({ type: 'query' })
+      yield put({ type: 'hideCloneVolumeModal' })
+      const resp = yield call(create, payload)
+      if (resp && resp.status === 200) {
+        message.success(`New volume (${payload.name}) created successfully`, 5)
+        yield put({ type: 'query' })
+      }
+    },
+    *showCloneVolumeModalBefore({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'showCloneVolumeModal', payload })
+
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
+      if (nodeTags.status === 200 && diskTags.status === 200) {
+        yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
+      } else {
+        yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
+      }
     },
     *showCreateVolumeModalBefore({
       payload,
-    }, { call, put }) {
+    }, { call, put, all }) {
       yield put({ type: 'showCreateVolumeModal' })
-      const nodeTags = yield call(getNodeTags, payload)
-      const diskTags = yield call(getDiskTags, payload)
+      // TODO: longhorn manager should have an API to get all volume's snapshots or add snapshotList array in GET /v1/volumes
+      const snapshotListRequests = payload.filter(item => item.actions.snapshotList).map(item => call(execAction, item.actions.snapshotList))
+      const snapshotResp = yield all(snapshotListRequests)
+      if (snapshotResp && snapshotResp.length > 0 && snapshotResp.every(resp => resp.status === 200)) {
+        // construct snapshots data by volume name
+        const snapshotsOptions = {}
+        for (const resp of snapshotResp) {
+          if (resp?.links?.self) {
+            const vol = resp?.links.self.split('/').pop()
+            const snapshots = resp.data.filter(d => d.name !== 'volume-head') // no include volume-head
+            sortSnapshots(snapshots)
+            snapshotsOptions[vol] = snapshots
+          }
+        }
+        yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions, snapshotLoading: false } })
+      }
+      const nodeTags = yield call(getNodeTags)
+      const diskTags = yield call(getDiskTags)
       if (nodeTags.status === 200 && diskTags.status === 200) {
         yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
       } else {
@@ -682,6 +720,9 @@ export default {
     updateBackground(state, action) {
       return updateState(state, action)
     },
+    setSnapshotsData(state, action) {
+      return { ...state, ...action.payload }
+    },
     showChangeVolumeModal(state, action) {
       return { ...state, changeVolumeActivate: action.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
     },
@@ -755,7 +796,7 @@ export default {
     hideRecurringJobModal(state) {
       return { ...state, recurringJobModalVisible: false, recurringJobModalKey: Math.random() }
     },
-    showVolumeCloneModal(state, action) {
+    showCloneVolumeModal(state, action) {
       return { ...state, ...action.payload, volumeCloneModalVisible: true, volumeCloneModalKey: Math.random() }
     },
     showAttachHostModal(state, action) {
@@ -782,7 +823,7 @@ export default {
     showBulkEngineUpgradeModal(state, action) {
       return { ...state, ...action.payload, bulkEngineUpgradeModalVisible: true, bulkEngineUpgradeModalKey: Math.random() }
     },
-    hideVolumeCloneModal(state) {
+    hideCloneVolumeModal(state) {
       return { ...state, volumeCloneModalVisible: false }
     },
     hideEngineUpgradeModal(state) {

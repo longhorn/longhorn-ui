@@ -21,16 +21,12 @@ class Snapshots extends React.Component {
     this.onAction = (action) => {
       if (action.type === 'cloneVolumeFromSnapshot') {
         const { volume, snapshot } = action.payload
-        if (!volume || !snapshot) { return }
-        console.log('🚀 ~ Snapshots ~  this.onAction ~ cloneVolumeFromSnapshot:', {
-          ...volume,
-          dataSource: `snap://${volume.name}/${snapshot.name}`,
-        })
         this.props.dispatch({
-          type: 'volume/createClonedVolume',
+          type: 'volume/showCloneVolumeModalBefore',
           payload: {
-            ...volume,
-            dataSource: `snap://${volume.name}/${snapshot.name}`,
+            selectedSnapshot: snapshot,
+            selected: volume,
+            cloneVolumeType: 'snapshot',
           },
         })
         return
@@ -47,14 +43,6 @@ class Snapshots extends React.Component {
           payload: !this.props.showRemoved,
         })
         this.refs.Snapshot.showReomve()
-      }
-      if (action.type === 'createVolumeFromSnapshot') {
-        this.props.dispatch({
-          type: 'volume/createClonedVolume',
-          payload: {
-
-          },
-        })
       }
       if (action.type === 'snapshotBackup') {
         this.setState({

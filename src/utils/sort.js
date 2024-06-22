@@ -46,6 +46,12 @@ export function sortVolume(dataSource) {
   })
 }
 
+export function sortSnapshots(dataSource) {
+  dataSource && dataSource.sort((a, b) => {
+    return new Date(b.created).getTime() - new Date(a.created).getTime()
+  })
+}
+
 export function sortBackups(dataSource) {
   dataSource && dataSource.sort((a, b) => {
     return new Date(b.created).getTime() - new Date(a.created).getTime()

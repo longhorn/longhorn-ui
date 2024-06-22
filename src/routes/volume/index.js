@@ -6,13 +6,16 @@ import moment from 'moment'
 import { Row, Col, Button, Modal, Alert } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
-import CreateVolume from './CreateVolume'
-import CustomColumn from './CustomColumn'
 import ExpansionVolumeSizeModal from './ExpansionVolumeSizeModal'
 import ChangeVolumeModal from './ChangeVolumeModal'
 import BulkChangeVolumeModal from './BulkChangeVolumeModal'
+import CreateVolume from './CreateVolume'
+import CloneVolume from './CloneVolume'
+import CustomColumn from './CustomColumn'
 import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
+import CreateBackupModal from './detail/CreateBackupModal'
+import CommonModal from './components/CommonModal'
 import WorkloadDetailModal from './WorkloadDetailModal'
 import RecurringJobModal from './RecurringJobModal'
 import AttachHost from './AttachHost'
@@ -36,9 +39,6 @@ import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import VolumeBulkActions from './VolumeBulkActions'
-import CreateBackupModal from './detail/CreateBackupModal'
-import CommonModal from './components/CommonModal'
-import VolumeCloneModal from './VolumeCloneModal'
 import {
   getAttachHostModalProps,
   getEngineUpgradeModalProps,
@@ -119,11 +119,11 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
-    const { data: snapshotData, state: snapshotModalState } = this.props.snapshotModal
-    console.log('🚀 ~ Volume ~ snapshotModalState:', snapshotModalState)
-    console.log('🚀 ~ Volume ~ snapshotData:', snapshotData)
     const {
       selected,
+      snapshotsOptions,
+      snapshotLoading,
+      cloneVolumeType,
       selectedRows,
       data,
       createPVAndPVCVisible,
@@ -230,15 +230,17 @@ class Volume extends React.Component {
     if (replicaSoftAntiAffinitySetting) {
       replicaSoftAntiAffinitySettingValue = replicaSoftAntiAffinitySetting?.value.toLowerCase() === 'true'
     }
-    const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options ? defaultDataLocalitySetting.definition.options : []
-    const defaultDataLocalityValue = defaultDataLocalitySetting?.value ? defaultDataLocalitySetting.value : 'disabled'
+    const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
+    const defaultDataLocalityValue = defaultDataLocalitySetting?.value || 'disabled'
     const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
-    const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
-    const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
-    const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
+    const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.firstUpperCase(), value: item })) || []
     if (defaultSnapshotDataIntegrityOption.length > 0) {
       defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
     }
+
+    const backingImageOptions = backingImages?.filter(image => hasReadyBackingDisk(image)) || []
+    const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
+    const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
 
     const volumeFilterMap = {
       healthy: healthyVolume,
@@ -248,6 +250,7 @@ class Volume extends React.Component {
       faulted: faultedVolume,
     }
     let volumes = data
+    // TODO: extract these filter functions to a separate file
     if (field && field === 'status' && volumeFilterMap[stateValue]) {
       volumes = volumeFilterMap[stateValue](volumes)
     } else if (field && field === 'engineImageUpgradable') {
@@ -287,8 +290,6 @@ class Volume extends React.Component {
       })
     }
 
-    console.log('🚀 ~ Volume ~ render ~ all volumes:', volumes)
-
     const volumeListProps = {
       dataSource: volumes,
       loading,
@@ -319,9 +320,10 @@ class Volume extends React.Component {
       },
       showVolumeCloneModal(record) {
         dispatch({
-          type: 'volume/showVolumeCloneModal',
+          type: 'volume/showCloneVolumeModalBefore',
           payload: {
             selected: record,
+            cloneVolumeType: 'volume',
           },
         })
       },
@@ -626,7 +628,6 @@ class Volume extends React.Component {
       },
     }
 
-
     const volumeFilterProps = {
       location,
       stateOption: [
@@ -788,7 +789,8 @@ class Volume extends React.Component {
         diskSelector: [],
         nodeSelector: [],
       },
-      volumes,
+      volumeOptions: volumes,
+      snapshotsOptions,
       nodeTags,
       defaultDataLocalityOption,
       defaultDataLocalityValue,
@@ -797,7 +799,8 @@ class Volume extends React.Component {
       v1DataEngineEnabled,
       v2DataEngineEnabled,
       diskTags,
-      backingImages: backingImages?.filter(image => hasReadyBackingDisk(image)) || [],
+      backingImageOptions,
+      snapshotLoading,
       tagsLoading,
       hosts,
       visible: createVolumeModalVisible,
@@ -1169,23 +1172,28 @@ class Volume extends React.Component {
     }
 
     const volumeCloneModalProps = {
-      selectedVolume: selected,
+      cloneType: cloneVolumeType,
+      volume: selected,
       visible: volumeCloneModalVisible,
+      diskTags,
+      nodeTags,
+      tagsLoading,
+      v1DataEngineEnabled,
+      v2DataEngineEnabled,
+      defaultDataLocalityOption,
+      defaultDataLocalityValue,
+      backingImageOptions,
       onOk(volume) {
-        if (selected.name && volume) {
+        if (volume) {
           dispatch({
             type: 'volume/createClonedVolume',
-            payload: {
-              ...volume,
-              name: volume.name,
-              dataSource: `vol://${selected.name}`,
-            },
+            payload: volume,
           })
         }
       },
       onCancel() {
         dispatch({
-          type: 'volume/hideVolumeCloneModal',
+          type: 'volume/hideCloneVolumeModal',
         })
       },
     }
@@ -1193,11 +1201,7 @@ class Volume extends React.Component {
     const addVolume = () => {
       dispatch({
         type: 'volume/showCreateVolumeModalBefore',
-      })
-      this.setState({
-        CreateVolumeGen() {
-          return <CreateVolume {...createVolumeModalProps} />
-        },
+        payload: volumes,
       })
     }
 
@@ -1274,7 +1278,7 @@ class Volume extends React.Component {
         {detachHostModalVisible ? <DetachHost key={detachHostModalKey} {...detachHostModalProps} /> : ''}
         {engineUpgradeModalVisible ? <EngineUgrade key={engineUpgradeModaKey} {...engineUpgradeModalProps} /> : ''}
         {bulkEngineUpgradeModalVisible ? <EngineUgrade key={bulkEngineUpgradeModalKey} {...bulkEngineUpgradeModalProps} /> : ''}
-        {volumeCloneModalVisible ? <VolumeCloneModal key={volumeCloneModalKey} {...volumeCloneModalProps} /> : ''}
+        {volumeCloneModalVisible ? <CloneVolume key={volumeCloneModalKey} {...volumeCloneModalProps} /> : ''}
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {updateReplicaCountModalVisible ? <UpdateReplicaCount key={updateReplicaCountModalKey} {...updateReplicaCountModalProps} /> : ''}
         {updateBulkReplicaCountModalVisible ? <UpdateBulkReplicaCount key={updateBulkReplicaCountModalKey} {...updateBulKReplicaCountModalProps} /> : ''}

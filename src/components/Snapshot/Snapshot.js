@@ -31,10 +31,11 @@ function VolumeHead(props) {
         <Icon type="caret-right" />Volume Head
         </Button>
     </div>
-    </Tooltip>) : (<div className="snapshot-current-desc">
+    </Tooltip>) : (
+      <div className="snapshot-current-desc">
         <Button>
           <Icon type="caret-right" />Volume Head
-          </Button>
+        </Button>
       </div>)
   )
 }
@@ -49,7 +50,6 @@ VolumeHead.propTypes = {
 // render each snapshot action dropdown
 function SnapshotIcon(props, snapshotProps) {
   function doAction(key) {
-    console.log('🚀 ~ doAction ~ key:', key)
     snapshotProps.onAction({
       type: key,
       payload: {
@@ -260,7 +260,6 @@ class Snapshot extends React.Component {
   render() {
     let props = this.props
     let children = null
-    console.log('props.snapshotTree', this.props.snapshotTree)
     if (props.snapshotTree) {
       children = props.snapshotTree.length > 0 ? loop(props.snapshotTree, props) : <TreeNode key="1" title={CurrentPoint(props)} />
       if (props.loading || this.state.loadingState !== props.loading) {

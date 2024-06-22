@@ -18,7 +18,6 @@ export async function execAction(url, params, silence = false) {
 }
 
 export async function create(params) {
-  console.log('🚀 ~ create params:', params)
   return request({
     url: '/v1/volumes',
     method: 'post',

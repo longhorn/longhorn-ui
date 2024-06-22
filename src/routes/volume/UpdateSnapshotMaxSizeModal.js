@@ -43,7 +43,7 @@ const modal = ({
     return 0
   }
 
-  let minValue = formatSize()
+  const minValue = formatSize()
 
   function unitChange(value) {
     let currentSize = getFieldsValue().snapshotMaxSize
