@@ -95,6 +95,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   } = volume
   const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
+  console.log('🚀 ~ VolumeDetail ~ snapshotModalState:', snapshotModalState)
+  console.log('🚀 ~ VolumeDetail ~ snapshotData:', snapshotData)
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data

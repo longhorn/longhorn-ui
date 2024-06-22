@@ -119,6 +119,9 @@ class Volume extends React.Component {
   render() {
     const me = this
     const { dispatch, loading, location } = this.props
+    const { data: snapshotData, state: snapshotModalState } = this.props.snapshotModal
+    console.log('🚀 ~ Volume ~ snapshotModalState:', snapshotModalState)
+    console.log('🚀 ~ Volume ~ snapshotData:', snapshotData)
     const {
       selected,
       selectedRows,
@@ -1307,6 +1310,7 @@ Volume.propTypes = {
   recurringJob: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
+  snapshotModal: PropTypes.object,
 }
 
-export default connect(({ engineimage, host, volume, setting, backingImage, backup, recurringJob, loading }) => ({ engineimage, host, volume, setting, backingImage, backup, recurringJob, loading: loading.models.volume }))(Volume)
+export default connect(({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, recurringJob, loading }) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, recurringJob, loading: loading.models.volume }))(Volume)
