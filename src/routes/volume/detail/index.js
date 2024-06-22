@@ -23,6 +23,7 @@ import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
 import EventList from './EventList'
 import SnapshotList from './SnapshotList'
+import CloneVolume from '../CloneVolume'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
@@ -30,6 +31,7 @@ import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
 import CommonModal from '../components/CommonModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
+import { hasReadyBackingDisk } from '../../../utils/status'
 import {
   getAttachHostModalProps,
   getEngineUpgradeModalProps,
@@ -49,9 +51,72 @@ import {
 
 const confirm = Modal.confirm
 
+const hasReplica = (selected, name) => {
+  if (selected && selected.replicas && selected.replicas.length > 0) {
+    return selected.replicas.some((item) => item.name === name)
+  }
+  return false
+}
+const hasEngine = (selected, name) => {
+  if (selected && selected.replicas && selected.replicas.length > 0) {
+    return selected.controllers.some((item) => item.name === name)
+  }
+  return false
+}
+
+function filterEventLogByName(eventlog, selectedVolume) {
+  if (!eventlog || !eventlog.data) {
+    return []
+  }
+  return eventlog.data.filter((ele) => {
+    if (ele?.event?.involvedObject.name && ele.event.involvedObject.kind && selectedVolume) {
+      switch (ele.event.involvedObject.kind) {
+        case 'Engine':
+          return hasEngine(selectedVolume, ele.event.involvedObject.name)
+        case 'Replica':
+          return hasReplica(selectedVolume, ele.event.involvedObject.name)
+        case 'Volume':
+          return selectedVolume.id === ele.event.involvedObject.name
+        default:
+          return false
+      }
+    }
+    return false
+  })
+}
+
+const mapEventLogs = (eventLogs) => {
+  return eventLogs?.map((ele, index) => ({
+    count: ele?.event?.count || '',
+    firstTimestamp: ele?.event?.firstTimestamp || '',
+    lastTimestamp: ele?.event?.lastTimestamp || '',
+    timestamp: ele?.event?.lastTimestamp ? Date.parse(ele.event.lastTimestamp) : 0,
+    type: ele?.event?.type || '',
+    reason: ele?.event?.reason || '',
+    message: ele?.event?.message || '',
+    source: ele?.event?.source?.component || '',
+    kind: ele?.event?.involvedObject?.kind || '',
+    name: ele?.event?.involvedObject?.name || '',
+    id: index,
+  })) || []
+}
+
+const getEventData = (eventlog, selectedVolume) => {
+  const eventLogs = filterEventLogByName(eventlog, selectedVolume)
+  const mappedEventLogs = mapEventLogs(eventLogs)
+  mappedEventLogs.sort((a, b) => b.timestamp - a.timestamp)
+  return mappedEventLogs
+}
+
 function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage, recurringJob }) {
   const {
     data,
+    cloneVolumeType,
+    selectedSnapshot,
+    selected,
+    nodeTags,
+    diskTags,
+    tagsLoading,
     attachHostModalVisible,
     engineUpgradeModalVisible,
     salvageModalVisible,
@@ -67,6 +132,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     changeVolumeActivate,
     changeVolumeModalVisible,
     previousChecked,
+    volumeCloneModalVisible,
     expansionVolumeSizeModalVisible,
     expansionVolumeSizeModalKey,
     updateDataLocalityModalVisible,
@@ -95,81 +161,44 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   } = volume
   const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
-  console.log('🚀 ~ VolumeDetail ~ snapshotModalState:', snapshotModalState)
-  console.log('🚀 ~ VolumeDetail ~ snapshotData:', snapshotData)
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data
   const selectedVolume = data.find(item => item.id === volumeId)
   const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
+
+  const backingImageOptions = backingImage?.data?.filter(image => hasReadyBackingDisk(image)) || []
   const settings = setting.data
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
   const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
   const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
-  const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
-  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
+
+  const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
+  const defaultDataLocalityValue = defaultDataLocalitySetting?.value || 'disabled'
+
+  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.firstUpperCase(), value: item })) || []
+
   if (defaultSnapshotDataIntegrityOption.length > 0) {
-    defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
+    defaultSnapshotDataIntegrityOption.unshift({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
   }
-  const hasReplica = (selected, name) => {
-    if (selected && selected.replicas && selected.replicas.length > 0) {
-      return selected.replicas.some((item) => {
-        return item.name === name
-      })
-    }
 
-    return false
-  }
-  const hasEngine = (selected, name) => {
-    if (selected && selected.replicas && selected.replicas.length > 0) {
-      return selected.controllers.some((item) => {
-        return item.name === name
-      })
-    }
+  const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
+  const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
+  const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
+  const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
 
-    return false
-  }
-  const eventData = eventlog && eventlog.data ? eventlog.data.filter((ele) => {
-    if (ele.event && ele.event.involvedObject && ele.event.involvedObject.name && ele.event.involvedObject.kind && selectedVolume) {
-      switch (ele.event.involvedObject.kind) {
-        case 'Engine':
-          return hasEngine(selectedVolume, ele.event.involvedObject.name)
-        case 'Replica':
-          return hasReplica(selectedVolume, ele.event.involvedObject.name)
-        case 'Volume':
-          return selectedVolume.id === ele.event.involvedObject.name
-        default:
-          return false
-      }
-    }
+  const eventData = getEventData(eventlog, selectedVolume)
 
-    return false
-  }).map((ele, index) => {
-    return {
-      count: ele.event ? ele.event.count : '',
-      firstTimestamp: ele.event && ele.event.firstTimestamp ? ele.event.firstTimestamp : '',
-      lastTimestamp: ele.event && ele.event.lastTimestamp ? ele.event.lastTimestamp : '',
-      timestamp: ele.event && ele.event.lastTimestamp ? Date.parse(ele.event.lastTimestamp) : 0,
-      type: ele.event ? ele.event.type : '',
-      reason: ele.event ? ele.event.reason : '',
-      message: ele.event ? ele.event.message : '',
-      source: ele.event && ele.event.source && ele.event.source.component ? ele.event.source.component : '',
-      kind: ele.event && ele.event.involvedObject && ele.event.involvedObject.kind ? ele.event.involvedObject.kind : '',
-      name: ele.event && ele.event.involvedObject && ele.event.involvedObject.name ? ele.event.involvedObject.name : '',
-      id: index,
-    }
-  }) : []
-  eventData.sort((a, b) => {
-    return b.timestamp - a.timestamp
-  })
   if (!selectedVolume) {
     return (<div></div>)
   }
+
   const found = hosts.find(h => selectedVolume.controller && h.id === selectedVolume.controller.hostId)
   if (found) {
     selectedVolume.host = found.name
   }
   selectedVolume.replicas.forEach(replica => { replica.volState = selectedVolume.state })
+
   const replicaListProps = {
     dataSource: selectedVolume.replicas || [],
     purgeStatus: selectedVolume.purgeStatus || [],
@@ -229,14 +258,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
-    // showVolumeCloneModal(record) {
-    //   dispatch({
-    //     type: 'volume/showVolumeCloneModal',
-    //     payload: {
-    //       selected: record,
-    //     },
-    //   })
-    // },
+    showVolumeCloneModal(record) {
+      dispatch({
+        type: 'volume/showCloneVolumeModalBefore',
+        payload: {
+          selected: record,
+        },
+      })
+    },
     showAttachHost(record) {
       dispatch({
         type: 'volume/showAttachHostModal',
@@ -645,6 +674,34 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
   }
 
+  const volumeCloneModalBySnapshotProps = {
+    cloneType: cloneVolumeType,
+    volume: selected,
+    snapshot: selectedSnapshot,
+    visible: volumeCloneModalVisible,
+    diskTags,
+    nodeTags,
+    tagsLoading,
+    v1DataEngineEnabled,
+    v2DataEngineEnabled,
+    defaultDataLocalityOption,
+    defaultDataLocalityValue,
+    backingImageOptions,
+    onOk(vol) {
+      if (vol) {
+        dispatch({
+          type: 'volume/createClonedVolume',
+          payload: vol,
+        })
+      }
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideCloneVolumeModal',
+      })
+    },
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div>
@@ -677,6 +734,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
             <EventList {...eventListProps} />
           </Col>
         </Row>
+        {volumeCloneModalVisible && <CloneVolume {...volumeCloneModalBySnapshotProps} />}
         {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
         {detachHostModalVisible && <DetachHost key={detachHostModalKey} {...detachHostModalProps} />}
         {engineUpgradeModalVisible && <EngineUpgrade {...engineUpgradeModalProps} />}
