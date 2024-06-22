@@ -15,6 +15,7 @@ function StartPoint() {
   )
 }
 
+// display volume head
 function VolumeHead(props) {
   return (
     props ? (<Tooltip placement="right"
@@ -45,8 +46,10 @@ VolumeHead.propTypes = {
   usercreated: PropTypes.string,
 }
 
+// render each snapshot action dropdown
 function SnapshotIcon(props, snapshotProps) {
   function doAction(key) {
+    console.log('🚀 ~ doAction ~ key:', key)
     snapshotProps.onAction({
       type: key,
       payload: {
@@ -104,7 +107,7 @@ function SnapshotIcon(props, snapshotProps) {
           { !snapshotProps.disableBackup ? <div style={{ padding: '0px 12px' }}>Backup</div> : <Tooltip title={snapshotProps.disableBackupMessage}><div className="disable-dropdown-menu">Backup</div></Tooltip>}
         </Menu.Item> : ''
       }
-      <Menu.Item key="volumeClonedFromSnapshot">
+      <Menu.Item key="cloneVolumeFromSnapshot">
         <div style={{ padding: '0px 12px' }}>Clone Volume</div>
       </Menu.Item>
       <Menu.Item key="snapshotDelete">
@@ -194,6 +197,7 @@ SnapshotIcon.propTypes = {
   usercreated: PropTypes.string,
 }
 
+// render volume head point with take snapshot action
 function CurrentPoint(props) {
   function onClick() {
     props.onAction({

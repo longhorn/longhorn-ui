@@ -19,7 +19,22 @@ class Snapshots extends React.Component {
       snapshotListUrl: '',
     }
     this.onAction = (action) => {
-      console.log('🚀 ~ Snapshots ~ constructor ~ action:', action)
+      if (action.type === 'cloneVolumeFromSnapshot') {
+        const { volume, snapshot } = action.payload
+        if (!volume || !snapshot) { return }
+        console.log('🚀 ~ Snapshots ~  this.onAction ~ cloneVolumeFromSnapshot:', {
+          ...volume,
+          dataSource: `snap://${volume.name}/${snapshot.name}`,
+        })
+        this.props.dispatch({
+          type: 'volume/createClonedVolume',
+          payload: {
+            ...volume,
+            dataSource: `snap://${volume.name}/${snapshot.name}`,
+          },
+        })
+        return
+      }
       if (action.type === 'backup') {
         this.setState({
           ...this.state,
@@ -172,7 +187,7 @@ class Snapshots extends React.Component {
     }
   }
 
-  createBackupBySnapsotModal = () => {
+  createBackupBySnapshotModal = () => {
     let me = this
     return {
       item: {
@@ -314,7 +329,7 @@ class Snapshots extends React.Component {
           Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
-        {this.state.createBackBySnapsotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapsotModalKey} {...this.createBackupBySnapsotModal()} /> : ''}
+        {this.state.createBackBySnapsotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapsotModalKey} {...this.createBackupBySnapshotModal()} /> : ''}
       </Card>
     )
   }

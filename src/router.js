@@ -114,7 +114,7 @@ const Routers = function ({ history, app }) {
             <Route exact path={`${path}instanceManager`} component={instanceManager} />
             <Route exact path={`${path}backingImage`} component={backingImage} />
             <Route exact path={`${path}recurringJob`} component={recurringJob} />
-            <Route exact path={`${path}recurringJob`} component={recurringJob} />
+            {/* <Route exact path={`${path}recurringJob`} component={recurringJob} /> */}
             <Route path={`${path}engineimage/:id`} component={engineimageDetail} />
             <Route path={`${path}orphanedData`} component={orphanedData} />
             <Route path={`${path}systemBackups`} component={systemBackups} />
