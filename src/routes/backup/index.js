@@ -288,6 +288,7 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
     nodeTags,
     diskTags,
     tagsLoading,
+    backupVolumes,
     backingImages,
     v1DataEngineEnabled,
     v2DataEngineEnabled,

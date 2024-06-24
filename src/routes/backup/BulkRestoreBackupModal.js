@@ -46,28 +46,50 @@ const modal = ({
     backingImage: i.backingImage,
     encrypted: false,
     restoreVolumeRecurringJob: 'ignored',
-    nodeSelector: [],
-    diskSelector: [],
+    nodeSelector: i.nodeSelector || [],
+    diskSelector: i.diskSelector || [],
   }))
-
   const [currentTab, setCurrentTab] = useState(0)
   const [restoreBackupConfigs, setRestoreBackupConfigs] = useState(initConfigs)
 
-  function handleOk() {
-    onOk(restoreBackupConfigs)
-  }
+  const handleOk = () => onOk(restoreBackupConfigs)
 
-  const handleFieldChange = () => {
+  const updateRestoreBackupConfigs = (key, newValue) => {
     setRestoreBackupConfigs(prev => {
       const newConfigs = [...prev]
       const data = {
         ...getFieldsValue(),
-        name: getFieldValue('name')?.trimLeftAndRight() || '',
+        [key]: newValue,
         fromBackup: items[currentTab]?.fromBackup || '',
       }
       newConfigs.splice(currentTab, 1, data)
       return newConfigs
     })
+  }
+
+  const handleNameChange = (e) => updateRestoreBackupConfigs('name', e.target.value)
+  const handleReplicasNumberChange = (newNumber) => updateRestoreBackupConfigs('numberOfReplicas', newNumber)
+  const handleEncryptedCheck = (e) => updateRestoreBackupConfigs('encrypted', e.target.checked)
+  const handleDataEngineChange = (value) => updateRestoreBackupConfigs('dataEngine', value)
+  const handleAccessModeChange = (value) => updateRestoreBackupConfigs('accessMode', value)
+  const handleRecurringJobChange = (value) => updateRestoreBackupConfigs('restoreVolumeRecurringJob', value)
+  const handleNodeTagRemove = (value) => {
+    const oldNodeTags = restoreBackupConfigs[currentTab]?.nodeSelector
+    const newNodeSelector = oldNodeTags?.filter(tag => tag !== value) || []
+    updateRestoreBackupConfigs('nodeSelector', newNodeSelector)
+  }
+  const handleNodeTagAdd = (value) => {
+    const oldNodeTags = restoreBackupConfigs[currentTab]?.nodeSelector
+    updateRestoreBackupConfigs('nodeSelector', [...oldNodeTags, value])
+  }
+  const handleDiskTagRemove = (value) => {
+    const oldDiskTags = restoreBackupConfigs[currentTab]?.diskSelector
+    const newDiskSelector = oldDiskTags?.filter(tag => tag !== value) || []
+    updateRestoreBackupConfigs('diskSelector', newDiskSelector)
+  }
+  const handleDiskTagAdd = (value) => {
+    const oldDiskTags = restoreBackupConfigs[currentTab]?.diskSelector
+    updateRestoreBackupConfigs('diskSelector', [...oldDiskTags, value])
   }
 
   const handleApplyAll = () => {
@@ -93,44 +115,16 @@ const modal = ({
     message.success(`Successfully apply ${getFieldValue('name')} config to all other restore volumes`, 5)
   }
 
-  const handleEncryptedCheck = (e) => {
-    const isChecked = e.target.checked
-    setRestoreBackupConfigs(prev => {
-      const newConfigs = [...prev]
-      const data = {
-        ...getFieldsValue(),
-        encrypted: isChecked,
-        name: getFieldValue('name')?.trimLeftAndRight() || '',
-        fromBackup: items[currentTab]?.fromBackup || '',
-      }
-      newConfigs.splice(currentTab, 1, data)
-      return newConfigs
-    })
-  }
-
   const allFieldsError = { ...getFieldsError() }
   const hasFieldsError = Object.values(allFieldsError).some(fieldError => fieldError !== undefined) || false
 
   const handleTabClick = (key) => {
     if (hasFieldsError) {
-      message.error('Please fill in all required fields before switching to another restore volume tab', 5)
+      message.error('Please correct the error fields before switching to another tab', 5)
       return
     }
     validateFields((errors) => {
-      if (errors) {
-        return
-      }
-      const data = {
-        ...getFieldsValue(),
-        name: getFieldValue('name').trimLeftAndRight(),
-        fromBackup: items[currentTab]?.fromBackup || '',
-      }
-      // replace this config with the current form data when click tab
-      setRestoreBackupConfigs(prev => {
-        const newConfigs = [...prev]
-        newConfigs.splice(currentTab, 1, data)
-        return newConfigs
-      })
+      if (errors) return errors
     })
 
     const newIndex = items.findIndex(i => i.backupName === key)
@@ -154,7 +148,12 @@ const modal = ({
   }
 
   const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
-  const alertMessage = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
+  const alertMessage = <p>
+    1. If there is another volume with the same name ({getFieldsValue().name}), the restore action will fail.
+    <br />
+    2. The restore volume name ({getFieldsValue().name}) is the same as this backup volume, by which the backups created after restoration reside in this backup volume as well.
+    </p>
+
   const tooltipTitle = `Apply this ${getFieldValue('name')} config to all the other restore volumes, this action will overwrite your previous filled in configs`
   const modalOpts = {
     title: 'Restore Multiple Latest Backups',
@@ -189,7 +188,7 @@ const modal = ({
           placement="right"
           visible={showWarning}
           content={
-          <div style={{ maxWidth: 250 }}>
+          <div style={{ maxWidth: 450 }}>
             <Alert message={alertMessage} type="warning" />
           </div>
         }>
@@ -202,7 +201,7 @@ const modal = ({
                   message: 'Volume name is required',
                 },
               ],
-            })(<Input onChange={handleFieldChange} />)}
+            })(<Input onChange={handleNameChange} />)}
           </FormItem>
         </Popover>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
@@ -214,7 +213,7 @@ const modal = ({
                 message: 'Please input the number of replicas',
               },
             ],
-          })(<InputNumber min={1} max={10} onChange={handleFieldChange} />)
+          })(<InputNumber min={1} max={10} onChange={handleReplicasNumberChange} />)
           }
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
@@ -236,7 +235,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Select onSelect={handleFieldChange}>
+          })(<Select onSelect={handleDataEngineChange}>
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
@@ -244,7 +243,7 @@ const modal = ({
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode,
-          })(<Select onSelect={handleFieldChange}>
+          })(<Select onSelect={handleAccessModeChange}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
@@ -270,7 +269,7 @@ const modal = ({
         <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
           {getFieldDecorator('restoreVolumeRecurringJob', {
             initialValue: 'ignored',
-          })(<Select onSelect={handleFieldChange}>
+          })(<Select onSelect={handleRecurringJobChange}>
             <Option key={'enabled'} value={'enabled'}>Enabled</Option>
             <Option key={'disabled'} value={'disabled'}>Disabled</Option>
             <Option key={'ignored'} value={'ignored'}>Ignored</Option>
@@ -280,7 +279,7 @@ const modal = ({
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
               initialValue: [],
-            })(<Select mode="tags" onSelect={handleFieldChange}>
+            })(<Select mode="tags" onSelect={handleNodeTagAdd} onDeselect={handleNodeTagRemove}>
             {nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
             </Select>)}
           </FormItem>
@@ -289,7 +288,7 @@ const modal = ({
           <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('diskSelector', {
               initialValue: [],
-            })(<Select mode="tags" onSelect={handleFieldChange}>
+            })(<Select mode="tags" onSelect={handleDiskTagAdd} onDeselect={handleDiskTagRemove}>
             {diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
             </Select>)}
           </FormItem>

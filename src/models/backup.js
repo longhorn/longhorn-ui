@@ -5,7 +5,6 @@ import queryString from 'query-string'
 import { sortTable } from '../utils/sort'
 import { getSorter, saveSorter, getBackupVolumeName } from '../utils/store'
 import { enableQueryData } from '../utils/dataDependency'
-import { routerRedux } from 'dva/router'
 
 export default {
   namespace: 'backup',
@@ -193,7 +192,6 @@ export default {
       yield call(restore, payload)
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
-      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *queryDiskTagsAndGetNodeTags({
       payload,
@@ -213,12 +211,14 @@ export default {
       yield put({ type: 'hideRestoreBackupModal' })
       if (payload.length > 0) {
         for (let i = 0; i < payload.length; i++) {
-          yield call(restore, payload[i])
+          const resp = yield call(restore, payload[i])
+          if (resp && resp.status === 200) {
+            message.success(`Successfully restore backup volume ${payload[i].name}`, 3)
+          }
         }
       }
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
-      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *delete({
       payload,
@@ -234,7 +234,6 @@ export default {
       yield call(createVolume, payload)
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
-      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *syncBackupVolume({
       payload,
@@ -257,10 +256,16 @@ export default {
       payload,
     }, { call, put, select }) {
       yield put({ type: 'hideBulkCreateVolumeStandModalVisible' })
-      yield payload.map((item) => call(createVolume, item))
+      if (payload.length > 0) {
+        for (let i = 0; i < payload.length; i++) {
+          const resp = yield call(createVolume, payload[i])
+          if (resp && resp.status === 200) {
+            message.success(`Successfully create DR volume ${payload[i].name}`, 3)
+          }
+        }
+      }
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
-      yield put(routerRedux.push({ pathname: '/volume' }))
     },
     *CreateStandVolume({
       payload,
