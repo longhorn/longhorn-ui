@@ -69,6 +69,7 @@ class BackingImage extends React.Component {
     const { uploadFile } = this
     const { data: volumeData } = this.props.volume
     const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows } = this.props.backingImage
+    console.log('🚀 ~ BackingImage ~ render ~ data:', data)
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
     const { field, value, createdFromValue } = queryString.parse(this.props.location.search)
 
