@@ -12,14 +12,47 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
     downloadBackingImage,
     showUpdateMinCopiesCount,
   }
-  const state = (record) => {
+
+  const dynamicStateIcon = (record) => {
     if (record.deletionTimestamp) {
       // Deleting
-      return (<Tooltip title={'Deleting'}><Icon type="sync" style={{ marginLeft: 10, color: '#f5222d' }} spin /></Tooltip>)
+      return (
+        <Tooltip title="Deleting backing image">
+          <Icon type="delete" className="color-error" />
+        </Tooltip>
+      )
     }
-    if (record.diskStateMap && Object.keys(record.diskStateMap).every((key) => record.diskStateMap[key] === 'failed')) {
+    if (Object.values(record.diskFileStatusMap).length > 0
+    && Object.values(record.diskFileStatusMap).some((diskStatus) => ['starting', 'pending', 'in-progress', 'ready-for-transfer'].includes(diskStatus.state))) {
+      // some creating states
+      const state = Object.values(record.diskFileStatusMap)[0]?.state || ''
+      const percentage = Object.values(record.diskFileStatusMap)[0]?.progress?.toString() || ''
+      return (
+        <Tooltip title={state}>
+          <Icon type="sync" style={{ color: '#00558b', marginRight: 4 }} spin />
+          {percentage && <span style={{ color: '#00558b' }}>{`${percentage} %`}</span>}
+        </Tooltip>
+      )
+    }
+
+    return ''
+  }
+
+  const staticStateIcon = (record) => {
+    if (record.secret !== '' || record.secretNamespace !== '') {
+      // encrypted backing image
+      return (
+        <Tooltip title="Encrypted Backing Image">
+          <Icon className="color-warning" type="lock" />
+        </Tooltip>
+      )
+    }
+
+    if (record.diskFileStatusMap && Object.values(record.diskFileStatusMap).every((diskStatus) => diskStatus.state.includes('failed'))) {
+      // unavailable backing image
       return (<Tooltip title={'The backingImage is unavailable'}><Icon type="warning" style={{ marginLeft: 10, color: '#f5222d' }} /></Tooltip>)
     }
+
     return ''
   }
 
@@ -31,15 +64,11 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
       width: 150,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => {
-        const isEncrypted = record.secret !== '' || record.secretNamespace !== ''
         return (
           <div onClick={() => { showDiskStateMapDetail(record) }} style={{ width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {isEncrypted && (
-              <Tooltip title="Encrypted Backing Image">
-                <Icon className="color-warning" type="lock" />
-              </Tooltip>
-            )}
-            <Button type="link" style={{ width: 'fit-content', paddingLeft: 8 }} block>{text}{state(record)}</Button>
+            {staticStateIcon(record)}
+            <Button type="link" style={{ width: 'fit-content', paddingLeft: 8, paddingRight: 8 }} block>{text}</Button>
+            {dynamicStateIcon(record)}
           </div>
         )
       },

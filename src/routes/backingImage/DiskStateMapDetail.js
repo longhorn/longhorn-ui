@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Modal, Progress, Tooltip, Card, Icon } from 'antd'
 import DiskStateMapActions from './DiskStateMapActions'
 import { ModalBlur, DropOption } from '../../components'
-import { diskStatusColorMap } from '../../utils/filter'
+import { diskStatusColorMap } from '../../utils/status'
 import style from './BackingImage.less'
 const confirm = Modal.confirm
 
@@ -24,9 +24,7 @@ const modal = ({
   diskStateMapDeleteLoading,
 }) => {
   // update detail list
-  let currentData = backingImages.find((item) => {
-    return item.id === selected.id
-  })
+  const currentData = backingImages.find((item) => item.id === selected.id) || {}
 
   const modalOpts = {
     title: <p style={{ fontWeight: '700', fontSize: '18px', marginBottom: 0 }}>{currentData.name}</p>,

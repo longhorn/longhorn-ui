@@ -6,7 +6,8 @@ import { formatMib } from '../../../utils/formatter'
 import ResourceChart from './resourceChart'
 import ResourceDetail from './resourceDetail'
 import styles from './resourceOverview.less'
-import { nodeStatusColorMap, healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
+import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
+import { nodeStatusColorMap } from '../../../utils/status'
 
 class ResourceOverview extends React.Component {
   constructor(props) {
