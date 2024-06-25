@@ -93,7 +93,8 @@ class BackingImage extends React.Component {
     const { uploadFile } = this
     const { data: settingData } = this.props.setting
     const { data: volumeData } = this.props.volume
-    const { data,
+    const {
+      data,
       selected,
       nodeTags,
       diskTags,

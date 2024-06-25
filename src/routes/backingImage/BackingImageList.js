@@ -31,9 +31,15 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
       width: 150,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => {
+        const isEncrypted = record.secret !== '' || record.secretNamespace !== ''
         return (
-          <div onClick={() => { showDiskStateMapDetail(record) }} style={{ width: '100%', cursor: 'pointer' }}>
-            <Button type="link" block>{text}{state(record)}</Button>
+          <div onClick={() => { showDiskStateMapDetail(record) }} style={{ width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {isEncrypted && (
+              <Tooltip title="Encrypted Backing Image">
+                <Icon className="color-warning" type="lock" />
+              </Tooltip>
+            )}
+            <Button type="link" style={{ width: 'fit-content', paddingLeft: 8 }} block>{text}{state(record)}</Button>
           </div>
         )
       },
