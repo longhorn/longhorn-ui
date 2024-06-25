@@ -12,6 +12,8 @@ function actions({ selected, deleteBackingImage, downloadBackingImage }) {
       case 'delete':
         confirm({
           title: `Are you sure you want to delete backing image ${record.name}?`,
+          okType: 'danger',
+          okText: 'Delete',
           onOk() {
             deleteBackingImage(record)
           },
