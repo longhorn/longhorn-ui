@@ -71,14 +71,10 @@ export default {
           yield put({ type: 'query' })
           let data = yield select(state => state.backingImage.data)
           if (data && data.length > 0) {
-            let currentBackingImage = data.find((item) => {
-              return item.name === payload.name
-            })
+            const currentBackingImage = data.find((item) => item.name === payload.name)
             if (currentBackingImage && currentBackingImage.diskFileStatusMap) {
-              let diskMap = currentBackingImage.diskFileStatusMap
-              canUpload = Object.keys(diskMap).some((key) => {
-                return diskMap[key].state === 'pending'
-              })
+              const diskMap = currentBackingImage.diskFileStatusMap
+              canUpload = Object.keys(diskMap).some((key) => diskMap[key].state === 'pending')
               if (canUpload) {
                 break
               }
