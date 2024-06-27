@@ -6,9 +6,9 @@ import moment from 'moment'
 import { Row, Col, Button, Modal, Alert } from 'antd'
 import queryString from 'query-string'
 import VolumeList from './VolumeList'
-import ExpansionVolumeSizeModal from './ExpansionVolumeSizeModal'
-import ChangeVolumeModal from './ChangeVolumeModal'
+import BulkCloneVolumeModal from './BulkCloneVolumeModal'
 import BulkChangeVolumeModal from './BulkChangeVolumeModal'
+import ChangeVolumeModal from './ChangeVolumeModal'
 import CreateVolume from './CreateVolume'
 import CloneVolume from './CloneVolume'
 import CustomColumn from './CustomColumn'
@@ -16,6 +16,7 @@ import CreatePVAndPVC from './CreatePVAndPVC'
 import CreatePVAndPVCSingle from './CreatePVAndPVCSingle'
 import CreateBackupModal from './detail/CreateBackupModal'
 import CommonModal from './components/CommonModal'
+import ExpansionVolumeSizeModal from './ExpansionVolumeSizeModal'
 import WorkloadDetailModal from './WorkloadDetailModal'
 import RecurringJobModal from './RecurringJobModal'
 import AttachHost from './AttachHost'
@@ -168,6 +169,7 @@ class Volume extends React.Component {
       previousNamespace,
       expansionVolumeSizeModalVisible,
       expansionVolumeSizeModalKey,
+      bulkCloneVolumeVisible,
       bulkExpandVolumeModalVisible,
       bulkExpandVolumeModalKey,
       updateBulkReplicaCountModalVisible,
@@ -907,6 +909,28 @@ class Volume extends React.Component {
       },
     }
 
+    const bulkCloneVolumeModalProps = {
+      selectedRows,
+      visible: bulkCloneVolumeVisible,
+      diskTags,
+      nodeTags,
+      tagsLoading,
+      v1DataEngineEnabled,
+      v2DataEngineEnabled,
+      defaultDataLocalityOption,
+      defaultDataLocalityValue,
+      backingImageOptions,
+      onOk(params) {
+        dispatch({
+          type: 'volume/bulkCloneVolume',
+          payload: params,
+        })
+      },
+      onCancel() {
+        dispatch({ type: 'volume/hideBulkCloneVolume' })
+      },
+    }
+
     const createPVAndPVCProps = {
       item: defaultNamespace,
       visible: createPVAndPVCVisible,
@@ -1028,6 +1052,14 @@ class Volume extends React.Component {
           createBackModalKey: Math.random(),
           createBackModalVisible: true,
           selectedRows: actions,
+        })
+      },
+      showBulkCloneVolume(record) {
+        dispatch({
+          type: 'volume/showBulkCloneVolumeModalBefore',
+          payload: {
+            selectedRows: record,
+          },
         })
       },
       bulkExpandVolume(actions) {
@@ -1266,6 +1298,7 @@ class Volume extends React.Component {
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
         {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
+        {bulkCloneVolumeVisible ? <BulkCloneVolumeModal {...bulkCloneVolumeModalProps} /> : ''}
         {bulkChangeVolumeModalVisible ? <BulkChangeVolumeModal key={bulkChangeVolumeModalKey} {...bulkChangeVolumeModalProps} /> : ''}
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps} /> : ''}
         {bulkExpandVolumeModalVisible ? <ExpansionVolumeSizeModal key={bulkExpandVolumeModalKey} {...bulkExpansionVolumeSizeModalProps} /> : '' }
