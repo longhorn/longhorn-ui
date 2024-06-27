@@ -17,6 +17,7 @@ function bulkActions({
   bulkExpandVolume,
   createPVAndPVC,
   showBulkDetachHost,
+  showBulkCloneVolume,
   commandKeyDown,
   showUpdateBulkReplicaCount,
   showUpdateBulkDataLocality,
@@ -97,6 +98,9 @@ function bulkActions({
         break
       case 'detach':
         showBulkDetachHost(selectedRows)
+        break
+      case 'bulkCloneVolume':
+        showBulkCloneVolume(selectedRows)
         break
       case 'backup':
         bulkBackup(selectedRows)
@@ -189,6 +193,7 @@ function bulkActions({
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !detachable(item)) } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() || !backupTargetAvailable }, toolTip: backupTargetMessage },
+    { key: 'bulkCloneVolume', name: 'Clone Volume', disabled() { return selectedRows.length === 0 } },
   ]
 
   const allDropDownActions = [
@@ -252,6 +257,7 @@ bulkActions.propTypes = {
   bulkBackup: PropTypes.func,
   createPVAndPVC: PropTypes.func,
   bulkExpandVolume: PropTypes.func,
+  showBulkCloneVolume: PropTypes.func,
   showUpdateBulkReplicaCount: PropTypes.func,
   showUpdateBulkDataLocality: PropTypes.func,
   showUpdateBulkAccessMode: PropTypes.func,

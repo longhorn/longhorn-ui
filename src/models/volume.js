@@ -36,6 +36,7 @@ export default {
     WorkloadDetailModalVisible: false,
     recurringJobModalVisible: false,
     attachHostModalVisible: false,
+    bulkCloneVolumeVisible: false,
     bulkAttachHostModalVisible: false,
     detachHostModalVisible: false,
     engineUpgradeModalVisible: false,
@@ -218,13 +219,35 @@ export default {
         yield put({ type: 'query' })
       }
     },
+    *bulkCloneVolume({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideBulkCloneVolume' })
+      for (const vol of payload) {
+        yield call(create, vol)
+      }
+      yield put({ type: 'query' })
+    },
+    *showBulkCloneVolumeModalBefore({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'showBulkCloneVolume', payload })
+
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
+      if (nodeTags.status === 200 && diskTags.status === 200) {
+        yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
+      } else {
+        yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
+      }
+    },
     *showCloneVolumeModalBefore({
       payload,
     }, { call, put }) {
       yield put({ type: 'showCloneVolumeModal', payload })
 
-      const nodeTags = yield call(getNodeTags, payload)
-      const diskTags = yield call(getDiskTags, payload)
+      const nodeTags = yield call(getNodeTags)
+      const diskTags = yield call(getDiskTags)
       if (nodeTags.status === 200 && diskTags.status === 200) {
         yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
       } else {
@@ -802,8 +825,14 @@ export default {
     showAttachHostModal(state, action) {
       return { ...state, ...action.payload, attachHostModalVisible: true, attachHostModalKey: Math.random() }
     },
+    showBulkCloneVolume(state, action) {
+      return { ...state, ...action.payload, bulkCloneVolumeVisible: true }
+    },
     showBulkAttachHostModal(state, action) {
       return { ...state, ...action.payload, bulkAttachHostModalVisible: true, bulkAttachHostModalKey: Math.random() }
+    },
+    hideBulkCloneVolume(state) {
+      return { ...state, bulkCloneVolumeVisible: false }
     },
     hideAttachHostModal(state) {
       return { ...state, attachHostModalVisible: false }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -8,11 +8,15 @@ import {
   Checkbox,
   Spin,
   Alert,
+  Button,
+  Tooltip,
+  message,
+  Tabs,
 } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 import { formatSize } from '../../utils/formatter'
-
+const TabPane = Tabs.TabPane
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -21,26 +25,8 @@ const formItemLayout = {
   wrapperCol: { span: 13 },
 }
 
-const genOkData = (getFieldsValue, getFieldValue, volume, cloneType) => {
-  const dataSourceResult = getFieldValue('dataSource')
-  const dataSource = cloneType === 'volume' ? `vol://${dataSourceResult}` : `snap://${volume.name}/${dataSourceResult}`
-  const data = {
-    ...volume,
-    ...getFieldsValue(),
-    size: volume.size,
-    dataSource,
-  }
-  if (data.unit) {
-    delete data.unit
-  }
-  return data
-}
-
-
 const modal = ({
-  cloneType = 'volume', // 'volume' or 'snapshot'
-  volume = {},
-  snapshot = {},
+  selectedRows = [],
   visible,
   onCancel,
   onOk,
@@ -55,48 +41,189 @@ const modal = ({
   form: {
     getFieldDecorator,
     validateFields,
+    setFieldsValue,
     getFieldsValue,
     getFieldValue,
+
+    getFieldsError,
   },
 }) => {
-  function handleOk() {
-    validateFields((errors) => {
-      if (errors) {
-        return
+  const initConfigs = selectedRows.map((i) => ({
+    id: i.id,
+    name: `cloned-${i.name}`,
+    size: i.size,
+    numberOfReplicas: i.numberOfReplicas,
+    frontend: i.frontend,
+    dataLocality: i.dataLocality || defaultDataLocalityValue,
+    accessMode: i.accessMode || null,
+    backingImage: i.backingImage,
+    dataSource: i.name,
+    encrypted: i.encrypted || false,
+    dataEngine: i.dataEngine || 'v1',
+    nodeSelector: i.nodeSelector || [],
+    diskSelector: i.diskSelector || [],
+  }))
+  const [tabIndex, setTabIndex] = useState(0)
+  const [volumeConfigs, setVolumeConfigs] = useState(initConfigs)
+
+  const handleOk = () => {
+    const data = volumeConfigs.map(vol => ({
+      ...vol,
+      dataSource: `vol://${vol.dataSource}`,
+    }))
+    onOk(data)
+  }
+  const updateVolumeConfig = (key, newValue) => {
+    setVolumeConfigs(prev => {
+      const newConfigs = [...prev]
+      const current = newConfigs[tabIndex]
+      const data = {
+        ...current,
+        [key]: newValue,
       }
-      const data = genOkData(getFieldsValue, getFieldValue, volume, cloneType)
-      onOk(data)
+      newConfigs.splice(tabIndex, 1, data)
+      return newConfigs
     })
   }
 
+  const handleApplyAll = () => {
+    // only apply below configs to other configs
+    const currentConfig = {
+      numberOfReplicas: getFieldValue('numberOfReplicas'),
+      frontend: getFieldValue('frontend'),
+      dataLocality: getFieldValue('dataLocality'),
+      accessMode: getFieldValue('accessMode'),
+      encrypted: getFieldValue('encrypted') || false,
+      dataEngine: getFieldValue('dataEngine'),
+      nodeSelector: getFieldValue('nodeSelector'),
+      diskSelector: getFieldValue('diskSelector'),
+    }
+    setVolumeConfigs(prev => {
+      const newConfigs = [...prev]
+      newConfigs.forEach((config, index) => {
+        if (index !== tabIndex) {
+          newConfigs.splice(index, 1, { ...config, ...currentConfig })
+        }
+      })
+      return newConfigs
+    })
+    message.success(`Successfully apply ${getFieldValue('name')} config to all other cloned volumes`, 5)
+  }
+
+  const tooltipTitle = `Apply ${getFieldValue('name')} configuration to other cloned volumes, this action will overwrite your previous filled-in configurations`
+  const allFieldsError = { ...getFieldsError() }
+  const hasFieldsError = Object.values(allFieldsError).some(fieldError => fieldError !== undefined) || false
+
+  const handleTabClick = (key) => {
+    if (hasFieldsError) {
+      message.error('Please correct the error fields before switching to another tab', 5)
+      return
+    }
+    validateFields((errors) => {
+      if (errors) return errors
+    })
+
+    const newIndex = selectedRows.findIndex(i => i.name === key)
+
+    if (newIndex !== -1) {
+      setTabIndex(newIndex)
+      const {
+        name,
+        numberOfReplicas,
+        frontend,
+        dataLocality,
+        accessMode,
+        backingImage,
+        encrypted,
+        dataEngine,
+        nodeSelector,
+        diskSelector } = volumeConfigs[newIndex] || {}
+
+      setFieldsValue({
+        name,
+        size: formatSize(volumeConfigs[newIndex]),
+        numberOfReplicas,
+        frontend,
+        dataLocality,
+        accessMode,
+        backingImage,
+        encrypted,
+        dataEngine,
+        nodeSelector,
+        diskSelector,
+      })
+    }
+  }
+
+  const handleNameChange = (e) => updateVolumeConfig('name', e.target.value)
+  const handleReplicasNumberChange = (newNumber) => updateVolumeConfig('numberOfReplicas', newNumber)
+  const handleFrontendChange = (value) => updateVolumeConfig('frontend', value)
+  const handleDataLocalityChange = (value) => updateVolumeConfig('dataLocality', value)
+  const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
+  const handleEncryptedCheck = (e) => updateVolumeConfig('encrypted', e.target.checked)
+  const handleDataEngineChange = (value) => updateVolumeConfig('dataEngine', value)
+  const handleNodeTagRemove = (value) => {
+    const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
+    const newNodeSelector = oldNodeTags?.filter(tag => tag !== value) || []
+    updateVolumeConfig('nodeSelector', newNodeSelector)
+  }
+  const handleNodeTagAdd = (value) => {
+    const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
+    updateVolumeConfig('nodeSelector', [...oldNodeTags, value])
+  }
+  const handleDiskTagRemove = (value) => {
+    const oldDiskTags = volumeConfigs[tabIndex]?.diskSelector
+    const newDiskSelector = oldDiskTags?.filter(tag => tag !== value) || []
+    updateVolumeConfig('diskSelector', newDiskSelector)
+  }
+  const handleDiskTagAdd = (value) => {
+    const oldDiskTags = volumeConfigs[tabIndex]?.diskSelector
+    updateVolumeConfig('diskSelector', [...oldDiskTags, value])
+  }
+
   const modalOpts = {
-    title: cloneType === 'volume' ? `Clone Volume from ${volume.name}` : `Clone Volume from ${volume.name} snapshot ${snapshot.name}`,
+    title: 'Clone Volumes',
     visible,
     onCancel,
     width: 880,
     onOk: handleOk,
+    footer: [
+      <Button key="cancel" onClick={onCancel}>Cancel</Button>,
+      <Tooltip key="applyAllTooltip" overlayStyle={{ width: 300 }} placement="top" title={tooltipTitle}>
+        <Button key="applyAll" style={{ marginLeft: 8 }} onClick={handleApplyAll} disabled={hasFieldsError}> Apply All </Button>
+      </Tooltip>,
+      <Button key="submit" style={{ marginLeft: 8 }} type="success" onClick={handleOk} disabled={hasFieldsError}>
+        Ok
+      </Button>,
+    ],
     style: { top: 0 },
   }
+
+  const item = volumeConfigs[tabIndex] || {}
+  const activeKey = item.id // use original volume id as key
 
   return (
     <ModalBlur {...modalOpts}>
       <Alert style={{ width: 'fit-content', margin: 'auto', marginBottom: 24 }} message="Longhorn will auto attach the new volume, perform cloning from specified volume, and then detach it" type="info" showIcon />
+      <Tabs className="cloneVolumeTab" activeKey={activeKey} onTabClick={handleTabClick} type="card">
+        {selectedRows.map(i => <TabPane tab={i.name} key={i.name} />)}
+      </Tabs>
       <Form layout="horizontal">
         <FormItem label="Name" hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
-            initialValue: `cloned-${volume.name}`,
+            initialValue: item.name,
             rules: [
               {
                 required: true,
                 message: 'Please input volume name',
               },
             ],
-          })(<Input />)}
+          })(<Input onChange={handleNameChange} />)}
         </FormItem>
         <div style={{ display: 'flex' }}>
           <FormItem label="Size" style={{ flex: '1 0 65%', paddingLeft: 30 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
             {getFieldDecorator('size', {
-              initialValue: formatSize(volume),
+              initialValue: formatSize(item),
               rules: [
                 {
                   required: true,
@@ -125,7 +252,7 @@ const modal = ({
           </FormItem>
           <FormItem style={{ flex: '1 0 30%' }}>
           {getFieldDecorator('unit', {
-            initialValue: volume.unit || 'Gi',
+            initialValue: item.unit || 'Gi',
             rules: [{ required: true, message: 'Please select your unit!' }],
           })(
             <Select
@@ -140,14 +267,14 @@ const modal = ({
         </div>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
-            initialValue: volume.numberOfReplicas,
+            initialValue: item.numberOfReplicas,
             rules: [
               {
                 required: true,
                 message: 'Please input the number of replicas',
               },
               {
-                validator: (rule, value, callback) => {
+                validator: (_rule, value, callback) => {
                   if (value === '' || typeof value !== 'number') {
                     callback()
                     return
@@ -162,54 +289,54 @@ const modal = ({
                 },
               },
             ],
-          })(<InputNumber />)}
+          })(<InputNumber onChange={handleReplicasNumberChange} />)}
         </FormItem>
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
-            initialValue: volume.frontend || frontends[0].value,
+            initialValue: item.frontend || frontends[0].value,
             rules: [
               {
                 required: true,
                 message: 'Please select a frontend',
               },
             ],
-          })(<Select>
+          })(<Select onSelect={handleFrontendChange}>
           { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataLocality', {
-            initialValue: volume.dataLocality || defaultDataLocalityValue,
-          })(<Select>
+            initialValue: item.dataLocality || defaultDataLocalityValue,
+          })(<Select onSelect={handleDataLocalityChange}>
           { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
-            initialValue: volume.accessMode || 'rwo',
-          })(<Select>
+            initialValue: item.accessMode || 'rwo',
+          })(<Select onSelect={handleAccessModeChange}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
-            initialValue: volume.backingImage || '',
+            initialValue: item.backingImage || '',
           })(<Select disabled>
             { backingImageOptions.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Data Source" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataSource', {
-            initialValue: cloneType === 'volume' ? volume?.name : snapshot?.name,
+            initialValue: item.id || '',
           })(<Select disabled />)}
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: volume.dataEngine || 'v1',
+            initialValue: item.dataEngine || 'v1',
             rules: [
               {
-                validator: (rule, value, callback) => {
+                validator: (_rule, value, callback) => {
                   if (value === 'v1' && !v1DataEngineEnabled) {
                     callback('v1 data engine is not enabled')
                   } else if (value === 'v2' && !v2DataEngineEnabled) {
@@ -219,7 +346,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Select>
+          })(<Select onSelect={handleDataEngineChange}>
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
@@ -227,14 +354,14 @@ const modal = ({
         <FormItem label="Encrypted" {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'checked',
-            initialValue: volume.encrypted || false,
-          })(<Checkbox></Checkbox>)}
+            initialValue: item.encrypted || false,
+          })(<Checkbox onChange={handleEncryptedCheck} />)}
         </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
-              initialValue: volume.nodeSelector || [],
-            })(<Select mode="tags">
+              initialValue: item.nodeSelector || [],
+            })(<Select mode="tags" onSelect={handleNodeTagAdd} onDeselect={handleNodeTagRemove}>
             { nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
             </Select>)}
           </FormItem>
@@ -242,8 +369,8 @@ const modal = ({
         <Spin spinning={tagsLoading}>
           <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
             {getFieldDecorator('diskSelector', {
-              initialValue: volume.diskSelector || [],
-            })(<Select mode="tags">
+              initialValue: item.diskSelector || [],
+            })(<Select mode="tags" onSelect={handleDiskTagAdd} onDeselect={handleDiskTagRemove}>
             { diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
             </Select>)}
           </FormItem>
@@ -254,9 +381,7 @@ const modal = ({
 }
 
 modal.propTypes = {
-  cloneType: PropTypes.string,
-  volume: PropTypes.object,
-  snapshot: PropTypes.object,
+  selectedRows: PropTypes.array.isRequired,
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
