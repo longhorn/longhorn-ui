@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
-import { Row, Col, Button, Progress, notification } from 'antd'
+import { Row, Col, Button, Progress, notification, Icon } from 'antd'
 import CreateBackingImage from './CreateBackingImage'
 import BackingImageList from './BackingImageList'
 import DiskStateMapDetail from './DiskStateMapDetail'
@@ -335,27 +335,49 @@ class BackingImage extends React.Component {
     let inUploadProgress = backingImageUploadStarted
 
     return (
-      <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
-        <Row gutter={24} style={{ marginBottom: 8 }}>
-          <Col lg={{ span: 4 }} md={{ span: 6 }} sm={24} xs={24}>
-            <BackingImageBulkActions {...backingImageBulkActionsProps} />
-          </Col>
-          <Col lg={{ offset: 13, span: 7 }} md={{ offset: 8, span: 10 }} sm={24} xs={24}>
-            <Filter {...backingImageFilterProps} />
-          </Col>
-        </Row>
-        { inUploadProgress ? (
+      <div className="content-inner" style={{ display: 'flex', padding: 0, flexDirection: 'column', overflow: 'visible !important' }}>
+        <div id="backingImageTable" style={{ height: '50%', padding: '8px 12px 0px' }}>
+          <Row gutter={24} style={{ marginBottom: 8 }}>
+            <Col lg={17} md={15} sm={24} xs={24}>
+              <BackingImageBulkActions {...backingImageBulkActionsProps} />
+            </Col>
+            <Col lg={7} md={9} sm={24} xs={24}>
+              <Filter {...backingImageFilterProps} />
+            </Col>
+          </Row>
+          <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
+            Create Backing Image
+          </Button>
+          <Row style={{ marginBottom: 8, height: 'calc(100% - 48px)' }}>
+            <BackingImageList {...backingImageListProps} />
+          </Row>
+        </div>
+        <div className={style.backupBackingImageTitle}>
+          <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
+          <span style={{ marginLeft: '4px' }}>Backup Backing Image</span>
+        </div>
+        <div id="backupBackingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
+          <Row gutter={24} style={{ marginBottom: 8 }}>
+            <Col lg={17} md={15} sm={24} xs={24}>
+              <BackingImageBulkActions {...backingImageBulkActionsProps} />
+            </Col>
+            <Col lg={7} md={9} sm={24} xs={24}>
+              <Filter {...backingImageFilterProps} />
+            </Col>
+          </Row>
+          <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
+            Create Backing Image
+          </Button>
+          <Row style={{ marginBottom: 8, height: 'calc(100% - 48px)' }}>
+            <BackingImageList {...backingImageListProps} />
+          </Row>
+        </div>
+        {inUploadProgress && (
           <div className={style.backingImageUploadingContainer}>
-            <div>
-              <Progress percent={backingImageUploadPercent} />
-              <span>Uploading</span>
-            </div>
+            <Progress percent={backingImageUploadPercent} />
+            <span>Uploading</span>
           </div>
-        ) : ''}
-        <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
-          Create Backing Image
-        </Button>
-        <BackingImageList {...backingImageListProps} />
+        )}
         { minCopiesCountModalVisible && <UpdateMinCopiesCount {...minCopiesCountProps} />}
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}

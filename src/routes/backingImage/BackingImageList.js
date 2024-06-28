@@ -166,20 +166,18 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
   ]
 
   return (
-    <div id="backingImageTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
-      <Table
-        className="common-table-class"
-        bordered={false}
-        columns={columns}
-        rowSelection={rowSelection}
-        dataSource={dataSource}
-        loading={loading}
-        simple
-        pagination={pagination}
-        rowKey={record => record.id}
-        scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
-      />
-    </div>
+    <Table
+      className="common-table-class"
+      bordered={false}
+      columns={columns}
+      rowSelection={rowSelection}
+      dataSource={dataSource}
+      loading={loading}
+      simple
+      pagination={pagination('backingImage')}
+      rowKey={record => record.id}
+      scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
+    />
   )
 }
 

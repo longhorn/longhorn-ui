@@ -47,3 +47,54 @@
     height: 50;
     z-index: 9999;
 }
+.backupBackingImageTitle {
+  background: #ecf0f1 !important;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  font-size: 20px;
+}
+
+:global {
+  #backingImageTable{
+    .ant-table {
+      height: calc(100% - 64px);
+      margin-bottom: 16px;
+      overflow: hidden;
+      .ant-table-body{
+        height: 100%;
+        overflow: auto;
+      }
+    }
+    .common-table-class {
+      height: 100%;
+      .ant-spin-nested-loading {
+        height: 100%;
+        .ant-spin-container{
+          height: 100%
+        }
+      }
+    }
+  }
+
+  #backupBackingImageTable {
+    .ant-table {
+      height: calc(100% - 64px);
+      margin-bottom: 16px;
+      overflow: hidden;
+      .ant-table-body{
+        height: 100%;
+        overflow: auto;
+      }
+    }
+    .common-table-class {
+      height: 100%;
+      .ant-spin-nested-loading {
+        height: 100%;
+        .ant-spin-container{
+          height: 100%
+        }
+      }
+    }
+  }
+}
