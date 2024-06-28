@@ -7,7 +7,6 @@ import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
-import { sortSnapshots } from '../utils/sort'
 
 export default {
   namespace: 'volume',
@@ -16,8 +15,7 @@ export default {
     data: [],
     resourceType: 'volume',
     cloneVolumeType: 'volume', // volume or snapshot
-    snapshotsOptions: {},
-    snapshotLoading: true,
+    snapshotsOptions: [],
     selected: null,
     selectSnapshot: null,
     selectedRows: [],
@@ -254,32 +252,30 @@ export default {
         yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
       }
     },
-    *showCreateVolumeModalBefore({
-      payload,
-    }, { call, put, all }) {
+    *showCreateVolumeModalBefore({ payload }, { call, put }) {
       yield put({ type: 'showCreateVolumeModal' })
-      // TODO: longhorn manager should have an API to get all volume's snapshots or add snapshotList array in GET /v1/volumes
-      const snapshotListRequests = payload.filter(item => item.actions.snapshotList).map(item => call(execAction, item.actions.snapshotList))
-      const snapshotResp = yield all(snapshotListRequests)
-      if (snapshotResp && snapshotResp.length > 0 && snapshotResp.every(resp => resp.status === 200)) {
-        // construct snapshots data by volume name
-        const snapshotsOptions = {}
-        for (const resp of snapshotResp) {
-          if (resp?.links?.self) {
-            const vol = resp?.links.self.split('/').pop()
-            const snapshots = resp.data.filter(d => d.name !== 'volume-head') // no include volume-head
-            sortSnapshots(snapshots)
-            snapshotsOptions[vol] = snapshots
-          }
-        }
-        yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions, snapshotLoading: false } })
-      }
-      const nodeTags = yield call(getNodeTags)
-      const diskTags = yield call(getDiskTags)
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
       if (nodeTags.status === 200 && diskTags.status === 200) {
         yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
       } else {
         yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
+      }
+    },
+    *getSingleVolumeSnapshots({
+      payload,
+    }, { call, put }) {
+      const url = payload.actions.snapshotList
+      if (!url) {
+        yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions: [] } })
+        return
+      }
+      const resp = yield call(execAction, url)
+      if (resp?.status === 200 && resp.data) {
+        yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions: resp.data } })
+      } else {
+        message.error(`Failed to get ${payload.name} snapshots`, 5)
+        yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions: [] } })
       }
     },
     *delete({
@@ -796,7 +792,7 @@ export default {
       return { ...state, createPVAndPVCVisible: false, nameSpaceDisabled: false, previousChecked: false, createPVAndPVCModalKey: Math.random() }
     },
     hideCreateVolumeModal(state) {
-      return { ...state, createVolumeModalVisible: false, tagsLoading: true }
+      return { ...state, createVolumeModalVisible: false, tagsLoading: true, snapshotsOptions: [] }
     },
     showExpansionVolumeSizeModal(state, action) {
       return { ...state, selected: action.payload, expansionVolumeSizeModalVisible: true, expansionVolumeSizeModalKey: Math.random() }

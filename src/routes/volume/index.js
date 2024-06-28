@@ -123,7 +123,6 @@ class Volume extends React.Component {
     const {
       selected,
       snapshotsOptions,
-      snapshotLoading,
       cloneVolumeType,
       selectedRows,
       data,
@@ -802,10 +801,15 @@ class Volume extends React.Component {
       v2DataEngineEnabled,
       diskTags,
       backingImageOptions,
-      snapshotLoading,
       tagsLoading,
       hosts,
       visible: createVolumeModalVisible,
+      getSnapshot: (volume) => {
+        dispatch({
+          type: 'volume/getSingleVolumeSnapshots',
+          payload: volume,
+        })
+      },
       onOk(newVolume) {
         dispatch({
           type: 'volume/create',
