@@ -6,10 +6,11 @@ import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { nodeTagColor, diskTagColor } from '../../utils/constants'
 
-function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, showUpdateMinCopiesCount, height }) {
+function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, createBackupBackingImage, downloadBackingImage, showUpdateMinCopiesCount, height }) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
+    createBackupBackingImage,
     showUpdateMinCopiesCount,
   }
 
@@ -184,6 +185,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  createBackupBackingImage: PropTypes.func,
   deleteBackingImage: PropTypes.func,
   showDiskStateMapDetail: PropTypes.func,
   showUpdateMinCopiesCount: PropTypes.func,

@@ -6,7 +6,7 @@ import { hasReadyBackingDisk, diskStatusColorMap } from '../../utils/status'
 const confirm = Modal.confirm
 
 
-function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackingImages }) {
+function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackingImages, backupSelectedBackingImages }) {
   const handleClick = (action) => {
     const count = selectedRows.length
     switch (action) {
@@ -55,14 +55,42 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
         })
         break
       }
+      case 'backup': {
+        const backupImages = selectedRows.filter(row => hasReadyBackingDisk(row))
+        const readyColor = diskStatusColorMap.ready
+        const readyTextStyle = {
+          display: 'inline-block',
+          width: 'max-content',
+          padding: '0 4px',
+          marginRight: '5px',
+          color: '#27AE5F',
+          border: `1px solid ${readyColor.color}`,
+          backgroundColor: readyColor.bg,
+          textTransform: 'capitalize',
+        }
+        confirm({
+          okText: 'Backup',
+          width: 'fit-content',
+          title: (<>
+                    <p>Are you sure to backup below <strong style={readyTextStyle}>Ready</strong> status backing {count === 1 ? 'image' : 'images'} ?</p>
+                    <ul>
+                      {backupImages.map(item => <li key={item.name}>{item.name}</li>)}
+                    </ul>
+                  </>),
+          onOk() {
+            backupSelectedBackingImages(backupImages)
+          },
+        })
+        break
+      }
       default:
-        // show nothing
     }
   }
 
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'download', name: 'Download', disabled() { return (selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row))) } },
+    { key: 'backup', name: 'Backup', disabled() { return selectedRows.length === 0 } },
   ]
 
   return (
@@ -81,6 +109,8 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   deleteBackingImages: PropTypes.func,
+  downloadSelectedBackingImages: PropTypes.func,
+  backupSelectedBackingImages: PropTypes.func,
 }
 
 export default bulkActions

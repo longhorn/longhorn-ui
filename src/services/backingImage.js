@@ -9,6 +9,21 @@ export async function query(params) {
   })
 }
 
+export async function execAction(url, params) {
+  return request({
+    url,
+    method: 'post',
+    data: params,
+  })
+}
+
+export async function queryBackupBackingImage() {
+  return request({
+    url: '/v1/backupbackingimages',
+    method: 'get',
+  })
+}
+
 export async function create(params) {
   return request({
     url: '/v1/backingimages',
@@ -19,11 +34,10 @@ export async function create(params) {
   })
 }
 
-export async function execAction(url, params) {
+export async function deleteBackupBackingImage(params) {
   return request({
-    url,
-    method: 'post',
-    data: params,
+    url: `/v1/backupbackingimages/${params.name}`,
+    method: 'delete',
   })
 }
 

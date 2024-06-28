@@ -72,6 +72,9 @@ const dependency = {
     }, {
       ns: 'setting',
       key: 'settings',
+    }, {
+      ns: 'backup',
+      key: 'backup',
     }],
   },
   settings: {
@@ -160,7 +163,7 @@ const httpDataDependency = {
   '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
   '/recurringJob': ['recurringJob'],
-  '/backingImage': ['volume', 'backingImage', 'setting'],
+  '/backingImage': ['volume', 'backingImage', 'setting', 'backup'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
