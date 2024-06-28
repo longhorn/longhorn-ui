@@ -13,8 +13,8 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
       case 'delete':
         confirm({
           width: 'fit-content',
-          okType: 'danger',
           okText: 'Delete',
+          okType: 'danger',
           title: (<>
                     <p>Are you sure to delete below {count} backing {count === 1 ? 'image' : 'images' } ?</p>
                     <ul>
