@@ -1,18 +1,22 @@
-import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
+import { create, deleteBackingImage, deleteBackupBackingImage, execAction, queryBackupBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import { sortByCreatedTime } from '../utils/sort'
 
 export default {
   ws: null,
   namespace: 'backingImage',
   state: {
-    data: [],
     resourceType: 'backingImage',
+    data: [],
+    bbiData: [], // backupBackingImage data
     selected: {},
     selectedRows: [],
+    bbiSelectedRows: [], // selected bbi (backupBackingImage) rows
+    backupBackingImageData: [],
     createBackingImageModalVisible: false,
     createBackingImageModalKey: Math.random(),
     diskStateMapDetailModalVisible: false,
@@ -32,6 +36,9 @@ export default {
             payload: location.pathname.startsWith('/backingImage') ? queryString.parse(location.search) : {},
           })
         }
+        if (location.pathname.startsWith('/backingImage')) {
+          dispatch({ type: 'queryBackupBackingImage' })
+        }
       })
     },
   },
@@ -48,6 +55,30 @@ export default {
       }
       yield put({ type: 'queryBackingImage', payload: { ...data } })
       yield put({ type: 'clearSelection' })
+    },
+    *queryBackupBackingImage(_, { call, put }) {
+      const resp = yield call(queryBackupBackingImage)
+      if (resp && resp.data) {
+        const bbiData = resp.data
+        sortByCreatedTime(bbiData)
+        yield put({ type: 'setBackupBackingImage', payload: { bbiData } })
+      }
+      yield put({ type: 'clearSelection' })
+    },
+    *createBackupBackingImage({
+      payload,
+    }, { call, put }) {
+      const url = payload.actions.backupBackingImageCreate
+      if (url) {
+        const resp = yield call(execAction, url)
+        if (resp && resp.status === 200) {
+          message.success(`Successfully trigger backup ${payload.name} backing image`)
+        }
+        yield delay(3000)
+        yield put({ type: 'queryBackupBackingImage' })
+      } else {
+        message.error('Failed to create backup, missing create backup backing image URL')
+      }
     },
     *create({
       payload,
@@ -89,6 +120,21 @@ export default {
         payload.sourceType === 'upload' && notification.destroy()
       }
     },
+    // restore bbi to bi
+    *restoreBackingImage({
+      payload,
+    }, { call, put }) {
+      yield call(execAction, payload.actions.backupBackingImageRestore)
+      yield delay(1000)
+      yield put({ type: 'query' })
+    },
+    *deleteBackupBackingImage({
+      payload,
+    }, { call, put }) {
+      yield call(deleteBackupBackingImage, payload)
+      yield delay(2000)
+      yield put({ type: 'queryBackupBackingImage' })
+    },
     *delete({
       payload,
     }, { call, put }) {
@@ -100,6 +146,29 @@ export default {
     }, { call, put }) {
       yield call(download, payload)
       yield put({ type: 'query' })
+    },
+    *bulkDeleteBackupBackingImage({
+      payload,
+    }, { call, put }) {
+      if (payload && payload.length > 0) {
+        yield payload.map(item => call(deleteBackupBackingImage, item))
+      }
+      yield delay(2000)
+      yield put({ type: 'queryBackupBackingImage' })
+    },
+    *bulkBackup({
+      payload,
+    }, { call, put }) {
+      if (payload && payload.length > 0) {
+        for (const bi of payload) {
+          const url = bi.actions.backupBackingImageCreate
+          if (url) {
+            yield call(execAction, url)
+          }
+        }
+      }
+      yield delay(4000)
+      yield put({ type: 'queryBackupBackingImage' })
     },
     *bulkDownload({
       payload,
@@ -179,11 +248,14 @@ export default {
         ...action.payload,
       }
     },
+    setBackupBackingImage(state, action) {
+      return { ...state, ...action.payload }
+    },
     changeSelection(state, action) {
       return { ...state, ...action.payload }
     },
     clearSelection(state) {
-      return { ...state, selectedRows: [] }
+      return { ...state, selectedRows: [], bbiSelectedRows: [] }
     },
     updateBackground(state, action) {
       return updateState(state, action)

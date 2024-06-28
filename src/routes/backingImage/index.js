@@ -5,9 +5,11 @@ import { connect } from 'dva'
 import { Row, Col, Button, Progress, notification, Icon } from 'antd'
 import CreateBackingImage from './CreateBackingImage'
 import BackingImageList from './BackingImageList'
+import BackupBackingImageList from './BackupBackingImageList'
 import DiskStateMapDetail from './DiskStateMapDetail'
 import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
+import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
 import queryString from 'query-string'
 import style from './BackingImage.less'
 import C from '../../utils/constants'
@@ -16,6 +18,7 @@ class BackingImage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      bbiTableHeight: 300,
       height: 300,
       message: null,
     }
@@ -32,8 +35,10 @@ class BackingImage extends React.Component {
 
   onResize = () => {
     const height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
+    const bbiTableHeight = document.getElementById('backupBackingImageTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
+      bbiTableHeight,
     })
   }
 
@@ -68,7 +73,9 @@ class BackingImage extends React.Component {
     const { dispatch, loading, location } = this.props
     const { uploadFile } = this
     const { data: volumeData } = this.props.volume
-    const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows } = this.props.backingImage
+    const { data, bbiData, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows, bbiSelectedRows } = this.props.backingImage
+    // console.log('🚀 ~ BackingImage ~ render ~ selectedRows:', selectedRows)
+    // console.log('🚀 ~ BackingImage ~ render ~ bbiSelectedRows:', bbiSelectedRows)
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
     const { field, value, createdFromValue } = queryString.parse(this.props.location.search)
 
@@ -93,10 +100,46 @@ class BackingImage extends React.Component {
       backingImages.sort((a, b) => a.name.localeCompare(b.name))
     }
     const volumeNameOptions = volumeData.map((volume) => volume.name)
+
+    const backupBackingImageListProps = {
+      dataSource: bbiData,
+      height: this.state.bbiTableHeight,
+      loading,
+      deleteBackupBackingImage(record) {
+        dispatch({
+          type: 'backingImage/deleteBackupBackingImage',
+          payload: record,
+        })
+      },
+      restoreBackingImage(record) {
+        dispatch({
+          type: 'backingImage/restoreBackingImage',
+          payload: record,
+        })
+      },
+      rowSelection: {
+        selectedRowKeys: bbiSelectedRows.map(item => item.id),
+        onChange(_, records) {
+          dispatch({
+            type: 'backingImage/changeSelection',
+            payload: {
+              bbiSelectedRows: records,
+            },
+          })
+        },
+      },
+    }
+
     const backingImageListProps = {
       dataSource: backingImages,
       height: this.state.height,
       loading,
+      createBackupBackingImage(record) {
+        dispatch({
+          type: 'backingImage/createBackupBackingImage',
+          payload: record,
+        })
+      },
       deleteBackingImage(record) {
         dispatch({
           type: 'backingImage/delete',
@@ -251,6 +294,7 @@ class BackingImage extends React.Component {
         { value: 'download', name: 'download' },
         { value: 'upload', name: 'upload' },
         { value: 'export-from-volume', name: 'export-from-volume' },
+        { value: 'restore', name: 'restore' },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, createdFromValue: createdFromPropValue } = filter
@@ -275,7 +319,7 @@ class BackingImage extends React.Component {
 
     const backingImageBulkActionsProps = {
       selectedRows,
-      deleteBackingImages(record) {
+      deleteBackupBackingImages(record) {
         dispatch({
           type: 'backingImage/bulkDelete',
           payload: record,
@@ -287,13 +331,29 @@ class BackingImage extends React.Component {
           payload: record,
         })
       },
+      backupSelectedBackingImages(record) {
+        dispatch({
+          type: 'backingImage/bulkBackup',
+          payload: record,
+        })
+      },
     }
 
-    let inUploadProgress = backingImageUploadStarted
+    const backupBackingImageBulkActionsProps = {
+      bbiSelectedRows,
+      deleteBackupBackingImages(records) {
+        dispatch({
+          type: 'backingImage/bulkDeleteBackupBackingImage',
+          payload: records,
+        })
+      },
+    }
+
+    const inUploadProgress = backingImageUploadStarted
 
     return (
       <div className="content-inner" style={{ display: 'flex', padding: 0, flexDirection: 'column', overflow: 'visible !important' }}>
-        <div id="backingImageTable" style={{ height: '50%', padding: '8px 12px 0px' }}>
+        <div id="backingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
           <Row gutter={24} style={{ marginBottom: 8 }}>
             <Col lg={17} md={15} sm={24} xs={24}>
               <BackingImageBulkActions {...backingImageBulkActionsProps} />
@@ -316,17 +376,14 @@ class BackingImage extends React.Component {
         <div id="backupBackingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
           <Row gutter={24} style={{ marginBottom: 8 }}>
             <Col lg={17} md={15} sm={24} xs={24}>
-              <BackingImageBulkActions {...backingImageBulkActionsProps} />
+              <BackupBackingImageBulkActions {...backupBackingImageBulkActionsProps} />
             </Col>
             <Col lg={7} md={9} sm={24} xs={24}>
-              <Filter {...backingImageFilterProps} />
+              {/* <Filter {...backingImageFilterProps} /> */}
             </Col>
           </Row>
-          <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
-            Create Backing Image
-          </Button>
           <Row style={{ marginBottom: 8, height: 'calc(100% - 48px)' }}>
-            <BackingImageList {...backingImageListProps} />
+            <BackupBackingImageList {...backupBackingImageListProps} />
           </Row>
         </div>
         {inUploadProgress && (

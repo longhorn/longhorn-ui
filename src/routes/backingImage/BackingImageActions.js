@@ -5,13 +5,15 @@ import { DropOption } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackingImage, downloadBackingImage }) {
+function actions({ selected, deleteBackingImage, downloadBackingImage, createBackupBackingImage }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete backing image ${record.name}?`,
+          okText: 'Delete',
+          okType: 'danger',
+          title: `Are you sure you want to delete ${record.name} backing image ?`,
           onOk() {
             deleteBackingImage(record)
           },
@@ -20,15 +22,19 @@ function actions({ selected, deleteBackingImage, downloadBackingImage }) {
       case 'download':
         downloadBackingImage(record)
         break
+      case 'backup':
+        createBackupBackingImage(record)
+        break
       default:
     }
   }
 
-  const disableDownloadAction = !hasReadyBackingDisk(selected)
+  const disableAction = !hasReadyBackingDisk(selected)
 
   const availableActions = [
+    { key: 'backup', name: ' Backup', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
+    { key: 'download', name: 'Download', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
     { key: 'delete', name: 'Delete' },
-    { key: 'download', name: 'Download', disabled: disableDownloadAction, tooltip: disableDownloadAction ? 'Missing disk with ready state' : '' },
   ]
 
   return (
@@ -42,6 +48,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   deleteBackingImage: PropTypes.func,
   downloadBackingImage: PropTypes.func,
+  createBackupBackingImage: PropTypes.func,
 }
 
 export default actions
