@@ -17,6 +17,7 @@ import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 import { formatSize } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
+import { sortSnapshots } from '../../utils/sort'
 
 const FormItem = Form.Item
 const { Panel } = Collapse
@@ -95,11 +96,10 @@ const genOkData = (getFieldsValue, getFieldValue, volumeOptions) => {
   return data
 }
 
-
 const modal = ({
   item,
   volumeOptions = [],
-  snapshotsOptions = {},
+  snapshotsOptions = [],
   visible,
   onCancel,
   onOk,
@@ -111,9 +111,9 @@ const modal = ({
   diskTags,
   backingImageOptions,
   tagsLoading,
-  snapshotLoading,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
+  getSnapshot,
   form: {
     getFieldDecorator,
     validateFields,
@@ -164,10 +164,23 @@ const modal = ({
     }
   }
 
+  const handleDataSourceTypeChange = () => {
+    setFieldsValue({
+      ...getFieldsValue(),
+      dataSourceVolume: '',
+    })
+  }
+
   const handleDataSourceVolumeChange = (value) => {
     const dataSourceVol = volumeOptions.find(vol => vol.name === value)
-    if (dataSourceVol) {
-      // set size field according to the selected data source
+    if (getFieldValue('dataSourceType') === dataSourceOptions[1] && dataSourceVol) {
+      getSnapshot(dataSourceVol)
+      setFieldsValue({
+        ...getFieldsValue(),
+        size: formatSize(dataSourceVol), // set size field according to the selected data source
+        dataSourceSnapshot: '',
+      })
+    } else {
       setFieldsValue({
         ...getFieldsValue(),
         size: formatSize(dataSourceVol),
@@ -175,7 +188,8 @@ const modal = ({
     }
   }
 
-  const targetVolumeSnaps = snapshotsOptions[getFieldValue('dataSourceVolume')] || []
+  const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
+  sortSnapshots(volumeSnapshots)
   const dataSourceAlertMsg = 'The volume size is set to the selected volume size. Mismatched size will cause create volume failed.'
   return (
     <ModalBlur {...modalOpts}>
@@ -245,7 +259,7 @@ const modal = ({
                 message: 'Please input the number of replicas',
               },
               {
-                validator: (rule, value, callback) => {
+                validator: (_rule, value, callback) => {
                   if (value === '' || typeof value !== 'number') {
                     callback()
                     return
@@ -297,58 +311,56 @@ const modal = ({
             { backingImageOptions.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
-        <Spin spinning={snapshotLoading}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <FormItem label={
-                <span>
-                  Data Source
-                  <span style={{
-                    marginLeft: 4,
-                    marginRight: 4,
-                  }}>
-                    <Tooltip
-                      overlayStyle={{ width: 450 }}
-                      title="Choose data source from existing volume or snapshot. Longhorn will clone the volume data from selected data source"
-                    >
-                      <Icon type="question-circle-o" />
-                    </Tooltip>
-                  </span>
-                </span>}
-              hasFeedback
-              {...formItemLayout}>
-              {getFieldDecorator('dataSourceType', { initialValue: '' })(
-                <Select allowClear>
-                  {dataSourceOptions.map(value => <Option key={value} value={value}>{value}</Option>) }
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <FormItem label={
+              <span>
+                Data Source
+                <span style={{
+                  marginLeft: 4,
+                  marginRight: 4,
+                }}>
+                  <Tooltip
+                    overlayStyle={{ width: 450 }}
+                    title="Choose data source from existing volume or snapshot. Longhorn will clone the volume data from selected data source"
+                  >
+                    <Icon type="question-circle-o" />
+                  </Tooltip>
+                </span>
+              </span>}
+            hasFeedback
+            {...formItemLayout}>
+            {getFieldDecorator('dataSourceType', { initialValue: '' })(
+              <Select allowClear onChange={handleDataSourceTypeChange}>
+                {dataSourceOptions.map(value => <Option key={value} value={value}>{value}</Option>) }
+              </Select>
+            )}
+          </FormItem>
+          {getFieldValue('dataSourceType') && (<Popover placement="right"
+            visible={displayDataSourceAlert()}
+            content={
+              <div style={{ maxWidth: 300 }}>
+                <Alert message={dataSourceAlertMsg} type="warning" />
+              </div>
+            }
+          >
+            <FormItem label="Volume" hasFeedback {...formItemLayout}>
+              {getFieldDecorator('dataSourceVolume', { initialValue: '' })(
+                <Select allowClear onChange={handleDataSourceVolumeChange}>
+                  {volumeOptions.map(vol => <Option key={vol.name} value={vol.name}>{vol.name}</Option>) }
                 </Select>
               )}
             </FormItem>
-            {getFieldValue('dataSourceType') && (<Popover placement="right"
-              visible={displayDataSourceAlert()}
-              content={
-                <div style={{ maxWidth: 300 }}>
-                  <Alert message={dataSourceAlertMsg} type="warning" />
-                </div>
-              }
-            >
-              <FormItem label="Volume" hasFeedback {...formItemLayout}>
-                {getFieldDecorator('dataSourceVolume', { initialValue: '' })(
-                  <Select allowClear onChange={handleDataSourceVolumeChange}>
-                    {volumeOptions.map(vol => <Option key={vol.name} value={vol.name}>{vol.name}</Option>) }
-                  </Select>
-                )}
-              </FormItem>
-            </Popover>
-            )}
-          </div>
-          {getFieldValue('dataSourceType') === dataSourceOptions[1] && <FormItem label="Snapshot" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('dataSourceSnapshot', { initialValue: '' })(
-              <Select allowClear optionLabelProp="label" dropdownMenuStyle={{ width: 500 }}>
-                {targetVolumeSnaps.map(snap => <Option key={snap.name} value={snap.name} label={snap.name}>{`${snap.name} (created ${formatDate(snap.created, false)})`}</Option>)}
-              </Select>
-            )}
-            </FormItem>
-          }
-        </Spin>
+          </Popover>
+          )}
+        </div>
+        {getFieldValue('dataSourceType') === dataSourceOptions[1] && <FormItem label="Snapshot" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataSourceSnapshot', { initialValue: '' })(
+            <Select allowClear optionLabelProp="label" dropdownMenuStyle={{ width: `${volumeSnapshots.length > 0 ? 'fit-content' : 'auto'}` }}>
+              {volumeSnapshots.map(snap => <Option key={snap.name} value={snap.name} label={snap.name}>{`${snap.name} (created ${formatDate(snap.created, false)})`}</Option>)}
+            </Select>
+          )}
+          </FormItem>
+        }
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: item.dataEngine || 'v1',
@@ -541,17 +553,17 @@ const modal = ({
 modal.propTypes = {
   form: PropTypes.object.isRequired,
   volumeOptions: PropTypes.array,
-  snapshotsOptions: PropTypes.object,
+  snapshotsOptions: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  getSnapshot: PropTypes.func,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   defaultDataLocalityOption: PropTypes.array,
   defaultSnapshotDataIntegrityOption: PropTypes.array,
   tagsLoading: PropTypes.bool,
-  snapshotLoading: PropTypes.bool,
   defaultDataLocalityValue: PropTypes.string,
   defaultRevisionCounterValue: PropTypes.bool,
   v1DataEngineEnabled: PropTypes.bool,
