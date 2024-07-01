@@ -9,7 +9,7 @@ const Option = Select.Option
 class Filter extends React.Component {
   constructor(props) {
     super(props)
-    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroupValue = '', createdFromValue = '' } = queryString.parse(props.location.search)
+    const { field = props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroupValue = '' } = queryString.parse(props.location.search)
     this.state = {
       field,
       stateValue,
@@ -19,7 +19,6 @@ class Filter extends React.Component {
       scheduleValue,
       pvStatusValue,
       revisionCounterValue,
-      createdFromValue,
       isGroupValue,
       keyword: value,
     }
@@ -65,7 +64,7 @@ class Filter extends React.Component {
   }
 
   handleCreatedFromValueChange = (createdFromValue) => {
-    this.setState({ ...this.state, createdFromValue })
+    this.setState({ ...this.state, value: createdFromValue })
   }
 
   handleFieldChange = (field) => {
@@ -73,7 +72,7 @@ class Filter extends React.Component {
   }
 
   render() {
-    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroup = '', createdFromValue = '' } = queryString.parse(this.props.location.search)
+    const { field = this.props.defaultField || 'name', value = '', stateValue = '', nodeRedundancyValue = '', engineImageUpgradableValue = '', scheduleValue = '', pvStatusValue = '', revisionCounterValue = '', isGroup = '' } = queryString.parse(this.props.location.search)
 
     let defaultContent = {
       field,
@@ -84,7 +83,6 @@ class Filter extends React.Component {
       scheduleValue,
       pvStatusValue,
       revisionCounterValue,
-      createdFromValue,
       isGroup,
     }
 
@@ -164,7 +162,7 @@ class Filter extends React.Component {
         style={{ width: '100%' }}
         size="large"
         allowClear
-        defaultValue={this.state.createdFromValue}
+        defaultValue={this.props.createdFromOption[0]?.value || ''}
         onChange={this.handleCreatedFromValueChange}
     >
     {this.props.createdFromOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}

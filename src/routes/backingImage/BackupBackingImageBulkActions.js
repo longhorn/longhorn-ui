@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
-// import { hasReadyBackingDisk } from '../../utils/status'
-// import { diskStatusColorMap } from '../../utils/filter'
 
 const confirm = Modal.confirm
 
