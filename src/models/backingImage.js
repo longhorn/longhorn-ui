@@ -25,6 +25,10 @@ export default {
     diskStateMapDeleteLoading: false,
     selectedDiskStateMapRows: [],
     selectedDiskStateMapRowKeys: [],
+    biSearchField: '',
+    biSearchValue: '',
+    bbiSearchField: '',
+    bbiSearchValue: '',
     socketStatus: 'closed',
   },
   subscriptions: {
@@ -124,8 +128,11 @@ export default {
     *restoreBackingImage({
       payload,
     }, { call, put }) {
-      yield call(execAction, payload.actions.backupBackingImageRestore)
+      const resp = yield call(execAction, payload.actions.backupBackingImageRestore)
       yield delay(1000)
+      if (resp && resp.status === 200) {
+        message.success(`Successfully restore ${payload.name} backing image`)
+      }
       yield put({ type: 'query' })
     },
     *deleteBackupBackingImage({
@@ -243,6 +250,12 @@ export default {
   },
   reducers: {
     queryBackingImage(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      }
+    },
+    setSearchFilter(state, action) {
       return {
         ...state,
         ...action.payload,
