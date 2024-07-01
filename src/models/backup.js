@@ -1,4 +1,5 @@
-import { query, queryBackupList, execAction, restore, deleteBackup, syncBackupVolume, syncAllBackupVolumes, createVolume, deleteAllBackups, getNodeTags, getDiskTags, queryTarget } from '../services/backup'
+import { query, queryBackupList, execAction, restore, deleteBackup, syncBackupVolume, syncAllBackupVolumes, createVolume, deleteAllBackups, getNodeTags, getDiskTags } from '../services/backup'
+import { queryBackupTarget } from '../services/backupTarget'
 import { message } from 'antd'
 import { wsChanges } from '../utils/websocket'
 import queryString from 'query-string'
@@ -21,6 +22,7 @@ export default {
     lastBackupUrl: '',
     volumeName: '',
     backupTargetMessage: '',
+    backupTargetAvailable: false,
     previousChecked: false,
     tagsLoading: true,
     size: '',
@@ -30,7 +32,6 @@ export default {
     backupVolumesForBulkCreate: [],
     search: {},
     restoreBackupModalVisible: false,
-    backupTargetAvailable: false,
     workloadDetailModalVisible: false,
     createVolumeStandModalVisible: false,
     bulkCreateVolumeStandModalVisible: false,
@@ -98,18 +99,19 @@ export default {
       }
     },
     *queryBackupTarget({
+      // eslint-disable-next-line no-unused-vars
       payload,
     }, { call, put }) {
-      let resp = yield call(queryTarget)
-      if (resp && resp.data && resp.data[0]) {
-        let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage', '/recurringJob']
-
-        isbackupVolumePage = payload.history && payload.history.location && payload.history.location.pathname && payload.history.location.pathname !== '/' && path.every(ele => !payload.history.location.pathname.startsWith(ele))
-        if (isbackupVolumePage) {
-          !resp.data[0].available ? message.error(resp.data[0].message) : message.destroy()
+      const resp = yield call(queryBackupTarget)
+      if (resp && resp.status === 200) {
+        const backupTargetAvailable = resp?.data?.some(d => d.available === true) || false
+        const backupTargetMessage = backupTargetAvailable ? '' : 'No backup target is available, please go to Setting -> Backup Target page to create one'
+        if (payload.history.location.pathname === '/backup' && !backupTargetAvailable) {
+          message.error(backupTargetMessage, 5)
+        } else {
+          message.destroy()
         }
-        yield put({ type: 'setBackupTargetAvailable', payload: { backupTargetAvailable: resp.data[0].available, backupTargetMessage: resp.data[0].message } })
+        yield put({ type: 'setBackupTargetAvailable', payload: { backupTargetAvailable, backupTargetMessage } })
       }
     },
     *queryBackupStatus({
@@ -316,7 +318,6 @@ export default {
           wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
         }
       }
-
       if (payload.type === 'backups' && getBackupVolumeName(payload.search)) {
         let wsBackup = yield select(state => state.backup.wsBackup)
         if (wsBackup) {
@@ -358,7 +359,12 @@ export default {
       let volumeName = getBackupVolumeName(state.search)
       if (volumeName && action.payload && action.payload.data) {
         let backupData = action.payload.data.filter((item) => {
-          return item.volumeName === volumeName
+          if (item.backupTargetName) {
+            // after implement multiple backup targets feature, backup volume name in backup page is composed by ${volumeName}-${backupTargetName}
+            return volumeName === `${item.volumeName}-${item.backupTargetName}`
+          } else {
+            return item.volumeName === volumeName
+          }
         })
         return {
           ...state,

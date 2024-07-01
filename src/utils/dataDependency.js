@@ -45,6 +45,9 @@ const dependency = {
     }, {
       ns: 'recurringJob',
       key: 'recurringjobs',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
   engineimage: {
@@ -59,6 +62,16 @@ const dependency = {
     runWs: [{
       ns: 'recurringJob',
       key: 'recurringjobs',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
+    }],
+  },
+  backupTarget: {
+    path: '/backupTarget',
+    runWs: [{
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
   backingImage: {
@@ -69,6 +82,9 @@ const dependency = {
     }, {
       ns: 'backingImage',
       key: 'backingimages',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
   settings: {
@@ -113,6 +129,9 @@ const dependency = {
     runWs: [{
       ns: 'systemBackups',
       key: 'systemBackups',
+    }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
     }],
   },
 }
@@ -135,6 +154,9 @@ const list = [{
   ns: 'engineimage',
   key: 'engineimages',
 }, {
+  ns: 'backupTarget',
+  key: 'backuptargets',
+}, {
   ns: 'recurringJob',
   key: 'recurringjobs',
 }, {
@@ -154,37 +176,33 @@ const list = [{
 const httpDataDependency = {
   '/dashboard': ['volume', 'host', 'eventlog'],
   '/node': ['volume', 'host', 'setting'],
-  '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
+  '/volume': ['volume', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
-  '/recurringJob': ['recurringJob'],
-  '/backingImage': ['volume', 'backingImage'],
+  '/recurringJob': ['recurringJob', 'backupTarget'],
+  '/backingImage': ['volume', 'backingImage', 'backupTarget'],
+  '/backupTarget': ['backupTarget'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
-  '/systemBackups': ['systemBackups'],
+  '/systemBackups': ['systemBackups', 'backupTarget'],
 }
 
 export function getDataDependency(pathName) {
   let keys = Object.keys(dependency).filter((key) => {
     if (pathName && dependency[key].path) {
-      let max = dependency[key].path.length
-      return dependency[key].path === pathName.substring(0, max)
+      // let max = dependency[key].path.length
+      return dependency[key].path === pathName
     }
     return false
   })
-
   if (keys && keys.length === 1) {
     let modal = dependency[keys[0]]
     modal.stopWs = list.filter((item) => {
-      return modal.runWs.every((ele) => {
-        return ele.ns !== item.ns
-      })
+      return modal.runWs.every((ele) => ele.ns !== item.ns)
     })
-
     return dependency[keys[0]]
   }
-
   return null
 }
 

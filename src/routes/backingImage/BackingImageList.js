@@ -5,10 +5,22 @@ import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 
-function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
+function list({
+  loading,
+  dataSource,
+  openBackupBackingImageModal,
+  deleteBackingImage,
+  showDiskStateMapDetail,
+  rowSelection,
+  downloadBackingImage,
+  height,
+  hasWritableBackupTargets,
+}) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
+    openBackupBackingImageModal,
+    hasWritableBackupTargets,
   }
   const state = (record) => {
     if (record.deletionTimestamp) {
@@ -94,7 +106,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
         dataSource={dataSource}
         loading={loading}
         simple
-        pagination={pagination}
+        pagination={pagination('backingImagePageSize')}
         rowKey={record => record.id}
         scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
       />
@@ -107,8 +119,10 @@ list.propTypes = {
   dataSource: PropTypes.array,
   deleteBackingImage: PropTypes.func,
   showDiskStateMapDetail: PropTypes.func,
+  openBackupBackingImageModal: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
+  hasWritableBackupTargets: PropTypes.bool,
 }
 
 export default list

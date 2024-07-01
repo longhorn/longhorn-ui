@@ -1,4 +1,4 @@
-import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
+import { create, deleteBackingImage, query, execAction, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
@@ -88,6 +88,16 @@ export default {
         // When a creation error occurs, the notification that has been turned on must be terminated.
         payload.sourceType === 'upload' && notification.destroy()
       }
+    },
+    *createBackingImageBackup({
+      url,
+      payload,
+    }, { call, put }) {
+      const resp = yield call(execAction, url, payload)
+      if (resp && resp.status === 200) {
+        message.success(`Successfully backup backing image ${payload.backingImageName}`, 5)
+      }
+      yield put({ type: 'query' })
     },
     *delete({
       payload,

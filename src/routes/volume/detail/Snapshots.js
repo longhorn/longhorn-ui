@@ -11,13 +11,14 @@ class Snapshots extends React.Component {
     super(props)
     this.state = {
       createBackModalKey: Math.random(),
-      createBackBySnapsotModalKey: Math.random(),
-      createBackModalVisible: false,
-      createBackBySnapsotModalVisible: false,
+      createBackBySnapshotModalKey: Math.random(),
+      createBackModalVisible: false, // click create backup button
+      createBackBySnapshotModalVisible: false, // click backup button in snapshot dropdown
       currentSnapshotName: '',
       snapshotBackupUrl: '',
       snapshotListUrl: '',
     }
+
     this.onAction = (action) => {
       if (action.type === 'backup') {
         this.setState({
@@ -37,7 +38,7 @@ class Snapshots extends React.Component {
       if (action.type === 'snapshotBackup') {
         this.setState({
           ...this.state,
-          createBackBySnapsotModalVisible: true,
+          createBackBySnapshotModalVisible: true,
           currentSnapshotName: action.payload && action.payload.snapshot && action.payload.snapshot.name ? action.payload.snapshot.name : '',
           snapshotBackupUrl: action.payload && action.payload.volume && action.payload.volume.actions && action.payload.volume.actions.snapshotBackup ? action.payload.volume.actions.snapshotBackup : '',
           snapshotListUrl: action.payload && action.payload.volume && action.payload.volume.actions && action.payload.volume.actions.snapshotList ? action.payload.volume.actions.snapshotList : '',
@@ -139,15 +140,16 @@ class Snapshots extends React.Component {
       item: {
         frontend: 'iscsi',
       },
+      availBackupTargets: me.props.availBackupTargets,
       visible: me.state.createBackModalVisible,
-      onOk(data) {
+      onOk(params) {
         me.props.dispatch({
           type: 'snapshotModal/backup',
           payload: {
             snapshotCreateUrl: me.props.volume.actions.snapshotCreate,
             snapshotBackupUrl: me.props.volume.actions.snapshotBackup,
             querySnapShotUrl: me.props.volume.actions.snapshotList,
-            labels: data,
+            ...params,
           },
         })
         me.setState({
@@ -166,14 +168,15 @@ class Snapshots extends React.Component {
     }
   }
 
-  createBackupBySnapsotModal = () => {
+  createBackupBySnapshotModal = () => {
     let me = this
     return {
       item: {
         frontend: 'iscsi',
       },
-      visible: me.state.createBackBySnapsotModalVisible,
-      onOk(data) {
+      availBackupTargets: me.props.availBackupTargets,
+      visible: me.state.createBackBySnapshotModalVisible,
+      onOk(params) {
         if (me.state.snapshotBackupUrl && me.state.currentSnapshotName && me.state.snapshotListUrl) {
           me.props.dispatch({
             type: 'snapshotModal/createBackupBySnapshot',
@@ -181,13 +184,13 @@ class Snapshots extends React.Component {
               snapshotBackupUrl: me.state.snapshotBackupUrl,
               snapshotName: me.state.currentSnapshotName,
               querySnapShotUrl: me.state.snapshotListUrl,
-              labels: data,
+              ...params,
             },
           })
           me.setState({
             ...me.state,
-            createBackBySnapsotModalKey: Math.random(),
-            createBackBySnapsotModalVisible: false,
+            createBackBySnapshotModalKey: Math.random(),
+            createBackBySnapshotModalVisible: false,
             currentSnapshotName: '',
             snapshotBackupUrl: '',
           })
@@ -196,8 +199,8 @@ class Snapshots extends React.Component {
       onCancel() {
         me.setState({
           ...me.state,
-          createBackBySnapsotModalKey: Math.random(),
-          createBackBySnapsotModalVisible: false,
+          createBackBySnapshotModalKey: Math.random(),
+          createBackBySnapshotModalVisible: false,
           currentSnapshotName: '',
           snapshotBackupUrl: '',
         })
@@ -222,11 +225,13 @@ class Snapshots extends React.Component {
     }
     const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.image
 
-    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable
+    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || this.props.availBackupTargets.length === 0
+
+    const createSnapshotDisabled = disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()
 
     const createBackupTooltipMessage = () => {
-      if (!this.props.backupTargetAvailable) {
-        return this.props.backupTargetMessage
+      if (this.props.availBackupTargets.length === 0) {
+        return 'No backup target is available and writable.'
       }
       if (this.props.volume.standby) {
         return 'Unable to create backup for DR volume.'
@@ -282,7 +287,7 @@ class Snapshots extends React.Component {
         <div>Snapshots and Backups</div>
         <div>
           <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create snapshot for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
-              <Button disabled={disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()}
+              <Button disabled={createSnapshotDisabled}
                 icon="scan"
                 onClick={() => { this.onAction({ type: 'snapshotCreate' }) }}
                 type="primary">
@@ -308,7 +313,7 @@ class Snapshots extends React.Component {
           Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
-        {this.state.createBackBySnapsotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapsotModalKey} {...this.createBackupBySnapsotModal()} /> : ''}
+        {this.state.createBackBySnapshotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapshotModalKey} {...this.createBackupBySnapshotModal()} /> : ''}
       </Card>
     )
   }
@@ -323,9 +328,8 @@ Snapshots.propTypes = {
   snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
   showRemoved: PropTypes.bool,
-  backupTargetAvailable: PropTypes.bool,
-  backupTargetMessage: PropTypes.string,
   volumeHead: PropTypes.object,
+  availBackupTargets: PropTypes.array,
 }
 
 export default Snapshots

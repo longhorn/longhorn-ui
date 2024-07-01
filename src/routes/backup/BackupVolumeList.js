@@ -41,7 +41,7 @@ class List extends React.Component {
     })
   }
 
-  fomartData = (data, key) => {
+  formatData = (data, key) => {
     if (this.isJson(data)) {
       let obj = JSON.parse(data)
 
@@ -117,6 +117,7 @@ class List extends React.Component {
                     search: queryString.stringify({
                       field: 'volumeName',
                       keyword: id,
+                      backupTargetName: record.backupTargetName,
                     }),
                   }}>
                   {id}
@@ -177,7 +178,7 @@ class List extends React.Component {
           let storageObj = {}
 
           if (record) {
-            storageObj = this.fomartData(record.KubernetesStatus)
+            storageObj = this.formatData(record.KubernetesStatus)
           }
           let title = (<div>
             <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
@@ -218,7 +219,7 @@ class List extends React.Component {
           let storageObj = {}
 
           if (record) {
-            storageObj = this.fomartData(record.KubernetesStatus)
+            storageObj = this.formatData(record.KubernetesStatus)
             storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 
