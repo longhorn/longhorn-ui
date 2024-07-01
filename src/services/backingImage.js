@@ -17,7 +17,7 @@ export async function execAction(url, params) {
   })
 }
 
-export async function queryBackupBackingImage() {
+export async function queryBbiList() {
   return request({
     url: '/v1/backupbackingimages',
     method: 'get',

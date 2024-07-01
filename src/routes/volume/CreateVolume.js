@@ -17,7 +17,7 @@ import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 import { formatSize } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
-import { sortSnapshots } from '../../utils/sort'
+import { sortByCreatedTime } from '../../utils/sort'
 
 const FormItem = Form.Item
 const { Panel } = Collapse
@@ -189,7 +189,7 @@ const modal = ({
   }
 
   const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
-  sortSnapshots(volumeSnapshots)
+  sortByCreatedTime(volumeSnapshots)
   const dataSourceAlertMsg = 'The volume size is set to the selected volume size. Mismatched size will cause create volume failed.'
   return (
     <ModalBlur {...modalOpts}>

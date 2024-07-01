@@ -4,7 +4,6 @@ import { Button, Modal } from 'antd'
 
 const confirm = Modal.confirm
 
-
 function bulkActions({ bbiSelectedRows, deleteBackupBackingImages }) {
   const handleClick = (action) => {
     const count = bbiSelectedRows.length
