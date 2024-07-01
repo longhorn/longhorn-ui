@@ -4,7 +4,7 @@ import { connect } from 'dva'
 import { Row, Col, Tooltip } from 'antd'
 import styles from './Footer.less'
 import { config } from '../../utils'
-import { getStatusIcon, getBackupStatusIcon, getSystemBackupStatusIcon } from '../../utils/websocket'
+import { getStatusIcon } from '../../utils/websocket'
 import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
@@ -126,12 +126,13 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(setting)}
           {getStatusIcon(engineimage)}
           {getStatusIcon(eventlog)}
-          {getStatusIcon(backingImage)}
+          {getStatusIcon(backingImage, 'backingImages')}
+          {getStatusIcon(backingImage, 'backupBackingImages')}
           {getStatusIcon(recurringJob)}
-          {getBackupStatusIcon(backup, 'backupVolumes')}
-          {getBackupStatusIcon(backup, 'backups')}
-          {getSystemBackupStatusIcon(systemBackups, 'systemBackup')}
-          {getSystemBackupStatusIcon(systemBackups, 'systemRestore')}
+          {getStatusIcon(backup, 'backupVolumes')}
+          {getStatusIcon(backup, 'backups')}
+          {getStatusIcon(systemBackups, 'systemBackup')}
+          {getStatusIcon(systemBackups, 'systemRestore')}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
         <StableLonghornVersions key={stableLonghornVersionsKey} {...stableLonghornVersionsProps} />

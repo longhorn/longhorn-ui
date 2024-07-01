@@ -194,7 +194,7 @@ export default {
         systemRestoresValue: '',
       }
     },
-    updateSocketStatusSysteBackups(state, action) {
+    updateSocketStatusSystemBackups(state, action) {
       return { ...state, socketSystemBackupsStatus: action.payload }
     },
     updateSocketStatusSystemRestores(state, action) {

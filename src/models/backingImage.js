@@ -3,7 +3,7 @@ import {
   deleteBackingImage,
   deleteBackupBackingImage,
   execAction,
-  queryBackupBackingImage,
+  queryBbiList,
   query,
   deleteDisksOnBackingImage,
   uploadChunk,
@@ -14,7 +14,6 @@ import { getNodeTags, getDiskTags } from '../services/backup'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
-import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
 import { sortByCreatedTime } from '../utils/sort'
 
@@ -22,6 +21,8 @@ export default {
   ws: null,
   namespace: 'backingImage',
   state: {
+    wsBi: null, // backingImage websocket
+    wsBbi: null, // backupBackingImage websocket
     resourceType: 'backingImage',
     data: [],
     bbiData: [], // backupBackingImage data
@@ -31,8 +32,7 @@ export default {
     diskTags: [],
     tagsLoading: true,
     minCopiesCountModalVisible: false,
-    bbiSelectedRows: [], // selected bbi (backupBackingImage) rows
-    backupBackingImageData: [],
+    bbiSelectedRows: [], // selected backupBackingImage rows
     createBackingImageModalVisible: false,
     createBackingImageModalKey: Math.random(),
     diskStateMapDetailModalVisible: false,
@@ -45,18 +45,14 @@ export default {
     biSearchValue: '',
     bbiSearchField: '',
     bbiSearchValue: '',
-    socketStatus: 'closed',
+    biSocketStatus: 'closed',
+    bbiSocketStatus: 'closed',
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
         if (enableQueryData(location.pathname, 'backingImage')) {
-          dispatch({
-            type: 'query',
-            payload: location.pathname.startsWith('/backingImage') ? queryString.parse(location.search) : {},
-          })
-        }
-        if (location.pathname.startsWith('/backingImage')) {
+          dispatch({ type: 'query' })
           dispatch({ type: 'queryBackupBackingImage' })
         }
       })
@@ -67,17 +63,17 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, payload)
-      if (payload && payload.field && payload.keyword && data.data) {
-        data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.keyword.trim()) > -1)
-      }
       if (data.data) {
         data.data.sort((a, b) => a.name.localeCompare(b.name))
       }
       yield put({ type: 'queryBackingImage', payload: { ...data } })
       yield put({ type: 'clearSelection' })
     },
-    *queryBackupBackingImage(_, { call, put }) {
-      const resp = yield call(queryBackupBackingImage)
+    *queryBackupBackingImage({
+      // eslint-disable-next-line no-unused-vars
+      _payload,
+    }, { call, put }) {
+      const resp = yield call(queryBbiList)
       if (resp && resp.data) {
         const bbiData = resp.data
         sortByCreatedTime(bbiData)
@@ -92,9 +88,9 @@ export default {
       if (url) {
         const resp = yield call(execAction, url)
         if (resp && resp.status === 200) {
-          message.success(`Successfully trigger backup ${payload.name} backing image`)
+          message.success(`Successfully backup ${payload.name} backing image`)
         }
-        yield delay(3000)
+        yield delay(1000)
         yield put({ type: 'queryBackupBackingImage' })
       } else {
         message.error('Failed to create backup, missing create backup backing image URL')
@@ -153,7 +149,6 @@ export default {
       payload,
     }, { call, put }) {
       const resp = yield call(execAction, payload.actions.backupBackingImageRestore)
-      yield delay(1000)
       if (resp && resp.status === 200) {
         message.success(`Successfully restore ${payload.name} backing image`)
       }
@@ -163,7 +158,7 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteBackupBackingImage, payload)
-      yield delay(2000)
+      yield delay(1000)
       yield put({ type: 'queryBackupBackingImage' })
     },
     *delete({
@@ -262,21 +257,31 @@ export default {
     *startWS({
       payload,
     }, { select }) {
-      let ws = yield select(state => state.backingImage.ws)
-      if (ws) {
-        ws.open()
-      } else {
-        wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+      if (payload.type === 'backingimages') {
+        const wsBi = yield select(state => state.backingImage.wsBi)
+        if (wsBi) {
+          wsBi.open()
+        } else {
+          wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+        }
+      }
+      if (payload.type === 'backupbackingimages') {
+        const wsBbi = yield select(state => state.backingImage.wsBbi)
+        if (wsBbi) {
+          wsBbi.open()
+        } else {
+          wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+        }
       }
     },
     *stopWS({
       // eslint-disable-next-line no-unused-vars
       payload,
     }, { select }) {
-      let ws = yield select(state => state.backingImage.ws)
-      if (ws) {
-        ws.close(1000)
-      }
+      const wsBi = yield select(state => state.backingImage.wsBi)
+      const wsBbi = yield select(state => state.backingImage.wsBbi)
+      if (wsBi) wsBi.close(1000)
+      if (wsBbi) wsBbi.close(1000)
     },
   },
   reducers: {
@@ -303,6 +308,18 @@ export default {
     },
     updateBackground(state, action) {
       return updateState(state, action)
+    },
+    updateBackgroundBBi(state, action) {
+      if (action.payload && action.payload.data) {
+        return {
+          ...state,
+          bbiData: action.payload.data || [],
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
     },
     showCreateBackingImageModal(state, action) {
       return { ...state, ...action.payload, createBackingImageModalVisible: true, createBackingImageModalKey: Math.random() }
@@ -354,10 +371,16 @@ export default {
       return { ...state, ...action.payload }
     },
     updateSocketStatus(state, action) {
-      return { ...state, socketStatus: action.payload }
+      return { ...state, biSocketStatus: action.payload }
     },
     updateWs(state, action) {
-      return { ...state, ws: action.payload }
+      return { ...state, wsBi: action.payload }
+    },
+    updateSocketStatusBbi(state, action) {
+      return { ...state, bbiSocketStatus: action.payload }
+    },
+    updateWsBbi(state, action) {
+      return { ...state, wsBbi: action.payload }
     },
   },
 }

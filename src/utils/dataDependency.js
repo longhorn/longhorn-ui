@@ -1,3 +1,4 @@
+// key is the payload type, see model/app.js subscriptions()
 const dependency = {
   dashboard: {
     path: '/dashboard',
@@ -70,6 +71,9 @@ const dependency = {
       ns: 'backingImage',
       key: 'backingimages',
     }, {
+      ns: 'backingImage',
+      key: 'backupbackingimages',
+    }, {
       ns: 'setting',
       key: 'settings',
     }, {
@@ -138,6 +142,9 @@ const list = [{
   ns: 'backingImage',
   key: 'backingimages',
 }, {
+  ns: 'backingImage',
+  key: 'backupbackingimages',
+}, {
   ns: 'engineimage',
   key: 'engineimages',
 }, {
@@ -179,18 +186,15 @@ export function getDataDependency(pathName) {
     }
     return false
   })
+  // console.log('🚀 ~ keys ~ keys:', keys)
 
   if (keys && keys.length === 1) {
     let modal = dependency[keys[0]]
     modal.stopWs = list.filter((item) => {
-      return modal.runWs.every((ele) => {
-        return ele.ns !== item.ns
-      })
+      return modal.runWs.every((ele) => ele.ns !== item.ns)
     })
-
     return dependency[keys[0]]
   }
-
   return null
 }
 

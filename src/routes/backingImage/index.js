@@ -456,7 +456,7 @@ class BackingImage extends React.Component {
           <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
           <span style={{ marginLeft: '4px' }}>Backup Backing Image</span>
         </div>
-        <div id="backupBackingImageTable" style={{ height: '50%', padding: '8px 12px 0px' }}>
+        <div id="backupBackingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
           <Row gutter={24} style={{ marginBottom: 8 }}>
             <Col lg={17} md={15} sm={24} xs={24}>
               <BackupBackingImageBulkActions {...backupBackingImageBulkActionsProps} />
