@@ -7,7 +7,6 @@ import { formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
 
 function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height }) {
-  // console.log('🚀 ~ list ~ dataSource:', dataSource)
   const actionsProps = {
     deleteBackupBackingImage,
     restoreBackingImage,
@@ -18,7 +17,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 200,
+      width: 120,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text) => {
         return (<div>{text}</div>)
@@ -27,7 +26,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 150,
+      width: 80,
       sorter: (a, b) => a.state.localeCompare(b.state),
       render: (text) => {
         return (
@@ -38,7 +37,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 150,
+      width: 80,
       sorter: (a, b) => parseInt(a.size, 10) - parseInt(b.size, 10),
       render: (text) => {
         return (
@@ -48,10 +47,24 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
         )
       },
     }, {
-      title: 'Created From',
+      title: 'URL',
+      dataIndex: 'url',
+      key: 'url',
+      width: 200,
+      sorter: (a, b) => a.url.localeCompare(b.url),
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Created Time',
       dataIndex: 'created',
       key: 'created',
-      width: 200,
+      width: 100,
       sorter: (a, b) => a.created.localeCompare(b.created),
       render: (text) => {
         return (

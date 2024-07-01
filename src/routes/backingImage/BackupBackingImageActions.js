@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
-// import { hasReadyBackingDisk } from '../../utils/status'
 const confirm = Modal.confirm
 
 function actions({ selected, deleteBackupBackingImage, restoreBackingImage }) {

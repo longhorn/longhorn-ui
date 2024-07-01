@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import { Row, Col, Button, Progress, notification, Icon } from 'antd'
 import CreateBackingImage from './CreateBackingImage'
@@ -11,31 +10,45 @@ import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
 import UpdateMinCopiesCount from './UpdateMinCopiesCount'
 import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
-import queryString from 'query-string'
 import style from './BackingImage.less'
-import C from '../../utils/constants'
 
-
-const filterBackingImages = (data, search) => {
-  const { field, value, createdFromValue } = queryString.parse(search)
-  let backingImages = data
-  if (field && (value || createdFromValue)) {
-    switch (field) {
-      case 'name':
-      case 'uuid':
-      case 'minNumberOfCopies':
-      case 'diskSelector':
-      case 'nodeSelector':
-        backingImages = backingImages.filter((image) => (value ? image[field].toString().includes(value.toString().trim()) : true))
-        break
-      case 'sourceType':
-        backingImages = backingImages.filter((image) => (createdFromValue ? image.sourceType === createdFromValue?.trim() : true))
-        break
-      default:
-        break
-    }
+const filterBackingImage = (data, field, value) => {
+  if (!data || data.length === 0) {
+    return []
+  }
+  let backingImages = [...data]
+  switch (field) {
+    case 'name':
+    case 'uuid':
+    case 'minNumberOfCopies':
+    case 'diskSelector':
+    case 'nodeSelector':
+      backingImages = backingImages.filter((image) => (value ? image[field].toString().includes(value.toString().trim()) : true))
+      break
+    case 'sourceType':
+      backingImages = backingImages.filter((image) => (value ? image.sourceType === value.trim() : true))
+      break
+    default:
   }
   return backingImages && backingImages.length > 0 ? backingImages.sort((a, b) => a.name.localeCompare(b.name)) : []
+}
+
+const filterBackupBackingImage = (bbiData, field, value) => {
+  if (!bbiData || bbiData.length === 0) {
+    return []
+  }
+  let result = [...bbiData]
+  if (field && value) {
+    switch (field) {
+      case 'name':
+      case 'state':
+      case 'url':
+        result = bbiData.filter((image) => (value ? image[field].toLowerCase().includes(value.toLowerCase().trim()) : true))
+        break
+      default:
+    }
+  }
+  return result
 }
 
 class BackingImage extends React.Component {
@@ -58,13 +71,26 @@ class BackingImage extends React.Component {
   }
 
   onResize = () => {
-    const height = document.getElementById('backingImageTable').offsetHeight - C.ContainerMarginHeight
-    const bbiTableHeight = document.getElementById('backupBackingImageTable').offsetHeight - C.ContainerMarginHeight
+    const bbiTableHeight = document.getElementById('backupBackingImageTable').offsetHeight
+    const biTableHeight = document.getElementById('backingImageTable').offsetHeight
+
+    const tableHeaderHeight = 55
+
+    const biTableClientHeight = document.querySelector('#backingImageTable .ant-table')?.clientHeight
+    const biTableEle = document.querySelector('#backingImageTable .ant-table-body')
+
+    const bbiTableClientHeight = document.querySelector('#backupBackingImageTable .ant-table')?.clientHeight
+    const bbiTableEle = document.querySelector('#backupBackingImageTable .ant-table-body')
+
+    if (biTableEle) biTableEle.style.height = `${biTableClientHeight - tableHeaderHeight}px`
+    if (bbiTableEle) bbiTableEle.style.height = `${bbiTableClientHeight - tableHeaderHeight}px`
+
     this.setState({
-      height,
+      height: biTableHeight,
       bbiTableHeight,
     })
   }
+
 
   uploadFile = (file, record) => {
     let totalSize = file.size
@@ -101,6 +127,10 @@ class BackingImage extends React.Component {
     const {
       data,
       bbiData,
+      biSearchField,
+      biSearchValue,
+      bbiSearchField,
+      bbiSearchValue,
       selected,
       nodeTags,
       diskTags,
@@ -122,12 +152,13 @@ class BackingImage extends React.Component {
     const defaultReplicaCount = settingData.find(s => s.id === 'default-replica-count')
     const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount.value, 10) : 3
 
-    const backingImages = filterBackingImages(data, this.props.location.search)
+    const backingImages = filterBackingImage(data, biSearchField, biSearchValue)
+    const backupBackingImage = filterBackupBackingImage(bbiData, bbiSearchField, bbiSearchValue)
 
     const volumeNameOptions = volumeData.map((volume) => volume.name)
 
     const backupBackingImageListProps = {
-      dataSource: bbiData,
+      dataSource: backupBackingImage,
       height: this.state.bbiTableHeight,
       loading,
       deleteBackupBackingImage(record) {
@@ -301,6 +332,25 @@ class BackingImage extends React.Component {
       diskStateMapDeleteLoading,
     }
 
+    const backupBackingImageFilterProps = {
+      location,
+      defaultField: 'name',
+      fieldOption: [
+        { value: 'name', name: 'Name' },
+        { value: 'state', name: 'State' },
+        { value: 'url', name: 'URL' },
+      ],
+      onSearch(filter) {
+        dispatch({
+          type: 'backingImage/setSearchFilter',
+          payload: {
+            bbiSearchField: filter.field,
+            bbiSearchValue: filter.value,
+          },
+        })
+      },
+    }
+
     const backingImageFilterProps = {
       location,
       defaultField: 'name',
@@ -320,29 +370,19 @@ class BackingImage extends React.Component {
         { value: 'restore', name: 'restore' },
       ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, createdFromValue: createdFromPropValue } = filter
-        if (filterField && (filterValue || createdFromPropValue)) {
-          dispatch(routerRedux.push({
-            pathname: '/backingImage',
-            search: queryString.stringify({
-              ...queryString.parse(location.search),
-              field: filterField,
-              value: filterValue,
-              createdFromValue: createdFromPropValue,
-            }),
-          }))
-        } else {
-          dispatch(routerRedux.push({
-            pathname: '/backingImage',
-            search: queryString.stringify({}),
-          }))
-        }
+        dispatch({
+          type: 'backingImage/setSearchFilter',
+          payload: {
+            biSearchField: filter.field,
+            biSearchValue: filter.value,
+          },
+        })
       },
     }
 
     const backingImageBulkActionsProps = {
       selectedRows,
-      deleteBackupBackingImages(record) {
+      deleteBackingImages(record) {
         dispatch({
           type: 'backingImage/bulkDelete',
           payload: record,
@@ -396,13 +436,13 @@ class BackingImage extends React.Component {
 
     return (
       <div className="content-inner" style={{ display: 'flex', padding: 0, flexDirection: 'column', overflow: 'visible !important' }}>
-        <div id="backingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
+        <div id="backingImageTable" style={{ height: '50%', padding: '8px 12px 0px' }}>
           <Row gutter={24} style={{ marginBottom: 8 }}>
             <Col lg={17} md={15} sm={24} xs={24}>
               <BackingImageBulkActions {...backingImageBulkActionsProps} />
             </Col>
             <Col lg={7} md={9} sm={24} xs={24}>
-              <Filter {...backingImageFilterProps} />
+              <Filter key="biFilter" {...backingImageFilterProps} />
             </Col>
           </Row>
           <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
@@ -416,13 +456,13 @@ class BackingImage extends React.Component {
           <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
           <span style={{ marginLeft: '4px' }}>Backup Backing Image</span>
         </div>
-        <div id="backupBackingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
+        <div id="backupBackingImageTable" style={{ height: '50%', padding: '8px 12px 0px' }}>
           <Row gutter={24} style={{ marginBottom: 8 }}>
             <Col lg={17} md={15} sm={24} xs={24}>
               <BackupBackingImageBulkActions {...backupBackingImageBulkActionsProps} />
             </Col>
             <Col lg={7} md={9} sm={24} xs={24}>
-              {/* <Filter {...backingImageFilterProps} /> */}
+              <Filter key="bbiFilter" {...backupBackingImageFilterProps} />
             </Col>
           </Row>
           <Row style={{ marginBottom: 8, height: 'calc(100% - 48px)' }}>
