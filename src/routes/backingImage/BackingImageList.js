@@ -5,10 +5,11 @@ import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 
-function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
+function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, createBackupBackingImage, downloadBackingImage, height }) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
+    createBackupBackingImage,
   }
   const state = (record) => {
     if (record.deletionTimestamp) {
@@ -85,26 +86,25 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
   ]
 
   return (
-    <div id="backingImageTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
-      <Table
-        className="common-table-class"
-        bordered={false}
-        columns={columns}
-        rowSelection={rowSelection}
-        dataSource={dataSource}
-        loading={loading}
-        simple
-        pagination={pagination}
-        rowKey={record => record.id}
-        scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
-      />
-    </div>
+    <Table
+      className="common-table-class"
+      bordered={false}
+      columns={columns}
+      rowSelection={rowSelection}
+      dataSource={dataSource}
+      loading={loading}
+      simple
+      pagination={pagination('backingImage')}
+      rowKey={record => record.id}
+      scroll={{ x: 970, y: dataSource.length > 0 ? height : 1 }}
+    />
   )
 }
 
 list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
+  createBackupBackingImage: PropTypes.func,
   deleteBackingImage: PropTypes.func,
   showDiskStateMapDetail: PropTypes.func,
   rowSelection: PropTypes.object,

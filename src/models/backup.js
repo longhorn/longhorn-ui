@@ -100,10 +100,10 @@ export default {
     *queryBackupTarget({
       payload,
     }, { call, put }) {
-      let resp = yield call(queryTarget)
+      const resp = yield call(queryTarget)
       if (resp && resp.data && resp.data[0]) {
         let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/backingImage', '/recurringJob']
+        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/recurringJob']
 
         isbackupVolumePage = payload.history && payload.history.location && payload.history.location.pathname && payload.history.location.pathname !== '/' && path.every(ele => !payload.history.location.pathname.startsWith(ele))
         if (isbackupVolumePage) {

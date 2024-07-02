@@ -22,6 +22,7 @@
     "unit-no-unknown": null,
     "no-descending-specificity": null,
     "value-list-max-empty-lines": null,
-    "selector-type-no-unknown": null
+    "selector-type-no-unknown": null,
+    "selector-class-pattern": null
   }
 }
