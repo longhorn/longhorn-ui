@@ -178,6 +178,15 @@ class List extends React.Component {
         },
       },
       {
+        title: 'Backup Mode',
+        dataIndex: 'backupMode',
+        key: 'backupMode',
+        width: 150,
+        render: (text) => {
+          return (<div>{text || 'incremental'}</div>)
+        },
+      },
+      {
         title: 'Snapshot Name',
         dataIndex: 'snapshotName',
         key: 'snapshotName',
@@ -288,7 +297,7 @@ class List extends React.Component {
         title: 'Snapshot Created',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
-        width: 260,
+        width: 220,
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (

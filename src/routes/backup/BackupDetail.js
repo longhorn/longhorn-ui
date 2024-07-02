@@ -15,6 +15,7 @@ const { confirm } = Modal
 
 function Backup({ backup, volume, setting, backingImage, loading, location, dispatch }) {
   const { backupVolumes, backupData, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
+  console.log('🚀 ~ Backup details ~ backupData:', backupData)
   const volumeList = volume.data
   const settings = setting.data
   const backingImages = backingImage.data
@@ -27,6 +28,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
   const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
   sortBackups(backupData)
+
   const backupProps = {
     backup: backupData,
     volumeList,

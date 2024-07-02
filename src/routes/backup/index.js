@@ -21,6 +21,7 @@ function Backup({ backup, loading, setting, backingImage, dispatch, location }) 
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
   const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
+  console.log('🚀 ~ Backup ~ backupVolumes:', backupVolumes)
 
   const settings = setting.data
   const backingImages = backingImage.data

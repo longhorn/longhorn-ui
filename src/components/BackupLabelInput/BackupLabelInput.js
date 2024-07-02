@@ -26,14 +26,7 @@ class BackupLabelInput extends React.Component {
     })
   }
 
-  handleSubmit = e => {
-    e.preventDefault()
-    // this.props.form.validateFields((err, values) => {
-    //   if (!err) {
-    //     const { keys, names } = values
-    //   }
-    // })
-  };
+  handleSubmit = e => e.preventDefault()
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form
@@ -46,45 +39,47 @@ class BackupLabelInput extends React.Component {
     getFieldDecorator('keys', { initialValue: [] })
     const keys = getFieldValue('keys')
     const formItems = keys.map((k, index) => (
-    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'start', height: '60px' }} key={index}>
-      <Form.Item
-        required={false}
-        key={`key${k}`}
-        style={{ marginBottom: 0 }}
-      >
-        {getFieldDecorator(`key[${k}]`, {
-          validateTrigger: ['onChange', 'onBlur'],
-          rules: [
-            {
-              required: true,
-              whitespace: true,
-              message: 'key is required',
-            },
-          ],
-        })(<Input placeholder="Labels Key" style={{ marginRight: 8 }} />)}
-      </Form.Item>
-      <Form.Item
-        required={false}
-        key={`value${k}`}
-        style={{ marginBottom: 0 }}
-      >
-        {getFieldDecorator(`value[${k}]`, {
-          validateTrigger: ['onChange', 'onBlur'],
-          rules: [
-            {
-              required: true,
-              whitespace: true,
-              message: 'value is required',
-            },
-          ],
-        })(<Input placeholder="Labels Value" style={{ marginRight: 8 }} />)}
-      </Form.Item>{keys.length > 0 ? (
-        <Icon
-          style={{ marginTop: '12px' }}
-          className="dynamic-delete-button"
-          type="minus-circle-o"
-          onClick={() => this.remove(k)}
-        />) : null}
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'start', height: '60px' }} key={index}>
+        <Form.Item
+          required={false}
+          key={`key${k}`}
+          labelCol={{ span: 4 }}
+          style={{ marginBottom: 0 }}
+        >
+          {getFieldDecorator(`key[${k}]`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required: true,
+                whitespace: true,
+                message: 'key is required',
+              },
+            ],
+          })(<Input placeholder="Key" style={{ marginRight: 8 }} />)}
+        </Form.Item>
+        <Form.Item
+          required={false}
+          key={`value${k}`}
+          style={{ marginBottom: 0 }}
+        >
+          {getFieldDecorator(`value[${k}]`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required: true,
+                whitespace: true,
+                message: 'value is required',
+              },
+            ],
+          })(<Input placeholder="Value" style={{ marginRight: 8 }} />)}
+        </Form.Item>
+        {keys.length > 0 ? (
+          <Icon
+            style={{ marginTop: '12px' }}
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => this.remove(k)}
+          />) : null}
       </div>
     ))
     return (
@@ -92,7 +87,7 @@ class BackupLabelInput extends React.Component {
         {formItems}
         <Form.Item {...formItemLayoutWithOutLabel}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add Labels for Backup
+            <Icon type="plus" /> Add Backup Labels
           </Button>
         </Form.Item>
       </Form>
