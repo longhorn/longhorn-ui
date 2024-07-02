@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Select, Upload, Button, Icon, InputNumber, Spin } from 'antd'
-import { ModalBlur, AutoComplete } from '../../components'
+import { ModalBlur } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
 
 const FormItem = Form.Item
@@ -22,6 +23,9 @@ const genDataFromType = (type, getFieldValue) => {
   const payload = {
     name: getFieldValue('name'),
     sourceType: getFieldValue('sourceType'),
+    minNumberOfCopies: getFieldValue('minNumberOfCopies'),
+    diskSelector: getFieldValue('diskSelector'),
+    nodeSelector: getFieldValue('nodeSelector'),
   }
 
   switch (type) {
@@ -110,16 +114,6 @@ const modal = ({
     },
   }
 
-
-  const autoCompleteProps = {
-    options: volumeNameOptions,
-    autoCompleteChange: (value) => {
-      setFieldsValue({
-        volumeName: value,
-      })
-    },
-  }
-
   const creationType = getFieldValue('sourceType')
   const availBackingImages = backingImageOptions?.filter(image => hasReadyBackingDisk(image)) || []
 
@@ -149,8 +143,8 @@ const modal = ({
           })(<Select defaultValue={'download'} onChange={() => {}}>
             <Option value={'download'}>Download From URL</Option>
             <Option value={'upload'}>Upload From Local</Option>
-            <Option value={'volume'}>Export from a Longhorn volume</Option>
-            <Option value={'clone'}>Clone from existing backing image</Option>
+            <Option value={'volume'}>Export From a Longhorn Volume</Option>
+            <Option value={'clone'}>Clone From Existing Backing Image</Option>
           </Select>)}
         </FormItem>
         {/* Display when select type = volume */}
@@ -159,27 +153,15 @@ const modal = ({
             <FormItem label="Volume Name" {...formItemLayout}>
               {getFieldDecorator('volumeName', {
                 initialValue: '',
-                valuePropName: 'value',
                 rules: [
                   {
                     required: creationType === 'volume',
-                    message: 'Please input volume name',
-                  },
-                  {
-                    validator: (_rule, value, callback) => {
-                      if (creationType === 'volume') {
-                        if (volumeNameOptions && volumeNameOptions.includes(value)) {
-                          callback()
-                        } else {
-                          callback('Please select an existing Longhorn volume.')
-                        }
-                      } else {
-                        callback()
-                      }
-                    },
+                    message: 'Please select an existing volume',
                   },
                 ],
-              })(<AutoComplete {...autoCompleteProps}></AutoComplete>)}
+              })(<Select>
+            {volumeNameOptions.map(vol => <Option key={vol} value={vol}>{vol}</Option>)}
+          </Select>)}
             </FormItem>
             <FormItem label="Exported Backing Image Type" {...formItemLayout}>
               {getFieldDecorator('exportType', {

@@ -187,11 +187,6 @@ class BackingImage extends React.Component {
             duration: 0,
           })
         }
-        params.expectedChecksum = newBackingImage.expectedChecksum
-        params.diskSelector = newBackingImage.diskSelector
-        params.nodeSelector = newBackingImage.nodeSelector
-        params.minNumberOfCopies = newBackingImage.minNumberOfCopies
-
         dispatch({
           type: 'backingImage/create',
           payload,
@@ -278,6 +273,7 @@ class BackingImage extends React.Component {
         { value: 'download', name: 'download' },
         { value: 'upload', name: 'upload' },
         { value: 'export-from-volume', name: 'export-from-volume' },
+        { value: 'clone', name: 'clone' },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, createdFromValue: createdFromPropValue } = filter
