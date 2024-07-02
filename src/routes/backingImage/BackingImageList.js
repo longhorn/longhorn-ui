@@ -22,19 +22,6 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
         </Tooltip>
       )
     }
-    if (Object.values(record.diskFileStatusMap).length > 0
-    && Object.values(record.diskFileStatusMap).some((diskStatus) => ['starting', 'pending', 'in-progress', 'ready-for-transfer'].includes(diskStatus.state))) {
-      // some creating states
-      const state = Object.values(record.diskFileStatusMap)[0]?.state || ''
-      const percentage = Object.values(record.diskFileStatusMap)[0]?.progress?.toString() || ''
-      return (
-        <Tooltip title={state}>
-          <Icon type="sync" style={{ color: '#00558b', marginRight: 4 }} spin />
-          {percentage && <span style={{ color: '#00558b' }}>{`${percentage} %`}</span>}
-        </Tooltip>
-      )
-    }
-
     return ''
   }
 
