@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
-import { hasReadyBackingDisk } from '../../utils/status'
-import { diskStatusColorMap } from '../../utils/filter'
+import { hasReadyBackingDisk, diskStatusColorMap } from '../../utils/status'
 
 const confirm = Modal.confirm
 
@@ -14,8 +13,10 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
       case 'delete':
         confirm({
           width: 'fit-content',
+          okType: 'danger',
+          okText: 'Delete',
           title: (<>
-                    <p>Are you sure to delete below {count} Backing {count === 1 ? 'Image' : 'Images' } ?</p>
+                    <p>Are you sure to delete below {count} backing {count === 1 ? 'image' : 'images' } ?</p>
                     <ul>
                       {selectedRows.map(item => <li>{item.name}</li>)},
                     </ul>

@@ -140,41 +140,25 @@ class BackingImage extends React.Component {
         url: '',
       },
       volumeNameOptions,
+      backingImageOptions: backingImages,
       visible: createBackingImageModalVisible,
       onOk(newBackingImage) {
-        let params = {}
-        params.name = newBackingImage.name
-        if (newBackingImage.type === 'upload') {
-          params.sourceType = 'upload'
-          params.parameters = {}
-
-          // notification.warning
+        const payload = { ...newBackingImage }
+        if (newBackingImage.sourceType === 'upload') {
+          delete payload.fileContainer
           notification.warning({
             message: 'Do not refresh or close this page, otherwise the upload will be interrupted.',
             key: 'uploadNotification',
             duration: 0,
           })
-        } else if (newBackingImage.type === 'download') {
-          params.sourceType = 'download'
-          params.parameters = {
-            url: newBackingImage.imageURL,
-          }
-        } else {
-          params.sourceType = 'export-from-volume'
-          params.parameters = {
-            'volume-name': newBackingImage.volumeName,
-            'export-type': newBackingImage.exportType,
-          }
         }
-        params.expectedChecksum = newBackingImage.expectedChecksum
-
         dispatch({
           type: 'backingImage/create',
-          payload: params,
+          payload,
           callback: (record, canUpload) => {
+            const file = newBackingImage?.fileContainer?.file
             // to do upload
-            if (newBackingImage.fileContainer && newBackingImage.fileContainer.file && newBackingImage.type === 'upload' && canUpload) {
-              let file = newBackingImage.fileContainer.file
+            if (newBackingImage.sourceType === 'upload' && file && canUpload) {
               uploadFile(file, record)
             } else {
               notification.close('uploadNotification')
@@ -251,6 +235,7 @@ class BackingImage extends React.Component {
         { value: 'download', name: 'download' },
         { value: 'upload', name: 'upload' },
         { value: 'export-from-volume', name: 'export-from-volume' },
+        { value: 'clone', name: 'clone' },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, createdFromValue: createdFromPropValue } = filter
