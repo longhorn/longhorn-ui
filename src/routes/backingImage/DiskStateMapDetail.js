@@ -160,6 +160,7 @@ const modal = ({
                 {currentData.sourceType === 'download' && 'Download from URL'}
                 {currentData.sourceType === 'upload' && 'Upload'}
                 {currentData.sourceType === 'export-from-volume' && 'Export from a Longhorn volume'}
+                {currentData.sourceType === 'clone' && 'Clone from existing backing image'}
               </span>
               <div style={{ textAlign: 'left' }}>Parameters During Creation</div>
               <div>
