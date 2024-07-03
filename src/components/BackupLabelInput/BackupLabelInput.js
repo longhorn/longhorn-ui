@@ -1,17 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Icon, Button } from 'antd'
+import { Form, Input, Icon, Button, Tooltip } from 'antd'
 
 let id = 0
+const formItemLayout = {
+  labelCol: {
+    span: 6,
+  },
+  wrapperCol: {
+    span: 15,
+  },
+}
 
 class BackupLabelInput extends React.Component {
   remove = k => {
     const { form } = this.props
     // can use data-binding to get
     const keys = form.getFieldValue('keys')
-    // We need at least one passenger
-
-    // can use data-binding to set
     form.setFieldsValue({
       keys: keys.filter(key => key !== k),
     })
@@ -30,20 +35,14 @@ class BackupLabelInput extends React.Component {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 16, offset: 4 },
-      },
-    }
+
     getFieldDecorator('keys', { initialValue: [] })
     const keys = getFieldValue('keys')
     const formItems = keys.map((k, index) => (
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'start', height: '60px' }} key={index}>
+      <div style={{ paddingLeft: 10, display: 'flex', justifyContent: 'space-evenly', alignItems: 'start', height: '60px' }} key={index}>
         <Form.Item
           required={false}
           key={`key${k}`}
-          labelCol={{ span: 4 }}
           style={{ marginBottom: 0 }}
         >
           {getFieldDecorator(`key[${k}]`, {
@@ -73,23 +72,26 @@ class BackupLabelInput extends React.Component {
             ],
           })(<Input placeholder="Value" style={{ marginRight: 8 }} />)}
         </Form.Item>
-        {keys.length > 0 ? (
-          <Icon
-            style={{ marginTop: '12px' }}
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            onClick={() => this.remove(k)}
-          />) : null}
+        {keys.length > 0 && (
+          <Tooltip title="Remove label">
+            <Icon
+              style={{ marginTop: '12px' }}
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => this.remove(k)}
+            />
+          </Tooltip>
+        )}
       </div>
     ))
     return (
       <Form onSubmit={this.handleSubmit}>
-        {formItems}
-        <Form.Item {...formItemLayoutWithOutLabel}>
+        <Form.Item label="Labels" {...formItemLayout}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add Backup Labels
+            <Icon type="plus" /> Add
           </Button>
         </Form.Item>
+        {formItems}
       </Form>
     )
   }
