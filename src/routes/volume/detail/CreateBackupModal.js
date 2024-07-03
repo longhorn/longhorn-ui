@@ -14,7 +14,6 @@ const formItemLayout = {
   },
 }
 
-
 const getLabels = (getFieldsValue) => {
   const result = {}
   if (getFieldsValue().keys && getFieldsValue().key && getFieldsValue().value) {
@@ -24,6 +23,7 @@ const getLabels = (getFieldsValue) => {
   }
   return result
 }
+
 const modal = ({
   visible,
   onCancel,
@@ -45,6 +45,7 @@ const modal = ({
         labels: getLabels(getFieldsValue),
         backupMode: getFieldValue('fullBackup') === true ? 'full' : 'incremental',
       }
+      console.log('🚀 ~ validateFields ~ data:', data)
       onOk(data)
     })
   }
@@ -66,14 +67,16 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <p type="warning"><Icon style={{ marginRight: '10px' }} type="exclamation-circle" />This could take a while depending on the actual size of the volume and network bandwidth.</p>
-       <FormItem label="Full Backup" {...formItemLayout}>
-          {getFieldDecorator('fullBackup', {
-            valuePropName: 'checked',
-            initialValue: false,
-          })(<Checkbox />)}
-        </FormItem>
+      <p type="warning">
+        <Icon style={{ marginRight: '10px' }} type="exclamation-circle" />This could take a while depending on the actual size of the volume and network bandwidth.
+      </p>
       <BackupLabelInput form={form} />
+      <FormItem label="Full Backup" {...formItemLayout}>
+        {getFieldDecorator('fullBackup', {
+          valuePropName: 'checked',
+          initialValue: false,
+        })(<Checkbox />)}
+      </FormItem>
     </ModalBlur>
   )
 }
