@@ -219,7 +219,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Select>
+          })(<Select disabled>
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}

@@ -161,7 +161,6 @@ const modal = ({
   const handleDataLocalityChange = (value) => updateVolumeConfig('dataLocality', value)
   const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
   const handleEncryptedCheck = (e) => updateVolumeConfig('encrypted', e.target.checked)
-  const handleDataEngineChange = (value) => updateVolumeConfig('dataEngine', value)
   const handleNodeTagRemove = (value) => {
     const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
     const newNodeSelector = oldNodeTags?.filter(tag => tag !== value) || []
@@ -346,7 +345,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Select onSelect={handleDataEngineChange}>
+          })(<Select disabled>
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
