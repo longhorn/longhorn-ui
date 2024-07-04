@@ -1,4 +1,6 @@
+
 import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
+import { getNodeTags, getDiskTags } from '../services/volume'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
@@ -13,6 +15,9 @@ export default {
     resourceType: 'backingImage',
     selected: {},
     selectedRows: [],
+    nodeTags: [],
+    diskTags: [],
+    tagsLoading: true,
     createBackingImageModalVisible: false,
     createBackingImageModalKey: Math.random(),
     diskStateMapDetailModalVisible: false,
@@ -87,6 +92,18 @@ export default {
       } else {
         // When a creation error occurs, the notification that has been turned on must be terminated.
         payload.sourceType === 'upload' && notification.destroy()
+      }
+    },
+    *openCreateBackingImageModal({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'showCreateBackingImageModal' })
+      const nodeTags = yield call(getNodeTags, payload)
+      const diskTags = yield call(getDiskTags, payload)
+      if (nodeTags.status === 200 && diskTags.status === 200) {
+        yield put({ type: 'changeTagsLoading', payload: { nodeTags: nodeTags.data, diskTags: diskTags.data, tagsLoading: false } })
+      } else {
+        yield put({ type: 'changeTagsLoading', payload: { tagsLoading: false } })
       }
     },
     *delete({
@@ -218,6 +235,9 @@ export default {
       return { ...state, diskStateMapDeleteLoading: true }
     },
     changeDiskStateMapSelection(state, action) {
+      return { ...state, ...action.payload }
+    },
+    changeTagsLoading(state, action) {
       return { ...state, ...action.payload }
     },
     updateSocketStatus(state, action) {

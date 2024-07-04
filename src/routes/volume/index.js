@@ -219,6 +219,7 @@ class Volume extends React.Component {
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)
     const settings = this.props.setting.data
     const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
+    console.log('🚀 ~ Volume ~ render ~ defaultReplicaCountSetting:', defaultReplicaCountSetting)
     const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
     const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
     const defaultRevisionCounterSetting = settings.find(s => s.id === 'disable-revision-counter')

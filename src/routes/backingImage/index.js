@@ -67,10 +67,17 @@ class BackingImage extends React.Component {
   render() {
     const { dispatch, loading, location } = this.props
     const { uploadFile } = this
+    const { data: settingData } = this.props.setting
     const { data: volumeData } = this.props.volume
-    const { data, selected, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows } = this.props.backingImage
+    const { data, selected, nodeTags, diskTags, tagsLoading, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows } = this.props.backingImage
+    console.log('🚀 ~ BackingImage ~ render ~ tagsLoading:', tagsLoading)
+    console.log('🚀 ~ BackingImage ~ render ~ diskTags:', diskTags)
+    console.log('🚀 ~ BackingImage ~ render ~ nodeTags:', nodeTags)
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
     const { field, value, createdFromValue } = queryString.parse(this.props.location.search)
+
+    const defaultReplicaCount = settingData.find(s => s.id === 'default-replica-count')
+    const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount.value, 10) : 3
 
     let backingImages = data
     if (field && (value || createdFromValue)) {
@@ -130,7 +137,7 @@ class BackingImage extends React.Component {
 
     const addBackingImage = () => {
       dispatch({
-        type: 'backingImage/showCreateBackingImageModal',
+        type: 'backingImage/openCreateBackingImageModal',
       })
     }
 
@@ -140,7 +147,11 @@ class BackingImage extends React.Component {
         url: '',
       },
       volumeNameOptions,
+      defaultNumberOfReplicas,
       visible: createBackingImageModalVisible,
+      nodeTags,
+      diskTags,
+      tagsLoading,
       onOk(newBackingImage) {
         let params = {}
         params.name = newBackingImage.name
@@ -167,6 +178,10 @@ class BackingImage extends React.Component {
           }
         }
         params.expectedChecksum = newBackingImage.expectedChecksum
+
+        params.diskSelector = newBackingImage.diskSelector
+        params.nodeSelector = newBackingImage.nodeSelector
+        params.minNumberOfCopies = newBackingImage.minNumberOfCopies
 
         dispatch({
           type: 'backingImage/create',
@@ -322,6 +337,7 @@ class BackingImage extends React.Component {
 
 BackingImage.propTypes = {
   app: PropTypes.object,
+  setting: PropTypes.object,
   backingImage: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
@@ -329,4 +345,4 @@ BackingImage.propTypes = {
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, volume, backingImage, loading }) => ({ app, volume, backingImage, loading: loading.models.backingImage }))(BackingImage)
+export default connect(({ app, setting, volume, backingImage, loading }) => ({ app, setting, volume, backingImage, loading: loading.models.backingImage }))(BackingImage)
