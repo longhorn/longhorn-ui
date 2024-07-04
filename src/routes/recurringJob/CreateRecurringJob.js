@@ -107,7 +107,6 @@ const modal = ({
         data.parameters = {}
         data.parameters[data.parametersKey] = data.parametersValue.toString()
       }
-
       delete data.parametersKey
       delete data.parametersValue
       onOk(data)
@@ -154,6 +153,16 @@ const modal = ({
       })
     }
   }
+
+  const handleParameterChange = (value) => {
+    // clear parametersValue if parametersKey is cleared
+    if (value === undefined) {
+      setFieldsValue({
+        parametersValue: '',
+      })
+    }
+  }
+
   const onCronOk = () => {
     // CronProps.cron changed by the parent component and passed on to the current component.
     setFieldsValue({
@@ -349,20 +358,14 @@ const modal = ({
           <div style={{ display: 'flex' }}>
             <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
               {getFieldDecorator('parametersKey', {
-                initialValue: isEdit ? Object.keys(item?.parameters)[0] : '',
-              })(<Select style={{ width: '100%' }}>
+                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.keys(item.parameters)[0] : '',
+              })(<Select style={{ width: '100%' }} allowClear onChange={handleParameterChange}>
                   <Option value="full-backup-interval">full-backup-interval</Option>
               </Select>)}
             </FormItem>
             <FormItem style={{ flex: '1 50%' }} {...formItemLayout}>
               {getFieldDecorator('parametersValue', {
-                initialValue: isEdit ? Object.values(item?.parameters)[0] : '',
-                rules: [
-                  {
-                    required: getFieldValue('parametersKey') !== '',
-                    message: 'interval number is required',
-                  },
-                ],
+                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.values(item.parameters)[0] : '',
               })(<InputNumber min={0} style={{ width: '66%' }} />)}
             </FormItem>
           </div>
