@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Icon, Button, Select, Checkbox, InputNumber, Tooltip } from 'antd'
+import { Form, Input, Icon, Button, Select, InputNumber, Checkbox, Tooltip } from 'antd'
 import { ModalBlur, ReactCron } from '../../components'
 
 const Option = Select.Option
@@ -36,7 +36,7 @@ const formItemForAddLabels = {
 const formItemLayoutWithOutForAddLabels = {
   wrapperCol: {
     span: 17,
-    offset: 6,
+    offset: 5,
   },
 }
 
@@ -65,10 +65,11 @@ const modal = ({
       if (errors) {
         return
       }
+      // TODO: extract below logic to getData function
       const data = {
         ...getFieldsValue(),
       }
-      if (data.fourceCreate) {
+      if (data.forceCreate) {
         if (data.task === 'snapshot') {
           data.task = 'snapshot-force-create'
         }
@@ -77,18 +78,14 @@ const modal = ({
         }
       }
       if (data.groups) {
-        data.groups = data.groups.filter((group) => {
-          return group
-        })
+        data.groups = data.groups.filter((group) => group)
         data.groups = data.groups && new Set(data.groups)
       } else {
         // If groups is null change it to empty array
         data.groups = []
       }
       if (data.labels) {
-        let labels = data.labels.filter((label) => {
-          return label
-        })
+        const labels = data.labels.filter((label) => label)
         if (labels && labels.length > 0) {
           let obj = {}
           data.labels = labels.forEach(label => {
@@ -96,7 +93,6 @@ const modal = ({
               obj[label.key] = label.value
             }
           })
-
           data.labels = obj
         }
       }
@@ -107,7 +103,13 @@ const modal = ({
         delete data.keysForlabels
       }
       delete data.defaultGroup
+      if (data.parametersKey && data.parametersValue?.toString() !== '') {
+        data.parameters = {}
+        data.parameters[data.parametersKey] = data.parametersValue.toString()
+      }
 
+      delete data.parametersKey
+      delete data.parametersValue
       onOk(data)
     })
   }
@@ -179,7 +181,7 @@ const modal = ({
   getFieldDecorator('keysForlabels', { initialValue: isEdit && item.labels ? Object.keys(item.labels).map((_, index) => index) : [0] })
 
   const keys = getFieldValue('keys')
-  const formKeys = keys.map((k, index) => (
+  const formGroups = keys.map((k, index) => (
     <Form.Item
       {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
       label={index === 0 ? 'Groups' : ''}
@@ -238,7 +240,7 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input placeholder="label key" style={{ width: '95%', marginRight: 8 }} />)}
+          })(<Input placeholder="key" style={{ width: '95%', marginRight: 8 }} />)}
         </Form.Item>
       </div>
       <div style={{ flex: 1 }}>
@@ -255,7 +257,7 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input placeholder="label value" style={{ width: '80%', marginRight: 8 }} />)}
+          })(<Input placeholder="value" style={{ width: '72%', marginRight: 8 }} />)}
           {keysForlabels.length > 1 ? (
             <Icon
               className="dynamic-delete-button"
@@ -304,7 +306,8 @@ const modal = ({
             placement="topLeft"
             title={`Create ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} periodically, even if expired ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} cannot be cleaned up.`}>
               <FormItem label="Force Create" style={{ width: 325 }} labelCol={{ span: 8 }} wrapperCol={{ span: 4 }}>
-                {getFieldDecorator('fourceCreate', {
+                {getFieldDecorator('forceCreate', {
+                  valuePropName: 'checked',
                   initialValue: false,
                 })(<Checkbox></Checkbox>)}
               </FormItem>
@@ -342,7 +345,29 @@ const modal = ({
           })(<Input style={{ width: '80%' }} />)}
           <Button style={{ marginLeft: 5 }} onClick={cronProps.openCronModal}>Edit</Button>
         </FormItem>
-        {formKeys}
+        {getFieldValue('task') === 'backup' && (
+          <div style={{ display: 'flex' }}>
+            <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+              {getFieldDecorator('parametersKey', {
+                initialValue: isEdit ? Object.keys(item?.parameters)[0] : '',
+              })(<Select style={{ width: '100%' }}>
+                  <Option value="full-backup-interval">full-backup-interval</Option>
+              </Select>)}
+            </FormItem>
+            <FormItem style={{ flex: '1 50%' }} {...formItemLayout}>
+              {getFieldDecorator('parametersValue', {
+                initialValue: isEdit ? Object.values(item?.parameters)[0] : '',
+                rules: [
+                  {
+                    required: getFieldValue('parametersKey') !== '',
+                    message: 'interval number is required',
+                  },
+                ],
+              })(<InputNumber min={0} style={{ width: '66%' }} />)}
+            </FormItem>
+          </div>
+        )}
+        {formGroups}
         <Form.Item {...formItemLayoutWithOutLabel}>
           <span style={{ width: '38%', display: 'inline-block', marginRight: 10 }}>
             <Button type="dashed" style={{ width: '100%' }} onClick={add}>
@@ -359,7 +384,7 @@ const modal = ({
         </Form.Item>
         {formLabels}
         <Form.Item {...formItemLayoutWithOutLabel}>
-          <Button type="dashed" onClick={addLabel} style={{ width: '60%' }}>
+          <Button type="dashed" onClick={addLabel} style={{ width: '80%' }}>
             <Icon type="plus" /> Add Label
           </Button>
         </Form.Item>

@@ -88,7 +88,7 @@ class BackupLabelInput extends React.Component {
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label="Labels" {...formItemLayout}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add
+            <Icon type="plus" /> Add Label
           </Button>
         </Form.Item>
         {formItems}
