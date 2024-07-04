@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Upload, Button, Icon } from 'antd'
-import { ModalBlur, AutoComplete } from '../../components'
+import { Form, Input, Select, Upload, Button, Icon, InputNumber, Spin } from 'antd'
+import { ModalBlur } from '../../components'
+
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -17,6 +18,10 @@ const formItemLayout = {
 const modal = ({
   item,
   volumeNameOptions,
+  tagsLoading,
+  defaultNumberOfReplicas,
+  nodeTags,
+  diskTags,
   visible,
   onCancel,
   onOk,
@@ -78,15 +83,6 @@ const modal = ({
     },
   }
 
-  const autoCompleteProps = {
-    options: volumeNameOptions,
-    autoCompleteChange: (value) => {
-      setFieldsValue({
-        volumeName: value,
-      })
-    },
-  }
-
   const creationType = getFieldValue('type')
   return (
     <ModalBlur {...modalOpts}>
@@ -102,6 +98,7 @@ const modal = ({
             ],
           })(<Input />)}
         </FormItem>
+
         <FormItem label="Created From" {...formItemLayout}>
           {getFieldDecorator('type', {
             valuePropName: 'type',
@@ -120,27 +117,15 @@ const modal = ({
         <FormItem label="Volume Name" {...formItemLayout} style={{ display: creationType === 'volume' ? 'block' : 'none' }}>
           {getFieldDecorator('volumeName', {
             initialValue: '',
-            valuePropName: 'value',
             rules: [
               {
                 required: creationType === 'volume',
-                message: 'Please input volume name',
-              },
-              {
-                validator: (rule, value, callback) => {
-                  if (creationType === 'volume') {
-                    if (volumeNameOptions && volumeNameOptions.includes(value)) {
-                      callback()
-                    } else {
-                      callback('Please select an existing Longhorn volume.')
-                    }
-                  } else {
-                    callback()
-                  }
-                },
+                message: 'Please select an existing volume',
               },
             ],
-          })(<AutoComplete {...autoCompleteProps}></AutoComplete>)}
+          })(<Select>
+            {volumeNameOptions.map(vol => <Option key={vol} value={vol}>{vol}</Option>)}
+          </Select>)}
         </FormItem>
         <FormItem label="Exported Backing Image Type" {...formItemLayout} style={{ display: creationType === 'volume' ? 'block' : 'none' }}>
           {getFieldDecorator('exportType', {
@@ -211,6 +196,35 @@ const modal = ({
             ],
           })(<Input placeholder="Ask Longhorn to validate the SHA512 checksum if it is specified here." />)}
         </FormItem>
+        <FormItem label="Minimum Number of Copies" {...formItemLayout}>
+          {getFieldDecorator('MinNumberOfCopies', {
+            initialValue: defaultNumberOfReplicas,
+            rules: [
+              {
+                required: true,
+                message: 'Please input the min number of copies',
+              },
+            ],
+          })(<InputNumber min={1} />)}
+        </FormItem>
+        <Spin spinning={tagsLoading}>
+          <FormItem label="Node Tag" {...formItemLayout}>
+            {getFieldDecorator('nodeSelector', {
+              initialValue: [],
+            })(<Select mode="multiple">
+            { nodeTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
+        <Spin spinning={tagsLoading}>
+          <FormItem label="Disk Tag" {...formItemLayout}>
+            {getFieldDecorator('diskSelector', {
+              initialValue: [],
+            })(<Select mode="multiple">
+            { diskTags.map(opt => <Option key={opt.id} value={opt.id}>{opt.name}</Option>) }
+            </Select>)}
+          </FormItem>
+        </Spin>
       </Form>
     </ModalBlur>
   )
@@ -222,7 +236,11 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  tagsLoading: PropTypes.bool,
   volumeNameOptions: PropTypes.array,
+  defaultNumberOfReplicas: PropTypes.number,
+  nodeTags: PropTypes.array,
+  diskTags: PropTypes.array,
 }
 
 export default Form.create()(modal)
