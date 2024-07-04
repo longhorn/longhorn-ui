@@ -45,7 +45,6 @@ const modal = ({
         labels: getLabels(getFieldsValue),
         backupMode: getFieldValue('fullBackup') === true ? 'full' : 'incremental',
       }
-      console.log('🚀 ~ validateFields ~ data:', data)
       onOk(data)
     })
   }
