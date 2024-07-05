@@ -197,7 +197,7 @@ const modal = ({
           })(<Input placeholder="Ask Longhorn to validate the SHA512 checksum if it is specified here." />)}
         </FormItem>
         <FormItem label="Minimum Number of Copies" {...formItemLayout}>
-          {getFieldDecorator('MinNumberOfCopies', {
+          {getFieldDecorator('minNumberOfCopies', {
             initialValue: defaultNumberOfReplicas,
             rules: [
               {

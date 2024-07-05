@@ -8,9 +8,33 @@ import BackingImageList from './BackingImageList'
 import DiskStateMapDetail from './DiskStateMapDetail'
 import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
+import UpdateMinCopiesCount from './UpdateMinCopiesCount'
 import queryString from 'query-string'
 import style from './BackingImage.less'
 import C from '../../utils/constants'
+
+
+const filterBackingImages = (data, search) => {
+  const { field, value, createdFromValue } = queryString.parse(search)
+  let backingImages = data
+  if (field && (value || createdFromValue)) {
+    switch (field) {
+      case 'name':
+      case 'uuid':
+      case 'minNumberOfCopies':
+      case 'diskSelector':
+      case 'nodeSelector':
+        backingImages = backingImages.filter((image) => (value ? image[field].toString().includes(value.toString().trim()) : true))
+        break
+      case 'sourceType':
+        backingImages = backingImages.filter((image) => (createdFromValue ? image.sourceType === createdFromValue?.trim() : true))
+        break
+      default:
+        break
+    }
+  }
+  return backingImages && backingImages.length > 0 ? backingImages.sort((a, b) => a.name.localeCompare(b.name)) : []
+}
 
 class BackingImage extends React.Component {
   constructor(props) {
@@ -69,41 +93,40 @@ class BackingImage extends React.Component {
     const { uploadFile } = this
     const { data: settingData } = this.props.setting
     const { data: volumeData } = this.props.volume
-    const { data, selected, nodeTags, diskTags, tagsLoading, createBackingImageModalVisible, createBackingImageModalKey, diskStateMapDetailModalVisible, diskStateMapDetailModalKey, diskStateMapDeleteDisabled, diskStateMapDeleteLoading, selectedDiskStateMapRows, selectedDiskStateMapRowKeys, selectedRows } = this.props.backingImage
-    console.log('🚀 ~ BackingImage ~ render ~ tagsLoading:', tagsLoading)
-    console.log('🚀 ~ BackingImage ~ render ~ diskTags:', diskTags)
-    console.log('🚀 ~ BackingImage ~ render ~ nodeTags:', nodeTags)
+    const { data,
+      selected,
+      nodeTags,
+      diskTags,
+      tagsLoading,
+      minCopiesCountModalVisible,
+      createBackingImageModalVisible,
+      createBackingImageModalKey,
+      diskStateMapDetailModalVisible,
+      diskStateMapDetailModalKey,
+      diskStateMapDeleteDisabled,
+      diskStateMapDeleteLoading,
+      selectedDiskStateMapRows,
+      selectedDiskStateMapRowKeys,
+      selectedRows,
+    } = this.props.backingImage
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
-    const { field, value, createdFromValue } = queryString.parse(this.props.location.search)
 
     const defaultReplicaCount = settingData.find(s => s.id === 'default-replica-count')
     const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount.value, 10) : 3
 
-    let backingImages = data
-    if (field && (value || createdFromValue)) {
-      switch (field) {
-        case 'name':
-          backingImages = backingImages.filter((image) => (value ? image.name.includes(value.trim()) : true))
-          break
-        case 'uuid':
-          backingImages = backingImages.filter((image) => (value ? image.uuid.includes(value.trim()) : true))
-          break
-        case 'sourceType':
-          backingImages = backingImages.filter((image) => (createdFromValue ? image.sourceType === createdFromValue?.trim() : true))
-          break
-        default:
-          break
-      }
-    }
+    const backingImages = filterBackingImages(data, this.props.location.search)
 
-    if (backingImages && backingImages.length > 0) {
-      backingImages.sort((a, b) => a.name.localeCompare(b.name))
-    }
     const volumeNameOptions = volumeData.map((volume) => volume.name)
     const backingImageListProps = {
       dataSource: backingImages,
       height: this.state.height,
       loading,
+      showUpdateMinCopiesCount(record) {
+        dispatch({
+          type: 'backingImage/showUpdateMinCopiesCountModal',
+          payload: record,
+        })
+      },
       deleteBackingImage(record) {
         dispatch({
           type: 'backingImage/delete',
@@ -261,6 +284,9 @@ class BackingImage extends React.Component {
         { value: 'name', name: 'Name' },
         { value: 'uuid', name: 'UUID' },
         { value: 'sourceType', name: 'Created From' },
+        { value: 'minNumberOfCopies', name: 'Minimum Copies' },
+        { value: 'nodeSelector', name: 'Node Tags' },
+        { value: 'diskSelector', name: 'Disk Tags' },
       ],
       createdFromOption: [
         { value: 'download', name: 'download' },
@@ -304,6 +330,26 @@ class BackingImage extends React.Component {
       },
     }
 
+    const minCopiesCountProps = {
+      item: selected,
+      visible: minCopiesCountModalVisible,
+      defaultNumberOfReplicas,
+      onOk(record, newCount) {
+        dispatch({
+          type: 'backingImage/updateMinCopiesCount',
+          payload: {
+            url: record?.actions?.updateMinNumberOfCopies || '',
+            params: { minNumberOfCopies: newCount },
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'backingImage/hideUpdateMinCopiesCountModal',
+        })
+      },
+    }
+
     let inUploadProgress = backingImageUploadStarted
 
     return (
@@ -328,6 +374,7 @@ class BackingImage extends React.Component {
           Create Backing Image
         </Button>
         <BackingImageList {...backingImageListProps} />
+        { minCopiesCountModalVisible && <UpdateMinCopiesCount {...minCopiesCountProps} />}
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}
       </div>

@@ -14,6 +14,7 @@ import {
   getOfflineRebuiltStatusWithoutFrontend,
 } from '../helper/index'
 import styles from './VolumeInfo.less'
+import { diskTagColor, nodeTagColor } from '../../../utils/constants'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
 import ConditionTooltip from './ConditionTooltip'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
@@ -102,7 +103,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
 
   let forMapNode = (tag, index) => {
     return (
-      <Tag key={index} color="rgb(39, 174, 95)">
+      <Tag key={index} color={nodeTagColor}>
         {tag}
       </Tag>
     )
@@ -110,7 +111,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
 
   let forMapDisk = (tag, index) => {
     return (
-      <Tag key={index} color="#108eb9">
+      <Tag key={index} color={diskTagColor}>
         {tag}
       </Tag>
     )

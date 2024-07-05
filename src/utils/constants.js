@@ -8,5 +8,8 @@ const C = {
   ContainerMarginHeight: 101,
 }
 
+const nodeTagColor = 'rgb(39, 174, 95)' // green
+const diskTagColor = '#108eb9' // blue
+
 export default C
-export { LH_UI_VERSION }
+export { LH_UI_VERSION, nodeTagColor, diskTagColor }

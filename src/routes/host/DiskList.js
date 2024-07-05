@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Progress, Tooltip, Tag } from 'antd'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
+import { diskTagColor } from '../../utils/constants'
 import { formatMib } from '../../utils/formatter'
 import './DiskList.less'
 
@@ -144,7 +145,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
         let forMap = (tag, index) => {
           return (
             <span style={{ marginBottom: '6px' }} key={index}>
-              <Tag color="#108eb9">
+              <Tag color={diskTagColor}>
                 {tag}
               </Tag>
             </span>
