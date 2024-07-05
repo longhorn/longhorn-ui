@@ -1,5 +1,4 @@
-
-import { create, deleteBackingImage, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
+import { create, deleteBackingImage, execAction, query, deleteDisksOnBackingImage, uploadChunk, download, bulkDownload } from '../services/backingImage'
 import { getNodeTags, getDiskTags } from '../services/volume'
 import { message, notification } from 'antd'
 import { delay } from 'dva/saga'
@@ -18,6 +17,7 @@ export default {
     nodeTags: [],
     diskTags: [],
     tagsLoading: true,
+    minCopiesCountModalVisible: false,
     createBackingImageModalVisible: false,
     createBackingImageModalKey: Math.random(),
     diskStateMapDetailModalVisible: false,
@@ -110,6 +110,13 @@ export default {
       payload,
     }, { call, put }) {
       yield call(deleteBackingImage, payload)
+      yield put({ type: 'query' })
+    },
+    *updateMinCopiesCount({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateMinCopiesCountModal' })
+      yield call(execAction, payload.url, payload.params)
       yield put({ type: 'query' })
     },
     *downloadBackingImage({
@@ -208,6 +215,13 @@ export default {
     showCreateBackingImageModal(state, action) {
       return { ...state, ...action.payload, createBackingImageModalVisible: true, createBackingImageModalKey: Math.random() }
     },
+    showUpdateMinCopiesCountModal(state, action) {
+      return {
+        ...state,
+        minCopiesCountModalVisible: true,
+        selected: action.payload,
+      }
+    },
     hideCreateBackingImageModal(state) {
       return { ...state, createBackingImageModalVisible: false }
     },
@@ -217,6 +231,13 @@ export default {
         selected: action.payload.record,
         diskStateMapDetailModalVisible: true,
         diskStateMapDetailModalKey: Math.random(),
+      }
+    },
+    hideUpdateMinCopiesCountModal(state) {
+      return {
+        ...state,
+        minCopiesCountModalVisible: false,
+        selected: {},
       }
     },
     hideDiskStateMapDetailModal(state) {

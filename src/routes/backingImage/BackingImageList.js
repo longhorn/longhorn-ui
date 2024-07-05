@@ -1,14 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Button, Icon, Tooltip } from 'antd'
+import { Table, Button, Icon, Tooltip, Tag } from 'antd'
 import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
+import { nodeTagColor, diskTagColor } from '../../utils/constants'
 
-function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, height }) {
+function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, downloadBackingImage, showUpdateMinCopiesCount, height }) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
+    showUpdateMinCopiesCount,
   }
   const state = (record) => {
     if (record.deletionTimestamp) {
@@ -26,7 +28,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 200,
+      width: 150,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => {
         return (
@@ -39,7 +41,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
       title: 'UUID',
       dataIndex: 'uuid',
       key: 'uuid',
-      width: 150,
+      width: 120,
       sorter: (a, b) => a.uuid.localeCompare(b.uuid),
       render: (text) => {
         return (
@@ -50,7 +52,7 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 150,
+      width: 80,
       sorter: (a, b) => a.size - b.size,
       render: (text) => {
         return (
@@ -59,16 +61,73 @@ function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail,
           </div>
         )
       },
-    }, {
+    },
+    {
       title: 'Created From',
       dataIndex: 'sourceType',
       key: 'sourceType',
-      width: 200,
+      width: 150,
       sorter: (a, b) => a.sourceType.localeCompare(b.sourceType),
       render: (text) => {
         return (
           <div>
             {text}
+          </div>
+        )
+      },
+    }, {
+      title: 'Minimum Copies',
+      dataIndex: 'minNumberOfCopies',
+      key: 'minNumberOfCopies',
+      width: 120,
+      sorter: (a, b) => a.minNumberOfCopies.toString().localeCompare(b.minNumberOfCopies.toString()),
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
+        )
+      },
+    }, {
+      title: 'Node Tags',
+      key: 'nodeSelector',
+      dataIndex: 'nodeSelector',
+      width: 120,
+      render: (_text, record) => {
+        const nodeTags = record.nodeSelector?.map((tag, index) => {
+          return (
+              <span style={{ marginBottom: '6px' }} key={index}>
+                <Tag color={nodeTagColor}>
+                  {tag}
+                </Tag>
+              </span>
+          )
+        }) || ''
+        return (
+          <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', alignItems: 'center' }}>
+            {nodeTags}
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Disk Tags',
+      key: 'diskSelector',
+      dataIndex: 'diskSelector',
+      width: 120,
+      render: (_text, record) => {
+        const diskTags = record.diskSelector?.sort().map((tag, index) => {
+          return (
+              <span style={{ marginBottom: '6px' }} key={index}>
+                <Tag color={diskTagColor}>
+                  {tag}
+                </Tag>
+              </span>
+          )
+        }) || ''
+        return (
+          <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', alignItems: 'center' }}>
+            {diskTags}
           </div>
         )
       },
@@ -107,6 +166,7 @@ list.propTypes = {
   dataSource: PropTypes.array,
   deleteBackingImage: PropTypes.func,
   showDiskStateMapDetail: PropTypes.func,
+  showUpdateMinCopiesCount: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
 }

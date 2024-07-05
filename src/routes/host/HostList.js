@@ -12,7 +12,7 @@ import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { formatMib } from '../../utils/formatter'
 import { pagination } from '../../utils/page'
 import { ModalBlur } from '../../components'
-import C from '../../utils/constants'
+import C, { nodeTagColor } from '../../utils/constants'
 
 class List extends React.Component {
   constructor(props) {
@@ -353,7 +353,7 @@ class List extends React.Component {
           let forMap = (tag, index) => {
             return (
               <span style={{ marginBottom: '6px' }} key={index}>
-                <Tag color="rgb(39, 174, 95)">
+                <Tag color={nodeTagColor}>
                   {tag}
                 </Tag>
               </span>

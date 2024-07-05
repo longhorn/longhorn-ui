@@ -19,6 +19,14 @@ export async function create(params) {
   })
 }
 
+export async function execAction(url, params) {
+  return request({
+    url,
+    method: 'post',
+    data: params,
+  })
+}
+
 export async function deleteBackingImage(params) {
   if (params.actions && params.actions.backingImageCleanup) {
     return request({

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Tag, Input, Tooltip, Icon } from 'antd'
+import { nodeTagColor, diskTagColor } from '../../../utils/constants'
 
 class DistTag extends React.Component {
   state = {
@@ -49,7 +50,7 @@ class DistTag extends React.Component {
         {tags.map((tag) => {
           const isLongTag = tag.length > 20
           const tagElem = (
-            <Tag color={this.props.nodeBoolean ? 'rgb(39, 174, 95)' : '#108eb9'} key={tag} closable onClose={() => this.handleClose(tag)}>
+            <Tag color={this.props.nodeBoolean ? nodeTagColor : diskTagColor} key={tag} closable onClose={() => this.handleClose(tag)}>
               {isLongTag ? `${tag.slice(0, 20)}...` : tag}
             </Tag>
           )
