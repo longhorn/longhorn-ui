@@ -1046,11 +1046,6 @@ class Volume extends React.Component {
         })
       },
       bulkBackup(actions) {
-        // bulkBackup(actions.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }))
-        // dispatch({
-        //   type: 'volume/bulkBackup',
-        //   payload: actions,
-        // })
         me.setState({
           ...me.state,
           createBackModalKey: Math.random(),
@@ -1189,7 +1184,7 @@ class Volume extends React.Component {
           type: 'volume/bulkBackup',
           payload: {
             actions: me.state.selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }),
-            labels: obj,
+            ...obj,
           },
         })
         me.setState({
