@@ -192,7 +192,7 @@ class Snapshots extends React.Component {
               snapshotBackupUrl: me.state.snapshotBackupUrl,
               snapshotName: me.state.currentSnapshotName,
               querySnapShotUrl: me.state.snapshotListUrl,
-              labels: data,
+              ...data,
             },
           })
           me.setState({
