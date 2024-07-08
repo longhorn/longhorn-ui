@@ -472,7 +472,15 @@ export default {
     *bulkBackup({
       payload,
     }, { put }) {
-      yield payload.actions.map(item => put({ type: 'snapshotCreateThenBackup', payload: { snapshotCreateUrl: item.snapshotCreateUrl, snapshotBackupUrl: item.snapshotBackupUrl, labels: payload.labels } }))
+      yield payload.actions.map(item => put({
+        type: 'snapshotCreateThenBackup',
+        payload: {
+          snapshotCreateUrl: item.snapshotCreateUrl,
+          snapshotBackupUrl: item.snapshotBackupUrl,
+          labels: payload.labels,
+          backupMode: payload.backupMode,
+        },
+      }))
       yield put({ type: 'query' })
     },
     *createPVAndPVC({
@@ -571,7 +579,7 @@ export default {
       payload,
     }, { call }) {
       const snapshot = yield call(execAction, payload.snapshotCreateUrl, {})
-      yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels })
+      yield call(execAction, payload.snapshotBackupUrl, { name: snapshot.name, labels: payload.labels, backupMode: payload.backupMode })
     },
     *createRecurringJob({
       payload,
