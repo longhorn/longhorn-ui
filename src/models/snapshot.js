@@ -215,9 +215,9 @@ export default (namespace) => {
       }, { call, put }) {
         yield put({ type: 'setLoading', payload: true })
         if (Object.getOwnPropertyNames(payload.labels).length === 0) {
-          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName })
+          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, backupMode: payload.backupMode })
         } else {
-          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, labels: payload.labels })
+          yield call(execAction, payload.snapshotBackupUrl, { name: payload.snapshotName, labels: payload.labels, backupMode: payload.backupMode })
         }
         yield put({ type: 'querySnapShot', payload: { url: payload.querySnapShotUrl } })
         yield put({ type: 'setLoading', payload: false })
