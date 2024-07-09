@@ -71,7 +71,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      if (data.fourceCreate) {
+      if (data.forceCreate) {
         if (data.task === 'snapshot') {
           data.task = 'snapshot-force-create'
         }
@@ -80,18 +80,14 @@ const modal = ({
         }
       }
       if (data.groups) {
-        data.groups = data.groups.filter((group) => {
-          return group
-        })
+        data.groups = data.groups.filter((group) => group)
         data.groups = data.groups && new Set(data.groups)
       } else {
         // If groups is null change it to empty array
         data.groups = []
       }
       if (data.labels) {
-        let labels = data.labels.filter((label) => {
-          return label
-        })
+        let labels = data.labels.filter((label) => label)
         if (labels && labels.length > 0) {
           let obj = {}
           data.labels = labels.forEach(label => {
@@ -110,6 +106,12 @@ const modal = ({
         delete data.keysForlabels
       }
       delete data.defaultGroup
+      if (data.parametersKey && data.parametersValue?.toString()) {
+        data.parameters = {}
+        data.parameters[data.parametersKey] = data.parametersValue.toString()
+      }
+      delete data.parametersKey
+      delete data.parametersValue
 
       if (data.isNew) {
         delete data.isNew
@@ -242,7 +244,7 @@ const modal = ({
   const keysForlabels = getFieldValue('keysForlabels')
   const formLabels = keysForlabels.map((k, index) => (
     <div key={`${k}-label`} style={{ display: 'flex' }}>
-      <div style={{ width: '52%', paddingLeft: '33px' }}>
+      <div style={{ width: '45%', paddingLeft: '55px' }}>
         <Form.Item
           {...(index === 0 ? formItemForAddLabels : formItemLayoutWithOutForAddLabels)}
           label={index === 0 ? 'Labels' : ''}
@@ -256,7 +258,7 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input placeholder="label key" style={{ width: '80%', marginRight: 8 }} />)}
+          })(<Input placeholder="key" style={{ marginRight: 8 }} />)}
         </Form.Item>
       </div>
       <div style={{ flex: 1 }}>
@@ -273,7 +275,7 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Input placeholder="label value" style={{ width: '80%', marginRight: 8 }} />)}
+          })(<Input placeholder="value" style={{ width: '72%', marginRight: 8 }} />)}
           {keysForlabels.length > 1 ? (
             <Icon
               className="dynamic-delete-button"
@@ -288,6 +290,18 @@ const modal = ({
   const nameGeneration = getFieldValue('name') ? getFieldValue('name') : `c-${Math.random().toString(36).substr(2, 6)}`
   const disableAddDefaultGroup = getFieldValue('keys').some((k) => getFieldValue('groups')[k.index] === 'default')
 
+
+  const handleParameterChange = (value) => {
+    // clear parametersValue if parametersKey is cleared
+    if (value === undefined) {
+      setFieldsValue({
+        parametersValue: '',
+      })
+    }
+  }
+
+  const isParametersValueRequired = !!getFieldValue('parametersKey')
+  const showParametersField = getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
   return (
     <ModalBlur {...modalOpts}>
       <Tabs tabPosition={'top'} type="card" onChange={changeTab} defaultActiveKey="1">
@@ -325,9 +339,10 @@ const modal = ({
                   placement="topLeft"
                   title={`Create ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} periodically, even if expired ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} cannot be cleaned up.`}>
                     <FormItem label="Force Create" style={{ width: 325 }} labelCol={{ span: 8 }} wrapperCol={{ span: 4 }}>
-                      {getFieldDecorator('fourceCreate', {
+                      {getFieldDecorator('forceCreate', {
+                        valuePropName: 'checked',
                         initialValue: false,
-                      })(<Checkbox></Checkbox>)}
+                      })(<Checkbox />)}
                     </FormItem>
                 </Tooltip>}
               </div>
@@ -363,6 +378,29 @@ const modal = ({
                 })(<Input disabled={true} style={{ width: '80%' }} />)}
                 <Button style={{ marginLeft: 5 }} onClick={cronProps.openCronModal}>Edit</Button>
               </FormItem>
+              {showParametersField && (
+                <div style={{ display: 'flex' }}>
+                  <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                    {getFieldDecorator('parametersKey', {
+                      initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.keys(item.parameters)[0] : '',
+
+                    })(<Select style={{ width: '100%' }} allowClear onChange={handleParameterChange}>
+                        <Option value="full-backup-interval">full-backup-interval</Option>
+                    </Select>)}
+                  </FormItem>
+                  <FormItem style={{ flex: '1 50%' }} {...formItemLayout}>
+                    {getFieldDecorator('parametersValue', {
+                      initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.values(item.parameters)[0] : '',
+                      rules: [
+                        {
+                          required: isParametersValueRequired,
+                          message: 'Value is required',
+                        },
+                      ],
+                    })(<InputNumber min={0} style={{ width: '66%' }} />)}
+                  </FormItem>
+                </div>
+              )}
               {formKeys}
               <Form.Item {...formItemLayoutWithOutLabel}>
                 <span style={{ width: '38%', display: 'inline-block', marginRight: 10 }}>
@@ -380,7 +418,7 @@ const modal = ({
               </Form.Item>
               {formLabels}
               <Form.Item {...formItemLayoutWithOutLabel}>
-                <Button type="dashed" onClick={addLabel} style={{ width: '60%' }}>
+                <Button type="dashed" onClick={addLabel} style={{ width: '80%' }}>
                   <Icon type="plus" /> Add Label
                 </Button>
               </Form.Item>
