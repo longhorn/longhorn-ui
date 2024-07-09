@@ -103,7 +103,7 @@ const modal = ({
         delete data.keysForlabels
       }
       delete data.defaultGroup
-      if (data.parametersKey && data.parametersValue?.toString() !== '') {
+      if (data.parametersKey && data.parametersValue?.toString()) {
         data.parameters = {}
         data.parameters[data.parametersKey] = data.parametersValue.toString()
       }
@@ -280,6 +280,8 @@ const modal = ({
   ))
   const nameGeneration = getFieldValue('name') ? getFieldValue('name') : `c-${Math.random().toString(36).substr(2, 6)}`
   const disableAddDefaultGroup = getFieldValue('keys').some((k) => getFieldValue('groups')[k.index] === 'default')
+  const isParametersValueRequired = !!getFieldValue('parametersKey')
+  const showParametersField = getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -354,7 +356,7 @@ const modal = ({
           })(<Input style={{ width: '80%' }} />)}
           <Button style={{ marginLeft: 5 }} onClick={cronProps.openCronModal}>Edit</Button>
         </FormItem>
-        {getFieldValue('task') === 'backup' && (
+        {showParametersField && (
           <div style={{ display: 'flex' }}>
             <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
               {getFieldDecorator('parametersKey', {
@@ -366,6 +368,12 @@ const modal = ({
             <FormItem style={{ flex: '1 50%' }} {...formItemLayout}>
               {getFieldDecorator('parametersValue', {
                 initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.values(item.parameters)[0] : '',
+                rules: [
+                  {
+                    required: isParametersValueRequired,
+                    message: 'Value is required',
+                  },
+                ],
               })(<InputNumber min={0} style={{ width: '66%' }} />)}
             </FormItem>
           </div>
