@@ -290,7 +290,6 @@ const modal = ({
   const nameGeneration = getFieldValue('name') ? getFieldValue('name') : `c-${Math.random().toString(36).substr(2, 6)}`
   const disableAddDefaultGroup = getFieldValue('keys').some((k) => getFieldValue('groups')[k.index] === 'default')
 
-
   const handleParameterChange = (value) => {
     // clear parametersValue if parametersKey is cleared
     if (value === undefined) {
