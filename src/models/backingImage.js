@@ -3,7 +3,7 @@ import {
   deleteBackingImage,
   deleteBackupBackingImage,
   execAction,
-  queryBbiList,
+  queryBackupBackingImageList,
   query,
   deleteDisksOnBackingImage,
   uploadChunk,
@@ -27,6 +27,7 @@ export default {
     data: [],
     bbiData: [], // backupBackingImage data
     selected: {},
+    bbiSelected: {},
     selectedRows: [],
     nodeTags: [],
     diskTags: [],
@@ -37,6 +38,7 @@ export default {
     createBackingImageModalKey: Math.random(),
     diskStateMapDetailModalVisible: false,
     diskStateMapDetailModalKey: Math.random(),
+    restoreBackupBackingImageModalVisible: false,
     diskStateMapDeleteDisabled: true,
     diskStateMapDeleteLoading: false,
     selectedDiskStateMapRows: [],
@@ -73,7 +75,7 @@ export default {
       // eslint-disable-next-line no-unused-vars
       _payload,
     }, { call, put }) {
-      const resp = yield call(queryBbiList)
+      const resp = yield call(queryBackupBackingImageList)
       if (resp && resp.data) {
         const bbiData = resp.data
         sortByCreatedTime(bbiData)
@@ -148,11 +150,17 @@ export default {
     *restoreBackingImage({
       payload,
     }, { call, put }) {
-      const resp = yield call(execAction, payload.actions.backupBackingImageRestore)
-      if (resp && resp.status === 200) {
-        message.success(`Successfully restore ${payload.name} backing image`)
+      yield put({ type: 'hideRestoreBackingImageModal' })
+      const restoreUrl = payload.item?.actions?.backupBackingImageRestore
+      if (restoreUrl) {
+        const resp = yield call(execAction, restoreUrl, payload.params)
+        if (resp && resp.status === 200) {
+          message.success(`Successfully restore ${payload.item.name} backing image`)
+        }
+        yield put({ type: 'query' })
+      } else {
+        message.error('Missing restore backup backing image url')
       }
-      yield put({ type: 'query' })
     },
     *deleteBackupBackingImage({
       payload,
@@ -186,7 +194,7 @@ export default {
       if (payload && payload.length > 0) {
         yield payload.map(item => call(deleteBackupBackingImage, item))
       }
-      yield delay(2000)
+      yield delay(3000)
       yield put({ type: 'queryBackupBackingImage' })
     },
     *bulkBackup({
@@ -200,7 +208,7 @@ export default {
           }
         }
       }
-      yield delay(4000)
+      yield delay(3000)
       yield put({ type: 'queryBackupBackingImage' })
     },
     *bulkDownload({
@@ -321,6 +329,9 @@ export default {
         }
       }
     },
+    showRestoreBackingImage(state, action) {
+      return { ...state, ...action.payload, restoreBackupBackingImageModalVisible: true }
+    },
     showCreateBackingImageModal(state, action) {
       return { ...state, ...action.payload, createBackingImageModalVisible: true, createBackingImageModalKey: Math.random() }
     },
@@ -330,6 +341,9 @@ export default {
         minCopiesCountModalVisible: true,
         selected: action.payload,
       }
+    },
+    hideRestoreBackingImageModal(state, action) {
+      return { ...state, ...action.payload, restoreBackupBackingImageModalVisible: false, bbiSelected: {} }
     },
     hideCreateBackingImageModal(state) {
       return { ...state, createBackingImageModalVisible: false }

@@ -33,7 +33,6 @@
     "linebreak-style": [0 ,"error", "windows"],
     "react/no-access-state-in-setstate": 0,
     "react/jsx-first-prop-new-line": 0,
-    "react/jsx-props-no-spreading": 0,
     "import/prefer-default-export": 0,
     "react/jsx-filename-extension": 0,
     "react/jsx-props-no-spreading": 0,
