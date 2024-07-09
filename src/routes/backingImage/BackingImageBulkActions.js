@@ -90,7 +90,7 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'download', name: 'Download', disabled() { return (selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row))) } },
-    { key: 'backup', name: 'Backup', disabled() { return selectedRows.length === 0 } },
+    { key: 'backup', name: 'Backup', disabled() { return selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row)) } },
   ]
 
   return (

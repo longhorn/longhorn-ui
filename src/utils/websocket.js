@@ -20,7 +20,6 @@ export function constructWebsocketURL(type, period) {
 }
 
 export function wsChanges(dispatch, type, period, ns, search) {
-  console.log('🚀 ~ wsChanges ~ type:', type)
   const url = constructWebsocketURL(type, period)
   const options = {
     timeout: 4000,
@@ -77,9 +76,6 @@ export function wsChanges(dispatch, type, period, ns, search) {
   }, 30000)
   // TODO: can refactor this to use a single event listener and dispatch to the correct action
   rws.addEventListener('message', (msg) => {
-    if (ns === 'backingImage') {
-      console.log('message rws.addEventListener ~ type =', backupType, ' msg:', JSON.parse(msg.data))
-    }
     recentWrite = true
     if (ns === 'backup') {
       if (backupType === 'backupvolumes') {
@@ -95,16 +91,13 @@ export function wsChanges(dispatch, type, period, ns, search) {
         })
       }
     } else if (ns === 'backingImage') {
-      console.log('message data ns:', ns, 'backupType:', backupType)
       if (backupType === 'backingimages') {
-        console.log('message backupType === backingimages call ns/updateBackground', JSON.parse(msg.data).data)
         dispatch({
           type: `${ns}/updateBackground`,
           payload: JSON.parse(msg.data),
         })
       }
       if (backupType === 'backupbackingimages') {
-        console.log('message backupType === backupbackingimages call ns/updateBackgroundBBi', JSON.parse(msg.data).data)
         dispatch({
           type: `${ns}/updateBackgroundBBi`,
           payload: JSON.parse(msg.data),

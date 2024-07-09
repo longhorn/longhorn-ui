@@ -76,9 +76,6 @@ const dependency = {
     }, {
       ns: 'setting',
       key: 'settings',
-    }, {
-      ns: 'backup',
-      key: 'backup',
     }],
   },
   settings: {
@@ -170,7 +167,7 @@ const httpDataDependency = {
   '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
   '/recurringJob': ['recurringJob'],
-  '/backingImage': ['volume', 'backingImage', 'setting', 'backup'],
+  '/backingImage': ['volume', 'backingImage', 'setting'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
@@ -186,7 +183,6 @@ export function getDataDependency(pathName) {
     }
     return false
   })
-  // console.log('🚀 ~ keys ~ keys:', keys)
 
   if (keys && keys.length === 1) {
     let modal = dependency[keys[0]]

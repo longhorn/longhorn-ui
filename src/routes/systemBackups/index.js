@@ -238,7 +238,7 @@ class SystemBackups extends React.Component {
           <SystemBackupsList {...systemBackupsListProps} />
         </div>
         <div className={style.systemRestores}>
-          <Icon type="file-done" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
+          <Icon type="file-done" />
           <span style={{ marginLeft: '4px' }}>System Restore</span>
         </div>
         <div id="systemRestoresTable" style={{ height: '43%', padding: '8px 12px 0px' }}>

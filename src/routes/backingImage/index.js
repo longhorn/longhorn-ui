@@ -10,6 +10,7 @@ import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
 import UpdateMinCopiesCount from './UpdateMinCopiesCount'
 import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
+import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
 import style from './BackingImage.less'
 
 const filterBackingImage = (data, field, value) => {
@@ -21,9 +22,11 @@ const filterBackingImage = (data, field, value) => {
     case 'name':
     case 'uuid':
     case 'minNumberOfCopies':
+      backingImages = backingImages.filter((image) => (value ? image[field].toString().includes(value.toString().trim()) : true))
+      break
     case 'diskSelector':
     case 'nodeSelector':
-      backingImages = backingImages.filter((image) => (value ? image[field].toString().includes(value.toString().trim()) : true))
+      backingImages = backingImages.filter((image) => (value ? image[field]?.toString().includes(value.trim()) || false : true))
       break
     case 'sourceType':
       backingImages = backingImages.filter((image) => (value ? image.sourceType === value.trim() : true))
@@ -132,10 +135,12 @@ class BackingImage extends React.Component {
       bbiSearchField,
       bbiSearchValue,
       selected,
+      bbiSelected,
       nodeTags,
       diskTags,
       tagsLoading,
       minCopiesCountModalVisible,
+      restoreBackupBackingImageModalVisible,
       createBackingImageModalVisible,
       createBackingImageModalKey,
       diskStateMapDetailModalVisible,
@@ -169,8 +174,10 @@ class BackingImage extends React.Component {
       },
       restoreBackingImage(record) {
         dispatch({
-          type: 'backingImage/restoreBackingImage',
-          payload: record,
+          type: 'backingImage/showRestoreBackingImage',
+          payload: {
+            bbiSelected: record,
+          },
         })
       },
       rowSelection: {
@@ -282,6 +289,25 @@ class BackingImage extends React.Component {
         dispatch({
           type: 'app/changeBlur',
           payload: false,
+        })
+      },
+    }
+
+    const restoreBBiModalProps = {
+      item: bbiSelected,
+      visible: restoreBackupBackingImageModalVisible,
+      onOk(item, params) {
+        dispatch({
+          type: 'backingImage/restoreBackingImage',
+          payload: {
+            item,
+            params,
+          },
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'backingImage/hideRestoreBackingImageModal',
         })
       },
     }
@@ -475,6 +501,7 @@ class BackingImage extends React.Component {
             <span>Uploading</span>
           </div>
         )}
+        { restoreBackupBackingImageModalVisible && <RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
         { minCopiesCountModalVisible && <UpdateMinCopiesCount {...minCopiesCountProps} />}
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}
