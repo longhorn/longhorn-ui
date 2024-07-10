@@ -102,11 +102,9 @@ export default {
     }, { call, put }) {
       const resp = yield call(queryTarget)
       if (resp && resp.data && resp.data[0]) {
-        let isbackupVolumePage = true
-        let path = ['/node', '/dashboard', '/volume', '/engineimage', '/setting', '/recurringJob']
-
-        isbackupVolumePage = payload.history && payload.history.location && payload.history.location.pathname && payload.history.location.pathname !== '/' && path.every(ele => !payload.history.location.pathname.startsWith(ele))
-        if (isbackupVolumePage) {
+        const backupNeededPages = ['/backup', '/backingImage', '/systemBackups']
+        const isBackupNeededPage = payload?.history?.location?.pathname && payload.history.location.pathname !== '/' && backupNeededPages.some(page => payload.history.location.pathname.startsWith(page))
+        if (isBackupNeededPage) {
           !resp.data[0].available ? message.error(resp.data[0].message) : message.destroy()
         }
         yield put({ type: 'setBackupTargetAvailable', payload: { backupTargetAvailable: resp.data[0].available, backupTargetMessage: resp.data[0].message } })

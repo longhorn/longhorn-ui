@@ -5,7 +5,7 @@ import style from './systemBackupsBulkActions.less'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, deleteSystemBackups, createSystemBackup }) {
+function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSystemBackup }) {
   const handleClick = (action) => {
     switch (action) {
       case 'create':
@@ -22,8 +22,10 @@ function bulkActions({ selectedRows, deleteSystemBackups, createSystemBackup }) 
       default:
     }
   }
+
+  const { backupTargetAvailable, backupTargetMessage } = backupProps
   const allActions = [
-    { key: 'create', name: 'Create' },
+    { key: 'create', name: 'Create', disabled: backupTargetAvailable === false, tooltip: backupTargetAvailable === false ? backupTargetMessage : '' },
     { key: 'delete', name: 'Delete', disabled: selectedRows.length === 0 },
   ]
 
@@ -43,6 +45,7 @@ function bulkActions({ selectedRows, deleteSystemBackups, createSystemBackup }) 
 
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
+  backupProps: PropTypes.object,
   deleteSystemBackups: PropTypes.func,
   createSystemBackup: PropTypes.func,
 }
