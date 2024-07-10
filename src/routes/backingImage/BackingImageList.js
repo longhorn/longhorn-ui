@@ -6,12 +6,13 @@ import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { nodeTagColor, diskTagColor } from '../../utils/constants'
 
-function list({ loading, dataSource, deleteBackingImage, showDiskStateMapDetail, rowSelection, createBackupBackingImage, downloadBackingImage, showUpdateMinCopiesCount, height }) {
+function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskStateMapDetail, rowSelection, createBackupBackingImage, downloadBackingImage, showUpdateMinCopiesCount, height }) {
   const backingImageActionsProps = {
     deleteBackingImage,
     downloadBackingImage,
     createBackupBackingImage,
     showUpdateMinCopiesCount,
+    backupProps,
   }
 
   const dynamicStateIcon = (record) => {
@@ -191,6 +192,7 @@ list.propTypes = {
   showUpdateMinCopiesCount: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
+  backupProps: PropTypes.object,
 }
 
 export default list

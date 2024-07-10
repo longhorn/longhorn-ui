@@ -196,6 +196,7 @@ class BackingImage extends React.Component {
     const backingImageListProps = {
       dataSource: backingImages,
       height: this.state.height,
+      backupProps: this.props.backup,
       loading,
       showUpdateMinCopiesCount(record) {
         dispatch({
@@ -408,6 +409,7 @@ class BackingImage extends React.Component {
 
     const backingImageBulkActionsProps = {
       selectedRows,
+      backupProps: this.props.backup,
       deleteBackingImages(record) {
         dispatch({
           type: 'backingImage/bulkDelete',
@@ -517,7 +519,8 @@ BackingImage.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   volume: PropTypes.object,
+  backup: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, setting, volume, backingImage, loading }) => ({ app, setting, volume, backingImage, loading: loading.models.backingImage }))(BackingImage)
+export default connect(({ app, setting, backup, volume, backingImage, loading }) => ({ app, setting, volume, backup, backingImage, loading: loading.models.backingImage }))(BackingImage)

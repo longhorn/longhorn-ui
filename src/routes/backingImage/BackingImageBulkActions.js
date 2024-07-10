@@ -6,7 +6,9 @@ import { hasReadyBackingDisk, diskStatusColorMap } from '../../utils/status'
 const confirm = Modal.confirm
 
 
-function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackingImages, backupSelectedBackingImages }) {
+function bulkActions({ selectedRows, backupProps, deleteBackingImages, downloadSelectedBackingImages, backupSelectedBackingImages }) {
+  const { backupTargetAvailable } = backupProps
+
   const handleClick = (action) => {
     const count = selectedRows.length
     switch (action) {
@@ -90,7 +92,7 @@ function bulkActions({ selectedRows, deleteBackingImages, downloadSelectedBackin
   const allActions = [
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'download', name: 'Download', disabled() { return (selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row))) } },
-    { key: 'backup', name: 'Backup', disabled() { return selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row)) } },
+    { key: 'backup', name: 'Backup', disabled() { return selectedRows.length === 0 || backupTargetAvailable === false || selectedRows.every(row => !hasReadyBackingDisk(row)) } },
   ]
 
   return (
@@ -111,6 +113,7 @@ bulkActions.propTypes = {
   deleteBackingImages: PropTypes.func,
   downloadSelectedBackingImages: PropTypes.func,
   backupSelectedBackingImages: PropTypes.func,
+  backupProps: PropTypes.object,
 }
 
 export default bulkActions

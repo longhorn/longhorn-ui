@@ -5,7 +5,9 @@ import { DropOption } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackingImage, downloadBackingImage, showUpdateMinCopiesCount, createBackupBackingImage }) {
+function actions({ selected, backupProps, deleteBackingImage, downloadBackingImage, showUpdateMinCopiesCount, createBackupBackingImage }) {
+  const { backupTargetAvailable, backupTargetMessage } = backupProps
+
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -34,9 +36,16 @@ function actions({ selected, deleteBackingImage, downloadBackingImage, showUpdat
 
   const disableAction = !hasReadyBackingDisk(selected)
 
+  const getBackupActionTooltip = () => {
+    if (!backupTargetAvailable) {
+      return backupTargetMessage
+    }
+    return disableAction ? 'Missing disk with ready state' : ''
+  }
+
   const availableActions = [
     { key: 'updateMinCopies', name: 'Update Minimum Copies Count', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
-    { key: 'backup', name: ' Backup', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
+    { key: 'backup', name: ' Backup', disabled: disableAction || backupTargetAvailable === false, tooltip: getBackupActionTooltip() },
     { key: 'download', name: 'Download', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
     { key: 'delete', name: 'Delete' },
   ]
@@ -54,6 +63,7 @@ actions.propTypes = {
   downloadBackingImage: PropTypes.func,
   showUpdateMinCopiesCount: PropTypes.func,
   createBackupBackingImage: PropTypes.func,
+  backupProps: PropTypes.object,
 }
 
 export default actions

@@ -167,12 +167,12 @@ const httpDataDependency = {
   '/volume': ['volume', 'host', 'setting', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
   '/recurringJob': ['recurringJob'],
-  '/backingImage': ['volume', 'backingImage', 'setting'],
+  '/backingImage': ['volume', 'backingImage', 'setting', 'backup'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
-  '/systemBackups': ['systemBackups'],
+  '/systemBackups': ['systemBackups', 'backup'],
 }
 
 export function getDataDependency(pathName) {
