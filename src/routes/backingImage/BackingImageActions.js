@@ -45,7 +45,7 @@ function actions({ selected, backupProps, deleteBackingImage, downloadBackingIma
 
   const availableActions = [
     { key: 'updateMinCopies', name: 'Update Minimum Copies Count', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
-    { key: 'backup', name: ' Backup', disabled: disableAction || backupTargetAvailable === false, tooltip: getBackupActionTooltip() },
+    { key: 'backup', name: ' Back Up', disabled: disableAction || backupTargetAvailable === false, tooltip: getBackupActionTooltip() },
     { key: 'download', name: 'Download', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
     { key: 'delete', name: 'Delete' },
   ]

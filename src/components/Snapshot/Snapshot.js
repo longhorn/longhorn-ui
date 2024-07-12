@@ -103,9 +103,17 @@ function SnapshotIcon(props, snapshotProps) {
           </div>}><div className="disable-dropdown-menu">Revert</div></Tooltip> }
         </Menu.Item> : ''
       }
-      { props.usercreated && !snapshotObject.removed ? <Menu.Item key="snapshotBackup" className="revert-menu-item">
-          { !snapshotProps.disableBackup ? <div style={{ padding: '0px 12px' }}>Backup</div> : <Tooltip title={snapshotProps.disableBackupMessage}><div className="disable-dropdown-menu">Backup</div></Tooltip>}
-        </Menu.Item> : ''
+      { props.usercreated && !snapshotObject.removed ? (
+        <Menu.Item key="snapshotBackup" className="revert-menu-item">
+          { !snapshotProps.disableBackup ? (
+            <div style={{ padding: '0px 12px' }}>Back Up</div>
+          ) : (
+            <Tooltip title={snapshotProps.disableBackupMessage}>
+              <div className="disable-dropdown-menu">Back up</div>
+            </Tooltip>
+          )}
+        </Menu.Item>
+      ) : ''
       }
       <Menu.Item key="cloneVolumeFromSnapshot">
         <div style={{ padding: '0px 12px' }}>Clone Volume</div>
