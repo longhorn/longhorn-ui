@@ -39,7 +39,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: `Restore ${item.name} Backup Backing Image`,
+    title: 'Restore Backing Image',
     visible,
     onCancel,
     onOk: handleOk,
@@ -50,16 +50,15 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-         <FormItem label="Secret" hasFeedback {...formItemLayout}>
-              {getFieldDecorator('secret', {
-                initialValue: '',
-              })(<Input />)}
-            </FormItem>
-            <FormItem label="Secret Namespace" hasFeedback {...formItemLayout}>
-              {getFieldDecorator('secretNamespace', {
-                initialValue: '',
-              })(<Input />)}
-            </FormItem>
+        <FormItem label="Backup" {...formItemLayout}>
+          {getFieldDecorator('backup', { initialValue: item?.name || '' })(<Input disabled />)}
+        </FormItem>
+        <FormItem label="Secret" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('secret', { initialValue: '' })(<Input />)}
+        </FormItem>
+        <FormItem label="Secret Namespace" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('secretNamespace', { initialValue: '' })(<Input />)}
+        </FormItem>
       </Form>
     </ModalBlur>
   )

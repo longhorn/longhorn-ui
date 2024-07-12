@@ -90,7 +90,7 @@ export default {
       if (url) {
         const resp = yield call(execAction, url)
         if (resp && resp.status === 200) {
-          message.success(`Successfully backup ${payload.name} backing image`)
+          message.success(`Successfully back up ${payload.name} backing image`)
         }
         yield delay(1000)
         yield put({ type: 'queryBackupBackingImage' })
