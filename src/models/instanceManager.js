@@ -25,8 +25,10 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, payload)
+      // filter data based on payload.field and payload.value
       if (payload && payload.field && payload.value && data.data) {
-        data.data = data.data.filter(item => item[payload.field] && item[payload.field].indexOf(payload.value.trim()) > -1)
+        const searchValue = payload.value.trim().toLowerCase()
+        data.data = data.data.filter(item => item[payload.field] && item[payload.field].toLowerCase().indexOf(searchValue) > -1)
       }
       if (data.data) {
         data.data.sort((a, b) => a.name.localeCompare(b.name))
