@@ -39,6 +39,7 @@ import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
+import { isRestoring } from './helper'
 import VolumeBulkActions from './VolumeBulkActions'
 import {
   getAttachHostModalProps,
@@ -912,9 +913,8 @@ class Volume extends React.Component {
         })
       },
     }
-
     const bulkCloneVolumeModalProps = {
-      selectedRows,
+      selectedRows: selectedRows.filter(item => !item.standby && !isRestoring(item)), // filter out standby and restoring volumes
       visible: bulkCloneVolumeVisible,
       diskTags,
       nodeTags,
