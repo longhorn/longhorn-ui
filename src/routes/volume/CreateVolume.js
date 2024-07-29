@@ -519,15 +519,6 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
               </Select>)}
             </FormItem>
-            { getFieldsValue().dataEngine === 'v2' && <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
-              {getFieldDecorator('offlineReplicaRebuilding', {
-                initialValue: 'ignored',
-              })(<Select>
-                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
-              </Select>)}
-            </FormItem>}
             <FormItem label="Freeze Filesystem For Snapshot" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('freezeFilesystemForSnapshot', {
                 initialValue: 'ignored',
