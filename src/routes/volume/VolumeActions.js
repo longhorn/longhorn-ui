@@ -33,7 +33,6 @@ function actions({
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
-  showOfflineReplicaRebuildingModal,
   showUpdateFreezeFilesystemForSnapshotModal,
   commandKeyDown,
 }) {
@@ -156,9 +155,6 @@ function actions({
       case 'updateReplicaDiskSoftAntiAffinity':
         showUpdateReplicaDiskSoftAntiAffinityModal(record)
         break
-      case 'updateOfflineReplicaRebuilding':
-        showOfflineReplicaRebuildingModal(record)
-        break
       case 'updateFreezeFilesystemForSnapshot':
         showUpdateFreezeFilesystemForSnapshotModal(record)
         break
@@ -234,7 +230,6 @@ function actions({
     { key: 'updateSnapshotMaxCount', name: 'Update Snapshot Max Count', disabled: false },
     { key: 'updateSnapshotMaxSize', name: 'Update Snapshot Max Size', disabled: false },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
-    { key: 'updateOfflineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false || selected.dataEngine !== 'v2' },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled: false },
   ]
   const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
