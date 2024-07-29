@@ -10,8 +10,6 @@ import {
   needToWaitDone,
   frontends,
   extractImageVersion,
-  getOfflineRebuiltStatus,
-  getOfflineRebuiltStatusWithoutFrontend,
 } from '../helper/index'
 import styles from './VolumeInfo.less'
 import { diskTagColor, nodeTagColor } from '../../../utils/constants'
@@ -210,20 +208,6 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   return (
     <div>
       {errorMsg}
-      {getOfflineRebuiltStatus(selectedVolume) && <Alert
-        style={{ marginTop: 5 }}
-        message="Offline Rebuilding"
-        description="The volume is being offline rebuilding"
-        type="warning"
-        showIcon
-      />}
-      {getOfflineRebuiltStatusWithoutFrontend(selectedVolume) && <Alert
-        style={{ marginTop: 5 }}
-        message="Offline Rebuilding"
-        description={selectedVolume.offlineReplicaRebuildingRequired ? 'The volume rebuilding will be automatically triggered after detachment' : 'Offline Replica Rebuilding is disabled, the volume rebuilding will not be automatically triggered after detachment'}
-        type="warning"
-        showIcon
-      />}
       {restoreProgress}
       <div className={styles.row}>
         <span className={styles.label}> State:</span>
@@ -262,10 +246,6 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}> Data Engine:</span>
         {selectedVolume.dataEngine}
-      </div>
-      <div className={styles.row}>
-        <span className={styles.label}> Offline Replica Rebuilding:</span>
-        {selectedVolume.offlineReplicaRebuilding}
       </div>
       {!selectedVolume.disableFrontend ? <div className={styles.row}>
         <span className={styles.label}> Attached Node &amp; Endpoint:</span>

@@ -57,7 +57,6 @@ import {
   getUpdateBulkSnapshotDataIntegrityModalProps,
   getUpdateSnapshotDataIntegrityProps,
   getUpdateReplicaSoftAntiAffinityModalProps,
-  getUpdateOfflineReplicaRebuildingModalProps,
   getDetachHostModalProps,
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
@@ -201,9 +200,6 @@ class Volume extends React.Component {
       softAntiAffinityKey,
       updateReplicaSoftAntiAffinityVisible,
       updateReplicaSoftAntiAffinityModalKey,
-      updateOfflineReplicaRebuildingVisible,
-      updateOfflineReplicaRebuildingModalKey,
-      offlineReplicaRebuildingKey,
       isBulkDetach,
       updateSnapshotMaxCountModalVisible,
       updateSnapshotMaxSizeModalVisible,
@@ -605,15 +601,6 @@ class Volume extends React.Component {
           payload: {
             volume: record,
             softAntiAffinityKey: 'updateReplicaDiskSoftAntiAffinity',
-          },
-        })
-      },
-      showOfflineReplicaRebuildingModal(record) {
-        dispatch({
-          type: 'volume/showOfflineReplicaRebuildingModal',
-          payload: {
-            volume: record,
-            offlineReplicaRebuildingKey: 'updateOfflineReplicaRebuilding',
           },
         })
       },
@@ -1145,15 +1132,6 @@ class Volume extends React.Component {
           },
         })
       },
-      showOfflineReplicaRebuildingModal(record) {
-        dispatch({
-          type: 'volume/showBulkOfflineReplicaRebuildingModal',
-          payload: {
-            volumes: record,
-            offlineReplicaRebuildingKey: 'updateBulkOfflineReplicaRebuilding',
-          },
-        })
-      },
       trimBulkFilesystem(record) {
         if (record?.length > 0) {
           dispatch({
@@ -1263,7 +1241,6 @@ class Volume extends React.Component {
     }
 
     const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selected, selectedRows, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
-    const updateOfflineReplicaRebuildingModalProps = getUpdateOfflineReplicaRebuildingModalProps(selected, selectedRows, updateOfflineReplicaRebuildingVisible, offlineReplicaRebuildingKey, dispatch)
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
     const updateBulKReplicaCountModalProps = getUpdateBulkReplicaCountModalProps(selectedRows, updateBulkReplicaCountModalVisible, dispatch)
     const updateDataLocalityModalProps = getUpdateDataLocalityModalProps(selected, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
@@ -1326,7 +1303,6 @@ class Volume extends React.Component {
         {updateSnapshotDataIntegrityModalVisible ? <UpdateSnapshotDataIntegrityModal key={updateSnapshotDataIntegrityModalKey} {...updateSnapshotDataIntegrityModalProps} /> : ''}
         {updateBulkSnapshotDataIntegrityModalVisible ? <UpdateBulkSnapshotDataIntegrityModal key={updateBulkSnapshotDataIntegrityModalKey} {...updateBulkSnapshotDataIntegrityModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
-        {updateOfflineReplicaRebuildingVisible ? <CommonModal key={updateOfflineReplicaRebuildingModalKey} {...updateOfflineReplicaRebuildingModalProps} /> : ''}
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
         {updateBulkFreezeFilesystemForSnapshotModalVisible ? <UpdateBulkFreezeFilesystemForSnapshotModal key={updateBulkFreezeFilesystemForSnapshotModalKey} {...updateBulkFreezeFilesystemForSnapshotModalProps} /> : ''}
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}

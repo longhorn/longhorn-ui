@@ -58,7 +58,6 @@ function list({
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
-  showOfflineReplicaRebuildingModal,
   showUpdateFreezeFilesystemForSnapshotModal,
   onRowClick = f => f,
 }) {
@@ -98,7 +97,6 @@ function list({
     showUpdateReplicaSoftAntiAffinityModal,
     showUpdateReplicaZoneSoftAntiAffinityModal,
     showUpdateReplicaDiskSoftAntiAffinityModal,
-    showOfflineReplicaRebuildingModal,
     showUpdateFreezeFilesystemForSnapshotModal,
     onRowClick,
   }
@@ -185,14 +183,14 @@ function list({
                 {ha}{state}{ !record.ready ? statusForWorkload : '' }
               </div>)
           } else if (text.hyphenToHump() === 'attached' && record.robustness === 'degraded') {
-            return (<Tooltip title={record.dataEngine === 'v2' && 'Replica rebuilding will be automatically triggered when the degraded volume is detached'}>
-                <div
-                  className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                >
-                  {ha}{state}{ !record.ready ? statusForWorkload : '' }
-                </div>
-              </Tooltip>)
+            return (
+              <div
+                className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
+                {ha}{state}{ !record.ready ? statusForWorkload : '' }
+              </div>
+            )
           } else if (text.hyphenToHump() === 'detached' && record.robustness === 'faulted') {
             return (<div
               className={classnames({ [record.robustness.toLowerCase()]: true, capitalize: true })}

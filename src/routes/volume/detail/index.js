@@ -43,7 +43,6 @@ import {
   getUpdateSnapshotDataIntegrityProps,
   getUpdateReplicaSoftAntiAffinityModalProps,
   getDetachHostModalProps,
-  getUpdateOfflineReplicaRebuildingModalProps,
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
@@ -149,9 +148,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     softAntiAffinityKey,
     updateReplicaSoftAntiAffinityVisible,
     updateReplicaSoftAntiAffinityModalKey,
-    updateOfflineReplicaRebuildingVisible,
-    offlineReplicaRebuildingKey,
-    updateOfflineReplicaRebuildingModalKey,
     detachHostModalVisible,
     detachHostModalKey,
     updateSnapshotMaxCountModalVisible,
@@ -485,15 +481,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
-    showOfflineReplicaRebuildingModal(record) {
-      dispatch({
-        type: 'volume/showOfflineReplicaRebuildingModal',
-        payload: {
-          volumes: record,
-          offlineReplicaRebuildingKey: 'updateOfflineReplicaRebuilding',
-        },
-      })
-    },
     trimFilesystem(record) {
       if (record?.actions?.trimFilesystem) {
         dispatch({
@@ -520,7 +507,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const engineUpgradeModalProps = getEngineUpgradeModalProps([selectedVolume], engineImages, engineUpgradePerNodeLimit, engineUpgradeModalVisible, dispatch)
   const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps([selectedVolume], updateReplicaAutoBalanceModalVisible, dispatch)
   const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selectedVolume, [], updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
-  const updateOfflineReplicaRebuildingModalProps = getUpdateOfflineReplicaRebuildingModalProps(selectedVolume, [], updateOfflineReplicaRebuildingVisible, offlineReplicaRebuildingKey, dispatch)
 
   const recurringJobProps = {
     dataSource: volumeRecurringJobs,
@@ -751,7 +737,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         { updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
-        {updateOfflineReplicaRebuildingVisible ? <CommonModal key={updateOfflineReplicaRebuildingModalKey} {...updateOfflineReplicaRebuildingModalProps} /> : ''}
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
       </div>
     </div>
