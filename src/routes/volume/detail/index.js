@@ -172,10 +172,10 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
   const defaultDataLocalityValue = defaultDataLocalitySetting?.value || 'disabled'
 
-  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.firstUpperCase(), value: item })) || []
+  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.toLowerCase(), value: item })) || []
 
   if (defaultSnapshotDataIntegrityOption.length > 0) {
-    defaultSnapshotDataIntegrityOption.unshift({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
+    defaultSnapshotDataIntegrityOption.unshift({ key: 'ignored (follow the global setting)', value: 'ignored' })
   }
 
   const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
