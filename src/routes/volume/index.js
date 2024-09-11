@@ -219,11 +219,15 @@ class Volume extends React.Component {
     const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options ? defaultDataLocalitySetting.definition.options : []
     const defaultDataLocalityValue = defaultDataLocalitySetting?.value ? defaultDataLocalitySetting.value : 'disabled'
     const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
+<<<<<<< HEAD
     const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
     const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
     const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
+=======
+    const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.toLowerCase(), value: item })) || []
+>>>>>>> b982e53 (fix: lowercase options name in volume page)
     if (defaultSnapshotDataIntegrityOption.length > 0) {
-      defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
+      defaultSnapshotDataIntegrityOption.push({ key: 'ignored (follow the global setting)', value: 'ignored' })
     }
 
     const volumeFilterMap = {

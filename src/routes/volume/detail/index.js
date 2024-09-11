@@ -100,10 +100,21 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
   const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
   const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
+<<<<<<< HEAD
   const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
   const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
   if (defaultSnapshotDataIntegrityOption.length > 0) {
     defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
+=======
+
+  const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
+  const defaultDataLocalityValue = defaultDataLocalitySetting?.value || 'disabled'
+
+  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.toLowerCase(), value: item })) || []
+
+  if (defaultSnapshotDataIntegrityOption.length > 0) {
+    defaultSnapshotDataIntegrityOption.unshift({ key: 'ignored (follow the global setting)', value: 'ignored' })
+>>>>>>> b982e53 (fix: lowercase options name in volume page)
   }
   const hasReplica = (selected, name) => {
     if (selected && selected.replicas && selected.replicas.length > 0) {

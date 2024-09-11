@@ -348,45 +348,45 @@ const modal = ({
               {getFieldDecorator('unmapMarkSnapChainRemoved', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>
             <FormItem label="Replica Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaSoftAntiAffinity', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>
             <FormItem label="Replica Zone Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaZoneSoftAntiAffinity', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>
             <FormItem label="Replica Disk Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaDiskSoftAntiAffinity', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>
             { getFieldsValue().dataEngine === 'v2' && <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('offlineReplicaRebuilding', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>Ignored (Follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>}
             <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>

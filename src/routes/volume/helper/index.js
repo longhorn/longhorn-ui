@@ -241,9 +241,9 @@ export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLoca
 
 export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -305,9 +305,9 @@ export function getUpdateSnapshotDataIntegrityProps(volume, visible, defaultSnap
 
 export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -399,6 +399,73 @@ export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDat
   }
 }
 
+<<<<<<< HEAD
+=======
+export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, dispatch) {
+  let option = [
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
+  ]
+
+  return {
+    item: volume,
+    option,
+    visible,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/updateFreezeFilesystemForSnapshot',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateFreezeFilesystemForSnapshotModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visible, dispatch) {
+  const option = [
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
+  ]
+
+  return {
+    items: volumes,
+    option,
+    visible,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateBulkFreezeFilesystemForSnapshot',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkFreezeFilesystemForSnapshotModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+>>>>>>> b982e53 (fix: lowercase options name in volume page)
 export function getUpdateAccessModeModalProps(volume, visible, dispatch) {
   return {
     item: volume,
@@ -549,9 +616,15 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       })
     },
     options: [
+<<<<<<< HEAD
       { value: 'enabled', lable: 'Enabled' },
       { value: 'disabled', lable: 'Disabled' },
       { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+=======
+      { value: 'enabled', label: 'enabled' },
+      { value: 'disabled', label: 'disabled' },
+      { value: 'ignored', label: 'ignored (follow the global setting)' },
+>>>>>>> b982e53 (fix: lowercase options name in volume page)
     ],
     feilds,
   }
