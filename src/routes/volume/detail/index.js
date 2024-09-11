@@ -100,10 +100,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
   const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
   const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
-  const defaultDataLocalityOption = defaultDataLocalitySetting && defaultDataLocalitySetting.definition && defaultDataLocalitySetting.definition.options ? defaultDataLocalitySetting.definition.options : []
-  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options ? defaultSnapshotDataIntegritySetting.definition.options.map((item) => { return { key: item.firstUpperCase(), value: item } }) : []
+
+  const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
+  const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.toLowerCase(), value: item })) || []
+
   if (defaultSnapshotDataIntegrityOption.length > 0) {
-    defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
+    defaultSnapshotDataIntegrityOption.push({ key: 'ignored (follow the global setting)', value: 'ignored' })
   }
   const hasReplica = (selected, name) => {
     if (selected && selected.replicas && selected.replicas.length > 0) {

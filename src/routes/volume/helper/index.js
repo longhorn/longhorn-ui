@@ -241,9 +241,9 @@ export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLoca
 
 export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -305,9 +305,9 @@ export function getUpdateSnapshotDataIntegrityProps(volume, visible, defaultSnap
 
 export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -549,9 +549,9 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       })
     },
     options: [
-      { value: 'enabled', lable: 'Enabled' },
-      { value: 'disabled', lable: 'Disabled' },
-      { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+      { value: 'enabled', label: 'enabled' },
+      { value: 'disabled', label: 'disabled' },
+      { value: 'ignored', label: 'ignored (follow the global setting)' },
     ],
     feilds,
   }
@@ -600,9 +600,9 @@ export function getUpdateOfflineReplicaRebuildingModalProps(volume, volumes, upd
       })
     },
     options: [
-      { value: 'enabled', lable: 'Enabled' },
-      { value: 'disabled', lable: 'Disabled' },
-      { value: 'ignored', lable: 'Ignored (Follow the global setting)' },
+      { value: 'enabled', label: 'enabled' },
+      { value: 'disabled', label: 'disabled' },
+      { value: 'ignored', label: 'ignored (follow the global setting)' },
     ],
     feilds,
   }
