@@ -241,9 +241,9 @@ export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLoca
 
 export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -305,9 +305,9 @@ export function getUpdateSnapshotDataIntegrityProps(volume, visible, defaultSnap
 
 export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -401,9 +401,9 @@ export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDat
 
 export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, dispatch) {
   let option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -433,9 +433,9 @@ export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, 
 
 export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visible, dispatch) {
   const option = [
-    { key: 'Enabled', value: 'enabled' },
-    { key: 'Disabled', value: 'disabled' },
-    { key: 'Ignored (Follow the global setting)', value: 'ignored' },
+    { key: 'enabled', value: 'enabled' },
+    { key: 'disabled', value: 'disabled' },
+    { key: 'ignored (follow the global setting)', value: 'ignored' },
   ]
 
   return {
@@ -613,9 +613,9 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       })
     },
     options: [
-      { value: 'enabled', label: 'Enabled' },
-      { value: 'disabled', label: 'Disabled' },
-      { value: 'ignored', label: 'Ignored (Follow the global setting)' },
+      { value: 'enabled', label: 'enabled' },
+      { value: 'disabled', label: 'disabled' },
+      { value: 'ignored', label: 'ignored (follow the global setting)' },
     ],
     fields,
   }
