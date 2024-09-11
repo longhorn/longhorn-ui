@@ -231,9 +231,9 @@ class Volume extends React.Component {
     const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
     const defaultDataLocalityValue = defaultDataLocalitySetting?.value || 'disabled'
     const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
-    const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.firstUpperCase(), value: item })) || []
+    const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.toLowerCase(), value: item })) || []
     if (defaultSnapshotDataIntegrityOption.length > 0) {
-      defaultSnapshotDataIntegrityOption.push({ key: 'Ignored (Follow the global setting)', value: 'ignored' })
+      defaultSnapshotDataIntegrityOption.push({ key: 'ignored (follow the global setting)', value: 'ignored' })
     }
 
     const backingImageOptions = backingImages?.filter(image => hasReadyBackingDisk(image)) || []
