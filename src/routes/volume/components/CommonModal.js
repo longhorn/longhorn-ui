@@ -81,7 +81,7 @@ const modal = ({
           initialValue,
         })(<Select>
             { options?.map((item) => {
-              return <Option key={item.value} value={item.value}>{item.lable}</Option>
+              return <Option key={item.value} value={item.value}>{item.label}</Option>
             }) }
           </Select>)}
         </FormItem>
