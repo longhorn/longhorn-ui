@@ -199,7 +199,7 @@ class EditableDiskList extends React.Component {
             <div className={styles.label}>
               Conditions
             </div>
-            <div className={styles.control} style={{ width: '690px', lineHeight: '40px', display: 'flex' }}>
+            <div className={styles.control} style={{ lineHeight: '40px' }}>
               {node && node.conditions && Object.keys(node.conditions).map((key) => {
                 let title = (<div>
                   {node.conditions[key] && node.conditions[key].lastProbeTime && node.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(node.conditions[key].lastProbeTime)}</div> : ''}

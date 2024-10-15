@@ -42,7 +42,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
           <div className={styles.label}>
             Conditions
           </div>
-          <div className={styles.control} style={{ width: '690px', lineHeight: '40px', display: 'flex', padding: '0 15px' }}>
+          <div className={styles.control} style={{ lineHeight: '40px' }}>
             {disk && disk.conditions && Object.keys(disk.conditions).map((key) => {
               let title = (<div>
                 {disk.conditions[key] && disk.conditions[key].lastProbeTime && disk.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(disk.conditions[key].lastProbeTime)}</div> : ''}
