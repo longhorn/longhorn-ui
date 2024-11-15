@@ -9,10 +9,7 @@
       "never"
     ],
     "allowForLoopAfterthoughts": 0,
-    "comma-dangle": [
-      2,
-      "always-multiline"
-    ],
+    "comma-dangle": 0,
     "max-len": 0,
     "camelcase": 0,
     "react/sort-comp": 0,
@@ -82,16 +79,21 @@
       {
         "ignoreRestSiblings": true
       }
-    ]
+    ],
+    // disabled rules for airbnb config v18
+    "react/state-in-constructor": 0,
+    "react/jsx-curly-newline": 0,
+    "no-multiple-empty-lines": 0,
+    "prefer-object-spread": 0
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 8,
+    "ecmaVersion": 2020,
     "ecmaFeatures": {
-      "jsx": true,
-      "experimentalObjectRestSpread": true
-    }
+      "jsx": true
+    },
+    "requireConfigFile": false
   },
   "globals": {
     "window": true,
