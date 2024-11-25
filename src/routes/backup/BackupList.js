@@ -214,6 +214,32 @@ class List extends React.Component {
           )
         },
       }, {
+        title: 'Re-Uploaded Data Size',
+        dataIndex: 'reUploadedDataSize',
+        key: 'reUploadedDataSize',
+        width: 150,
+        sorter: (a, b) => sortTable(a, b, 'reUploadedDataSize'),
+        render: (text, record) => {
+          return (
+            <div>
+              {record.state === 'Completed' && formatMib(text)}
+            </div>
+          )
+        },
+      }, {
+        title: 'Newly Uploaded Data Size',
+        dataIndex: 'newlyUploadDataSize',
+        key: 'newlyUploadDataSize',
+        width: 180,
+        sorter: (a, b) => sortTable(a, b, 'newlyUploadDataSize'),
+        render: (text, record) => {
+          return (
+            <div>
+              {record.state === 'Completed' && formatMib(text)}
+            </div>
+          )
+        },
+      }, {
         title: <div>PV/PVC</div>,
         dataIndex: 'labels',
         key: 'KubernetesStatus',
