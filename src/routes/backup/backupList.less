@@ -9,10 +9,23 @@
         top: -20px;
         left: 50%;
         text-align: center;
-        transform: translateX(-50%); 
+        transform: translateX(-50%);
         height: 24px;
         line-height: 24px;
         overflow: hidden;
         text-overflow:ellipsis;
+    }
+}
+
+.backupMode {
+    :global {
+        .ant-tag {
+            border: 0;
+        }
+    }
+
+    .fullTag {
+        color: #1890ff;
+        background: #e6f7ff;
     }
 }
