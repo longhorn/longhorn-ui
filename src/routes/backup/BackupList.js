@@ -126,7 +126,7 @@ class List extends React.Component {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
-        width: '15%',
+        width: 100,
         sorter: (a, b) => sortTable(a, b, 'id'),
         render: (text) => {
           return (
@@ -139,7 +139,7 @@ class List extends React.Component {
         title: 'Volume',
         dataIndex: 'volumeName',
         key: 'volumeName',
-        width: '14%',
+        width: 120,
         render: (text, record) => {
           let errorMessage = record.messages && record.messages.error ? record.messages.error : ''
           return (
@@ -158,7 +158,7 @@ class List extends React.Component {
         title: 'Creation State',
         dataIndex: 'state',
         key: 'state',
-        width: 150,
+        width: 120,
         render: (text, record) => {
           if (record.state === 'InProgress') {
             return (
@@ -181,7 +181,7 @@ class List extends React.Component {
         title: 'Backup Mode',
         dataIndex: 'backupMode',
         key: 'backupMode',
-        width: 150,
+        width: 120,
         render: (text) => {
           return (
             <div className={style.backupMode}>
@@ -198,7 +198,7 @@ class List extends React.Component {
         dataIndex: 'snapshotName',
         key: 'snapshotName',
         align: 'center',
-        width: '16.72%',
+        width: 150,
         sorter: (a, b) => sortTable(a, b, 'snapshotName'),
         render: (text) => {
           return (
@@ -211,7 +211,7 @@ class List extends React.Component {
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
-        width: 100,
+        width: 90,
         sorter: (a, b) => sortTable(a, b, 'size'),
         render: (text, record) => {
           return (
@@ -237,7 +237,7 @@ class List extends React.Component {
         title: 'Newly Uploaded Data Size',
         dataIndex: 'newlyUploadDataSize',
         key: 'newlyUploadDataSize',
-        width: 180,
+        width: 150,
         sorter: (a, b) => sortTable(a, b, 'newlyUploadDataSize'),
         render: (text, record) => {
           return (
@@ -247,10 +247,10 @@ class List extends React.Component {
           )
         },
       }, {
-        title: <div>PV/PVC</div>,
+        title: 'PV/PVC',
         dataIndex: 'labels',
         key: 'KubernetesStatus',
-        width: '7.63%',
+        width: 90,
         render: (record) => {
           let storageObj = {}
 
@@ -290,7 +290,7 @@ class List extends React.Component {
         title: 'Workload/Pod',
         dataIndex: 'labels',
         key: 'WorkloadNameAndPodName',
-        width: '12.5%',
+        width: 150,
         render: (record) => {
           let storageObj = {}
 
@@ -330,7 +330,7 @@ class List extends React.Component {
         title: 'Snapshot Created',
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
-        width: 220,
+        width: 150,
         sorter: (a, b) => sortTable(a, b, 'snapshotCreated'),
         render: (text) => {
           return (
