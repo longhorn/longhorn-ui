@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Modal, Icon, message, Tooltip, Progress, Input, Button, Tag } from 'antd'
+import { Table, Modal, Icon, message, Tooltip, Progress, Input, Button } from 'antd'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DropOption } from '../../components'
 import { formatDate } from '../../utils/formatDate'
@@ -185,11 +185,8 @@ class List extends React.Component {
         sorter: (a, b) => sortTable(a, b, 'backupMode'),
         render: (text) => {
           return (
-            <div className={style.backupMode}>
-              { text === 'full'
-                ? <Tag className={style.fullTag}>{text}</Tag>
-                : <Tag>{text || 'incremental'}</Tag>
-              }
+            <div>
+              {text || 'incremental'}
             </div>
           )
         },
