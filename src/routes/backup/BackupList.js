@@ -182,6 +182,7 @@ class List extends React.Component {
         dataIndex: 'backupMode',
         key: 'backupMode',
         width: 120,
+        sorter: (a, b) => sortTable(a, b, 'backupMode'),
         render: (text) => {
           return (
             <div className={style.backupMode}>
