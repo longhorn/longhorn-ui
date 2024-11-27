@@ -351,7 +351,7 @@ class List extends React.Component {
           }
           return (
             <div onClick={() => { showBackupLabels(obj) }}>
-              <Icon style={{ fontSize: '18px', color: obj ? '#108eb9' : '#cccccc', cursor: 'pointer' }} type="tags" />
+              <Icon style={{ fontSize: '18px', color: obj ? '#108ee9' : '#cccccc', cursor: 'pointer' }} type="tags" />
             </div>
           )
         },
