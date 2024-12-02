@@ -164,6 +164,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>)
     } else if (isExpanding) {
       message = `The volume is in expansion progress from size ${formatMib(currentSize)} to size ${formatMib(expectedSize)}`
+    } else {
+      message = 'Maximum available space for the volume.'
     }
 
     return (
@@ -256,12 +258,13 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>}
       <div className={styles.row}>
         <span className={styles.label}> Size:</span>
-        {/* {formatMib(selectedVolume.size)} */}
         {volumeSizeEle()}
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Actual Size:</span>
-        {state ? formatMib(computeActualSize) : 'Unknown'}
+        <Tooltip title={'Space used by each replica, including data and snapshots.'}>
+          {state ? formatMib(computeActualSize) : 'Unknown'}
+        </Tooltip>
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Data Locality:</span>
