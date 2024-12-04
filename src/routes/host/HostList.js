@@ -314,23 +314,27 @@ class List extends React.Component {
           const backingImageAllocated = computeBackingImageAllocated(record)
           const replicaAllocated = computeReplicaAllocated(record)
           const percent = computeUsagePercentage(allocated, total)
-          const replicaPercent = computeUsagePercentage(replicaAllocated, total)
+          const backingImagePercent = computeUsagePercentage(backingImageAllocated, total)
           const status = getStorageProgressStatus(minimalSchedulingQuotaWarning, percent)
+
+          const renderTooltipContent = () => (
+            <div className={styles.allocatedTooltip}>
+              <span>Replica Size: {byteToGi(replicaAllocated)} Gi</span>
+              <span>Backing Image Size: {byteToGi(backingImageAllocated)} Gi</span>
+              <span>Total Usage: {percent}%</span>
+            </div>
+          )
+          const tooltipContent = renderTooltipContent()
+
           return (
             <div>
               <div>
-                <Tooltip title={() => (
-                  <div className={styles.allocatedTooltip}>
-                    <span>Replica Size: {byteToGi(replicaAllocated)} Gi</span>
-                    <span>Backing Image Size: {byteToGi(backingImageAllocated)} Gi</span>
-                    <span>Total Usage: {percent}%</span>
-                  </div>
-                )}>
+                <Tooltip title={tooltipContent}>
                   <Progress
                     strokeWidth={14}
                     status={status}
                     percent={percent}
-                    successPercent={replicaPercent}
+                    successPercent={backingImagePercent}
                     showInfo={false}
                   />
                 </Tooltip>
