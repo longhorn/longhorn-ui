@@ -203,6 +203,27 @@ class List extends React.Component {
     const computeAllocated = (record) => {
       return Object.values(record.disks).reduce((total, item) => total + item.storageScheduled, 0)
     }
+    const computeTotalSize = (record, property) => {
+      return Object.keys(record.disks).reduce((totalSize, key) => {
+        const disk = record.disks[key]
+        const propertyData = disk[property]
+
+        if (propertyData) {
+          totalSize += Object.values(propertyData).reduce((acc, size) => acc + size, 0)
+        }
+
+        return totalSize
+      }, 0)
+    }
+    const computeBackingImageAllocated = (record) => {
+      return computeTotalSize(record, 'scheduledBackingImage')
+    }
+    const computeReplicaAllocated = (record) => {
+      return computeTotalSize(record, 'scheduledReplica')
+    }
+    const computeUsagePercentage = (allocated, total) => {
+      return total > 0 ? Math.round((allocated / total) * 100) : 0
+    }
     const coumputeTotalUsed = (record) => {
       return Object.values(record.disks).reduce((total, item) => total + item.storageMaximum, 0)
     }
@@ -290,12 +311,28 @@ class List extends React.Component {
         render: (text, record) => {
           const allocated = computeAllocated(record)
           const total = computeTotalAllocated(record)
-          const p = total === 0 ? 0 : Math.round((allocated / total) * 100)
+          const backingImageAllocated = computeBackingImageAllocated(record)
+          const replicaAllocated = computeReplicaAllocated(record)
+          const percent = computeUsagePercentage(allocated, total)
+          const replicaPercent = computeUsagePercentage(replicaAllocated, total)
+          const status = getStorageProgressStatus(minimalSchedulingQuotaWarning, percent)
           return (
             <div>
               <div>
-                <Tooltip title={`${p}%`}>
-                  <Progress strokeWidth={14} status={getStorageProgressStatus(minimalSchedulingQuotaWarning, p)} percent={p > 100 ? 100 : p} showInfo={false} />
+                <Tooltip title={() => (
+                  <div className={styles.allocatedTooltip}>
+                    <span>Replica Size: {byteToGi(replicaAllocated)} Gi</span>
+                    <span>Backing Image Size: {byteToGi(backingImageAllocated)} Gi</span>
+                    <span>Total Usage: {percent}%</span>
+                  </div>
+                )}>
+                  <Progress
+                    strokeWidth={14}
+                    status={status}
+                    percent={percent}
+                    successPercent={replicaPercent}
+                    showInfo={false}
+                  />
                 </Tooltip>
               </div>
               <div className={styles.secondLabel}>
@@ -313,11 +350,12 @@ class List extends React.Component {
         render: (text, record) => {
           const used = computeUsed(record)
           const total = coumputeTotalUsed(record)
-          const p = total === 0 ? 0 : Math.round((used / total) * 100)
+          const p = computeUsagePercentage(used, total)
+
           return (
             <div>
               <div>
-                <Tooltip title={`${p}%`}>
+                <Tooltip title={`Total usage: ${p}%`}>
                   <Progress strokeWidth={14} status={getStorageProgressStatus(minimalSchedulingQuotaWarning, p)} percent={p > 100 ? 100 : p} showInfo={false} />
                 </Tooltip>
               </div>
