@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, message } from 'antd'
+import { Table, message, Icon, Tooltip } from 'antd'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import BackupBackingImageActions from './BackupBackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
-
+import styles from './BackupBackingImageList.less'
 function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height }) {
   const actionsProps = {
     deleteBackupBackingImage,
@@ -26,10 +26,20 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 120,
+      width: 180,
       sorter: (a, b) => a.name.localeCompare(b.name),
-      render: (text) => {
-        return (<div>{text}</div>)
+      render: (text, record) => {
+        const isEncrypted = Boolean(record.secret || record.secretNamespace)
+        return (
+          <>
+            {isEncrypted && (
+              <Tooltip title="Encrypted Backing Image Backup">
+                <Icon className="color-warning" type="lock" />
+              </Tooltip>
+            )}
+            <span className={styles.encryptedBackup}>{text}</span>
+          </>
+        )
       },
     }, {
       title: 'State',
@@ -75,7 +85,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'Created Time',
       dataIndex: 'created',
       key: 'created',
-      width: 80,
+      width: 100,
       sorter: (a, b) => a.created.localeCompare(b.created),
       render: (text) => {
         return (
