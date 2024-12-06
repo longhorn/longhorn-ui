@@ -307,6 +307,7 @@ class List extends React.Component {
                     percent={percent}
                     successPercent={backingImagePercent}
                     showInfo={false}
+                    className={styles.progress}
                   />
                 </Tooltip>
               </div>
