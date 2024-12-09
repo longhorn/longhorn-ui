@@ -2,7 +2,7 @@
   color: #27ae60;
 }
 .status, .name, .allocated, .replicas, .used, .size {
-  text-align: center !important; 
+  text-align: center !important;
 }
 .allowScheduling {
   text-align: right !important;
@@ -19,5 +19,17 @@ a {
   }
   .ant-progress-status-success .ant-progress-bg {
     background-color: #27AE5F !important;
+  }
+}
+.allocatedTooltip {
+  display: flex;
+  flex-direction: column;
+}
+
+.progress {
+  :global {
+    .ant-progress-success-bg {
+      background: #219653; // darken(#27AE5F, 10%)
+    }
   }
 }
