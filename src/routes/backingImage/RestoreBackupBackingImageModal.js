@@ -51,12 +51,16 @@ const modal = ({
         <FormItem label="Backup" {...formItemLayout}>
           {getFieldDecorator('backup', { initialValue: item.name || '' })(<Input disabled={!!item.name} />)}
         </FormItem>
-        <FormItem label="Secret" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('secret', { initialValue: item.secret || '' })(<Input disabled={!!item.secret} />)}
-        </FormItem>
-        <FormItem label="Secret Namespace" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('secretNamespace', { initialValue: item.secretNamespace || '' })(<Input disabled={!!item.secretNamespace} />)}
-        </FormItem>
+        {item.secret && (
+          <FormItem label="Secret" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('secret', { initialValue: item.secret })(<Input disabled />)}
+          </FormItem>
+        )}
+        {item.secretNamespace && (
+          <FormItem label="Secret Namespace" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('secretNamespace', { initialValue: item.secretNamespace })(<Input disabled />)}
+          </FormItem>
+        )}
       </Form>
     </ModalBlur>
   )
