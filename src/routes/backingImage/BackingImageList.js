@@ -5,6 +5,7 @@ import BackingImageActions from './BackingImageActions'
 import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { nodeTagColor, diskTagColor } from '../../utils/constants'
+import styles from './BackingImageList.less'
 
 function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskStateMapDetail, rowSelection, createBackupBackingImage, downloadBackingImage, showUpdateMinCopiesCount, height }) {
   const backingImageActionsProps = {
@@ -50,13 +51,13 @@ function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskSt
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 150,
+      width: 180,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => {
         return (
-          <div onClick={() => { showDiskStateMapDetail(record) }} style={{ width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div onClick={() => { showDiskStateMapDetail(record) }}>
             {staticStateIcon(record)}
-            <Button type="link" style={{ width: 'fit-content', paddingLeft: 8, paddingRight: 8 }} block>{text}</Button>
+            <Button type="link" className={styles.encryptedBackingImage}>{text}</Button>
             {dynamicStateIcon(record)}
           </div>
         )
@@ -76,7 +77,7 @@ function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskSt
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 80,
+      width: 100,
       sorter: (a, b) => a.size - b.size,
       render: (text) => {
         return (
@@ -90,7 +91,7 @@ function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskSt
       title: 'Created From',
       dataIndex: 'sourceType',
       key: 'sourceType',
-      width: 150,
+      width: 120,
       sorter: (a, b) => a.sourceType.localeCompare(b.sourceType),
       render: (text) => {
         return (
@@ -103,7 +104,7 @@ function list({ loading, dataSource, backupProps, deleteBackingImage, showDiskSt
       title: 'Minimum Copies',
       dataIndex: 'minNumberOfCopies',
       key: 'minNumberOfCopies',
-      width: 120,
+      width: 130,
       sorter: (a, b) => a.minNumberOfCopies.toString().localeCompare(b.minNumberOfCopies.toString()),
       render: (text) => {
         return (
