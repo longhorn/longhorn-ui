@@ -45,7 +45,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 80,
+      width: 120,
       sorter: (a, b) => a.state.localeCompare(b.state),
       render: (text) => {
         return (
@@ -85,7 +85,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
       title: 'Created Time',
       dataIndex: 'created',
       key: 'created',
-      width: 100,
+      width: 120,
       sorter: (a, b) => a.created.localeCompare(b.created),
       render: (text) => {
         return (

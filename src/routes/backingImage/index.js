@@ -4,55 +4,13 @@ import { connect } from 'dva'
 import { Row, Col, Button, Progress, notification, Icon } from 'antd'
 import CreateBackingImage from './CreateBackingImage'
 import BackingImageList from './BackingImageList'
-import BackupBackingImageList from './BackupBackingImageList'
 import DiskStateMapDetail from './DiskStateMapDetail'
 import { Filter } from '../../components/index'
 import BackingImageBulkActions from './BackingImageBulkActions'
 import UpdateMinCopiesCount from './UpdateMinCopiesCount'
-import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
-import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
+import BackupBackingImage from './BackupBackingImage'
+import { filterBackingImage } from './utils'
 import style from './BackingImage.less'
-
-const filterBackingImage = (data, field, value) => {
-  if (!data || data.length === 0) {
-    return []
-  }
-  let backingImages = [...data]
-  switch (field) {
-    case 'name':
-    case 'uuid':
-    case 'minNumberOfCopies':
-      backingImages = backingImages.filter((image) => (value ? image[field].toString().includes(value.toString().trim()) : true))
-      break
-    case 'diskSelector':
-    case 'nodeSelector':
-      backingImages = backingImages.filter((image) => (value ? image[field]?.toString().includes(value.trim()) || false : true))
-      break
-    case 'sourceType':
-      backingImages = backingImages.filter((image) => (value ? image.sourceType === value.trim() : true))
-      break
-    default:
-  }
-  return backingImages && backingImages.length > 0 ? backingImages.sort((a, b) => a.name.localeCompare(b.name)) : []
-}
-
-const filterBackupBackingImage = (bbiData, field, value) => {
-  if (!bbiData || bbiData.length === 0) {
-    return []
-  }
-  let result = [...bbiData]
-  if (field && value) {
-    switch (field) {
-      case 'name':
-      case 'state':
-      case 'url':
-        result = bbiData.filter((image) => (value ? image[field].toLowerCase().includes(value.toLowerCase().trim()) : true))
-        break
-      default:
-    }
-  }
-  return result
-}
 
 class BackingImage extends React.Component {
   constructor(props) {
@@ -129,18 +87,13 @@ class BackingImage extends React.Component {
     const { data: volumeData } = this.props.volume
     const {
       data,
-      bbiData,
       biSearchField,
       biSearchValue,
-      bbiSearchField,
-      bbiSearchValue,
       selected,
-      bbiSelected,
       nodeTags,
       diskTags,
       tagsLoading,
       minCopiesCountModalVisible,
-      restoreBackupBackingImageModalVisible,
       createBackingImageModalVisible,
       createBackingImageModalKey,
       diskStateMapDetailModalVisible,
@@ -150,7 +103,6 @@ class BackingImage extends React.Component {
       selectedDiskStateMapRows,
       selectedDiskStateMapRowKeys,
       selectedRows,
-      bbiSelectedRows,
     } = this.props.backingImage
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
 
@@ -158,40 +110,7 @@ class BackingImage extends React.Component {
     const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount.value, 10) : 3
 
     const backingImages = filterBackingImage(data, biSearchField, biSearchValue)
-    const backupBackingImage = filterBackupBackingImage(bbiData, bbiSearchField, bbiSearchValue)
-
     const volumeNameOptions = volumeData.map((volume) => volume.name)
-
-    const backupBackingImageListProps = {
-      dataSource: backupBackingImage,
-      height: this.state.bbiTableHeight,
-      loading,
-      deleteBackupBackingImage(record) {
-        dispatch({
-          type: 'backingImage/deleteBackupBackingImage',
-          payload: record,
-        })
-      },
-      restoreBackingImage(record) {
-        dispatch({
-          type: 'backingImage/showRestoreBackingImage',
-          payload: {
-            bbiSelected: record,
-          },
-        })
-      },
-      rowSelection: {
-        selectedRowKeys: bbiSelectedRows.map(item => item.id),
-        onChange(_, records) {
-          dispatch({
-            type: 'backingImage/changeSelection',
-            payload: {
-              bbiSelectedRows: records,
-            },
-          })
-        },
-      },
-    }
 
     const backingImageListProps = {
       dataSource: backingImages,
@@ -294,25 +213,6 @@ class BackingImage extends React.Component {
       },
     }
 
-    const restoreBBiModalProps = {
-      item: bbiSelected,
-      visible: restoreBackupBackingImageModalVisible,
-      onOk(item, params) {
-        dispatch({
-          type: 'backingImage/restoreBackingImage',
-          payload: {
-            item,
-            params,
-          },
-        })
-      },
-      onCancel() {
-        dispatch({
-          type: 'backingImage/hideRestoreBackingImageModal',
-        })
-      },
-    }
-
     const diskStateMapDetailModalProps = {
       selected,
       backingImages,
@@ -357,25 +257,6 @@ class BackingImage extends React.Component {
       },
       diskStateMapDeleteDisabled,
       diskStateMapDeleteLoading,
-    }
-
-    const backupBackingImageFilterProps = {
-      location,
-      defaultField: 'name',
-      fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'state', name: 'State' },
-        { value: 'url', name: 'URL' },
-      ],
-      onSearch(filter) {
-        dispatch({
-          type: 'backingImage/setSearchFilter',
-          payload: {
-            bbiSearchField: filter.field,
-            bbiSearchValue: filter.value,
-          },
-        })
-      },
     }
 
     const backingImageFilterProps = {
@@ -450,16 +331,6 @@ class BackingImage extends React.Component {
       },
     }
 
-    const backupBackingImageBulkActionsProps = {
-      bbiSelectedRows,
-      deleteBackupBackingImages(records) {
-        dispatch({
-          type: 'backingImage/bulkDeleteBackupBackingImage',
-          payload: records,
-        })
-      },
-    }
-
     const inUploadProgress = backingImageUploadStarted
 
     return (
@@ -484,26 +355,16 @@ class BackingImage extends React.Component {
           <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
           <span style={{ marginLeft: '4px' }}>Backing Image Backup</span>
         </div>
-        <div id="backupBackingImageTable" style={{ height: '45%', padding: '8px 12px 0px' }}>
-          <Row gutter={24} style={{ marginBottom: 8 }}>
-            <Col lg={17} md={15} sm={24} xs={24}>
-              <BackupBackingImageBulkActions {...backupBackingImageBulkActionsProps} />
-            </Col>
-            <Col lg={7} md={9} sm={24} xs={24}>
-              <Filter key="bbiFilter" {...backupBackingImageFilterProps} />
-            </Col>
-          </Row>
-          <Row style={{ marginBottom: 8, height: 'calc(100% - 48px)' }}>
-            <BackupBackingImageList {...backupBackingImageListProps} />
-          </Row>
-        </div>
+        <BackupBackingImage
+          height={this.state.bbiTableHeight}
+          location={location}
+        />
         {inUploadProgress && (
           <div className={style.backingImageUploadingContainer}>
             <Progress percent={backingImageUploadPercent} />
             <span>Uploading</span>
           </div>
         )}
-        { restoreBackupBackingImageModalVisible && <RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
         { minCopiesCountModalVisible && <UpdateMinCopiesCount {...minCopiesCountProps} />}
         { createBackingImageModalVisible ? <CreateBackingImage key={createBackingImageModalKey} {...createBackingImageModalProps} /> : ''}
         { diskStateMapDetailModalVisible ? <DiskStateMapDetail key={diskStateMapDetailModalKey} {...diskStateMapDetailModalProps} /> : ''}
