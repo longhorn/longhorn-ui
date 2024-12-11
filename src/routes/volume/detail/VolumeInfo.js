@@ -205,6 +205,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
     return text
   }
 
+  const renderLabelTooltip = (title) => (
+    <Tooltip overlayClassName={styles.labelTooltip} title={title}>
+      <Icon type="info-circle" />
+    </Tooltip>
+  )
+
   return (
     <div>
       {errorMsg}
@@ -255,12 +261,19 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.hostId !== '').map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId}</div>) : ''}
       </div>}
       <div className={styles.row}>
-        <span className={styles.label}> Size:</span>
-        {/* {formatMib(selectedVolume.size)} */}
+        <span className={styles.label}>
+          <span>Size</span>
+          {renderLabelTooltip('Amount of space available to the volume when in use. This is the size that you specified when you created the volume.')}
+          <span>:</span>
+        </span>
         {volumeSizeEle()}
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>Actual Size:</span>
+        <span className={styles.label}>
+          <span>Actual Size</span>
+          {renderLabelTooltip('Amount of space used by the volume head and snapshots. This can exceed the value of the "Size" field.')}
+          <span>:</span>
+        </span>
         {state ? formatMib(computeActualSize) : 'Unknown'}
       </div>
       <div className={styles.row}>
@@ -282,9 +295,11 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         </div>
       </div> : ''}
       <div className={styles.row}>
-        <Tooltip title={'Provides the binary to start and communicate with the volume engine/replicas.'}>
-          <span className={styles.label}> Engine Image:</span>
-        </Tooltip>
+        <span className={styles.label}>
+          <span>Engine Image</span>
+          {renderLabelTooltip('Provides the binary to start and communicate with the volume engine/replicas.')}
+          <span>:</span>
+        </span>
         {selectedVolume.image}
       </div>
       <div className={styles.row}>
@@ -328,9 +343,11 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {formatMib(selectedVolume.snapshotMaxSize)}
       </div>
       <div className={styles.row}>
-        <Tooltip title={'Manages the engine/replica instances’ life cycle on the node.'}>
-          <span className={styles.label}> Instance Manager:</span>
-        </Tooltip>
+        <span className={styles.label}>
+          <span>Instance Manager</span>
+          {renderLabelTooltip('Manages the engine/replica instances’ life cycle on the node.')}
+          <span>:</span>
+        </span>
         {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.instanceManagerName !== '').map(item => <div key={item.hostId} style={{ fontFamily: 'monospace', margin: '2px 0px' }}> <span style={{ backgroundColor: '#f2f4f5' }}> {item.instanceManagerName} </span></div>) : ''}
       </div>
       <div className={styles.row}>
