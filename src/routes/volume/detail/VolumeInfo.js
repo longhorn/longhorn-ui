@@ -263,7 +263,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}>
           <span>Size</span>
-          {renderLabelTooltip('Space capacity of a volume.')}
+          {renderLabelTooltip('Amount of space available to the volume when in use. This is the size that you specified when you created the volume.')}
           <span>:</span>
         </span>
         {volumeSizeEle()}
@@ -271,7 +271,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       <div className={styles.row}>
         <span className={styles.label}>
           <span>Actual Size</span>
-          {renderLabelTooltip('Actual storage space used for the volume, including volume-head and snapshots, which may exceed the size.')}
+          {renderLabelTooltip('Amount of space used by the volume head and snapshots. This can exceed the value of the "Size" field.')}
           <span>:</span>
         </span>
         {state ? formatMib(computeActualSize) : 'Unknown'}
