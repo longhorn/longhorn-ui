@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
 import VolumeBackup from './VolumeBackup'
+import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
 
 function Backup({ dispatch, location }) {
@@ -14,8 +15,8 @@ function Backup({ dispatch, location }) {
     {
       key: 'backing-image',
       label: 'Backing Image',
-      content: 'Content of Tab Pane 2',
-    }
+      content: <BackupBackingImage location={location} />,
+    },
   ]
 
   return (

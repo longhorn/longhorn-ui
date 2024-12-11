@@ -4,7 +4,7 @@ import { Modal } from 'antd'
 import { DropOption } from '../../components'
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackupBackingImage, restoreBackingImage }) {
+function BackupBackingImageBulkActions({ selected, deleteBackupBackingImage, restoreBackingImage }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -39,10 +39,10 @@ function actions({ selected, deleteBackupBackingImage, restoreBackingImage }) {
   )
 }
 
-actions.propTypes = {
+BackupBackingImageBulkActions.propTypes = {
   selected: PropTypes.object,
   deleteBackupBackingImage: PropTypes.func,
   restoreBackingImage: PropTypes.func,
 }
 
-export default actions
+export default BackupBackingImageBulkActions
