@@ -7,7 +7,7 @@ import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
 
-function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height }) {
+function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height }) {
   const actionsProps = {
     deleteBackupBackingImage,
     restoreBackingImage,
@@ -112,7 +112,7 @@ function list({ loading, dataSource, deleteBackupBackingImage, restoreBackingIma
   )
 }
 
-list.propTypes = {
+BackupBackingImageList.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   deleteBackupBackingImage: PropTypes.func,
@@ -121,4 +121,4 @@ list.propTypes = {
   height: PropTypes.number,
 }
 
-export default list
+export default BackupBackingImageList

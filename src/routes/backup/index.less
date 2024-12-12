@@ -11,10 +11,38 @@
 		.ant-tabs-content {
 			background: #fff;
 			flex: 1;
+			overflow: hidden;
 		}
 
 		.ant-tabs-tabpane {
 			height: 100%;
+		}
+	}
+
+	.backupBackingImage {
+		height: 100%;
+		box-sizing: border-box;
+
+		:global {
+			.ant-table-wrapper.common-table-class {
+				height: calc(100% - 48px); // 48 is the action bar height
+			}
+
+			.ant-spin-nested-loading,
+			.ant-spin-container,
+			.ant-table-content,
+			.ant-table-scroll {
+				height: 100%;
+			}
+
+			.ant-table {
+				height: calc(100% - 48px); // 48 is the pagination height
+				margin-bottom: 16px;
+			}
+
+			.ant-table-scroll {
+				overflow-y: hidden;
+			}
 		}
 	}
 }

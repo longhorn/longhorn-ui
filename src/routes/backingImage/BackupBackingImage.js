@@ -111,9 +111,7 @@ const BackupBackingImage = ({ backingImage, loading, height, dispatch, location,
             <Filter key="bbiFilter" {...backupBackingImageFilterProps} />
           </Col>
         </Row>
-        <Row>
-          <BackupBackingImageList {...backupBackingImageListProps} />
-        </Row>
+        <BackupBackingImageList {...backupBackingImageListProps} />
       </div>
       { restoreBackupBackingImageModalVisible && <RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
     </>
@@ -125,7 +123,7 @@ BackupBackingImage.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
-  height: PropTypes.number,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   className: PropTypes.string,
 }
 
