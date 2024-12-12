@@ -19,11 +19,7 @@ function Backup({ dispatch, location }) {
       key: 'backing-image',
       label: 'Backing Image',
       content:
-        <BackupBackingImage
-          className={styles.backupBackingImage}
-          location={location}
-          height="calc(100% - 48px)"
-        />
+        <BackupBackingImage location={location} />
     }
   ]
   const defaultKey = tabs[0].key

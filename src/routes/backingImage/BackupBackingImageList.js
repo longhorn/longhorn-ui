@@ -109,7 +109,6 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
 
   return (
     <Table
-      className="common-table-class"
       bordered={false}
       columns={columns}
       rowSelection={rowSelection}

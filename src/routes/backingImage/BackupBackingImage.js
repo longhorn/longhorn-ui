@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Row, Col } from 'antd'
@@ -10,7 +10,34 @@ import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
 import { filterBackupBackingImage } from './utils'
 import styles from './BackupBackingImage.less'
 
-const BackupBackingImage = ({ backingImage, loading, height, dispatch, location, className }) => {
+const BackupBackingImage = ({ backingImage, loading, dispatch, location, className }) => {
+  const containerRef = useRef(null)
+  const actionBarRef = useRef(null)
+  const [tableBodyHeight, setTableBodyHeight] = useState(0)
+
+  useEffect(() => {
+    const calculateTableBodyHeight = () => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.getBoundingClientRect().height || 0
+        const actionBarHeight = actionBarRef.current.getBoundingClientRect().height || 0
+        const tableHeaderHeight = document.querySelector('.ant-table-thead')?.getBoundingClientRect().height || 0
+        const paginationHeight = 48
+        const containerPadding = 24
+
+        const tableBodyHeightValue = containerHeight - actionBarHeight - tableHeaderHeight - paginationHeight - containerPadding
+        setTableBodyHeight(tableBodyHeightValue)
+      }
+    }
+
+    calculateTableBodyHeight()
+    window.addEventListener('resize', calculateTableBodyHeight)
+
+    return () => {
+      window.removeEventListener('resize', calculateTableBodyHeight)
+    }
+  }, [])
+
+
   const {
     bbiSelectedRows,
     bbiData,
@@ -19,6 +46,7 @@ const BackupBackingImage = ({ backingImage, loading, height, dispatch, location,
     bbiSelected,
     restoreBackupBackingImageModalVisible,
   } = backingImage
+
   const backupBackingImage = filterBackupBackingImage(bbiData, bbiSearchField, bbiSearchValue)
 
   const backupBackingImageBulkActionsProps = {
@@ -52,7 +80,7 @@ const BackupBackingImage = ({ backingImage, loading, height, dispatch, location,
 
   const backupBackingImageListProps = {
     dataSource: backupBackingImage,
-    height,
+    height: tableBodyHeight,
     loading,
     deleteBackupBackingImage(record) {
       dispatch({
@@ -102,18 +130,20 @@ const BackupBackingImage = ({ backingImage, loading, height, dispatch, location,
 
   return (
     <>
-      <div id="backupBackingImageTable" className={cx(styles.container, className)}>
-        <Row gutter={24} style={{ marginBottom: 8 }}>
-          <Col lg={17} md={15} sm={24} xs={24}>
-            <BackupBackingImageBulkActions {...backupBackingImageBulkActionsProps} />
-          </Col>
-          <Col lg={7} md={9} sm={24} xs={24}>
-            <Filter key="bbiFilter" {...backupBackingImageFilterProps} />
-          </Col>
-        </Row>
+      <div id="backupBackingImageTable" ref={containerRef} className={cx(styles.container, className)}>
+        <div ref={actionBarRef} className={styles.row}>
+          <Row gutter={24}>
+            <Col lg={17} md={15} sm={24} xs={24}>
+              <BackupBackingImageBulkActions {...backupBackingImageBulkActionsProps} />
+            </Col>
+            <Col lg={7} md={9} sm={24} xs={24}>
+              <Filter key="bbiFilter" {...backupBackingImageFilterProps} />
+            </Col>
+          </Row>
+        </div>
         <BackupBackingImageList {...backupBackingImageListProps} />
       </div>
-      { restoreBackupBackingImageModalVisible && <RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
+      {restoreBackupBackingImageModalVisible && <RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
     </>
   )
 }
