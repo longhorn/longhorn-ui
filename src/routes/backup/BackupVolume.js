@@ -13,11 +13,11 @@ import BulkCreateStandbyVolumeModal from './BulkCreateStandbyVolumeModal'
 import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
 import WorkloadDetailModal from '../volume/WorkloadDetailModal'
-import styles from './VolumeBackup.less'
+import styles from './BackupVolume.less'
 
 const { confirm, info } = Modal
 
-function VolumeBackup({ backup, loading, setting, backingImage, dispatch, location }) {
+function BackupVolume({ backup, loading, setting, backingImage, dispatch, location }) {
   location.search = location.search ? location.search : ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
@@ -337,7 +337,7 @@ function VolumeBackup({ backup, loading, setting, backingImage, dispatch, locati
   )
 }
 
-VolumeBackup.propTypes = {
+BackupVolume.propTypes = {
   backup: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
@@ -346,4 +346,4 @@ VolumeBackup.propTypes = {
   backingImage: PropTypes.object,
 }
 
-export default connect(({ backup, setting, backingImage, loading }) => ({ backup, setting, backingImage, loading: loading.models.backup }))(VolumeBackup)
+export default connect(({ backup, setting, backingImage, loading }) => ({ backup, setting, backingImage, loading: loading.models.backup }))(BackupVolume)

@@ -10,7 +10,7 @@ import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
 import { filterBackupBackingImage } from './utils'
 import styles from './BackupBackingImage.less'
 
-const BackupBackingImage = ({ backingImage, loading, dispatch, location, className }) => {
+function BackupBackingImage({ backingImage, loading, dispatch, location, className }) {
   const containerRef = useRef(null)
   const actionBarRef = useRef(null)
   const [tableBodyHeight, setTableBodyHeight] = useState(0)

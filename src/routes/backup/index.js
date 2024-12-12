@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import VolumeBackup from './VolumeBackup'
+import BackupVolume from './BackupVolume'
 import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
 
@@ -13,7 +13,7 @@ function Backup({ dispatch, location }) {
     {
       key: 'volume',
       label: 'Volume',
-      content: <VolumeBackup location={location} />,
+      content: <BackupVolume location={location} />,
     },
     {
       key: 'backing-image',
