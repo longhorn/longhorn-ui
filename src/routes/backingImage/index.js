@@ -16,7 +16,6 @@ class BackingImage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      bbiTableHeight: 300,
       height: 300,
       message: null,
     }
@@ -32,23 +31,15 @@ class BackingImage extends React.Component {
   }
 
   onResize = () => {
-    const bbiTableHeight = document.getElementById('backupBackingImageTable').offsetHeight
     const biTableHeight = document.getElementById('backingImageTable').offsetHeight
-
     const tableHeaderHeight = 55
-
     const biTableClientHeight = document.querySelector('#backingImageTable .ant-table')?.clientHeight
     const biTableEle = document.querySelector('#backingImageTable .ant-table-body')
 
-    const bbiTableClientHeight = document.querySelector('#backupBackingImageTable .ant-table')?.clientHeight
-    const bbiTableEle = document.querySelector('#backupBackingImageTable .ant-table-body')
-
     if (biTableEle) biTableEle.style.height = `${biTableClientHeight - tableHeaderHeight}px`
-    if (bbiTableEle) bbiTableEle.style.height = `${bbiTableClientHeight - tableHeaderHeight}px`
 
     this.setState({
       height: biTableHeight,
-      bbiTableHeight,
     })
   }
 
@@ -355,10 +346,7 @@ class BackingImage extends React.Component {
           <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
           <span style={{ marginLeft: '4px' }}>Backing Image Backup</span>
         </div>
-        <BackupBackingImage
-          height={this.state.bbiTableHeight}
-          location={location}
-        />
+        <BackupBackingImage className={style.backupBackingImage} location={location} />
         {inUploadProgress && (
           <div className={style.backingImageUploadingContainer}>
             <Progress percent={backingImageUploadPercent} />
