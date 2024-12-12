@@ -40,9 +40,9 @@ const BackupBackingImage = ({ backingImage, loading, dispatch, location, classNa
 
   const {
     bbiSelectedRows,
-    bbiData,
-    bbiSearchField,
-    bbiSearchValue,
+    bbiData = [],
+    bbiSearchField = '',
+    bbiSearchValue = '',
     bbiSelected,
     restoreBackupBackingImageModalVisible,
   } = backingImage
@@ -153,7 +153,6 @@ BackupBackingImage.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
-  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   className: PropTypes.string,
 }
 
