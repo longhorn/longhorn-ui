@@ -8,7 +8,7 @@ import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
 
 function Backup({ dispatch, location }) {
-  const { pathname, hash } = location
+  const { pathname, hash, search } = location
   const tabs = [
     {
       key: 'volume',
@@ -26,7 +26,7 @@ function Backup({ dispatch, location }) {
 
   useEffect(() => {
     if (!hash) {
-      dispatch(routerRedux.replace({ pathname, hash: defaultKey }))
+      dispatch(routerRedux.replace({ pathname, hash: defaultKey, search }))
     }
   }, [hash, pathname, dispatch])
 
