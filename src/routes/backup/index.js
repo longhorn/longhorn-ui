@@ -3,12 +3,28 @@ import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
+import queryString from 'query-string'
 import BackupVolume from './BackupVolume'
 import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
 
 function Backup({ dispatch, location }) {
   const { pathname, hash, search } = location
+
+  const handleBackupBackingImageSearch = (filter = {}) => {
+    const { field, value } = filter
+
+    dispatch(routerRedux.push({
+      pathname,
+      hash,
+      search: queryString.stringify({
+        ...queryString.parse(search),
+        field,
+        value
+      })
+    }))
+  }
+
   const tabs = [
     {
       key: 'volume',
@@ -19,10 +35,14 @@ function Backup({ dispatch, location }) {
       key: 'backing-image',
       label: 'Backing Image',
       content:
-        <BackupBackingImage location={location} />
+        <BackupBackingImage
+          location={location}
+          onSearch={handleBackupBackingImageSearch}
+        />
     }
   ]
   const defaultKey = tabs[0].key
+  const activeTab = hash ? hash.replace('#', '') : defaultKey
 
   useEffect(() => {
     if (!hash) {
@@ -33,8 +53,6 @@ function Backup({ dispatch, location }) {
   const handleTabChange = (key) => {
     dispatch(routerRedux.replace({ pathname, hash: key }))
   }
-
-  const activeTab = hash ? hash.replace('#', '') : defaultKey
 
   return (
     <Tabs
