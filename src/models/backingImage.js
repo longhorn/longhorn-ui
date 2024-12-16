@@ -45,8 +45,6 @@ export default {
     selectedDiskStateMapRowKeys: [],
     biSearchField: '',
     biSearchValue: '',
-    bbiSearchField: '',
-    bbiSearchValue: '',
     biSocketStatus: 'closed',
     bbiSocketStatus: 'closed',
   },
