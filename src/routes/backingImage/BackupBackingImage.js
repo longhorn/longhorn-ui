@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Row, Col } from 'antd'
 import cx from 'classnames'
+import queryString from 'query-string'
 import { Filter } from '../../components/index'
 import BackupBackingImageList from './BackupBackingImageList'
 import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
@@ -10,11 +11,14 @@ import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
 import { filterBackupBackingImage } from './utils'
 import styles from './BackupBackingImage.less'
 
-function BackupBackingImage({ backingImage, loading, dispatch, location, className }) {
+function BackupBackingImage({ backingImage, loading, dispatch, location, className, onSearch }) {
   const containerRef = useRef(null)
   const actionBarRef = useRef(null)
   const [tableBodyHeight, setTableBodyHeight] = useState(0)
+  const [bbiSearchField, setBbiSearchField] = useState('')
+  const [bbiSearchValue, setBbiSearchValue] = useState('')
 
+  // calculate table body height
   useEffect(() => {
     const calculateTableBodyHeight = () => {
       if (containerRef.current) {
@@ -37,12 +41,18 @@ function BackupBackingImage({ backingImage, loading, dispatch, location, classNa
     }
   }, [])
 
+  // get search filter from URL query params
+  useEffect(() => {
+    const params = queryString.parse(location.search)
+    const { field, value } = params
+
+    setBbiSearchField(field)
+    setBbiSearchValue(value)
+  }, [location.search])
 
   const {
     bbiSelectedRows,
     bbiData = [],
-    bbiSearchField = '',
-    bbiSearchValue = '',
     bbiSelected,
     restoreBackupBackingImageModalVisible,
   } = backingImage
@@ -68,13 +78,13 @@ function BackupBackingImage({ backingImage, loading, dispatch, location, classNa
       { value: 'url', name: 'URL' },
     ],
     onSearch(filter) {
-      dispatch({
-        type: 'backingImage/setSearchFilter',
-        payload: {
-          bbiSearchField: filter.field,
-          bbiSearchValue: filter.value,
-        },
-      })
+      // if prop onSearch exists, call it with the filter data
+      if (typeof onSearch === 'function') {
+        onSearch(filter)
+      } else {
+        setBbiSearchField(filter.field)
+        setBbiSearchValue(filter.value)
+      }
     },
   }
 
@@ -154,6 +164,7 @@ BackupBackingImage.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   className: PropTypes.string,
+  onSearch: PropTypes.func
 }
 
 export default connect(({
