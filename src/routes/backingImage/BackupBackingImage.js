@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import { Row, Col } from 'antd'
 import cx from 'classnames'
 import queryString from 'query-string'
+import { routerRedux } from 'dva/router'
 import { Filter } from '../../components/index'
 import BackupBackingImageList from './BackupBackingImageList'
 import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
@@ -11,7 +12,16 @@ import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
 import { filterBackupBackingImage } from './utils'
 import styles from './BackupBackingImage.less'
 
-function BackupBackingImage({ backingImage, loading, dispatch, location, className, onSearch }) {
+function BackupBackingImage({
+  backingImage,
+  loading,
+  dispatch,
+  location = {},
+  className,
+  persistFilterInURL = false
+}) {
+  const { pathname, hash, search } = location
+
   const containerRef = useRef(null)
   const actionBarRef = useRef(null)
   const [tableBodyHeight, setTableBodyHeight] = useState(0)
@@ -43,12 +53,11 @@ function BackupBackingImage({ backingImage, loading, dispatch, location, classNa
 
   // get search filter from URL query params
   useEffect(() => {
-    const params = queryString.parse(location.search)
-    const { field, value } = params
+    const { field = '', value = '' } = queryString.parse(search) || {}
 
     setBbiSearchField(field)
     setBbiSearchValue(value)
-  }, [location.search])
+  }, [search])
 
   const {
     bbiSelectedRows,
@@ -78,9 +87,19 @@ function BackupBackingImage({ backingImage, loading, dispatch, location, classNa
       { value: 'url', name: 'URL' },
     ],
     onSearch(filter) {
-      // if prop onSearch exists, call it with the filter data
-      if (typeof onSearch === 'function') {
-        onSearch(filter)
+      const { field, value } = filter
+
+      if (persistFilterInURL) {
+        const trimmedValue = value?.trim()
+        const params = (field && trimmedValue)
+          ? { ...queryString.parse(search), field, value: trimmedValue }
+          : {}
+
+        dispatch(routerRedux.push({
+          pathname,
+          hash,
+          search: queryString.stringify(params)
+        }))
       } else {
         setBbiSearchField(filter.field)
         setBbiSearchValue(filter.value)
@@ -164,7 +183,7 @@ BackupBackingImage.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   className: PropTypes.string,
-  onSearch: PropTypes.func
+  persistFilterInURL: PropTypes.bool,
 }
 
 export default connect(({
