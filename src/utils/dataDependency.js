@@ -97,6 +97,9 @@ const dependency = {
       ns: 'backingImage',
       key: 'backingimages',
     }, {
+      ns: 'backingImage',
+      key: 'backupbackingimages',
+    }, {
       ns: 'backup',
       key: 'backupvolumes',
     }, {

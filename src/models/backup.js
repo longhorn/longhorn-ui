@@ -327,6 +327,15 @@ export default {
         let wsBackup = yield select(state => state.backup.wsBackup)
         if (wsBackup) wsBackup.close(1000)
       }
+
+      if (payload.type === 'backupbackingimages') {
+        const wsBbi = yield select(state => state.backingImage.wsBbi)
+        if (wsBbi) {
+          wsBbi.open()
+        } else {
+          wsChanges(payload.dispatch, payload.type, '1s', payload.ns)
+        }
+      }
     },
     *stopWS({
       // eslint-disable-next-line no-unused-vars
