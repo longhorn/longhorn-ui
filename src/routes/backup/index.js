@@ -3,28 +3,12 @@ import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import queryString from 'query-string'
 import BackupVolume from './BackupVolume'
 import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
 
 function Backup({ dispatch, location }) {
   const { pathname, hash, search } = location
-
-  const handleBackupBackingImageSearch = (filter = {}) => {
-    const { field, value } = filter
-
-    dispatch(routerRedux.push({
-      pathname,
-      hash,
-      search: queryString.stringify({
-        ...queryString.parse(search),
-        field,
-        value
-      })
-    }))
-  }
-
   const tabs = [
     {
       key: 'volume',
@@ -35,10 +19,7 @@ function Backup({ dispatch, location }) {
       key: 'backing-image',
       label: 'Backing Image',
       content:
-        <BackupBackingImage
-          location={location}
-          onSearch={handleBackupBackingImageSearch}
-        />
+        <BackupBackingImage persistFilterInURL location={location} />
     }
   ]
   const defaultKey = tabs[0].key
