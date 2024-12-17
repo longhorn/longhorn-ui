@@ -35,6 +35,7 @@ const modal = ({
   defaultDataLocalityOption,
   defaultDataLocalityValue,
   backingImageOptions,
+  backupTargets,
   tagsLoading,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
@@ -57,6 +58,7 @@ const modal = ({
     dataLocality: i.dataLocality || defaultDataLocalityValue,
     accessMode: i.accessMode || null,
     backingImage: i.backingImage,
+    backupTargetName: i.backupTargetName || 'default',
     dataSource: i.name,
     encrypted: i.encrypted || false,
     dataEngine: i.dataEngine || 'v1',
@@ -95,6 +97,7 @@ const modal = ({
       accessMode: getFieldValue('accessMode'),
       encrypted: getFieldValue('encrypted') || false,
       dataEngine: getFieldValue('dataEngine'),
+      backupTargetName: getFieldValue('backupTargetName'),
       nodeSelector: getFieldValue('nodeSelector'),
       diskSelector: getFieldValue('diskSelector'),
     }
@@ -136,8 +139,10 @@ const modal = ({
         backingImage,
         encrypted,
         dataEngine,
+        backupTargetName,
         nodeSelector,
-        diskSelector } = volumeConfigs[newIndex] || {}
+        diskSelector
+      } = volumeConfigs[newIndex] || {}
 
       setFieldsValue({
         name,
@@ -149,6 +154,7 @@ const modal = ({
         backingImage,
         encrypted,
         dataEngine,
+        backupTargetName,
         nodeSelector,
         diskSelector,
       })
@@ -160,6 +166,7 @@ const modal = ({
   const handleFrontendChange = (value) => updateVolumeConfig('frontend', value)
   const handleDataLocalityChange = (value) => updateVolumeConfig('dataLocality', value)
   const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
+  const handleBackupTargeNameChange = (value) => updateVolumeConfig('backupTargeName', value)
   const handleEncryptedCheck = (e) => updateVolumeConfig('encrypted', e.target.checked)
   const handleNodeTagRemove = (value) => {
     const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
@@ -350,6 +357,13 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backupTargetName', {
+            initialValue: item.backupTargetName || '',
+          })(<Select allowClear onSelect={handleBackupTargeNameChange}>
+            { backupTargets.map(bt => <Option key={bt} value={bt}>{bt}</Option>)}
+          </Select>)}
+        </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'checked',
@@ -387,6 +401,7 @@ modal.propTypes = {
   onOk: PropTypes.func,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
+  backupTargets: PropTypes.array,
   defaultDataLocalityOption: PropTypes.array,
   defaultDataLocalityValue: PropTypes.string,
   tagsLoading: PropTypes.bool,
