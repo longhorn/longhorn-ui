@@ -386,7 +386,7 @@ const modal = ({
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
             // init backup target is the default one
-            initialValue: backupTargets.find(bt=> bt === 'default') || '',
+            initialValue: backupTargets.find(bt => bt === 'default') || '',
           })(<Select allowClear>
             { backupTargets.map(bt => <Option key={bt} value={bt}>{bt}</Option>)}
           </Select>)}

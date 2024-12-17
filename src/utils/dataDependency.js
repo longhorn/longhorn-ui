@@ -63,9 +63,6 @@ const dependency = {
     runWs: [{
       ns: 'recurringJob',
       key: 'recurringjobs',
-    }, {
-      ns: 'backupTarget',
-      key: 'backuptargets',
     }],
   },
   backupTarget: {
@@ -189,7 +186,7 @@ const httpDataDependency = {
   '/volume': ['volume', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
   '/backingImage': ['volume', 'backingImage', 'backupTarget'],
-  '/recurringJob': ['recurringJob', 'backupTarget'],
+  '/recurringJob': ['recurringJob'],
   '/backupTarget': ['backupTarget'],
   '/setting': ['setting'],
   '/backup': ['host', 'setting', 'backingImage', 'backup'],

@@ -115,8 +115,9 @@ class List extends React.Component {
                   to={{
                     pathname: `/backup/${id}`,
                     search: queryString.stringify({
-                      field: 'volumeName',
-                      keyword: id,
+                      field: 'name',
+                      keyword: record.name,
+                      volumeName: record.volumeName
                     }),
                   }}>
                   {id}

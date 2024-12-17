@@ -46,7 +46,6 @@ const noRetain = (val) => {
 
 const modal = ({
   item,
-  availBackupTargets,
   visible,
   isEdit,
   onCancel,
@@ -61,11 +60,9 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
-  const isBackupTask = () => getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
-
   function handleOk() {
     validateFields((errors) => {
-      if (errors || (isBackupTask() && getFieldValue('backupTargetName') === '')) {
+      if (errors) {
         return
       }
       // TODO: extract below logic to getData function
@@ -328,26 +325,6 @@ const modal = ({
               </FormItem>
           </Tooltip>}
         </div>
-        <div>
-          {isBackupTask()
-          && <FormItem label="Backup Target" {...formItemLayout}>
-              {getFieldDecorator('backupTargetName', {
-                // eslint-disable-next-line no-nested-ternary
-                initialValue: isEdit ? item.backupTargetName : availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please select a backup target',
-                  },
-                ],
-              })(
-              <Select disabled={isEdit} style={{ width: '80%' }}>
-                {availBackupTargets.map(bkTarget => <Option key={bkTarget.name} value={bkTarget.name}>{bkTarget.name}</Option>)}
-              </Select>
-              )}
-            </FormItem>
-          }
-        </div>
         <FormItem label="Retain" hasFeedback {...formItemLayout}>
           {getFieldDecorator('retain', {
             initialValue: isEdit ? item.retain : 1,
@@ -433,7 +410,6 @@ const modal = ({
 
 modal.propTypes = {
   form: PropTypes.object.isRequired,
-  availBackupTargets: PropTypes.array,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,

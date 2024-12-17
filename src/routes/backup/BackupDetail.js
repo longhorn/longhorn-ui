@@ -15,14 +15,15 @@ const { confirm } = Modal
 
 function Backup({ backup, volume, setting, backingImage, loading, location, dispatch }) {
   const { backupVolumes, backupData, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
+
   const volumeList = volume.data
   const settings = setting.data
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
 
-  const volumeName = queryString.parse(location.search).keyword
-  const currentBackUp = backupVolumes.find((item) => { return item.id === volumeName })
+  const { volumeName } = queryString.parse(location.search)
+  const currentBackUp = backupVolumes.find((item) => item.volumeName === volumeName) || {}
   const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
   const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
@@ -44,7 +45,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
     },
     sorter,
     showRestoreBackup(record) {
-      let currentVolume = volumeList.find((item) => record.volumeName === item.name)
+      const currentVolume = volumeList.find((item) => record.volumeName === item.name)
       dispatch({
         type: 'backup/beforeShowRestoreBackupModal',
         payload: {

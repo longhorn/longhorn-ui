@@ -71,7 +71,7 @@ export function setSortOrder(columns, sorter) {
 }
 
 export function getBackupVolumeName(search) {
-  if (search && search.field === 'volumeName' && search.keyword) {
+  if (search && search.field === 'name' && search.keyword) {
     return search.keyword
   }
   return ''

@@ -91,8 +91,7 @@ class RecurringJob extends React.Component {
 
   render() {
     const me = this
-    const { dispatch, loading, location, backupTarget } = this.props
-    const availAndWritableBackupTarget = backupTarget.data.filter((item) => item.available && !item.readOnly)
+    const { dispatch, loading, location } = this.props
     const { data } = this.props.recurringJob
     const { field, value } = queryString.parse(this.props.location.search)
     // Front-end filtering
@@ -126,7 +125,6 @@ class RecurringJob extends React.Component {
       item: this.state.selected,
       visible: this.state.createRecurringJobModalVisible,
       isEdit: this.state.isEdit,
-      availBackupTargets: availAndWritableBackupTarget,
       onOk(newRecurringJob) {
         me.setState({
           ...me.state,
@@ -267,10 +265,9 @@ class RecurringJob extends React.Component {
 
 RecurringJob.propTypes = {
   recurringJob: PropTypes.object,
-  backupTarget: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ recurringJob, backupTarget, loading }) => ({ recurringJob, backupTarget, loading: loading.models.recurringJob }))(RecurringJob)
+export default connect(({ recurringJob, loading }) => ({ recurringJob, loading: loading.models.recurringJob }))(RecurringJob)
