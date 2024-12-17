@@ -234,13 +234,16 @@ class Snapshots extends React.Component {
     }
     const upgradingEngine = () => this.props.volume.currentImage !== this.props.volume.image
 
-    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !this.props.backupTargetAvailable
+    const volBackupTarget = this.props.volume.backupTargetName
+    const volBackupTargetAvailable = !!this.props.backupTarget.data.find(bt => bt.name === volBackupTarget)?.available
+
+    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !volBackupTargetAvailable
 
     const createSnapshotDisabled = disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()
 
     const createBackupTooltipMessage = () => {
-      if (!this.props.backupTargetAvailable) {
-        return this.props.backupTargetMessage
+      if (!volBackupTargetAvailable) {
+        return `Backup target ${volBackupTarget} is unavailable.`
       }
       if (this.props.volume.standby) {
         return 'Unable to create backup for DR volume.'
@@ -337,9 +340,8 @@ Snapshots.propTypes = {
   snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
   showRemoved: PropTypes.bool,
-  backupTargetAvailable: PropTypes.bool,
-  backupTargetMessage: PropTypes.string,
   volumeHead: PropTypes.object,
+  backupTarget: PropTypes.object
 }
 
 export default Snapshots

@@ -26,9 +26,19 @@ function actions({ selected, deleteBackupTarget, editBackupTarget }) {
     }
   }
 
+  const deleteActions = ({
+    disabled: selected.name === 'default',
+    tooltip: selected.name === 'default' ? 'Default backup target can not be deleted' : '',
+  })
+
   const availableActions = [
     { key: 'edit', name: 'Edit' },
-    { key: 'delete', name: 'Delete', disabled: selected.default === true, tooltip: selected.default === true ? 'Default backup target can not be deleted' : '' },
+    {
+      key: 'delete',
+      name: 'Delete',
+      disabled: deleteActions.disabled,
+      tooltip: deleteActions.tooltip
+    }
   ]
 
   return (

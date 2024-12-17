@@ -96,7 +96,6 @@ class List extends React.Component {
   render() {
     const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
-    console.log("🚀 ~ List ~ render ~ dataSource:", dataSource)
     const handleMenuClick = (record, event) => {
       switch (event.key) {
         case 'restore':

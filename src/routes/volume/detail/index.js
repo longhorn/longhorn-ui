@@ -107,7 +107,7 @@ const getEventData = (eventlog, selectedVolume) => {
   return mappedEventLogs
 }
 
-function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, volume, volumeId, setting, loading, backingImage, recurringJob }) {
+function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, backupTarget, volume, volumeId, setting, loading, backingImage, recurringJob }) {
   const {
     data,
     cloneVolumeType,
@@ -155,7 +155,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateFreezeFilesystemForSnapshotModalKey,
     updateFreezeFilesystemForSnapshotModalVisible,
   } = volume
-  const { backupStatus, backupTargetAvailable, backupTargetMessage } = backup
+  const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
@@ -530,9 +530,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     volume: selectedVolume,
     volumeId,
     dispatch,
-    backupTargetAvailable,
-    backupTargetMessage,
     volumeHead: snapshotData.find(d => d.name === 'volume-head'),
+    backupTarget,
   }
 
   const salvageModalProps = {
@@ -749,6 +748,7 @@ VolumeDetail.propTypes = {
   backup: PropTypes.object,
   host: PropTypes.object,
   engineimage: PropTypes.object,
+  backupTarget: PropTypes.object,
   volumeId: PropTypes.string,
   loading: PropTypes.bool,
   snapshotModal: PropTypes.object,
@@ -758,4 +758,4 @@ VolumeDetail.propTypes = {
   recurringJob: PropTypes.object,
 }
 
-export default connect(({ snapshotModal, backup, host, engineimage, volume, loading, eventlog, setting, backingImage, recurringJob }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting, backingImage, recurringJob }))(VolumeDetail)
+export default connect(({ snapshotModal, backup, host, engineimage, backupTarget, volume, loading, eventlog, setting, backingImage, recurringJob }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, backupTarget, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting, backingImage, recurringJob }))(VolumeDetail)
