@@ -127,6 +127,19 @@ function list({
         )
       },
     }, {
+      title: 'Data Engine',
+      dataIndex: 'dataEngine',
+      key: 'dataEngine',
+      width: 130,
+      sorter: (a, b) => a.dataEngine.toString().localeCompare(b.dataEngine.toString()),
+      render: (text) => {
+        return (
+          <div>
+            {text}
+          </div>
+        )
+      },
+    }, {
       title: 'Node Tags',
       key: 'nodeSelector',
       dataIndex: 'nodeSelector',
