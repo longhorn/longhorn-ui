@@ -40,9 +40,13 @@ const modal = ({
       if (errors) {
         return
       }
+      // use the backup target name from the original backupVolume
+      const targetBackupVolume = backupVolumes.find(bkVol => bkVol.volumeName === item.volumeName) || {}
       const data = {
         ...getFieldsValue(),
         fromBackup: item.fromBackup,
+        backupTargetName: targetBackupVolume?.backupTargetName || '',
+        volumeName: getFieldsValue().name,
       }
       if (data.name && typeof data.name === 'string') {
         data.name = data.name.trimLeftAndRight()

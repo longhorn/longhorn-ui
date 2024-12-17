@@ -8,6 +8,7 @@
       2,
       "never"
     ],
+    "react/function-component-definition": 0,
     "allowForLoopAfterthoughts": 0,
     "comma-dangle": 0,
     "max-len": 0,

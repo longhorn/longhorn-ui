@@ -208,7 +208,6 @@ list.propTypes = {
   rowSelection: PropTypes.object,
   height: PropTypes.number,
   backupProps: PropTypes.object,
-  // hasWritableBackupTargets: PropTypes.bool,
 }
 
 export default list
