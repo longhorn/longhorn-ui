@@ -90,9 +90,29 @@ function bulkActions({ selectedRows, backupProps, deleteBackingImages, downloadS
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
-    { key: 'download', name: 'Download', disabled() { return (selectedRows.length === 0 || selectedRows.every(row => !hasReadyBackingDisk(row))) } },
-    { key: 'backup', name: 'Back Up', disabled() { return selectedRows.length === 0 || backupTargetAvailable === false || selectedRows.every(row => !hasReadyBackingDisk(row)) } },
+    {
+      key: 'delete',
+      name: 'Delete',
+      disabled() { return selectedRows.length === 0 }
+    },
+    {
+      key: 'download',
+      name: 'Download',
+      disabled() {
+        return selectedRows.length === 0
+          || selectedRows.every(row => !hasReadyBackingDisk(row))
+          || selectedRows.some(row => row.dataEngine === 'v2')
+      }
+    },
+    {
+      key: 'backup',
+      name: 'Back Up',
+      disabled() {
+        return selectedRows.length === 0
+          || backupTargetAvailable === false
+          || selectedRows.every(row => !hasReadyBackingDisk(row))
+      }
+    },
   ]
 
   return (
