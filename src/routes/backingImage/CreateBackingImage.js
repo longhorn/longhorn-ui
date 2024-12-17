@@ -24,6 +24,7 @@ const genDataFromType = (type, getFieldValue) => {
     name: getFieldValue('name'),
     sourceType: getFieldValue('sourceType'),
     minNumberOfCopies: getFieldValue('minNumberOfCopies'),
+    dataEngine: getFieldValue('dataEngine'),
     diskSelector: getFieldValue('diskSelector'),
     nodeSelector: getFieldValue('nodeSelector'),
   }
@@ -85,6 +86,8 @@ const modal = ({
     getFieldValue,
     setFieldsValue,
   },
+  v1DataEngineEnabled = true,
+  v2DataEngineEnabled = false
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -309,6 +312,27 @@ const modal = ({
             ],
           })(<InputNumber min={1} />)}
         </FormItem>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: v2DataEngineEnabled ? 'v2' : 'v1',
+            rules: [
+              {
+                validator: (_rule, value, callback) => {
+                  if ((value === 'v1' && !v1DataEngineEnabled) || (value === 'v2' && !v2DataEngineEnabled)) {
+                    callback(`${value} data engine is not enabled`)
+                  } else {
+                    callback()
+                  }
+                },
+              },
+            ],
+          })(
+            <Select>
+              <Option value="v1">v1</Option>
+              <Option value="v2">v2</Option>
+            </Select>
+          )}
+        </FormItem>
         <Spin spinning={tagsLoading}>
           <FormItem label="Node Tag" {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
@@ -344,6 +368,8 @@ modal.propTypes = {
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
   backingImageOptions: PropTypes.array,
+  v1DataEngineEnabled: PropTypes.bool,
+  v2DataEngineEnabled: PropTypes.bool,
 }
 
 export default Form.create()(modal)
