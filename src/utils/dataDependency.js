@@ -198,14 +198,16 @@ const httpDataDependency = {
 export function getDataDependency(pathName) {
   let keys = Object.keys(dependency).filter((key) => {
     if (pathName && dependency[key].path) {
-      /* /backup will be mis-included in /backupTarget path if using the following condition */
-      // let max = dependency[key].path.length
-      // return dependency[key].path === pathName.substring(0, max)
-      return dependency[key].path === pathName
+      /* /backup will be mis-included in /backupTarget path if using the else condition */
+      if (pathName === '/backupTarget') {
+        return dependency[key].path === pathName
+      } else {
+        const max = dependency[key].path.length
+        return dependency[key].path === pathName.substring(0, max)
+      }
     }
     return false
   })
-
   if (keys && keys.length === 1) {
     let modal = dependency[keys[0]]
     modal.stopWs = list.filter((item) => {
@@ -218,7 +220,6 @@ export function getDataDependency(pathName) {
 
 export function enableQueryData(pathName, ns) {
   let canQueryData = false
-
   // Determining whether other dependencies model need to request data
   if (Object.keys(httpDataDependency).some((key) => pathName.startsWith(key)
     && httpDataDependency[key].find((item) => item === ns))

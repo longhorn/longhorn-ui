@@ -96,6 +96,7 @@ class List extends React.Component {
   render() {
     const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
     const dataSource = backup || []
+    console.log("🚀 ~ List ~ render ~ dataSource:", dataSource)
     const handleMenuClick = (record, event) => {
       switch (event.key) {
         case 'restore':
@@ -188,6 +189,18 @@ class List extends React.Component {
             <div>
               {text || 'incremental'}
             </div>
+          )
+        },
+      },
+      {
+        title: 'Backup Target',
+        dataIndex: 'backupTargetName',
+        key: 'backupTargetName',
+        width: 120,
+        sorter: (a, b) => sortTable(a, b, 'backupTargetName'),
+        render: (text) => {
+          return (
+            <div>{text}</div>
           )
         },
       },
@@ -341,7 +354,7 @@ class List extends React.Component {
         title: 'Labels',
         dataIndex: 'labels',
         key: 'labels',
-        width: 100,
+        width: 80,
         render: (obj, record) => {
           if (obj && record.snapshotCreated) {
             obj.snapshotCreated = record.snapshotCreated

@@ -365,7 +365,7 @@ export default {
     updateBackgroundBackups(state, action) {
       let volumeName = getBackupVolumeName(state.search)
       if (volumeName && action.payload && action.payload.data) {
-        let backupData = action.payload.data.filter((item) => {
+        const backupData = action.payload.data.filter((item) => {
           return item.volumeName === volumeName
         })
         return {

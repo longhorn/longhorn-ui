@@ -49,6 +49,7 @@ const modal = ({
   defaultDataLocalityOption,
   defaultDataLocalityValue,
   backingImageOptions,
+  backupTargets,
   tagsLoading,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
@@ -224,6 +225,13 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backupTargetName', {
+            initialValue: backupTargets.find(bt => bt === volume.backupTargetName) || '',
+          })(<Select allowClear>
+            { backupTargets.map(bt => <Option key={bt} value={bt}>{bt}</Option>)}
+          </Select>)}
+        </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'checked',
@@ -263,6 +271,7 @@ modal.propTypes = {
   onOk: PropTypes.func,
   nodeTags: PropTypes.array,
   diskTags: PropTypes.array,
+  backupTargets: PropTypes.array,
   defaultDataLocalityOption: PropTypes.array,
   defaultDataLocalityValue: PropTypes.string,
   tagsLoading: PropTypes.bool,
