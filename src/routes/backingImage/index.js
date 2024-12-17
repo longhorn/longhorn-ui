@@ -117,8 +117,11 @@ class BackingImage extends React.Component {
     } = this.props.backingImage
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
 
-    const defaultReplicaCount = settingData.find(s => s.id === 'default-replica-count')
-    const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount.value, 10) : 3
+    const settingsMap = settingData.reduce((acc, setting = {}) => ({ ...acc, [setting.id]: setting.value }), {})
+    const v1DataEngineEnabled = settingsMap['v1-data-engine'] === 'true'
+    const v2DataEngineEnabled = settingsMap['v2-data-engine'] === 'true'
+    const defaultReplicaCount = settingsMap['default-replica-count']
+    const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount, 10) : 3
 
     const backingImages = filterBackingImage(data, biSearchField, biSearchValue)
     const volumeNameOptions = volumeData.map((volume) => volume.name)
@@ -209,6 +212,8 @@ class BackingImage extends React.Component {
       nodeTags,
       diskTags,
       tagsLoading,
+      v1DataEngineEnabled,
+      v2DataEngineEnabled,
       onOk(newBackingImage) {
         const payload = { ...newBackingImage }
         if (newBackingImage.sourceType === 'upload') {
