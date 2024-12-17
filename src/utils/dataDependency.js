@@ -41,6 +41,9 @@ const dependency = {
       ns: 'backingImage',
       key: 'backingimages',
     }, {
+      ns: 'backupTarget',
+      key: 'backuptargets',
+    }, {
       ns: 'engineimage',
       key: 'engineimages',
     }, {
