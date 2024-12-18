@@ -66,7 +66,7 @@ import {
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
 import { hasReadyBackingDisk } from '../../utils/status'
-import { getAvailableBackupTargets } from '../../utils/backupTarget'
+import { getBackupTargets } from '../../utils/backupTarget'
 
 const confirm = Modal.confirm
 
@@ -212,7 +212,7 @@ class Volume extends React.Component {
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
     const engineImages = this.props.engineimage.data
-    const backupTargets = getAvailableBackupTargets(this.props.backupTarget).map(item => item.name)
+    const backupTargets = getBackupTargets(this.props.backupTarget)
     const { backupTargetAvailable, backupTargetMessage } = this.props.backup
     const recurringJobData = this.props.recurringJob.data
     const { field, value, stateValue, nodeRedundancyValue, engineImageUpgradableValue, scheduleValue, pvStatusValue, revisionCounterValue } = queryString.parse(this.props.location.search)

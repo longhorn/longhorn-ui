@@ -17,7 +17,7 @@ const formItemLayout = {
 
 const modal = ({
   backingImage,
-  availBackupTargets,
+  backupTargets,
   visible,
   onCancel,
   onOk,
@@ -27,7 +27,7 @@ const modal = ({
   },
 }) => {
   function handleOk() {
-    const backupTarget = availBackupTargets.find(bkTarget => bkTarget.name === getFieldValue('backupTargetName'))
+    const backupTarget = backupTargets.find(bkTarget => bkTarget.name === getFieldValue('backupTargetName'))
     if (backupTarget) {
       const url = backingImage.actions?.backupBackingImageCreate
       const payload = {
@@ -55,10 +55,10 @@ const modal = ({
       <div style={{ display: 'flex' }}>
         <FormItem label="Backup Target" style={{ width: '100%' }} {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
-            initialValue: availBackupTargets.length > 0 ? availBackupTargets[0].name : '',
+            initialValue: backupTargets.find(bk => bk.name === 'default')?.name || '',
           })(
           <Select style={{ width: '100%' }}>
-            {availBackupTargets.map(bkTarget => <Option key={bkTarget.name} value={bkTarget.name}>{bkTarget.name}</Option>)}
+            {backupTargets.map(bkTarget => <Option key={bkTarget.name} disabled={bkTarget.available === false} value={bkTarget.name}>{bkTarget.name}</Option>)}
           </Select>
           )}
         </FormItem>
@@ -69,7 +69,7 @@ const modal = ({
 
 modal.propTypes = {
   backingImage: PropTypes.object,
-  availBackupTargets: PropTypes.array,
+  backupTargets: PropTypes.array,
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
