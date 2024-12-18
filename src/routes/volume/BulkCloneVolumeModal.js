@@ -166,7 +166,7 @@ const modal = ({
   const handleFrontendChange = (value) => updateVolumeConfig('frontend', value)
   const handleDataLocalityChange = (value) => updateVolumeConfig('dataLocality', value)
   const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
-  const handleBackupTargeNameChange = (value) => updateVolumeConfig('backupTargeName', value)
+  const handleBackupTargetNameChange = (value) => updateVolumeConfig('backupTargeName', value)
   const handleEncryptedCheck = (e) => updateVolumeConfig('encrypted', e.target.checked)
   const handleNodeTagRemove = (value) => {
     const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
@@ -360,8 +360,8 @@ const modal = ({
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
             initialValue: item.backupTargetName || '',
-          })(<Select allowClear onSelect={handleBackupTargeNameChange}>
-            { backupTargets.map(bt => <Option key={bt} value={bt}>{bt}</Option>)}
+          })(<Select allowClear onSelect={handleBackupTargetNameChange}>
+            { backupTargets.map(bt => <Option key={bt.name} disabled={bt.available === false} value={bt.name}>{bt.name}</Option>)}
           </Select>)}
         </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>

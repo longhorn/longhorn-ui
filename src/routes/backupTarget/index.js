@@ -12,7 +12,7 @@ import { timeDurationStrToInt } from '../../utils/formatter'
 import queryString from 'query-string'
 import C from '../../utils/constants'
 
-const filterDataByField = (backupTargetData, field, value, booleanValue) => {
+const filterDataByField = (backupTargetData, field, value) => {
   if (!field) {
     return backupTargetData
   }
@@ -25,7 +25,11 @@ const filterDataByField = (backupTargetData, field, value, booleanValue) => {
       result = backupTargetData.filter((d) => (value ? d[`${field}`].includes(value?.trim()) : true))
       break
     case 'available': {
-      result = backupTargetData.filter((d) => (booleanValue ? d[`${field}`].toString() === booleanValue?.toLowerCase() : true))
+      result = backupTargetData.filter((d) => {
+        if (value === 'available') return d[`${field}`] === true
+        if (value === 'error') return d[`${field}`] === false
+        return true
+      })
       break
     }
     default:
@@ -89,9 +93,9 @@ class BackupTarget extends React.Component {
     const { dispatch, loading, location } = this.props
     const { createBackupTargetModalVisible, editBackupTargetModalVisible, selectedEditRow } = this.state
     const { data, selectedRows } = this.props.backupTarget
-    const { field, value, booleanValue } = queryString.parse(this.props.location.search)
+    const { field, value } = queryString.parse(this.props.location.search)
 
-    const backupTargetData = filterDataByField(data, field, value, booleanValue)
+    const backupTargetData = filterDataByField(data, field, value)
 
     const backupTargetListProps = {
       dataSource: backupTargetData,
@@ -174,17 +178,17 @@ class BackupTarget extends React.Component {
         { value: 'backupTargetURL', name: 'URL' },
         { value: 'credentialSecret', name: 'Credential Secret' },
         { value: 'pollInterval', name: 'Poll Interval' },
-        { value: 'available', name: 'Available' },
+        { value: 'available', name: 'Status' },
       ],
-      booleanFields: ['available'],
+      availableOption: [
+        { value: 'available', name: 'Available' },
+        { value: 'error', name: 'Error' },
+      ],
       onSearch(filter) {
-        const { field: filterField, value: filterValue, booleanValue: filterBooleanValue } = filter
-        if (filterField && (filterValue || typeof filterBooleanValue === 'boolean')) {
+        const { field: filterField, value: filterValue } = filter
+        if (filterField && filterValue) {
           const queryStringObj = { field: filterField }
-          if (['available'].includes(filterField) && typeof filterBooleanValue === 'boolean') {
-            queryStringObj.booleanValue = filterBooleanValue
-          }
-          if (['name', 'backupTargetURL', 'credentialSecret', 'pollInterval'].includes(filterField) && filterValue) {
+          if (['name', 'backupTargetURL', 'credentialSecret', 'pollInterval', 'available'].includes(filterField) && filterValue) {
             queryStringObj.value = filterValue
           }
           dispatch(routerRedux.push({

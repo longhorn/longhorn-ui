@@ -49,9 +49,6 @@ const dependency = {
     }, {
       ns: 'recurringJob',
       key: 'recurringjobs',
-    }, {
-      ns: 'backupTarget',
-      key: 'backuptargets',
     }],
   },
   engineimage: {

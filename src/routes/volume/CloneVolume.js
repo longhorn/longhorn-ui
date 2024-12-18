@@ -227,9 +227,9 @@ const modal = ({
         </FormItem>
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
-            initialValue: backupTargets.find(bt => bt === volume.backupTargetName) || '',
+            initialValue: backupTargets.find(bt => bt.name === volume.backupTargetName)?.name || '',
           })(<Select allowClear>
-            { backupTargets.map(bt => <Option key={bt} value={bt}>{bt}</Option>)}
+            { backupTargets.map(bt => <Option key={bt.name} disabled={bt.available === false} value={bt.name}>{bt.name}</Option>)}
           </Select>)}
         </FormItem>
         <FormItem label="Encrypted" {...formItemLayout}>

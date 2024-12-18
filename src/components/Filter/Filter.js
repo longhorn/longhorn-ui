@@ -6,8 +6,6 @@ import styles from './Filter.less'
 
 const Option = Select.Option
 
-const BOOLEAN_OPTIONS = { True: true, False: false }
-
 class Filter extends React.Component {
   constructor(props) {
     super(props)
@@ -22,7 +20,6 @@ class Filter extends React.Component {
       revisionCounterValue = '',
       isGroupValue = '',
       createdFromValue = '',
-      booleanValue = BOOLEAN_OPTIONS.True,
     } = queryString.parse(props.location.search)
 
     this.state = {
@@ -37,7 +34,6 @@ class Filter extends React.Component {
       isGroupValue,
       keyword: value,
       createdFromValue,
-      booleanValue,
     }
   }
 
@@ -80,8 +76,8 @@ class Filter extends React.Component {
     this.setState({ ...this.state, isGroupValue })
   }
 
-  handleBooleanValueChange = (booleanValue) => {
-    this.setState({ ...this.state, booleanValue })
+  handleAvailableValueChange = (availValue) => {
+    this.setState({ ...this.state, value: availValue })
   }
 
   handleCreatedFromValueChange = (createdFromValue) => {
@@ -93,7 +89,6 @@ class Filter extends React.Component {
   }
 
   render() {
-    const { booleanFields = [] } = this.props
     const {
       field = this.props.defaultField || 'Name',
       value = '',
@@ -201,16 +196,16 @@ class Filter extends React.Component {
           {this.props.createdFromOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
         </Select>
       )
-    } else if (booleanFields.includes(this.state.field)) {
+    } else if (this.state.field === 'available' && this.props.availableOption) {
       valueForm = (
-        <Select key="boolean"
+        <Select
+          key="available"
           style={{ width: '100%' }}
           size="large"
           allowClear
-          defaultValue={BOOLEAN_OPTIONS.True}
-          onChange={this.handleBooleanValueChange}
+          onChange={this.handleAvailableValueChange}
         >
-          {Object.keys(BOOLEAN_OPTIONS).map(key => (<Option key={key} value={BOOLEAN_OPTIONS[key]}>{key}</Option>))}
+          {this.props.availableOption.map(item => (<Option key={item.name} value={item.value}>{item.name}</Option>))}
         </Select>
       )
     }
@@ -256,6 +251,7 @@ Filter.propTypes = {
   revisionCounterOption: PropTypes.array,
   recurringJobIsGroupOption: PropTypes.array,
   createdFromOption: PropTypes.array,
+  availableOption: PropTypes.array,
 }
 
 export default Filter

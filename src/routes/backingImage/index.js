@@ -11,7 +11,7 @@ import BackingImageBulkActions from './BackingImageBulkActions'
 import UpdateMinCopiesCount from './UpdateMinCopiesCount'
 import BackupBackingImage from './BackupBackingImage'
 import { filterBackingImage } from './utils'
-import { getAvailableBackupTargets } from '../../utils/backupTarget'
+import { getBackupTargets } from '../../utils/backupTarget'
 import style from './BackingImage.less'
 
 class BackingImage extends React.Component {
@@ -176,7 +176,7 @@ class BackingImage extends React.Component {
 
     const createBackupBackingImageModalProps = {
       backingImage: selectedBackingImage,
-      availBackupTargets: getAvailableBackupTargets(backupTarget),
+      backupTargets: getBackupTargets(backupTarget),
       visible: backupBackingImageModalVisible,
       onOk(url, payload) {
         dispatch({
