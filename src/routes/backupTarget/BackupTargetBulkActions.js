@@ -28,7 +28,7 @@ function bulkActions({ selectedRows, bulkDeleteBackupTargets }) {
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
+    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 || selectedRows.every(row => row.name === 'default') } },
   ]
 
   return (
