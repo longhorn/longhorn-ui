@@ -117,7 +117,7 @@ class BackingImage extends React.Component {
     } = this.props.backingImage
     const { backingImageUploadPercent, backingImageUploadStarted } = this.props.app
 
-    const settingsMap = settingData.reduce((acc, setting = {}) => ({ ...acc, [setting.id]: setting.value }), {})
+    const settingsMap = Object.fromEntries(settingData.map(setting => [setting.id, setting.value]))
     const v1DataEngineEnabled = settingsMap['v1-data-engine'] === 'true'
     const v2DataEngineEnabled = settingsMap['v2-data-engine'] === 'true'
     const defaultReplicaCount = settingsMap['default-replica-count']
