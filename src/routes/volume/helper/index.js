@@ -479,7 +479,33 @@ export function getUpdateBackupTargetProps(volume, visible, backupTargets, dispa
     },
     onCancel() {
       dispatch({
-        type: 'volume/hideBackupTargetModal',
+        type: 'volume/hideUpdateBackupTargetModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
+export function getUpdateBulkBackupTargetProps(volumes, visible, backupTargets, dispatch) {
+  return {
+    items: volumes,
+    visible,
+    backupTargets,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/bulkBackupTargetUpdate',
+        payload: {
+          params: v,
+          urls,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBulkBackupTargetModal',
       })
       dispatch({
         type: 'app/changeBlur',

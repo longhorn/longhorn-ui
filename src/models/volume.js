@@ -52,6 +52,7 @@ export default {
     updateBulkReplicaCountModalVisible: false,
     customColumnVisible: false,
     updateBackupTargetModalVisible: false,
+    updateBulkBackupTargetModalVisible: false,
     volumeCloneModalVisible: false,
     updateDataLocalityModalVisible: false,
     updateSnapshotMaxCountModalVisible: false,
@@ -95,6 +96,7 @@ export default {
     bulkAttachHostModalKey: Math.random(),
     engineUpgradeModaKey: Math.random(),
     volumeCloneModalKey: Math.random(),
+    updateBulkBackupTargetModalKey: Math.random(),
     bulkEngineUpgradeModalKey: Math.random(),
     expansionVolumeSizeModalKey: Math.random(),
     updateReplicaCountModalKey: Math.random(),
@@ -412,8 +414,15 @@ export default {
     *backupTargetUpdate({
       payload,
     }, { call, put }) {
-      yield put({ type: 'hideBackupTargetModal' })
+      yield put({ type: 'hideUpdateBackupTargetModal' })
       yield call(execAction, payload.url, payload.params)
+      yield put({ type: 'query' })
+    },
+    *bulkBackupTargetUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideUpdateBulkBackupTargetModal' })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
     *accessModeUpdate({
@@ -931,6 +940,9 @@ export default {
     showUpdateBackupTarget(state, action) {
       return { ...state, ...action.payload, updateBackupTargetModalVisible: true, updateBackupTargetModalKey: Math.random() }
     },
+    showUpdateBulkBackupTarget(state, action) {
+      return { ...state, ...action.payload, updateBulkBackupTargetModalVisible: true, updateBulkBackupTargetModalKey: Math.random() }
+    },
     showUpdateBulkReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: Math.random() }
     },
@@ -964,8 +976,11 @@ export default {
     hideUpdateAccessModeModal(state) {
       return { ...state, updateAccessModeModalVisible: false }
     },
-    hideBackupTargetModal(state) {
+    hideUpdateBackupTargetModal(state) {
       return { ...state, updateBackupTargetModalVisible: false }
+    },
+    hideUpdateBulkBackupTargetModal(state) {
+      return { ...state, updateBulkBackupTargetModalVisible: false }
     },
     showBulkExpandVolumeModal(state, action) {
       return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: Math.random() }

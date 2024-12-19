@@ -15,7 +15,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
+  items,
   backupTargets,
   visible,
   onCancel,
@@ -32,8 +32,11 @@ const modal = ({
         return
       }
       const data = { ...getFieldsValue() }
-      const url = item?.actions?.updateBackupTargetName
-      onOk(data, url)
+      const urls = items.reduce((final, item) => {
+        final.push(item.actions.updateBackupTargetName)
+        return final
+      }, [])
+      onOk(data, urls)
     })
   }
 
@@ -43,7 +46,7 @@ const modal = ({
     onCancel,
     onOk: handleOk,
   }
-  if (!item) {
+  if (!items) {
     return null
   }
   return (
@@ -51,7 +54,7 @@ const modal = ({
       <Form layout="horizontal">
         <FormItem label="BackupTarget" {...formItemLayout}>
         {getFieldDecorator('backupTargetName', {
-          initialValue: backupTargets.find(bt => bt.name === item.backupTargetName)?.name || 'default',
+          initialValue: 'default',
         })(<Select>
             { backupTargets.map(bt => <Option key={bt.name} disabled={bt.available === false} value={bt.name}>{bt.name}</Option>)}
           </Select>)}
@@ -66,7 +69,7 @@ modal.propTypes = {
   visible: PropTypes.bool,
   backupTargets: PropTypes.array,
   onCancel: PropTypes.func,
-  item: PropTypes.object,
+  items: PropTypes.array,
   onOk: PropTypes.func,
 }
 

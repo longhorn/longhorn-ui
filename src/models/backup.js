@@ -363,7 +363,6 @@ export default {
       }
     },
     updateBackgroundBackups(state, action) {
-      // const volumeName = getBackupVolumeName(state.search) // volumeName here is backupVolumes id/name
       const volumeId = state.search?.keyword
       const targetBackupVolume = state.backupVolumes.find((item) => item.name === volumeId) || {}
       if (targetBackupVolume?.volumeName && action.payload?.data) {
