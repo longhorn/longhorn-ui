@@ -117,7 +117,6 @@ class List extends React.Component {
                     search: queryString.stringify({
                       field: 'name',
                       keyword: record.name,
-                      volumeName: record.volumeName
                     }),
                   }}>
                   {id}
