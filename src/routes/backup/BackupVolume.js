@@ -88,11 +88,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
         payload: record,
       })
     },
-    DeleteAllBackups(record) {
-      // dispatch({
-      //   type: 'backup/CreateStandVolume',
-      //   payload: record,
-      // })
+    deleteAllBackups(record) {
       showDeleteConfirm(record)
     },
     showBackingImageInfo(record) {
