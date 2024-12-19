@@ -51,6 +51,7 @@ export default {
     bulkExpandVolumeModalVisible: false,
     updateBulkReplicaCountModalVisible: false,
     customColumnVisible: false,
+    updateBackupTargetModalVisible: false,
     volumeCloneModalVisible: false,
     updateDataLocalityModalVisible: false,
     updateSnapshotMaxCountModalVisible: false,
@@ -77,6 +78,7 @@ export default {
     recurringJobList: [],
     softAntiAffinityKey: '',
     updateReplicaSoftAntiAffinityVisible: false,
+    updateBackupTargetModalKey: Math.random(),
     changeVolumeModalKey: Math.random(),
     bulkChangeVolumeModalKey: Math.random(),
     bulkExpandVolumeModalKey: Math.random(),
@@ -405,6 +407,13 @@ export default {
           yield call(execAction, payload.urls[i], payload.params)
         }
       }
+      yield put({ type: 'query' })
+    },
+    *backupTargetUpdate({
+      payload,
+    }, { call, put }) {
+      yield put({ type: 'hideBackupTargetModal' })
+      yield call(execAction, payload.url, payload.params)
       yield put({ type: 'query' })
     },
     *accessModeUpdate({
@@ -919,6 +928,9 @@ export default {
     showUpdateAccessMode(state, action) {
       return { ...state, ...action.payload, updateAccessModeModalVisible: true, updateAccessModeModalKey: Math.random() }
     },
+    showUpdateBackupTarget(state, action) {
+      return { ...state, ...action.payload, updateBackupTargetModalVisible: true, updateBackupTargetModalKey: Math.random() }
+    },
     showUpdateBulkReplicaCountModal(state, action) {
       return { ...state, ...action.payload, updateBulkReplicaCountModalVisible: true, updateBulkReplicaCountModalKey: Math.random() }
     },
@@ -951,6 +963,9 @@ export default {
     },
     hideUpdateAccessModeModal(state) {
       return { ...state, updateAccessModeModalVisible: false }
+    },
+    hideBackupTargetModal(state) {
+      return { ...state, updateBackupTargetModalVisible: false }
     },
     showBulkExpandVolumeModal(state, action) {
       return { ...state, bulkExpandVolumeModalVisible: true, selectedRows: action.payload, bulkExpandVolumeModalKey: Math.random() }
