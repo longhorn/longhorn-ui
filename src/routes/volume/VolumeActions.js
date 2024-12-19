@@ -25,6 +25,7 @@ function actions({
   changeVolume,
   showUpdateDataLocality,
   showUpdateAccessMode,
+  showUpdateBackupTarget,
   showUpdateReplicaAutoBalanceModal,
   showUnmapMarkSnapChainRemovedModal,
   engineUpgradePerNodeLimit,
@@ -128,6 +129,9 @@ function actions({
       case 'updateAccessMode':
         showUpdateAccessMode(record)
         break
+      case 'updateBackupTarget':
+        showUpdateBackupTarget(record)
+        break
       case 'pvAndpvcCreate':
         createPVAndPVC(record)
         break
@@ -223,6 +227,7 @@ function actions({
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateSnapshotDataIntegrity', name: 'Snapshot Data Integrity', disabled: false },
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
+    { key: 'updateBackupTarget', name: 'Update Backup Target'},
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },

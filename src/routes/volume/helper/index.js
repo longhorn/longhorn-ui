@@ -463,6 +463,32 @@ export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visi
   }
 }
 
+export function getUpdateBackupTargetProps(volume, visible, backupTargets, dispatch) {
+  return {
+    item: volume,
+    visible,
+    backupTargets,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/backupTargetUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideBackupTargetModal',
+      })
+      dispatch({
+        type: 'app/changeBlur',
+        payload: false,
+      })
+    },
+  }
+}
+
 export function getUpdateAccessModeModalProps(volume, visible, dispatch) {
   return {
     item: volume,
