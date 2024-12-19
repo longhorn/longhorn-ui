@@ -84,7 +84,7 @@ class List extends React.Component {
     if (e.key === 'recovery') {
       this.props.Create(record)
     } else if (e.key === 'deleteAll') {
-      this.props.DeleteAllBackups(record)
+      this.props.deleteAllBackups(record)
     } else if (e.key === 'restoreLatestBackup') {
       this.props.restoreLatestBackup(record)
     } else if (e.key === 'syncBackupVolume') {
@@ -326,7 +326,7 @@ List.propTypes = {
   onSorterChange: PropTypes.func,
   Create: PropTypes.func,
   onRowClick: PropTypes.func,
-  DeleteAllBackups: PropTypes.func,
+  deleteAllBackups: PropTypes.func,
   dispatch: PropTypes.func,
   restoreLatestBackup: PropTypes.func,
   syncBackupVolume: PropTypes.func,

@@ -22,8 +22,9 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
 
-  const { volumeName } = queryString.parse(location.search)
+  const { volumeName, keyword } = queryString.parse(location.search)
   const currentBackUp = backupVolumes.find((item) => item.volumeName === volumeName) || {}
+  console.log("🚀 ~ Backup ~ currentBackUp:", currentBackUp)
   const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
   const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
@@ -139,7 +140,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
       onOk() {
         dispatch({
           type: 'backup/deleteAllBackups',
-          payload: volumeName,
+          payload: currentBackUp.id,
         })
       },
     })
