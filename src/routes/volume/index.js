@@ -35,6 +35,7 @@ import UpdateFreezeFilesystemForSnapshotModal from './UpdateFreezeFilesystemForS
 import UpdateBulkFreezeFilesystemForSnapshotModal from './UpdateBulkFreezeFilesystemForSnapshotModal'
 import UpdateAccessMode from './UpdateAccessMode'
 import UpdateBackupTargetModal from './UpdateBackupTargetModal'
+import UpdateBulkBackupTargetModal from './UpdateBulkBackupTargetModal'
 import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
@@ -64,6 +65,7 @@ import {
   getUpdateFreezeFilesystemForSnapshotModalProps,
   getUpdateBulkFreezeFilesystemForSnapshotModalProps,
   getUpdateBackupTargetProps,
+  getUpdateBulkBackupTargetProps
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -211,7 +213,9 @@ class Volume extends React.Component {
       updateBulkFreezeFilesystemForSnapshotModalVisible,
       updateBulkFreezeFilesystemForSnapshotModalKey,
       updateBackupTargetModalVisible,
-      updateBackupTargetModalKey
+      updateBackupTargetModalKey,
+      updateBulkBackupTargetModalVisible,
+      updateBulkBackupTargetModalKey
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -1105,6 +1109,14 @@ class Volume extends React.Component {
           },
         })
       },
+      showUpdateBulkBackupTarget(record) {
+        dispatch({
+          type: 'volume/showUpdateBulkBackupTarget',
+          payload: {
+            selectedRows: record,
+          },
+        })
+      },
       showUpdateReplicaAutoBalanceModal(record) {
         dispatch({
           type: 'volume/showUpdateReplicaAutoBalanceModal',
@@ -1267,6 +1279,7 @@ class Volume extends React.Component {
     const updateBulkSnapshotDataIntegrityModalProps = getUpdateBulkSnapshotDataIntegrityModalProps(selectedRows, updateBulkSnapshotDataIntegrityModalVisible, defaultSnapshotDataIntegrityOption, dispatch)
     const updateBulkDataLocalityModalProps = getUpdateBulkDataLocalityModalProps(selectedRows, updateBulkDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
     const updateBackupTargetProps = getUpdateBackupTargetProps(selected, updateBackupTargetModalVisible, backupTargets, dispatch)
+    const updateBulkBackupTargetModalProps = getUpdateBulkBackupTargetProps(selectedRows, updateBulkBackupTargetModalVisible, backupTargets, dispatch)
     const updateAccessModeModalProps = getUpdateAccessModeModalProps(selected, updateAccessModeModalVisible, dispatch)
     const updateBulkAccessModeModalProps = getUpdateBulkAccessModeModalProps(selectedRows, updateBulkAccessModeModalVisible, dispatch)
     const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps(selectedRows, updateReplicaAutoBalanceModalVisible, dispatch)
@@ -1325,6 +1338,7 @@ class Volume extends React.Component {
         {updateBulkFreezeFilesystemForSnapshotModalVisible ? <UpdateBulkFreezeFilesystemForSnapshotModal key={updateBulkFreezeFilesystemForSnapshotModalKey} {...updateBulkFreezeFilesystemForSnapshotModalProps} /> : ''}
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
         {updateBackupTargetModalVisible ? <UpdateBackupTargetModal key={updateBackupTargetModalKey} {...updateBackupTargetProps} /> : ''}
+        {updateBulkBackupTargetModalVisible ? <UpdateBulkBackupTargetModal key={updateBulkBackupTargetModalKey} {...updateBulkBackupTargetModalProps} /> : ''}
       </div>
     )
   }
