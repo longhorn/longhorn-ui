@@ -47,7 +47,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       title: 'State',
       dataIndex: 'state',
       key: 'state',
-      width: 80,
+      width: 120,
       sorter: (a, b) => a.state.localeCompare(b.state),
       render: (text) => {
         return (
@@ -58,7 +58,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       title: 'Backup Target',
       dataIndex: 'backupTargetName',
       key: 'backupTargetName',
-      width: 100,
+      width: 180,
       sorter: (a, b) => sortTable(a, b, 'backupTargetName'),
       render: (text) => {
         return (
@@ -71,7 +71,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
-      width: 80,
+      width: 120,
       sorter: (a, b) => parseInt(a.size, 10) - parseInt(b.size, 10),
       render: (text) => {
         return (
@@ -100,7 +100,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       title: 'Created Time',
       dataIndex: 'created',
       key: 'created',
-      width: 120,
+      width: 180,
       sorter: (a, b) => a.created.localeCompare(b.created),
       render: (text) => {
         return (

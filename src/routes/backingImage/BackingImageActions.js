@@ -52,10 +52,28 @@ function actions({
   }
 
   const availableActions = [
-    { key: 'updateMinCopies', name: 'Update Minimum Copies Count', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
-    { key: 'backup', name: ' Back Up', disabled: disableAction || backupTargetAvailable === false, tooltip: getBackupActionTooltip() },
-    { key: 'download', name: 'Download', disabled: disableAction, tooltip: disableAction ? 'Missing disk with ready state' : '' },
-    { key: 'delete', name: 'Delete' },
+    {
+      key: 'updateMinCopies',
+      name: 'Update Minimum Copies Count',
+      disabled: disableAction,
+      tooltip: disableAction ? 'Missing disk with ready state' : ''
+    },
+    {
+      key: 'backup',
+      name: ' Back Up',
+      disabled: disableAction || backupTargetAvailable === false,
+      tooltip: getBackupActionTooltip()
+    },
+    {
+      key: 'download',
+      name: 'Download',
+      disabled: disableAction || selected.dataEngine === 'v2',
+      tooltip: disableAction ? 'Missing disk with ready state' : ''
+    },
+    {
+      key: 'delete',
+      name: 'Delete'
+    },
   ]
 
   return (
