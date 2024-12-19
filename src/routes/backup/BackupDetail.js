@@ -22,16 +22,15 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
   const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
 
-  const { volumeName, keyword } = queryString.parse(location.search)
-  const currentBackUp = backupVolumes.find((item) => item.volumeName === volumeName) || {}
-  console.log("🚀 ~ Backup ~ currentBackUp:", currentBackUp)
+  const { keyword } = queryString.parse(location.search)
+  const currentBackUp = backupVolumes.find(bkVol => bkVol.name === keyword) || {}
   const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
   const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
   const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
 
-  const backups = volumeName ? backupData.filter(bk => bk.volumeName === volumeName) : backupData
-  sortBackups(backupData)
+  const backups = currentBackUp ? backupData.filter(bk => bk.volumeName === currentBackUp.volumeName) : backupData
+  sortBackups(backups)
 
   const backupProps = {
     backup: backups,
@@ -65,7 +64,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
       dispatch({
         type: 'backup/delete',
         payload: {
-          volumeName,
+          volumeName: currentBackUp.volumeName,
           name: record.id,
           listUrl,
           ...queryString.parse(location.search),
