@@ -28,6 +28,7 @@ function bulkActions({
   backupTargetMessage,
   showBulkUnmapMarkSnapChainRemovedModal,
   trimBulkFilesystem,
+  showUpdateBulkBackupTarget,
   showUpdateBulkSnapshotDataIntegrityModal,
   showUpdateReplicaSoftAntiAffinityModal,
   showUpdateReplicaZoneSoftAntiAffinityModal,
@@ -116,6 +117,9 @@ function bulkActions({
       case 'updateBulkAccessMode':
         showUpdateBulkAccessMode(selectedRows)
         break
+      case 'updateBulkBackupTarget':
+        showUpdateBulkBackupTarget(selectedRows)
+        break
       case 'createPVAndPVC':
         createPVAndPVC(selectedRows)
         break
@@ -200,6 +204,7 @@ function bulkActions({
     { key: 'updateBulkDataLocality', name: 'Update Data Locality', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateBulkDataLocality() || upgradingEngine() } },
     { key: 'updateSnapshotDataIntegrity', name: 'Snapshot Data Integrity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateBulkAccessMode', name: 'Update Access Mode', disabled() { return selectedRows.length === 0 || isHasStandy() || disableUpdateAccessMode() } },
+    { key: 'updateBulkBackupTarget', name: 'Update Backup Target', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled() { return selectedRows.length === 0 || disableUpdateReplicaAutoBalance() } },
     { key: 'createPVAndPVC', name: 'Create PV/PVC', disabled() { return selectedRows.length === 0 || isHasStandy() || hasVolumeRestoring() || isHasPVC() || isFaulted() || !hasAction('pvCreate') || !hasAction('pvcCreate') } },
     { key: 'bulkChangeVolume', name: 'Activate Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !item.standby) } },
@@ -256,6 +261,7 @@ bulkActions.propTypes = {
   showBulkCloneVolume: PropTypes.func,
   showUpdateBulkReplicaCount: PropTypes.func,
   showUpdateBulkDataLocality: PropTypes.func,
+  showUpdateBulkBackupTarget: PropTypes.func,
   showUpdateBulkAccessMode: PropTypes.func,
   showUpdateBulkSnapshotDataIntegrityModal: PropTypes.func,
   showUpdateReplicaAutoBalanceModal: PropTypes.func,
