@@ -131,7 +131,7 @@ function list({
       dataIndex: 'dataEngine',
       key: 'dataEngine',
       width: 130,
-      sorter: (a, b) => a.dataEngine.toString().localeCompare(b.dataEngine.toString()),
+      sorter: (a, b) => (a.dataEngine || '').toString().localeCompare((b.dataEngine || '').toString()),
       render: (text) => {
         return (
           <div>
