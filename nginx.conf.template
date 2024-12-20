@@ -45,5 +45,7 @@ http {
              root /web/dist;
         }
 
+        include /var/config/nginx/conf.d/*.conf;
+
     }
 }
