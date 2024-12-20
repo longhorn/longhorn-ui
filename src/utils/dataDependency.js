@@ -185,7 +185,7 @@ const httpDataDependency = {
   '/node': ['volume', 'host', 'setting'],
   '/volume': ['volume', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
-  '/backingImage': ['volume', 'backingImage', 'backupTarget'],
+  '/backingImage': ['volume', 'backingImage', 'backupTarget', 'backup'],
   '/recurringJob': ['recurringJob'],
   '/backupTarget': ['backupTarget'],
   '/setting': ['setting'],
