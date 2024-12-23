@@ -125,6 +125,7 @@ class BackingImage extends React.Component {
 
     const backingImages = filterBackingImage(data, biSearchField, biSearchValue)
     const volumeNameOptions = volumeData.map((volume) => volume.name)
+    const backupTargets = getBackupTargets(backupTarget)
 
     const backingImageListProps = {
       dataSource: backingImages,
@@ -179,7 +180,7 @@ class BackingImage extends React.Component {
 
     const createBackupBackingImageModalProps = {
       backingImage: selectedBackingImage,
-      backupTargets: getBackupTargets(backupTarget),
+      backupTargets,
       visible: backupBackingImageModalVisible,
       onOk(url, payload) {
         dispatch({
@@ -327,6 +328,7 @@ class BackingImage extends React.Component {
     const backingImageBulkActionsProps = {
       selectedRows,
       backupProps: this.props.backup,
+      backupTargets,
       deleteBackingImages(record) {
         dispatch({
           type: 'backingImage/bulkDelete',
@@ -344,7 +346,7 @@ class BackingImage extends React.Component {
           type: 'backingImage/bulkBackup',
           payload: record,
         })
-      },
+      }
     }
 
     const minCopiesCountProps = {
