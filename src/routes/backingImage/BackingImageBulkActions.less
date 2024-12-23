@@ -1,0 +1,41 @@
+.bulkActionBtns {
+	margin-right: 10px;
+}
+
+.backupModal {
+	display: flex;
+
+	.questionCircleIcon {
+		margin-right: 16px;
+		font-size: 22px;
+		color: #faad14;
+	}
+
+	.backupForm {
+		color: #000000d9;
+		font-weight: 500;
+		font-size: 17px;
+		line-height: 1.4;
+	}
+
+	:global {
+		.ant-modal-body {
+			display: flex;
+			padding: 32px 32px 0;
+
+			.ant-form-item {
+				display: flex;
+				margin-bottom: 0;
+			}
+
+			.ant-col.ant-form-item-control-wrapper {
+				flex: 1;
+			}
+		}
+
+		.ant-modal-footer {
+			padding: 24px 32px;
+			border-top: 0;
+		}
+	}
+}
