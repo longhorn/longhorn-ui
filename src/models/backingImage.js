@@ -212,7 +212,7 @@ export default {
         for (const bi of payload) {
           const url = bi.actions.backupBackingImageCreate
           if (url) {
-            yield call(execAction, url)
+            yield call(execAction, url, bi)
           }
         }
       }
