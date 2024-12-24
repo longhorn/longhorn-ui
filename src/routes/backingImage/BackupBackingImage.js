@@ -18,7 +18,9 @@ function BackupBackingImage({
   dispatch,
   location = {},
   className,
-  persistFilterInURL = false
+  persistFilterInURL = false,
+  v1DataEngineEnabled = true,
+  v2DataEngineEnabled = false
 }) {
   const { pathname, hash, search } = location
 
@@ -142,6 +144,8 @@ function BackupBackingImage({
   const restoreBBiModalProps = {
     item: bbiSelected,
     visible: restoreBackupBackingImageModalVisible,
+    v1DataEngineEnabled,
+    v2DataEngineEnabled,
     onOk(item, params) {
       dispatch({
         type: 'backingImage/restoreBackingImage',
@@ -173,7 +177,7 @@ function BackupBackingImage({
         </div>
         <BackupBackingImageList {...backupBackingImageListProps} />
       </div>
-      {restoreBackupBackingImageModalVisible && <RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
+      {<RestoreBackupBackingImageModal {...restoreBBiModalProps} />}
     </>
   )
 }
@@ -185,6 +189,8 @@ BackupBackingImage.propTypes = {
   dispatch: PropTypes.func,
   className: PropTypes.string,
   persistFilterInURL: PropTypes.bool,
+  v1DataEngineEnabled: PropTypes.bool,
+  v2DataEngineEnabled: PropTypes.bool,
 }
 
 export default connect(({
