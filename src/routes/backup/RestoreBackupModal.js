@@ -109,7 +109,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: 'v1',
+            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
             rules: [
               {
                 required: true,
