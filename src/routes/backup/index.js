@@ -7,8 +7,12 @@ import BackupVolume from './BackupVolume'
 import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
 
-function Backup({ dispatch, location }) {
+function Backup({ dispatch, location, setting = {} }) {
   const { pathname, hash, search } = location
+  const settingsMap = Object.fromEntries(setting.data.map(s => [s.id, s.value]))
+  const v1DataEngineEnabled = settingsMap['v1-data-engine'] === 'true'
+  const v2DataEngineEnabled = settingsMap['v2-data-engine'] === 'true'
+
   const tabs = [
     {
       key: 'volume',
@@ -19,7 +23,7 @@ function Backup({ dispatch, location }) {
       key: 'backing-image',
       label: 'Backing Image',
       content:
-        <BackupBackingImage persistFilterInURL location={location} />
+        <BackupBackingImage persistFilterInURL location={location} v1DataEngineEnabled={v1DataEngineEnabled} v2DataEngineEnabled={v2DataEngineEnabled} />
     }
   ]
   const defaultKey = tabs[0].key
@@ -55,6 +59,7 @@ function Backup({ dispatch, location }) {
 Backup.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  setting: PropTypes.object,
 }
 
-export default connect()(Backup)
+export default connect(({ setting }) => ({ setting }))(Backup)

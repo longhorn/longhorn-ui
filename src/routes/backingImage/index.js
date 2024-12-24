@@ -393,7 +393,12 @@ class BackingImage extends React.Component {
           <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
           <span style={{ marginLeft: '4px' }}>Backing Image Backup</span>
         </div>
-        <BackupBackingImage className={style.backupBackingImage} location={location} />
+        <BackupBackingImage
+          className={style.backupBackingImage}
+          location={location}
+          v1DataEngineEnabled={v1DataEngineEnabled}
+          v2DataEngineEnabled={v2DataEngineEnabled}
+        />
         {inUploadProgress && (
           <div className={style.backingImageUploadingContainer}>
             <Progress percent={backingImageUploadPercent} />
