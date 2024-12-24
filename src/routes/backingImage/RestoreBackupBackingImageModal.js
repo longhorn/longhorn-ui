@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input } from 'antd'
+import { Form, Input, Select, } from 'antd'
 import { ModalBlur } from '../../components'
 
-const FormItem = Form.Item
+const { Item: FormItem } = Form
+const { Option } = Select
 
 const formItemLayout = {
   labelCol: {
@@ -24,6 +25,8 @@ const modal = ({
     validateFields,
     getFieldValue,
   },
+  v1DataEngineEnabled = true,
+  v2DataEngineEnabled = false
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -33,6 +36,7 @@ const modal = ({
       const data = {
         secret: getFieldValue('secret') || '',
         secretNamespace: getFieldValue('secretNamespace') || '',
+        dataEngine: getFieldValue('dataEngine') || 'v1'
       }
       onOk(item, data)
     })
@@ -61,6 +65,26 @@ const modal = ({
             {getFieldDecorator('secretNamespace', { initialValue: item.secretNamespace })(<Input disabled />)}
           </FormItem>
         )}
+         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: item.dataEngine || 'v1',
+            rules: [
+              {
+                validator: (_rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
       </Form>
     </ModalBlur>
   )
@@ -72,6 +96,8 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  v1DataEngineEnabled: PropTypes.bool,
+  v2DataEngineEnabled: PropTypes.bool,
 }
 
 export default Form.create()(modal)
