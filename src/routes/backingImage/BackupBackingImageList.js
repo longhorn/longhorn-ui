@@ -26,10 +26,10 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
   const columns = [
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'backingImageName',
+      key: 'backingImageName',
       width: 120,
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => a.backingImageName.localeCompare(b.backingImageName),
       render: (text, record) => {
         const isEncrypted = Boolean(record.secret || record.secretNamespace)
         return (
