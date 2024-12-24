@@ -365,8 +365,9 @@ export default {
     updateBackgroundBackups(state, action) {
       const volumeId = state.search?.keyword
       const targetBackupVolume = state.backupVolumes.find((item) => item.name === volumeId) || {}
+      // Websocket (action.payload.data) returns all backupVolumes backups, we need to filter by volumeName + backupTargetName
       if (targetBackupVolume?.volumeName && action.payload?.data) {
-        const backupData = action.payload.data.filter((item) => item.volumeName === targetBackupVolume?.volumeName)
+        const backupData = action.payload.data.filter((item) => item.volumeName === targetBackupVolume?.volumeName && item.backupTargetName === targetBackupVolume?.backupTargetName)
         return {
           ...state,
           backupData,
