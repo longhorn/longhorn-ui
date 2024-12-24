@@ -24,6 +24,7 @@ import RecurringJob from './RecurringJob'
 import EventList from './EventList'
 import SnapshotList from './SnapshotList'
 import CloneVolume from '../CloneVolume'
+import UpdateBackupTargetModal from '../UpdateBackupTargetModal'
 import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
@@ -47,6 +48,7 @@ import {
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
 } from '../helper'
+import { getBackupTargets } from '../../../utils/backupTarget'
 
 const confirm = Modal.confirm
 
@@ -132,6 +134,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     changeVolumeModalVisible,
     previousChecked,
     volumeCloneModalVisible,
+    updateBackupTargetModalVisible,
     expansionVolumeSizeModalVisible,
     expansionVolumeSizeModalKey,
     updateDataLocalityModalVisible,
@@ -182,6 +185,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
   const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
 
+  const backupTargets = getBackupTargets(backupTarget)
   const eventData = getEventData(eventlog, selectedVolume)
 
   if (!selectedVolume) {
@@ -371,6 +375,14 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     showUpdateAccessMode(record) {
       dispatch({
         type: 'volume/showUpdateAccessMode',
+        payload: {
+          selected: record,
+        },
+      })
+    },
+    showUpdateBackupTarget(record) {
+      dispatch({
+        type: 'volume/showUpdateBackupTarget',
         payload: {
           selected: record,
         },
@@ -658,6 +670,26 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
   }
 
+  const updateBackupTargetModalProps = {
+    item: selectedVolume,
+    visible: updateBackupTargetModalVisible,
+    backupTargets,
+    onOk(v, url) {
+      dispatch({
+        type: 'volume/backupTargetUpdate',
+        payload: {
+          params: v,
+          url,
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/hideUpdateBackupTargetModal',
+      })
+    },
+  }
+
   const volumeCloneModalBySnapshotProps = {
     cloneType: cloneVolumeType,
     volume: selected,
@@ -718,6 +750,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
             <EventList {...eventListProps} />
           </Col>
         </Row>
+        {updateBackupTargetModalVisible && <UpdateBackupTargetModal {...updateBackupTargetModalProps} />}
         {volumeCloneModalVisible && <CloneVolume {...volumeCloneModalBySnapshotProps} />}
         {attachHostModalVisible && <AttachHost {...attachHostModalProps} />}
         {detachHostModalVisible && <DetachHost key={detachHostModalKey} {...detachHostModalProps} />}
