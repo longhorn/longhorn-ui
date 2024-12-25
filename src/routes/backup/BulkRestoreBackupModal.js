@@ -44,6 +44,7 @@ const modal = ({
     accessMode: i.accessMode || null,
     latestBackup: i.backupName,
     backingImage: i.backingImage,
+    fromBackup: i.fromBackup,
     encrypted: false,
     restoreVolumeRecurringJob: 'ignored',
     nodeSelector: i.nodeSelector || [],
