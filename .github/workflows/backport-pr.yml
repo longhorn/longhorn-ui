@@ -1,0 +1,12 @@
+name: Link-Backport-PR-Issue
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - master
+      - "v*"
+
+jobs:
+  call-workflow:
+    uses: longhorn/longhorn/.github/workflows/backport-pr.yml@master
