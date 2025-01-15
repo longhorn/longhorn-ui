@@ -199,7 +199,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   }
 
   return (
-    <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
+    <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '-50px', right: '20px', display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
         <DropOption
           menuOptions={[
