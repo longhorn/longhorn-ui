@@ -289,9 +289,8 @@ class List extends React.Component {
     })
 
     return (
-      <div id="backTable" style={{ overflow: 'hidden', flex: 1 }}>
+      <div id="backTable">
         <Table
-          className="common-table-class"
           rowSelection={rowSelection}
           locale={locale}
           bordered={false}
