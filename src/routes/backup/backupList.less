@@ -1,18 +1,41 @@
 .workloadContainer {
-    border-radius: 4px;
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    .pod {
-        position: absolute;
-        right: 0px;
-        top: -20px;
-        left: 50%;
-        text-align: center;
-        transform: translateX(-50%);
-        height: 24px;
-        line-height: 24px;
-        overflow: hidden;
-        text-overflow:ellipsis;
+	border-radius: 4px;
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	.pod {
+		position: absolute;
+		right: 0px;
+		top: -20px;
+		left: 50%;
+		text-align: center;
+		transform: translateX(-50%);
+		height: 24px;
+		line-height: 24px;
+		overflow: hidden;
+		text-overflow:ellipsis;
+	}
+}
+
+:global {
+  #backDetailTable {
+    height: 100%;
+
+		.ant-table-wrapper,
+    .common-table-class,
+    .ant-spin-nested-loading,
+    .ant-spin-container {
+      height: 100%;
     }
+
+    .ant-table {
+      height: calc(100% - 40px); // pagination height
+      overflow: hidden;
+
+      .ant-table-content,
+      .ant-table-scroll {
+        height: 100%;
+      }
+    }
+  }
 }
