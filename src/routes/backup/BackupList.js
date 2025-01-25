@@ -393,9 +393,8 @@ class List extends React.Component {
     }
 
     return (
-      <div id="backDetailTable" style={{ overflow: 'hidden', flex: 1 }}>
+      <div id="backDetailTable">
         <Table
-          className="common-table-class"
           locale={locale}
           bordered={false}
           columns={columns}
