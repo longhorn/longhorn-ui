@@ -1,0 +1,56 @@
+#!/bin/bash
+set -e
+
+cd $(dirname $0)/..
+
+PROJECT=$(basename "${PWD}")
+
+command -v buildx >/dev/null && BUILD_CMD=(buildx) || BUILD_CMD=(docker buildx)
+
+# read configurable parameters
+REPO=${REPO:-longhornio}
+IMAGE_NAME=${IMAGE_NAME:-${PROJECT}}
+VERSION=${VERSION:-$(bash ./scripts/version)}
+TAG=${TAG:-${VERSION}}
+PUSH=${PUSH:-'false'}
+IS_SECURE=${IS_SECURE:-'false'}
+MACHINE=${MACHINE:-''}
+TARGET_PLATFORMS=${TARGET_PLATFORMS:-''}
+IID_FILE=${IID_FILE:-''}
+IID_FILE_FLAG=${IID_FILE_FLAG:-''}
+
+IMAGE="${REPO}/${IMAGE_NAME}:${TAG}"
+
+BUILDER_ARGS=()
+[[ $MACHINE ]] && BUILDER_ARGS+=('--builder' "${MACHINE}")
+
+IFS=' ' read -r -a IID_FILE_ARGS <<<"${IID_FILE_FLAG}"
+[[ -n "$IID_FILE" && ${#IID_FILE_ARGS} == 0 ]] && IID_FILE_ARGS=('--iidfile' "${IID_FILE}")
+
+BUILDX_ARGS=()
+
+if [[ "${PUSH}" == 'true' ]]; then
+    BUILDX_ARGS+=('--push')
+else
+    BUILDX_ARGS+=('--load')
+fi
+
+[[ ${IS_SECURE} == 'true' ]] && BUILDX_ARGS+=('--sbom=true' '--attest' 'type=provenance,mode=max')
+[[ ${TARGET_PLATFORMS} ]] && BUILDX_ARGS+=('--platform' "${TARGET_PLATFORMS}")
+
+IMAGE_BUILD_CMD_ARGS=(
+    build --no-cache \
+    "${BUILDER_ARGS[@]}" \
+    "${IID_FILE_ARGS[@]}" \
+    "${BUILDX_ARGS[@]}" \
+    --build-arg "VERSION=${VERSION}" \
+    --build-arg "IS_SECURE=${IS_SECURE}" \
+    -t "${IMAGE}" -f ./Dockerfile .
+)
+echo "${BUILD_CMD[@]}" "${IMAGE_BUILD_CMD_ARGS[@]}"
+"${BUILD_CMD[@]}" "${IMAGE_BUILD_CMD_ARGS[@]}"
+
+echo "Built ${IMAGE}"
+
+mkdir -p ./bin
+echo "${IMAGE}" > ./bin/latest_image
