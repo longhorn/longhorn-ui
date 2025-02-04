@@ -16,27 +16,17 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 100,
+      width: 160,
       render: (text, record) => {
         return (
           <div>{record.name}</div>
         )
       },
     }, {
-      title: 'Groups',
-      dataIndex: 'groups',
-      key: 'groups',
-      width: 200,
-      render: (text, record) => {
-        return (
-          <div>{record.groups && record.groups.join(', ')}</div>
-        )
-      },
-    }, {
       title: 'Type',
       dataIndex: 'task',
       key: 'task',
-      width: 150,
+      width: 160,
       render: (text, record) => {
         return (
           <div>{record.task}</div>
@@ -55,6 +45,35 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
+      title: 'Retain',
+      key: 'retain',
+      width: 120,
+      render: (record) => {
+        return (
+          <div>{record.retain}</div>
+        )
+      },
+    }, {
+      title: 'Concurrency',
+      key: 'concurrency',
+      width: 120,
+      render: (record) => {
+        return (
+          <div>{record.concurrency}</div>
+        )
+      },
+    }, {
+      title: 'Parameters',
+      key: 'parameters',
+      width: 200,
+      render: (record) => {
+        return (
+          <div>{record.parameters && Object.keys(record.parameters).map((key) => {
+            return key ? `${key}: ${record.parameters[key]}` : ''
+          }).join(', ')}</div>
+        )
+      },
+    }, {
       title: 'Labels',
       dataIndex: 'labels',
       key: 'labels',
@@ -67,21 +86,13 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Retain',
-      key: 'retain',
-      width: 80,
-      render: (record) => {
+      title: 'Groups',
+      dataIndex: 'groups',
+      key: 'groups',
+      width: 200,
+      render: (text, record) => {
         return (
-          <div>{record.retain}</div>
-        )
-      },
-    }, {
-      title: 'Concurrency',
-      key: 'concurrency',
-      width: 80,
-      render: (record) => {
-        return (
-          <div>{record.concurrency}</div>
+          <div>{record.groups && record.groups.join(', ')}</div>
         )
       },
     }, {
