@@ -5,6 +5,8 @@ RUN mkdir /web
 WORKDIR /web
 COPY . /web
 RUN npm ci
+ARG IS_SECURE
+ENV IS_SECURE ${IS_SECURE}
 ARG VERSION
 ENV VERSION ${VERSION}
 RUN envsubst '${VERSION}' < /web/src/utils/config.js > /web/src/utils/config.js.subst && mv /web/src/utils/config.js.subst /web/src/utils/config.js
