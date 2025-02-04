@@ -60,6 +60,8 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const isSystemBackup = getFieldValue('task') === 'system-backup'
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -170,6 +172,7 @@ const modal = ({
     })
     cronProps.onCronCancel()
   }
+
   const onChangeTask = (val) => {
     if (noRetain(val)) {
       setFieldsValue({
@@ -178,6 +181,13 @@ const modal = ({
     } else if (getFieldValue('retain') === 0) {
       setFieldsValue({
         retain: 1,
+      })
+    }
+
+    if (getFieldValue('task') === 'backup' || isSystemBackup) {
+      setFieldsValue({
+        parametersKey: '',
+        parametersValue: '',
       })
     }
   }
@@ -282,7 +292,12 @@ const modal = ({
   const nameGeneration = getFieldValue('name') ? getFieldValue('name') : `c-${Math.random().toString(36).substr(2, 6)}`
   const disableAddDefaultGroup = getFieldValue('keys').some((k) => getFieldValue('groups')[k.index] === 'default')
   const isParametersValueRequired = !!getFieldValue('parametersKey')
-  const showParametersField = getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
+  const showParametersField = getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create' || isSystemBackup
+  const showConcurrency = !isSystemBackup
+  const showGroup = !isSystemBackup
+  const showLabels = !isSystemBackup
+  const systemBackupParameterOptions = ['always', 'disabled', 'if-not-present']
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -311,6 +326,7 @@ const modal = ({
                 <Option value="snapshot">Snapshot</Option>
                 <Option value="snapshot-delete">Snapshot Delete</Option>
                 <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
+                <Option value="system-backup">System Backup</Option>
                 <Option value="filesystem-trim">Filesystem Trim</Option>
             </Select>)}
           </FormItem>
@@ -335,16 +351,18 @@ const modal = ({
             ],
           })(<InputNumber disabled={noRetain(getFieldValue('task'))} style={{ width: '80%' }} min={0} />)}
         </FormItem>
-        <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('concurrency', {
-            initialValue: isEdit ? item.concurrency : 1,
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(<InputNumber style={{ width: '80%' }} min={1} />)}
-        </FormItem>
+        {showConcurrency && (
+          <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('concurrency', {
+              initialValue: isEdit ? item.concurrency : 1,
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<InputNumber style={{ width: '80%' }} min={1} />)}
+          </FormItem>
+        )}
         <FormItem label="Cron" {...formItemLayout}>
           {getFieldDecorator('cron', {
             initialValue: cronProps.cron,
@@ -361,45 +379,83 @@ const modal = ({
           <div style={{ display: 'flex' }}>
             <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
               {getFieldDecorator('parametersKey', {
-                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.keys(item.parameters)[0] : '',
-              })(<Select style={{ width: '100%' }} allowClear onChange={handleParameterChange}>
-                  <Option value="full-backup-interval">full-backup-interval</Option>
-              </Select>)}
+                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
+                  ? Object.keys(item.parameters)[0]
+                  : '',
+                rules: isSystemBackup
+                  ? [{
+                    required: true,
+                    message: 'Key is required',
+                  }]
+                  : [],
+              })(
+                isSystemBackup
+                  ? (
+                    <Select style={{ width: '100%' }}>
+                      <Option value="volume-backup-policy">volume-backup-policy</Option>
+                    </Select>
+                  )
+                  : (
+                    <Select style={{ width: '100%' }} allowClear onChange={handleParameterChange}>
+                      <Option value="full-backup-interval">full-backup-interval</Option>
+                   </Select>
+                  )
+              )}
             </FormItem>
             <FormItem style={{ flex: '1 50%' }} {...formItemLayout}>
               {getFieldDecorator('parametersValue', {
-                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.values(item.parameters)[0] : '',
+                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
+                  ? Object.values(item.parameters)[0]
+                  : '',
                 rules: [
                   {
                     required: isParametersValueRequired,
                     message: 'Value is required',
                   },
                 ],
-              })(<InputNumber min={0} style={{ width: '66%' }} />)}
+              })(
+                isSystemBackup
+                  ? (
+                    <Select style={{ width: '66%' }}>
+                      {systemBackupParameterOptions.map(option => (
+                        <Option key={option} value={option}>{option}</Option>
+                      ))}
+                    </Select>
+                  )
+                  : <InputNumber min={0} style={{ width: '66%' }} />
+              )}
             </FormItem>
           </div>
         )}
-        {formGroups}
-        <Form.Item {...formItemLayoutWithOutLabel}>
-          <span style={{ width: '38%', display: 'inline-block', marginRight: 10 }}>
-            <Button type="dashed" style={{ width: '100%' }} onClick={add}>
-              <Icon type="plus" /> Add Group
-            </Button>
-          </span>
-          <span style={{ width: '38%', display: 'inline-block', marginLeft: 10 }}>
-            <Tooltip title={'Volume with no recurring jobs or groups will automatically apply to the recurring jobs in the default group.'}>
-              <Button type="dashed" style={{ width: '100%' }} disabled={disableAddDefaultGroup} onClick={addDefaultGroup}>
-                <Icon type="plus" /> Add to default group
+        { showGroup && (
+          <>
+            {formGroups}
+            <Form.Item {...formItemLayoutWithOutLabel}>
+              <span style={{ width: '38%', display: 'inline-block', marginRight: 10 }}>
+                <Button type="dashed" style={{ width: '100%' }} onClick={add}>
+                  <Icon type="plus" /> Add Group
+                </Button>
+              </span>
+              <span style={{ width: '38%', display: 'inline-block', marginLeft: 10 }}>
+                <Tooltip title={'Volume with no recurring jobs or groups will automatically apply to the recurring jobs in the default group.'}>
+                  <Button type="dashed" style={{ width: '100%' }} disabled={disableAddDefaultGroup} onClick={addDefaultGroup}>
+                    <Icon type="plus" /> Add to default group
+                  </Button>
+                </Tooltip>
+              </span>
+            </Form.Item>
+          </>
+        )}
+        { showLabels && (
+          <>
+            {formLabels}
+            <Form.Item {...formItemLayoutWithOutLabel}>
+              <Button type="dashed" onClick={addLabel} style={{ width: '80%' }}>
+                <Icon type="plus" /> Add Label
               </Button>
-            </Tooltip>
-          </span>
-        </Form.Item>
-        {formLabels}
-        <Form.Item {...formItemLayoutWithOutLabel}>
-          <Button type="dashed" onClick={addLabel} style={{ width: '80%' }}>
-            <Icon type="plus" /> Add Label
-          </Button>
-        </Form.Item>
+            </Form.Item>
+          </>
+        )}
       </Form>
       <ModalBlur disabled={cronProps.modulerCronDisabled} {...cronProps.modalCronOpts} width={880} onCancel={() => { cronProps.onCronCancel() }} onOk={() => { onCronOk() }}>
         <ReactCron cron={cronProps.cron} key={cronProps.ReactCronKey} saveDisabled={cronProps.saveDisabled} changeCron={cronProps.changeCron} />
