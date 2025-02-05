@@ -184,10 +184,16 @@ const modal = ({
       })
     }
 
-    if (getFieldValue('task') === 'backup' || isSystemBackup) {
+    // set initial parameter values when the task changes
+    if (val === 'backup') {
       setFieldsValue({
         parametersKey: '',
         parametersValue: '',
+      })
+    } else if (val === 'system-backup') {
+      setFieldsValue({
+        parametersKey: 'volume-backup-policy',
+        parametersValue: 'if-not-present',
       })
     }
   }
@@ -296,7 +302,7 @@ const modal = ({
   const showConcurrency = !isSystemBackup
   const showGroup = !isSystemBackup
   const showLabels = !isSystemBackup
-  const systemBackupParameterOptions = ['always', 'disabled', 'if-not-present']
+  const systemBackupParameterOptions = ['if-not-present', 'always', 'disabled']
 
   return (
     <ModalBlur {...modalOpts}>
@@ -378,52 +384,55 @@ const modal = ({
         {showParametersField && (
           <div style={{ display: 'flex' }}>
             <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-              {getFieldDecorator('parametersKey', {
-                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
-                  ? Object.keys(item.parameters)[0]
-                  : '',
-                rules: isSystemBackup
-                  ? [{
-                    required: true,
-                    message: 'Key is required',
-                  }]
-                  : [],
-              })(
-                isSystemBackup
-                  ? (
-                    <Select style={{ width: '100%' }}>
-                      <Option value="volume-backup-policy">volume-backup-policy</Option>
-                    </Select>
-                  )
-                  : (
+              {isSystemBackup
+                ? getFieldDecorator('parametersKey', {
+                  initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
+                    ? Object.keys(item.parameters)[0]
+                    : 'volume-backup-policy',
+                  rules: [{ required: true }]
+                })(
+                  <Select style={{ width: '100%' }}>
+                    <Option value="volume-backup-policy">volume-backup-policy</Option>
+                  </Select>
+                )
+                : getFieldDecorator('parametersKey', {
+                  initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
+                    ? Object.keys(item.parameters)[0]
+                    : ''
+                })(
                     <Select style={{ width: '100%' }} allowClear onChange={handleParameterChange}>
                       <Option value="full-backup-interval">full-backup-interval</Option>
-                   </Select>
-                  )
-              )}
+                  </Select>
+                )
+              }
             </FormItem>
             <FormItem style={{ flex: '1 50%' }} {...formItemLayout}>
-              {getFieldDecorator('parametersValue', {
-                initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
-                  ? Object.values(item.parameters)[0]
-                  : '',
-                rules: [
-                  {
-                    required: isParametersValueRequired,
-                    message: 'Value is required',
-                  },
-                ],
-              })(
-                isSystemBackup
-                  ? (
-                    <Select style={{ width: '66%' }}>
-                      {systemBackupParameterOptions.map(option => (
-                        <Option key={option} value={option}>{option}</Option>
-                      ))}
-                    </Select>
-                  )
-                  : <InputNumber min={0} style={{ width: '66%' }} />
-              )}
+              {isSystemBackup
+                ? getFieldDecorator('parametersValue', {
+                  initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
+                    ? Object.values(item.parameters)[0]
+                    : systemBackupParameterOptions[0],
+                })(
+                  <Select style={{ width: '66%' }}>
+                    {systemBackupParameterOptions.map(option => (
+                      <Option key={option} value={option}>{option}</Option>
+                    ))}
+                  </Select>
+                )
+                : getFieldDecorator('parametersValue', {
+                  initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0]
+                    ? Object.values(item.parameters)[0]
+                    : '',
+                  rules: [
+                    {
+                      required: isParametersValueRequired,
+                      message: 'Value is required',
+                    },
+                  ],
+                })(
+                  <InputNumber min={0} style={{ width: '66%' }} />
+                )
+              }
             </FormItem>
           </div>
         )}
