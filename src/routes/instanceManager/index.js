@@ -62,6 +62,7 @@ class InstanceManager extends React.Component {
 
     const instanceManagerFilterProps = {
       location,
+      defaultField: 'name',
       fieldOption: [
         { value: 'name', name: 'Name' },
         { value: 'nodeID', name: 'Node' },
