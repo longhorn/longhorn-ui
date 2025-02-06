@@ -1,4 +1,4 @@
-const { LH_UI_VERSION } = process.env
+const { LH_UI_VERSION, IS_SECURE } = process.env
 
 const C = {
   RegExp: {
@@ -17,4 +17,4 @@ const nodeTagColor = 'rgb(39, 174, 95)' // green
 const diskTagColor = '#108eb9' // blue
 
 export default C
-export { LH_UI_VERSION, nodeTagColor, diskTagColor }
+export { LH_UI_VERSION, IS_SECURE, nodeTagColor, diskTagColor }

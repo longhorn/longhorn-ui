@@ -17,6 +17,7 @@ const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 const theme = require("./src/theme");
 const versionText = require('fs').readFileSync('./version', 'utf8');
 const longhornVersion = versionText ? versionText.trim().substring(1).split('-')[0]: '1.7.0';
+const isSecure = process.env.IS_SECURE === 'true'
 
 module.exports = {
   devtool: 'source-map',
@@ -156,6 +157,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         LH_UI_VERSION: JSON.stringify(longhornVersion),
+        IS_SECURE: isSecure,
       }
     }),
     new ProgressBarPlugin(),
