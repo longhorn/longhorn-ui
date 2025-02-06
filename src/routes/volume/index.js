@@ -597,6 +597,7 @@ class Volume extends React.Component {
 
     const volumeFilterProps = {
       location,
+      defaultField: 'name',
       stateOption: [
         { value: 'healthy', name: 'Healthy' },
         { value: 'inProgress', name: 'In Progress' },
