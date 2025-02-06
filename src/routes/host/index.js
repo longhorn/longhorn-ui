@@ -315,8 +315,9 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
     replicaModalDeleteLoading,
   }
 
-  const HostFilterProps = {
+  const hostFilterProps = {
     location,
+    defaultField: 'name',
     selectedHostRows,
     dispatch,
     stateOption: [
@@ -357,7 +358,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 
   return (
     <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
-      <HostFilter ref={(component) => { hostFilter = component }} {...HostFilterProps} />
+      <HostFilter ref={(component) => { hostFilter = component }} {...hostFilterProps} />
       <HostList ref={(component) => { hostList = component }} {...hostListProps} />
       {modalVisible && <AddDisk {...addDiskModalProps} />}
       {replicaModalVisible && <HostReplica {...hostReplicaModalProps} />}
