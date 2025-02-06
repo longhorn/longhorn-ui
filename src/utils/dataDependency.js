@@ -134,6 +134,9 @@ const dependency = {
   systemBackups: {
     path: '/systemBackups',
     runWs: [{
+      ns: 'backupTarget',
+      key: 'backuptargets',
+    }, {
       ns: 'systemBackups',
       key: 'systemBackups',
     }],
