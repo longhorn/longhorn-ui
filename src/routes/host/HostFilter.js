@@ -76,9 +76,10 @@ class HostFilter extends React.Component {
   }
 
   render() {
-    const { location, onSearch, stateOption, fieldOption, selectedHostRows } = this.props
+    const { location, onSearch, stateOption, fieldOption, selectedHostRows, defaultField } = this.props
     const searchGroupProps = {
       location,
+      defaultField,
       stateOption,
       fieldOption,
       onSearch: (value) => {
@@ -105,6 +106,7 @@ class HostFilter extends React.Component {
 HostFilter.propTypes = {
   onSearch: PropTypes.func,
   location: PropTypes.object,
+  defaultField: PropTypes.string,
   stateOption: PropTypes.array,
   fieldOption: PropTypes.array,
   selectedHostRows: PropTypes.array,
