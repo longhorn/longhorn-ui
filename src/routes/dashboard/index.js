@@ -5,7 +5,6 @@ import queryString from 'query-string'
 import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
-import { IS_SECURE } from '../../utils/constants'
 
 function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
   let { data: eventlogsData, sorter } = eventlog
@@ -52,9 +51,6 @@ function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
   }
   return (
     <div style={{ overflow: 'auto', height: '100%' }}>
-      {
-        IS_SECURE ? 'prime' : 'normal'
-      }
       <Card bordered={false}>
         <ResourceOverview {...resourceOverviewProps} />
         <EventLogs {...eventLogsProps} />
