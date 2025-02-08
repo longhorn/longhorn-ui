@@ -24,26 +24,26 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
               : <img src={longhornLogo} alt="LONGHORN" />
           }
         </Col>
-        <Col className={styles.menuCol} lg={16} md={16} sm={0} xs={0}>
-          <Menus {...menusProps} />
-        </Col>
-        {/* popup menu for small device */}
-        <Col className={styles.popupMenuCol} md={0}>
-          {isNavbar
-            && <Popover
-              placement="bottomLeft"
-              onVisibleChange={switchMenuPopover}
-              visible={menuPopoverVisible}
-              overlayClassName={styles.popupMenu}
-              trigger="click"
-              content={<Menus {...menusProps}
-              />}>
-              <div className={styles.button}>
-                <Icon type="bars" />
-              </div>
-            </Popover>
-          }
-        </Col>
+        {
+          isNavbar
+            ? <Col className={styles.popupMenuCol}>
+                <Popover
+                  placement="bottomLeft"
+                  onVisibleChange={switchMenuPopover}
+                  visible={menuPopoverVisible}
+                  overlayClassName={styles.popupMenu}
+                  trigger="click"
+                  content={<Menus {...menusProps}
+                  />}>
+                  <div className={styles.button}>
+                    <Icon type="bars" />
+                  </div>
+                </Popover>
+              </Col>
+            : <Col className={styles.menuCol} lg={16} md={16} sm={0} xs={0}>
+                <Menus {...menusProps} />
+              </Col>
+        }
       </Row>
     </div>
   )

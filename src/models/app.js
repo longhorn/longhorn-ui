@@ -108,14 +108,12 @@ export default {
       return {
         ...state,
         isNavbar: true,
-        menuPopoverVisible: true,
       }
     },
     hideNavbar(state) {
       return {
         ...state,
         isNavbar: false,
-        menuPopoverVisible: false,
       }
     },
     showBundlesModel(state) {
