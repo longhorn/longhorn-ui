@@ -156,6 +156,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         LH_UI_VERSION: JSON.stringify(longhornVersion),
+        IS_SECURE: JSON.stringify(process.env.IS_SECURE || 'false'),
       }
     }),
     new ProgressBarPlugin(),
