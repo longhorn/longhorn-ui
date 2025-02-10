@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { Row, Col, Popover, Icon } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'
-import { isSecure } from '../../utils/constants'
 import longhornLogo from '../../assets/images/longhorn-logo.svg'
-import suseStorageLogo from '../../assets/images/suse-storage.svg'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   const menusProps = {
@@ -18,11 +16,7 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
     <div className={styles.header}>
       <Row align="middle">
         <Col className={styles.logoCol}>
-          {
-            isSecure
-              ? <img src={suseStorageLogo} alt="SUSE Storage" />
-              : <img src={longhornLogo} alt="LONGHORN" />
-          }
+          <img src={longhornLogo} alt="LONGHORN" />
         </Col>
         {
           isNavbar
