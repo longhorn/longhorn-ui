@@ -13,7 +13,6 @@ var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 const versionText = require('fs').readFileSync('./version', 'utf8');
 const longhornVersion = versionText ? versionText.trim().substring(1).split('-')[0]: '1.7.0';
-const isSecure = process.env.IS_SECURE === 'true'
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "index.js"),
@@ -187,7 +186,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         LH_UI_VERSION: JSON.stringify(longhornVersion),
-        IS_SECURE: isSecure
+        IS_SECURE: JSON.stringify(process.env.IS_SECURE || 'false')
       }
     }),
     new OpenBrowserPlugin({url: 'http://localhost:8080/'}),

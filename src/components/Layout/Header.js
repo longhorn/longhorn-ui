@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Row, Col, Popover, Icon } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'
-import { IS_SECURE } from '../../utils/constants'
+import { isSecure } from '../../utils/constants'
 import longhornLogo from '../../assets/images/longhorn-logo.svg'
 import suseStorageLogo from '../../assets/images/suse-storage.svg'
 
@@ -19,7 +19,7 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
       <Row align="middle">
         <Col className={styles.logoCol}>
           {
-            IS_SECURE
+            isSecure
               ? <img src={suseStorageLogo} alt="SUSE Storage" />
               : <img src={longhornLogo} alt="LONGHORN" />
           }
