@@ -42,6 +42,7 @@ jobs:
         tags: longhornio/longhorn-ui:${{ env.branch }}-head
         file: Dockerfile
         sbom: true
+        provenance: mode=max
         build-args: |
           VERSION=${{ env.sha_short }}
 
@@ -54,5 +55,6 @@ jobs:
         tags: longhornio/longhorn-ui:${{ github.ref_name }}
         file: Dockerfile
         sbom: true
+        provenance: mode=max
         build-args: |
           VERSION=${{ github.ref_name }}
