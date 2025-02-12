@@ -38,7 +38,7 @@
       border-bottom: none;
     }
     .ant-menu-submenu .ant-menu .ant-menu-item:hover {
-      border-bottom: none; 
+      border-bottom: none;
     }
   }
 
@@ -51,9 +51,24 @@
     line-height: 60px;
   }
 
+  :global .ant-row {
+    display: flex;
+  }
+
   .logoCol {
-    color: white;
-    background-color: #004572;
+    padding: 10px 20px;
+    height: 60px;
+    background: white;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 180px;
+
+    img {
+      height: auto;
+      max-width: 100%;
+      transform: translateY(1px);
+    }
   }
 
   .menuCol {
@@ -61,25 +76,10 @@
     background-color: #0075a8;
   }
 
-  .logoContainer {
-    margin-left: 0;
-    padding: 0 20px;
-    height: 60px;
-    background: white;
-    position: relative;
-  }
-
-  .logo {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    width: 76%;
-  }
-
-  .popupMenu {
-    display: inline-block;
-    float: right;
+  .popupMenuCol {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
   }
 
   .button {
@@ -98,9 +98,8 @@
   }
 }
 
-.popovermenu {
+.popupMenu {
   width: 280px;
-  margin-left: 6px;
 
   :global .ant-popover-inner-content {
     padding: 0;
