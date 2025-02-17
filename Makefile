@@ -32,9 +32,9 @@ buildx-machine:
 # - IID_FILE_FLAG: options to generate image ID file
 .PHONY: workflow-image-build-push workflow-image-build-push-secure
 workflow-image-build-push: buildx-machine
-	MACHINE=$(MACHINE) PUSH='true' VERSION=$(VERSION) bash scripts/package
+	MACHINE=$(MACHINE) PUSH='true' VERSION=$(VERSION) IMAGE_NAME=$(NAME) bash scripts/package
 workflow-image-build-push-secure: buildx-machine
-	MACHINE=$(MACHINE) PUSH='true' VERSION=$(VERSION) IS_SECURE=true bash scripts/package
+	MACHINE=$(MACHINE) PUSH='true' VERSION=$(VERSION) IMAGE_NAME=$(NAME) IS_SECURE=true bash scripts/package
 
 stop:
 	docker stop $(NAME)-$(INSTANCE)
