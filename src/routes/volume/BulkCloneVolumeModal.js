@@ -166,7 +166,7 @@ const modal = ({
   const handleFrontendChange = (value) => updateVolumeConfig('frontend', value)
   const handleDataLocalityChange = (value) => updateVolumeConfig('dataLocality', value)
   const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
-  const handleBackupTargetNameChange = (value) => updateVolumeConfig('backupTargeName', value)
+  const handleBackupTargetNameChange = (value) => updateVolumeConfig('backupTargetName', value)
   const handleEncryptedCheck = (e) => updateVolumeConfig('encrypted', e.target.checked)
   const handleNodeTagRemove = (value) => {
     const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
