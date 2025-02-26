@@ -39,7 +39,10 @@ class Filter extends React.Component {
 
   handleSubmit = () => {
     if (this.props.onSearch) {
-      this.props.onSearch(Object.assign({}, this.state))
+      this.setState(
+        (prevState) => ({ value: prevState.value.trim() }),
+        () => this.props.onSearch({ ...this.state })
+      )
     }
   }
 
