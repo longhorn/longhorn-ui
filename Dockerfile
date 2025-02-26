@@ -12,7 +12,7 @@ ENV VERSION ${VERSION}
 RUN envsubst '${VERSION}' < /web/src/utils/config.js > /web/src/utils/config.js.subst && mv /web/src/utils/config.js.subst /web/src/utils/config.js
 RUN npm run build
 
-FROM registry.suse.com/bci/bci-base:15.6
+FROM registry.suse.com/bci/bci-base:15.7
 
 RUN zypper -n ref && \
     zypper update -y
