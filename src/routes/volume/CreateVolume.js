@@ -319,6 +319,26 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            rules: [
+              {
+                validator: (_rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select onChange={handleDataEngineChange}>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: '',
@@ -376,26 +396,6 @@ const modal = ({
           )}
           </FormItem>
         }
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
-            rules: [
-              {
-                validator: (_rule, value, callback) => {
-                  if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
-                  } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
-                  }
-                  callback()
-                },
-              },
-            ],
-          })(<Select onChange={handleDataEngineChange}>
-            <Option key={'v1'} value={'v1'}>v1</Option>
-            <Option key={'v2'} value={'v2'}>v2</Option>
-          </Select>)}
-        </FormItem>
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
             // init backup target is the default one
