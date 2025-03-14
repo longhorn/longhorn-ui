@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -124,6 +124,13 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const [filteredBackingImages, setFilteredBackingImages] = useState([])
+
+  useEffect(() => {
+    const dataEngine = getFieldValue('dataEngine')
+    setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === dataEngine))
+  }, [])
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -188,6 +195,12 @@ const modal = ({
         size: formatSize(dataSourceVol),
       })
     }
+  }
+
+  // filter backing image options based on selected data engine version
+  const handleDataEngineChange = (value) => {
+    setFieldsValue({ ...getFieldsValue(), backingImage: '' }) // reset selected backing image
+    setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === value))
   }
 
   const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
@@ -306,11 +319,31 @@ const modal = ({
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            rules: [
+              {
+                validator: (_rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select onChange={handleDataEngineChange}>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: '',
           })(<Select allowClear>
-            { backingImageOptions.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+            { filteredBackingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -363,26 +396,6 @@ const modal = ({
           )}
           </FormItem>
         }
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
-            rules: [
-              {
-                validator: (_rule, value, callback) => {
-                  if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
-                  } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
-                  }
-                  callback()
-                },
-              },
-            ],
-          })(<Select>
-            <Option key={'v1'} value={'v1'}>v1</Option>
-            <Option key={'v2'} value={'v2'}>v2</Option>
-          </Select>)}
-        </FormItem>
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
             // init backup target is the default one
