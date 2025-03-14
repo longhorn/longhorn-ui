@@ -41,7 +41,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Allow snapshots removal during trim',
+    title: 'Allow Snapshots Removal During Trim',
     visible,
     onCancel,
     width: 600,
