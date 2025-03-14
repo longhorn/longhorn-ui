@@ -248,7 +248,7 @@ function actions({
   })
 
   availableActions.push({ key: 'cloneVolume', name: 'Clone Volume', disabled: selected.standby || isRestoring(selected) })
-  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() === 'false' })
+  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() !== 'true' })
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
     availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
   }
