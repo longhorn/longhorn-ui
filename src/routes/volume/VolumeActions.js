@@ -229,7 +229,7 @@ function actions({
     { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
     { key: 'updateBackupTargetName', name: 'Update Backup Target' },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
-    { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow snapshots removal during trim', disabled: false },
+    { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow Snapshots Removal During Trim', disabled: false },
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
     { key: 'updateSnapshotMaxCount', name: 'Update Snapshot Max Count', disabled: false },
