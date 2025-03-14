@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -124,6 +124,13 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const [filteredBackingImages, setFilteredBackingImages] = useState([])
+
+  useEffect(() => {
+    const dataEngine = getFieldValue('dataEngine')
+    setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === dataEngine))
+  }, [])
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -188,6 +195,12 @@ const modal = ({
         size: formatSize(dataSourceVol),
       })
     }
+  }
+
+  // filter backing image options based on selected data engine version
+  const handleDataEngineChange = (value) => {
+    setFieldsValue({ ...getFieldsValue(), backingImage: '' }) // reset selected backing image
+    setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === value))
   }
 
   const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
@@ -310,7 +323,7 @@ const modal = ({
           {getFieldDecorator('backingImage', {
             initialValue: '',
           })(<Select allowClear>
-            { backingImageOptions.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+            { filteredBackingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -378,7 +391,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Select>
+          })(<Select onChange={handleDataEngineChange}>
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
