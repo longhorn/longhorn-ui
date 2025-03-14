@@ -26,7 +26,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
     } else if (canBeRemoved()) {
       return (<a onClick={() => onRemove(disk.id)}><IconRemove /></a>)
     }
-    return <Tooltip placement="top" title="Only the disk with disabled scheduling and no storage scheduled can be deleted"><span><IconRemove disabled /></span></Tooltip>
+    return <Tooltip placement="top" title="To delete this disk, disable scheduling and ensure that no replicas and backing images are in use"><span><IconRemove disabled /></span></Tooltip>
   }
 
   // Because the parameters passed need to be retained, the content of the form is retained
