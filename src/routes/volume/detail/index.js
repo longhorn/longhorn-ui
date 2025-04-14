@@ -29,6 +29,7 @@ import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
+import OfflineRebuildModal from '../OfflineRebuildModal'
 import CommonModal from '../components/CommonModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
@@ -47,6 +48,7 @@ import {
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
+  getOfflineRebuildModalProps
 } from '../helper'
 import { getBackupTargets } from '../../../utils/backupTarget'
 
@@ -157,6 +159,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateSnapshotMaxSizeModalVisible,
     updateFreezeFilesystemForSnapshotModalKey,
     updateFreezeFilesystemForSnapshotModalVisible,
+    isOfflineRebuildModalVisible
   } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -511,6 +514,15 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    toggleOfflineRebuildModal(record) {
+      dispatch({
+        type: 'volume/toggleOfflineRebuildModal',
+        payload: {
+          selected: record,
+          isOfflineRebuildModalVisible: true,
+        },
+      })
+    },
   }
 
   const attachHostModalProps = getAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -587,6 +599,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateSnapshotMaxCountModalVisible, dispatch)
   const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selectedVolume, updateSnapshotMaxSizeModalVisible, dispatch)
   const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selectedVolume, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
+  const offlineRebuildModalProps = getOfflineRebuildModalProps([selectedVolume], isOfflineRebuildModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
@@ -763,12 +776,13 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {expansionVolumeSizeModalVisible ? <ExpansionVolumeSizeModal key={expansionVolumeSizeModalKey} {...expansionVolumeSizeModalProps}></ExpansionVolumeSizeModal> : ''}
         {salvageModalVisible ? <Salvage {...salvageModalProps} /> : ''}
         {changeVolumeModalVisible ? <ChangeVolumeModal key={changeVolumeModalKey} {...changeVolumeModalProps} /> : ''}
-        { createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : '' }
-        { updateSnapshotMaxCountModalVisible ? <UpdateSnapshotMaxCountModal {...updateSnapshotMaxCountModalProps} /> : '' }
-        { updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
+        {createPVAndPVCSingleVisible ? <CreatePVAndPVCSingle key={createPVAndPVCModalSingleKey} {...createPVAndPVCSingleProps} /> : '' }
+        {updateSnapshotMaxCountModalVisible ? <UpdateSnapshotMaxCountModal {...updateSnapshotMaxCountModalProps} /> : '' }
+        {updateSnapshotMaxSizeModalVisible ? <UpdateSnapshotMaxSizeModal {...updateSnapshotMaxSizeModalProps} /> : '' }
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
+        {isOfflineRebuildModalVisible ? <OfflineRebuildModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
       </div>
     </div>
   )
