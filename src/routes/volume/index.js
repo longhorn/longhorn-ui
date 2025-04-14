@@ -1191,6 +1191,15 @@ class Volume extends React.Component {
           },
         })
       },
+      toggleOfflineRebuildModal(record) {
+        dispatch({
+          type: 'volume/toggleOfflineRebuildModal',
+          payload: {
+            selectedRows: record,
+            isOfflineRebuildModalVisible: true
+          },
+        })
+      }
     }
 
     const createBackModalProps = {

@@ -34,6 +34,7 @@ function bulkActions({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateBulkFreezeFilesystemForSnapshotModal,
+  toggleOfflineRebuildModal
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -152,6 +153,9 @@ function bulkActions({
           },
         })
         break
+      case 'offlineRebuild':
+        toggleOfflineRebuildModal(selectedRows)
+        break
       default:
     }
   }
@@ -215,6 +219,7 @@ function bulkActions({
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled() { return selectedRows.length === 0 } },
+    { key: 'offlineRebuild', name: 'Offline Replica Rebuild', disabled() { return selectedRows.length === 0 } },
   ]
 
   const menu = (<Menu>
