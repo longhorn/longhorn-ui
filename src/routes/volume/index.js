@@ -39,6 +39,7 @@ import UpdateBulkBackupTargetModal from './UpdateBulkBackupTargetModal'
 import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
+import OfflineRebuildModal from './OfflineRebuildModal'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import { isRestoring } from './helper'
@@ -65,7 +66,8 @@ import {
   getUpdateFreezeFilesystemForSnapshotModalProps,
   getUpdateBulkFreezeFilesystemForSnapshotModalProps,
   getUpdateBackupTargetProps,
-  getUpdateBulkBackupTargetProps
+  getUpdateBulkBackupTargetProps,
+  getOfflineRebuildModalProps
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -215,7 +217,8 @@ class Volume extends React.Component {
       updateBackupTargetModalVisible,
       updateBackupTargetModalKey,
       updateBulkBackupTargetModalVisible,
-      updateBulkBackupTargetModalKey
+      updateBulkBackupTargetModalKey,
+      isOfflineRebuildModalVisible
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -633,6 +636,15 @@ class Volume extends React.Component {
           })
         },
       },
+      toggleOfflineRebuildModal(record) {
+        dispatch({
+          type: 'volume/toggleOfflineRebuildModal',
+          payload: {
+            selected: record,
+            isOfflineRebuildModalVisible: true
+          },
+        })
+      }
     }
 
     const volumeFilterProps = {
@@ -1289,6 +1301,7 @@ class Volume extends React.Component {
     const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selected, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
     const updateBulkFreezeFilesystemForSnapshotModalProps = getUpdateBulkFreezeFilesystemForSnapshotModalProps(selectedRows, updateBulkFreezeFilesystemForSnapshotModalVisible, dispatch)
     const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
+    const offlineRebuildModalProps = getOfflineRebuildModalProps(selected ? [selected] : selectedRows, isOfflineRebuildModalVisible, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
@@ -1340,6 +1353,7 @@ class Volume extends React.Component {
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
         {updateBackupTargetModalVisible ? <UpdateBackupTargetModal key={updateBackupTargetModalKey} {...updateBackupTargetProps} /> : ''}
         {updateBulkBackupTargetModalVisible ? <UpdateBulkBackupTargetModal key={updateBulkBackupTargetModalKey} {...updateBulkBackupTargetModalProps} /> : ''}
+        {isOfflineRebuildModalVisible ? <OfflineRebuildModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
       </div>
     )
   }
