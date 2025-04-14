@@ -485,6 +485,20 @@ function list({
       },
     },
     {
+      title: 'Offline Replica Rebuild',
+      dataIndex: 'offlineRebuild',
+      key: 'offlineRebuild',
+      width: 240,
+      sorter: (a, b) => sortTable(a, b, 'offlineRebuild'),
+      render: (text, record) => {
+        return (
+          <div>
+            {record.offlineRebuild}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',

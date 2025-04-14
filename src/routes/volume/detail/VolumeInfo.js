@@ -374,6 +374,14 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Freeze Filesystem For Snapshot:</span>
         {addGlobalSettingDescription(selectedVolume?.freezeFilesystemForSnapshot)}
       </div>
+      {
+        selectedVolume.kubernetesStatus
+          ? <div className={styles.row}>
+              <span className={styles.label}>Offline Replica Rebuild:</span>
+              {selectedVolume?.offlineRebuild}
+            </div>
+          : null
+      }
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>

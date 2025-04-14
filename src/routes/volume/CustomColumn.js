@@ -10,7 +10,7 @@ const formItemLayout = {
     span: 4,
   },
   wrapperCol: {
-    span: 20,
+    span: 24,
   },
 }
 
@@ -98,6 +98,10 @@ const modal = ({
     {
       value: 'dataEngine',
       label: 'Data Engine',
+    },
+    {
+      value: 'offlineRebuild',
+      label: 'Offline Replica Rebuild',
     },
   ]
 
