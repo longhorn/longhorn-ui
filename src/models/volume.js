@@ -117,6 +117,7 @@ export default {
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
+    isOfflineRebuildModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -449,6 +450,16 @@ export default {
     *updateReplicaSoftAntiAffinityModal({
       payload,
     }, { call, put }) {
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateOfflineRebuild({
+      payload,
+    }, { call, put }) {
+      yield put({
+        type: 'volume/toggleOfflineRebuildModal',
+        payload: { isOfflineRebuildModalVisible: false }
+      })
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
@@ -1036,6 +1047,14 @@ export default {
         ...state,
         softAntiAffinityKey: '',
         updateReplicaSoftAntiAffinityVisible: false,
+      }
+    },
+    toggleOfflineRebuildModal(state, action = {}) {
+      const { selected, isOfflineRebuildModalVisible } = action.payload || {}
+      return {
+        ...state,
+        selected: selected ?? state.selected,
+        isOfflineRebuildModalVisible: isOfflineRebuildModalVisible ?? state.isOfflineRebuildModalVisible,
       }
     },
     updateWs(state, action) {

@@ -35,6 +35,7 @@ function actions({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateFreezeFilesystemForSnapshotModal,
+  toggleOfflineRebuildModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -170,6 +171,9 @@ function actions({
           },
         })
         break
+      case 'offlineRebuild':
+        toggleOfflineRebuildModal(record)
+        break
       default:
     }
   }
@@ -237,7 +241,10 @@ function actions({
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled: false },
   ]
-  const availableActions = [{ key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) }, { key: 'delete', name: 'Delete' }]
+  const availableActions = [
+    { key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) },
+    { key: 'delete', name: 'Delete' },
+  ]
 
   allActions.forEach(action => {
     for (const key of Object.keys(selected.actions)) {
@@ -257,6 +264,9 @@ function actions({
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
   availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' })
+  if (selected?.actions?.offlineRebuilding) {
+    availableActions.push({ key: 'offlineRebuild', name: 'Offline Replica Rebuild' })
+  }
   toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions}

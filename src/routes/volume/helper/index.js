@@ -673,6 +673,25 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
   }
 }
 
+export function getOfflineRebuildModalProps(volumes, visible, dispatch) {
+  return {
+    visible,
+    items: volumes,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateOfflineRebuild',
+        payload: { params: v, urls },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/toggleOfflineRebuildModal',
+        payload: { isOfflineRebuildModalVisible: false }
+      })
+    },
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }
