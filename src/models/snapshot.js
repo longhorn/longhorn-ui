@@ -53,12 +53,14 @@ let filterRemoved = (data) => {
       if (parent !== '') {
         let parentEntity = data.find(el => el.name === parent)
 
-        let pChildArray = parentEntity.children
-        let itemPos = pChildArray.findIndex(ele => ele === item.name)
-        pChildArray = pChildArray.slice(0, itemPos)
-          .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
-          .concat(item.children)
-        parentEntity.children = pChildArray
+        if (parentEntity) {
+          let pChildArray = parentEntity.children
+          let itemPos = pChildArray.findIndex(ele => ele === item.name)
+          pChildArray = pChildArray.slice(0, itemPos)
+            .concat(pChildArray.slice(itemPos + 1, pChildArray.length))
+            .concat(item.children)
+          parentEntity.children = pChildArray
+        }
       }
       // change children parent
       for (let j = 0; j < item.children.length; j += 1) {
