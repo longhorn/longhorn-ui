@@ -155,7 +155,7 @@ function bulkActions({
       default:
     }
   }
-  const hasDetachedVolume = () => selectedRows.some(item => item.state === 'detached')
+  const hasNonAttachedVolume = () => selectedRows.some(item => item.state === 'detached')
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.image)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
@@ -193,7 +193,7 @@ function bulkActions({
     { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !detachable(item)) } },
-    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || hasDetachedVolume() || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() || !backupTargetAvailable }, toolTip: backupTargetMessage },
+    { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || hasNonAttachedVolume() || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() || !backupTargetAvailable }, toolTip: backupTargetMessage },
     { key: 'bulkCloneVolume', name: 'Clone Volume', disabled() { return selectedRows.length === 0 || selectedRows.every(item => item.standby || isRestoring(item)) } },
 
   ]
