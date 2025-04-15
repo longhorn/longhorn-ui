@@ -29,7 +29,6 @@ import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
-import OfflineRebuildModal from '../OfflineRebuildModal'
 import CommonModal from '../components/CommonModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
@@ -782,7 +781,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
-        {isOfflineRebuildModalVisible ? <OfflineRebuildModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
+        {isOfflineRebuildModalVisible ? <CommonModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
       </div>
     </div>
   )

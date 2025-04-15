@@ -39,7 +39,6 @@ import UpdateBulkBackupTargetModal from './UpdateBulkBackupTargetModal'
 import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
-import OfflineRebuildModal from './OfflineRebuildModal'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import { isRestoring } from './helper'
@@ -1362,7 +1361,7 @@ class Volume extends React.Component {
         {me.state.createBackModalVisible ? <CreateBackupModal key={me.state.createBackModalKey} {...createBackModalProps} /> : ''}
         {updateBackupTargetModalVisible ? <UpdateBackupTargetModal key={updateBackupTargetModalKey} {...updateBackupTargetProps} /> : ''}
         {updateBulkBackupTargetModalVisible ? <UpdateBulkBackupTargetModal key={updateBulkBackupTargetModalKey} {...updateBulkBackupTargetModalProps} /> : ''}
-        {isOfflineRebuildModalVisible ? <OfflineRebuildModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
+        {isOfflineRebuildModalVisible ? <CommonModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
       </div>
     )
   }
