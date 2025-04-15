@@ -53,7 +53,7 @@ let filterRemoved = (data) => {
       if (parent !== '') {
         let parentEntity = data.find(el => el.name === parent)
 
-        if (parentEntity) {
+        if (parentEntity && Array.isArray(parentEntity.children)) {
           let pChildArray = parentEntity.children
           let itemPos = pChildArray.findIndex(ele => ele === item.name)
           pChildArray = pChildArray.slice(0, itemPos)
