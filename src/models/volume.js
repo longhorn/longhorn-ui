@@ -458,7 +458,10 @@ export default {
     }, { call, put }) {
       yield put({
         type: 'volume/toggleOfflineRebuildingModal',
-        payload: { isOfflineRebuildingModalVisible: false }
+        payload: {
+          selectedRows: [],
+          isOfflineRebuildingModalVisible: false
+        }
       })
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
@@ -1050,10 +1053,10 @@ export default {
       }
     },
     toggleOfflineRebuildingModal(state, action = {}) {
-      const { selected, isOfflineRebuildingModalVisible } = action.payload || {}
+      const { selectedRows, isOfflineRebuildingModalVisible } = action.payload || {}
       return {
         ...state,
-        selected: selected ?? state.selected,
+        selectedRows: selectedRows ?? state.selectedRows,
         isOfflineRebuildingModalVisible: isOfflineRebuildingModalVisible ?? state.isOfflineRebuildingModalVisible,
       }
     },
