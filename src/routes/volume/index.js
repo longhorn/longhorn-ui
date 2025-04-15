@@ -639,7 +639,7 @@ class Volume extends React.Component {
         dispatch({
           type: 'volume/toggleOfflineRebuildingModal',
           payload: {
-            selected: record,
+            selectedRows: [record],
             isOfflineRebuildingModalVisible: true
           },
         })
@@ -1309,7 +1309,7 @@ class Volume extends React.Component {
     const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selected, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
     const updateBulkFreezeFilesystemForSnapshotModalProps = getUpdateBulkFreezeFilesystemForSnapshotModalProps(selectedRows, updateBulkFreezeFilesystemForSnapshotModalVisible, dispatch)
     const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
-    const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selected ? [selected] : selectedRows, isOfflineRebuildingModalVisible, dispatch)
+    const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
