@@ -677,6 +677,16 @@ export function getOfflineRebuildModalProps(volumes, visible, dispatch) {
   return {
     visible,
     items: volumes,
+    options: [
+      { value: 'enabled', label: 'enabled' },
+      { value: 'disabled', label: 'disabled' },
+      { value: 'ignored', label: 'ignored (follow the global setting)' },
+    ],
+    fields: {
+      actionKey: 'offlineRebuilding',
+      key: 'offlineRebuild',
+      name: 'Offline Replica Rebuild',
+    },
     onOk(v, urls) {
       dispatch({
         type: 'volume/updateOfflineRebuild',

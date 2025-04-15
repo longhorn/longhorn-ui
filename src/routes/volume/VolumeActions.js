@@ -171,7 +171,7 @@ function actions({
           },
         })
         break
-      case 'offlineRebuild':
+      case 'offlineRebuilding':
         toggleOfflineRebuildModal(record)
         break
       default:
@@ -240,6 +240,7 @@ function actions({
     { key: 'updateSnapshotMaxSize', name: 'Update Snapshot Max Size', disabled: false },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled: false },
+    { key: 'offlineRebuilding', name: 'Update Offline Replica Rebuild', disabled: false },
   ]
   const availableActions = [
     { key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) },
@@ -264,9 +265,7 @@ function actions({
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
   availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' })
-  if (selected?.actions?.offlineRebuilding) {
-    availableActions.push({ key: 'offlineRebuild', name: 'Offline Replica Rebuild' })
-  }
+
   toggleRollbackAndUpgradeAction(availableActions)
   return (
     <DropOption menuOptions={availableActions}
