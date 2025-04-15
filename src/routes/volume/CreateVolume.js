@@ -551,6 +551,15 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>
+            <FormItem label="Offline Replica Rebuild" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('offlineRebuild', {
+                initialValue: 'ignored',
+              })(<Select>
+                <Option key={'enabled'} value={'enabled'}>enabled</Option>
+                <Option key={'disabled'} value={'disabled'}>disabled</Option>
+                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+              </Select>)}
+            </FormItem>
             <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
               {getFieldDecorator('revisionCounterDisabled', {
                 valuePropName: 'checked',
