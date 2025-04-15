@@ -100,8 +100,8 @@ const modal = ({
       label: 'Data Engine',
     },
     {
-      value: 'offlineRebuild',
-      label: 'Offline Replica Rebuild',
+      value: 'offlineRebuilding',
+      label: 'Offline Replica Rebuilding',
     },
   ]
 

@@ -60,7 +60,7 @@ function list({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateFreezeFilesystemForSnapshotModal,
-  toggleOfflineRebuildModal,
+  toggleOfflineRebuildingModal,
   onRowClick = f => f,
 }) {
   const volumeActionsProps = {
@@ -101,7 +101,7 @@ function list({
     showUpdateReplicaZoneSoftAntiAffinityModal,
     showUpdateReplicaDiskSoftAntiAffinityModal,
     showUpdateFreezeFilesystemForSnapshotModal,
-    toggleOfflineRebuildModal,
+    toggleOfflineRebuildingModal,
     onRowClick,
   }
   /**
@@ -485,15 +485,15 @@ function list({
       },
     },
     {
-      title: 'Offline Replica Rebuild',
-      dataIndex: 'offlineRebuild',
-      key: 'offlineRebuild',
+      title: 'Offline Replica Rebuilding',
+      dataIndex: 'offlineRebuilding',
+      key: 'offlineRebuilding',
       width: 240,
-      sorter: (a, b) => sortTable(a, b, 'offlineRebuild'),
+      sorter: (a, b) => sortTable(a, b, 'offlineRebuilding'),
       render: (text, record) => {
         return (
           <div>
-            {record.offlineRebuild}
+            {record.offlineRebuilding}
           </div>
         )
       },
@@ -610,7 +610,7 @@ list.propTypes = {
   replicaSoftAntiAffinitySettingValue: PropTypes.bool,
   engineUpgradePerNodeLimit: PropTypes.object,
   showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
-  toggleOfflineRebuildModal: PropTypes.func,
+  toggleOfflineRebuildingModal: PropTypes.func,
 }
 
 export default list

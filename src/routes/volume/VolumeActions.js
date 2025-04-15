@@ -35,7 +35,7 @@ function actions({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateFreezeFilesystemForSnapshotModal,
-  toggleOfflineRebuildModal,
+  toggleOfflineRebuildingModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -171,8 +171,8 @@ function actions({
           },
         })
         break
-      case 'offlineRebuilding':
-        toggleOfflineRebuildModal(record)
+      case 'offlineReplicaRebuilding':
+        toggleOfflineRebuildingModal(record)
         break
       default:
     }
@@ -240,7 +240,7 @@ function actions({
     { key: 'updateSnapshotMaxSize', name: 'Update Snapshot Max Size', disabled: false },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled: false },
-    { key: 'offlineRebuilding', name: 'Update Offline Replica Rebuild', disabled: false },
+    { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false },
   ]
   const availableActions = [
     { key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) },
