@@ -155,7 +155,7 @@ function bulkActions({
       default:
     }
   }
-  const hasNonAttachedVolume = () => selectedRows.some(item => item.state === 'detached')
+  const hasNonAttachedVolume = () => selectedRows.some(item => item.state !== 'attached')
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.image)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
