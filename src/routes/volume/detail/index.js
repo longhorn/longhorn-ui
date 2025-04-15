@@ -47,7 +47,7 @@ import {
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
-  getOfflineRebuildModalProps
+  getOfflineRebuildingModalProps
 } from '../helper'
 import { getBackupTargets } from '../../../utils/backupTarget'
 
@@ -158,7 +158,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateSnapshotMaxSizeModalVisible,
     updateFreezeFilesystemForSnapshotModalKey,
     updateFreezeFilesystemForSnapshotModalVisible,
-    isOfflineRebuildModalVisible
+    isOfflineRebuildingModalVisible
   } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -513,12 +513,12 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
-    toggleOfflineRebuildModal(record) {
+    toggleOfflineRebuildingModal(record) {
       dispatch({
-        type: 'volume/toggleOfflineRebuildModal',
+        type: 'volume/toggleOfflineRebuildingModal',
         payload: {
           selected: record,
-          isOfflineRebuildModalVisible: true,
+          isOfflineRebuildingModalVisible: true,
         },
       })
     },
@@ -598,7 +598,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateSnapshotMaxCountModalVisible, dispatch)
   const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selectedVolume, updateSnapshotMaxSizeModalVisible, dispatch)
   const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selectedVolume, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
-  const offlineRebuildModalProps = getOfflineRebuildModalProps([selectedVolume], isOfflineRebuildModalVisible, dispatch)
+  const offlineRebuildingModalProps = getOfflineRebuildingModalProps([selectedVolume], isOfflineRebuildingModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
@@ -781,7 +781,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {updateReplicaAutoBalanceModalVisible ? <UpdateReplicaAutoBalanceModal key={updateReplicaAutoBalanceModalKey} {...updateReplicaAutoBalanceModalProps} /> : ''}
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
-        {isOfflineRebuildModalVisible ? <CommonModal key={isOfflineRebuildModalVisible} {...offlineRebuildModalProps} /> : null}
+        {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
       </div>
     </div>
   )

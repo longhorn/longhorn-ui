@@ -117,7 +117,7 @@ export default {
     socketStatus: 'closed',
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
-    isOfflineRebuildModalVisible: false,
+    isOfflineRebuildingModalVisible: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -453,12 +453,12 @@ export default {
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
     },
-    *updateOfflineRebuild({
+    *updateOfflineRebuilding({
       payload,
     }, { call, put }) {
       yield put({
-        type: 'volume/toggleOfflineRebuildModal',
-        payload: { isOfflineRebuildModalVisible: false }
+        type: 'volume/toggleOfflineRebuildingModal',
+        payload: { isOfflineRebuildingModalVisible: false }
       })
       yield payload.urls.map(url => call(execAction, url, payload.params))
       yield put({ type: 'query' })
@@ -1049,12 +1049,12 @@ export default {
         updateReplicaSoftAntiAffinityVisible: false,
       }
     },
-    toggleOfflineRebuildModal(state, action = {}) {
-      const { selected, isOfflineRebuildModalVisible } = action.payload || {}
+    toggleOfflineRebuildingModal(state, action = {}) {
+      const { selected, isOfflineRebuildingModalVisible } = action.payload || {}
       return {
         ...state,
         selected: selected ?? state.selected,
-        isOfflineRebuildModalVisible: isOfflineRebuildModalVisible ?? state.isOfflineRebuildModalVisible,
+        isOfflineRebuildingModalVisible: isOfflineRebuildingModalVisible ?? state.isOfflineRebuildingModalVisible,
       }
     },
     updateWs(state, action) {

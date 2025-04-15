@@ -673,7 +673,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
   }
 }
 
-export function getOfflineRebuildModalProps(volumes, visible, dispatch) {
+export function getOfflineRebuildingModalProps(volumes, visible, dispatch) {
   return {
     visible,
     items: volumes,
@@ -683,20 +683,20 @@ export function getOfflineRebuildModalProps(volumes, visible, dispatch) {
       { value: 'ignored', label: 'ignored (follow the global setting)' },
     ],
     fields: {
-      actionKey: 'offlineRebuilding',
-      key: 'offlineRebuild',
-      name: 'Offline Replica Rebuild',
+      actionKey: 'offlineReplicaRebuilding',
+      key: 'offlineRebuilding',
+      name: 'Offline Replica Rebuilding',
     },
     onOk(v, urls) {
       dispatch({
-        type: 'volume/updateOfflineRebuild',
+        type: 'volume/updateOfflineRebuilding',
         payload: { params: v, urls },
       })
     },
     onCancel() {
       dispatch({
-        type: 'volume/toggleOfflineRebuildModal',
-        payload: { isOfflineRebuildModalVisible: false }
+        type: 'volume/toggleOfflineRebuildingModal',
+        payload: { isOfflineRebuildingModalVisible: false }
       })
     },
   }
