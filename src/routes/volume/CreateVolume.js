@@ -130,7 +130,6 @@ const modal = ({
     const dataEngine = getFieldValue('dataEngine')
     setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === dataEngine))
   }, [])
-
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -197,10 +196,11 @@ const modal = ({
     }
   }
 
-  // filter backing image options based on selected data engine version
+  // filter options based on selected data engine version
   const handleDataEngineChange = (value) => {
     setFieldsValue({ ...getFieldsValue(), backingImage: '' }) // reset selected backing image
     setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === value))
+    setFieldsValue({ ...getFieldsValue(), frontend: frontends[0].value }) // reset selected frontend
   }
 
   const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
@@ -291,34 +291,6 @@ const modal = ({
             ],
           })(<InputNumber />)}
         </FormItem>
-        <FormItem label="Frontend" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('frontend', {
-            initialValue: frontends[0].value,
-            rules: [
-              {
-                required: true,
-                message: 'Please select a frontend',
-              },
-            ],
-          })(<Select>
-          { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
-          </Select>)}
-        </FormItem>
-        <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('dataLocality', {
-            initialValue: defaultDataLocalityValue,
-          })(<Select>
-          { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
-          </Select>)}
-        </FormItem>
-        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('accessMode', {
-            initialValue: 'rwo',
-          })(<Select>
-            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
-            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
-          </Select>)}
-        </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
@@ -339,11 +311,44 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
+        <FormItem label="Frontend" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('frontend', {
+            initialValue: frontends[0].value,
+            rules: [
+              {
+                required: true,
+                message: 'Please select a frontend',
+              },
+            ],
+          })(<Select>
+          {frontends.map(({ value, label, dataEngine }) => {
+            const selectedDataEngine = getFieldValue('dataEngine')
+            return dataEngine.includes(selectedDataEngine)
+              ? <Option key={value} value={value}>{label}</Option>
+              : null
+          })}
+          </Select>)}
+        </FormItem>
+        <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataLocality', {
+            initialValue: defaultDataLocalityValue,
+          })(<Select>
+          { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
+          </Select>)}
+        </FormItem>
+        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('accessMode', {
+            initialValue: 'rwo',
+          })(<Select>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: '',
           })(<Select allowClear>
-            { filteredBackingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
+              { filteredBackingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
