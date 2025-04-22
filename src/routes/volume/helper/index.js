@@ -713,7 +713,7 @@ export function needToWaitDone(state, replicas) {
 export const frontends = [
   { label: 'Block Device', value: 'blockdev', dataEngine: ['v1', 'v2'] },
   { label: 'iSCSI', value: 'iscsi', dataEngine: ['v1'] },
-  { label: 'NVMF', value: 'nvmf', dataEngine: ['v2'] },
+  { label: 'NVMf', value: 'nvmf', dataEngine: ['v2'] },
   { label: 'UBLK', value: 'ublk', dataEngine: ['v2'] },
 ]
 
