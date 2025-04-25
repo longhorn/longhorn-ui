@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { Table } from 'antd'
 import { pagination } from '../../utils/page'
 import { sortTable } from '../../utils/sort'
-import OrphanedDataActions from './orphanedDataActions'
+import OrphanedDataActions from './OrphanedDataActions'
 
-function list({ loading, dataSource, height, rowSelection, deleteOrphanedData }) {
+function ReplicaOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData }) {
   const orphanedDataActionsProps = {
     deleteOrphanedData,
   }
@@ -135,16 +135,14 @@ function list({ loading, dataSource, height, rowSelection, deleteOrphanedData })
   })
 
   return (
-    <div id="orphanedDataTable" style={{ flex: 1, height: '1px', overflow: 'hidden' }}>
+    <div id="replicaOrphansTable">
       <Table
-        className="common-table-class"
         bordered={false}
         columns={columns}
         dataSource={dataSource}
         rowSelection={rowSelection}
         rowKey={record => record.name}
         loading={loading}
-        height={`${dataSource.length > 0 ? height : 1}px`}
         scroll={{ x: columnWidth, y: dataSource.length > 0 ? height : 1 }}
         pagination={pagination('orphanedDataSize')}
         simple
@@ -153,7 +151,7 @@ function list({ loading, dataSource, height, rowSelection, deleteOrphanedData })
   )
 }
 
-list.propTypes = {
+ReplicaOrphansList.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   rowSelection: PropTypes.object,
@@ -162,4 +160,4 @@ list.propTypes = {
   deleteOrphanedData: PropTypes.func,
 }
 
-export default list
+export default ReplicaOrphansList
