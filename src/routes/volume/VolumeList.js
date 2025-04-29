@@ -468,6 +468,19 @@ function list({
       },
     },
     {
+      title: 'Running Replicas',
+      dataIndex: 'runningreplicas',
+      key: 'runningreplicas',
+      width: 100,
+      render: (text, record) => {
+        return (
+          <div>
+            {record.numberOfRunningReplicas}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Access Mode',
       dataIndex: 'accessMode',
       key: 'accessMode',
