@@ -88,10 +88,6 @@ const modal = ({
       label: 'Replicas',
     },
     {
-      value: 'runningreplicas',
-      label: 'Running Replicas',
-    },
-    {
       value: 'dataLocality',
       label: 'Data Locality',
     },
