@@ -1,6 +1,7 @@
 import { query, deleteOrphaned } from '../services/orphanedData'
 import { enableQueryData } from '../utils/dataDependency'
 import queryString from 'query-string'
+import { ORPHAN_TYPES } from '../utils/orphanedData'
 
 export default {
   ws: null,
@@ -10,39 +11,52 @@ export default {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(location => {
-        if (enableQueryData(location.pathname, 'orphanedData')) {
-          dispatch({
-            type: 'query',
-            payload: location.pathname.startsWith('/orphanedData') ? queryString.parse(location.search) : {},
-          })
-        }
+      history.listen(({ pathname = '', search = '', hash = '' }) => {
+        if (!enableQueryData(pathname, 'orphanedData') || !hash) return
+
+        const payload = pathname.startsWith('/orphanedData')
+          ? { ...queryString.parse(search), hash }
+          : {}
+
+        dispatch({ type: 'query', payload })
       })
     },
   },
   effects: {
     *query({
-      payload,
+      payload = {},
     }, { call, put }) {
       let { data } = yield call(query)
-      // Front-end filtering
+      const currentOrphanType = payload.hash?.substring(1)
+
+      // filter by orphan type
+      data = data.filter(orphan => {
+        if (currentOrphanType === ORPHAN_TYPES.REPLICA_DATA) return orphan.orphanType === ORPHAN_TYPES.REPLICA_DATA
+
+        return (
+          orphan.orphanType === ORPHAN_TYPES.ENGINE_INSTANCE || orphan.orphanType === ORPHAN_TYPES.REPLICA_INSTANCE
+        )
+      })
+
+      // front-end filtering
       if (payload?.field && payload?.value) {
-        switch (payload.field) {
-          case 'node':
-            data = data.filter(item => item.nodeID.indexOf(payload.value) > -1)
-            break
-          case 'diskPath':
-            data = data.filter(item => item.parameters?.DiskPath.indexOf(payload.value) > -1)
-            break
-          case 'diskName':
-            data = data.filter(item => item.parameters?.DiskName.indexOf(payload.value) > -1)
-            break
-          case 'directoryName':
-            data = data.filter(item => item.parameters?.DataName.indexOf(payload.value) > -1)
-            break
-          default:
+        const fieldMap = {
+          node: item => item.nodeID?.includes(payload.value),
+          diskPath: item => item.parameters?.DiskPath?.includes(payload.value),
+          diskName: item => item.parameters?.DiskName?.includes(payload.value),
+          directoryName: item => item.parameters?.DataName?.includes(payload.value),
+          instanceName: item => item.parameters?.InstanceName?.includes(payload.value),
+          instanceManager: item => item.parameters?.instanceManager?.includes(payload.value),
+          orphanType: item => item.orphanType?.includes(payload.value),
+          dataEngine: item => item.dataEngine?.includes(payload.value),
+        }
+
+        const filterFn = fieldMap[payload.field]
+        if (filterFn) {
+          data = data.filter(filterFn)
         }
       }
+
       yield put({ type: 'setState', payload: { data } })
     },
     *delete({
