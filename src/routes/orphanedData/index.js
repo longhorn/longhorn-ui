@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import ReplicaOrphans from './ReplicaOrphans'
+import ReplicaDataOrphans from './ReplicaDataOrphans'
 import InstanceOrphans from './InstanceOrphans'
 import styles from './index.less'
 import { ORPHAN_TYPES } from '../../utils/orphanedData'
@@ -13,9 +13,9 @@ function OrphanedData({ dispatch, location }) {
 
   const tabs = [
     {
-      key: ORPHAN_TYPES.REPLICA,
-      label: 'Replica Orphans',
-      content: <ReplicaOrphans location={location} />,
+      key: ORPHAN_TYPES.REPLICA_DATA,
+      label: 'Replica Data Orphans',
+      content: <ReplicaDataOrphans location={location} />,
     },
     {
       key: 'instance',

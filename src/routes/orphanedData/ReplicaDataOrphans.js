@@ -4,12 +4,12 @@ import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import { Row, Col } from 'antd'
 import { Filter } from '../../components/index'
-import ReplicaOrphanList from './ReplicaOrphansList'
+import ReplicaDataOrphansList from './ReplicaDataOrphansList'
 import OrphanedDataBulkActions from './OrphanedDataBulkActions'
 import queryString from 'query-string'
 import C from '../../utils/constants'
 
-class ReplicaOrphans extends React.Component {
+class ReplicaDataOrphans extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +28,7 @@ class ReplicaOrphans extends React.Component {
   }
 
   onResize = () => {
-    const height = document.getElementById('replicaOrphansTable').offsetHeight - C.ContainerMarginHeight
+    const height = document.getElementById('replicaDataOrphansTable').offsetHeight - C.ContainerMarginHeight
     this.setState({
       height,
     })
@@ -109,17 +109,17 @@ class ReplicaOrphans extends React.Component {
             <Filter {...orphanedDataFilterProps} />
           </Col>
         </Row>
-        <ReplicaOrphanList {...orphanedDataListProps} />
+        <ReplicaDataOrphansList {...orphanedDataListProps} />
       </div>
     )
   }
 }
 
-ReplicaOrphans.propTypes = {
+ReplicaDataOrphans.propTypes = {
   orphanedData: PropTypes.object,
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ orphanedData, loading }) => ({ orphanedData, loading: loading.models.orphanedData }))(ReplicaOrphans)
+export default connect(({ orphanedData, loading }) => ({ orphanedData, loading: loading.models.orphanedData }))(ReplicaDataOrphans)

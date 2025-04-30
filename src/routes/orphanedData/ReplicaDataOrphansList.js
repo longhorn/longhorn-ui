@@ -5,7 +5,7 @@ import { pagination } from '../../utils/page'
 import { sortTable } from '../../utils/sort'
 import OrphanedDataActions from './OrphanedDataActions'
 
-function ReplicaOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData }) {
+function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData }) {
   const orphanedDataActionsProps = {
     deleteOrphanedData,
   }
@@ -135,7 +135,7 @@ function ReplicaOrphansList({ loading, dataSource, height, rowSelection, deleteO
   })
 
   return (
-    <div id="replicaOrphansTable">
+    <div id="replicaDataOrphansTable">
       <Table
         bordered={false}
         columns={columns}
@@ -151,7 +151,7 @@ function ReplicaOrphansList({ loading, dataSource, height, rowSelection, deleteO
   )
 }
 
-ReplicaOrphansList.propTypes = {
+ReplicaDataOrphansList.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   rowSelection: PropTypes.object,
@@ -160,4 +160,4 @@ ReplicaOrphansList.propTypes = {
   deleteOrphanedData: PropTypes.func,
 }
 
-export default ReplicaOrphansList
+export default ReplicaDataOrphansList
