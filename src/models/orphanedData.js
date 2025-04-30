@@ -31,8 +31,11 @@ export default {
 
       // filter by orphan type
       data = data.filter(orphan => {
-        if (currentOrphanType === ORPHAN_TYPES.REPLICA) return orphan.orphanType === ORPHAN_TYPES.REPLICA
-        return orphan.orphanType !== ORPHAN_TYPES.REPLICA
+        if (currentOrphanType === ORPHAN_TYPES.REPLICA_DATA) return orphan.orphanType === ORPHAN_TYPES.REPLICA_DATA
+
+        return (
+          orphan.orphanType === ORPHAN_TYPES.ENGINE_INSTANCE || orphan.orphanType === ORPHAN_TYPES.REPLICA_INSTANCE
+        )
       })
 
       // front-end filtering
