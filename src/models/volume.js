@@ -150,7 +150,9 @@ export default {
       }
       // Add runningreplicas field to each volume
       data.data.forEach(volume => {
-        volume.numberOfRunningReplicas = volume.replicas ? volume.replicas.length : 0
+        volume.numberOfRunningReplicas = Array.isArray(volume.replicas)
+          ? volume.replicas.filter(replica => replica.running === true).length
+          : 0
       })
       sortVolume(data.data)
       yield put({ type: 'queryVolume', payload: { ...data } })
