@@ -462,7 +462,7 @@ function list({
       render: (text, record) => {
         return (
           <div>
-            {record.numberOfReplicas}
+            {record.numberOfRunningReplicas} / {record.numberOfReplicas}
           </div>
         )
       },
