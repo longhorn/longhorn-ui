@@ -218,8 +218,10 @@ export function updateState(state, action) {
   // When resourceType is undefined, it means that the data is not updated.
   if (action.payload && action.payload.resourceType) {
     // Calculate numberOfRunningReplicas for each volume
-    data.forEach(volume => {
-      volume.numberOfRunningReplicas = volume.replicas ? volume.replicas.length : 0
+    data.data.forEach(volume => {
+      volume.numberOfRunningReplicas = Array.isArray(volume.replicas)
+        ? volume.replicas.filter(replica => replica.running === true).length
+        : 0
     })
     return {
       ...state,
