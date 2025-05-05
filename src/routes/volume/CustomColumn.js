@@ -85,7 +85,7 @@ const modal = ({
     },
     {
       value: 'replicas',
-      label: 'Replicas (Running / Desired)',
+      label: 'Replicas',
     },
     {
       value: 'dataLocality',
