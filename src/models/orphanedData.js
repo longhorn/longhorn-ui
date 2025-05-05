@@ -27,31 +27,35 @@ export default {
       payload = {},
     }, { call, put }) {
       let { data } = yield call(query)
-      const currentOrphanType = payload.hash?.substring(1)
+      const { records = [], hash, field, value } = payload
 
-      // filter by orphan type
+      const deletedOrphanNames = records.map(item => item.name)
+      const orphanTypeFilter = hash?.substring(1)
+
+      // filter by orphan type and deleted orphans
       data = data.filter(orphan => {
-        if (currentOrphanType === ORPHAN_TYPES.REPLICA_DATA) return orphan.orphanType === ORPHAN_TYPES.REPLICA_DATA
+        const isMatchingType = orphanTypeFilter === ORPHAN_TYPES.REPLICA_DATA
+          ? orphan.orphanType === ORPHAN_TYPES.REPLICA_DATA
+          : (orphan.orphanType === ORPHAN_TYPES.ENGINE_INSTANCE || orphan.orphanType === ORPHAN_TYPES.REPLICA_INSTANCE)
 
-        return (
-          orphan.orphanType === ORPHAN_TYPES.ENGINE_INSTANCE || orphan.orphanType === ORPHAN_TYPES.REPLICA_INSTANCE
-        )
+        const isDeleted = deletedOrphanNames.includes(orphan.name)
+        return isMatchingType && !isDeleted
       })
 
       // front-end filtering
-      if (payload?.field && payload?.value) {
+      if (field && value) {
         const fieldMap = {
-          node: item => item.nodeID?.includes(payload.value),
-          diskPath: item => item.parameters?.DiskPath?.includes(payload.value),
-          diskName: item => item.parameters?.DiskName?.includes(payload.value),
-          directoryName: item => item.parameters?.DataName?.includes(payload.value),
-          instanceName: item => item.parameters?.InstanceName?.includes(payload.value),
-          instanceManager: item => item.parameters?.instanceManager?.includes(payload.value),
-          orphanType: item => item.orphanType?.includes(payload.value),
-          dataEngine: item => item.dataEngine?.includes(payload.value),
+          node: item => item.nodeID?.includes(value),
+          diskPath: item => item.parameters?.DiskPath?.includes(value),
+          diskName: item => item.parameters?.DiskName?.includes(value),
+          directoryName: item => item.parameters?.DataName?.includes(value),
+          instanceName: item => item.parameters?.InstanceName?.includes(value),
+          instanceManager: item => item.parameters?.instanceManager?.includes(value),
+          orphanType: item => item.orphanType?.includes(value),
+          dataEngine: item => item.dataEngine?.includes(value),
         }
 
-        const filterFn = fieldMap[payload.field]
+        const filterFn = fieldMap[field]
         if (filterFn) {
           data = data.filter(filterFn)
         }
@@ -60,20 +64,20 @@ export default {
       yield put({ type: 'setState', payload: { data } })
     },
     *delete({
-      payload,
+      payload = {},
     }, { call, put }) {
-      yield call(deleteOrphaned, payload)
-      yield put({ type: 'query' })
+      yield call(deleteOrphaned, payload.records[0])
+      yield put({ type: 'query', payload })
     },
     *bulkDelete({
-      payload,
+      payload = {},
       callback,
     }, { call, put }) {
-      if (payload && payload.length > 0) {
-        yield payload.map(item => call(deleteOrphaned, item))
+      if (payload && payload.records.length > 0) {
+        yield payload.records.map(item => call(deleteOrphaned, item))
       }
       if (callback) callback()
-      yield put({ type: 'query' })
+      yield put({ type: 'query', payload })
     },
   },
   reducers: {

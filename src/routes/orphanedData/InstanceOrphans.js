@@ -45,7 +45,7 @@ class InstanceOrphans extends React.Component {
         if (record?.length > 0) {
           dispatch({
             type: 'orphanedData/bulkDelete',
-            payload: record.map(item => { return { name: item.name } }),
+            payload: { records: record.map(item => { return { name: item.name } }), hash: location?.hash },
             callback: () => {
               me.setState({
                 ...me.state,
@@ -72,7 +72,7 @@ class InstanceOrphans extends React.Component {
         if (record?.name) {
           dispatch({
             type: 'orphanedData/delete',
-            payload: { name: record.name },
+            payload: { records: [{ name: record.name }], hash: location?.hash },
           })
         }
       },
