@@ -455,27 +455,19 @@ function list({
       },
     },
     {
-      title: 'Replicas',
+      title: 'Replicas (Running/Desired)',
       dataIndex: 'replicas',
       key: 'replicas',
-      width: 100,
+      width: 200,
       render: (text, record) => {
+        // Calculate numberOfRunningReplicas for each volume
+        let numberOfRunningReplicas = Array.isArray(record.replicas)
+          ? record.replicas.filter(volume => volume.running === true).length
+          : 0
+
         return (
           <div>
-            {record.numberOfRunningReplicas} / {record.numberOfReplicas}
-          </div>
-        )
-      },
-    },
-    {
-      title: 'Running Replicas',
-      dataIndex: 'runningreplicas',
-      key: 'runningreplicas',
-      width: 100,
-      render: (text, record) => {
-        return (
-          <div>
-            {record.numberOfRunningReplicas}
+            {numberOfRunningReplicas} / {record.numberOfReplicas}
           </div>
         )
       },
