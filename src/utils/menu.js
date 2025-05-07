@@ -56,7 +56,7 @@ module.exports = [
       {
         show: true,
         key: 'orphanedData',
-        name: 'Orphans',
+        name: 'Orphan Resources',
         icon: 'profile',
       },
       {
