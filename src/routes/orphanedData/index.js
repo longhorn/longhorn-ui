@@ -14,12 +14,12 @@ function OrphanedData({ dispatch, location }) {
   const tabs = [
     {
       key: ORPHAN_TYPES.REPLICA_DATA,
-      label: 'Replica Data Orphans',
+      label: 'Replica Data',
       content: <ReplicaDataOrphans location={location} />,
     },
     {
       key: 'instance',
-      label: 'Instance Orphans',
+      label: 'Instances',
       content: <InstanceOrphans location={location} />,
     },
   ]
