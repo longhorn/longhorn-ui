@@ -49,7 +49,7 @@ const modal = ({
   defaultDataLocalityOption,
   defaultDataLocalityValue,
   backingImageOptions,
-  backupTargets,
+  backupTargets = [],
   tagsLoading,
   v1DataEngineEnabled,
   v2DataEngineEnabled,
