@@ -88,6 +88,7 @@ const modal = ({
             initialValue,
           })(<Select>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>) : getFieldDecorator('accessMode', {
             rules: [
@@ -98,6 +99,7 @@ const modal = ({
             ],
           })(<Select placeholder="various">
               <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+              <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
               <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
