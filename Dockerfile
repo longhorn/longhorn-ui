@@ -1,6 +1,5 @@
-FROM node:16.20 as builder
-RUN apt-get update -y && \
-    apt-get install -y gettext-base
+FROM node:16.20-alpine as builder
+RUN apk add --no-cache gettext
 RUN mkdir /web
 WORKDIR /web
 COPY . /web
