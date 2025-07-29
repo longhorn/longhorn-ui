@@ -16,7 +16,6 @@ const getMenus = function (menuArray, siderFold) {
         <SubMenu key={linkTo.pathname}
           title={
             <span>
-              {item.icon ? <Icon type={item.icon} /> : ''}
               {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
               <Icon type="down" style={{ marginLeft: 5 }} />
             </span>
@@ -28,7 +27,6 @@ const getMenus = function (menuArray, siderFold) {
       menus = (
         <Menu.Item key={linkTo.pathname}>
           <LinkTo to={linkTo}>
-            {item.icon ? <Icon type={item.icon} /> : ''}
             {siderFold && topMenus.indexOf(item.key) >= 0 ? '' : item.name}
           </LinkTo>
         </Menu.Item>
