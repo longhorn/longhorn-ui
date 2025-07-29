@@ -76,6 +76,6 @@ module.exports = [
   },
   {
     key: 'setting',
-    name: 'Setting',
+    name: 'Settings',
   },
 ]
