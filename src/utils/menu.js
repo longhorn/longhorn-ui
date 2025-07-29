@@ -5,11 +5,11 @@ module.exports = [
   },
   {
     key: 'node',
-    name: 'Node',
+    name: 'Nodes',
   },
   {
     key: 'volume',
-    name: 'Volume',
+    name: 'Volumes',
     child: [
       {
         key: 'detail',
@@ -19,7 +19,7 @@ module.exports = [
   },
   {
     key: 'recurringJob',
-    name: 'Recurring Job',
+    name: 'Recurring Jobs',
   },
   {
     key: 'backupAndRestore',
@@ -28,17 +28,17 @@ module.exports = [
       {
         show: true,
         key: 'backup',
-        name: 'Backup',
+        name: 'Backups',
       },
       {
         show: true,
         key: 'backupTarget',
-        name: 'Backup Target',
+        name: 'Backup Targets',
       },
       {
         show: true,
         key: 'systemBackups',
-        name: 'System Backup',
+        name: 'System Backups',
       },
     ],
   },
@@ -49,7 +49,7 @@ module.exports = [
       {
         show: true,
         key: 'backingImage',
-        name: 'Backing Image',
+        name: 'Backing Images',
       },
       {
         show: true,
@@ -59,7 +59,7 @@ module.exports = [
       {
         show: true,
         key: 'engineimage',
-        name: 'Engine Image',
+        name: 'Engine Images',
         child: [
           {
             key: 'detail',
@@ -70,7 +70,7 @@ module.exports = [
       {
         show: true,
         key: 'instanceManager',
-        name: 'Instance Manager Image',
+        name: 'Instance Manager Images',
       },
     ],
   },
