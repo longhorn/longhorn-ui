@@ -26,20 +26,46 @@ module.exports = [
     icon: 'history',
   },
   {
-    key: 'backup',
-    name: 'Backup',
-    icon: 'copy',
-  },
-  {
-    key: 'setting',
-    name: 'Setting',
-    icon: 'setting',
+    key: 'backupAndRestore',
+    name: 'Backup and Restore',
+    icon: 'cloud-sync',
     child: [
       {
         show: true,
-        key: 'setting',
-        name: 'General',
-        icon: 'setting',
+        key: 'backup',
+        name: 'Backup',
+        icon: 'copy',
+      },
+      {
+        show: true,
+        key: 'backupTarget',
+        name: 'Backup Target',
+        icon: 'cloud-server',
+      },
+      {
+        show: true,
+        key: 'systemBackups',
+        name: 'System Backup',
+        icon: 'file-sync',
+      },
+    ],
+  },
+  {
+    key: 'advanced',
+    name: 'Advanced',
+    icon: 'bars',
+    child: [
+      {
+        show: true,
+        key: 'backingImage',
+        name: 'Backing Image',
+        icon: 'file-image',
+      },
+      {
+        show: true,
+        key: 'orphanedData',
+        name: 'Orphan Resources',
+        icon: 'profile',
       },
       {
         show: true,
@@ -55,34 +81,15 @@ module.exports = [
       },
       {
         show: true,
-        key: 'orphanedData',
-        name: 'Orphan Resources',
-        icon: 'profile',
-      },
-      {
-        show: true,
-        key: 'backingImage',
-        name: 'Backing Image',
-        icon: 'file-image',
-      },
-      {
-        show: true,
-        key: 'backupTarget',
-        name: 'Backup Target',
-        icon: 'cloud-server',
-      },
-      {
-        show: true,
         key: 'instanceManager',
         name: 'Instance Manager Image',
         icon: 'apartment',
       },
-      {
-        show: true,
-        key: 'systemBackups',
-        name: 'System Backup',
-        icon: 'file-sync',
-      },
     ],
+  },
+  {
+    key: 'setting',
+    name: 'Setting',
+    icon: 'setting',
   },
 ]
