@@ -103,7 +103,7 @@ export default {
       const resp = yield call(queryBackupTarget)
       if (resp && resp.status === 200) {
         const backupTargetAvailable = resp?.data?.some(d => d.available === true) || false
-        const backupTargetMessage = backupTargetAvailable ? '' : 'No backup target is available, please go to Setting -> Backup Target page to create one'
+        const backupTargetMessage = backupTargetAvailable ? '' : 'No backup target is available, please go to Backup Target page to create one'
         if (payload.history.location.pathname === '/backup' && !backupTargetAvailable) {
           message.error(backupTargetMessage, 3)
         } else {
