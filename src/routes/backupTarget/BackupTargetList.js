@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table } from 'antd'
+import { Table, Tooltip, Icon } from 'antd'
 import BackupTargetActions from './BackupTargetActions'
 import { pagination } from '../../utils/page'
+import style from './BackupTargetList.less'
 
 function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSelection, height }) {
   const columns = [
@@ -56,10 +57,17 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
       key: 'available',
       width: 90,
       sorter: (a, b) => a.available - b.available,
-      render: (text) => {
+      render: (text, record = {}) => {
         return (
-          <div className={text === true ? 'healthy' : 'error'}>
-            {text === true ? 'Available' : 'Error'}
+          <div className={style.statusWrapper}>
+            <div className={`${style.status} ${text === true ? 'healthy' : 'error'}`}>
+              {text === true ? 'Available' : 'Error'}
+            </div>
+            {record.message && (
+              <Tooltip title={record.message}>
+                <Icon type="info-circle" />
+              </Tooltip>
+            )}
           </div>
         )
       },
