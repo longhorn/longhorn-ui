@@ -1,4 +1,4 @@
-FROM node:16.20-alpine as builder
+FROM node:20-alpine as builder
 RUN apk add --no-cache gettext
 RUN mkdir /web
 WORKDIR /web
