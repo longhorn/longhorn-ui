@@ -19,6 +19,7 @@ import UpdateUnmapMarkSnapChainRemovedModal from '../UpdateUnmapMarkSnapChainRem
 import UpdateSnapshotMaxCountModal from '../UpdateSnapshotMaxCountModal.js'
 import UpdateSnapshotMaxSizeModal from '../UpdateSnapshotMaxSizeModal.js'
 import UpdateFreezeFilesystemForSnapshotModal from '../UpdateFreezeFilesystemForSnapshotModal'
+import UpdateReplicaRebuildingBandwidthLimitModal from '../UpdateReplicaRebuildingBandwidthLimitModal'
 import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
 import EventList from './EventList'
@@ -47,7 +48,8 @@ import {
   getUpdateSnapshotMaxCountModalProps,
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
-  getOfflineRebuildingModalProps
+  getOfflineRebuildingModalProps,
+  getReplicaRebuildingBandwidthLimitModalProps
 } from '../helper'
 import { getBackupTargets } from '../../../utils/backupTarget'
 
@@ -158,7 +160,8 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     updateSnapshotMaxSizeModalVisible,
     updateFreezeFilesystemForSnapshotModalKey,
     updateFreezeFilesystemForSnapshotModalVisible,
-    isOfflineRebuildingModalVisible
+    isOfflineRebuildingModalVisible,
+    isReplicaRebuildingBandwidthLimitModalVisible
   } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -522,6 +525,15 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         },
       })
     },
+    toggleReplicaRebuildingBandwidthLimitModal(record) {
+      dispatch({
+        type: 'volume/toggleReplicaRebuildingBandwidthLimitModal',
+        payload: {
+          selectedRows: [record],
+          isReplicaRebuildingBandwidthLimitModalVisible: true
+        },
+      })
+    }
   }
 
   const attachHostModalProps = getAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -599,6 +611,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const updateSnapshotMaxSizeModalProps = getUpdateSnapshotMaxSizeModalProps(selectedVolume, updateSnapshotMaxSizeModalVisible, dispatch)
   const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selectedVolume, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
   const offlineRebuildingModalProps = getOfflineRebuildingModalProps([selectedVolume], isOfflineRebuildingModalVisible, dispatch)
+  const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps([selectedVolume], isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
@@ -783,6 +796,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
         {updateReplicaSoftAntiAffinityVisible ? <CommonModal key={updateReplicaSoftAntiAffinityModalKey} {...updateReplicaSoftAntiAffinityModalProps} /> : ''}
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
+        {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
       </div>
     </div>
   )

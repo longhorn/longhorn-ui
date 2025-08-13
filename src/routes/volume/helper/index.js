@@ -702,6 +702,25 @@ export function getOfflineRebuildingModalProps(volumes, visible, dispatch) {
   }
 }
 
+export function getReplicaRebuildingBandwidthLimitModalProps(volumes, visible, dispatch) {
+  return {
+    visible,
+    items: volumes,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateReplicaRebuildingBandwidthLimit',
+        payload: { params: v, urls },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/toggleReplicaRebuildingBandwidthLimitModal',
+        payload: { isReplicaRebuildingBandwidthLimitModalVisible: false }
+      })
+    },
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }

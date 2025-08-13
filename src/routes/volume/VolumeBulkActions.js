@@ -34,7 +34,8 @@ function bulkActions({
   showUpdateReplicaZoneSoftAntiAffinityModal,
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateBulkFreezeFilesystemForSnapshotModal,
-  toggleOfflineRebuildingModal
+  toggleOfflineRebuildingModal,
+  toggleReplicaRebuildingBandwidthLimitModal
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -156,6 +157,9 @@ function bulkActions({
       case 'offlineReplicaRebuilding':
         toggleOfflineRebuildingModal(selectedRows)
         break
+      case 'updateReplicaRebuildingBandwidthLimit':
+        toggleReplicaRebuildingBandwidthLimitModal(selectedRows)
+        break
       default:
     }
   }
@@ -220,6 +224,7 @@ function bulkActions({
     { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled() { return selectedRows.length === 0 } },
     { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.every((row) => !row.actions?.offlineReplicaRebuilding) } },
+    { key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v1') } },
   ]
 
   const menu = (<Menu>
