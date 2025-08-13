@@ -39,6 +39,7 @@ import UpdateBulkBackupTargetModal from './UpdateBulkBackupTargetModal'
 import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
+import UpdateReplicaRebuildingBandwidthLimitModal from './UpdateReplicaRebuildingBandwidthLimitModal'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import { isRestoring } from './helper'
@@ -66,7 +67,8 @@ import {
   getUpdateBulkFreezeFilesystemForSnapshotModalProps,
   getUpdateBackupTargetProps,
   getUpdateBulkBackupTargetProps,
-  getOfflineRebuildingModalProps
+  getOfflineRebuildingModalProps,
+  getReplicaRebuildingBandwidthLimitModalProps
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -217,7 +219,8 @@ class Volume extends React.Component {
       updateBackupTargetModalKey,
       updateBulkBackupTargetModalVisible,
       updateBulkBackupTargetModalKey,
-      isOfflineRebuildingModalVisible
+      isOfflineRebuildingModalVisible,
+      isReplicaRebuildingBandwidthLimitModalVisible
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -641,6 +644,15 @@ class Volume extends React.Component {
           payload: {
             selectedRows: [record],
             isOfflineRebuildingModalVisible: true
+          },
+        })
+      },
+      toggleReplicaRebuildingBandwidthLimitModal(record) {
+        dispatch({
+          type: 'volume/toggleReplicaRebuildingBandwidthLimitModal',
+          payload: {
+            selectedRows: [record],
+            isReplicaRebuildingBandwidthLimitModalVisible: true
           },
         })
       }
@@ -1198,6 +1210,15 @@ class Volume extends React.Component {
             isOfflineRebuildingModalVisible: true
           },
         })
+      },
+      toggleReplicaRebuildingBandwidthLimitModal(record) {
+        dispatch({
+          type: 'volume/toggleReplicaRebuildingBandwidthLimitModal',
+          payload: {
+            selectedRows: record,
+            isReplicaRebuildingBandwidthLimitModalVisible: true
+          },
+        })
       }
     }
 
@@ -1310,6 +1331,7 @@ class Volume extends React.Component {
     const updateBulkFreezeFilesystemForSnapshotModalProps = getUpdateBulkFreezeFilesystemForSnapshotModalProps(selectedRows, updateBulkFreezeFilesystemForSnapshotModalVisible, dispatch)
     const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
     const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
+    const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps(selectedRows, isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
@@ -1362,6 +1384,7 @@ class Volume extends React.Component {
         {updateBackupTargetModalVisible ? <UpdateBackupTargetModal key={updateBackupTargetModalKey} {...updateBackupTargetProps} /> : ''}
         {updateBulkBackupTargetModalVisible ? <UpdateBulkBackupTargetModal key={updateBulkBackupTargetModalKey} {...updateBulkBackupTargetModalProps} /> : ''}
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
+        {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
       </div>
     )
   }

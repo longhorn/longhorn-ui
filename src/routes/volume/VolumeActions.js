@@ -36,6 +36,7 @@ function actions({
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateFreezeFilesystemForSnapshotModal,
   toggleOfflineRebuildingModal,
+  toggleReplicaRebuildingBandwidthLimitModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -174,6 +175,9 @@ function actions({
       case 'offlineReplicaRebuilding':
         toggleOfflineRebuildingModal(record)
         break
+      case 'updateReplicaRebuildingBandwidthLimit':
+        toggleReplicaRebuildingBandwidthLimitModal(record)
+        break
       default:
     }
   }
@@ -254,6 +258,10 @@ function actions({
       }
     }
   })
+
+  if (selected.dataEngine === 'v2') {
+    availableActions.push({ key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled: false })
+  }
 
   availableActions.push({ key: 'cloneVolume', name: 'Clone Volume', disabled: selected.standby || isRestoring(selected) })
   availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() !== 'true' })

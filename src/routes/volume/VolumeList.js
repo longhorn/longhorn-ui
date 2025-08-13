@@ -61,6 +61,7 @@ function list({
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateFreezeFilesystemForSnapshotModal,
   toggleOfflineRebuildingModal,
+  toggleReplicaRebuildingBandwidthLimitModal,
   onRowClick = f => f,
 }) {
   const volumeActionsProps = {
@@ -102,6 +103,7 @@ function list({
     showUpdateReplicaDiskSoftAntiAffinityModal,
     showUpdateFreezeFilesystemForSnapshotModal,
     toggleOfflineRebuildingModal,
+    toggleReplicaRebuildingBandwidthLimitModal,
     onRowClick,
   }
   /**
@@ -616,6 +618,7 @@ list.propTypes = {
   engineUpgradePerNodeLimit: PropTypes.object,
   showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
   toggleOfflineRebuildingModal: PropTypes.func,
+  toggleReplicaRebuildingBandwidthLimitModal: PropTypes.func,
 }
 
 export default list

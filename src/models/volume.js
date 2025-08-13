@@ -118,6 +118,7 @@ export default {
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
     isOfflineRebuildingModalVisible: false,
+    isReplicaRebuildingBandwidthLimitModalVisible: false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -461,6 +462,19 @@ export default {
         payload: {
           selectedRows: [],
           isOfflineRebuildingModalVisible: false
+        }
+      })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateReplicaRebuildingBandwidthLimit({
+      payload,
+    }, { call, put }) {
+      yield put({
+        type: 'volume/toggleReplicaRebuildingBandwidthLimitModal',
+        payload: {
+          selectedRows: [],
+          isReplicaRebuildingBandwidthLimitModalVisible: false
         }
       })
       yield payload.urls.map(url => call(execAction, url, payload.params))
@@ -1058,6 +1072,15 @@ export default {
         ...state,
         selectedRows: selectedRows ?? state.selectedRows,
         isOfflineRebuildingModalVisible: isOfflineRebuildingModalVisible ?? state.isOfflineRebuildingModalVisible,
+      }
+    },
+    toggleReplicaRebuildingBandwidthLimitModal(state, action = {}) {
+      const { selectedRows, isReplicaRebuildingBandwidthLimitModalVisible } = action.payload || {}
+
+      return {
+        ...state,
+        selectedRows: selectedRows ?? state.selectedRows,
+        isReplicaRebuildingBandwidthLimitModalVisible: isReplicaRebuildingBandwidthLimitModalVisible ?? state.isReplicaRebuildingBandwidthLimitModalVisible,
       }
     },
     updateWs(state, action) {
