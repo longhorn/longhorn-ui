@@ -127,7 +127,6 @@ const form = ({
                 rules: parseSettingRules(setting),
                 initialValue: type === 'bool' ? value === 'true' || value === true : value,
                 valuePropName: type === 'bool' ? 'checked' : 'value',
-                getValueFromEvent: type === 'bool' ? e => e.target.checked : undefined,
               })(genInputItem(setting, onChangeFn))}
             </div>
           )
@@ -136,7 +135,6 @@ const form = ({
             rules: parseSettingRules(setting),
             initialValue: type === 'bool' ? setting.value === 'true' || setting.value === true : setting.value || setting.definition.default,
             valuePropName: type === 'bool' ? 'checked' : 'value',
-            getValueFromEvent: type === 'bool' ? e => e.target.checked : undefined,
           })(genInputItem(setting, val => onInputChange(fieldKey, val)))
         )}
 
