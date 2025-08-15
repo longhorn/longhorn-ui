@@ -34,7 +34,7 @@ const formItemLayout = {
 
 const formItemLayoutForAdvanced = {
   labelCol: {
-    span: 8,
+    span: 9,
   },
   wrapperCol: {
     span: 14,
@@ -230,49 +230,49 @@ const modal = ({
           })(<Input />)}
         </FormItem>
         <div style={{ display: 'flex' }}>
-        <FormItem label="Size" style={{ flex: '1 0 65%', paddingLeft: 30 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-          {getFieldDecorator('size', {
-            initialValue: item.size,
-            rules: [
-              {
-                required: true,
-                message: 'Please input volume size',
-              }, {
-                validator: (rule, value, callback) => {
-                  if (value === '' || typeof value !== 'number') {
-                    callback()
-                    return
-                  }
-                  if (value < 0 || value > 65536) {
-                    callback('The value should be between 0 and 65535')
-                  } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
-                    callback('This value should have at most two decimal places')
-                  } else if (value < 10 && getFieldsValue().unit === 'Mi') {
-                    callback('The volume size must be greater than 10 Mi')
-                  } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
-                    callback('Decimals are not allowed')
-                  } else {
-                    callback()
-                  }
+          <FormItem label="Size" style={{ flex: '1 0 65%', paddingLeft: 30 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+            {getFieldDecorator('size', {
+              initialValue: item.size,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input volume size',
+                }, {
+                  validator: (rule, value, callback) => {
+                    if (value === '' || typeof value !== 'number') {
+                      callback()
+                      return
+                    }
+                    if (value < 0 || value > 65536) {
+                      callback('The value should be between 0 and 65535')
+                    } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
+                      callback('This value should have at most two decimal places')
+                    } else if (value < 10 && getFieldsValue().unit === 'Mi') {
+                      callback('The volume size must be greater than 10 Mi')
+                    } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
+                      callback('Decimals are not allowed')
+                    } else {
+                      callback()
+                    }
+                  },
                 },
-              },
-            ],
-          })(<InputNumber min={0} max={65535} style={{ width: '330px' }} />)}
-        </FormItem>
-        <FormItem style={{ flex: '1 0 30%' }}>
-          {getFieldDecorator('unit', {
-            initialValue: item.unit || 'Gi',
-            rules: [{ required: true, message: 'Please select your unit!' }],
-          })(
-            <Select
-              style={{ width: '100px' }}
-              onChange={unitChange}
-            >
-              <Option value="Mi">Mi</Option>
-              <Option value="Gi">Gi</Option>
-            </Select>,
-          )}
-        </FormItem>
+              ],
+            })(<InputNumber min={0} max={65535} style={{ width: '330px' }} />)}
+          </FormItem>
+          <FormItem style={{ flex: '1 0 30%' }}>
+            {getFieldDecorator('unit', {
+              initialValue: item.unit || 'Gi',
+              rules: [{ required: true, message: 'Please select your unit!' }],
+            })(
+              <Select
+                style={{ width: '100px' }}
+                onChange={unitChange}
+              >
+                <Option value="Mi">Mi</Option>
+                <Option value="Gi">Gi</Option>
+              </Select>,
+            )}
+          </FormItem>
         </div>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
@@ -462,14 +462,12 @@ const modal = ({
                 </span>
               </span>
             }
-              style={{ flex: 0.6 }}
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 14 }}>
+              {...formItemLayoutForAdvanced}
+            >
               {getFieldDecorator('snapshotMaxCount', {
                 initialValue: 0,
               })(<InputNumber style={{ width: '250px' }} />) }
             </FormItem>
-            <div style={{ display: 'flex', gap: 10 }}>
               <FormItem
                 label={
                 <span>
@@ -483,30 +481,26 @@ const modal = ({
                     </Tooltip>
                   </span>
                 </span>}
-                style={{ paddingLeft: 93 }}
-                labelCol={{ span: 12 }}
-                wrapperCol={{ span: 12 }}
+                {...formItemLayoutForAdvanced}
               >
-                {getFieldDecorator('snapshotMaxSize', {
-                  initialValue: '0',
-                })(<Input style={{ maxWidth: '250px' }} />)}
+                <div style={{ display: 'flex', gap: 10 }}>
+                  {getFieldDecorator('snapshotMaxSize', {
+                    initialValue: '0',
+                  })(<Input style={{ maxWidth: '250px' }} />)}
+                  {getFieldDecorator('snapshotSizeUnit', {
+                    initialValue: item.unit || 'Gi',
+                    rules: [{ required: true, message: 'Please select your unit!' }],
+                  })(
+                    <Select
+                      style={{ width: '100px' }}
+                      onChange={unitChange}
+                    >
+                      <Option value="Mi">Mi</Option>
+                      <Option value="Gi">Gi</Option>
+                    </Select>,
+                  )}
+                </div>
               </FormItem>
-
-               <FormItem>
-                {getFieldDecorator('snapshotSizeUnit', {
-                  initialValue: item.unit || 'Gi',
-                  rules: [{ required: true, message: 'Please select your unit!' }],
-                })(
-                  <Select
-                    style={{ width: '100px' }}
-                    onChange={unitChange}
-                  >
-                    <Option value="Mi">Mi</Option>
-                    <Option value="Gi">Gi</Option>
-                  </Select>,
-                )}
-              </FormItem>
-            </div>
             <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaAutoBalance', {
                 initialValue: 'ignored',
@@ -571,6 +565,24 @@ const modal = ({
                 <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
               </Select>)}
             </FormItem>
+            {getFieldValue('dataEngine') === 'v2' && (
+              <FormItem
+                label={
+                  <span>Replica Rebuilding Bandwidth Limit
+                    <span style={{ marginLeft: 4, marginRight: 4 }}>
+                      <Tooltip title="Set '0' to inherit global settings">
+                        <Icon type="question-circle-o" />
+                      </Tooltip>
+                    </span>
+                  </span>
+                }
+                {...formItemLayoutForAdvanced}
+              >
+                {getFieldDecorator('replicaRebuildingBandwidthLimit', {
+                  initialValue: 0,
+                })(<InputNumber style={{ width: '250px' }} />) }
+              </FormItem>
+            )}
             <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
               {getFieldDecorator('revisionCounterDisabled', {
                 valuePropName: 'checked',
