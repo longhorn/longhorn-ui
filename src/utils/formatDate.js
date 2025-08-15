@@ -26,3 +26,12 @@ export function formatDate(date, hasTooltip = true) {
   }
   return moment(gmt).fromNow()
 }
+
+
+export const safeParseJSON = str => {
+  try {
+    return str ? JSON.parse(str) : {}
+  } catch {
+    return {}
+  }
+}
