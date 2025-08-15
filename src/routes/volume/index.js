@@ -231,7 +231,7 @@ class Volume extends React.Component {
     const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
     const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
     const defaultRevisionCounterSetting = settings.find(s => s.id === 'disable-revision-counter')
-    const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+    const defaultNumberOfReplicas = defaultReplicaCountSetting?.value || ''
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
     const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')

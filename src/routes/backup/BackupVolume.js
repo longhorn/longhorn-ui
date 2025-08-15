@@ -39,7 +39,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
   const settings = setting.data
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
-  const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+  const defaultNumberOfReplicas = defaultReplicaCountSetting?.value || ''
   const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
   const v2DataEngineEnabledSetting = settings.find(s => s.id === 'v2-data-engine')
   const v1DataEngineEnabled = v1DataEngineEnabledSetting?.value === 'true'
@@ -84,7 +84,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
     },
     Create(record) { // to create DR volume
       dispatch({
-        type: 'backup/CreateStandVolume',
+        type: 'backup/createStandVolume',
         payload: record,
       })
     },
@@ -244,7 +244,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
     },
     showBulkCreateDisasterRecoveryVolume() {
       dispatch({
-        type: 'backup/BulkCreateStandVolume',
+        type: 'backup/bulkCreateStandVolume',
         payload: {
           backupVolume: selectedRows,
         },

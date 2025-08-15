@@ -16,7 +16,6 @@ const formItemLayout = {
 
 const modal = ({
   item,
-  defaultNumberOfReplicas,
   visible,
   onCancel,
   onOk,
@@ -50,7 +49,7 @@ const modal = ({
       <Form layout="horizontal">
         <FormItem label="Minimum Number of Copies" hasFeedback {...formItemLayout}>
           {getFieldDecorator('minNumberOfCopies', {
-            initialValue: item.minNumberOfCopies || defaultNumberOfReplicas,
+            initialValue: item.minNumberOfCopies,
             rules: [
               {
                 required: true,
@@ -65,7 +64,6 @@ const modal = ({
 }
 
 modal.propTypes = {
-  defaultNumberOfReplicas: PropTypes.number,
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
