@@ -378,6 +378,14 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Offline Replica Rebuilding:</span>
         {selectedVolume?.offlineRebuilding}
       </div>
+      {
+        selectedVolume.dataEngine === 'v2' && (
+          <div className={styles.row}>
+            <span className={styles.label}> Replica Rebuilding Bandwidth Limit:</span>
+            {selectedVolume?.replicaRebuildingBandwidthLimit}
+          </div>
+        )
+      }
       { selectedVolume.kubernetesStatus ? <div>
           { selectedVolume.kubernetesStatus.lastPVCRefAt ? <div className={styles.row}>
               <span className={styles.label}> Last time bound with PVC:</span>
