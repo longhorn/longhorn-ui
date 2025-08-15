@@ -122,7 +122,7 @@ const form = ({
 
           return (
             <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div className={styles.dataEngineLabel}>{`${engine} Data Engine:`}</div>
+              <div className={styles.dataEngineLabel}>{`${engine.firstUpperCase()} Data Engine:`}</div>
               {getFieldDecorator(name, {
                 rules: parseSettingRules(setting),
                 initialValue: type === 'bool' ? value === 'true' || value === true : value,
