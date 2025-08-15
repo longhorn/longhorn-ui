@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ReactMarkdown from 'react-markdown/with-html'
-import { Form, Input, Button, Spin, Icon, Checkbox, Select, InputNumber, Alert } from 'antd'
+import { Form, Input, Button, Spin, Checkbox, Select, InputNumber, Alert } from 'antd'
 import styles from './setting.less'
 import { classnames } from '../../utils'
 import { LH_UI_VERSION } from '../../utils/constants'
+import { safeParseJSON } from '../../utils/formatDate'
 
 const FormItem = Form.Item
 const { Option } = Select
@@ -25,7 +26,33 @@ const form = ({
 
   const handleOnSubmit = () => {
     const fields = getFieldsValue()
-    Object.keys(fields).forEach(key => { fields[key] = fields[key].toString() })
+
+    // convert all values to string, bool as 'true'/'false'
+    Object.keys(fields).forEach(key => {
+      const fieldDef = data.find(d => d.definition.displayName === key)
+      if (fieldDef?.definition?.type === 'bool') {
+        fields[key] = fields[key] ? 'true' : 'false'
+      } else {
+        fields[key] = fields[key]?.toString() ?? ''
+      }
+    })
+
+    // merge engine-specific fields into JSON string
+    data.filter(d => d.definition.dataEngineSpecific).forEach(setting => {
+      const engines = Object.keys(safeParseJSON(setting.value || setting.definition.default))
+      if (engines.length > 0) {
+        const merged = {}
+        engines.forEach(engine => {
+          const key = `${setting.id}-${engine}`
+          if (fields[key] !== undefined) {
+            merged[engine] = fields[key]
+            delete fields[key]
+          }
+        })
+        fields[setting.id] = JSON.stringify(merged)
+      }
+    })
+
     onSubmit(fields)
     resetChangedSettings()
   }
@@ -49,75 +76,73 @@ const form = ({
     }
   }
 
-  const genInputItem = (setting) => {
-    const settingType = setting.definition.type
-    const settingName = setting.definition.displayName
-
-    if (setting.definition && setting.definition.options) {
+  const genInputItem = (setting, onChangeFn) => {
+    if (setting?.definition?.options) {
       return (
-        <Select onChange={value => onInputChange(settingName, value)} getPopupContainer={triggerNode => triggerNode.parentElement}>
-          {setting.definition.options.map((item, index) => (
-            <Option key={index} value={item}>{item}</Option>
-          ))}
+        <Select onChange={onChangeFn} getPopupContainer={triggerNode => triggerNode.parentElement}>
+          {setting.definition.options.map((item, idx) => <Option key={idx} value={item}>{item}</Option>)}
         </Select>
       )
     }
 
-    switch (settingType) {
+    const commonProps = { disabled: setting.definition.readOnly, onChange: onChangeFn }
+    switch (setting.definition.type) {
       case 'bool':
-        return (<Checkbox disabled={setting.definition.readOnly} onChange={e => onInputChange(settingName, e.target.checked)} />)
+        return <Checkbox {...commonProps} onChange={e => onChangeFn(e.target.checked)} />
       case 'int':
-        return (<InputNumber onChange={value => onInputChange(settingName, value)} style={{ width: '100%' }} parser={limitNumber} disabled={setting.definition.readOnly} min={0} />)
+        return <InputNumber {...commonProps} parser={limitNumber} min={0} />
       default:
-        return (<Input readOnly={setting.definition.readOnly} onChange={e => onInputChange(settingName, e.target.value)} />)
+        return <Input {...commonProps} />
     }
   }
 
-  const genFormItem = (setting) => {
-    let initialValue
-    let valuePropName
-    switch (setting.definition.type) {
-      case 'bool':
-        if (setting.value !== '') {
-          initialValue = setting.value === 'true'
-        } else {
-          initialValue = setting.definition.default === 'true'
-        }
-        valuePropName = 'checked'
-        break
-      case 'int':
-        if (setting.value !== '') {
-          initialValue = parseInt(setting.value, 10)
-        } else {
-          initialValue = 0
-        }
-        valuePropName = 'value'
-        break
-      default:
-        initialValue = setting.value || setting.definition.default
-        valuePropName = 'value'
-        break
-    }
+  const genFormItem = (setting = {}) => {
+    const { type, dataEngineSpecific: isEngineSpecific, displayName: fieldKey } = setting.definition
+    const deprecated = type === 'deprecated'
+    const engineValues = isEngineSpecific ? safeParseJSON(setting.value || setting.definition.default) : {}
+    const engines = isEngineSpecific && Object.keys(engineValues).length ? Object.keys(engineValues) : [null]
 
-    const deprecatedSettings = setting.definition && setting.definition.type === 'deprecated'
     return (
-      <FormItem key={setting.id} className={'settings-container'} style={{ display: deprecatedSettings ? 'none' : 'block' }}>
-        <span className={setting.definition.required ? 'ant-form-item-required' : ''} style={{ fontSize: '14px', fontWeight: 700, marginRight: '10px' }}>{setting.definition.displayName}{valuePropName === 'checked' ? ':' : ''}</span>
-        {getFieldDecorator(setting.name, {
-          rules: parseSettingRules(setting),
-          initialValue,
-          valuePropName,
-        })(genInputItem(setting))}
-        <div>
-          {setting.definition.required && !setting.definition.readOnly
-            ? <Icon style={{ marginRight: 5 }} type="question-circle-o" />
-            : <Icon style={{ margin: '8px 5px 0px 0px', float: 'left' }} type="question-circle-o" />
-          }
-          <small style={{ color: '#6c757d', fontSize: '13px', fontWeight: 400 }}>
-            {setting.definition.required && !setting.definition.readOnly ? 'Required. ' : ''}
-            <ReactMarkdown source={setting.definition.description} />
-          </small>
-        </div>
+      <FormItem
+        key={setting.id}
+        className="settings-container"
+        style={{ display: deprecated ? 'none' : 'block' }}
+      >
+        <span
+          className={setting.definition.required ? 'ant-form-item-required' : ''}
+          style={{ fontSize: 14, fontWeight: 700, marginRight: 10 }}
+        >
+          {fieldKey}{type === 'bool' || type === 'int' ? ':' : ''}
+        </span>
+
+        {isEngineSpecific ? engines.map(engine => {
+          const name = `${setting.id}-${engine}`
+          const value = engineValues[engine]
+          const onChangeFn = val => onInputChange(setting.id, { ...engineValues, [engine]: val })
+
+          return (
+            <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className={styles.dataEngineLabel}>{`${engine} Data Engine:`}</div>
+              {getFieldDecorator(name, {
+                rules: parseSettingRules(setting),
+                initialValue: type === 'bool' ? value === 'true' || value === true : value,
+                valuePropName: type === 'bool' ? 'checked' : 'value',
+                getValueFromEvent: type === 'bool' ? e => e.target.checked : undefined,
+              })(genInputItem(setting, onChangeFn))}
+            </div>
+          )
+        }) : (
+          getFieldDecorator(setting.name, {
+            rules: parseSettingRules(setting),
+            initialValue: type === 'bool' ? setting.value === 'true' || setting.value === true : setting.value || setting.definition.default,
+            valuePropName: type === 'bool' ? 'checked' : 'value',
+            getValueFromEvent: type === 'bool' ? e => e.target.checked : undefined,
+          })(genInputItem(setting, val => onInputChange(fieldKey, val)))
+        )}
+
+        <small style={{ color: '#7f868d', fontSize: 13 }}>
+          <ReactMarkdown className={styles.info} source={setting.definition.description} />
+        </small>
       </FormItem>
     )
   }

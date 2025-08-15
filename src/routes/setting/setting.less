@@ -17,13 +17,15 @@
       padding: 16px 16px 0 16px;
       > .fieldsetLabel {
         position: absolute;
-        transform: translateY(-120%);
+        top: 0;
+        left: 16px;
+        transform: translate(-8px, -50%);
         text-transform: capitalize;
         display: inline-block;
-        padding: 0 24px;
+        padding: 0 8px;
         white-space: nowrap;
         text-align: center;
-        font-weight: 700;
+        font-weight: 600;
         color: rgb(173, 172, 172);
         font-size: 18px;
         background-color: #ffffff;
@@ -31,12 +33,35 @@
     }
     .dangerZone {
       border: 1px solid #f15354;
+      > .fieldsetLabel {
+        color: #f15354;
+      }
       .description{
         color: #f15354;
         font-size: 14px;
         font-weight: 600;
       }
     }
+
+    .dataEngineLabel {
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .info {
+      p {
+        line-height: 1.4;
+        margin-bottom: 4px !important;
+      }
+
+      ol, ul {
+        margin: 8px 0;
+
+        li {
+          line-height: 1.4;
+          margin-bottom: 4px !important;
+        }
+      }
+    }
   }
 }
-
