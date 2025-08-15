@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert } from 'antd'
 import { ModalBlur } from '../../components'
+import { safeParseJSON } from '../../utils/formatDate'
+
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -72,6 +74,15 @@ const modal = ({
 
   const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
   const message = `The restore volume name (${getFieldsValue().name}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well.`
+  const parsedReplicas = safeParseJSON(item.numberOfReplicas)
+  const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
+  const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+
+  // filter options based on selected data engine version
+  const handleDataEngineChange = (engine) => {
+    const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
+    setFieldsValue({ ...getFieldsValue(), numberOfReplicas: replicas }) // update number of replicas
+  }
 
   return (
     <ModalBlur {...modalOpts}>
@@ -98,7 +109,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
-            initialValue: item.numberOfReplicas,
+            initialValue: initialReplicas,
             rules: [
               {
                 required: true,
@@ -109,7 +120,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            initialValue: initialDataEngine,
             rules: [
               {
                 required: true,
@@ -126,7 +137,7 @@ const modal = ({
                 },
               },
             ],
-          })(<Select>
+          })(<Select onChange={handleDataEngineChange}>
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}

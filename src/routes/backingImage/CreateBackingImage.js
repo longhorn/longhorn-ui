@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Form, Input, Select, Upload, Button, Icon, InputNumber, Spin } from 'antd'
 import { ModalBlur } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
+import { safeParseJSON } from '../../utils/formatDate'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -119,6 +120,15 @@ const modal = ({
 
   const creationType = getFieldValue('sourceType')
   const availBackingImages = backingImageOptions?.filter(image => hasReadyBackingDisk(image)) || []
+  const parsedReplicas = safeParseJSON(defaultNumberOfReplicas)
+  const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
+  const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+
+  // filter options based on selected data engine version
+  const handleDataEngineChange = (engine) => {
+    const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
+    setFieldsValue({ ...getFieldsValue(), minNumberOfCopies: replicas }) // update number of replicas
+  }
 
   return (
     <ModalBlur {...modalOpts}>
@@ -303,7 +313,7 @@ const modal = ({
         )}
         <FormItem label="Minimum Number of Copies" {...formItemLayout}>
           {getFieldDecorator('minNumberOfCopies', {
-            initialValue: defaultNumberOfReplicas,
+            initialValue: initialReplicas,
             rules: [
               {
                 required: true,
@@ -314,7 +324,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            initialValue: initialDataEngine,
             rules: [
               {
                 validator: (_rule, value, callback) => {
@@ -327,7 +337,7 @@ const modal = ({
               },
             ],
           })(
-            <Select>
+            <Select onChange={handleDataEngineChange}>
               <Option value="v1">v1</Option>
               <Option value="v2">v2</Option>
             </Select>

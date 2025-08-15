@@ -267,7 +267,7 @@ export default {
       const search = yield select(store => { return store.backup.search })
       yield put({ type: 'query', payload: { ...search } })
     },
-    *CreateStandVolume({
+    *createStandVolume({
       payload,
     }, { call, put }) {
       const data = yield call(execAction, payload.actions.backupList)
@@ -278,13 +278,13 @@ export default {
       yield put({ type: 'showCreateVolumeStandModalVisible' })
       yield put({ type: 'queryDiskTagsAndGetNodeTags' })
     },
-    *BulkCreateStandVolume({
+    *bulkCreateStandVolume({
       payload,
     }, { call, put }) {
       const data = yield payload.backupVolume.map((item) => call(execAction, item.actions.backupList))
       const volumes = data.map((item, index) => {
         const volume = payload.backupVolume[index]
-        const lastBackup = item.data.find((backup) => backup.id === volume.lastBackupName)
+        const lastBackup = item.data.find((backup) => backup.id === volume.lastBackupName) || {}
         return {
           volumeName: volume.id,
           lastBackupUrl: lastBackup.url,

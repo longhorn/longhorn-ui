@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, InputNumber, Select, message, Spin, Checkbox, Tooltip, Tabs, Button, Input, Popover, Alert } from 'antd'
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formatter'
+import { safeParseJSON } from '../../utils/formatDate'
 
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -39,10 +40,14 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const parsedReplicas = safeParseJSON(numberOfReplicas)
+  const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
+  const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+
   const initConfigs = items.map((i) => ({
     name: i.volumeName,
     size: formatMib(i.size),
-    numberOfReplicas,
+    numberOfReplicas: initialReplicas,
     dataEngine: 'v1',
     accessMode: i.accessMode || null,
     backingImage: i.backingImage,
@@ -105,7 +110,12 @@ const modal = ({
   const handleNameChange = (e) => updateDrVolumeConfigs('name', e.target.value)
   const handleReplicasNumberChange = (newNumber) => updateDrVolumeConfigs('numberOfReplicas', newNumber)
   const handleEncryptedCheck = (e) => updateDrVolumeConfigs('encrypted', e.target.checked)
-  const handleDataEngineChange = (value) => updateDrVolumeConfigs('dataEngine', value)
+  const handleDataEngineChange = (value) => {
+    const replicas = parseInt(parsedReplicas[value] ?? 3, 10)
+    updateDrVolumeConfigs('dataEngine', value)
+    updateDrVolumeConfigs('numberOfReplicas', replicas)
+    setFieldsValue({ numberOfReplicas: replicas })
+  }
   const handleAccessModeChange = (value) => updateDrVolumeConfigs('accessMode', value)
   const handleNodeTagRemove = (value) => {
     const oldNodeTags = drVolumeConfigs[currentTab]?.nodeSelector
@@ -219,7 +229,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
-            initialValue: numberOfReplicas,
+            initialValue: initialReplicas,
             rules: [
               {
                 required: true,
@@ -230,7 +240,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            initialValue: initialDataEngine,
             rules: [
               {
                 required: true,

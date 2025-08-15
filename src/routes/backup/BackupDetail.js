@@ -20,7 +20,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   const settings = setting.data
   const backingImages = backingImage.data
   const defaultReplicaCountSetting = settings.find(s => s.id === 'default-replica-count')
-  const defaultNumberOfReplicas = defaultReplicaCountSetting !== undefined ? parseInt(defaultReplicaCountSetting.value, 10) : 3
+  const defaultNumberOfReplicas = defaultReplicaCountSetting?.value || ''
 
   const { keyword } = queryString.parse(location.search)
   const currentBackUp = backupVolumes.find(bkVol => bkVol.name === keyword) || {}
@@ -179,7 +179,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
   const handleMenuClick = (record, e) => {
     if (e.key === 'recovery') {
       dispatch({
-        type: 'backup/CreateStandVolume',
+        type: 'backup/createStandVolume',
         payload: record,
       })
     } else if (e.key === 'deleteAll') {

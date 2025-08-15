@@ -120,9 +120,7 @@ class BackingImage extends React.Component {
     const settingsMap = Object.fromEntries(settingData.map(setting => [setting.id, setting.value]))
     const v1DataEngineEnabled = settingsMap['v1-data-engine'] === 'true'
     const v2DataEngineEnabled = settingsMap['v2-data-engine'] === 'true'
-    const defaultReplicaCount = settingsMap['default-replica-count']
-    const defaultNumberOfReplicas = defaultReplicaCount ? parseInt(defaultReplicaCount, 10) : 3
-
+    const defaultNumberOfReplicas = settingsMap['default-replica-count']
     const backingImages = filterBackingImage(data, biSearchField, biSearchValue)
     const volumeNameOptions = volumeData.map((volume) => volume.name)
     const backupTargets = getBackupTargets(backupTarget)
@@ -352,7 +350,6 @@ class BackingImage extends React.Component {
     const minCopiesCountProps = {
       item: selected,
       visible: minCopiesCountModalVisible,
-      defaultNumberOfReplicas,
       onOk(record, newCount) {
         dispatch({
           type: 'backingImage/updateMinCopiesCount',

@@ -16,7 +16,7 @@ import {
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
 import { formatSize } from '../../utils/formatter'
-import { formatDate } from '../../utils/formatDate'
+import { formatDate, safeParseJSON } from '../../utils/formatDate'
 import { sortByCreatedTime } from '../../utils/sort'
 
 const FormItem = Form.Item
@@ -196,16 +196,25 @@ const modal = ({
     }
   }
 
-  // filter options based on selected data engine version
-  const handleDataEngineChange = (value) => {
-    setFieldsValue({ ...getFieldsValue(), backingImage: '' }) // reset selected backing image
-    setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === value))
-    setFieldsValue({ ...getFieldsValue(), frontend: frontends[0].value }) // reset selected frontend
-  }
-
   const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
   sortByCreatedTime(volumeSnapshots)
   const dataSourceAlertMsg = 'The volume size is set to the selected volume size. Mismatched size will cause create volume failed.'
+
+  const parsedReplicas = safeParseJSON(item.numberOfReplicas)
+  const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
+  const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+
+  // filter options based on selected data engine version
+  const handleDataEngineChange = (engine) => {
+    const fields = getFieldsValue()
+    setFieldsValue({ ...fields, backingImage: '', frontend: frontends[0].engine }) // reset dependent fields
+    // update filtered backing images
+    setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === engine))
+    // update number of replicas
+    const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
+    setFieldsValue({ ...fields, numberOfReplicas: replicas })
+  }
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -267,12 +276,9 @@ const modal = ({
         </div>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
-            initialValue: item.numberOfReplicas,
+            initialValue: initialReplicas,
             rules: [
-              {
-                required: true,
-                message: 'Please input the number of replicas',
-              },
+              { required: true, message: 'Please input the number of replicas' },
               {
                 validator: (_rule, value, callback) => {
                   if (value === '' || typeof value !== 'number') {
@@ -293,7 +299,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            initialValue: initialDataEngine,
             rules: [
               {
                 validator: (_rule, value, callback) => {
