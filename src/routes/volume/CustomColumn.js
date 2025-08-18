@@ -7,7 +7,7 @@ const FormItem = Form.Item
 
 const formItemLayout = {
   labelCol: {
-    span: 4,
+    span: 5,
   },
   wrapperCol: {
     span: 24,
@@ -103,6 +103,10 @@ const modal = ({
       value: 'offlineRebuilding',
       label: 'Offline Replica Rebuilding',
     },
+    {
+      value: 'replicaRebuildingBandwidthLimit',
+      label: 'Replica Rebuilding Bandwidth Limit',
+    },
   ]
 
   const modalOpts = {
@@ -110,6 +114,7 @@ const modal = ({
     visible,
     onCancel,
     onOk: handleOk,
+    width: 680,
   }
 
   return (
