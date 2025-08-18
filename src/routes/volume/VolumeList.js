@@ -506,6 +506,20 @@ function list({
       },
     },
     {
+      title: 'Replica Rebuilding Bandwidth Limit',
+      dataIndex: 'replicaRebuildingBandwidthLimit',
+      key: 'replicaRebuildingBandwidthLimit',
+      width: 240,
+      sorter: (a, b) => sortTable(a, b, 'replicaRebuildingBandwidthLimit'),
+      render: (text, record) => {
+        return (
+          <div>
+            {record.replicaRebuildingBandwidthLimit}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Last Backup At',
       dataIndex: 'lastBackupAt',
       key: 'lastBackupAt',
