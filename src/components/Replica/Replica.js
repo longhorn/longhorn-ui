@@ -119,7 +119,7 @@ class Replica extends React.Component {
     }
 
     return (
-      <div style={{ display: 'inline-block', padding: '4px 20px' }} key={item.name}>
+      <div style={{ display: 'inline-block', padding: '0px 10px' }} key={item.name}>
         <Card bodyStyle={{ height: 280, padding: 0 }}>
           <div style={{ position: 'relative', backgroundColor: this.modeInfo.color, padding: 20, color: 'white' }}>
             <img
