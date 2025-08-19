@@ -32,6 +32,9 @@ const dependency = {
       ns: 'volume',
       key: 'volumes',
     }, {
+      ns: 'volumeAttachments',
+      key: 'volumeattachments',
+    }, {
       ns: 'host',
       key: 'nodes',
     }, {
@@ -146,6 +149,9 @@ const list = [{
   ns: 'volume',
   key: 'volumes',
 }, {
+  ns: 'volumeAttachments',
+  key: 'volumeattachments',
+}, {
   ns: 'host',
   key: 'nodes',
 }, {
@@ -186,7 +192,7 @@ const list = [{
 const httpDataDependency = {
   '/dashboard': ['volume', 'host', 'eventlog'],
   '/node': ['volume', 'host', 'setting'],
-  '/volume': ['volume', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
+  '/volume': ['volume', 'volumeAttachments', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
   '/engineimage': ['engineimage'],
   '/backingImage': ['volume', 'backingImage', 'backupTarget', 'backup'],
   '/recurringJob': ['recurringJob'],

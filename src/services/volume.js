@@ -157,3 +157,17 @@ export async function updateRecurringJob(params) {
     },
   })
 }
+
+export async function getVolumeAttachments() {
+  return request({
+    url: '/v1/volumeattachments',
+    method: 'get',
+  })
+}
+
+export async function getVolumeAttachmentById(id) {
+  return request({
+    url: `/v1/volumeattachments/${id}`,
+    method: 'get',
+  })
+}
