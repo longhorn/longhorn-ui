@@ -1,5 +1,5 @@
 import { getVolumeAttachments, getVolumeAttachmentById } from '../services/volume'
-import { wsChanges, updateState } from '../utils/websocket'
+import { wsChanges } from '../utils/websocket'
 import { enableQueryData } from '../utils/dataDependency'
 
 export default {
@@ -41,11 +41,14 @@ export default {
 
       const data = yield call(getVolumeAttachmentById, payload.id)
       if (data) {
-        yield put({ type: 'update', payload: { data: { ...volumeAttachments.data, [payload.id]: data } } })
+        yield put({
+          type: 'update',
+          payload: { data: { ...volumeAttachments.data, [payload.id]: data } },
+        })
       }
     },
     *startWS({ payload }, { select }) {
-      let ws = yield select(state => state.ws)
+      let ws = yield select(state => state.volumeAttachments.ws)
       if (ws) {
         ws.open()
       } else {
@@ -53,22 +56,35 @@ export default {
       }
     },
     *stopWS(_, { select }) {
-      let ws = yield select(state => state.ws)
+      let ws = yield select(state => state.volumeAttachments.ws)
       if (ws) {
         ws.close(1000)
       }
     },
   },
   reducers: {
-    update(state, { payload }) {
-      return { ...state, ...payload }
+    update(state, action) {
+      return { ...state, data: action.payload.data || {} }
     },
+
     updateBackground(state, action) {
-      return updateState(state, action)
+      const incoming = action.payload
+      const existing = state.data || {}
+      const newData = { ...existing }
+
+      if (Array.isArray(incoming.data)) {
+        incoming.data.forEach(item => {
+          newData[item.id] = item
+        })
+      }
+
+      return { ...state, data: newData }
     },
+
     updateSocketStatus(state, action) {
       return { ...state, socketStatus: action.payload }
     },
+
     updateWs(state, action) {
       return { ...state, ws: action.payload }
     },
