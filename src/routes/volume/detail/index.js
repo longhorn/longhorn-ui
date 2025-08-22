@@ -300,10 +300,10 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
     },
     showBackups(record) {
       dispatch(routerRedux.push({
-        pathname: `/backup/${record.name}`,
+        pathname: '/backup',
         search: queryString.stringify({
           field: 'volumeName',
-          keyword: record.name,
+          value: record.name,
         }),
       }))
     },
