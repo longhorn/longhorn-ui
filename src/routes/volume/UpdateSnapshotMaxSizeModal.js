@@ -33,7 +33,7 @@ const modal = ({
 
   // Convert Units Bi to Gi
   function formatSize() {
-    if (item?.snapshotMaxSize && item?.snapshotMaxSize) {
+    if (item?.snapshotMaxSize) {
       let sizeMi = parseInt(item?.snapshotMaxSize, 10) / (1024 * 1024)
 
       return getFieldsValue().unit === 'Gi'
