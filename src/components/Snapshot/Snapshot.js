@@ -209,7 +209,7 @@ SnapshotIcon.propTypes = {
 function CurrentPoint(props) {
   function onClick() {
     props.onAction({
-      type: 'snapshotCreate',
+      type: 'snapshotCRCreate',
       payload: {
         volume: props.volume,
       },

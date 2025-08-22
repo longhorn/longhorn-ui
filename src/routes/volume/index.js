@@ -320,17 +320,6 @@ class Volume extends React.Component {
         })
       },
       sorter,
-      takeSnapshot(record) {
-        dispatch({
-          type: 'volume/actions',
-          payload: {
-            url: record.actions.snapshotCreate,
-            params: {
-              name: '',
-            },
-          },
-        })
-      },
       showVolumeCloneModal(record) {
         dispatch({
           type: 'volume/showCloneVolumeModalBefore',
@@ -1231,7 +1220,7 @@ class Volume extends React.Component {
         dispatch({
           type: 'volume/bulkBackup',
           payload: {
-            actions: me.state.selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCreate, snapshotBackupUrl: item.actions.snapshotBackup } }),
+            actions: me.state.selectedRows.map(item => { return { snapshotCreateUrl: item.actions.snapshotCRCreate, snapshotBackupUrl: item.actions.snapshotBackup } }),
             ...obj,
           },
         })

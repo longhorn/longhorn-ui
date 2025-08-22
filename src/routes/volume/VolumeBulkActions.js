@@ -166,7 +166,7 @@ function bulkActions({
   const hasNonAttachedVolume = () => selectedRows.some(item => item.state !== 'attached')
   const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.image)
-  const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCreate)
+  const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCRCreate)
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
   const disableUpdateBulkDataLocality = () => selectedRows.some(item => !item.actions || !item.actions.updateDataLocality)
   const disableUpdateReplicaAutoBalance = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaAutoBalance)

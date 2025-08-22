@@ -292,7 +292,6 @@ actions.propTypes = {
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,
   showBackups: PropTypes.func,
-  takeSnapshot: PropTypes.func,
   showSalvage: PropTypes.func,
   rollback: PropTypes.func,
   showCloneVolume: PropTypes.func,
