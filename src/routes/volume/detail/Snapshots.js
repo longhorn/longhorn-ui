@@ -156,7 +156,7 @@ class Snapshots extends React.Component {
         me.props.dispatch({
           type: 'snapshotModal/backup',
           payload: {
-            snapshotCreateUrl: me.props.volume.actions.snapshotCreate,
+            snapshotCreateUrl: me.props.volume.actions.snapshotCRCreate,
             snapshotBackupUrl: me.props.volume.actions.snapshotBackup,
             querySnapShotUrl: me.props.volume.actions.snapshotList,
             ...params,
@@ -237,7 +237,7 @@ class Snapshots extends React.Component {
     const volBackupTarget = this.props.volume.backupTargetName
     const volBackupTargetAvailable = !!this.props.backupTarget.data.find(bt => bt.name === volBackupTarget)?.available
 
-    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !volBackupTargetAvailable
+    const disableBackup = !this.props.volume.actions || !this.props.volume.actions.snapshotCRCreate || !this.props.state || this.props.volume.standby || isRestoring() || upgradingEngine() || !volBackupTargetAvailable
 
     const createSnapshotDisabled = disabledSnapshotAction(this.props.volume, this.props.state) || this.props.volume.standby || isRestoring() || upgradingEngine()
 
@@ -301,7 +301,7 @@ class Snapshots extends React.Component {
           <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create snapshot for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
               <Button disabled={createSnapshotDisabled}
                 icon="scan"
-                onClick={() => { this.onAction({ type: 'snapshotCreate' }) }}
+                onClick={() => { this.onAction({ type: 'snapshotCRCreate' }) }}
                 type="primary">
                 Take Snapshot
               </Button>
