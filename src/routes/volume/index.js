@@ -375,11 +375,11 @@ class Volume extends React.Component {
       },
       showBackups(record) {
         dispatch(routerRedux.push({
-          pathname: `/backup/${record.name}`,
+          pathname: '/backup',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             field: 'volumeName',
-            keyword: record.name,
+            value: record.name,
           }),
         }))
       },
