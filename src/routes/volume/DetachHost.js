@@ -65,11 +65,33 @@ const modal = ({
     onOk: handleOk,
   }
 
-  const description = (<div>
-    Detaching a Volume when it is being used by a running Kubernetes Pod will result in
-    crashing of the Pod and possible loss of data. The Volume cannot be used by the
-    Kubernetes again until the original Pod is deleted. Are you sure you want to detach the volume?
-  </div>)
+  const getAlertDescription = (item) => {
+    const va = item?.volumeAttachment
+    if (!va) return null
+
+    const attachments = Object.values(va.attachments || {})
+
+    if (attachments.some(att => att.attachmentType === 'csi-attacher')) {
+      return (
+        <div>
+          Force-detaching this volume may cause it to become inconsistent with Kubernetes VolumeAttachment resources.<br />
+          This can prevent workloads from attaching the volume correctly and may lead to Pod failures or potential data loss.
+        </div>
+      )
+    }
+
+    if (item?.kubernetesStatus?.workloadsStatus && !item.kubernetesStatus.lastPodRefAt) {
+      return (
+        <div>
+          Detaching a Volume when it is being used by a running Kubernetes Pod will result in
+          crashing of the Pod and possible loss of data. The Volume cannot be used by the
+          Kubernetes again until the original Pod is deleted. Are you sure you want to detach the volume?
+        </div>
+      )
+    }
+
+    return null
+  }
 
   return (
     <ModalBlur {...modalOpts}>
@@ -80,13 +102,13 @@ const modal = ({
             valuePropName: 'checked',
           })(<Checkbox></Checkbox>)}
         </FormItem>
-          { items.some((item) => {
-            return item?.kubernetesStatus?.workloadsStatus && !item.kubernetesStatus.lastPodRefAt
-          }) && <Alert
-            description={description}
+        {items.some(item => getAlertDescription(item)) && (
+          <Alert
+            description={getAlertDescription(items.find(item => getAlertDescription(item)))}
             type="warning"
             showIcon
-          />}
+          />
+        )}
       </Form>
     </ModalBlur>
   )
