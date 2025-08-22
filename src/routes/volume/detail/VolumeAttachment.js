@@ -20,7 +20,7 @@ function VolumeAttachment({ volumeAttachment = {}, loading = false }) {
     { title: 'Attachment ID', dataIndex: 'attachmentID', key: 'attachmentID' },
     { title: 'Attachment Type', dataIndex: 'attachmentType', key: 'attachmentType' },
     { title: 'Node ID', dataIndex: 'nodeID', key: 'nodeID' },
-    { title: 'Satisfied', dataIndex: 'satisfied', key: 'satisfied', render: text => (text ? 'yes' : 'no') },
+    { title: 'Satisfied', dataIndex: 'satisfied', key: 'satisfied', render: text => (text ? 'Yes' : 'No') },
     { title: 'Last Transition Time', dataIndex: 'lastTransitionTime', key: 'lastTransitionTime' },
   ]
 
