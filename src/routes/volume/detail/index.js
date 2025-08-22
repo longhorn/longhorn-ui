@@ -246,19 +246,6 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
   const volumeActionsProps = {
     engineImages,
     engineUpgradePerNodeLimit,
-    takeSnapshot(record) {
-      dispatch({
-        type: 'snapshotModal/snapshotAction',
-        payload: {
-          type: 'snapshotCreate',
-          url: record.actions.snapshotCreate,
-          params: {
-            name: '',
-          },
-          querySnapShotUrl: record.actions.snapshotList,
-        },
-      })
-    },
     showVolumeCloneModal(record) {
       dispatch({
         type: 'volume/showCloneVolumeModalBefore',
