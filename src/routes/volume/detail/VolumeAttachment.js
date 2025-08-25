@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Card, Alert } from 'antd'
+import { Table, Card, Alert, Tooltip, Icon } from 'antd'
 import styles from './index.less'
 
 function VolumeAttachment({ volumeAttachment = {}, loading = false }) {
@@ -13,6 +13,7 @@ function VolumeAttachment({ volumeAttachment = {}, loading = false }) {
     attachmentType: attachment.attachmentType,
     nodeID: attachment.nodeID,
     satisfied: attachment.satisfied,
+    conditions: attachment.conditions || [],
     lastTransitionTime: attachment.conditions?.[0]?.lastTransitionTime || ''
   }))
 
@@ -20,7 +21,24 @@ function VolumeAttachment({ volumeAttachment = {}, loading = false }) {
     { title: 'Attachment ID', dataIndex: 'attachmentID', key: 'attachmentID' },
     { title: 'Attachment Type', dataIndex: 'attachmentType', key: 'attachmentType' },
     { title: 'Node ID', dataIndex: 'nodeID', key: 'nodeID' },
-    { title: 'Satisfied', dataIndex: 'satisfied', key: 'satisfied', render: text => (text ? 'Yes' : 'No') },
+    {
+      title: 'Satisfied',
+      dataIndex: 'satisfied',
+      key: 'satisfied',
+      render: (text, record) => {
+        const isSatisfied = !!text
+        const message = record.conditions?.[0]?.message
+
+        if (isSatisfied) return 'Yes'
+        return (
+          <Tooltip title={message || 'Not satisfied'}>
+            <span>
+              No {message && <Icon type="info-circle" />}
+            </span>
+          </Tooltip>
+        )
+      }
+    },
     { title: 'Last Transition Time', dataIndex: 'lastTransitionTime', key: 'lastTransitionTime' },
   ]
 
