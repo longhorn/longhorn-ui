@@ -20,6 +20,7 @@ import UpdateSnapshotMaxCountModal from '../UpdateSnapshotMaxCountModal.js'
 import UpdateSnapshotMaxSizeModal from '../UpdateSnapshotMaxSizeModal.js'
 import UpdateFreezeFilesystemForSnapshotModal from '../UpdateFreezeFilesystemForSnapshotModal'
 import UpdateReplicaRebuildingBandwidthLimitModal from '../UpdateReplicaRebuildingBandwidthLimitModal'
+import VolumeAttachment from './VolumeAttachment'
 import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
 import EventList from './EventList'
@@ -112,7 +113,23 @@ const getEventData = (eventlog, selectedVolume) => {
   return mappedEventLogs
 }
 
-function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, host, backupTarget, volume, volumeId, setting, loading, backingImage, recurringJob }) {
+function VolumeDetail({
+  snapshotModal,
+  dispatch,
+  backup,
+  engineimage,
+  eventlog,
+  host,
+  backupTarget,
+  loading,
+  volume,
+  volumeId,
+  volumeAttachment,
+  loadingVolumeAttachments,
+  setting,
+  backingImage,
+  recurringJob
+}) {
   const {
     data,
     cloneVolumeType,
@@ -585,6 +602,7 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
       height: 360,
       background: '#fff',
       overflowY: 'auto',
+      padding: '0 25px',
     },
   }
 
@@ -750,6 +768,9 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
               <ReplicaList {...replicaListProps} />
             </Card>
           </Col>
+           <Col xs={24} style={{ marginBottom: 16 }}>
+            <VolumeAttachment volumeAttachment={volumeAttachment} loading={loadingVolumeAttachments} />
+          </Col>
           <Col xs={24} style={{ marginBottom: 16 }}>
             <Snapshots {...snapshotsProp} />
           </Col>
@@ -791,19 +812,54 @@ function VolumeDetail({ snapshotModal, dispatch, backup, engineimage, eventlog, 
 
 VolumeDetail.propTypes = {
   volume: PropTypes.object,
+  volumeId: PropTypes.string,
+  volumeAttachment: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   backup: PropTypes.object,
   host: PropTypes.object,
   engineimage: PropTypes.object,
   backupTarget: PropTypes.object,
-  volumeId: PropTypes.string,
   loading: PropTypes.bool,
   snapshotModal: PropTypes.object,
   eventlog: PropTypes.object,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
   recurringJob: PropTypes.object,
+  loadingVolumeAttachments: PropTypes.bool
 }
 
-export default connect(({ snapshotModal, backup, host, engineimage, backupTarget, volume, loading, eventlog, setting, backingImage, recurringJob }, { match }) => ({ snapshotModal, backup, host, volume, engineimage, backupTarget, loading: loading.models.volume, volumeId: match.params.id, eventlog, setting, backingImage, recurringJob }))(VolumeDetail)
+export default connect(({
+  snapshotModal,
+  backup,
+  host,
+  engineimage,
+  backupTarget,
+  volume,
+  volumeAttachments,
+  loading,
+  eventlog,
+  setting,
+  backingImage,
+  recurringJob
+}, { match }) => {
+  const volumeId = match.params.id
+  const volumeAttachment = volumeAttachments.data ? volumeAttachments.data[volumeId] : null
+
+  return {
+    snapshotModal,
+    backup,
+    host,
+    volume,
+    volumeId,
+    volumeAttachment,
+    engineimage,
+    backupTarget,
+    loading: loading.models.volume,
+    loadingVolumeAttachments: loading.models.volumeAttachments,
+    eventlog,
+    setting,
+    backingImage,
+    recurringJob
+  }
+})(VolumeDetail)

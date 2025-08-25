@@ -2,6 +2,7 @@ import './publicPath'
 import appmodel from './models/app'
 import host from './models/host'
 import volume from './models/volume'
+import volumeAttachments from './models/volumeAttachments'
 import setting from './models/setting'
 import eventlog from './models/eventlog'
 import engineimage from './models/engineimage'
@@ -38,6 +39,7 @@ app.model(backingImage)
 app.model(backupTarget)
 app.model(backup)
 app.model(volume)
+app.model(volumeAttachments)
 app.model(recurringJob)
 app.model(instanceManager)
 app.model(orphanedData)
