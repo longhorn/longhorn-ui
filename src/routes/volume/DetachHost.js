@@ -71,11 +71,10 @@ const modal = ({
 
     const attachments = Object.values(va.attachments || {})
 
-    if (attachments.some(att => att.attachmentType === 'csi-attacher')) {
+    if (attachments.some(att => att.attachmentType === 'csi-attacher' && att.satisfied)) {
       return (
         <div>
-          Force-detaching this volume may cause it to become inconsistent with Kubernetes VolumeAttachment resources.<br />
-          This can prevent workloads from attaching the volume correctly and may lead to Pod failures or potential data loss.
+          Forcing this volume to detach could break its connection to Kubernetes&apos;s VolumeAttachment resources. This could prevent your applications from attaching volumes correctly, potentially causing Pods to fail or leading to data loss.
         </div>
       )
     }
