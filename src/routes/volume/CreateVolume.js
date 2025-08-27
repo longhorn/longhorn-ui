@@ -442,6 +442,15 @@ const modal = ({
         {/* Advanced Configurations */}
         <Collapse>
           <Panel header="Advanced Configurations" key="1">
+            <FormItem label="Backup Block Size" hasFeedback {...formItemLayoutForAdvanced}>
+              {getFieldDecorator('backupBlockSize', { initialValue: '0' })(
+                <Select>
+                  <Option key={'ignored'} value={'0'}>ignored (follow the global setting)</Option>
+                  <Option key={'2Mi'} value={'2097152'}>2 Mi</Option>
+                  <Option key={'16Mi'} value={'16777216'}>16 Mi</Option>
+                </Select>
+              )}
+            </FormItem>
             <FormItem label="Snapshot Data Integrity" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('snapshotDataIntegrity', {
                 initialValue: 'ignored',

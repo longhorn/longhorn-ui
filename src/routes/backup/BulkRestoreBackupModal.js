@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Spin, Select, message, Popover, Alert, Tabs, Button, Checkbox, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
+import { safeParseJSON } from '../../utils/formatDate'
 
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -37,19 +38,27 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
-  const initConfigs = items.map((i) => ({
-    name: i.volumeName,
-    numberOfReplicas: i.numberOfReplicas,
-    dataEngine: 'v1',
-    accessMode: i.accessMode || null,
-    latestBackup: i.backupName,
-    backingImage: i.backingImage,
-    fromBackup: i.fromBackup,
-    encrypted: false,
-    restoreVolumeRecurringJob: 'ignored',
-    nodeSelector: i.nodeSelector || [],
-    diskSelector: i.diskSelector || [],
-  }))
+  const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
+
+  const initConfigs = items.map((i) => {
+    const parsedReplicas = safeParseJSON(i.numberOfReplicas)
+    const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+
+    return {
+      name: i.volumeName,
+      numberOfReplicas: initialReplicas,
+      dataEngine: initialDataEngine,
+      accessMode: i.accessMode || null,
+      latestBackup: i.backupName,
+      backingImage: i.backingImage,
+      fromBackup: i.fromBackup,
+      encrypted: false,
+      restoreVolumeRecurringJob: 'ignored',
+      nodeSelector: i.nodeSelector || [],
+      diskSelector: i.diskSelector || [],
+      backupBlockSize: i.blockSize || '0'
+    }
+  })
   const [currentTab, setCurrentTab] = useState(0)
   const [restoreBackupConfigs, setRestoreBackupConfigs] = useState(initConfigs)
 
@@ -219,7 +228,7 @@ const modal = ({
         </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            initialValue: item.dataEngine,
             rules: [
               {
                 required: true,
@@ -273,7 +282,7 @@ const modal = ({
           })(<Select onSelect={handleRecurringJobChange}>
             <Option key={'enabled'} value={'enabled'}>Enabled</Option>
             <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-            <Option key={'ignored'} value={'ignored'}>Ignored</Option>
+            <Option key={'ignored'} value={'ignored'}>Ignored (follow the global setting)</Option>
           </Select>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
@@ -294,6 +303,19 @@ const modal = ({
             </Select>)}
           </FormItem>
         </Spin>
+        <FormItem label="Backup Block Size" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backupBlockSize', {
+            initialValue: ['0', '2097152', '16777216'].includes(String(item.blockSize))
+              ? String(item.backupBlockSize)
+              : '0',
+          })(
+            <Select>
+              <Option key="ignored" value="0">Ignored (follow the global setting)</Option>
+              <Option key="2Mi" value="2097152">2 Mi</Option>
+              <Option key="16Mi" value="16777216">16 Mi</Option>
+            </Select>
+          )}
+        </FormItem>
       </Form>
     </ModalBlur>
   )

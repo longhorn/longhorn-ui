@@ -132,12 +132,18 @@ export default {
           }
         })
       }
+
       if (lastBackup) {
-        params.fromBackup = lastBackup.url
-        params.backupName = lastBackup.id
-        params.numberOfReplicas = payload.numberOfReplicas
-        params.volumeName = lastBackup.volumeName
-        params.backingImage = payload.backingImage || ''
+        const { url, id, volumeName, ...rest } = lastBackup
+
+        params = {
+          fromBackup: url,
+          backupName: id,
+          volumeName,
+          numberOfReplicas: payload.numberOfReplicas,
+          backingImage: payload.backingImage || '',
+          ...rest,
+        }
 
         yield put({ type: 'showRestoreBackupModal', payload: { currentItem: [params] } })
         yield put({ type: 'queryDiskTagsAndGetNodeTags' })
@@ -170,15 +176,21 @@ export default {
           }
         }
         if (data && data.length > 0) {
-          yield put({ type: 'showRestoreBulkBackupModal',
+          yield put({
+            type: 'showRestoreBulkBackupModal',
             payload: {
-              currentItem: data.map(d => ({
-                backupName: d.name,
-                backingImage: d.volumeBackingImageName,
-                fromBackup: d.url,
-                volumeName: d.volumeName,
-                numberOfReplicas: payload.numberOfReplicas,
-              })),
+              currentItem: data.map(d => {
+                const { name, url, volumeName, volumeBackingImageName, ...rest } = d
+
+                return {
+                  backupName: name,
+                  fromBackup: url,
+                  volumeName,
+                  backingImage: volumeBackingImageName,
+                  numberOfReplicas: payload.numberOfReplicas,
+                  ...rest,
+                }
+              }),
             },
           })
           yield put({ type: 'queryDiskTagsAndGetNodeTags' })

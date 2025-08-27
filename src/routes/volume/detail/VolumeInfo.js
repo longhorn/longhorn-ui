@@ -254,6 +254,10 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         {selectedVolume.backupTargetName || ''}
       </div>
       <div className={styles.row}>
+        <span className={styles.label}> Backup Block Size:</span>
+        {formatMib(selectedVolume.backupBlockSize)}
+      </div>
+      <div className={styles.row}>
         <span className={styles.label}> Data Engine:</span>
         {selectedVolume.dataEngine}
       </div>

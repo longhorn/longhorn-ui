@@ -46,16 +46,19 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
     sorter,
     showRestoreBackup(record) {
       const currentVolume = volumeList.find((item) => record.volumeName === item.name)
+      const { id, url, volumeName, ...rest } = record
+
       dispatch({
         type: 'backup/beforeShowRestoreBackupModal',
         payload: {
           currentItem: {
-            backupName: record.id,
-            fromBackup: record.url,
+            backupName: id,
+            fromBackup: url,
             numberOfReplicas: defaultNumberOfReplicas,
-            volumeName: record.volumeName,
-            accessMode: currentVolume && currentVolume.accessMode ? currentVolume.accessMode : 'rwo',
+            volumeName,
+            accessMode: currentVolume?.accessMode || 'rwo',
             backingImage: currentBackUp.backingImageName,
+            ...rest,
           },
         },
       })
