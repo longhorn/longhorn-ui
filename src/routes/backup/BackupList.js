@@ -192,6 +192,22 @@ class List extends React.Component {
         },
       },
       {
+        title: 'Backup Block Size',
+        dataIndex: 'blockSize',
+        key: 'blockSize',
+        width: 150,
+        sorter: (a, b) => sortTable(a, b, 'blockSize'),
+        render: (text, record) => {
+          if (record.state === 'Completed') {
+            if (String(text) === '-1') {
+              return <span className="error">Error</span>
+            }
+            return formatMib(text)
+          }
+          return null
+        }
+      },
+      {
         title: 'Backup Target',
         dataIndex: 'backupTargetName',
         key: 'backupTargetName',
