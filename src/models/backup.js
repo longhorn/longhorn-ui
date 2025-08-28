@@ -302,6 +302,7 @@ export default {
           lastBackupUrl: lastBackup.url,
           size: lastBackup.volumeSize,
           backingImage: lastBackup.volumeBackingImageName,
+          blockSize: lastBackup.blockSize
         }
       })
       // For DR Volume
@@ -442,7 +443,7 @@ export default {
       return { ...state, showBackuplabelsModalVisible: false, createVolumeStandModalKey: Math.random() }
     },
     initModalUrl(state, action) {
-      return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, size: action.found.volumeSize }
+      return { ...state, lastBackupUrl: action.found.url, volumeName: action.payload.name, size: action.found.volumeSize, blockSize: action.found.blockSize }
     },
     initBulkCreateModalUrl(state, action) {
       return { ...state, backupVolumesForBulkCreate: action.volumes }

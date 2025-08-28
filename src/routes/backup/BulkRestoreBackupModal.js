@@ -305,7 +305,7 @@ const modal = ({
         </Spin>
         <FormItem label="Backup Block Size" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupBlockSize', {
-            initialValue: ['0', '2097152', '16777216'].includes(String(item.blockSize))
+            initialValue: ['0', '2097152', '16777216'].includes(String(item.backupBlockSize))
               ? String(item.backupBlockSize)
               : '0',
           })(
