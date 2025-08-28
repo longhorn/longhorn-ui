@@ -14,7 +14,7 @@ import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 const { confirm } = Modal
 
 function Backup({ backup, volume, setting, backingImage, loading, location, dispatch }) {
-  const { backupVolumes, backupData, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
+  const { backupVolumes, backupData, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, blockSize, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
 
   const volumeList = volume.data
   const settings = setting.data
@@ -156,6 +156,7 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
       baseImage,
       fromBackup: lastBackupUrl,
       backingImage: currentBackUp ? currentBackUp.backingImageName : '',
+      blockSize
     },
     nodeTags,
     diskTags,

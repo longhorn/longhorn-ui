@@ -18,7 +18,7 @@ const formItemLayout = {
 }
 
 const modal = ({
-  item,
+  item = {},
   visible,
   onCancel,
   onOk,
@@ -203,6 +203,19 @@ const modal = ({
             </Select>)}
           </FormItem>
         </Spin>
+        <FormItem label="Backup Block Size" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('backupBlockSize', {
+            initialValue: ['0', '2097152', '16777216'].includes(String(item.blockSize))
+              ? String(item.blockSize)
+              : '0',
+          })(
+            <Select disabled>
+              <Option key="ignored" value="0">Ignored (follow the global setting)</Option>
+              <Option key="2Mi" value="2097152">2 Mi</Option>
+              <Option key="16Mi" value="16777216">16 Mi</Option>
+            </Select>
+          )}
+        </FormItem>
         <div style={{ display: 'none' }}>
           <FormItem label="Backup Url" hasFeedback {...formItemLayout}>
             {getFieldDecorator('fromBackup', {

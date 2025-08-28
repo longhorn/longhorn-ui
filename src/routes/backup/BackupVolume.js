@@ -33,7 +33,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
   location.search = location.search || ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
-  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
+  const { backupVolumes, sorter, backupFilterKey, currentItem, restoreBackupModalKey, createVolumeStandModalKey, bulkCreateVolumeStandModalKey, createVolumeStandModalVisible, bulkCreateVolumeStandModalVisible, lastBackupUrl, blockSize, size, restoreBackupModalVisible, selectedRows, previousChecked, tagsLoading, nodeTags, diskTags, volumeName, backupVolumesForBulkCreate, workloadDetailModalVisible, WorkloadDetailModalKey, workloadDetailModalItem, currentBackupVolume } = backup
   const { field, value } = queryString.parse(location.search)
   const backupVolumesData = filterBackupVolumes(backupVolumes, field, value)
   const settings = setting.data
@@ -264,6 +264,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
       fromBackup: lastBackupUrl,
       name: volumeName,
       backingImage: currentBackupVolume?.backingImageName || '',
+      blockSize
     },
     visible: createVolumeStandModalVisible,
     nodeTags,
@@ -294,6 +295,7 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
       fromBackup: item.lastBackupUrl,
       volumeName: item.volumeName,
       backingImage: item.backingImage,
+      blockSize: item.blockSize,
     })),
     numberOfReplicas: defaultNumberOfReplicas,
     visible: bulkCreateVolumeStandModalVisible,
