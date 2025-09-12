@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -58,8 +58,13 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
+    setFieldsValue,
   },
 }) => {
+  const [replicaDisabled, setReplicaDisabled] = useState(
+    getFieldValue('cloneMode') === 'linked-clone'
+  )
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -139,6 +144,48 @@ const modal = ({
           )}
           </FormItem>
         </div>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: volume.dataEngine || 'v1',
+            rules: [
+              {
+                validator: (rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select disabled>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
+        <FormItem label="Clone Mode" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('cloneMode', {
+            initialValue: 'full-copy',
+          })(
+            <Select
+              disabled={volume.dataEngine === 'v1'}
+              onChange={(value) => {
+                if (value === 'linked-clone') {
+                  setFieldsValue({ numberOfReplicas: 1 })
+                  setReplicaDisabled(true)
+                } else {
+                  setReplicaDisabled(false)
+                }
+              }}
+            >
+              <Option key="full-copy" value="full-copy">full-copy</Option>
+              {volume.dataEngine === 'v2' && (
+                <Option key="linked-clone" value="linked-clone">linked-clone</Option>
+              )}
+            </Select>
+          )}
+        </FormItem>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: volume.numberOfReplicas,
@@ -163,7 +210,7 @@ const modal = ({
                 },
               },
             ],
-          })(<InputNumber />)}
+          })(<InputNumber disabled={replicaDisabled} />)}
         </FormItem>
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
@@ -204,26 +251,6 @@ const modal = ({
           {getFieldDecorator('dataSource', {
             initialValue: cloneType === 'volume' ? volume?.name : snapshot?.name,
           })(<Select disabled />)}
-        </FormItem>
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('dataEngine', {
-            initialValue: volume.dataEngine || 'v1',
-            rules: [
-              {
-                validator: (rule, value, callback) => {
-                  if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
-                  } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
-                  }
-                  callback()
-                },
-              },
-            ],
-          })(<Select disabled>
-            <Option key={'v1'} value={'v1'}>v1</Option>
-            <Option key={'v2'} value={'v2'}>v2</Option>
-          </Select>)}
         </FormItem>
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
