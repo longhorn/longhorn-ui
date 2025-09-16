@@ -64,9 +64,12 @@ const modal = ({
     dataEngine: i.dataEngine || 'v1',
     nodeSelector: i.nodeSelector || [],
     diskSelector: i.diskSelector || [],
+    cloneMode: 'full-copy'
   }))
   const [tabIndex, setTabIndex] = useState(0)
   const [volumeConfigs, setVolumeConfigs] = useState(initConfigs)
+  const [replicaDisabled, setReplicaDisabled] = useState(initConfigs[0].cloneMode === 'linked-clone')
+
 
   const handleOk = () => {
     const data = volumeConfigs.map(vol => ({
@@ -89,7 +92,6 @@ const modal = ({
   }
 
   const handleApplyAll = () => {
-    // only apply below configs to other configs
     const currentConfig = {
       numberOfReplicas: getFieldValue('numberOfReplicas'),
       frontend: getFieldValue('frontend'),
@@ -100,69 +102,88 @@ const modal = ({
       backupTargetName: getFieldValue('backupTargetName'),
       nodeSelector: getFieldValue('nodeSelector'),
       diskSelector: getFieldValue('diskSelector'),
+      cloneMode: getFieldValue('cloneMode'),
     }
-    setVolumeConfigs(prev => {
-      const newConfigs = [...prev]
-      newConfigs.forEach((config, index) => {
-        if (index !== tabIndex) {
-          newConfigs.splice(index, 1, { ...config, ...currentConfig })
-        }
-      })
-      return newConfigs
-    })
-    message.success(`Successfully apply ${getFieldValue('name')} config to all other cloned volumes`, 5)
+
+    setVolumeConfigs(prev => prev.map((config, index) => {
+      if (index === tabIndex) return config
+
+      const updated = { ...config }
+
+      if (config.dataEngine === currentConfig.dataEngine) {
+        updated.cloneMode = currentConfig.cloneMode
+        updated.numberOfReplicas = currentConfig.cloneMode === 'linked-clone' ? 1 : currentConfig.numberOfReplicas
+      }
+
+      updated.frontend = currentConfig.frontend
+      updated.dataLocality = currentConfig.dataLocality
+      updated.accessMode = currentConfig.accessMode
+      updated.encrypted = currentConfig.encrypted
+      updated.backupTargetName = currentConfig.backupTargetName
+      updated.nodeSelector = currentConfig.nodeSelector
+      updated.diskSelector = currentConfig.diskSelector
+
+      return updated
+    }))
+
+    setReplicaDisabled(currentConfig.cloneMode === 'linked-clone')
+
+    message.success(
+      `Successfully apply ${getFieldValue('name')} config to all other cloned volumes`,
+      5
+    )
   }
+
 
   const tooltipTitle = `Apply ${getFieldValue('name')} configuration to other cloned volumes, this action will overwrite your previous filled-in configurations`
   const allFieldsError = { ...getFieldsError() }
   const hasFieldsError = Object.values(allFieldsError).some(fieldError => fieldError !== undefined) || false
 
   const handleTabClick = (key) => {
-    if (hasFieldsError) {
-      message.error('Please correct the error fields before switching to another tab', 5)
-      return
-    }
     validateFields((errors) => {
-      if (errors) return errors
-    })
+      if (errors) {
+        message.error('Please correct the error fields before switching to another tab', 5)
+        return
+      }
 
-    const newIndex = selectedRows.findIndex(i => i.name === key)
+      const newIndex = selectedRows.findIndex(i => i.id === key)
+      if (newIndex === -1) return
 
-    if (newIndex !== -1) {
       setTabIndex(newIndex)
-      const {
-        name,
-        numberOfReplicas,
-        frontend,
-        dataLocality,
-        accessMode,
-        backingImage,
-        encrypted,
-        dataEngine,
-        backupTargetName,
-        nodeSelector,
-        diskSelector
-      } = volumeConfigs[newIndex] || {}
+      const current = volumeConfigs[newIndex]
 
       setFieldsValue({
-        name,
-        size: formatSize(volumeConfigs[newIndex]),
-        numberOfReplicas,
-        frontend,
-        dataLocality,
-        accessMode,
-        backingImage,
-        encrypted,
-        dataEngine,
-        backupTargetName,
-        nodeSelector,
-        diskSelector,
+        name: current.name,
+        size: formatSize(current),
+        numberOfReplicas: current.numberOfReplicas,
+        frontend: current.frontend,
+        dataLocality: current.dataLocality,
+        accessMode: current.accessMode,
+        backingImage: current.backingImage,
+        encrypted: current.encrypted,
+        dataEngine: current.dataEngine,
+        backupTargetName: current.backupTargetName,
+        nodeSelector: current.nodeSelector,
+        diskSelector: current.diskSelector,
+        cloneMode: current.cloneMode
       })
-    }
+
+      setReplicaDisabled(current.cloneMode === 'linked-clone')
+    })
   }
 
   const handleNameChange = (e) => updateVolumeConfig('name', e.target.value)
   const handleReplicasNumberChange = (newNumber) => updateVolumeConfig('numberOfReplicas', newNumber)
+  const handleCloneModeChange = (value) => {
+    updateVolumeConfig('cloneMode', value)
+
+    if (value === 'linked-clone') {
+      updateVolumeConfig('numberOfReplicas', 1)
+      setFieldsValue({ numberOfReplicas: 1 })
+    }
+
+    setReplicaDisabled(value === 'linked-clone')
+  }
   const handleFrontendChange = (value) => updateVolumeConfig('frontend', value)
   const handleDataLocalityChange = (value) => updateVolumeConfig('dataLocality', value)
   const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
@@ -271,6 +292,39 @@ const modal = ({
           )}
           </FormItem>
         </div>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            rules: [
+              {
+                validator: (_rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select disabled>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
+        <FormItem label="Clone Mode" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('cloneMode', { initialValue: 'full-copy' })(
+            <Select
+              disabled={item.dataEngine === 'v1'}
+              onChange={handleCloneModeChange}
+            >
+              <Option key="full-copy" value="full-copy">full-copy</Option>
+              {item.dataEngine === 'v2' && (
+                <Option key="linked-clone" value="linked-clone">linked-clone</Option>
+              )}
+            </Select>
+          )}
+        </FormItem>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: item.numberOfReplicas,
@@ -295,7 +349,7 @@ const modal = ({
                 },
               },
             ],
-          })(<InputNumber onChange={handleReplicasNumberChange} />)}
+          })(<InputNumber onChange={handleReplicasNumberChange} disabled={replicaDisabled} />)}
         </FormItem>
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
@@ -336,26 +390,6 @@ const modal = ({
           {getFieldDecorator('dataSource', {
             initialValue: item.id || '',
           })(<Select disabled />)}
-        </FormItem>
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
-            rules: [
-              {
-                validator: (_rule, value, callback) => {
-                  if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
-                  } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
-                  }
-                  callback()
-                },
-              },
-            ],
-          })(<Select disabled>
-            <Option key={'v1'} value={'v1'}>v1</Option>
-            <Option key={'v2'} value={'v2'}>v2</Option>
-          </Select>)}
         </FormItem>
         <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
