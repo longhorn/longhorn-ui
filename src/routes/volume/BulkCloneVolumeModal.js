@@ -294,7 +294,7 @@ const modal = ({
         </div>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
-            initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
+            initialValue: item.dataEngine || 'v1',
             rules: [
               {
                 validator: (_rule, value, callback) => {
