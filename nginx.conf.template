@@ -10,7 +10,7 @@ http {
         include /etc/nginx/mime.types;
 
         listen ${LONGHORN_UI_PORT};       # IPv4
-        listen [::]:${LONGHORN_UI_PORT};  # IPv6
+        ${IPV6_LISTEN}
 
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
