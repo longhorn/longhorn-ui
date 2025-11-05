@@ -107,17 +107,6 @@ const modal = ({
         <FormItem label="Use Previous Name" hasFeedback {...formItemLayout}>
           <Checkbox checked={previousChecked} disabled={!item.volumeName} onChange={onPreviousChange} />
         </FormItem>
-        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('numberOfReplicas', {
-            initialValue: initialReplicas,
-            rules: [
-              {
-                required: true,
-                message: 'Please input the number of replicas',
-              },
-            ],
-          })(<InputNumber min={1} />)}
-        </FormItem>
         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: initialDataEngine,
@@ -141,6 +130,17 @@ const modal = ({
             <Option key={'v1'} value={'v1'}>v1</Option>
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
+        </FormItem>
+        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('numberOfReplicas', {
+            initialValue: initialReplicas,
+            rules: [
+              {
+                required: true,
+                message: 'Please input the number of replicas',
+              },
+            ],
+          })(<InputNumber min={1} />)}
         </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
