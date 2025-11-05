@@ -12,6 +12,7 @@ const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps,
     )
   })
   return (<Dropdown
+    trigger="click"
     overlay={<Menu onClick={onMenuClick}>{menu}</Menu>}
     {...dropdownProps}
   >
