@@ -274,6 +274,26 @@ const modal = ({
             )}
           </FormItem>
         </div>
+        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('dataEngine', {
+            initialValue: initialDataEngine,
+            rules: [
+              {
+                validator: (_rule, value, callback) => {
+                  if (value === 'v1' && !v1DataEngineEnabled) {
+                    callback('v1 data engine is not enabled')
+                  } else if (value === 'v2' && !v2DataEngineEnabled) {
+                    callback('v2 data engine is not enabled')
+                  }
+                  callback()
+                },
+              },
+            ],
+          })(<Select onChange={handleDataEngineChange}>
+            <Option key={'v1'} value={'v1'}>v1</Option>
+            <Option key={'v2'} value={'v2'}>v2</Option>
+          </Select>)}
+        </FormItem>
         <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: initialReplicas,
@@ -296,26 +316,6 @@ const modal = ({
               },
             ],
           })(<InputNumber />)}
-        </FormItem>
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('dataEngine', {
-            initialValue: initialDataEngine,
-            rules: [
-              {
-                validator: (_rule, value, callback) => {
-                  if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
-                  } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
-                  }
-                  callback()
-                },
-              },
-            ],
-          })(<Select onChange={handleDataEngineChange}>
-            <Option key={'v1'} value={'v1'}>v1</Option>
-            <Option key={'v2'} value={'v2'}>v2</Option>
-          </Select>)}
         </FormItem>
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
