@@ -42,3 +42,12 @@ export const nodeStatusColorMap = {
   disabled: { color: '#dee1e3', bg: 'rgba(222,225,227,.05)' }, // grey
   unknown: { color: '#F15354', bg: 'rgba(241,83,84,.05)' }, // red
 }
+
+export const NODE_STATUS = {
+  SCHEDULABLE: 'schedulable',
+  UNSCHEDULABLE: 'unschedulable',
+  AUTO_EVICTING: 'autoEvicting',
+  DOWN: 'down',
+  DISABLED: 'disabled',
+  UNKNOWN: 'unknown',
+}
