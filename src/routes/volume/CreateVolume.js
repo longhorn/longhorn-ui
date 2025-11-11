@@ -176,27 +176,28 @@ const modal = ({
     setFieldsValue({
       ...getFieldsValue(),
       dataSourceVolume: '',
+      dataSourceSnapshot: ''
     })
   }
 
   const handleDataSourceVolumeChange = (value) => {
     const dataSourceVol = volumeOptions.find(vol => vol.name === value)
+
     if (getFieldValue('dataSourceType') === dataSourceOptions[1] && dataSourceVol) {
       getSnapshot(dataSourceVol)
-      setFieldsValue({
-        ...getFieldsValue(),
-        size: formatSize(dataSourceVol), // set size field according to the selected data source
-        dataSourceSnapshot: '',
-      })
-    } else {
-      setFieldsValue({
-        ...getFieldsValue(),
-        size: formatSize(dataSourceVol),
-      })
     }
+
+    setFieldsValue({
+      ...getFieldsValue(),
+      size: formatSize(dataSourceVol),
+      dataSourceSnapshot: '',
+    })
   }
 
-  const volumeSnapshots = snapshotsOptions?.length > 0 ? snapshotsOptions.filter(d => d.name !== 'volume-head') : []// no include volume-head
+  const dataSourceVolume = getFieldValue('dataSourceVolume')
+  const volumeSnapshots = dataSourceVolume && snapshotsOptions?.length > 0
+    ? snapshotsOptions.filter(snap => snap.name !== 'volume-head')
+    : []
   sortByCreatedTime(volumeSnapshots)
   const dataSourceAlertMsg = 'The volume size is set to the selected volume size. Mismatched size will cause create volume failed.'
 
@@ -207,12 +208,18 @@ const modal = ({
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
     const fields = getFieldsValue()
-    setFieldsValue({ ...fields, backingImage: '', frontend: frontends[0].engine }) // reset dependent fields
+    const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
+
     // update filtered backing images
     setFilteredBackingImages(backingImageOptions.filter(image => image.dataEngine === engine))
-    // update number of replicas
-    const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
-    setFieldsValue({ ...fields, numberOfReplicas: replicas })
+    setFieldsValue({
+      ...fields,
+      numberOfReplicas: replicas, // update number of replicas
+      backingImage: '',
+      frontend: frontends[0].engine,
+      dataSourceVolume: '',
+      dataSourceSnapshot: '',
+    })
   }
 
   return (
@@ -391,9 +398,22 @@ const modal = ({
           >
             <FormItem label="Volume" hasFeedback {...formItemLayout}>
               {getFieldDecorator('dataSourceVolume', { initialValue: '' })(
-                <Select allowClear onChange={handleDataSourceVolumeChange}>
-                  {volumeOptions.map(vol => <Option key={vol.name} value={vol.name}>{vol.name}</Option>) }
-                </Select>
+                (() => {
+                  const selectedDataEngine = getFieldValue('dataEngine')
+                  const filteredOptions = volumeOptions
+                    .filter(vol => vol.dataEngine === selectedDataEngine)
+                    .map(vol => (
+                      <Option key={vol.name} value={vol.name}>
+                        {vol.name}
+                      </Option>
+                    ))
+
+                  return (
+                    <Select allowClear onChange={handleDataSourceVolumeChange}>
+                      {filteredOptions}
+                    </Select>
+                  )
+                })()
               )}
             </FormItem>
           </Popover>
