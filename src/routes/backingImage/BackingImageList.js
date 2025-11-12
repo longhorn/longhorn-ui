@@ -101,6 +101,20 @@ function list({
       },
     },
     {
+      title: 'Virtual Size',
+      dataIndex: 'virtualSize',
+      key: 'virtualSize',
+      width: 100,
+      sorter: (a, b) => a.virtualSize - b.virtualSize,
+      render: (text) => {
+        return (
+          <div>
+            {formatMib(text)}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Created From',
       dataIndex: 'sourceType',
       key: 'sourceType',
