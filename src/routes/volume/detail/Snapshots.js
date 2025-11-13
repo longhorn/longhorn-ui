@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Tooltip, Card, Switch, Progress } from 'antd'
+import { Button, Tooltip, Card, Progress } from 'antd'
 import { Snapshot } from '../../../components'
 import CreateBackupModal from './CreateBackupModal'
 import styles from './index.less'
@@ -37,14 +37,6 @@ class Snapshots extends React.Component {
           ...this.state,
           createBackModalVisible: true,
         })
-        return
-      }
-      if (action.type === 'toggleShowRemoved') {
-        this.props.dispatch({
-          type: 'snapshotModal/setShowRemoved',
-          payload: !this.props.showRemoved,
-        })
-        this.refs.Snapshot.showReomve()
         return
       }
       if (action.type === 'snapshotBackup') {
@@ -255,7 +247,7 @@ class Snapshots extends React.Component {
       loading: this.props.loading,
       volume: this.props.volume,
       state: this.props.state,
-      snapshotTree: this.props.showRemoved ? this.props.snapshotTreeWithRemoved : this.props.snapshotTree,
+      snapshotTree: this.props.snapshotTree,
       volumeHead: this.props.volumeHead,
       disableBackup,
       disableBackupMessage: createBackupTooltipMessage(),
@@ -321,9 +313,6 @@ class Snapshots extends React.Component {
             <Snapshot {...treeProps} onAction={this.onAction} ref="Snapshot" />
           </div>
         </div>
-        <div style={{ position: 'absolute', top: 80, right: 30 }}>
-          Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
-        </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
         {this.state.createBackBySnapshotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapshotModalKey} {...this.createBackupBySnapshotModal()} /> : ''}
       </Card>
@@ -337,9 +326,7 @@ Snapshots.propTypes = {
   volume: PropTypes.object,
   loading: PropTypes.bool,
   snapshotTree: PropTypes.array,
-  snapshotTreeWithRemoved: PropTypes.array,
   state: PropTypes.bool,
-  showRemoved: PropTypes.bool,
   volumeHead: PropTypes.object,
   backupTarget: PropTypes.object
 }
