@@ -79,7 +79,7 @@ function list({
       title: 'UUID',
       dataIndex: 'uuid',
       key: 'uuid',
-      width: 120,
+      width: 140,
       sorter: (a, b) => a.uuid.localeCompare(b.uuid),
       render: (text) => {
         return (
@@ -87,10 +87,17 @@ function list({
         )
       },
     }, {
-      title: 'Size',
+      title: (
+        <span>
+          Actual Size&nbsp;
+          <Tooltip title="The physical storage space currently consumed by the image file on the host's file system">
+            <Icon type="exclamation-circle" />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'size',
       key: 'size',
-      width: 100,
+      width: 160,
       sorter: (a, b) => a.size - b.size,
       render: (text) => {
         return (
@@ -101,10 +108,17 @@ function list({
       },
     },
     {
-      title: 'Virtual Size',
+      title: (
+        <span>
+          Virtual Size&nbsp;
+          <Tooltip title="The total logical capacity of the disk that the image represents">
+            <Icon type="exclamation-circle" />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'virtualSize',
       key: 'virtualSize',
-      width: 100,
+      width: 160,
       sorter: (a, b) => a.virtualSize - b.virtualSize,
       render: (text) => {
         return (
