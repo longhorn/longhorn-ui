@@ -322,7 +322,7 @@ class Snapshots extends React.Component {
           </div>
         </div>
         <div style={{ position: 'absolute', top: 80, right: 30 }}>
-          Show System Hidden: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
+          Show System Snapshots: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
         {this.state.createBackBySnapshotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapshotModalKey} {...this.createBackupBySnapshotModal()} /> : ''}
