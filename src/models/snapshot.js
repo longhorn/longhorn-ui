@@ -140,7 +140,7 @@ export default (namespace) => {
       loading: false,
       state: false,
       enablePolling: false,
-      showRemoved: false,
+      showRemoved: true,
       // raw snapshots data
       data: [],
     },
