@@ -1,5 +1,6 @@
 events { worker_connections 1024; }
 http {
+    large_client_header_buffers 4 32k;
     server {
         gzip on;
         gzip_min_length 1k;
