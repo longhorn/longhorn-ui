@@ -354,6 +354,7 @@ const modal = ({
             initialValue: 'rwo',
           })(<Select>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+            <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>

@@ -56,6 +56,7 @@ const modal = ({
           initialValue: item.accessMode,
         })(<Select>
           <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
+          <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
           <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
