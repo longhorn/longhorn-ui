@@ -58,6 +58,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
   const healthState = getHealthState(selectedVolume.robustness)
   const accessModeObject = {
     rwo: 'ReadWriteOnce',
+    rwop: 'ReadWriteOncePod',
     rwx: 'ReadWriteMany',
   }
   let upgrade = ''
