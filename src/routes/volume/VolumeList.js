@@ -61,6 +61,7 @@ function list({
   showUpdateFreezeFilesystemForSnapshotModal,
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
+  toggleUblkParamsModal,
   onRowClick = f => f,
 }) {
   const volumeActionsProps = {
@@ -102,6 +103,7 @@ function list({
     showUpdateFreezeFilesystemForSnapshotModal,
     toggleOfflineRebuildingModal,
     toggleReplicaRebuildingBandwidthLimitModal,
+    toggleUblkParamsModal,
     onRowClick,
   }
   /**

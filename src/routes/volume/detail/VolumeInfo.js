@@ -249,6 +249,18 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             <Icon type="disconnect" className="healthy" />
           </Tooltip> : (frontends.find(item => item.value === selectedVolume.frontend) || '').label}
       </div>
+      {selectedVolume.frontend === 'ublk' && (
+        <>
+          <div className={styles.row}>
+            <span className={styles.label}>Ublk Number of Queues:</span>
+            {selectedVolume.ublkNumberOfQueue}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}>Ublk Queue Depth:</span>
+            {selectedVolume.ublkQueueDepth}
+          </div>
+        </>
+      )}
       <div className={styles.row}>
         <span className={styles.label}> Backup Target:</span>
         {selectedVolume.backupTargetName || ''}

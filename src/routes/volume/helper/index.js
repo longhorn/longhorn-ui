@@ -721,6 +721,29 @@ export function getReplicaRebuildingBandwidthLimitModalProps(volumes, visible, d
   }
 }
 
+export function getUblkParamsModalProps(volumes, visible, field, dispatch) {
+  return {
+    visible,
+    field,
+    items: volumes,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateUblkParams',
+        payload: { params: v, urls },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/toggleUblkParamsModal',
+        payload: {
+          isUblkParamsModalVisible: false,
+          ublkParamsField: ''
+        }
+      })
+    },
+  }
+}
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }

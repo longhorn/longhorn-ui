@@ -40,6 +40,7 @@ import UpdateBulkAccessMode from './UpdateBulkAccessMode'
 import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import UpdateReplicaRebuildingBandwidthLimitModal from './UpdateReplicaRebuildingBandwidthLimitModal'
+import UpdateUblkParamsModal from './UpdateUblkParamsModal'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import { isRestoring } from './helper'
@@ -68,7 +69,8 @@ import {
   getUpdateBackupTargetProps,
   getUpdateBulkBackupTargetProps,
   getOfflineRebuildingModalProps,
-  getReplicaRebuildingBandwidthLimitModalProps
+  getReplicaRebuildingBandwidthLimitModalProps,
+  getUblkParamsModalProps
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -220,7 +222,9 @@ class Volume extends React.Component {
       updateBulkBackupTargetModalVisible,
       updateBulkBackupTargetModalKey,
       isOfflineRebuildingModalVisible,
-      isReplicaRebuildingBandwidthLimitModalVisible
+      isReplicaRebuildingBandwidthLimitModalVisible,
+      ublkParamsField,
+      isUblkParamsModalVisible
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -235,6 +239,8 @@ class Volume extends React.Component {
     const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
     const defaultRevisionCounterSetting = settings.find(s => s.id === 'disable-revision-counter')
     const defaultNumberOfReplicas = defaultReplicaCountSetting?.value || ''
+    const defaultUblkNumberOfQueue = settings.find(s => s.id === 'default-ublk-number-of-queue')?.value
+    const defaultUblkQueueDepth = settings.find(s => s.id === 'default-ublk-queue-depth')?.value
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
     const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
@@ -644,7 +650,17 @@ class Volume extends React.Component {
             isReplicaRebuildingBandwidthLimitModalVisible: true
           },
         })
-      }
+      },
+      toggleUblkParamsModal(record, key) {
+        dispatch({
+          type: 'volume/toggleUblkParamsModal',
+          payload: {
+            key,
+            selectedRows: [record],
+            isUblkParamsModalVisible: true
+          },
+        })
+      },
     }
 
     const volumeFilterProps = {
@@ -802,6 +818,8 @@ class Volume extends React.Component {
     const createVolumeModalProps = {
       item: {
         numberOfReplicas: defaultNumberOfReplicas,
+        ublkNumberOfQueue: defaultUblkNumberOfQueue,
+        ublkQueueDepth: defaultUblkQueueDepth,
         size: 20,
         iops: 1000,
         unit: 'Gi',
@@ -1208,7 +1226,17 @@ class Volume extends React.Component {
             isReplicaRebuildingBandwidthLimitModalVisible: true
           },
         })
-      }
+      },
+      toggleUblkParamsModal(record, key) {
+        dispatch({
+          type: 'volume/toggleUblkParamsModal',
+          payload: {
+            key,
+            selectedRows: record,
+            isUblkParamsModalVisible: true
+          },
+        })
+      },
     }
 
     const createBackModalProps = {
@@ -1321,6 +1349,7 @@ class Volume extends React.Component {
     const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
     const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
     const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps(selectedRows, isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
+    const ublkParamsModalProps = getUblkParamsModalProps(selectedRows, isUblkParamsModalVisible, ublkParamsField, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
@@ -1374,6 +1403,7 @@ class Volume extends React.Component {
         {updateBulkBackupTargetModalVisible ? <UpdateBulkBackupTargetModal key={updateBulkBackupTargetModalKey} {...updateBulkBackupTargetModalProps} /> : ''}
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
+        {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
       </div>
     )
   }
