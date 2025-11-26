@@ -20,6 +20,7 @@ import UpdateSnapshotMaxCountModal from '../UpdateSnapshotMaxCountModal.js'
 import UpdateSnapshotMaxSizeModal from '../UpdateSnapshotMaxSizeModal.js'
 import UpdateFreezeFilesystemForSnapshotModal from '../UpdateFreezeFilesystemForSnapshotModal'
 import UpdateReplicaRebuildingBandwidthLimitModal from '../UpdateReplicaRebuildingBandwidthLimitModal'
+import UpdateUblkParamsModal from '../UpdateUblkParamsModal'
 import VolumeAttachment from './VolumeAttachment'
 import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
@@ -50,7 +51,8 @@ import {
   getUpdateSnapshotMaxSizeModalProps,
   getUpdateFreezeFilesystemForSnapshotModalProps,
   getOfflineRebuildingModalProps,
-  getReplicaRebuildingBandwidthLimitModalProps
+  getReplicaRebuildingBandwidthLimitModalProps,
+  getUblkParamsModalProps
 } from '../helper'
 import { getBackupTargets } from '../../../utils/backupTarget'
 
@@ -178,7 +180,9 @@ function VolumeDetail({
     updateFreezeFilesystemForSnapshotModalKey,
     updateFreezeFilesystemForSnapshotModalVisible,
     isOfflineRebuildingModalVisible,
-    isReplicaRebuildingBandwidthLimitModalVisible
+    isReplicaRebuildingBandwidthLimitModalVisible,
+    ublkParamsField,
+    isUblkParamsModalVisible,
   } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -537,7 +541,17 @@ function VolumeDetail({
           isReplicaRebuildingBandwidthLimitModalVisible: true
         },
       })
-    }
+    },
+    toggleUblkParamsModal(record, key) {
+      dispatch({
+        type: 'volume/toggleUblkParamsModal',
+        payload: {
+          key,
+          selectedRows: record,
+          isUblkParamsModalVisible: true
+        },
+      })
+    },
   }
 
   const attachHostModalProps = getAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -617,6 +631,7 @@ function VolumeDetail({
   const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selectedVolume, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
   const offlineRebuildingModalProps = getOfflineRebuildingModalProps([selectedVolume], isOfflineRebuildingModalVisible, dispatch)
   const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps([selectedVolume], isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
+  const ublkParamsModalProps = getUblkParamsModalProps([selectedVolume], isUblkParamsModalVisible, ublkParamsField, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
@@ -805,6 +820,7 @@ function VolumeDetail({
         {updateFreezeFilesystemForSnapshotModalVisible ? <UpdateFreezeFilesystemForSnapshotModal key={updateFreezeFilesystemForSnapshotModalKey} {...updateFreezeFilesystemForSnapshotModalProps} /> : ''}
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
+        {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
       </div>
     </div>
   )

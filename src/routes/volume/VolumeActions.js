@@ -37,6 +37,7 @@ function actions({
   showUpdateFreezeFilesystemForSnapshotModal,
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
+  toggleUblkParamsModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -178,6 +179,12 @@ function actions({
       case 'updateReplicaRebuildingBandwidthLimit':
         toggleReplicaRebuildingBandwidthLimitModal(record)
         break
+      case 'updateUblkNumberOfQueue':
+        toggleUblkParamsModal(record, 'ublkNumberOfQueue')
+        break
+      case 'updateUblkQueueDepth':
+        toggleUblkParamsModal(record, 'ublkQueueDepth')
+        break
       default:
     }
   }
@@ -258,9 +265,13 @@ function actions({
       }
     }
   })
-
   if (selected.dataEngine === 'v2') {
     availableActions.push({ key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled: false })
+  }
+
+  if (selected.frontend === 'ublk') {
+    availableActions.push({ key: 'updateUblkNumberOfQueue', name: 'Update UBLK Number of Queue', disabled: selected.state !== 'detached' })
+    availableActions.push({ key: 'updateUblkQueueDepth', name: 'Update UBLK Queue Depth', disabled: selected.state !== 'detached' })
   }
 
   availableActions.push({ key: 'cloneVolume', name: 'Clone Volume', disabled: selected.standby || isRestoring(selected) })

@@ -201,9 +201,16 @@ const modal = ({
   sortByCreatedTime(volumeSnapshots)
   const dataSourceAlertMsg = 'The volume size is set to the selected volume size. Mismatched size will cause create volume failed.'
 
-  const parsedReplicas = safeParseJSON(item.numberOfReplicas)
+  const parsedReplicas = safeParseJSON(item.numberOfReplicas || '{}')
+  const parsedUblkNumberOfQueue = safeParseJSON(item.ublkNumberOfQueue || '{}')
+  const parsedUblkQueueDepth = safeParseJSON(item.ublkQueueDepth || '{}')
+
   const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
   const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+
+  const currentDataEngine = getFieldValue('dataEngine')
+  const initialUblkNumberOfQueue = Number(parsedUblkNumberOfQueue[currentDataEngine] ?? 0)
+  const initialUblkQueueDepth = Number(parsedUblkQueueDepth[currentDataEngine] ?? 0)
 
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
@@ -327,21 +334,51 @@ const modal = ({
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
             initialValue: frontends[0].value,
-            rules: [
-              {
-                required: true,
-                message: 'Please select a frontend',
-              },
-            ],
-          })(<Select>
-          {frontends.map(({ value, label, dataEngine }) => {
-            const selectedDataEngine = getFieldValue('dataEngine')
-            return dataEngine.includes(selectedDataEngine)
-              ? <Option key={value} value={value}>{label}</Option>
-              : null
-          })}
-          </Select>)}
+            rules: [{ required: true, message: 'Please select a frontend' }],
+          })(
+            <Select>
+              {frontends.map(({ value, label, dataEngine }) => {
+                const selectedDataEngine = getFieldValue('dataEngine')
+                return dataEngine.includes(selectedDataEngine) ? (
+                  <Option key={value} value={value}>
+                    {label}
+                  </Option>
+                ) : null
+              })}
+            </Select>
+          )}
         </FormItem>
+        {getFieldValue('frontend') === 'ublk' && (
+          <>
+            {['ublkNumberOfQueue', 'ublkQueueDepth'].map((field) => {
+              const label = field === 'ublkNumberOfQueue'
+                ? 'UBLK Number of Queue'
+                : 'UBLK Queue Depth'
+
+              const initialValue = field === 'ublkNumberOfQueue'
+                ? initialUblkNumberOfQueue
+                : initialUblkQueueDepth
+
+              const requiredMessage = field === 'ublkNumberOfQueue'
+                ? 'Please input the UBLK number of the queue'
+                : 'Please input the UBLK queue depth'
+
+              return (
+                <FormItem key={field} label={label} hasFeedback {...formItemLayout}>
+                  {getFieldDecorator(field, {
+                    initialValue,
+                    rules: [{ required: true, message: requiredMessage }],
+                  })(
+                    <InputNumber
+                      parser={(value) => Number(String(value).replace(/[^\d]/g, ''))}
+                      min={0}
+                    />
+                  )}
+                </FormItem>
+              )
+            })}
+          </>
+        )}
         <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataLocality', {
             initialValue: defaultDataLocalityValue,

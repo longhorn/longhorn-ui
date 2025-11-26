@@ -35,7 +35,8 @@ function bulkActions({
   showUpdateReplicaDiskSoftAntiAffinityModal,
   showUpdateBulkFreezeFilesystemForSnapshotModal,
   toggleOfflineRebuildingModal,
-  toggleReplicaRebuildingBandwidthLimitModal
+  toggleReplicaRebuildingBandwidthLimitModal,
+  toggleUblkParamsModal
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -160,6 +161,12 @@ function bulkActions({
       case 'updateReplicaRebuildingBandwidthLimit':
         toggleReplicaRebuildingBandwidthLimitModal(selectedRows)
         break
+      case 'updateUblkNumberOfQueue':
+        toggleUblkParamsModal(selectedRows, 'ublkNumberOfQueue')
+        break
+      case 'updateUblkQueueDepth':
+        toggleUblkParamsModal(selectedRows, 'ublkQueueDepth')
+        break
       default:
     }
   }
@@ -227,15 +234,27 @@ function bulkActions({
     { key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v1') } },
   ]
 
-  const menu = (<Menu>
-    {
-      allDropDownActions.map((item) => {
-        return (<Menu.Item key={item.key}>
-          <Button style={{ width: '100%', textAlign: 'left' }} size="large" type="link" disabled={item.disabled()} onClick={() => handleClick(item.key)}>{ item.name }</Button>
-        </Menu.Item>)
-      })
-    }
-  </Menu>)
+  if (selectedRows.some((row) => row?.frontend === 'ublk')) {
+    allDropDownActions.push({ key: 'updateUblkNumberOfQueue', name: 'Update UBLK Number of Queue', disabled() { return selectedRows.every((row) => row.state !== 'detached') } })
+    allDropDownActions.push({ key: 'updateUblkQueueDepth', name: 'Update UBLK Queue Depth', disabled() { return selectedRows.every((row) => row.state !== 'detached') } })
+  }
+
+  const menu = (
+      <Menu style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+        {allDropDownActions.map(item => (
+          <Menu.Item key={item.key}>
+            <Button
+              style={{ width: '100%', textAlign: 'left' }}
+              type="link"
+              disabled={item.disabled()}
+              onClick={() => handleClick(item.key)}
+            >
+              {item.name}
+            </Button>
+          </Menu.Item>
+        ))}
+      </Menu>
+  )
 
   return (
     <div className={style.bulkActions}>

@@ -118,7 +118,9 @@ export default {
     sorter: getSorter('volumeList.sorter'),
     customColumnList: window.__column__, // eslint-disable-line no-underscore-dangle
     isOfflineRebuildingModalVisible: false,
-    isReplicaRebuildingBandwidthLimitModalVisible: false
+    isReplicaRebuildingBandwidthLimitModalVisible: false,
+    ublkParamsField: '',
+    isUblkParamsModalVisible: false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -475,6 +477,20 @@ export default {
         payload: {
           selectedRows: [],
           isReplicaRebuildingBandwidthLimitModalVisible: false
+        }
+      })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateUblkParams({
+      payload,
+    }, { call, put }) {
+      yield put({
+        type: 'volume/toggleUblkParamsModal',
+        payload: {
+          selectedRows: [],
+          isUblkParamsModalVisible: false,
+          ublkParamsField: '',
         }
       })
       yield payload.urls.map(url => call(execAction, url, payload.params))
@@ -1081,6 +1097,16 @@ export default {
         ...state,
         selectedRows: selectedRows ?? state.selectedRows,
         isReplicaRebuildingBandwidthLimitModalVisible: isReplicaRebuildingBandwidthLimitModalVisible ?? state.isReplicaRebuildingBandwidthLimitModalVisible,
+      }
+    },
+    toggleUblkParamsModal(state, action = {}) {
+      const { selectedRows = [], isUblkParamsModalVisible, key } = action.payload || {}
+
+      return {
+        ...state,
+        selectedRows: selectedRows ?? state.selectedRows,
+        ublkParamsField: key,
+        isUblkParamsModalVisible: isUblkParamsModalVisible ?? state.isUblkParamsModalVisible,
       }
     },
     updateWs(state, action) {
