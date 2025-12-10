@@ -14,6 +14,13 @@ const HEALTH_STATUS_LABEL = {
   WARNING: 'Warning',
 }
 
+const HEALTH_STATUS_COLOR = {
+  FAILED: '#F15354',
+  WARNING: '#F1C40F',
+  PASSED: '#27AE5F',
+  UNKNOWN: '#dee1e3',
+}
+
 function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal }) {
   const getDiskStatus = (record) => {
     const readyStatus = node?.conditions?.Ready?.status?.toLowerCase()
@@ -213,6 +220,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
         const healthData = record.healthData?.[diskKey]
         const status = healthData?.healthStatus || ''
         const label = HEALTH_STATUS_LABEL[status] || status
+        const color = HEALTH_STATUS_COLOR[status]
 
         const formatAttributeName = (name) => name.replace(/([A-Z])/g, ' $1').trim()
 
@@ -224,11 +232,11 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
 
         return (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
-            <span>{label || '-'}</span>
+            <span style={{ color }}>{label || '-'}</span>
 
             {label && tooltipContent && (
               <Tooltip title={tooltipContent}>
-                <Icon type="exclamation-circle" />
+                <Icon type="info-circle" />
               </Tooltip>
             )}
           </div>
