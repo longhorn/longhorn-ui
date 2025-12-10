@@ -1,11 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Progress, Tooltip, Tag } from 'antd'
+import { Table, Progress, Tooltip, Tag, Icon } from 'antd'
 import { byteToGi, getStorageProgressStatus } from './helper/index'
 import { diskTagColor } from '../../utils/constants'
 import { NODE_STATUS } from '../../utils/status'
 import { formatMib } from '../../utils/formatter'
 import './DiskList.less'
+
+const HEALTH_STATUS_LABEL = {
+  FAILED: 'Failed',
+  PASSED: 'Passed',
+  UNKNOWN: 'Unknown',
+  WARNING: 'Warning',
+}
+
+const HEALTH_STATUS_COLOR = {
+  FAILED: '#F15354',
+  WARNING: '#F1C40F',
+  PASSED: '#27AE5F',
+  UNKNOWN: '#dee1e3',
+}
 
 function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal }) {
   const getDiskStatus = (record) => {
@@ -30,6 +44,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
 
   const columns = [
     {
+      title: 'Status',
       key: 'status',
       width: 170,
       render: (text, record) => {
@@ -58,6 +73,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'ID',
       key: 'id',
       dataIndex: 'id',
       width: 200,
@@ -66,6 +82,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'Disk Type',
       key: 'diskType',
       dataIndex: 'diskType',
       width: 100,
@@ -78,19 +95,20 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'Path',
       key: 'path',
       dataIndex: 'path',
       width: 360,
       render: (text) => {
         return (
           <div className="path" style={{ textAlign: 'center' }}>
-            <span className="pathLabel">Path: &nbsp;</span>
             <span>{text}</span>
           </div>
         )
       },
     },
     {
+      title: 'Replicas',
       key: 'scheduledReplica',
       dataIndex: 'scheduledReplica',
       width: 96,
@@ -98,7 +116,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
         let numberOfReplicas = replicas ? Object.keys(replicas).length : 0
 
         return (
-          <div className="replicas">
+          <div className="replicas" style={{ textAlign: 'center' }}>
             <a onClick={() => showDiskReplicaModal(record, node)}>
               {numberOfReplicas}
             </a>
@@ -107,6 +125,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'Allocated',
       key: 'allocated',
       dataIndex: 'storageScheduled',
       width: 180,
@@ -129,6 +148,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'Used',
       key: 'used',
       width: 180,
       render: (text, record) => {
@@ -150,6 +170,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'Size',
       key: 'size',
       width: 180,
       render: (text, record) => {
@@ -190,6 +211,39 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
+      title: 'Health Status',
+      key: 'healthStatus',
+      dataIndex: 'healthStatus',
+      width: 170,
+      render: (_, record) => {
+        const diskKey = record.id
+        const healthData = record.healthData?.[diskKey]
+        const status = healthData?.healthStatus || ''
+        const label = HEALTH_STATUS_LABEL[status] || status
+        const color = HEALTH_STATUS_COLOR[status]
+
+        const formatAttributeName = (name) => name.replace(/([A-Z])/g, ' $1').trim()
+
+        const tooltipContent = healthData?.attributes?.map((attr) => (
+          <div key={attr.name}>
+            <span>{formatAttributeName(attr.name)}:</span> {attr.rawValue}
+          </div>
+        ))
+
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+            <span style={{ color }}>{label || '-'}</span>
+
+            {label && tooltipContent && (
+              <Tooltip title={tooltipContent}>
+                <Icon type="info-circle" />
+              </Tooltip>
+            )}
+          </div>
+        )
+      },
+    },
+    {
       key: 'operation',
       width: 38,
     },
@@ -201,15 +255,13 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       <div className="title">Disks</div>
       <div className="content">
         <Table
-          showHeader={false}
           defaultExpandAllRows
           bordered={false}
           columns={columns}
           dataSource={disks}
-          simple
           pagination={pagination}
           rowKey={record => record.id}
-          scroll={{ y: '100%' }}
+          scroll={{ x: true, y: true }}
         />
       </div>
     </div>
