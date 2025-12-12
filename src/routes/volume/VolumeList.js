@@ -482,6 +482,7 @@ function list({
       render: (text) => {
         const accessModeObject = {
           rwo: 'ReadWriteOnce',
+          rwop: 'ReadWriteOncePod',
           rwx: 'ReadWriteMany',
         }
         return (
