@@ -50,6 +50,7 @@ function ConditionTooltip({ selectedVolume, conditionKey }) {
       }
       break
     case 'Restore':
+    case 'OfflineRebuilding':
       icon = <Icon style={{ marginRight: 5 }} type="check-circle" />
       if (reason === '' && status?.toLowerCase() === 'false') {
         conditionClassName = 'unknown' // grey

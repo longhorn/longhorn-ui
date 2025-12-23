@@ -240,7 +240,16 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             Conditions:
           </span>
           <div className={styles.control} style={{ display: 'flex' }}>
-            {selectedVolume && selectedVolume.conditions && Object.keys(selectedVolume.conditions).filter((key) => ['Restore', 'Scheduled', 'TooManySnapshots'].includes(key)).map((key) => <ConditionTooltip key={key} selectedVolume={selectedVolume} conditionKey={key} />)}
+            {selectedVolume?.conditions
+              && ['Restore', 'Scheduled', 'TooManySnapshots', 'OfflineRebuilding']
+                .filter((key) => selectedVolume.conditions[key])
+                .map((key) => (
+                  <ConditionTooltip
+                    key={key}
+                    selectedVolume={selectedVolume}
+                    conditionKey={key}
+                  />
+                ))}
           </div>
         </div>
       </div>
