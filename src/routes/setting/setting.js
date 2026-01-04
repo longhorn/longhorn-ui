@@ -92,7 +92,7 @@ const form = ({
       case 'int':
         return <InputNumber {...commonProps} parser={limitNumber} min={0} />
       default:
-        return <Input {...commonProps} />
+        return <Input {...commonProps} onChange={e => { onChangeFn(e.target.value) }} />
     }
   }
 
