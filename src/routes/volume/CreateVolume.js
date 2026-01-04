@@ -223,7 +223,7 @@ const modal = ({
       ...fields,
       numberOfReplicas: replicas, // update number of replicas
       backingImage: '',
-      frontend: frontends[0].engine,
+      frontend: frontends[0].value,
       dataSourceVolume: '',
       dataSourceSnapshot: '',
     })
