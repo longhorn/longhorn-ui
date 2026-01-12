@@ -47,7 +47,12 @@ module.exports = {
         "target": endpoint,
         "changeOrigin": true
       },
-    }
+    },
+    watchOptions: {
+      ignored: /node_modules/,
+      poll: 1000,
+      aggregateTimeout: 300,
+    },
   },
   output: {
     filename: "[name].js",

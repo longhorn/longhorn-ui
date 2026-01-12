@@ -120,7 +120,8 @@ export default {
     isOfflineRebuildingModalVisible: false,
     isReplicaRebuildingBandwidthLimitModalVisible: false,
     ublkParamsField: '',
-    isUblkParamsModalVisible: false
+    isUblkParamsModalVisible: false,
+    isRebuildConcurrentSyncLimitModalVisible: false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -491,6 +492,19 @@ export default {
           selectedRows: [],
           isUblkParamsModalVisible: false,
           ublkParamsField: '',
+        }
+      })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateRebuildConcurrentSyncLimit({
+      payload,
+    }, { call, put }) {
+      yield put({
+        type: 'volume/toggleRebuildConcurrentSyncLimitModal',
+        payload: {
+          selectedRows: [],
+          isRebuildConcurrentSyncLimitModalVisible: false,
         }
       })
       yield payload.urls.map(url => call(execAction, url, payload.params))
@@ -1107,6 +1121,15 @@ export default {
         selectedRows: selectedRows ?? state.selectedRows,
         ublkParamsField: key,
         isUblkParamsModalVisible: isUblkParamsModalVisible ?? state.isUblkParamsModalVisible,
+      }
+    },
+    toggleRebuildConcurrentSyncLimitModal(state, action = {}) {
+      const { selectedRows = [], isRebuildConcurrentSyncLimitModalVisible } = action.payload || {}
+
+      return {
+        ...state,
+        selectedRows: selectedRows ?? state.selectedRows,
+        isRebuildConcurrentSyncLimitModalVisible: isRebuildConcurrentSyncLimitModalVisible ?? state.isRebuildConcurrentSyncLimitModalVisible,
       }
     },
     updateWs(state, action) {

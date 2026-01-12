@@ -36,7 +36,8 @@ function bulkActions({
   showUpdateBulkFreezeFilesystemForSnapshotModal,
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
-  toggleUblkParamsModal
+  toggleUblkParamsModal,
+  toggleRebuildConcurrentSyncLimitModal
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -167,11 +168,14 @@ function bulkActions({
       case 'updateUblkQueueDepth':
         toggleUblkParamsModal(selectedRows, 'ublkQueueDepth')
         break
+      case 'rebuildConcurrentSyncLimit':
+        toggleRebuildConcurrentSyncLimitModal(selectedRows)
+        break
       default:
     }
   }
   const hasNonAttachedVolume = () => selectedRows.some(item => item.state !== 'attached')
-  const hasAction = action => selectedRows.every(item => Object.keys(item.actions).includes(action))
+  const hasAction = action => selectedRows.every(item => item.actions && Object.keys(item.actions).includes(action))
   const hasDoingState = (exclusions = []) => selectedRows.some(item => (item.state.endsWith('ing') && !exclusions.includes(item.state)) || item.currentImage !== item.image)
   const isSnapshotDisabled = () => selectedRows.every(item => !item.actions || !item.actions.snapshotCRCreate)
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
@@ -232,6 +236,7 @@ function bulkActions({
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled() { return selectedRows.length === 0 } },
     { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.every((row) => !row.actions?.offlineReplicaRebuilding) } },
     { key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v1') } },
+    { key: 'rebuildConcurrentSyncLimit', name: 'Update Rebuild Concurrent Sync Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v2') } },
   ]
 
   if (selectedRows.some((row) => row?.frontend === 'ublk')) {

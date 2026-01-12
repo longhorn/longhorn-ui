@@ -372,6 +372,14 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Snapshot Max Size:</span>
         {formatMib(selectedVolume.snapshotMaxSize)}
       </div>
+      {
+        selectedVolume.dataEngine === 'v1' && (
+          <div className={styles.row}>
+            <span className={styles.label}> Rebuild Concurrent Sync Limit:</span>
+            {selectedVolume.rebuildConcurrentSyncLimit}
+          </div>
+        )
+      }
       <div className={styles.row}>
         <span className={styles.label}>
           <span>Instance Manager</span>

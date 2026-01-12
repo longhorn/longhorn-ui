@@ -62,6 +62,7 @@ function list({
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
   toggleUblkParamsModal,
+  toggleRebuildConcurrentSyncLimitModal,
   onRowClick = f => f,
 }) {
   const volumeActionsProps = {
@@ -104,6 +105,7 @@ function list({
     toggleOfflineRebuildingModal,
     toggleReplicaRebuildingBandwidthLimitModal,
     toggleUblkParamsModal,
+    toggleRebuildConcurrentSyncLimitModal,
     onRowClick,
   }
   /**
