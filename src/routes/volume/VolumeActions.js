@@ -38,6 +38,7 @@ function actions({
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
   toggleUblkParamsModal,
+  toggleRebuildConcurrentSyncLimitModal,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -185,6 +186,9 @@ function actions({
       case 'updateUblkQueueDepth':
         toggleUblkParamsModal(record, 'ublkQueueDepth')
         break
+      case 'rebuildConcurrentSyncLimit':
+        toggleRebuildConcurrentSyncLimitModal(record)
+        break
       default:
     }
   }
@@ -265,6 +269,9 @@ function actions({
       }
     }
   })
+  if (selected.dataEngine === 'v1') {
+    availableActions.push({ key: 'rebuildConcurrentSyncLimit', name: 'Update Rebuild Concurrent Sync Limit', disabled: false })
+  }
   if (selected.dataEngine === 'v2') {
     availableActions.push({ key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled: false })
   }

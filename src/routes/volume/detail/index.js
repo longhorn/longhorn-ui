@@ -32,6 +32,7 @@ import CreatePVAndPVCSingle from '../CreatePVAndPVCSingle'
 import ChangeVolumeModal from '../ChangeVolumeModal'
 import ExpansionVolumeSizeModal from '../ExpansionVolumeSizeModal'
 import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
+import RebuildConcurrentSyncLimitModal from '../RebuildConcurrentSyncLimitModal'
 import CommonModal from '../components/CommonModal'
 import Salvage from '../Salvage'
 import { ReplicaList, ExpansionErrorDetail } from '../../../components'
@@ -52,7 +53,8 @@ import {
   getUpdateFreezeFilesystemForSnapshotModalProps,
   getOfflineRebuildingModalProps,
   getReplicaRebuildingBandwidthLimitModalProps,
-  getUblkParamsModalProps
+  getUblkParamsModalProps,
+  getRebuildConcurrentSyncLimitModalProps
 } from '../helper'
 import { getBackupTargets } from '../../../utils/backupTarget'
 
@@ -183,6 +185,7 @@ function VolumeDetail({
     isReplicaRebuildingBandwidthLimitModalVisible,
     ublkParamsField,
     isUblkParamsModalVisible,
+    isRebuildConcurrentSyncLimitModalVisible
   } = volume
   const { backupStatus } = backup
   const { data: snapshotData, state: snapshotModalState } = snapshotModal
@@ -552,6 +555,15 @@ function VolumeDetail({
         },
       })
     },
+    toggleRebuildConcurrentSyncLimitModal(record) {
+      dispatch({
+        type: 'volume/toggleRebuildConcurrentSyncLimitModal',
+        payload: {
+          selectedRows: [record],
+          isRebuildConcurrentSyncLimitModalVisible: true
+        },
+      })
+    },
   }
 
   const attachHostModalProps = getAttachHostModalProps([selectedVolume], hosts, attachHostModalVisible, dispatch)
@@ -632,6 +644,7 @@ function VolumeDetail({
   const offlineRebuildingModalProps = getOfflineRebuildingModalProps([selectedVolume], isOfflineRebuildingModalVisible, dispatch)
   const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps([selectedVolume], isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
   const ublkParamsModalProps = getUblkParamsModalProps([selectedVolume], isUblkParamsModalVisible, ublkParamsField, dispatch)
+  const rebuildConcurrentSyncLimitModalProps = getRebuildConcurrentSyncLimitModalProps([selectedVolume], isRebuildConcurrentSyncLimitModalVisible, dispatch)
   const createPVAndPVCSingleProps = {
     item: {
       defaultPVName,
@@ -821,6 +834,7 @@ function VolumeDetail({
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
         {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
+        {isRebuildConcurrentSyncLimitModalVisible ? <RebuildConcurrentSyncLimitModal key={isRebuildConcurrentSyncLimitModalVisible} {...rebuildConcurrentSyncLimitModalProps} /> : null}
       </div>
     </div>
   )

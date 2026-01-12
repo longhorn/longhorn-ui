@@ -744,6 +744,26 @@ export function getUblkParamsModalProps(volumes, visible, field, dispatch) {
   }
 }
 
+export function getRebuildConcurrentSyncLimitModalProps(volumes, visible, dispatch) {
+  return {
+    visible,
+    items: volumes,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateRebuildConcurrentSyncLimit',
+        payload: { params: v, urls },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/toggleRebuildConcurrentSyncLimitModal',
+        payload: { isRebuildConcurrentSyncLimitModalVisible: false }
+      })
+    },
+  }
+}
+
+
 export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }

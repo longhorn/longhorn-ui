@@ -122,6 +122,7 @@ const modal = ({
     getFieldsValue,
     getFieldValue,
     setFieldsValue,
+    resetFields
   },
 }) => {
   const [filteredBackingImages, setFilteredBackingImages] = useState([])
@@ -227,6 +228,10 @@ const modal = ({
       dataSourceVolume: '',
       dataSourceSnapshot: '',
     })
+
+    if (engine === 'v2') {
+      resetFields(['rebuildConcurrentSyncLimit'])
+    }
   }
 
   return (
@@ -568,6 +573,30 @@ const modal = ({
                   )}
                 </div>
               </FormItem>
+              {getFieldValue('dataEngine') === 'v1' && (
+                <FormItem
+                  label={
+                    <span>
+                      Rebuild Concurrent Sync Limit
+                      <span style={{ marginLeft: 4, marginRight: 4 }}>
+                        <Tooltip title="Set '0' to inherit global settings">
+                          <Icon type="question-circle-o" />
+                        </Tooltip>
+                      </span>
+                    </span>
+                  }
+                  {...formItemLayoutForAdvanced}
+                >
+                  {getFieldDecorator('rebuildConcurrentSyncLimit', {
+                    initialValue: 0,
+                    rules: [
+                      { type: 'number', min: 0, max: 5, message: 'Value must be between 0 and 5' }
+                    ],
+                  })(
+                    <InputNumber min={0} max={5} style={{ width: '250px' }} />
+                  )}
+                </FormItem>
+              )}
             <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaAutoBalance', {
                 initialValue: 'ignored',

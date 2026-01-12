@@ -41,6 +41,7 @@ import UpdateReplicaAutoBalanceModal from './UpdateReplicaAutoBalanceModal'
 import UpdateBulkDataLocality from './UpdateBulkDataLocality'
 import UpdateReplicaRebuildingBandwidthLimitModal from './UpdateReplicaRebuildingBandwidthLimitModal'
 import UpdateUblkParamsModal from './UpdateUblkParamsModal'
+import RebuildConcurrentSyncLimitModal from './RebuildConcurrentSyncLimitModal'
 import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import { isRestoring } from './helper'
@@ -70,7 +71,8 @@ import {
   getUpdateBulkBackupTargetProps,
   getOfflineRebuildingModalProps,
   getReplicaRebuildingBandwidthLimitModalProps,
-  getUblkParamsModalProps
+  getUblkParamsModalProps,
+  getRebuildConcurrentSyncLimitModalProps
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
@@ -224,7 +226,8 @@ class Volume extends React.Component {
       isOfflineRebuildingModalVisible,
       isReplicaRebuildingBandwidthLimitModalVisible,
       ublkParamsField,
-      isUblkParamsModalVisible
+      isUblkParamsModalVisible,
+      isRebuildConcurrentSyncLimitModalVisible
     } = this.props.volume
     const hosts = this.props.host.data
     const backingImages = this.props.backingImage.data
@@ -658,6 +661,15 @@ class Volume extends React.Component {
             key,
             selectedRows: [record],
             isUblkParamsModalVisible: true
+          },
+        })
+      },
+      toggleRebuildConcurrentSyncLimitModal(record) {
+        dispatch({
+          type: 'volume/toggleRebuildConcurrentSyncLimitModal',
+          payload: {
+            selectedRows: [record],
+            isRebuildConcurrentSyncLimitModalVisible: true
           },
         })
       },
@@ -1237,6 +1249,15 @@ class Volume extends React.Component {
           },
         })
       },
+      toggleRebuildConcurrentSyncLimitModal(record) {
+        dispatch({
+          type: 'volume/toggleRebuildConcurrentSyncLimitModal',
+          payload: {
+            selectedRows: record,
+            isRebuildConcurrentSyncLimitModalVisible: true
+          },
+        })
+      },
     }
 
     const createBackModalProps = {
@@ -1350,6 +1371,7 @@ class Volume extends React.Component {
     const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
     const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps(selectedRows, isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
     const ublkParamsModalProps = getUblkParamsModalProps(selectedRows, isUblkParamsModalVisible, ublkParamsField, dispatch)
+    const rebuildConcurrentSyncLimitModalProps = getRebuildConcurrentSyncLimitModalProps(selectedRows, isRebuildConcurrentSyncLimitModalVisible, dispatch)
 
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
@@ -1404,6 +1426,7 @@ class Volume extends React.Component {
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
         {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
+        {isRebuildConcurrentSyncLimitModalVisible ? <RebuildConcurrentSyncLimitModal key={isRebuildConcurrentSyncLimitModalVisible} {...rebuildConcurrentSyncLimitModalProps} /> : null}
       </div>
     )
   }
