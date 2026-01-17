@@ -108,12 +108,14 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     },
   }
 
+  const versionHref = currentVersion === 'dev' ? 'https://github.com/longhorn/longhorn/releases' : `https://github.com/longhorn/longhorn/releases/tag/v${currentVersion}`
+
   return (
     <div className={styles.footer}>
       <Row type="flex" justify="space-between">
         <Col>
           {upgrade}
-          <a>{currentVersion}</a>
+          <a target="blank" href={versionHref}>{currentVersion}</a>
           <a target="blank" href="https://longhorn.io/docs">Documentation</a>
           <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
