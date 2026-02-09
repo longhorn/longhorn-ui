@@ -58,6 +58,11 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     )
   }
 
+  let releaseHref = 'https://github.com/longhorn/longhorn/releases/'
+  if (currentVersion !== 'dev') {
+    releaseHref += `tag/${currentVersion}`
+  }
+
   const createBundlesrops = {
     item: {},
     visible: bundlesropsVisible,
@@ -113,7 +118,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
       <Row type="flex" justify="space-between">
         <Col>
           {upgrade}
-          <a>{currentVersion}</a>
+          <a target="blank" href={releaseHref}>{currentVersion}</a>
           <a target="blank" href="https://longhorn.io/docs">Documentation</a>
           <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
           <a target="blank" href={issueHref}>File an Issue</a>
