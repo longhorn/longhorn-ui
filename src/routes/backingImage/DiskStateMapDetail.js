@@ -5,6 +5,8 @@ import DiskStateMapActions from './DiskStateMapActions'
 import { ModalBlur, DropOption } from '../../components'
 import { diskStatusColorMap } from '../../utils/status'
 import style from './BackingImage.less'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
 // As the back-end field changes from diskStateMap to diskFileStatusMap
@@ -22,6 +24,7 @@ const modal = ({
   rowSelection,
   diskStateMapDeleteDisabled,
   diskStateMapDeleteLoading,
+  t,
 }) => {
   // update detail list
   const currentData = backingImages.find((item) => item.id === selected.id) || {}
@@ -36,7 +39,7 @@ const modal = ({
     style: {
       top: 0,
     },
-    okText: 'Close',
+    okText: t('common.close'),
     footer: null,
     bodyStyle: { padding: '0px' },
   }
@@ -45,7 +48,7 @@ const modal = ({
     switch (event.key) {
       case 'cleanUp':
         confirm({
-          title: `Are you sure to clean up the image file from the disk (${record.disk}) ?`,
+          title: t('diskStateMapDetail.modal.cleanUp.title', { disk: record.disk }),
           onOk() {
             deleteDisksOnBackingImage([record])
           },
@@ -68,7 +71,7 @@ const modal = ({
 
   const columns = [
     {
-      title: 'Status',
+      title: t('columns.status'),
       dataIndex: 'status',
       key: 'status',
       width: 200,
@@ -107,7 +110,7 @@ const modal = ({
         )
       },
     }, {
-      title: 'Disk',
+      title: t('columns.disk'),
       dataIndex: 'disk',
       key: 'disk',
       render: (text) => {
@@ -120,13 +123,13 @@ const modal = ({
 
   const tableRowSelection = rowSelection
   columns.push({
-    title: 'Operation',
+    title: t('columns.operation'),
     key: 'operation',
     width: 100,
     render: (_text, record) => {
       return (
           <DropOption menuOptions={[
-            { key: 'cleanUp', name: 'Clean Up' },
+            { key: 'cleanUp', name: t('diskStateMapDetail.actions.cleanUp') },
           ]}
             onMenuClick={e => handleMenuClick(record, e)}
           />
@@ -153,38 +156,38 @@ const modal = ({
         <div className={style.backingImageModalContainer}>
           <Card>
             <div className={style.parametersContainer} style={{ marginBottom: 0 }}>
-              <div>UUID</div>
+              <div>{t('diskStateMapDetail.details.uuid')}</div>
               <span>{currentData.uuid}</span>
-              <div>Created From</div>
+              <div>{t('diskStateMapDetail.details.createdFrom')}</div>
               <span>
-                {currentData.sourceType === 'download' && 'Download from URL'}
-                {currentData.sourceType === 'upload' && 'Upload'}
-                {currentData.sourceType === 'export-from-volume' && 'Export from a Longhorn volume'}
-                {currentData.sourceType === 'clone' && 'Clone from existing backing image'}
-                {currentData.sourceType === 'restore' && 'Restore from backup backing image'}
+                {currentData.sourceType === 'download' && t('diskStateMapDetail.createdFrom.download')}
+                {currentData.sourceType === 'upload' && t('diskStateMapDetail.createdFrom.upload')}
+                {currentData.sourceType === 'export-from-volume' && t('diskStateMapDetail.createdFrom.exportFromVolume')}
+                {currentData.sourceType === 'clone' && t('diskStateMapDetail.createdFrom.clone')}
+                {currentData.sourceType === 'restore' && t('diskStateMapDetail.createdFrom.restore')}
               </span>
-              <div style={{ textAlign: 'left' }}>Parameters During Creation</div>
+              <div style={{ textAlign: 'left' }}>{t('diskStateMapDetail.details.parametersDuringCreation')}</div>
               <div>
                 {currentData.parameters && Object.keys(currentData.parameters).length > 0 ? Object.keys(currentData.parameters).map((key) => {
                   return <div style={{ display: 'flex' }} key={key}>
                     <div style={{ minWidth: 'fit-content', fontWeight: 'normal' }}>{key}:</div>
                     <div style={{ marginLeft: 5, fontWeight: 'normal' }}>{currentData.parameters[key]}</div>
                   </div>
-                }) : <Tooltip title="empty"><Icon type="stop" className="color-warning" /></Tooltip>}
+                }) : <Tooltip title={t('diskStateMapDetail.details.empty')}><Icon type="stop" className="color-warning" /></Tooltip>}
               </div>
             </div>
           </Card>
           <Card>
             <div className={style.parametersContainer}>
-              { currentData.expectedChecksum && currentData.expectedChecksum !== currentData.currentChecksum ? <div style={{ textAlign: 'left' }}>Expected SHA512 Checksum:</div> : '' }
+              { currentData.expectedChecksum && currentData.expectedChecksum !== currentData.currentChecksum ? <div style={{ textAlign: 'left' }}>{t('diskStateMapDetail.details.expectedChecksum')}:</div> : '' }
               { currentData.expectedChecksum && currentData.expectedChecksum !== currentData.currentChecksum ? <span>{currentData.expectedChecksum}</span> : '' }
               <div className={style.currentChecksum}>
-                { currentData.expectedChecksum === currentData.currentChecksum && currentData.currentChecksum !== '' && isReady ? <Tooltip title={'Current checksum is the same as the expected value'}>
-                  <summary className="color-success">Verified</summary>
-                </Tooltip> : ((currentData.expectedChecksum !== '' && isReady) && <Tooltip title={'Current checksum doesn’t match the expected value'}>
-                  <summary className="color-error">Failed</summary>
+                { currentData.expectedChecksum === currentData.currentChecksum && currentData.currentChecksum !== '' && isReady ? <Tooltip title={t('diskStateMapDetail.details.checksumMatchTooltip')}>
+                  <summary className="color-success">{t('diskStateMapDetail.details.verified')}</summary>
+                </Tooltip> : ((currentData.expectedChecksum !== '' && isReady) && <Tooltip title={t('diskStateMapDetail.details.checksumMismatchTooltip')}>
+                  <summary className="color-error">{t('diskStateMapDetail.details.failed')}</summary>
                 </Tooltip>)}
-                Current SHA512 Checksum
+                {t('diskStateMapDetail.details.currentChecksum')}
               </div>
               <span>{currentData.currentChecksum ? currentData.currentChecksum : ''}</span>
             </div>
@@ -218,6 +221,7 @@ modal.propTypes = {
   selectedRows: PropTypes.array,
   deleteDisksOnBackingImage: PropTypes.func,
   rowSelection: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default modal
+export default withTranslation()(modal)

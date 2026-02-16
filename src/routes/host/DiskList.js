@@ -6,13 +6,9 @@ import { diskTagColor } from '../../utils/constants'
 import { NODE_STATUS } from '../../utils/status'
 import { formatMib } from '../../utils/formatter'
 import './DiskList.less'
+import { withTranslation } from 'react-i18next'
 
-const HEALTH_STATUS_LABEL = {
-  FAILED: 'Failed',
-  PASSED: 'Passed',
-  UNKNOWN: 'Unknown',
-  WARNING: 'Warning',
-}
+
 
 const HEALTH_STATUS_COLOR = {
   FAILED: '#F15354',
@@ -21,30 +17,37 @@ const HEALTH_STATUS_COLOR = {
   UNKNOWN: '#dee1e3',
 }
 
-function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal }) {
+function diskList({ disks, node, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showDiskReplicaModal, t }) {
+  const HEALTH_STATUS_LABEL = {
+    FAILED: t('diskList.healthStatus.failed'),
+    PASSED: t('diskList.healthStatus.passed'),
+    UNKNOWN: t('diskList.healthStatus.unknown'),
+    WARNING: t('diskList.healthStatus.warning'),
+  }
+
   const getDiskStatus = (record) => {
     const readyStatus = node?.conditions?.Ready?.status?.toLowerCase()
     const schedulableStatus = node?.conditions?.Schedulable?.status?.toLowerCase()
     const diskSchedulable = record?.conditions?.Schedulable?.status?.toLowerCase()
 
     if (readyStatus === 'false') {
-      return { label: <span className="error">Error</span>, statusKey: 'error' }
+      return { label: <span className="error">{t('diskList.status.error')}</span>, statusKey: 'error' }
     }
 
     if (node?.allowScheduling === false || record?.allowScheduling === false) {
-      return { label: <span className="disabled">Disabled</span>, statusKey: NODE_STATUS.DISABLED }
+      return { label: <span className="disabled">{t('diskList.status.disabled')}</span>, statusKey: NODE_STATUS.DISABLED }
     }
 
     if (schedulableStatus === 'false' || diskSchedulable === 'false') {
-      return { label: <span className="unschedulable">Unschedulable</span>, statusKey: NODE_STATUS.UNSCHEDULABLE }
+      return { label: <span className="unschedulable">{t('diskList.status.unschedulable')}</span>, statusKey: NODE_STATUS.UNSCHEDULABLE }
     }
 
-    return { label: <span className="schedulable">Schedulable</span>, statusKey: NODE_STATUS.SCHEDULABLE }
+    return { label: <span className="schedulable">{t('diskList.status.schedulable')}</span>, statusKey: NODE_STATUS.SCHEDULABLE }
   }
 
   const columns = [
     {
-      title: 'Status',
+      title: t('columns.status'),
       key: 'status',
       width: 170,
       render: (text, record) => {
@@ -73,7 +76,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'ID',
+      title: t('diskList.columns.id'),
       key: 'id',
       dataIndex: 'id',
       width: 200,
@@ -82,7 +85,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Disk Type',
+      title: t('diskList.columns.diskType'),
       key: 'diskType',
       dataIndex: 'diskType',
       width: 100,
@@ -95,7 +98,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Path',
+      title: t('diskList.columns.path'),
       key: 'path',
       dataIndex: 'path',
       width: 360,
@@ -108,7 +111,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Replicas',
+      title: t('diskList.columns.replicas'),
       key: 'scheduledReplica',
       dataIndex: 'scheduledReplica',
       width: 96,
@@ -125,7 +128,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Allocated',
+      title: t('diskList.columns.allocated'),
       key: 'allocated',
       dataIndex: 'storageScheduled',
       width: 180,
@@ -148,7 +151,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Used',
+      title: t('diskList.columns.used'),
       key: 'used',
       width: 180,
       render: (text, record) => {
@@ -170,7 +173,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Size',
+      title: t('columns.size'),
       key: 'size',
       width: 180,
       render: (text, record) => {
@@ -179,13 +182,13 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
         return (
           <div className="size" style={{ textAlign: 'center' }}>
             <div>{formatMib(total)}</div>
-            <div className="secondLabel" style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} Reserved` : null}</div>
+            <div className="secondLabel" style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} ${t('diskList.text.reserved')}` : null}</div>
           </div>
         )
       },
     },
     {
-      title: 'Tags',
+      title: t('diskList.columns.tags'),
       key: 'tags',
       width: 100,
       render: (text, record) => {
@@ -211,7 +214,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
       },
     },
     {
-      title: 'Health Status',
+      title: t('diskList.columns.healthStatus'),
       key: 'healthStatus',
       dataIndex: 'healthStatus',
       width: 170,
@@ -252,7 +255,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
   const pagination = false
   return (
     <div className="diskList">
-      <div className="title">Disks</div>
+      <div className="title">{t('diskList.title')}</div>
       <div className="content">
         <Table
           defaultExpandAllRows
@@ -268,6 +271,7 @@ function diskList({ disks, node, storageOverProvisioningPercentage, minimalSched
   )
 }
 diskList.propTypes = {
+  t: PropTypes.func,
   disks: PropTypes.array,
   node: PropTypes.object,
   storageOverProvisioningPercentage: PropTypes.number,
@@ -275,4 +279,4 @@ diskList.propTypes = {
   showDiskReplicaModal: PropTypes.func,
 }
 
-export default diskList
+export default withTranslation()(diskList)

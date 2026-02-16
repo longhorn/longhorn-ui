@@ -7,19 +7,20 @@ import ReplicaDataOrphans from './ReplicaDataOrphans'
 import InstanceOrphans from './InstanceOrphans'
 import styles from './index.less'
 import { ORPHAN_TYPES } from '../../utils/orphanedData'
+import { withTranslation } from 'react-i18next'
 
-function OrphanedData({ dispatch, location }) {
+function OrphanedData({ dispatch, location, t }) {
   const { pathname, hash, search } = location
 
   const tabs = [
     {
       key: ORPHAN_TYPES.REPLICA_DATA,
-      label: 'Replica Data',
+      label: t('orphanedData.tabs.replicaData'),
       content: <ReplicaDataOrphans location={location} />,
     },
     {
       key: 'instance',
-      label: 'Instances',
+      label: t('orphanedData.tabs.instances'),
       content: <InstanceOrphans location={location} />,
     },
   ]
@@ -60,6 +61,7 @@ OrphanedData.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   setting: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default connect()(OrphanedData)
+export default withTranslation()(connect()(OrphanedData))

@@ -6,6 +6,7 @@ import queryString from 'query-string'
 import { sortTable } from '../utils/sort'
 import { getSorter, saveSorter, getBackupVolumeName } from '../utils/store'
 import { enableQueryData } from '../utils/dataDependency'
+import i18n from '../i18n'
 
 export default {
   namespace: 'backup',
@@ -103,7 +104,7 @@ export default {
       const resp = yield call(queryBackupTarget)
       if (resp && resp.status === 200) {
         const backupTargetAvailable = resp?.data?.some(d => d.available === true) || false
-        const backupTargetMessage = backupTargetAvailable ? '' : 'No backup target is available, please go to Backup Target page to create one'
+        const backupTargetMessage = backupTargetAvailable ? '' : i18n.t('models.backup.queryBackupTarget.noBackupTarget')
         if (payload.history.location.pathname === '/backup' && !backupTargetAvailable) {
           message.error(backupTargetMessage, 3)
         } else {
@@ -225,7 +226,7 @@ export default {
         for (let i = 0; i < payload.length; i++) {
           const resp = yield call(restore, payload[i])
           if (resp && resp.status === 200) {
-            message.success(`Successfully restore backup volume ${payload[i].name}`, 3)
+            message.success(i18n.t('models.backup.restoreBulkBackup.success', { name: payload[i].name }), 3)
           }
         }
       }
@@ -253,7 +254,7 @@ export default {
       const backVolName = payload.name
       const resp = yield call(syncBackupVolume, backVolName)
       if (resp && resp.status === 200) {
-        message.success(`Successfully trigger backup volume ${backVolName} synchronization`, 5)
+        message.success(i18n.t('models.backup.syncBackupVolume.success', { name: backVolName }), 5)
       }
     },
     *syncAllBackupVolumes({
@@ -261,7 +262,7 @@ export default {
       _payload }, { call }) {
       const resp = yield call(syncAllBackupVolumes)
       if (resp && resp.status === 200) {
-        message.success('Successfully trigger all backup volumes synchronization', 5)
+        message.success(i18n.t('models.backup.syncAllBackupVolumes.success'), 5)
       }
     },
     *bulkCreateVolume({
@@ -272,7 +273,7 @@ export default {
         for (let i = 0; i < payload.length; i++) {
           const resp = yield call(createVolume, payload[i])
           if (resp && resp.status === 200) {
-            message.success(`Successfully create DR volume ${payload[i].name}`, 3)
+            message.success(i18n.t('models.backup.bulkCreateVolume.success', { name: payload[i].name }), 3)
           }
         }
       }

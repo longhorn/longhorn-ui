@@ -8,6 +8,7 @@ import EditRecurringJob from '../../recurringJob/CreateRecurringJob'
 import RecurringJobActions from './RecurringJobActions'
 import AddRecurringJobOrGroupModal from './AddRecurringJobOrGroupModal'
 import styles from './index.less'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
@@ -84,7 +85,7 @@ class RecurringJob extends React.Component {
             recurringExistingJobOptions,
           })
         } else {
-          message.error('Get Recurring Job failed')
+          message.error(this.props.t('recurringJobDetail.message.getRecurringJobFailed'))
         }
       },
     })
@@ -124,7 +125,7 @@ class RecurringJob extends React.Component {
             recurringJobGroupOptions,
           })
         } else {
-          message.error('Get Recurring Job failed')
+          message.error(this.props.t('recurringJobDetail.message.getRecurringJobFailed'))
         }
       },
     })
@@ -170,7 +171,10 @@ class RecurringJob extends React.Component {
     let me = this
     confirm({
       width: 800,
-      title: `Are you sure you want to remove Recurring Job ${this.state.selectedJobRows.map((item) => item.name).join(',')} from ${this.props.selectedVolume && this.props.selectedVolume.name}?`,
+      title: this.props.t('recurringJobDetail.bulkDeleteJob.confirmTitle', {
+        jobs: this.state.selectedJobRows.map((item) => item.name).join(','),
+        volume: this.props.selectedVolume && this.props.selectedVolume.name
+      }),
       onOk() {
         me.props.dispatch({
           type: 'volume/removeBulkVolumeRecurringJob',
@@ -194,7 +198,10 @@ class RecurringJob extends React.Component {
     let me = this
     confirm({
       width: 800,
-      title: `Are you sure you want to remove Recurring Job Group ${this.state.selectedJobGroupRows.map((item) => item.name).join(',')} from ${this.props.selectedVolume && this.props.selectedVolume.name}?`,
+      title: this.props.t('recurringJobDetail.bulkDeleteJobGroup.confirmTitle', {
+        groups: this.state.selectedJobGroupRows.map((item) => item.name).join(','),
+        volume: this.props.selectedVolume && this.props.selectedVolume.name
+      }),
       onOk() {
         me.props.dispatch({
           type: 'volume/removeBulkVolumeRecurringJob',
@@ -231,7 +238,7 @@ class RecurringJob extends React.Component {
 
   render() {
     const me = this
-    const { dispatch, selectedVolume, dataSource, recurringJobData } = this.props
+    const { t, dispatch, selectedVolume, dataSource, recurringJobData } = this.props
     if (dataSource && dataSource.length > 0) {
       dataSource.sort((a, b) => a.name.localeCompare(b.name))
     }
@@ -406,7 +413,7 @@ class RecurringJob extends React.Component {
     }
     const columnsForJob = [
       {
-        title: 'Name',
+        title: t('columns.name'),
         dataIndex: 'name',
         key: 'name',
         width: 200,
@@ -414,12 +421,12 @@ class RecurringJob extends React.Component {
           return (
             <div>
               {record.name}
-              {record.isAlreadyDeleted ? <Tooltip title={'Recurring Job doesn\'t exist'}><Icon className="faulted" style={{ marginLeft: 5 }} type="exclamation-circle" /></Tooltip> : ''}
+              {record.isAlreadyDeleted ? <Tooltip title={t('recurringJobDetail.tooltips.recurringJobNotExist')}><Icon className="faulted" style={{ marginLeft: 5 }} type="exclamation-circle" /></Tooltip> : ''}
             </div>
           )
         },
       }, {
-        title: 'Type',
+        title: t('columns.type'),
         dataIndex: 'task',
         key: 'task',
         width: 100,
@@ -429,7 +436,7 @@ class RecurringJob extends React.Component {
           )
         },
       }, {
-        title: 'Groups',
+        title: t('columns.groups'),
         dataIndex: 'groups',
         key: 'groups',
         width: 200,
@@ -439,7 +446,7 @@ class RecurringJob extends React.Component {
           )
         },
       }, {
-        title: 'Schedule',
+        title: t('columns.schedule'),
         dataIndex: 'cron',
         key: 'cron',
         width: 200,
@@ -451,7 +458,7 @@ class RecurringJob extends React.Component {
           )
         },
       }, {
-        title: 'Labels',
+        title: t('columns.labels'),
         dataIndex: 'labels',
         key: 'labels',
         width: 200,
@@ -463,7 +470,7 @@ class RecurringJob extends React.Component {
           )
         },
       }, {
-        title: 'Retain',
+        title: t('columns.retain'),
         key: 'retain',
         width: 120,
         render: (record) => {
@@ -472,7 +479,7 @@ class RecurringJob extends React.Component {
           )
         },
       }, {
-        title: 'Concurrency',
+        title: t('columns.concurrency'),
         key: 'concurrency',
         width: 120,
         render: (record) => {
@@ -482,7 +489,7 @@ class RecurringJob extends React.Component {
         },
       },
       {
-        title: 'Operation',
+        title: t('columns.operation'),
         key: 'operation',
         fixed: 'right',
         width: 110,
@@ -517,7 +524,7 @@ class RecurringJob extends React.Component {
 
     const columnsForJobGroup = [
       {
-        title: 'Name',
+        title: t('columns.name'),
         dataIndex: 'name',
         key: 'name',
         width: '65%',
@@ -525,13 +532,13 @@ class RecurringJob extends React.Component {
           return (
             <div onClick={() => this.showModalGroupDeatil(record)} style={{ width: '100%', cursor: 'pointer' }}>
               <Button type={'link'}>{text}</Button>
-              {record.isAlreadyDeleted ? <Tooltip title={record.name === 'default' ? 'No Recurring job is set to default Group' : 'Recurring Job Group doesn\'t exist'}><Icon className="faulted" style={{ marginLeft: 5 }} type="exclamation-circle" /></Tooltip> : ''}
+              {record.isAlreadyDeleted ? <Tooltip title={record.name === 'default' ? t('recurringJobDetail.tooltips.noDefaultGroupJobs') : t('recurringJobDetail.tooltips.recurringJobGroupNotExist')}><Icon className="faulted" style={{ marginLeft: 5 }} type="exclamation-circle" /></Tooltip> : ''}
             </div>
           )
         },
       },
       {
-        title: 'Operation',
+        title: t('columns.operation'),
         key: 'operation',
         width: '33%',
         render: (text, record) => {
@@ -562,7 +569,7 @@ class RecurringJob extends React.Component {
 
     const modalGroupDeatilOpts = {
       visible: this.state.modalGroupDeatilVisible,
-      title: 'Recurring Job',
+      title: t('recurringJobDetail.modalGroupDetail.title'),
       width: 1300,
       hasOnCancel: true,
       onOk: this.hideModalGroupDeatil,
@@ -575,19 +582,19 @@ class RecurringJob extends React.Component {
       <Card
         title={
           <div className={styles.header}>
-            <div>Recurring Jobs Schedule</div>
+            <div>{t('recurringJobDetail.title')}</div>
           </div>
         }
         bordered={false}
       >
         <Tabs className="recurring-jobs-tabs" tabPosition="left" type="card" defaultActiveKey="1">
-          <TabPane tab="Job" key="1">
+          <TabPane tab={t('recurringJobDetail.tabs.job')} key="1">
             <div className={styles.tabHeader}>
               <div>
-                <Button type="primary" disabled={this.state.selectedJobRows && this.state.selectedJobRows.length === 0} onClick={() => this.bulkDeleteJob()}> Delete </Button>
+                <Button type="primary" disabled={this.state.selectedJobRows && this.state.selectedJobRows.length === 0} onClick={() => this.bulkDeleteJob()}>{t('common.delete')}</Button>
               </div>
               <div className={styles.new}>
-                <Button type="primary" onClick={this.onNewRecurringJob} disabled={!canAddJobToVolume} icon="plus">Add</Button>
+                <Button type="primary" onClick={this.onNewRecurringJob} disabled={!canAddJobToVolume} icon="plus">{t('recurringJobDetail.addButton')}</Button>
               </div>
             </div>
             <div style={{ minHeight: '270px', maxHeight: '350' }}>
@@ -606,14 +613,14 @@ class RecurringJob extends React.Component {
             {this.state.addRecurringJobModalVisible && <CreateRecurringJob key={this.state.addRecurringJobModalKey} {...createRecurringJobModalProps} />}
             {this.state.editRecurringJobModalVisible && <EditRecurringJob key={this.state.editRecurringJobModalKey} {...editRecurringJobModalProps} />}
           </TabPane>
-          <TabPane tab="Group" key="2">
+          <TabPane tab={t('recurringJobDetail.tabs.group')} key="2">
             <div style={{ marginBottom: 5 }}>
             <div className={styles.tabHeader}>
               <div>
-                <Button type="primary" disabled={this.state.selectedJobGroupRows && this.state.selectedJobGroupRows.length === 0} onClick={() => this.bulkDeleteJobGroup()}> Delete </Button>
+                <Button type="primary" disabled={this.state.selectedJobGroupRows && this.state.selectedJobGroupRows.length === 0} onClick={() => this.bulkDeleteJobGroup()}>{t('common.delete')}</Button>
               </div>
               <div className={styles.new}>
-                <Button type="primary" onClick={this.addJobGroupForVolume} disabled={!canAddJobToVolume} icon="plus">Add</Button>
+                <Button type="primary" onClick={this.addJobGroupForVolume} disabled={!canAddJobToVolume} icon="plus">{t('recurringJobDetail.addButton')}</Button>
               </div>
             </div>
             </div>
@@ -642,6 +649,7 @@ class RecurringJob extends React.Component {
 }
 
 RecurringJob.propTypes = {
+  t: PropTypes.func,
   selectedVolume: PropTypes.object,
   dataSource: PropTypes.array,
   recurringJobData: PropTypes.array,
@@ -649,4 +657,4 @@ RecurringJob.propTypes = {
   dispatch: PropTypes.func,
 }
 
-export default RecurringJob
+export default withTranslation()(RecurringJob)

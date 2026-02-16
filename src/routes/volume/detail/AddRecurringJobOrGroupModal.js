@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { ModalBlur } from '../../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -15,6 +17,7 @@ const formItemLayout = {
 }
 
 const modal = ({
+  t,
   item,
   visible,
   onCancel,
@@ -39,7 +42,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: item.type === 'job' ? 'Add Recurring Job' : 'Add Recurring Job Group',
+    title: item.type === 'job' ? t('addRecurringJobOrGroupModal.title.job') : t('addRecurringJobOrGroupModal.title.group'),
     visible,
     onCancel,
     width: 800,
@@ -51,13 +54,13 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label={item.type === 'job' ? 'Recurring Job Name' : 'Recurring Job Group Name'} {...formItemLayout}>
+        <FormItem label={item.type === 'job' ? t('addRecurringJobOrGroupModal.label.jobName') : t('addRecurringJobOrGroupModal.label.groupName')} {...formItemLayout}>
         {getFieldDecorator('name', {
           initialValue: '',
           rules: [
             {
               required: true,
-              message: 'Please Select Recurring Job Name',
+              message: t('addRecurringJobOrGroupModal.validation.required'),
             },
           ],
         })(<Select>
@@ -72,6 +75,7 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -79,4 +83,4 @@ modal.propTypes = {
   onOk: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

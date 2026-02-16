@@ -4,15 +4,16 @@ import { Table } from 'antd'
 import { pagination } from '../../utils/page'
 import { sortTable } from '../../utils/sort'
 import OrphanedDataActions from './OrphanedDataActions'
+import { withTranslation } from 'react-i18next'
 
-function InstanceOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData }) {
+function InstanceOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData, t }) {
   const orphanedDataActionsProps = {
     deleteOrphanedData,
   }
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       width: 220,
       key: 'name',
@@ -20,7 +21,7 @@ function InstanceOrphansList({ loading, dataSource, height, rowSelection, delete
       render: (text) => text,
     },
     {
-      title: 'Node',
+      title: t('columns.node'),
       dataIndex: 'nodeID',
       width: 150,
       key: 'nodeID',
@@ -28,7 +29,7 @@ function InstanceOrphansList({ loading, dataSource, height, rowSelection, delete
       render: (text) => text,
     },
     {
-      title: 'Instance Name',
+      title: t('columns.instanceName'),
       dataIndex: 'parameters',
       width: 220,
       key: 'instanceName',
@@ -36,7 +37,7 @@ function InstanceOrphansList({ loading, dataSource, height, rowSelection, delete
       render: (obj) => obj?.InstanceName || '',
     },
     {
-      title: 'Instance Manager',
+      title: t('columns.instanceManager'),
       dataIndex: 'parameters',
       width: 220,
       key: 'instanceManager',
@@ -44,7 +45,7 @@ function InstanceOrphansList({ loading, dataSource, height, rowSelection, delete
       render: (obj) => obj?.InstanceManager || '',
     },
     {
-      title: 'Instance Type',
+      title: t('columns.instanceType'),
       dataIndex: 'orphanType',
       width: 220,
       key: 'orphanType',
@@ -52,7 +53,7 @@ function InstanceOrphansList({ loading, dataSource, height, rowSelection, delete
       render: (text) => text,
     },
     {
-      title: 'Data Engine',
+      title: t('columns.dataEngine'),
       dataIndex: 'dataEngine',
       width: 180,
       key: 'dataEngine',
@@ -60,7 +61,7 @@ function InstanceOrphansList({ loading, dataSource, height, rowSelection, delete
       render: (text) => text || '-',
     },
     {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 110,
       fixed: 'right',
@@ -101,6 +102,7 @@ InstanceOrphansList.propTypes = {
   height: PropTypes.number,
   showRefCountVolumeModal: PropTypes.func,
   deleteOrphanedData: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default InstanceOrphansList
+export default withTranslation()(InstanceOrphansList)

@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function actions({ selected, showEditDisksModal, deleteHost }) {
+function actions({ selected, showEditDisksModal, deleteHost, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -14,7 +15,7 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
         break
       case 'deleteHost':
         confirm({
-          title: `Are you sure you want to delete node ${selected.name}?`,
+          title: t('hostActions.confirm.deleteTitle', { name: selected.name }),
           onOk() {
             deleteHost(record)
           },
@@ -27,19 +28,19 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
 
   menuOptions.push({
     key: 'editDisk',
-    name: 'Edit node and disks',
+    name: t('hostActions.menu.editNodeAndDisks'),
     disabled: selected.status.key === 'down',
-    tooltip: selected.status.key === 'down' ? 'Node must not be down' : '',
+    tooltip: selected.status.key === 'down' ? t('hostActions.menu.nodeMustNotBeDown') : '',
   })
 
   let removeNodeTooltip = ''
   if (selected.status.key !== 'down') {
-    removeNodeTooltip = 'Kubernetes node status must be down first'
+    removeNodeTooltip = t('hostActions.menu.nodeMustBeDown')
   }
 
   menuOptions.push({
     key: 'deleteHost',
-    name: 'Remove Node',
+    name: t('hostActions.menu.removeNode'),
     disabled: removeNodeTooltip !== '',
     tooltip: removeNodeTooltip,
   })
@@ -55,9 +56,10 @@ function actions({ selected, showEditDisksModal, deleteHost }) {
 }
 
 actions.propTypes = {
+  t: PropTypes.func,
   selected: PropTypes.object,
   showEditDisksModal: PropTypes.func,
   deleteHost: PropTypes.func,
 }
 
-export default actions
+export default withTranslation()(actions)

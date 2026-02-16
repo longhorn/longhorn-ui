@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { groupBy } from '../helper'
 import { ModalBlur } from '../../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -27,6 +29,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -51,7 +54,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: `Update ${fields?.name}`,
+    title: t('common.updateField', { fieldName: fields?.name }),
     visible,
     onCancel,
     width: 710,
@@ -98,6 +101,7 @@ modal.propTypes = {
   onOk: PropTypes.func,
   options: PropTypes.array,
   fields: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

@@ -1,17 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Alert } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, deleteRecurringJob }) {
+function bulkActions({ selectedRows, deleteRecurringJob, t }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Recurring Job ${selectedRows.map(item => item.name).join(',')} ?`,
+          title: t('recurringJobActions.modal.delete.title', { recurringJobName: selectedRows.map(item => item.name).join(',') }),
           content: <Alert
-            description={`If one of the recurring job (${selectedRows.map(item => item.name).join(',')}) is the last one of a job group, Longhorn will remove the group from all volumes automatically.`}
+            description={t('recurringJobBulkActions.modal.delete.description', { recurringJobNames: selectedRows.map(item => item.name).join(',') })}
             type="warning"
           />,
           width: 760,
@@ -25,7 +26,7 @@ function bulkActions({ selectedRows, deleteRecurringJob }) {
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
+    { key: 'delete', name: t('common.delete'), disabled() { return selectedRows.length === 0 } },
   ]
 
   return (
@@ -45,6 +46,7 @@ function bulkActions({ selectedRows, deleteRecurringJob }) {
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   deleteRecurringJob: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

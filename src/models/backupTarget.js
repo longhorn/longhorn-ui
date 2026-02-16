@@ -4,6 +4,7 @@ import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
 import { delay } from 'dva/saga'
+import i18n from '../i18n'
 
 export default {
   ws: null,
@@ -45,7 +46,7 @@ export default {
     }, { call, put }) {
       const resp = yield call(createBackupTarget, payload)
       if (resp && resp.status === 200) {
-        message.success(`Successfully create backup target ${payload.name}.`)
+        message.success(i18n.t('models.backupTarget.create.success', { name: payload.name }))
       }
       yield put({ type: 'query' })
     },

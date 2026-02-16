@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './Search.less'
 import { Form, Input, Select, Button } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 class Search extends React.Component {
   state = {
@@ -41,6 +42,7 @@ class Search extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const allowClear = true
     const { size, select, selectOptions, selectProps, style, keyword } = this.props
     return (
@@ -60,7 +62,7 @@ class Search extends React.Component {
           >
             {this.state.options}
           </Select>
-          <Button htmlType="submit" size={size} type="primary" onClick={this.handleSearch}>Go</Button>
+          <Button htmlType="submit" size={size} type="primary" onClick={this.handleSearch}>{t('search.goButton')}</Button>
         </Input.Group>
       </Form>
     )
@@ -76,6 +78,7 @@ Search.propTypes = {
   selectOptions: PropTypes.array,
   style: PropTypes.object,
   keyword: PropTypes.string,
+  t: PropTypes.func.isRequired,
 }
 
-export default Search
+export default withTranslation()(Search)

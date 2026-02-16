@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -25,6 +27,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -41,7 +44,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Backup Target',
+    title: t('updateBackupTargetModal.title.updateBackupTarget'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -52,7 +55,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="BackupTarget" {...formItemLayout}>
+        <FormItem label={t('updateBackupTargetModal.form.backupTarget.label')} {...formItemLayout}>
         {getFieldDecorator('backupTargetName', {
           initialValue: 'default',
         })(<Select>
@@ -71,6 +74,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   items: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

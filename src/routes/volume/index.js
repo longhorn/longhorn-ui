@@ -78,6 +78,7 @@ import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faulte
 import C from '../../utils/constants'
 import { hasReadyBackingDisk } from '../../utils/status'
 import { getBackupTargets } from '../../utils/backupTarget'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
@@ -131,7 +132,7 @@ class Volume extends React.Component {
 
   render() {
     const me = this
-    const { dispatch, loading, location } = this.props
+    const { dispatch, loading, location, t } = this.props
     const {
       selected,
       snapshotsOptions,
@@ -257,7 +258,7 @@ class Volume extends React.Component {
     const defaultRevisionCounterValue = defaultRevisionCounterSetting?.value === 'true'
     const defaultSnapshotDataIntegrityOption = defaultSnapshotDataIntegritySetting?.definition?.options.map((item) => ({ key: item.toLowerCase(), value: item })) || []
     if (defaultSnapshotDataIntegrityOption.length > 0) {
-      defaultSnapshotDataIntegrityOption.push({ key: 'ignored (follow the global setting)', value: 'ignored' })
+      defaultSnapshotDataIntegrityOption.push({ key: t('createVolume.options.ignored'), value: 'ignored' })
     }
 
     const backingImageOptions = backingImages?.filter(image => hasReadyBackingDisk(image)) || []
@@ -517,9 +518,9 @@ class Volume extends React.Component {
         if (record && record.kubernetesStatus) {
           if (record.kubernetesStatus.pvStatus) {
             message = (<div>
-              <div>If the in-progress expansion you want to cancel is triggered by the PVC size update, this operation will not help revert the PVC. Since the PVC size can not shrink, users need to clean up then recreate the PVC and PV after the expansion canceling success:</div>
-              <div>1. Update the field spec.persistentVolumeReclaimPolicy to Retain for the corresponding PV. </div>
-              <div>2. Delete then recreate the related PVC and PV.</div></div>)
+              <div>{t('volume.cancelExpansion.pvcWarning.part1')}</div>
+              <div>1. {t('volume.cancelExpansion.pvcWarning.step1')}</div>
+              <div>2. {t('volume.cancelExpansion.pvcWarning.step2')}</div></div>)
           }
         }
 
@@ -529,17 +530,17 @@ class Volume extends React.Component {
         }
 
         let content = (<div>
-          <div>This operation is used to cancel the expansion if the volume cannot complete the expansion and gets stuck there. Once the expansion is complete, it cannot be rolled back or canceled</div>
+          <div>{t('volume.cancelExpansion.description')}</div>
           {lastExpansionError ? <ExpansionErrorDetail content={lastExpansionError} lastExpansionFailedAt={lastExpansionFailedAt} /> : '' }
           {message ? <Alert style={{ marginTop: '5px' }} message={message} type="info" /> : ''}
           </div>)
 
         confirm({
-          title: 'Are you sure to cancel expansion?',
+          title: t('volume.cancelExpansion.confirmTitle'),
           content,
-          okText: 'Yes',
+          okText: t('common.yes'),
           okType: 'danger',
-          cancelText: 'No',
+          cancelText: t('common.no'),
           width: 800,
           onOk() {
             dispatch({
@@ -679,49 +680,49 @@ class Volume extends React.Component {
       location,
       defaultField: 'name',
       stateOption: [
-        { value: 'healthy', name: 'Healthy' },
-        { value: 'inProgress', name: 'In Progress' },
-        { value: 'degraded', name: 'Degraded' },
-        { value: 'faulted', name: 'Fault' },
-        { value: 'detached', name: 'Detached' },
+        { value: 'healthy', name: t('volume.filter.stateOptions.healthy') },
+        { value: 'inProgress', name: t('volume.filter.stateOptions.inProgress') },
+        { value: 'degraded', name: t('volume.filter.stateOptions.degraded') },
+        { value: 'faulted', name: t('volume.filter.stateOptions.fault') },
+        { value: 'detached', name: t('volume.filter.stateOptions.detached') },
       ],
       replicaNodeRedundancyOption: [
-        { value: 'yes', name: 'Yes' },
-        { value: 'limited', name: 'Limited' },
-        { value: 'no', name: 'No' },
+        { value: 'yes', name: t('common.yes') },
+        { value: 'limited', name: t('volume.filter.redundancyOptions.limited') },
+        { value: 'no', name: t('common.no') },
       ],
       engineImageUpgradableOption: [
-        { value: 'yes', name: 'Yes' },
-        { value: 'no', name: 'No' },
+        { value: 'yes', name: t('common.yes') },
+        { value: 'no', name: t('common.no') },
       ],
       scheduleOption: [
-        { value: 'yes', name: 'Yes' },
-        { value: 'no', name: 'No' },
+        { value: 'yes', name: t('common.yes') },
+        { value: 'no', name: t('common.no') },
       ],
       pvStatusOption: [
-        { value: 'none', name: 'None' },
-        { value: 'available', name: 'Available' },
-        { value: 'bound', name: 'Bound' },
-        { value: 'released', name: 'Released' },
+        { value: 'none', name: t('volume.filter.pvStatusOptions.none') },
+        { value: 'available', name: t('volume.filter.pvStatusOptions.available') },
+        { value: 'bound', name: t('volume.filter.pvStatusOptions.bound') },
+        { value: 'released', name: t('volume.filter.pvStatusOptions.released') },
       ],
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'host', name: 'Node' },
-        { value: 'status', name: 'Status' },
-        { value: 'namespace', name: 'Namespace' },
-        { value: 'replicaNodeRedundancy', name: 'Node redundancy' },
-        { value: 'engineImageUpgradable', name: 'Engine image upgradable' },
-        { value: 'pvName', name: 'PV Name' },
-        { value: 'pvcName', name: 'PVC Name' },
-        { value: 'pvStatus', name: 'PV Status' },
-        { value: 'NodeTag', name: 'Node Tag' },
-        { value: 'DiskTag', name: 'Disk Tag' },
-        { value: 'schedule', name: 'Scheduled' },
-        { value: 'revisionCounter', name: 'Revision Counter Disabled' },
+        { value: 'name', name: t('common.name') },
+        { value: 'host', name: t('volume.filter.fieldOptions.node') },
+        { value: 'status', name: t('columns.status') },
+        { value: 'namespace', name: t('volume.filter.fieldOptions.namespace') },
+        { value: 'replicaNodeRedundancy', name: t('volume.filter.fieldOptions.nodeRedundancy') },
+        { value: 'engineImageUpgradable', name: t('volume.filter.fieldOptions.engineImageUpgradable') },
+        { value: 'pvName', name: t('volume.filter.fieldOptions.pvName') },
+        { value: 'pvcName', name: t('volume.filter.fieldOptions.pvcName') },
+        { value: 'pvStatus', name: t('volume.filter.fieldOptions.pvStatus') },
+        { value: 'NodeTag', name: t('common.nodeTag') },
+        { value: 'DiskTag', name: t('common.diskTag') },
+        { value: 'schedule', name: t('volume.filter.fieldOptions.scheduled') },
+        { value: 'revisionCounter', name: t('volume.filter.fieldOptions.revisionCounterDisabled') },
       ],
       revisionCounterOption: [
-        { value: 'True', name: 'True' },
-        { value: 'False', name: 'False' },
+        { value: 'True', name: t('common.true') },
+        { value: 'False', name: t('common.false') },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue, stateValue: filterStateValue, nodeRedundancyValue: redundancyValue, engineImageUpgradableValue: imageUpgradableValue, scheduleValue: schedulePropValue, pvStatusValue: pvStatusPropValue, revisionCounterValue: revisionCounterPropValue } = filter
@@ -1349,7 +1350,7 @@ class Volume extends React.Component {
       },
     }
 
-    const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selected, selectedRows, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch)
+    const updateReplicaSoftAntiAffinityModalProps = getUpdateReplicaSoftAntiAffinityModalProps(selected, selectedRows, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch, t)
     const updateReplicaCountModalProps = getUpdateReplicaCountModalProps(selected, updateReplicaCountModalVisible, dispatch)
     const updateBulKReplicaCountModalProps = getUpdateBulkReplicaCountModalProps(selectedRows, updateBulkReplicaCountModalVisible, dispatch)
     const updateDataLocalityModalProps = getUpdateDataLocalityModalProps(selected, updateDataLocalityModalVisible, defaultDataLocalityOption, dispatch)
@@ -1363,10 +1364,10 @@ class Volume extends React.Component {
     const updateAccessModeModalProps = getUpdateAccessModeModalProps(selected, updateAccessModeModalVisible, dispatch)
     const updateBulkAccessModeModalProps = getUpdateBulkAccessModeModalProps(selectedRows, updateBulkAccessModeModalVisible, dispatch)
     const updateReplicaAutoBalanceModalProps = getUpdateReplicaAutoBalanceModalProps(selectedRows, updateReplicaAutoBalanceModalVisible, dispatch)
-    const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selected, unmapMarkSnapChainRemovedModalVisible, dispatch)
-    const bulkUnmapMarkSnapChainRemovedModalProps = getBulkUnmapMarkSnapChainRemovedModalProps(selectedRows, bulkUnmapMarkSnapChainRemovedModalVisible, dispatch)
-    const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selected, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
-    const updateBulkFreezeFilesystemForSnapshotModalProps = getUpdateBulkFreezeFilesystemForSnapshotModalProps(selectedRows, updateBulkFreezeFilesystemForSnapshotModalVisible, dispatch)
+    const unmapMarkSnapChainRemovedModalProps = getUnmapMarkSnapChainRemovedModalProps(selected, unmapMarkSnapChainRemovedModalVisible, dispatch, t)
+    const bulkUnmapMarkSnapChainRemovedModalProps = getBulkUnmapMarkSnapChainRemovedModalProps(selectedRows, bulkUnmapMarkSnapChainRemovedModalVisible, dispatch, t)
+    const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selected, updateFreezeFilesystemForSnapshotModalVisible, dispatch, t)
+    const updateBulkFreezeFilesystemForSnapshotModalProps = getUpdateBulkFreezeFilesystemForSnapshotModalProps(selectedRows, updateBulkFreezeFilesystemForSnapshotModalVisible, dispatch, t)
     const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
     const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
     const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps(selectedRows, isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
@@ -1383,8 +1384,8 @@ class Volume extends React.Component {
             <Filter {...volumeFilterProps} />
           </Col>
         </Row>
-        <Button className="out-container-button" size="large" type="primary" onClick={addVolume}>Create Volume</Button>
-        <Button style={{ position: 'absolute', top: '-46px', right: '150px' }} size="large" type="primary" onClick={customColumn}>Custom Column</Button>
+        <Button className="out-container-button" size="large" type="primary" onClick={addVolume}>{t('volume.buttons.createVolume')}</Button>
+        <Button style={{ position: 'absolute', top: '-46px', right: '150px' }} size="large" type="primary" onClick={customColumn}>{t('volume.buttons.customColumn')}</Button>
         <VolumeList {...volumeListProps} />
         {WorkloadDetailModalVisible ? <WorkloadDetailModal key={WorkloadDetailModalKey} {...WorkloadDetailModalProps} /> : ''}
         {recurringJobModalVisible ? <RecurringJobModal key={recurringJobModalKey} {...recurringJobModalProps} /> : ''}
@@ -1445,6 +1446,7 @@ Volume.propTypes = {
   setting: PropTypes.object,
   backingImage: PropTypes.object,
   snapshotModal: PropTypes.object,
+  t: PropTypes.func,
 }
 
 export default connect(({
@@ -1458,4 +1460,4 @@ export default connect(({
   backupTarget,
   recurringJob,
   loading
-}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, loading: loading.models.volume }))(Volume)
+}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, loading: loading.models.volume }))(withTranslation()(Volume))

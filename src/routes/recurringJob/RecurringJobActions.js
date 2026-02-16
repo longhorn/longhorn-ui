@@ -2,17 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Alert } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function actions({ selected, deleteRecurringJob, editRecurringJob }) {
+function actions({ selected, deleteRecurringJob, editRecurringJob, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete Recurring Job ${record.name}?`,
+          title: t('recurringJobActions.modal.delete.title', { recurringJobName: record.name }),
           content: <Alert
-            description={`If the recurring job ${record.name} is the last one of a job group, Longhorn will remove the group from all volumes automatically.`}
+            description={t('recurringJobActions.modal.delete.description', { recurringJobName: record.name })}
             type="warning"
           />,
           width: 760,
@@ -29,8 +31,8 @@ function actions({ selected, deleteRecurringJob, editRecurringJob }) {
   }
 
   const availableActions = [
-    { key: 'edit', name: 'Edit' },
-    { key: 'delete', name: 'Delete' },
+    { key: 'edit', name: t('common.edit') },
+    { key: 'delete', name: t('common.delete') },
   ]
 
   return (
@@ -44,6 +46,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   deleteRecurringJob: PropTypes.func,
   editRecurringJob: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default actions
+export default withTranslation()(actions)

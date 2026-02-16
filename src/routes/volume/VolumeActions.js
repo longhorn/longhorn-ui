@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
 function actions({
@@ -40,6 +42,7 @@ function actions({
   toggleUblkParamsModal,
   toggleRebuildConcurrentSyncLimitModal,
   commandKeyDown,
+  t,
 }) {
   const deleteWranElement = (record) => {
     let workloadResources = ''
@@ -47,27 +50,27 @@ function actions({
     let pvResources = ''
 
     if (record && record.kubernetesStatus && record.kubernetesStatus.pvStatus && record.kubernetesStatus.pvName) {
-      hasPvTooltipText = (<div>{`The following resources associated with this volume (${record.name}) will be deleted:`}</div>)
+      hasPvTooltipText = (<div>{t('volumeActions.modal.delete.hasPvTooltipText', { name: record.name })}</div>)
       pvResources = (<div style={{ margin: '10px', color: '#b7b7b7' }}>
-        <div style={{ paddingLeft: '10px' }}>PV Name: {record.kubernetesStatus.pvName}</div>
-        { !record.kubernetesStatus.lastPVCRefAt && record.kubernetesStatus.pvcName ? <div style={{ paddingLeft: '10px' }}>PVC Name: {record.kubernetesStatus.pvcName}</div> : ''}
+        <div style={{ paddingLeft: '10px' }}>{t('volumeActions.modal.delete.pvName', { name: record.kubernetesStatus.pvName })}</div>
+        { !record.kubernetesStatus.lastPVCRefAt && record.kubernetesStatus.pvcName ? <div style={{ paddingLeft: '10px' }}>{t('volumeActions.modal.delete.pvcName', { name: record.kubernetesStatus.pvcName })}</div> : ''}
       </div>)
     }
     if (record.kubernetesStatus && record.kubernetesStatus.workloadsStatus && !record.kubernetesStatus.lastPodRefAt && record.kubernetesStatus.workloadsStatus.length > 0) {
       workloadResources = (<div>
         <div style={{ margin: '10px 0px', color: '#b7b7b7' }}>{record.kubernetesStatus.workloadsStatus.map((item, i) => {
-          return (<div key={i} style={{ paddingLeft: '10px' }}>Pod Name: {item.podName} ({item.podStatus})</div>)
+          return (<div key={i} style={{ paddingLeft: '10px' }}>{t('volumeActions.modal.delete.podName', { name: item.podName, status: item.podStatus })}</div>)
         })}</div>
       </div>)
     }
 
     return (<div>
-      {record.state === 'attached' ? <div>{`The volume is attached on ${record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''}. Deleting this volume may cause errors for any running applications using this volume!`} </div> : ''}
-      {workloadResources ? <div> { `The following workload(s) depend on this volume (${record.name}) and may encounter errors once it is deleted:` }</div> : '' }
+      {record.state === 'attached' ? <div>{t('volumeActions.modal.delete.attachedWarning', { hostId: record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : '' })}</div> : ''}
+      {workloadResources ? <div>{t('volumeActions.modal.delete.workloadWarning', { name: record.name })}</div> : '' }
       {workloadResources}
       {hasPvTooltipText}
       {pvResources}
-      <div style={{ marginTop: hasPvTooltipText || pvResources ? 10 : 0 }}>{`Are you sure you want to delete volume (${record.name}) ?`} </div>
+      <div style={{ marginTop: hasPvTooltipText || pvResources ? 10 : 0 }}>{t('volumeActions.modal.delete.confirmation', { name: record.name })}</div>
     </div>)
   }
   const handleMenuClick = (event, record) => {
@@ -87,7 +90,7 @@ function actions({
           confirm({
             width: 700,
             okType: 'danger',
-            okText: 'Delete',
+            okText: t('volumeActions.modal.delete.okText'),
             title,
             onOk() {
               deleteVolume(record)
@@ -109,7 +112,7 @@ function actions({
         break
       case 'rollback':
         confirm({
-          title: `Are you sure you want to rollback volume ${record.name}?`,
+          title: t('volumeActions.modal.rollback.title', { name: record.name }),
           onOk() {
             rollback(record)
           },
@@ -168,7 +171,7 @@ function actions({
         break
       case 'trimFilesystem':
         confirm({
-          title: 'Are you sure you want to trim the filesystem?',
+          title: t('volumeActions.modal.trimFilesystem.title'),
           onOk() {
             trimFilesystem(record)
           },
@@ -196,14 +199,14 @@ function actions({
     if (selected.currentImage === selected.image) {
       const rollbackActionIndex = currentActions.findIndex(item => item.key === 'rollback')
       if (rollbackActionIndex > -1) {
-        const upgradeAction = { key: 'engineUpgrade', name: 'Upgrade' }
+        const upgradeAction = { key: 'engineUpgrade', name: t('volumeActions.actions.upgrade') }
         currentActions[rollbackActionIndex] = upgradeAction
       }
       return
     }
     const upgradeActionIndex = currentActions.findIndex(item => item.key === 'engineUpgrade')
     if (upgradeActionIndex > -1) {
-      const rollbackAction = { key: 'rollback', name: 'Rollback' }
+      const rollbackAction = { key: 'rollback', name: t('volumeActions.actions.rollback') }
       currentActions[upgradeActionIndex] = rollbackAction
     }
   }
@@ -238,28 +241,28 @@ function actions({
   const upgradingEngine = () => selected.currentImage !== selected.image
 
   const allActions = [
-    { key: 'attach', name: 'Attach', disabled: !attachable(selected) },
-    { key: 'detach', name: 'Detach', disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
-    { key: 'salvage', name: 'Salvage', disabled: isRestoring(selected) },
-    { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.image !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') || selected?.dataEngine === 'v2' },
-    { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
-    { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
-    { key: 'updateSnapshotDataIntegrity', name: 'Snapshot Data Integrity', disabled: false },
-    { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
-    { key: 'updateBackupTargetName', name: 'Update Backup Target' },
-    { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
-    { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow Snapshots Removal During Trim', disabled: false },
-    { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled: false },
-    { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled: false },
-    { key: 'updateSnapshotMaxCount', name: 'Update Snapshot Max Count', disabled: false },
-    { key: 'updateSnapshotMaxSize', name: 'Update Snapshot Max Size', disabled: false },
-    { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled: false },
-    { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled: false },
-    { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled: false },
+    { key: 'attach', name: t('volumeActions.actions.attach'), disabled: !attachable(selected) },
+    { key: 'detach', name: t('volumeActions.actions.detach'), disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? t('volumeActions.tooltips.rwxDetach') : '' },
+    { key: 'salvage', name: t('volumeActions.actions.salvage'), disabled: isRestoring(selected) },
+    { key: 'engineUpgrade', name: t('volumeActions.actions.engineUpgrade'), disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.image !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') || selected?.dataEngine === 'v2' },
+    { key: 'updateReplicaCount', name: t('volumeActions.actions.updateReplicaCount'), disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
+    { key: 'updateDataLocality', name: t('volumeActions.actions.updateDataLocality'), disabled: !canUpdateDataLocality() || upgradingEngine() },
+    { key: 'updateSnapshotDataIntegrity', name: t('volumeActions.actions.updateSnapshotDataIntegrity'), disabled: false },
+    { key: 'updateAccessMode', name: t('volumeActions.actions.updateAccessMode'), disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
+    { key: 'updateBackupTargetName', name: t('volumeActions.actions.updateBackupTarget') },
+    { key: 'updateReplicaAutoBalance', name: t('volumeActions.actions.updateReplicaAutoBalance'), disabled: !canUpdateReplicaAutoBalance() },
+    { key: 'updateUnmapMarkSnapChainRemoved', name: t('volumeActions.actions.allowSnapshotsRemovalDuringTrim'), disabled: false },
+    { key: 'updateReplicaSoftAntiAffinity', name: t('volumeActions.actions.updateReplicaSoftAntiAffinity'), disabled: false },
+    { key: 'updateReplicaZoneSoftAntiAffinity', name: t('volumeActions.actions.updateReplicaZoneSoftAntiAffinity'), disabled: false },
+    { key: 'updateSnapshotMaxCount', name: t('volumeActions.actions.updateSnapshotMaxCount'), disabled: false },
+    { key: 'updateSnapshotMaxSize', name: t('volumeActions.actions.updateSnapshotMaxSize'), disabled: false },
+    { key: 'updateReplicaDiskSoftAntiAffinity', name: t('volumeActions.actions.updateReplicaDiskSoftAntiAffinity'), disabled: false },
+    { key: 'updateFreezeFilesystemForSnapshot', name: t('volumeActions.actions.updateFreezeFilesystemForSnapshot'), disabled: false },
+    { key: 'offlineReplicaRebuilding', name: t('volumeActions.actions.offlineReplicaRebuilding'), disabled: false },
   ]
   const availableActions = [
-    { key: 'backups', name: 'Backups', disabled: selected.standby || isRestoring(selected) },
-    { key: 'delete', name: 'Delete' },
+    { key: 'backups', name: t('volumeActions.actions.backups'), disabled: selected.standby || isRestoring(selected) },
+    { key: 'delete', name: t('volumeActions.actions.delete') },
   ]
 
   allActions.forEach(action => {
@@ -273,24 +276,24 @@ function actions({
     availableActions.push({ key: 'rebuildConcurrentSyncLimit', name: 'Update Rebuild Concurrent Sync Limit', disabled: false })
   }
   if (selected.dataEngine === 'v2') {
-    availableActions.push({ key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled: false })
+    availableActions.push({ key: 'updateReplicaRebuildingBandwidthLimit', name: t('volumeActions.actions.updateReplicaRebuildingBandwidthLimit'), disabled: false })
   }
 
   if (selected.frontend === 'ublk') {
-    availableActions.push({ key: 'updateUblkNumberOfQueue', name: 'Update UBLK Number of Queue', disabled: selected.state !== 'detached' })
-    availableActions.push({ key: 'updateUblkQueueDepth', name: 'Update UBLK Queue Depth', disabled: selected.state !== 'detached' })
+    availableActions.push({ key: 'updateUblkNumberOfQueue', name: t('volumeActions.actions.updateUblkNumberOfQueue'), disabled: selected.state !== 'detached' })
+    availableActions.push({ key: 'updateUblkQueueDepth', name: t('volumeActions.actions.updateUblkQueueDepth'), disabled: selected.state !== 'detached' })
   }
 
-  availableActions.push({ key: 'cloneVolume', name: 'Clone Volume', disabled: selected.standby || isRestoring(selected) })
-  availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() !== 'true' })
+  availableActions.push({ key: 'cloneVolume', name: t('volumeActions.actions.cloneVolume'), disabled: selected.standby || isRestoring(selected) })
+  availableActions.push({ key: 'expandVolume', name: t('volumeActions.actions.expandVolume'), disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() !== 'true' })
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
-    availableActions.push({ key: 'cancelExpansion', name: 'Cancel Expansion', disabled: false })
+    availableActions.push({ key: 'cancelExpansion', name: t('volumeActions.actions.cancelExpansion'), disabled: false })
   }
-  availableActions.push({ key: 'pvAndpvcCreate', name: 'Create PV/PVC', disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.robustness === 'faulted' || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring(selected) || !selected.actions?.pvCreate || !selected.actions?.pvcCreate })
+  availableActions.push({ key: 'pvAndpvcCreate', name: t('volumeActions.actions.pvAndpvcCreate'), disabled: (selected.kubernetesStatus.pvcName && !selected.kubernetesStatus.lastPVCRefAt) || selected.robustness === 'faulted' || selected.standby || selected.state === 'attaching' || selected.state === 'detaching' || isRestoring(selected) || !selected.actions?.pvCreate || !selected.actions?.pvcCreate })
   if (selected.standby) {
-    availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
+    availableActions.push({ key: 'changeVolume', name: t('volumeActions.actions.activateDisasterRecoveryVolume'), disabled: !selected.standby })
   }
-  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' })
+  availableActions.push({ key: 'trimFilesystem', name: t('volumeActions.actions.trimFilesystem'), disabled: selected.state !== 'attached' })
 
   toggleRollbackAndUpgradeAction(availableActions)
   return (
@@ -329,6 +332,7 @@ actions.propTypes = {
   showUpdateSnapshotDataIntegrityModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
   showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default actions
+export default withTranslation()(actions)

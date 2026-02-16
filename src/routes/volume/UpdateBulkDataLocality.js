@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -25,6 +27,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -62,7 +65,7 @@ const modal = ({
   let initialValue = ''
 
   const modalOpts = {
-    title: 'Update Data Locality',
+    title: t('updateBulkDataLocality.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -84,7 +87,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
+        <FormItem label={t('updateBulkDataLocality.fields.dataLocality')} hasFeedback {...formItemLayout}>
           {initialValue ? getFieldDecorator('dataLocality', {
             initialValue,
           })(<Select>
@@ -93,10 +96,10 @@ const modal = ({
             rules: [
               {
                 required: true,
-                message: 'Can not be empty',
+                message: t('common.validation.cannotBeEmpty'),
               },
             ],
-          })(<Select placeholder="various">
+          })(<Select placeholder={t('updateBulkDataLocality.placeholders.various')}>
             { option.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
@@ -112,6 +115,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   items: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))
