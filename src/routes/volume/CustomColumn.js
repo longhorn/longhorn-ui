@@ -84,6 +84,10 @@ const modal = ({
       label: 'Last Backup At',
     },
     {
+      value: 'backupTargetName',
+      label: 'Backup Target',
+    },
+    {
       value: 'replicas',
       label: 'Replicas',
     },

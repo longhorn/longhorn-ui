@@ -13,6 +13,56 @@ var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const endpoint = process.env.LONGHORN_MANAGER_IP || 'http://54.223.25.181:9500/';
 const versionText = require('fs').readFileSync('./version', 'utf8');
 const longhornVersion = versionText ? versionText.trim().substring(1).split('-')[0]: '1.7.0';
+const ignoredProxyErrorCodes = new Set(['ECONNRESET', 'EPIPE', 'ERR_STREAM_DESTROYED']);
+
+function isIgnoredProxyError(error) {
+  return Boolean(error && ignoredProxyErrorCodes.has(error.code));
+}
+
+function handleProxyError(error, proxyPath, res) {
+  if (!error) {
+    return;
+  }
+
+  if (isIgnoredProxyError(error)) {
+    console.warn(`[dev-server proxy] ${error.code} while proxying ${proxyPath} to ${endpoint}`);
+  } else {
+    console.error(error);
+  }
+
+  if (!res) {
+    return;
+  }
+
+  if (typeof res.writeHead === 'function' && !res.headersSent) {
+    res.writeHead(502, { 'Content-Type': 'text/plain' });
+    res.end('Proxy error');
+    return;
+  }
+
+  if (typeof res.destroy === 'function') {
+    res.destroy();
+  }
+}
+
+function attachSocketErrorHandler(socket, proxyPath) {
+  if (!socket || socket.__longhornErrorHandlerAttached) {
+    return;
+  }
+
+  socket.__longhornErrorHandlerAttached = true;
+  socket.on('error', (error) => handleProxyError(error, proxyPath));
+}
+
+function createProxyOptions(proxyPath) {
+  return {
+    target: endpoint,
+    changeOrigin: true,
+    onError(error, req, res) {
+      handleProxyError(error, req && req.url ? req.url : proxyPath, res);
+    },
+  };
+}
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "index.js"),
@@ -38,15 +88,17 @@ module.exports = {
       proxyTimeout: 10 * 60 * 1000,
       timeout: 10 * 60 * 1000,
       "/v1/ws/**": {
-        "target": endpoint,
-        "changeOrigin": true,
-        "ws": true,
-        "secure": false
+        ...createProxyOptions('/v1/ws/**'),
+        ws: true,
+        secure: false,
+        onProxyReqWs(proxyReq, req, socket) {
+          attachSocketErrorHandler(socket, req && req.url ? req.url : '/v1/ws/**');
+        },
+        onOpen(proxySocket) {
+          attachSocketErrorHandler(proxySocket, '/v1/ws/**');
+        },
       },
-      "/v1/": {
-        "target": endpoint,
-        "changeOrigin": true
-      },
+      "/v1/": createProxyOptions('/v1/'),
     },
     watchOptions: {
       ignored: /node_modules/,
