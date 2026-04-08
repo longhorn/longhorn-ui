@@ -538,6 +538,20 @@ function list({
       },
     },
     {
+      title: 'Backup Target',
+      dataIndex: 'backupTargetName',
+      key: 'backupTargetName',
+      width: 180,
+      sorter: (a, b) => sortTable(a, b, 'backupTargetName'),
+      render: (text) => {
+        return (
+          <div>
+            {text || ''}
+          </div>
+        )
+      },
+    },
+    {
       title: 'Operation',
       key: 'operation',
       width: 110,
