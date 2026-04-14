@@ -198,6 +198,7 @@ function VolumeDetail({
   const settings = setting.data
   const defaultDataLocalitySetting = settings.find(s => s.id === 'default-data-locality')
   const defaultSnapshotDataIntegritySetting = settings.find(s => s.id === 'snapshot-data-integrity')
+  const snapshotWarningThresholdSetting = settings.find(s => s.id === 'snapshot-count-warning-threshold')
   const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
 
   const defaultDataLocalityOption = defaultDataLocalitySetting?.definition?.options || []
@@ -250,6 +251,7 @@ function VolumeDetail({
     backupStatus,
     snapshotModalState,
     engineImages,
+    snapshotWarningThreshold: snapshotWarningThresholdSetting?.value,
     currentBackingImage,
     hosts,
     clearBackupStatus() {

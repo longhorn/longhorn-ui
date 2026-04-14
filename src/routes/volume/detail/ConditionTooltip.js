@@ -9,10 +9,19 @@ const toolTipContent = (field, prefix, value = '') => {
   return (<div style={{ marginBottom: 5 }}>{prefix}: {text}</div>)
 }
 
-function ConditionTooltip({ selectedVolume, conditionKey }) {
+const parsePositiveNumber = (value) => {
+  const num = Number(value)
+  return Number.isFinite(num) && num > 0 ? num : null
+}
+
+function ConditionTooltip({ selectedVolume, conditionKey, snapshotWarningThreshold }) {
   let icon = <Icon style={{ marginRight: 5 }} type="exclamation-circle" />
   let conditionClassName = ''
   const { type, lastProbeTime, lastTransitionTime, message, reason, status } = selectedVolume.conditions[conditionKey] || {}
+  const computedThreshold = Math.min(
+    parsePositiveNumber(snapshotWarningThreshold),
+    parsePositiveNumber(selectedVolume.snapshotMaxCount)
+  )
   let title = selectedVolume.conditions[conditionKey] ? (
     <div>
       {toolTipContent(type, 'Name', type)}
@@ -31,7 +40,7 @@ function ConditionTooltip({ selectedVolume, conditionKey }) {
           <div>
             {toolTipContent(type, 'Name', type) }
             {toolTipContent(lastTransitionTime, 'Last Transition Time', lastTransitionTime)}
-            {toolTipContent(status, 'Status', 'The snapshot number threshold (100) has not been exceeded')}
+            {toolTipContent(status, 'Status', `The snapshot number threshold (${computedThreshold}) has not been exceeded`)}
           </div>
         )
       } else {
@@ -83,6 +92,7 @@ function ConditionTooltip({ selectedVolume, conditionKey }) {
 ConditionTooltip.propTypes = {
   selectedVolume: PropTypes.object,
   conditionKey: PropTypes.string,
+  snapshotWarningThreshold: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
 export default ConditionTooltip

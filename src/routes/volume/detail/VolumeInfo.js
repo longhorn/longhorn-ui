@@ -18,7 +18,7 @@ import ConditionTooltip from './ConditionTooltip'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../../utils/filter'
 
 
-function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, currentBackingImage }) {
+function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, currentBackingImage, snapshotWarningThreshold }) {
   let errorMsg = null
   const state = snapshotModalState
 
@@ -248,6 +248,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
                     key={key}
                     selectedVolume={selectedVolume}
                     conditionKey={key}
+                    snapshotWarningThreshold={snapshotWarningThreshold}
                   />
                 ))}
           </div>
@@ -467,6 +468,7 @@ VolumeInfo.propTypes = {
   snapshotModal: PropTypes.object,
   snapshotModalState: PropTypes.bool,
   engineImages: PropTypes.array,
+  snapshotWarningThreshold: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   currentBackingImage: PropTypes.object,
   hosts: PropTypes.array,
 }
