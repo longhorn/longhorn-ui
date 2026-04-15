@@ -18,6 +18,7 @@ import { frontends } from './helper/index'
 import { formatSize } from '../../utils/formatter'
 import { formatDate, safeParseJSON } from '../../utils/formatDate'
 import { sortByCreatedTime } from '../../utils/sort'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const { Panel } = Collapse
@@ -124,6 +125,7 @@ const modal = ({
     setFieldsValue,
     resetFields
   },
+  t,
 }) => {
   const [filteredBackingImages, setFilteredBackingImages] = useState([])
 
@@ -142,7 +144,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create Volume',
+    title: t('createVolume.title'),
     visible,
     onCancel,
     width: 880,
@@ -200,7 +202,7 @@ const modal = ({
     ? snapshotsOptions.filter(snap => snap.name !== 'volume-head')
     : []
   sortByCreatedTime(volumeSnapshots)
-  const dataSourceAlertMsg = 'The volume size is set to the selected volume size. Mismatched size will cause create volume failed.'
+  const dataSourceAlertMsg = t('createVolume.dataSourceAlert')
 
   const parsedReplicas = safeParseJSON(item.numberOfReplicas || '{}')
   const parsedUblkNumberOfQueue = safeParseJSON(item.ublkNumberOfQueue || '{}')
@@ -237,25 +239,25 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.name')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
             initialValue: item.name || '',
             rules: [
               {
                 required: true,
-                message: 'Please input volume name',
+                message: t('createVolume.validation.nameRequired'),
               },
             ],
           })(<Input />)}
         </FormItem>
         <div style={{ display: 'flex' }}>
-          <FormItem label="Size" style={{ flex: '1 0 65%', paddingLeft: 30 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+          <FormItem label={t('columns.size')} style={{ flex: '1 0 65%', paddingLeft: 30 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
             {getFieldDecorator('size', {
               initialValue: item.size,
               rules: [
                 {
                   required: true,
-                  message: 'Please input volume size',
+                  message: t('common.validation.sizeRequired'),
                 }, {
                   validator: (rule, value, callback) => {
                     if (value === '' || typeof value !== 'number') {
@@ -263,13 +265,13 @@ const modal = ({
                       return
                     }
                     if (value < 0 || value > 65536) {
-                      callback('The value should be between 0 and 65535')
+                      callback(t('common.validation.valueBetween', { min: 0, max: 65536 }))
                     } else if (!/^\d+([.]\d{1,2})?$/.test(value)) {
-                      callback('This value should have at most two decimal places')
+                      callback(t('createVolume.validation.sizeDecimal'))
                     } else if (value < 10 && getFieldsValue().unit === 'Mi') {
-                      callback('The volume size must be greater than 10 Mi')
+                      callback(t('createVolume.validation.sizeMinMi'))
                     } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
-                      callback('Decimals are not allowed')
+                      callback(t('createVolume.validation.sizeNoDecimalMi'))
                     } else {
                       callback()
                     }
@@ -281,7 +283,7 @@ const modal = ({
           <FormItem style={{ flex: '1 0 30%' }}>
             {getFieldDecorator('unit', {
               initialValue: item.unit || 'Gi',
-              rules: [{ required: true, message: 'Please select your unit!' }],
+              rules: [{ required: true, message: t('createVolume.validation.unitRequired') }],
             })(
               <Select
                 style={{ width: '100px' }}
@@ -293,16 +295,16 @@ const modal = ({
             )}
           </FormItem>
         </div>
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+        <FormItem label={t('columns.dataEngine')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: initialDataEngine,
             rules: [
               {
                 validator: (_rule, value, callback) => {
                   if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
+                    callback(t('common.validation.vEngineDisabled', { v: 'v1' }))
                   } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
+                    callback(t('common.validation.vEngineDisabled', { v: 'v2' }))
                   }
                   callback()
                 },
@@ -313,11 +315,11 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
-        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.numberOfReplicas')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: initialReplicas,
             rules: [
-              { required: true, message: 'Please input the number of replicas' },
+              { required: true, message: t('common.validation.replicasRequired') },
               {
                 validator: (_rule, value, callback) => {
                   if (value === '' || typeof value !== 'number') {
@@ -325,9 +327,9 @@ const modal = ({
                     return
                   }
                   if (value < 1 || value > 10) {
-                    callback('The value should be between 1 and 10')
+                    callback(t('common.validation.valueBetween', { min: 1, max: 10 }))
                   } else if (!/^\d+$/.test(value)) {
-                    callback('The value must be a positive integer')
+                    callback(t('createVolume.validation.replicasInteger'))
                   } else {
                     callback()
                   }
@@ -336,10 +338,10 @@ const modal = ({
             ],
           })(<InputNumber />)}
         </FormItem>
-        <FormItem label="Frontend" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.frontend')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
             initialValue: frontends[0].value,
-            rules: [{ required: true, message: 'Please select a frontend' }],
+            rules: [{ required: true, message: t('common.validation.frontendRequired') }],
           })(
             <Select>
               {frontends.map(({ value, label, dataEngine }) => {
@@ -357,16 +359,16 @@ const modal = ({
           <>
             {['ublkNumberOfQueue', 'ublkQueueDepth'].map((field) => {
               const label = field === 'ublkNumberOfQueue'
-                ? 'UBLK Number of Queue'
-                : 'UBLK Queue Depth'
+                ? t('createVolume.fields.ublkNumberOfQueue')
+                : t('createVolume.fields.ublkQueueDepth')
 
               const initialValue = field === 'ublkNumberOfQueue'
                 ? initialUblkNumberOfQueue
                 : initialUblkQueueDepth
 
               const requiredMessage = field === 'ublkNumberOfQueue'
-                ? 'Please input the UBLK number of the queue'
-                : 'Please input the UBLK queue depth'
+                ? t('createVolume.validation.ublkNumberOfQueueRequired')
+                : t('createVolume.validation.ublkQueueDepthRequired')
 
               return (
                 <FormItem key={field} label={label} hasFeedback {...formItemLayout}>
@@ -384,23 +386,23 @@ const modal = ({
             })}
           </>
         )}
-        <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createVolume.fields.dataLocality')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataLocality', {
             initialValue: defaultDataLocalityValue,
           })(<Select>
           { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
           </Select>)}
         </FormItem>
-        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
+        <FormItem label={t('columns.accessMode')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: 'rwo',
           })(<Select>
-            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
-            <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
-            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>{t('accessModes.rwo')}</Option>
+            <Option key={'ReadWriteOncePod'} value={'rwop'}>{t('accessModes.rwop')}</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>{t('accessModes.rwx')}</Option>
           </Select>)}
         </FormItem>
-        <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.backingImage')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: '',
           })(<Select allowClear>
@@ -410,14 +412,14 @@ const modal = ({
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <FormItem label={
               <span>
-                Data Source
+                {t('createVolume.fields.dataSource')}
                 <span style={{
                   marginLeft: 4,
                   marginRight: 4,
                 }}>
                   <Tooltip
                     overlayStyle={{ width: 450 }}
-                    title="Choose data source from existing volume or snapshot. Longhorn will clone the volume data from selected data source"
+                    title={t('createVolume.tooltips.dataSource')}
                   >
                     <Icon type="question-circle-o" />
                   </Tooltip>
@@ -427,7 +429,7 @@ const modal = ({
             {...formItemLayout}>
             {getFieldDecorator('dataSourceType', { initialValue: '' })(
               <Select allowClear onChange={handleDataSourceTypeChange}>
-                {dataSourceOptions.map(value => <Option key={value} value={value}>{value}</Option>) }
+                {dataSourceOptions.map(value => <Option key={value} value={value}>{t(`createVolume.dataSourceOptions.${value.replace(' ', '')}`)}</Option>) }
               </Select>
             )}
           </FormItem>
@@ -439,7 +441,7 @@ const modal = ({
               </div>
             }
           >
-            <FormItem label="Volume" hasFeedback {...formItemLayout}>
+            <FormItem label={t('createVolume.fields.volume')} hasFeedback {...formItemLayout}>
               {getFieldDecorator('dataSourceVolume', { initialValue: '' })(
                 (() => {
                   const selectedDataEngine = getFieldValue('dataEngine')
@@ -462,15 +464,15 @@ const modal = ({
           </Popover>
           )}
         </div>
-        {getFieldValue('dataSourceType') === dataSourceOptions[1] && <FormItem label="Snapshot" hasFeedback {...formItemLayout}>
+        {getFieldValue('dataSourceType') === dataSourceOptions[1] && <FormItem label={t('createVolume.fields.snapshot')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataSourceSnapshot', { initialValue: '' })(
             <Select allowClear optionLabelProp="label" dropdownMenuStyle={{ width: `${volumeSnapshots.length > 0 ? 'fit-content' : 'auto'}` }}>
-              {volumeSnapshots.map(snap => <Option key={snap.name} value={snap.name} label={snap.name}>{`${snap.name} (created ${formatDate(snap.created, false)})`}</Option>)}
+              {volumeSnapshots.map(snap => <Option key={snap.name} value={snap.name} label={snap.name}>{`${snap.name} (${t('createVolume.created')} ${formatDate(snap.created, false)})`}</Option>)}
             </Select>
           )}
           </FormItem>
         }
-        <FormItem label="Backup Target" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createVolume.fields.backupTarget')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
             // init backup target is the default one
             initialValue: backupTargets.find(bt => bt.name === 'default')?.name || '',
@@ -478,14 +480,14 @@ const modal = ({
             { backupTargets.map(bt => <Option key={bt.name} disabled={bt.available === false} value={bt.name}>{bt.name}</Option>)}
           </Select>)}
         </FormItem>
-        <FormItem label="Encrypted" {...formItemLayout}>
+        <FormItem label={t('common.encrypted')} {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'checked',
             initialValue: false,
           })(<Checkbox></Checkbox>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
-          <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
+          <FormItem label={t('common.nodeTag')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
               initialValue: [],
             })(<Select mode="tags">
@@ -494,7 +496,7 @@ const modal = ({
           </FormItem>
         </Spin>
         <Spin spinning={tagsLoading}>
-          <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
+          <FormItem label={t('common.diskTag')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('diskSelector', {
               initialValue: [],
             })(<Select mode="tags">
@@ -504,17 +506,17 @@ const modal = ({
         </Spin>
         {/* Advanced Configurations */}
         <Collapse>
-          <Panel header="Advanced Configurations" key="1">
-            <FormItem label="Backup Block Size" hasFeedback {...formItemLayoutForAdvanced}>
+          <Panel header={t('createVolume.advancedConfigurations')} key="1">
+            <FormItem label={t('columns.backupBlockSize')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('backupBlockSize', { initialValue: '0' })(
                 <Select>
-                  <Option key={'ignored'} value={'0'}>ignored (follow the global setting)</Option>
+                  <Option key={'ignored'} value={'0'}>{t('createVolume.options.ignored')}</Option>
                   <Option key={'2Mi'} value={'2097152'}>2 Mi</Option>
                   <Option key={'16Mi'} value={'16777216'}>16 Mi</Option>
                 </Select>
               )}
             </FormItem>
-            <FormItem label="Snapshot Data Integrity" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.snapshotDataIntegrity')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('snapshotDataIntegrity', {
                 initialValue: 'ignored',
               })(<Select>
@@ -523,12 +525,12 @@ const modal = ({
             </FormItem>
             <FormItem label={
               <span>
-                Snapshot Max Count
+                {t('createVolume.fields.snapshotMaxCount')}
                 <span style={{
                   marginLeft: 4,
                   marginRight: 4,
                 }}>
-                  <Tooltip title="Set '0' to inherit global settings">
+                  <Tooltip title={t('createVolume.tooltips.setInheritGlobal', { value: '0' })}>
                     <Icon type="question-circle-o" />
                   </Tooltip>
                 </span>
@@ -543,12 +545,12 @@ const modal = ({
               <FormItem
                 label={
                 <span>
-                  Snapshot Max Size
+                  {t('createVolume.fields.snapshotMaxSize')}
                   <span style={{
                     marginLeft: 4,
                     marginRight: 4,
                   }}>
-                    <Tooltip title="Set '0' for unrestricted size or at least twice volume size">
+                    <Tooltip title={t('createVolume.tooltips.snapshotMaxSize')}>
                       <Icon type="question-circle-o" />
                     </Tooltip>
                   </span>
@@ -561,7 +563,7 @@ const modal = ({
                   })(<Input style={{ maxWidth: '250px' }} />)}
                   {getFieldDecorator('snapshotSizeUnit', {
                     initialValue: item.unit || 'Gi',
-                    rules: [{ required: true, message: 'Please select your unit!' }],
+                    rules: [{ required: true, message: t('createVolume.validation.unitRequired') }],
                   })(
                     <Select
                       style={{ width: '100px' }}
@@ -577,9 +579,9 @@ const modal = ({
                 <FormItem
                   label={
                     <span>
-                      Rebuild Concurrent Sync Limit
+                      {t('createVolume.fields.rebuildConcurrentSyncLimit')}
                       <span style={{ marginLeft: 4, marginRight: 4 }}>
-                        <Tooltip title="Set '0' to inherit global settings">
+                        <Tooltip title={t('createVolume.tooltips.setInheritGlobal', { value: '0' })}>
                           <Icon type="question-circle-o" />
                         </Tooltip>
                       </span>
@@ -590,83 +592,83 @@ const modal = ({
                   {getFieldDecorator('rebuildConcurrentSyncLimit', {
                     initialValue: 0,
                     rules: [
-                      { type: 'number', min: 0, max: 5, message: 'Value must be between 0 and 5' }
+                      { type: 'number', min: 0, max: 5, message: t('createVolume.validation.rebuildConcurrentSyncLimit') }
                     ],
                   })(
                     <InputNumber min={0} max={5} style={{ width: '250px' }} />
                   )}
                 </FormItem>
               )}
-            <FormItem label="Replicas Auto Balance" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.replicasAutoBalance')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaAutoBalance', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'least-effort'} value={'least-effort'}>least-effort</Option>
-                <Option key={'best-effort'} value={'best-effort'}>best-effort</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'least-effort'} value={'least-effort'}>{t('createVolume.options.leastEffort')}</Option>
+                <Option key={'best-effort'} value={'best-effort'}>{t('createVolume.options.bestEffort')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Allow Snapshot Removal During Trim" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.allowSnapshotRemovalDuringTrim')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('unmapMarkSnapChainRemoved', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>{t('createVolume.options.enabled')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Replica Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.replicaSoftAntiAffinity')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaSoftAntiAffinity', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>{t('createVolume.options.enabled')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Replica Zone Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.replicaZoneSoftAntiAffinity')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaZoneSoftAntiAffinity', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>{t('createVolume.options.enabled')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Replica Disk Soft Anti Affinity" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.replicaDiskSoftAntiAffinity')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('replicaDiskSoftAntiAffinity', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>{t('createVolume.options.enabled')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Freeze Filesystem For Snapshot" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.freezeFilesystemForSnapshot')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('freezeFilesystemForSnapshot', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>{t('createVolume.options.enabled')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Offline Replica Rebuilding" hasFeedback {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.offlineRebuilding')} hasFeedback {...formItemLayoutForAdvanced}>
               {getFieldDecorator('offlineRebuilding', {
                 initialValue: 'ignored',
               })(<Select>
-                <Option key={'enabled'} value={'enabled'}>enabled</Option>
-                <Option key={'disabled'} value={'disabled'}>disabled</Option>
-                <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
+                <Option key={'enabled'} value={'enabled'}>{t('createVolume.options.enabled')}</Option>
+                <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+                <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
               </Select>)}
             </FormItem>
             {getFieldValue('dataEngine') === 'v2' && (
               <FormItem
                 label={
-                  <span>Replica Rebuilding Bandwidth Limit
+                  <span>{t('createVolume.fields.replicaRebuildingBandwidthLimit')}
                     <span style={{ marginLeft: 4, marginRight: 4 }}>
-                      <Tooltip title="Set '0' to inherit global settings">
+                      <Tooltip title={t('createVolume.tooltips.setInheritGlobal', { value: '0' })}>
                         <Icon type="question-circle-o" />
                       </Tooltip>
                     </span>
@@ -679,7 +681,7 @@ const modal = ({
                 })(<InputNumber style={{ width: '250px' }} />) }
               </FormItem>
             )}
-            <FormItem label="Disable Revision Counter" {...formItemLayoutForAdvanced}>
+            <FormItem label={t('createVolume.fields.disableRevisionCounter')} {...formItemLayoutForAdvanced}>
               {getFieldDecorator('revisionCounterDisabled', {
                 valuePropName: 'checked',
                 initialValue: defaultRevisionCounterValue,
@@ -712,6 +714,7 @@ modal.propTypes = {
   v1DataEngineEnabled: PropTypes.bool,
   v2DataEngineEnabled: PropTypes.bool,
   backingImageOptions: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

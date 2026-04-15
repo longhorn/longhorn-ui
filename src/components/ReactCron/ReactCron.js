@@ -4,6 +4,7 @@ import prettyCron from '../../utils/prettycron'
 import cronValidate from '../../utils/cronValidate'
 import PropTypes from 'prop-types'
 import style from './ReactCron.less'
+import { withTranslation } from 'react-i18next'
 
 const TabPane = Tabs.TabPane
 const RadioGroup = Radio.Group
@@ -816,6 +817,7 @@ class ReactCron extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const { current } = this.state
     const children = []
     for (let i = 0; i < 60; i++) {
@@ -825,13 +827,13 @@ class ReactCron extends React.Component {
     for (let i = 0; i < 24; i++) {
       childrenHour.push(<Option key={i}>{i}</Option>)
     }
-    const weekAry = [{ val: 1, label: 'Sunday' }, { val: 2, label: 'Monday' }, { val: 3, label: 'Tuesday' }, { val: 4, label: 'Wednesday' }, { val: 5, label: 'Thursday' }, { val: 6, label: 'Friday' }, { val: 7, label: 'Saturday' }]
+    const weekAry = [{ val: 1, label: t('reactCron.weekDays.sunday') }, { val: 2, label: t('reactCron.weekDays.monday') }, { val: 3, label: t('reactCron.weekDays.tuesday') }, { val: 4, label: t('reactCron.weekDays.wednesday') }, { val: 5, label: t('reactCron.weekDays.thursday') }, { val: 6, label: t('reactCron.weekDays.friday') }, { val: 7, label: t('reactCron.weekDays.saturday') }]
     const childrenWeekAry = []
     for (let i = 0; i < 7; i++) {
       childrenWeekAry.push(<Option key={weekAry[i].val}>{weekAry[i].label}</Option>)
     }
 
-    const weekSpeAry = [{ val: 'SUN', label: 'Sunday' }, { val: 'MON', label: 'Monday' }, { val: 'TUE', label: 'Tuesday' }, { val: 'WED', label: 'Wednesday' }, { val: 'THU', label: 'Thursday' }, { val: 'FRI', label: 'Friday' }, { val: 'SAT', label: 'Saturday' }]
+    const weekSpeAry = [{ val: 'SUN', label: t('reactCron.weekDays.sunday') }, { val: 'MON', label: t('reactCron.weekDays.monday') }, { val: 'TUE', label: t('reactCron.weekDays.tuesday') }, { val: 'WED', label: t('reactCron.weekDays.wednesday') }, { val: 'THU', label: t('reactCron.weekDays.thursday') }, { val: 'FRI', label: t('reactCron.weekDays.friday') }, { val: 'SAT', label: t('reactCron.weekDays.saturday') }]
     const childrenSpeWeekAry = []
     for (let i = 0; i < 7; i++) {
       childrenSpeWeekAry.push(<Option key={weekSpeAry[i].val}>{weekSpeAry[i].label}</Option>)
@@ -842,7 +844,7 @@ class ReactCron extends React.Component {
       childrenSpeMonthAry.push(<Option key={i}>{i}</Option>)
     }
 
-    const weekLAry = [{ val: '1L', label: 'Sunday' }, { val: '2L', label: 'Monday' }, { val: '3L', label: 'Tuesday' }, { val: '4L', label: 'Wednesday' }, { val: '5L', label: 'Thursday' }, { val: '6L', label: 'Friday' }, { val: '7L', label: 'Saturday' }]
+    const weekLAry = [{ val: '1L', label: t('reactCron.weekDays.sunday') }, { val: '2L', label: t('reactCron.weekDays.monday') }, { val: '3L', label: t('reactCron.weekDays.tuesday') }, { val: '4L', label: t('reactCron.weekDays.wednesday') }, { val: '5L', label: t('reactCron.weekDays.thursday') }, { val: '6L', label: t('reactCron.weekDays.friday') }, { val: '7L', label: t('reactCron.weekDays.saturday') }]
     const childrenLAWeekAry = []
     for (let i = 0; i < 7; i++) {
       childrenLAWeekAry.push(<Option key={weekLAry[i].val}>{weekLAry[i].label}</Option>)
@@ -860,20 +862,20 @@ class ReactCron extends React.Component {
     return (
       <div>
         <Tabs activeKey={this.state.activeKey} onChange={(key) => this.activeKeyChange(key)} type="card">
-          <TabPane tab="Cron" key="Cron">
+          <TabPane tab={t('reactCron.tabs.cron')} key="Cron">
             <div style={{ minHeight: '160px' }}>
               <div style={{ width: '60%', display: 'flex', alignItems: 'center' }}>
-                <label style={{ fontSize: '18px', marginRight: '10px' }}>Cron</label>
-                <Input placeholder="Cron" value={this.state.cornText} onChange={this.CronInputChange} />
+                <label style={{ fontSize: '18px', marginRight: '10px' }}>{t('reactCron.tabs.cron')}</label>
+                <Input placeholder={t('reactCron.tabs.cron')} value={this.state.cornText} onChange={this.CronInputChange} />
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Generate Cron" key="generateCron">
+          <TabPane tab={t('reactCron.tabs.generateCron')} key="generateCron">
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', left: 0 }}>
                 <Steps direction="vertical" size="small" current={current}>
                   {steps.map(item => (
-                    <Step key={item.title} title={item.title} />
+                    <Step key={item.title} title={item.title === 'Minutes' ? t('reactCron.steps.minutes') : item.title === 'Hour' ? t('reactCron.steps.hour') : item.title === 'Day' ? t('reactCron.steps.day') : t('reactCron.steps.month')} />
                   ))}
                 </Steps>
               </div>
@@ -883,25 +885,25 @@ class ReactCron extends React.Component {
                   <RadioGroup onChange={this.minutesOnChange} value={this.state.minutesValue}>
                     <Row>
                       <Col className={style.cronClo} span={24}>
-                        <Radio value={1}>Every minutes</Radio>
+                        <Radio value={1}>{t('reactCron.minutes.everyMinutes')}</Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={2}>
-                          Every
+                          {t('reactCron.common.every')}
                           <InputNumber className={style.cronInput} min={1} max={60} disabled={!(this.state.minutes.cronEvery === '2')} defaultValue={this.state.minutes.incrementStart} onChange={(val) => { let data = Object.assign({}, this.state.minutes, { incrementStart: val, minutesText: this.state.minutes.cronEvery === '2' ? `${this.state.minutes.incrementIncrement}/${val}` : this.state.minutesText }); this.setState({ ...this.state, minutesText: data.minutesText, minutes: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          minutes(s) starting at minutes
+                          {t('reactCron.common.minuteUnit')} {t('reactCron.common.startingAt')} {t('reactCron.common.minutes')}
                           <InputNumber className={style.cronInput} min={1} max={59} disabled={!(this.state.minutes.cronEvery === '2')} defaultValue={this.state.minutes.incrementIncrement} onChange={(val) => { let data = Object.assign({}, this.state.minutes, { incrementIncrement: val, minutesText: this.state.minutes.cronEvery === '2' ? `${val}/${this.state.minutes.incrementStart}` : this.state.minutesText }); this.setState({ ...this.state, minutesText: data.minutesText, minutes: data }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={3}>
-                          Specific minutes (choose one or many)
+                          {t('reactCron.minutes.specificMinutes')}
                         </Radio>
                         <div className={style.cronInput} style={{ display: 'inline-block', width: '300px' }}>
                           <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="Please select"
+                            placeholder={t('reactCron.common.pleaseSelect')}
                             disabled={!(this.state.minutes.cronEvery === '3')}
                             onChange={this.minutesMultipleChange}
                           >
@@ -911,9 +913,9 @@ class ReactCron extends React.Component {
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={4}>
-                          Every minutes between
+                          {t('reactCron.minutes.everyMinutesBetween')}
                           <InputNumber className={style.cronInput} min={0} max={this.state.minutes.rangeEnd} defaultValue={this.state.minutes.rangeStart} disabled={!(this.state.minutes.cronEvery === '4')} onChange={(val) => { let data = Object.assign({}, this.state.minutes, { rangeStart: val, minutesText: this.state.minutes.cronEvery === '4' ? `${val}-${this.state.minutes.rangeEnd}` : this.state.minutesText }); this.setState({ ...this.state, minutesText: data.minutesText, minutes: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          and
+                          {t('reactCron.common.and')}
                           <InputNumber className={style.cronInput} min={this.state.minutes.rangeStart} max={59} defaultValue={this.state.minutes.rangeEnd} disabled={!(this.state.minutes.cronEvery === '4')} onChange={(val) => { let data = Object.assign({}, this.state.minutes, { rangeEnd: val, minutesText: this.state.minutes.cronEvery === '4' ? `${this.state.minutes.rangeStart}-${val}` : this.state.minutesText }); this.setState({ ...this.state, minutesText: data.minutesText, minutes: data }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
@@ -925,25 +927,25 @@ class ReactCron extends React.Component {
                   <RadioGroup onChange={this.hourOnChange} value={this.state.hourValue}>
                     <Row>
                       <Col className={style.cronClo} span={24}>
-                        <Radio value={1}>Every hour</Radio>
+                        <Radio value={1}>{t('reactCron.hour.everyHour')}</Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={2}>
-                          Every
+                          {t('reactCron.common.every')}
                           <InputNumber className={style.cronInput} min={0} max={23} disabled={!(this.state.hour.cronEvery === '2')} defaultValue={this.state.hour.incrementStart} onChange={(val) => { let data = Object.assign({}, this.state.hour, { incrementStart: val, hourText: this.state.hour.cronEvery === '2' ? `${this.state.hour.incrementIncrement}/${val}` : this.state.hourText }); this.setState({ ...this.state, hourText: data.hourText, hour: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          hour(s) starting at hour
+                          {t('reactCron.common.hourUnit')} {t('reactCron.common.startingAt')} {t('reactCron.common.hour')}
                           <InputNumber className={style.cronInput} min={0} max={23} disabled={!(this.state.hour.cronEvery === '2')} defaultValue={this.state.hour.incrementIncrement} onChange={(val) => { let data = Object.assign({}, this.state.hour, { incrementIncrement: val, hourText: this.state.hour.cronEvery === '2' ? `${val}/${this.state.hour.incrementStart}` : this.state.hourText }); this.setState({ ...this.state, hourText: data.hourText, hour: data }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={3}>
-                          Specific hour (choose one or many)
+                          {t('reactCron.hour.specificHour')}
                         </Radio>
                         <div className={style.cronInput} style={{ display: 'inline-block', width: '300px' }}>
                           <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="Please select"
+                            placeholder={t('reactCron.common.pleaseSelect')}
                             disabled={!(this.state.hour.cronEvery === '3')}
                             onChange={this.hourMultipleChange}
                           >
@@ -953,9 +955,9 @@ class ReactCron extends React.Component {
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={4}>
-                          Every hour between
+                          {t('reactCron.hour.everyHourBetween')}
                           <InputNumber className={style.cronInput} min={0} max={this.state.hour.rangeEnd} defaultValue={this.state.hour.rangeStart} disabled={!(this.state.hour.cronEvery === '4')} onChange={(val) => { let data = Object.assign({}, this.state.hour, { rangeStart: val, hourText: this.state.hour.cronEvery === '4' ? `${val}-${this.state.hour.rangeEnd}` : this.state.hourText }); this.setState({ ...this.state, hourText: data.hourText, hour: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          and
+                          {t('reactCron.common.and')}
                           <InputNumber className={style.cronInput} min={this.state.hour.rangeStart} max={23} defaultValue={this.state.hour.rangeEnd} disabled={!(this.state.hour.cronEvery === '4')} onChange={(val) => { let data = Object.assign({}, this.state.hour, { rangeEnd: val, hourText: this.state.hour.cronEvery === '4' ? `${this.state.hour.rangeStart}-${val}` : this.state.hourText }); this.setState({ ...this.state, hourText: data.hourText, hour: data }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
@@ -967,13 +969,13 @@ class ReactCron extends React.Component {
                   <RadioGroup onChange={this.dayOnChange} value={this.state.dayValue}>
                     <Row>
                       <Col className={style.cronClo} span={24}>
-                        <Radio value={1}>Every day</Radio>
+                        <Radio value={1}>{t('reactCron.day.everyDay')}</Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={2}>
-                          Every
+                          {t('reactCron.common.every')}
                           <InputNumber className={style.cronInput} min={1} max={7} disabled={!(this.state.day.cronEvery === '2')} defaultValue={this.state.day.incrementIncrement} onChange={(val) => { let data = Object.assign({}, this.state.week, { incrementIncrement: val, weekText: this.state.day.cronEvery === '2' ? `${val}/${this.state.week.incrementStart}` : this.state.weekText }); this.setState({ ...this.state, weekText: data.weekText, week: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          day(s) starting on
+                          {t('reactCron.common.dayUnit')} {t('reactCron.common.startingOn')}
                           <Select className={style.cronInput} defaultValue="1" disabled={!(this.state.day.cronEvery === '2')} style={{ width: 120 }} onChange={this.weekChange}>
                             {childrenWeekAry}
                           </Select>
@@ -981,21 +983,21 @@ class ReactCron extends React.Component {
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={3}>
-                          Every
+                          {t('reactCron.common.every')}
                           <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '3')} defaultValue={this.state.day.incrementIncrement} onChange={(val) => { let data = Object.assign({}, this.state.day, { incrementIncrement: val, dayText: this.state.day.cronEvery === '3' ? `${this.state.day.incrementStart}/${val}` : this.state.dayText }); this.setState({ ...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          day(s) starting at the
+                          {t('reactCron.common.dayUnit')} {t('reactCron.common.startingAtThe')}
                           <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '3')} defaultValue={this.state.day.incrementStart} onChange={(val) => { let data = Object.assign({}, this.state.day, { incrementStart: val, dayText: this.state.day.cronEvery === '3' ? `${val}/${this.state.day.incrementIncrement}` : this.state.dayText }); this.setState({ ...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={4}>
-                          Specific day of week (choose one or many)
+                          {t('reactCron.day.specificDayOfWeek')}
                         </Radio>
                         <div className={style.cronInput} style={{ display: 'inline-block', width: '300px' }}>
                           <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="Please select"
+                            placeholder={t('reactCron.common.pleaseSelect')}
                             onChange={this.weekSpeChange}
                             disabled={!(this.state.day.cronEvery === '4')}
                           >
@@ -1005,13 +1007,13 @@ class ReactCron extends React.Component {
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={5}>
-                          Specific day of month (choose one or many)
+                          {t('reactCron.day.specificDayOfMonth')}
                         </Radio>
                         <div className={style.cronInput} style={{ display: 'inline-block', width: '300px' }}>
                           <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="Please select"
+                            placeholder={t('reactCron.common.pleaseSelect')}
                             onChange={this.daySpeChange}
                             disabled={!(this.state.day.cronEvery === '5')}
                           >
@@ -1021,17 +1023,17 @@ class ReactCron extends React.Component {
                       </Col>
                       {/* <Col span={24}>
                         <Radio value={6}>
-                          On the last day of the month
+                          {t('reactCron.day.onTheLastDayOfTheMonth')}
                         </Radio>
                       </Col>
                       <Col span={24}>
                         <Radio value={7}>
-                          On the last weekday of the month
+                          {t('reactCron.day.onTheLastWeekdayOfTheMonth')}
                         </Radio>
                       </Col> */}
                       {/* <Col span={24}>
                         <Radio value={8}>
-                          On the last
+                          {t('reactCron.day.onTheLast')}
                           <Select
                               defaultValue="1L"
                               disabled={!(this.state.day.cronEvery === '8')}
@@ -1040,25 +1042,25 @@ class ReactCron extends React.Component {
                             >
                               {childrenLAWeekAry}
                           </Select>
-                          of the month
+                          {t('reactCron.day.ofTheMonth')}
                         </Radio>
                       </Col> */}
                       {/* <Col span={24}>
                         <Radio value={9}>
                           <InputNumber min={1} max={31} disabled={!(this.state.day.cronEvery === '9')} defaultValue={this.state.day.cronDaysBeforeEomMinus} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysBeforeEomMinus: val, dayText: this.state.day.cronEvery === '9' ? `L-${val}` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
-                          day(s) before the end of the month
+                          {t('reactCron.day.daysBeforeTheEndOfTheMonth')}
                         </Radio>
                       </Col> */}
                       {/* <Col className={style.cronClo} span={24}>
                         <Radio value={10}>
-                          Nearest weekday (Monday to Friday) to the
+                          {t('reactCron.day.nearestWeekdayToThe')}
                           <InputNumber className={style.cronInput} min={1} max={31} disabled={!(this.state.day.cronEvery === '10')} defaultValue={this.state.day.cronDaysNearestWeekday} onChange={(val)=>{let data = Object.assign({}, this.state.day, { cronDaysNearestWeekday: val, dayText: this.state.day.cronEvery === '10' ? `${val}W` : this.state.dayText }); this.setState({...this.state, weekText: '?', day: data, dayText: data.dayText }, () => { this.prettyCronfun() })}}></InputNumber>
-                          of the month
+                          {t('reactCron.day.ofTheMonth')}
                         </Radio>
                       </Col> */}
                       {/* <Col span={24}>
                         <Radio value={11}>
-                          On the
+                          {t('reactCron.day.onThe')}
                           <InputNumber min={1} max={5} disabled={!(this.state.day.cronEvery === '11')} defaultValue={this.state.week.cronNthDayDay} onChange={(val)=>{let data = Object.assign({}, this.state.week, { cronNthDayNth: val, weekText: this.state.day.cronEvery === '11' ? `${this.state.week.cronNthDayDay}#${val}` : this.state.weekText }); this.setState({...this.state, dayText: '?', week: data, weekText: data.weekText }, () => { this.prettyCronfun() })}}></InputNumber>
                           <Select
                             defaultValue={this.state.week.cronNthDayDay}
@@ -1068,7 +1070,7 @@ class ReactCron extends React.Component {
                           >
                             {childrenWeekAry}
                           </Select>
-                          of the month
+                          {t('reactCron.day.ofTheMonth')}
                         </Radio>
                       </Col> */}
                     </Row>
@@ -1079,25 +1081,25 @@ class ReactCron extends React.Component {
                   <RadioGroup onChange={this.monthOnChange} value={this.state.monthValue}>
                     <Row>
                       <Col className={style.cronClo} span={24}>
-                        <Radio value={1}>Every month</Radio>
+                        <Radio value={1}>{t('reactCron.month.everyMonth')}</Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={2}>
-                          Every
+                          {t('reactCron.common.every')}
                           <InputNumber className={style.cronInput} min={1} max={12} disabled={!(this.state.month.cronEvery === '2')} defaultValue={this.state.month.incrementStart} onChange={(val) => { let data = Object.assign({}, this.state.month, { incrementStart: val, monthText: this.state.month.cronEvery === '2' ? `${this.state.month.incrementIncrement}/${val}` : this.state.monthText }); this.setState({ ...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          month(s) starting at month
+                          {t('reactCron.common.monthUnit')} {t('reactCron.common.startingAt')} {t('reactCron.common.month')}
                           <InputNumber className={style.cronInput} min={1} max={12} disabled={!(this.state.month.cronEvery === '2')} defaultValue={this.state.month.incrementIncrement} onChange={(val) => { let data = Object.assign({}, this.state.month, { incrementIncrement: val, monthText: this.state.month.cronEvery === '2' ? `${val}/${this.state.month.incrementStart}` : this.state.monthText }); this.setState({ ...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={3}>
-                          Specific month (choose one or many)
+                          {t('reactCron.month.specificMonth')}
                         </Radio>
                         <div className={style.cronInput} style={{ display: 'inline-block', width: '300px' }}>
                           <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="Please select"
+                            placeholder={t('reactCron.common.pleaseSelect')}
                             disabled={!(this.state.month.cronEvery === '3')}
                             onChange={this.monthMultipleChange}
                           >
@@ -1107,9 +1109,9 @@ class ReactCron extends React.Component {
                       </Col>
                       <Col className={style.cronClo} span={24}>
                         <Radio value={4}>
-                          Every month between
+                          {t('reactCron.month.everyMonthBetween')}
                           <InputNumber className={style.cronInput} min={1} max={this.state.month.rangeEnd} defaultValue={this.state.month.rangeStart} disabled={!(this.state.month.cronEvery === '4')} onChange={(val) => { let data = Object.assign({}, this.state.month, { rangeStart: val, monthText: this.state.month.cronEvery === '4' ? `${val}-${this.state.month.rangeEnd}` : this.state.monthText }); this.setState({ ...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() }) }}></InputNumber>
-                          and
+                          {t('reactCron.common.and')}
                           <InputNumber className={style.cronInput} min={this.state.month.rangeStart} max={12} defaultValue={this.state.month.rangeEnd} disabled={!(this.state.month.cronEvery === '4')} onChange={(val) => { let data = Object.assign({}, this.state.month, { rangeEnd: val, monthText: this.state.month.cronEvery === '4' ? `${this.state.month.rangeStart}-${val}` : this.state.monthText }); this.setState({ ...this.state, monthText: data.monthText, month: data }, () => { this.prettyCronfun() }) }}></InputNumber>
                         </Radio>
                       </Col>
@@ -1120,17 +1122,17 @@ class ReactCron extends React.Component {
               <div style={{ margin: '20px', textAlign: 'right' }}>
                 {current > 0 && (
                   <Button style={{ marginRight: 8 }} onClick={() => this.prev()}>
-                    Previous
+                    {t('reactCron.buttons.previous')}
                   </Button>
                 )}
                 {current < steps.length - 1 && (
                   <Button type="primary" onClick={() => this.next()}>
-                    Next
+                    {t('reactCron.buttons.next')}
                   </Button>
                 )}
                 {current === steps.length - 1 && (
                   <Button type="primary" onClick={() => { this.setState({ activeKey: 'Cron' }) }}>
-                    Done
+                    {t('reactCron.buttons.done')}
                   </Button>
                 )}
               </div>
@@ -1139,7 +1141,7 @@ class ReactCron extends React.Component {
         </Tabs>
         { this.state.cornFormat
           ? <div style={{ padding: '10px', background: 'rgba(212, 75, 10, 0.2)' }}>
-            <span>Cron expression format error</span>
+            <span>{t('reactCron.error.cronExpressionFormatError')}</span>
           </div>
           : <div style={{ padding: '10px', background: '#ebf2f6' }}>
             <span>{this.state.prettyCronText}</span>
@@ -1152,6 +1154,9 @@ class ReactCron extends React.Component {
 
 ReactCron.propTypes = {
   changeCron: PropTypes.func,
+  saveDisabled: PropTypes.func,
+  cron: PropTypes.string,
+  t: PropTypes.func.isRequired,
 }
 
-export default ReactCron
+export default withTranslation()(ReactCron)

@@ -8,8 +8,9 @@ import { formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
 import { sortTable } from '../../utils/sort'
 import styles from './BackupBackingImageList.less'
+import { withTranslation } from 'react-i18next'
 
-function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height }) {
+function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage, restoreBackingImage, rowSelection, height, t }) {
   const actionsProps = {
     deleteBackupBackingImage,
     restoreBackingImage,
@@ -17,15 +18,15 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
 
   const onCopy = (_text, copySuccess) => {
     if (copySuccess) {
-      message.success('Copied', 1.5)
+      message.success(t('backupBackingImageList.copySuccess'), 1.5)
     } else {
-      message.error('Copy failed', 1.5)
+      message.error(t('backupBackingImageList.copyFailed'), 1.5)
     }
   }
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'backingImageName',
       key: 'backingImageName',
       width: 120,
@@ -35,7 +36,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
         return (
           <>
             {isEncrypted && (
-              <Tooltip title="Encrypted Backing Image Backup">
+              <Tooltip title={t('backupBackingImageList.tooltips.encryptedBackingImage')}>
                 <Icon className="color-warning" type="lock" />
               </Tooltip>
             )}
@@ -44,7 +45,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
         )
       },
     }, {
-      title: 'State',
+      title: t('columns.state'),
       dataIndex: 'state',
       key: 'state',
       width: 120,
@@ -55,7 +56,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
         )
       },
     }, {
-      title: 'Backup Target',
+      title: t('columns.backupTarget'),
       dataIndex: 'backupTargetName',
       key: 'backupTargetName',
       width: 180,
@@ -68,7 +69,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
         )
       },
     }, {
-      title: 'Size',
+      title: t('columns.size'),
       dataIndex: 'size',
       key: 'size',
       width: 120,
@@ -81,7 +82,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
         )
       },
     }, {
-      title: 'URL',
+      title: t('columns.url'),
       dataIndex: 'url',
       key: 'url',
       width: 240,
@@ -97,7 +98,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
       },
     },
     {
-      title: 'Created Time',
+      title: t('columns.createdTime'),
       dataIndex: 'created',
       key: 'created',
       width: 180,
@@ -110,7 +111,7 @@ function BackupBackingImageList({ loading, dataSource, deleteBackupBackingImage,
         )
       },
     }, {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 120,
       render: (_text, record) => {
@@ -143,6 +144,7 @@ BackupBackingImageList.propTypes = {
   restoreBackingImage: PropTypes.func,
   rowSelection: PropTypes.object,
   height: PropTypes.number,
+  t: PropTypes.func.isRequired,
 }
 
-export default BackupBackingImageList
+export default withTranslation()(BackupBackingImageList)

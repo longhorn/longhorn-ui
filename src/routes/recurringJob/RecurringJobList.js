@@ -4,8 +4,9 @@ import { Table } from 'antd'
 import RecurringJobActions from './RecurringJobActions'
 import prettyCron from '../../utils/prettycron'
 import { pagination } from '../../utils/page'
+import { withTranslation } from 'react-i18next'
 
-function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, editRecurringJob }) {
+function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, editRecurringJob, t }) {
   const recurringJobActionsProps = {
     deleteRecurringJob,
     editRecurringJob,
@@ -13,7 +14,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
       width: 160,
@@ -23,7 +24,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Type',
+      title: t('columns.type'),
       dataIndex: 'task',
       key: 'task',
       width: 160,
@@ -33,7 +34,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Schedule',
+      title: t('columns.schedule'),
       dataIndex: 'cron',
       key: 'cron',
       width: 200,
@@ -45,7 +46,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Retain',
+      title: t('columns.retain'),
       key: 'retain',
       width: 120,
       render: (record) => {
@@ -54,7 +55,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Concurrency',
+      title: t('columns.concurrency'),
       key: 'concurrency',
       width: 120,
       render: (record) => {
@@ -63,7 +64,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Parameters',
+      title: t('columns.parameters'),
       key: 'parameters',
       width: 200,
       render: (record) => {
@@ -74,7 +75,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Labels',
+      title: t('columns.labels'),
       dataIndex: 'labels',
       key: 'labels',
       width: 200,
@@ -86,7 +87,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Groups',
+      title: t('columns.groups'),
       dataIndex: 'groups',
       key: 'groups',
       width: 200,
@@ -96,7 +97,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 120,
       render: (text, record) => {
@@ -132,6 +133,7 @@ list.propTypes = {
   height: PropTypes.number,
   deleteRecurringJob: PropTypes.func,
   editRecurringJob: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default list
+export default withTranslation()(list)

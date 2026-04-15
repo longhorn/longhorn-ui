@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Progress } from 'antd'
 import moment from 'moment'
+import { withTranslation } from 'react-i18next'
 
 class LatestBackup extends React.Component {
   state = {
@@ -40,11 +41,11 @@ class LatestBackup extends React.Component {
   }
 
   render() {
-    let { backupStatus } = this.props
+    const { t, backupStatus } = this.props
     const { progress } = this.state
     return (
       <div>
-        {backupStatus.actions && !backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>no backup yet</div>}
+        {backupStatus.actions && !backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>{t('latestBackup.noBackupYet')}</div>}
         {backupStatus.started && <Progress percent={backupStatus.inProgress ? progress : 100} status={backupStatus.inProgress ? 'active' : 'success'} />}
         {backupStatus.started && <div style={{ color: 'rgba(0,0,0,.43)' }}>{moment(backupStatus.started).calendar()}</div>}
       </div>)
@@ -56,6 +57,7 @@ LatestBackup.propTypes = {
   backupStatus: PropTypes.object,
   queryBackupStatus: PropTypes.func,
   clearBackupStatus: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default LatestBackup
+export default withTranslation()(LatestBackup)

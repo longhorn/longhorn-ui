@@ -2,17 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Alert, Icon } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function actions({ selected, deleteSystemRestore }) {
+function actions({ selected, deleteSystemRestore, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
-    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name} ?</div>
+    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />{t('systemRestoresAction.modal.delete.title.default', { name: record.name })}</div>
     if (record.state === 'Pending' || record.state === 'Restoring' || record.state === 'Downloading') {
       title = (<div>
-        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {record.name}</div>
+        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />{t('systemRestoresAction.modal.delete.title.inProgress', { name: record.name })}</div>
         <Alert
-          message={'Deleting restoring system backup will abort the remaining resource rollout. An incomplete restore may cause Longhorn system resource inconsistencies leading to unexpected behavior.'}
+          message={t('systemRestoresAction.modal.delete.warningMessage')}
           type="warning"
         />
       </div>)
@@ -33,7 +35,7 @@ function actions({ selected, deleteSystemRestore }) {
   }
 
   const availableActions = [
-    { key: 'delete', name: 'Delete' },
+    { key: 'delete', name: t('common.delete') },
   ]
 
   return (
@@ -46,6 +48,7 @@ function actions({ selected, deleteSystemRestore }) {
 actions.propTypes = {
   selected: PropTypes.object,
   deleteSystemRestore: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default actions
+export default withTranslation()(actions)

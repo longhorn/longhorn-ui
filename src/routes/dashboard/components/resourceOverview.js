@@ -8,6 +8,7 @@ import ResourceDetail from './resourceDetail'
 import styles from './resourceOverview.less'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode } from '../../../utils/filter'
 import { nodeStatusColorMap } from '../../../utils/status'
+import { withTranslation } from 'react-i18next'
 
 class ResourceOverview extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class ResourceOverview extends React.Component {
   }
 
   render() {
-    const { host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f } = this.props
+    const { host, volume, loading, onVolumeClick = f => f, onNodeClick = f => f, t } = this.props
     const { host: hostLoading, volume: volumeLoading } = loading.models
     this.hostLoading = hostLoading
     this.volumeLoading = volumeLoading
@@ -144,47 +145,47 @@ class ResourceOverview extends React.Component {
 
     const storageSpaceInfoColors = ['#27AE5F', '#F1C40F', '#78C9CF', '#dee1e3']
     const storageSpaceInfoData = [
-      { name: 'Schedulable storage', value: storageSpaceInfo.schedulableSpace },
-      { name: 'Reserved storage', value: storageSpaceInfo.resevedSpace },
-      { name: 'Used storage', value: storageSpaceInfo.usedSpace },
-      { name: 'Disabled storage', value: storageSpaceInfo.disabledSpace },
+      { name: t('resource.storage.schedulableStorage'), value: storageSpaceInfo.schedulableSpace },
+      { name: t('resource.storage.reservedStorage'), value: storageSpaceInfo.resevedSpace },
+      { name: t('resource.storage.usedStorage'), value: storageSpaceInfo.usedSpace },
+      { name: t('resource.storage.disabledStorage'), value: storageSpaceInfo.disabledSpace },
     ]
     const storageBlockSpaceInfoData = [
-      { name: 'Schedulable storage', value: storageBlockSpaceInfo.schedulableSpace },
-      { name: 'Reserved storage', value: storageBlockSpaceInfo.resevedSpace },
-      { name: 'Used storage', value: storageBlockSpaceInfo.usedSpace },
-      { name: 'Disabled storage', value: storageBlockSpaceInfo.disabledSpace },
+      { name: t('resource.storage.schedulableStorage'), value: storageBlockSpaceInfo.schedulableSpace },
+      { name: t('resource.storage.reservedStorage'), value: storageBlockSpaceInfo.resevedSpace },
+      { name: t('resource.storage.usedStorage'), value: storageBlockSpaceInfo.usedSpace },
+      { name: t('resource.storage.disabledStorage'), value: storageBlockSpaceInfo.disabledSpace },
     ]
     const storageSpaceInfoDetails = [
-      { name: 'Schedulable', value: formatMib(storageSpaceInfo.schedulableSpace), color: storageSpaceInfoColors[0] },
-      { name: 'Reserved', value: formatMib(storageSpaceInfo.resevedSpace), color: storageSpaceInfoColors[1] },
-      { name: 'Used', value: formatMib(storageSpaceInfo.usedSpace), color: storageSpaceInfoColors[2] },
-      { name: 'Disabled', value: formatMib(storageSpaceInfo.disabledSpace), color: storageSpaceInfoColors[3] },
+      { name: t('resource.storage.schedulable'), value: formatMib(storageSpaceInfo.schedulableSpace), color: storageSpaceInfoColors[0] },
+      { name: t('resource.storage.reserved'), value: formatMib(storageSpaceInfo.resevedSpace), color: storageSpaceInfoColors[1] },
+      { name: t('resource.storage.used'), value: formatMib(storageSpaceInfo.usedSpace), color: storageSpaceInfoColors[2] },
+      { name: t('resource.storage.disabled'), value: formatMib(storageSpaceInfo.disabledSpace), color: storageSpaceInfoColors[3] },
     ]
     const storageBlockSpaceInfoDetails = [
-      { name: 'Schedulable', value: formatMib(storageBlockSpaceInfo.schedulableSpace), color: storageSpaceInfoColors[0] },
-      { name: 'Reserved', value: formatMib(storageBlockSpaceInfo.resevedSpace), color: storageSpaceInfoColors[1] },
-      { name: 'Used', value: formatMib(storageBlockSpaceInfo.usedSpace), color: storageSpaceInfoColors[2] },
-      { name: 'Disabled', value: formatMib(storageBlockSpaceInfo.disabledSpace), color: storageSpaceInfoColors[3] },
+      { name: t('resource.storage.schedulable'), value: formatMib(storageBlockSpaceInfo.schedulableSpace), color: storageSpaceInfoColors[0] },
+      { name: t('resource.storage.reserved'), value: formatMib(storageBlockSpaceInfo.resevedSpace), color: storageSpaceInfoColors[1] },
+      { name: t('resource.storage.used'), value: formatMib(storageBlockSpaceInfo.usedSpace), color: storageSpaceInfoColors[2] },
+      { name: t('resource.storage.disabled'), value: formatMib(storageBlockSpaceInfo.disabledSpace), color: storageSpaceInfoColors[3] },
     ]
-    const storageSpaceInfoTotal = { name: 'Total', value: formatMib(storageSpaceInfo.totalSpace) }
-    const storageBlockSpaceInfoTotal = { name: 'Total', value: formatMib(storageBlockSpaceInfo.totalSpace) }
+    const storageSpaceInfoTotal = { name: t('common.total'), value: formatMib(storageSpaceInfo.totalSpace) }
+    const storageBlockSpaceInfoTotal = { name: t('common.total'), value: formatMib(storageBlockSpaceInfo.totalSpace) }
     this.storageSpaceChartProps = {
       title: formatMib(storageSpaceInfo.schedulableSpace),
-      subTitle: 'Storage Schedulable',
+      subTitle: t('resource.storage.schedulableStorage'),
       colors: storageSpaceInfoColors,
       data: storageSpaceInfoData,
       loading: hostLoading,
-      empty: 'No Storage',
+      empty: t('resource.storage.empty'),
       width: this.state.resourceWidth,
     }
     this.storageBlockSpaceChartProps = {
       title: formatMib(storageBlockSpaceInfo.schedulableSpace),
-      subTitle: 'Storage Schedulable (Block)',
+      subTitle: t('resource.storage.blockTitle'),
       colors: storageSpaceInfoColors,
       data: storageBlockSpaceInfoData,
       loading: hostLoading,
-      empty: 'No Storage',
+      empty: t('resource.storage.empty'),
       width: this.state.resourceWidth,
     }
     this.storageSpaceDetailProps = {
@@ -200,29 +201,29 @@ class ResourceOverview extends React.Component {
 
     const volumeInfoColors = ['#27AE5F', '#F1C40F', '#78C9CF', '#F15354', '#dee1e3']
     const volumeInfoData = [
-      { key: 'healthy', name: 'Healthy', value: volumeInfo.healthy },
-      { key: 'degraded', name: 'Degraded', value: volumeInfo.degraded },
-      { key: 'inProgress', name: 'In Progress', value: volumeInfo.inProgress },
-      { key: 'faulted', name: 'Faulted', value: volumeInfo.faulted },
-      { key: 'detached', name: 'Detached', value: volumeInfo.detached },
+      { key: 'healthy', name: t('resource.volume.healthy'), value: volumeInfo.healthy },
+      { key: 'degraded', name: t('resource.volume.degraded'), value: volumeInfo.degraded },
+      { key: 'inProgress', name: t('resource.volume.inProgress'), value: volumeInfo.inProgress },
+      { key: 'faulted', name: t('resource.volume.faulted'), value: volumeInfo.faulted },
+      { key: 'detached', name: t('resource.volume.detached'), value: volumeInfo.detached },
     ]
     const volumeDetails = [
-      { key: 'healthy', name: 'Healthy', value: volumeInfo.healthy, color: volumeInfoColors[0] },
-      { key: 'degraded', name: 'Degraded', value: volumeInfo.degraded, color: volumeInfoColors[1] },
-      { key: 'inProgress', name: 'In Progress', value: volumeInfo.inProgress, color: volumeInfoColors[2] },
-      { key: 'faulted', name: 'Fault', value: volumeInfo.faulted, color: volumeInfoColors[3] },
-      { key: 'detached', name: 'Detached', value: volumeInfo.detached, color: volumeInfoColors[4] },
+      { key: 'healthy', name: t('resource.volume.healthy'), value: volumeInfo.healthy, color: volumeInfoColors[0] },
+      { key: 'degraded', name: t('resource.volume.degraded'), value: volumeInfo.degraded, color: volumeInfoColors[1] },
+      { key: 'inProgress', name: t('resource.volume.inProgress'), value: volumeInfo.inProgress, color: volumeInfoColors[2] },
+      { key: 'faulted', name: t('resource.volume.faulted'), value: volumeInfo.faulted, color: volumeInfoColors[3] },
+      { key: 'detached', name: t('resource.volume.detached'), value: volumeInfo.detached, color: volumeInfoColors[4] },
     ]
-    const volumeInfoTotal = { name: 'Total', value: volumeInfo.total }
+    const volumeInfoTotal = { name: t('common.total'), value: volumeInfo.total }
     this.volumeInfoChartProps = {
       title: volumeInfo.total,
-      subTitle: volumeInfo.total > 1 ? 'Volumes' : 'Volume',
+      subTitle: volumeInfo.total > 1 ? t('resource.volume.plural') : t('resource.volume.single'),
       colors: volumeInfoColors,
       data: volumeInfoData,
       loading: volumeLoading,
       onClick: onVolumeClick,
       clickable: true,
-      empty: 'No Volume',
+      empty: t('resource.volume.empty'),
       activeIndex: this.state.volumeActiveIndex,
       width: this.state.resourceWidth,
     }
@@ -243,27 +244,27 @@ class ResourceOverview extends React.Component {
     // We do not represent autoEvicting in the resource overview. autoEvicting nodes are also unschedulable.
     const nodeInfoColors = [nodeStatusColorMap.schedulable.color, nodeStatusColorMap.unschedulable.color, nodeStatusColorMap.down.color, nodeStatusColorMap.disabled.color]
     const nodeInfoData = [
-      { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable },
-      { key: 'unschedulable', name: 'Unschedulable', value: nodeInfo.unschedulable },
-      { key: 'down', name: 'Down', value: nodeInfo.down },
-      { key: 'schedulingDisabled', name: 'Disabled', value: nodeInfo.schedulingDisabled },
+      { key: 'schedulable', name: t('resource.node.schedulable'), value: nodeInfo.schedulable },
+      { key: 'unschedulable', name: t('resource.node.unschedulable'), value: nodeInfo.unschedulable },
+      { key: 'down', name: t('resource.node.down'), value: nodeInfo.down },
+      { key: 'schedulingDisabled', name: t('resource.node.disabled'), value: nodeInfo.schedulingDisabled },
     ]
     const nodeDetails = [
-      { key: 'schedulable', name: 'Schedulable', value: nodeInfo.schedulable, color: nodeInfoColors[0] },
-      { key: 'unschedulable', name: 'Unschedulable', value: nodeInfo.unschedulable, color: nodeInfoColors[1] },
-      { key: 'down', name: 'Down', value: nodeInfo.down, color: nodeInfoColors[2] },
-      { key: 'schedulingDisabled', name: 'Disabled', value: nodeInfo.schedulingDisabled, color: nodeInfoColors[3] },
+      { key: 'schedulable', name: t('resource.node.schedulable'), value: nodeInfo.schedulable, color: nodeInfoColors[0] },
+      { key: 'unschedulable', name: t('resource.node.unschedulable'), value: nodeInfo.unschedulable, color: nodeInfoColors[1] },
+      { key: 'down', name: t('resource.node.down'), value: nodeInfo.down, color: nodeInfoColors[2] },
+      { key: 'schedulingDisabled', name: t('resource.node.disabled'), value: nodeInfo.schedulingDisabled, color: nodeInfoColors[3] },
     ]
-    const nodeInfoTotal = { name: 'Total', value: nodeInfo.total }
+    const nodeInfoTotal = { name: t('common.total'), value: nodeInfo.total }
     this.nodeInfoChartProps = {
       title: nodeInfo.total,
-      subTitle: nodeInfo.total > 1 ? 'Nodes' : 'Node',
+      subTitle: nodeInfo.total > 1 ? t('resource.node.plural') : t('resource.node.single'),
       colors: nodeInfoColors,
       data: nodeInfoData,
       loading: hostLoading,
       onClick: onNodeClick,
       clickable: true,
-      empty: 'No Node',
+      empty: t('resource.node.empty'),
       activeIndex: this.state.nodeActiveIndex,
       width: this.state.resourceWidth,
     }
@@ -307,6 +308,7 @@ class ResourceOverview extends React.Component {
 }
 
 ResourceOverview.propTypes = {
+  t: PropTypes.func,
   host: PropTypes.object,
   volume: PropTypes.object,
   loading: PropTypes.object,
@@ -314,4 +316,4 @@ ResourceOverview.propTypes = {
   onNodeClick: PropTypes.func,
 }
 
-export default ResourceOverview
+export default withTranslation()(ResourceOverview)

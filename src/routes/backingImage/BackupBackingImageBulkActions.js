@@ -1,20 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function bulkActions({ bbiSelectedRows, deleteBackupBackingImages }) {
+function bulkActions({ bbiSelectedRows, deleteBackupBackingImages, t }) {
   const handleClick = (action) => {
     const count = bbiSelectedRows.length
     switch (action) {
       case 'delete':
         confirm({
           width: 'fit-content',
-          okText: 'Delete',
+          okText: t('common.delete'),
           okType: 'danger',
           title: (<>
-                    <p>Are you sure to delete below {count} backup backing {count === 1 ? 'image' : 'images' } ?</p>
+                    <p>{t('backupBackingImageBulkActions.modal.delete.title', { count })}</p>
                     <ul>
                       {bbiSelectedRows.map(item => <li>{item.name}</li>)},
                     </ul>
@@ -29,7 +30,7 @@ function bulkActions({ bbiSelectedRows, deleteBackupBackingImages }) {
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return bbiSelectedRows.length === 0 } },
+    { key: 'delete', name: t('common.delete'), disabled() { return bbiSelectedRows.length === 0 } },
   ]
 
   return (
@@ -48,6 +49,7 @@ function bulkActions({ bbiSelectedRows, deleteBackupBackingImages }) {
 bulkActions.propTypes = {
   bbiSelectedRows: PropTypes.array,
   deleteBackupBackingImages: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

@@ -1,15 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, deleteorphanedData }) {
+function bulkActions({ selectedRows, deleteorphanedData, t }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete ${selectedRows.map(item => item.name).join(',')} ?`,
+          title: t('orphanedDataActions.modal.delete.title', { name: selectedRows.map(item => item.name).join(',') }),
           width: 760,
           onOk() {
             deleteorphanedData(selectedRows)
@@ -21,7 +22,7 @@ function bulkActions({ selectedRows, deleteorphanedData }) {
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 } },
+    { key: 'delete', name: t('common.delete'), disabled() { return selectedRows.length === 0 } },
   ]
 
   return (
@@ -41,6 +42,7 @@ function bulkActions({ selectedRows, deleteorphanedData }) {
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   deleteorphanedData: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

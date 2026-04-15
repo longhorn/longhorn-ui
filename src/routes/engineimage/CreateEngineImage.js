@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -23,6 +25,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -37,7 +40,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create Engine Image',
+    title: t('createEngineImage.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -46,13 +49,13 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Image" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createEngineImage.form.image.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('image', {
             initialValue: item.image,
             rules: [
               {
                 required: true,
-                message: 'Please input engine image',
+                message: t('createEngineImage.form.image.rules.required'),
               },
             ],
           })(<Input />)}
@@ -68,6 +71,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))
