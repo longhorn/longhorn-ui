@@ -1,19 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, bulkDeleteBackupTargets }) {
+function bulkActions({ selectedRows, bulkDeleteBackupTargets, t }) {
   const handleClick = (action) => {
     const count = selectedRows.length
     switch (action) {
       case 'delete':
         confirm({
           width: 'fit-content',
-          okText: 'Delete',
+          okText: t('common.delete'),
           okType: 'danger',
           title: (<>
-                    <p>Are you sure to you want to delete below {count} backup {count === 1 ? 'target' : 'targets' } ?</p>
+                    <p>{t('backupTargetBulkActions.modal.delete.title', {
+                      count
+                    })}</p>
                     <ul>
                       {selectedRows.map(item => <li key={item.name}>{item.name}</li>)}
                     </ul>
@@ -28,7 +32,7 @@ function bulkActions({ selectedRows, bulkDeleteBackupTargets }) {
   }
 
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled() { return selectedRows.length === 0 || selectedRows.every(row => row.name === 'default') } },
+    { key: 'delete', name: t('common.delete'), disabled() { return selectedRows.length === 0 || selectedRows.every(row => row.name === 'default') } },
   ]
 
   return (
@@ -47,6 +51,7 @@ function bulkActions({ selectedRows, bulkDeleteBackupTargets }) {
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   bulkDeleteBackupTargets: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

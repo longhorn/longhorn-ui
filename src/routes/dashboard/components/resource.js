@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import CountUp from 'react-countup'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import styles from './resource.less'
+import { withTranslation } from 'react-i18next'
 
 const countUpProps = {
   start: 0,
@@ -12,7 +13,7 @@ const countUpProps = {
   separator: ',',
 }
 
-function Resource({ total, used, data }) {
+function Resource({ total, used, data, t }) {
   const COLORS = ['#00558b', '#108ee9']
   return (<div className={styles.resource}>
     <ResponsiveContainer minHeight={200}>
@@ -31,7 +32,7 @@ function Resource({ total, used, data }) {
     </ResponsiveContainer>
     <div className={styles.number}>
       <div className={styles.item}>
-        <p>Used</p>
+        <p>{t('resource.storage.used')}</p>
         <p>
           <CountUp
             end={used}
@@ -41,7 +42,7 @@ function Resource({ total, used, data }) {
         </p>
       </div>
       <div className={styles.item}>
-        <p>Total</p>
+        <p>{t('common.total')}</p>
         <p>
           <CountUp
             end={total}
@@ -55,9 +56,10 @@ function Resource({ total, used, data }) {
 }
 
 Resource.propTypes = {
+  t: PropTypes.func,
   data: PropTypes.array,
   total: PropTypes.number,
   used: PropTypes.number,
 }
 
-export default Resource
+export default withTranslation()(Resource)

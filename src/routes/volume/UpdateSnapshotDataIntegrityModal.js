@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Alert } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -25,6 +27,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -41,7 +44,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Snapshot Data Integrity',
+    title: t('updateSnapshotDataIntegrityModal.title.snapshotDataIntegrity'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -52,7 +55,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Option" {...formItemLayout}>
+        <FormItem label={t('updateSnapshotDataIntegrityModal.form.option.label')} {...formItemLayout}>
           {getFieldDecorator('snapshotDataIntegrity', {
             initialValue: item.snapshotDataIntegrity,
           })(<Select>
@@ -60,7 +63,7 @@ const modal = ({
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may override the global setting “Snapshot Data Integrity”"
+            message={t('updateSnapshotDataIntegrityModal.form.warning.message')}
             type="warning"
           />
         </FormItem>
@@ -76,6 +79,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

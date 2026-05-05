@@ -8,10 +8,11 @@ import { Filter } from '../../components/index'
 import EngineImageList from './EngineImageList'
 import CreateEngineImage from './CreateEngineImage'
 import { filterEngineImage } from '../../utils/filter'
+import { withTranslation } from 'react-i18next'
 
 class EngineImage extends React.Component {
   render() {
-    const { dispatch, loading, location } = this.props
+    const { dispatch, loading, location, t } = this.props
     const { data, createEngineImageModalVisible, createEngineImageModalKey } = this.props.engineimage
     const { field, value } = queryString.parse(this.props.location.search)
     let engineimages = data
@@ -56,7 +57,7 @@ class EngineImage extends React.Component {
       location,
       defaultField: 'image',
       fieldOption: [
-        { value: 'image', name: 'Image' },
+        { value: 'image', name: t('engineImage.filter.fieldOption.image') },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
@@ -92,7 +93,7 @@ class EngineImage extends React.Component {
             <Filter {...engineImageFilterProps} />
           </Col>
         </Row>
-        <Button className="out-container-button" size="large" type="primary" onClick={addEngineImage}>Deploy Engine Image</Button>
+        <Button className="out-container-button" size="large" type="primary" onClick={addEngineImage}>{t('engineImage.button.deployEngineImage')}</Button>
         <EngineImageList {...engineImageListProps} />
         { createEngineImageModalVisible ? <CreateEngineImage key={createEngineImageModalKey} {...createEngineImageModalProps} /> : ''}
       </div>
@@ -105,6 +106,7 @@ EngineImage.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default connect(({ engineimage, loading }) => ({ engineimage, loading: loading.models.engineimage }))(EngineImage)
+export default withTranslation()(connect(({ engineimage, loading }) => ({ engineimage, loading: loading.models.engineimage }))(EngineImage))

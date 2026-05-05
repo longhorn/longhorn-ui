@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Checkbox } from 'antd'
 import style from './CustomColumn.less'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -24,6 +26,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -41,47 +44,47 @@ const modal = ({
   const options = [
     {
       value: 'state',
-      label: 'State',
+      label: t('columns.state'),
       disabled: true,
     },
     {
       value: 'id',
-      label: 'Name',
+      label: t('columns.name'),
       disabled: true,
     },
     {
       value: 'size',
-      label: 'Size',
+      label: t('columns.size'),
       disabled: true,
     },
     {
       value: 'actualSize',
-      label: 'Actual Size',
+      label: t('columns.actualSize'),
     },
     {
       value: 'created',
-      label: 'Created',
+      label: t('columns.created'),
     },
     {
       value: 'kubernetesStatus',
-      label: 'PV/PVC',
+      label: t('columns.pvPvc'),
     },
     {
       value: 'namespace',
-      label: 'Namespace',
+      label: t('columns.namespace'),
     },
     {
       value: 'WorkloadNameAndPodName',
-      label: 'Attached To',
+      label: t('columns.attachedTo'),
       disabled: true,
     },
     {
       value: 'recurringJobs',
-      label: 'Schedule',
+      label: t('columns.schedule'),
     },
     {
       value: 'lastBackupAt',
-      label: 'Last Backup At',
+      label: t('columns.lastBackupAt'),
     },
     {
       value: 'backupTargetName',
@@ -89,32 +92,32 @@ const modal = ({
     },
     {
       value: 'replicas',
-      label: 'Replicas',
+      label: t('columns.replicas'),
     },
     {
       value: 'dataLocality',
-      label: 'Data Locality',
+      label: t('columns.dataLocality'),
     },
     {
       value: 'accessMode',
-      label: 'Access Mode',
+      label: t('columns.accessMode'),
     },
     {
       value: 'dataEngine',
-      label: 'Data Engine',
+      label: t('columns.dataEngine'),
     },
     {
       value: 'offlineRebuilding',
-      label: 'Offline Replica Rebuilding',
+      label: t('columns.offlineRebuilding'),
     },
     {
       value: 'replicaRebuildingBandwidthLimit',
-      label: 'Replica Rebuilding Bandwidth Limit',
+      label: t('columns.replicaRebuildingBandwidthLimit'),
     },
   ]
 
   const modalOpts = {
-    title: 'Custom Column',
+    title: t('customColumn.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -141,6 +144,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   columns: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

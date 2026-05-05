@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Card, Icon, Tooltip } from 'antd'
 import { formatDate } from '../../../utils/formatDate'
 import styles from './index.less'
+import { withTranslation } from 'react-i18next'
 
 class EventList extends React.Component {
   constructor(props) {
@@ -39,57 +40,58 @@ class EventList extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const columns = [
       {
-        title: 'Name',
+        title: t('columns.name'),
         key: 'name',
         render: (record) => {
           return (<div style={{ minWidth: 120 }}>{record.name}</div>)
         },
       }, {
-        title: 'Kind',
+        title: t('columns.kind'),
         key: 'kind',
         render: (record) => {
           return (<div>{record.kind}</div>)
         },
       },
       {
-        title: 'Source',
+        title: t('columns.source'),
         key: 'source',
         render: (record) => {
           return (<div>{record.source}</div>)
         },
       },
       {
-        title: 'Type',
+        title: t('columns.type'),
         key: 'type',
         render: (record) => {
           return (<div>{record.type}</div>)
         },
       },
       {
-        title: 'First Time',
+        title: t('columns.firstTime'),
         key: 'firstTimestamp',
         render: (record) => {
           return (<div>{formatDate(record.firstTimestamp)}</div>)
         },
       },
       {
-        title: 'Last Time',
+        title: t('columns.lastTime'),
         key: 'lastTimestamp',
         render: (record) => {
           return (<div>{formatDate(record.lastTimestamp)}</div>)
         },
       },
       {
-        title: 'Reason',
+        title: t('columns.reason'),
         key: 'reason',
         render: (record) => {
           return (<div>{record.reason}</div>)
         },
       },
       {
-        title: 'Message',
+        title: t('columns.message'),
         key: 'message',
         width: 400,
         render: (record) => {
@@ -100,8 +102,8 @@ class EventList extends React.Component {
     return (<Card bodyStyle={{ padding: 0 }}
       title={<div className={styles.header}>
       <div className="title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Tooltip title={this.state.toggleEventLogVisible ? 'Click to Collapse' : 'Click to Expand'}>
-          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} /> Event Log</div>
+        <Tooltip title={this.state.toggleEventLogVisible ? t('eventList.tooltip.collapse') : t('eventList.tooltip.expand')}>
+          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleEventLog()} /> {t('eventList.title')}</div>
         </Tooltip>
       </div></div>}
       bordered={false}>{this.state.toggleEventLogVisible ? <div style={{ padding: 24 }}>
@@ -117,8 +119,9 @@ class EventList extends React.Component {
 }
 
 EventList.propTypes = {
+  t: PropTypes.func,
   dataSource: PropTypes.array,
   dispatch: PropTypes.func,
 }
 
-export default EventList
+export default withTranslation()(EventList)

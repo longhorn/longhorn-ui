@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import { formatDate } from '../../../utils/formatDate'
 import classnames from 'classnames'
 import styles from './EngineImageInfo.less'
+import { withTranslation } from 'react-i18next'
 
-function EngineImageInfo({ selectedEngineImage }) {
+function EngineImageInfo({ selectedEngineImage, t }) {
   const nodeDeploymentMapElement = (nodeDeploymentMap) => {
     if (nodeDeploymentMap) {
       return Object.keys(nodeDeploymentMap).map((key) => {
@@ -18,43 +19,43 @@ function EngineImageInfo({ selectedEngineImage }) {
   return (
     <div>
       <div className={styles.row}>
-        <span className={styles.label}>Name:</span>
+        <span className={styles.label}>{t('common.name')}:</span>
         <span>{selectedEngineImage.name}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>Build Date:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.buildDate')}:</span>
         <span>{ formatDate(selectedEngineImage.buildDate) }</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>Status:</span>
-        <span className={classnames({ [selectedEngineImage.incompatible ? 'incompatible' : selectedEngineImage.state.toLowerCase()]: true, capitalize: true })}>{selectedEngineImage.incompatible ? 'Incompatible' : selectedEngineImage.state.hyphenToHump()}</span>
+        <span className={styles.label}>{t('columns.status')}:</span>
+        <span className={classnames({ [selectedEngineImage.incompatible ? 'incompatible' : selectedEngineImage.state.toLowerCase()]: true, capitalize: true })}>{selectedEngineImage.incompatible ? t('engineImageInfo.status.incompatible') : selectedEngineImage.state.hyphenToHump()}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>Default:</span>
-        <span>{selectedEngineImage.default ? 'True' : 'False'}</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.default')}:</span>
+        <span>{selectedEngineImage.default ? t('common.true') : t('common.false')}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>CLIAPIVersion:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.cliAPIVersion')}:</span>
         <span>{selectedEngineImage.cliAPIVersion}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>ControllerAPIVersion:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.controllerAPIVersion')}:</span>
         <span>{selectedEngineImage.controllerAPIVersion}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>Image:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.image')}:</span>
         <span>{selectedEngineImage.image}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>RefCount:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.refCount')}:</span>
         <span>{selectedEngineImage.refCount}</span>
       </div>
       <div className={styles.row}>
-        <span className={styles.label}>NoRefSince:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.noRefSince')}:</span>
         <span>{selectedEngineImage.noRefSince}</span>
       </div>
       <div className={styles.row} style={{ display: 'flex' }}>
-        <span className={styles.label}>NodeDeploymentMap:</span>
+        <span className={styles.label}>{t('engineImageInfo.fields.nodeDeploymentMap')}:</span>
         <span>{nodeDeploymentMapElement(selectedEngineImage.nodeDeploymentMap)}</span>
       </div>
     </div>
@@ -63,6 +64,7 @@ function EngineImageInfo({ selectedEngineImage }) {
 
 EngineImageInfo.propTypes = {
   selectedEngineImage: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default EngineImageInfo
+export default withTranslation()(EngineImageInfo)

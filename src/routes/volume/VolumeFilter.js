@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'antd'
 import { Filter } from '../../components/index'
+import { withTranslation } from 'react-i18next'
 
 const VolumeFilter = ({
   location,
@@ -9,6 +10,7 @@ const VolumeFilter = ({
   onAdd,
   stateOption,
   fieldOption,
+  t,
 }) => {
   const FilterProps = {
     location,
@@ -26,7 +28,7 @@ const VolumeFilter = ({
       </Col>
 
       <Col lg={{ offset: 10, span: 8 }} md={{ offset: 8, span: 8 }} sm={{ offset: 0, span: 8 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
-        <Button size="large" type="primary" onClick={onAdd}>Create Volume</Button>
+        <Button size="large" type="primary" onClick={onAdd}>{t('createVolume.title')}</Button>
       </Col>
     </Row>
   )
@@ -40,6 +42,7 @@ VolumeFilter.propTypes = {
   fieldOption: PropTypes.array,
   nodeRedundancyOption: PropTypes.array,
   engineImageUpgradableOption: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default VolumeFilter
+export default withTranslation()(VolumeFilter)

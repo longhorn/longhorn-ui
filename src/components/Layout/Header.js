@@ -4,6 +4,7 @@ import { Row, Col, Popover, Icon } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'
 import longhornLogo from '../../assets/images/longhorn-logo.svg'
+import { withTranslation } from 'react-i18next'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   const menusProps = {
@@ -50,4 +51,4 @@ Header.propTypes = {
   switchMenuPopover: PropTypes.func,
 }
 
-export default Header
+export default withTranslation()(Header)

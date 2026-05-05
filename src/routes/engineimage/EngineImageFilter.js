@@ -2,19 +2,24 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Button, Row, Col } from 'antd'
 import { Search } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const EngineImageFilter = ({
   field,
   keyword,
   onSearch,
   onAdd,
+  t,
 }) => {
   const searchGroupProps = {
     field,
     keyword,
     size: 'large',
     select: true,
-    selectOptions: [{ value: 'name', name: 'Name' }, { value: 'image', name: 'image' }],
+    selectOptions: [
+      { value: 'name', name: t('common.name') },
+      { value: 'image', name: t('engineImageFilter.selectOptions.image') }
+    ],
     selectProps: {
       defaultValue: field || 'name',
     },
@@ -28,7 +33,7 @@ const EngineImageFilter = ({
       </Col>
 
       <Col lg={{ offset: 10, span: 8 }} md={{ offset: 8, span: 8 }} sm={{ offset: 0, span: 8 }} xs={{ offset: 0, span: 24 }} style={{ marginBottom: 16, textAlign: 'right' }}>
-        <Button size="large" type="primary" onClick={onAdd}>Create Engine Image</Button>
+        <Button size="large" type="primary" onClick={onAdd}>{t('engineImageFilter.button.createEngineImage')}</Button>
       </Col>
     </Row>
   )
@@ -42,6 +47,7 @@ EngineImageFilter.propTypes = {
   field: PropTypes.string,
   keyword: PropTypes.string,
   location: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default Form.create()(EngineImageFilter)
+export default withTranslation()(Form.create()(EngineImageFilter))

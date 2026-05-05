@@ -4,15 +4,16 @@ import { Table } from 'antd'
 import { pagination } from '../../utils/page'
 import { sortTable } from '../../utils/sort'
 import OrphanedDataActions from './OrphanedDataActions'
+import { withTranslation } from 'react-i18next'
 
-function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData }) {
+function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, deleteOrphanedData, t }) {
   const orphanedDataActionsProps = {
     deleteOrphanedData,
   }
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       width: 220,
       key: 'name',
@@ -26,7 +27,7 @@ function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, del
       },
     },
     {
-      title: 'Node',
+      title: t('columns.node'),
       dataIndex: 'nodeID',
       width: 150,
       key: 'nodeID',
@@ -40,7 +41,7 @@ function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, del
       },
     },
     {
-      title: 'Disk Name',
+      title: t('columns.diskName'),
       dataIndex: 'parameters',
       width: 220,
       key: 'DiskName',
@@ -65,7 +66,7 @@ function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, del
       },
     },
     {
-      title: 'Disk Path',
+      title: t('columns.diskPath'),
       dataIndex: 'parameters',
       width: 220,
       key: 'DiskPath',
@@ -90,7 +91,7 @@ function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, del
       },
     },
     {
-      title: 'Directory Name',
+      title: t('columns.directoryName'),
       dataIndex: 'parameters',
       width: 180,
       key: 'DataName',
@@ -115,7 +116,7 @@ function ReplicaDataOrphansList({ loading, dataSource, height, rowSelection, del
       },
     },
     {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 110,
       fixed: 'right',
@@ -158,6 +159,7 @@ ReplicaDataOrphansList.propTypes = {
   height: PropTypes.number,
   showRefCountVolumeModal: PropTypes.func,
   deleteOrphanedData: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default ReplicaDataOrphansList
+export default withTranslation()(ReplicaDataOrphansList)

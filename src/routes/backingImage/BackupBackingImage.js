@@ -11,6 +11,7 @@ import BackupBackingImageBulkActions from './BackupBackingImageBulkActions'
 import RestoreBackupBackingImageModal from './RestoreBackupBackingImageModal'
 import { filterBackupBackingImage } from './utils'
 import styles from './BackupBackingImage.less'
+import { withTranslation } from 'react-i18next'
 
 function BackupBackingImage({
   backingImage,
@@ -20,7 +21,8 @@ function BackupBackingImage({
   className,
   persistFilterInURL = false,
   v1DataEngineEnabled = true,
-  v2DataEngineEnabled = false
+  v2DataEngineEnabled = false,
+  t,
 }) {
   const { pathname, hash, search } = location
 
@@ -84,10 +86,10 @@ function BackupBackingImage({
     location,
     defaultField: 'name',
     fieldOption: [
-      { value: 'name', name: 'Name' },
-      { value: 'state', name: 'State' },
-      { value: 'url', name: 'URL' },
-      { value: 'backupTargetName', name: 'Backup Target' },
+      { value: 'name', name: t('common.name') },
+      { value: 'state', name: t('backupBackingImage.filter.fieldOptions.state') },
+      { value: 'url', name: t('backupBackingImage.filter.fieldOptions.url') },
+      { value: 'backupTargetName', name: t('backupBackingImage.filter.fieldOptions.backupTargetName') },
     ],
     onSearch(filter) {
       const { field, value } = filter
@@ -191,9 +193,10 @@ BackupBackingImage.propTypes = {
   persistFilterInURL: PropTypes.bool,
   v1DataEngineEnabled: PropTypes.bool,
   v2DataEngineEnabled: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 }
 
-export default connect(({
+export default withTranslation()(connect(({
   backingImage,
   loading,
   dispatch
@@ -201,4 +204,4 @@ export default connect(({
   backingImage,
   loading: loading.models.backingImage,
   dispatch
-}))(BackupBackingImage)
+}))(BackupBackingImage))

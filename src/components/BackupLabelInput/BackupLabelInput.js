@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Icon, Button, Tooltip } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 let id = 0
 const formItemLayout = {
@@ -34,6 +35,7 @@ class BackupLabelInput extends React.Component {
   handleSubmit = e => e.preventDefault()
 
   render() {
+    const { t } = this.props
     const { getFieldDecorator, getFieldValue } = this.props.form
 
     getFieldDecorator('keys', { initialValue: [] })
@@ -51,10 +53,10 @@ class BackupLabelInput extends React.Component {
               {
                 required: true,
                 whitespace: true,
-                message: 'key is required',
+                message: t('backupLabelInput.keyRequiredMessage'),
               },
             ],
-          })(<Input placeholder="Labels Key" style={{ marginRight: 8 }} />)}
+          })(<Input placeholder={t('backupLabelInput.labelsKeyPlaceholder')} style={{ marginRight: 8 }} />)}
         </Form.Item>
         <Form.Item
           required={false}
@@ -67,13 +69,13 @@ class BackupLabelInput extends React.Component {
               {
                 required: true,
                 whitespace: true,
-                message: 'value is required',
+                message: t('backupLabelInput.valueRequiredMessage'),
               },
             ],
-          })(<Input placeholder="Value" style={{ marginRight: 8 }} />)}
+          })(<Input placeholder={t('backupLabelInput.valuePlaceholder')} style={{ marginRight: 8 }} />)}
         </Form.Item>
         {keys.length > 0 && (
-          <Tooltip title="Remove label">
+          <Tooltip title={t('backupLabelInput.removeLabelTooltip')}>
             <Icon
               style={{ marginTop: '12px' }}
               className="dynamic-delete-button"
@@ -86,9 +88,9 @@ class BackupLabelInput extends React.Component {
     ))
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item label="Labels" style={{ display: 'flex' }} {...formItemLayout}>
+        <Form.Item label={t('backupLabelInput.labelsLabel')} style={{ display: 'flex' }} {...formItemLayout}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add Labels
+            <Icon type="plus" /> {t('backupLabelInput.addLabelsButton')}
           </Button>
         </Form.Item>
          {formItems}
@@ -99,6 +101,7 @@ class BackupLabelInput extends React.Component {
 
 BackupLabelInput.propTypes = {
   form: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
-export default BackupLabelInput
+export default withTranslation()(BackupLabelInput)
