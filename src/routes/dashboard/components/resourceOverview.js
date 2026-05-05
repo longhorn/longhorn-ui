@@ -90,7 +90,7 @@ class ResourceOverview extends React.Component {
       const result = host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((availabeSpace, currentDisk) => {
           if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
-            return availabeSpace + (currentDisk.storageAvailable - currentDisk.storageReserved)
+            return availabeSpace + currentDisk.storageAvailable
           }
           return availabeSpace
         }, 0)
@@ -103,7 +103,7 @@ class ResourceOverview extends React.Component {
       return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((usedSpace, currentDisk) => {
           if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
-            return usedSpace + (currentDisk.storageMaximum - currentDisk.storageAvailable)
+            return usedSpace + (currentDisk.storageMaximum - currentDisk.storageReserved - currentDisk.storageAvailable)
           }
           return usedSpace
         }, 0)
