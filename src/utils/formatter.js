@@ -90,11 +90,12 @@ export function formatSnapshot(selectVolume, snapshot) {
         if (ele.error) {
           backupStatusErrorMsg.push({ replica: ele.replica, error: ele.error })
         }
-        total += ele.progress
+        total += ele.state === 'Completed' ? 100 : ele.progress
       })
       backupStatusObject = {}
       backupStatusObject.backupError = backupStatusErrorMsg
       backupStatusObject.progress = Math.floor(total / backupStatusObjectList.length)
+      backupStatusObject.isCompleted = backupStatusObjectList.every(ele => ele.state === 'Completed')
       backupStatusObject.snapshot = snapshot.name
       backupStatusObject.replicas = backupStatusObjectList.filter(item => item.replica).map(item => item.replica).join(', ')
       backupStatusObject.backupIds = backupStatusObjectList.filter(item => item.id).map(item => item.id).join(',')

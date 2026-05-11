@@ -149,7 +149,7 @@ function SnapshotIcon(props, snapshotProps) {
     backgroundColor = '#cccccc'
   }
 
-  if (backupStatusHasError) {
+  if (backupStatusHasError && !backupStatusObject.isCompleted) {
     backgroundColor = '#F15354'
   }
 
@@ -177,7 +177,7 @@ function SnapshotIcon(props, snapshotProps) {
            {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>Replicas: {backupStatusObject.replicas}</p>}
            {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>Backups: {backupStatusObject.backupIds}</p>}
             {/* <p className="snapshot-created">Backup URL: {backupStatusObject.backupURL}</p> */}
-            {backupStatusErrorMsg}</div> : ''
+            {backupStatusObject.isCompleted ? '' : backupStatusErrorMsg}</div> : ''
         }
       </div>}>
         <div>
