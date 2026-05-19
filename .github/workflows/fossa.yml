@@ -26,10 +26,6 @@ jobs:
       - name: "Checkout code"
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: "Skip FOSSA Scan when API key is unavailable"
-        if: env.FOSSA_API_KEY == ''
-        run: echo "FOSSA_API_KEY is not available in this workflow context. Skipping FOSSA scan."
-
       - name: "Run FOSSA Scan"
         if: env.FOSSA_API_KEY != ''
         uses: fossas/fossa-action@c414b9ad82eaad041e47a7cf62a4f02411f427a0 # v1.8.0 # Use a specific version if locking is preferred
