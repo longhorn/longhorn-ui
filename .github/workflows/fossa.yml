@@ -16,19 +16,16 @@ permissions: {}
 
 jobs:
   fossa-scan:
-    if: github.repository == 'longhorn/longhorn-ui' # FOSSA is not intended to run on forks.
+    if: github.repository == 'longhorn/longhorn-ui' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) # FOSSA is not intended to run on forks.
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
     steps:
       - name: "Checkout code"
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Run FOSSA Scan"
-        if: env.FOSSA_API_KEY != ''
         uses: fossas/fossa-action@c414b9ad82eaad041e47a7cf62a4f02411f427a0 # v1.8.0 # Use a specific version if locking is preferred
         with:
-          api-key: ${{ env.FOSSA_API_KEY }}
+          api-key: ${{ secrets.FOSSA_API_KEY }}
           project: longhorn-ui
