@@ -85,29 +85,30 @@ class ResourceOverview extends React.Component {
       }, 0)
     }
     // Available (green)
-    // a. AvailableForSchedulingStorage = sum(enabledNodes.enabledDisks.AvailableStorage - enabledNodes.enabledDisks.ReservedStorage)
+    // a. AvailableForSchedulingStorage = sum(enabledNodes.enabledDisks.AvailableStorage)
     const computeSchedulableSpace = (blockDiskType) => {
       const result = host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((availabeSpace, currentDisk) => {
           if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
-            return availabeSpace + (currentDisk.storageAvailable - currentDisk.storageReserved)
+            return availabeSpace + currentDisk.storageAvailable
           }
           return availabeSpace
         }, 0)
       }, 0)
-      return result < 0 ? 0 : result
+      return Math.max(0, result)
     }
     // Used (blue)
-    // a. UsedStorage = sum(enabledNodes.enabledDisk.MaximumStorage - enabledNodes.enabledDisks.AvailableStorage)
+    // a. UsedStorage = sum(enabledNodes.enabledDisk.ScheduledStorage)
     const computeUsedSpace = (blockDiskType) => {
-      return host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
+      const result = host.data.filter(n => n.allowScheduling === true).reduce((total, currentNode) => {
         return total + Object.values(currentNode.disks).filter(d => d.allowScheduling === true).reduce((usedSpace, currentDisk) => {
           if (currentDisk.diskType === blockDiskType || !currentDisk.diskType) {
-            return usedSpace + (currentDisk.storageMaximum - currentDisk.storageAvailable)
+            return usedSpace + (currentDisk.storageScheduled || 0)
           }
           return usedSpace
         }, 0)
       }, 0)
+      return Math.max(0, result)
     }
     const storageSpaceInfo = {
       totalSpace: computeTotalSpace('filesystem'),
