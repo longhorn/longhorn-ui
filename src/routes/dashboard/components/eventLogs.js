@@ -4,6 +4,7 @@ import { Table, Input, Button, Icon } from 'antd'
 import { sortTable, sortTableByISODate } from '../../../utils/sort'
 import { setSortOrder } from '../../../utils/store'
 import './eventLogs.less'
+import { withTranslation } from 'react-i18next'
 
 class EventLogs extends React.Component {
   constructor(props) {
@@ -101,7 +102,7 @@ class EventLogs extends React.Component {
   }
 
   render() {
-    const { data, sorter, onSorterChange = f => f } = this.props
+    const { data, sorter, onSorterChange = f => f, t } = this.props
     const rowClassName = (record, index) => {
       if (index % 2 === 0) {
         return 'rowStriped'
@@ -121,7 +122,7 @@ class EventLogs extends React.Component {
       }, new Set())).map(item => ({ text: item, value: item }))
     const columns = [
       {
-        title: 'Last Seen',
+        title: t('eventLogs.columns.lastSeen'),
         dataIndex: 'lastTimestamp',
         key: 'lastTimestamp',
         className: 'date',
@@ -130,7 +131,7 @@ class EventLogs extends React.Component {
           return (<div className="seenTime">{text}</div>)
         },
       }, {
-        title: 'First Seen',
+        title: t('eventLogs.columns.firstSeen'),
         dataIndex: 'firstTimestamp',
         key: 'firstTimestamp',
         className: 'date',
@@ -139,7 +140,7 @@ class EventLogs extends React.Component {
           return (<div className="seenTime">{text}</div>)
         },
       }, {
-        title: 'Count',
+        title: t('eventLogs.columns.count'),
         dataIndex: 'count',
         key: 'count',
         className: 'text',
@@ -148,7 +149,7 @@ class EventLogs extends React.Component {
           return (<div className="count">{text}</div>)
         },
       }, {
-        title: 'Name',
+        title: t('columns.name'),
         dataIndex: 'nameText',
         key: 'nameText',
         className: 'name',
@@ -157,13 +158,13 @@ class EventLogs extends React.Component {
           <div className="filter-dropdown">
             <Input
               ref={ele => { this.searchNameInput = ele }}
-              placeholder="Search name"
+              placeholder={t('eventLogs.search.name')}
               value={this.state.searchInput.nameText}
               onChange={this.onSearchNameChange}
               onPressEnter={() => this.onSearch('nameText')}
             />
-            <Button type="link" onClick={() => this.onSearch('nameText')}>OK</Button>
-            <Button type="link" onClick={this.onReset}>Reset</Button>
+            <Button type="link" onClick={() => this.onSearch('nameText')}>{t('common.ok')}</Button>
+            <Button type="link" onClick={this.onReset}>{t('common.reset')}</Button>
           </div>
         ),
         filterDropdownVisible: this.state.filterNameDropdownVisible,
@@ -185,7 +186,7 @@ class EventLogs extends React.Component {
           ) : <div className="name">{text}</div>
         },
       }, {
-        title: 'Kind',
+        title: t('eventLogs.columns.kind'),
         dataIndex: 'involvedObject.kind',
         key: 'involvedObject.kind',
         className: 'text',
@@ -207,7 +208,7 @@ class EventLogs extends React.Component {
       //   },
       // },
       {
-        title: 'Type',
+        title: t('eventLogs.columns.type'),
         dataIndex: 'eventType',
         key: 'eventType',
         className: 'text',
@@ -219,7 +220,7 @@ class EventLogs extends React.Component {
           return (<div className="eventType">{text}</div>)
         },
       }, {
-        title: 'Reason',
+        title: t('eventLogs.columns.reason'),
         dataIndex: 'reason',
         key: 'reason',
         className: 'reason',
@@ -228,7 +229,7 @@ class EventLogs extends React.Component {
           return <div className="reason">{text}</div>
         },
       }, {
-        title: 'Source',
+        title: t('eventLogs.columns.source'),
         dataIndex: 'sourceText',
         key: 'sourceText',
         className: 'text',
@@ -238,13 +239,13 @@ class EventLogs extends React.Component {
           <div className="filter-dropdown">
             <Input
               ref={ele => { this.searchSourceInput = ele }}
-              placeholder="Search source"
+              placeholder={t('eventLogs.search.source')}
               value={this.state.searchInput.sourceText}
               onChange={this.onSearchSourceChange}
               onPressEnter={() => this.onSearch('sourceText')}
             />
-            <Button type="link" onClick={() => this.onSearch('sourceText')}>OK</Button>
-            <Button type="link" onClick={this.onReset}>Reset</Button>
+            <Button type="link" onClick={() => this.onSearch('sourceText')}>{t('common.ok')}</Button>
+            <Button type="link" onClick={this.onReset}>{t('common.reset')}</Button>
           </div>
         ),
         filterDropdownVisible: this.state.filterSourceDropdownVisible,
@@ -254,7 +255,7 @@ class EventLogs extends React.Component {
           }, () => this.searchSourceInput.focus())
         },
       }, {
-        title: 'Message',
+        title: t('eventLogs.columns.message'),
         dataIndex: 'message',
         className: 'text',
         width: 200,
@@ -269,7 +270,7 @@ class EventLogs extends React.Component {
     setSortOrder(columns, sorter)
     return (
       <div className="eventLogs">
-        <div className="title">Event Log</div>
+        <div className="title">{t('eventLogs.title')}</div>
           <div className="content">
             <Table columns={columns}
               onChange={onChange}
@@ -284,9 +285,10 @@ class EventLogs extends React.Component {
 }
 
 EventLogs.propTypes = {
+  t: PropTypes.func,
   data: PropTypes.array,
   sorter: PropTypes.object,
   onSorterChange: PropTypes.func,
 }
 
-export default EventLogs
+export default withTranslation()(EventLogs)

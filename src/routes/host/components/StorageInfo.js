@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { formatMib } from '../../../utils/formatter'
 import styles from './StorageInfo.less'
+import { withTranslation } from 'react-i18next'
 
-function StorageInfo({ storage }) {
+function StorageInfo({ storage, t }) {
   const computeSchedulableSpace = () => {
     const space = storage.storageAvailable - storage.storageReserved
     if (space < 0) {
@@ -15,23 +16,23 @@ function StorageInfo({ storage }) {
     <div className={styles.storageInfo}>
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(computeSchedulableSpace())}</div>
-        <div className={styles.storageLabel}>Schedulable</div>
+        <div className={styles.storageLabel}>{t('storageInfo.schedulable')}</div>
       </div>
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(storage.storageAvailable)}</div>
-        <div className={styles.storageLabel}>Available</div>
+        <div className={styles.storageLabel}>{t('storageInfo.available')}</div>
       </div>
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(storage.storageReserved)}</div>
-        <div className={styles.storageLabel}>Reserved</div>
+        <div className={styles.storageLabel}>{t('storageInfo.reserved')}</div>
       </div>
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(storage.storageMaximum)}</div>
-        <div className={styles.storageLabel}>Maximum</div>
+        <div className={styles.storageLabel}>{t('storageInfo.maximum')}</div>
       </div>
       <div className={styles.storage}>
         <div className={styles.storageValue}>{formatMib(storage.storageScheduled)}</div>
-        <div className={styles.storageLabel}>Scheduled</div>
+        <div className={styles.storageLabel}>{t('storageInfo.scheduled')}</div>
       </div>
     </div>
   )
@@ -39,6 +40,7 @@ function StorageInfo({ storage }) {
 
 StorageInfo.propTypes = {
   storage: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default StorageInfo
+export default withTranslation()(StorageInfo)

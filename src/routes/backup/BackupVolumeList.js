@@ -11,6 +11,7 @@ import { pagination } from '../../utils/page'
 import queryString from 'query-string'
 import style from './backupList.less'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 class List extends React.Component {
   constructor(props) {
@@ -95,12 +96,12 @@ class List extends React.Component {
   }
 
   render() {
-    const { backup, loading, sorter, rowSelection, onSorterChange, onRowClick, showWorkloadsStatusDetail = f => f } = this.props
+    const { backup, loading, sorter, rowSelection, onSorterChange, onRowClick, showWorkloadsStatusDetail = f => f, t } = this.props
     const dataSource = backup || []
 
     const columns = [
       {
-        title: 'Name',
+        title: t('columns.name'),
         dataIndex: 'volumeName',
         key: 'volumeName',
         width: 200,
@@ -126,7 +127,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Size',
+        title: t('columns.size'),
         dataIndex: 'size',
         key: 'size',
         width: 80,
@@ -140,7 +141,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Backup Target',
+        title: t('columns.backupTarget'),
         dataIndex: 'backupTargetName',
         key: 'backupTargetName',
         width: 200,
@@ -152,7 +153,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Last Backup At',
+        title: t('columns.lastBackupAt'),
         dataIndex: 'lastBackupAt',
         key: 'lastBackupAt',
         width: 200,
@@ -166,7 +167,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Created At',
+        title: t('columns.createdAt'),
         dataIndex: 'created',
         key: 'created',
         align: 'center',
@@ -181,7 +182,7 @@ class List extends React.Component {
         },
       },
       {
-        title: <div>PV/PVC</div>,
+        title: <div>{t('columns.pvPvc')}</div>,
         dataIndex: 'labels',
         key: 'KubernetesStatus',
         width: 120,
@@ -192,23 +193,23 @@ class List extends React.Component {
             storageObj = this.formatData(record.KubernetesStatus)
           }
           let title = (<div>
-            <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
-            <div><span>PV Status</span><span>: </span><span>{storageObj.pvStatus}</span></div>
-            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(storageObj.lastPVCRefAt)}</span></div> : ''}
-            { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
+            <div><span>{t('backupVolumeList.tooltips.pvName')}</span><span>: </span><span>{storageObj.pvName}</span></div>
+            <div><span>{t('backupVolumeList.tooltips.pvStatus')}</span><span>: </span><span>{storageObj.pvStatus}</span></div>
+            { storageObj.lastPVCRefAt ? <div><span>{t('backupVolumeList.tooltips.lastTimeBoundWithPVC')}</span><span> : </span><span>{formatDate(storageObj.lastPVCRefAt)}</span></div> : ''}
+            { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? t('backupVolumeList.tooltips.lastBounded') : ''} {t('backupVolumeList.tooltips.pvcName')}</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
           </div>)
           let content = (() => {
             if (!storageObj.pvName) {
               return ''
             }
             if (storageObj.pvName && !storageObj.pvcName && !storageObj.namespace) {
-              return <div>Available</div>
+              return <div>{t('backupVolumeList.pvStatuses.available')}</div>
             }
             if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && !storageObj.lastPVCRefAt) {
-              return <div>Bound</div>
+              return <div>{t('backupVolumeList.pvStatuses.bound')}</div>
             }
             if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && storageObj.lastPVCRefAt) {
-              return <div>Released</div>
+              return <div>{t('backupVolumeList.pvStatuses.released')}</div>
             }
             return ''
           })()
@@ -222,7 +223,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Workload/Pod',
+        title: t('columns.workloadPod'),
         dataIndex: 'labels',
         key: 'WorkloadNameAndPodName',
         width: 230,
@@ -234,7 +235,7 @@ class List extends React.Component {
             storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 
-          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {formatDate(storageObj.lastPodRefAt)}</div></div> : ''
+          const title = storageObj.lastPodRefAt ? <div><div>{t('backupVolumeList.tooltips.lastTimeUsed')}: {formatDate(storageObj.lastPodRefAt)}</div></div> : ''
           const ele = storageObj.workloadsStatus && storageObj.workloadsStatus.length ? storageObj.workloadsStatus.map((item, index) => {
             return <div key={index}>{item.podName}</div>
           }) : ''
@@ -252,7 +253,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Operation',
+        title: t('columns.operation'),
         key: 'operation',
         width: 120,
         fixed: 'right',
@@ -260,11 +261,11 @@ class List extends React.Component {
           let hasBackingImage = record.backingImageName || record.backingImageURL
           return (
             <DropOption menuOptions={[
-              { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
-              { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled: !record.lastBackupName || (record.messages && record.messages.error) },
-              { key: 'syncBackupVolume', name: 'Sync Backup Volume' },
-              { key: 'deleteAll', name: 'Delete All Backups' },
-              { key: 'backingImageInfo', name: 'Backing Image Info', disabled: !hasBackingImage, tooltip: hasBackingImage ? '' : 'No backing image is used' },
+              { key: 'recovery', name: t('backupVolumeList.operationOptions.createDisasterRecoveryVolume'), disabled: !record.lastBackupName || (record.messages && record.messages.error) },
+              { key: 'restoreLatestBackup', name: t('backupVolumeList.operationOptions.restoreLatestBackup'), disabled: !record.lastBackupName || (record.messages && record.messages.error) },
+              { key: 'syncBackupVolume', name: t('backupVolumeList.operationOptions.syncBackupVolume') },
+              { key: 'deleteAll', name: t('backupVolumeList.operationOptions.deleteAllBackups') },
+              { key: 'backingImageInfo', name: t('backupVolumeList.operationOptions.backingImageInfo'), disabled: !hasBackingImage, tooltip: hasBackingImage ? '' : t('backupVolumeList.operationOptions.noBackingImageTooltip') },
             ]}
               onMenuClick={e => this.handleMenuClick(record, e)}
             />
@@ -278,7 +279,7 @@ class List extends React.Component {
     }
     setSortOrder(columns, sorter)
     const locale = {
-      emptyText: backup ? 'No Data' : 'Please select a volume first',
+      emptyText: backup ? t('common.noData') : t('backupVolumeList.table.noVolumeSelected'),
     }
 
     // dynamic column width
@@ -330,6 +331,7 @@ List.propTypes = {
   syncBackupVolume: PropTypes.func,
   showBackingImageInfo: PropTypes.func,
   showWorkloadsStatusDetail: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default List
+export default withTranslation()(List)

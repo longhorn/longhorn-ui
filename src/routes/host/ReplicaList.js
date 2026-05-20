@@ -2,14 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table, Modal } from 'antd'
 import { DropOption, LinkTo } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function list({ dataSource, deleteReplicas, rowSelection }) {
+function list({ dataSource, deleteReplicas, rowSelection, t }) {
   const handleMenuClick = (record, event) => {
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete replica ${record.name}?`,
+          title: t('replicaList.deleteConfirm', { replicaName: record.name }),
           onOk() {
             deleteReplicas([record])
           },
@@ -19,12 +21,12 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
     }
   }
   const statusMap = {
-    healthy: { className: 'healthy', label: 'Healthy' },
-    rebuilding: { className: 'rebuilding', label: 'Rebuilding' },
-    err: { className: 'error', label: 'Error' },
-    unknown: { className: 'unknown', label: 'Unknown' },
-    failed: { className: 'failed', label: 'Failed' },
-    stopped: { className: 'stopped', label: 'Stopped' },
+    healthy: { className: 'healthy', label: t('replicaList.status.healthy') },
+    rebuilding: { className: 'rebuilding', label: t('replicaList.status.rebuilding') },
+    err: { className: 'error', label: t('replicaList.status.error') },
+    unknown: { className: 'unknown', label: t('replicaList.status.unknown') },
+    failed: { className: 'failed', label: t('replicaList.status.failed') },
+    stopped: { className: 'stopped', label: t('replicaList.status.stopped') },
   }
   const parseStatus = (replica) => {
     let s
@@ -52,7 +54,7 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
   }
   const columns = [
     {
-      title: 'Status',
+      title: t('columns.status'),
       dataIndex: 'running',
       key: 'running',
       width: 100,
@@ -64,7 +66,7 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
         )
       },
     }, {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
       render: (text, record) => {
@@ -79,17 +81,17 @@ function list({ dataSource, deleteReplicas, rowSelection }) {
         )
       },
     }, {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 100,
       render: (text, record) => {
         let deleteTooltip = ''
         if (record.volState !== 'detached' && record.volState !== 'attached') {
-          deleteTooltip = `Replica belongs to volume currently ${record.volState}. Volume must be attached or detached.`
+          deleteTooltip = t('replicaList.deleteTooltip', { volumeState: record.volState })
         }
         return (
           <DropOption menuOptions={[
-            { key: 'delete', name: 'Delete', disabled: deleteTooltip !== '', tooltip: deleteTooltip },
+            { key: 'delete', name: t('common.delete'), disabled: deleteTooltip !== '', tooltip: deleteTooltip },
           ]}
             onMenuClick={e => handleMenuClick(record, e)}
           />
@@ -120,6 +122,7 @@ list.propTypes = {
   dataSource: PropTypes.array,
   deleteReplicas: PropTypes.func,
   rowSelection: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default list
+export default withTranslation()(list)

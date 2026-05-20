@@ -9,6 +9,7 @@ import RecurringJobBulkActions from './RecurringJobBulkActions'
 import queryString from 'query-string'
 import { Row, Col, Button } from 'antd'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 class RecurringJob extends React.Component {
   constructor(props) {
@@ -91,7 +92,7 @@ class RecurringJob extends React.Component {
 
   render() {
     const me = this
-    const { dispatch, loading, location } = this.props
+    const { dispatch, loading, location, t } = this.props
     const { data } = this.props.recurringJob
     const { field, value } = queryString.parse(this.props.location.search)
     // Front-end filtering
@@ -208,10 +209,10 @@ class RecurringJob extends React.Component {
       location,
       defaultField: 'name',
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'groups', name: 'Group' },
-        { value: 'label', name: 'Label' },
-        { value: 'type', name: 'Type' },
+        { value: 'name', name: t('common.name') },
+        { value: 'groups', name: t('recurringJob.filter.fieldOptions.groups') },
+        { value: 'label', name: t('recurringJob.filter.fieldOptions.label') },
+        { value: 'type', name: t('recurringJob.filter.fieldOptions.type') },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
@@ -255,7 +256,7 @@ class RecurringJob extends React.Component {
             <Filter {...recurringJobFilterProps} />
           </Col>
         </Row>
-        <Button className="out-container-button" size="large" type="primary" onClick={this.showCreateRecurringJobModal}>Create Recurring Job</Button>
+        <Button className="out-container-button" size="large" type="primary" onClick={this.showCreateRecurringJobModal}>{t('recurringJob.button.createRecurringJob')}</Button>
         {this.state.createRecurringJobModalVisible && <CreateRecurringJob key={this.createRecurringJobModalKey} {...createRecurringJobModalProps} />}
         <RecurringJobList {...recurringJobListProps} />
       </div>
@@ -268,6 +269,7 @@ RecurringJob.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default connect(({ recurringJob, loading }) => ({ recurringJob, loading: loading.models.recurringJob }))(RecurringJob)
+export default withTranslation()(connect(({ recurringJob, loading }) => ({ recurringJob, loading: loading.models.recurringJob }))(RecurringJob))

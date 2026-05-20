@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ModalBlur } from '../../components'
 import RecurringJob from './detail/RecurringJob'
+import { withTranslation } from 'react-i18next'
 
 const modal = ({
   visible,
@@ -12,6 +13,7 @@ const modal = ({
   recurringJobData,
   dispatch,
   loading,
+  t
 }) => {
   const modalOpts = {
     title: '',
@@ -20,7 +22,7 @@ const modal = ({
     onOk,
     hasOnCancel: true,
     width: 1000,
-    okText: 'Close',
+    okText: t('common.close'),
     bodyStyle: { padding: '0px' },
     style: { top: 0 },
   }
@@ -52,6 +54,7 @@ modal.propTypes = {
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
   dispatch: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default modal
+export default withTranslation()(modal)

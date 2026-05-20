@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Radio } from 'antd'
 import { ModalBlur } from '../../components'
 import styles from './BulkEditNode.less'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
@@ -13,6 +14,7 @@ const modal = ({
   onCancel,
   onOk,
   selectedHostRows,
+  t
 }) => {
   function handleOk() {
     const { validateFields } = form
@@ -52,12 +54,12 @@ const modal = ({
   const { getFieldDecorator } = form
 
   const modalOpts = {
-    title: 'Edit Node',
+    title: t('bulkEditNode.title'),
     visible,
     onCancel,
     onOk: handleOk,
     width: 500,
-    okText: 'Save',
+    okText: t('common.save'),
   }
 
   return (
@@ -65,7 +67,7 @@ const modal = ({
       <Form style={{ display: 'flex' }}>
         <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'start' }}>
           <div className={styles.label}>
-            Node Scheduling
+            {t('bulkEditNode.nodeScheduling')}
           </div>
           <div className={styles.control} style={{ width: '210px' }}>
             <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -73,8 +75,8 @@ const modal = ({
                 initialValue: isEnabled,
               })(
                 <RadioGroup>
-                  <Radio value={true}>Enable</Radio>
-                  <Radio value={false}>Disable</Radio>
+                  <Radio value={true}>{t('common.enable')}</Radio>
+                  <Radio value={false}>{t('common.disable')}</Radio>
                 </RadioGroup>
               )}
             </FormItem>
@@ -82,7 +84,7 @@ const modal = ({
         </div>
         <div className={styles.formItem} style={{ display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'start' }}>
           <div className={styles.label}>
-            Eviction Requested
+            {t('bulkEditNode.evictionRequested')}
           </div>
           <div className={styles.control}>
             <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -91,13 +93,13 @@ const modal = ({
                 rules: [
                   {
                     required: true,
-                    message: 'Eviction Requested is required',
+                    message: t('bulkEditNode.evictionRequired'),
                   },
                 ],
               })(
                 <RadioGroup>
-                  <Radio value={true}>True</Radio>
-                  <Radio value={false}>False</Radio>
+                  <Radio value={true}>{t('common.true')}</Radio>
+                  <Radio value={false}>{t('common.false')}</Radio>
                 </RadioGroup>
               )}
             </FormItem>
@@ -109,6 +111,7 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   form: PropTypes.object.isRequired,
   selectedHostRows: PropTypes.array,
   visible: PropTypes.bool,
@@ -116,4 +119,4 @@ modal.propTypes = {
   onOk: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

@@ -45,6 +45,7 @@ class DistTag extends React.Component {
   render() {
     const { tags } = this.state
     const { inputVisible, inputValue } = this.state
+    const { t } = this.props
     return (
       <div>
         {tags.map((tag) => {
@@ -76,7 +77,7 @@ class DistTag extends React.Component {
         )}
         {!inputVisible && (
           <Tag onClick={this.showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
-            <Icon type="plus" /> {this.props.nodeBoolean ? 'New Node Tag' : 'New Disk Tag'}
+            <Icon type="plus" /> {this.props.nodeBoolean ? t('tagComponent.newNodeTag') : t('tagComponent.newDiskTag')}
           </Tag>
         )}
       </div>
@@ -85,6 +86,7 @@ class DistTag extends React.Component {
 }
 
 DistTag.propTypes = {
+  t: PropTypes.func,
   tags: PropTypes.array,
   changeTags: PropTypes.func,
   nodeBoolean: PropTypes.bool,

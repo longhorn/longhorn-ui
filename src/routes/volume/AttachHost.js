@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Checkbox, Alert, Row, Col } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const formItemLayout = {
@@ -33,6 +34,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -47,7 +49,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Attach to host',
+    title: t('attachHost.title'),
     visible,
     onCancel,
     width: 1040,
@@ -67,19 +69,19 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Host" hasFeedback {...formItemLayout}>
+        <FormItem label={t('attachHost.fields.host')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('host', {
             rules: [
               {
                 required: true,
-                message: 'Please select a host to attach',
+                message: t('attachHost.validation.hostRequired'),
               },
             ],
           })(<Select style={{ width: '100%' }} size="large">
             {options}
           </Select>)}
         </FormItem>
-        <FormItem label="Maintenance" valuepropname={'checked'} {...formItemLayoutCheckBox}>
+        <FormItem label={t('attachHost.fields.maintenance')} valuepropname={'checked'} {...formItemLayoutCheckBox}>
           {getFieldDecorator('disableFrontend', {
             initialValue: hasRwxVolume,
             valuePropName: 'checked',
@@ -93,7 +95,7 @@ const modal = ({
       </Form>
       { hasRwxVolume ? <Row>
         <Col span={18} style={{ marginLeft: 100 }}>
-          <Alert message="RWX volumes can only be manually attached in maintenance mode." type="warning" showIcon />
+          <Alert message={t('attachHost.rwxWarning')} type="warning" showIcon />
         </Col>
       </Row> : '' }
     </ModalBlur>
@@ -107,6 +109,7 @@ modal.propTypes = {
   items: PropTypes.array,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

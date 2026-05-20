@@ -6,8 +6,9 @@ import { routerRedux } from 'dva/router'
 import BackupVolume from './BackupVolume'
 import BackupBackingImage from '../backingImage/BackupBackingImage'
 import styles from './index.less'
+import { withTranslation } from 'react-i18next'
 
-function Backup({ dispatch, location, setting = {} }) {
+function Backup({ dispatch, location, setting = {}, t }) {
   const { pathname, hash, search } = location
   const settingsMap = Object.fromEntries(setting.data.map(s => [s.id, s.value]))
   const v1DataEngineEnabled = settingsMap['v1-data-engine'] === 'true'
@@ -16,12 +17,12 @@ function Backup({ dispatch, location, setting = {} }) {
   const tabs = [
     {
       key: 'volume',
-      label: 'Volume',
+      label: t('backup.tabs.volume'),
       content: <BackupVolume location={location} />,
     },
     {
       key: 'backing-image',
-      label: 'Backing Image',
+      label: t('common.backingImage'),
       content:
         <BackupBackingImage persistFilterInURL location={location} v1DataEngineEnabled={v1DataEngineEnabled} v2DataEngineEnabled={v2DataEngineEnabled} />
     }
@@ -60,6 +61,7 @@ Backup.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   setting: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
-export default connect(({ setting }) => ({ setting }))(Backup)
+export default withTranslation()(connect(({ setting }) => ({ setting }))(Backup))

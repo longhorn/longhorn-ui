@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 
@@ -24,6 +25,7 @@ const modal = ({
     validateFields,
     getFieldValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -36,7 +38,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Minimum Copies Count',
+    title: t('updateMinCopiesCount.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -47,13 +49,13 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Minimum Number of Copies" hasFeedback {...formItemLayout}>
+        <FormItem label={t('updateMinCopiesCount.form.minNumberOfCopies.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('minNumberOfCopies', {
             initialValue: item.minNumberOfCopies,
             rules: [
               {
                 required: true,
-                message: 'Please input the copies number',
+                message: t('updateMinCopiesCount.form.minNumberOfCopies.rules.required'),
               },
             ],
           })(<InputNumber min={1} />)}
@@ -69,6 +71,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

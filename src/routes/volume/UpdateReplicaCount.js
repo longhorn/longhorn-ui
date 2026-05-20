@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -23,6 +25,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -40,7 +43,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Replicas Count',
+    title: t('updateReplicaCount.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -51,18 +54,18 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Number Of Replicas" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.numberOfReplicas')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('replicaCount', {
             initialValue: item.numberOfReplicas,
             rules: [
               {
                 required: true,
-                message: 'Please input the number of replicas',
+                message: t('common.validation.replicasRequired'),
               },
               {
                 validator: (rule, value, callback) => {
                   if (value < 1 || value > 20 || !/^\d+$/.test(value)) {
-                    callback('The value should be an integer between 1 and 20')
+                    callback(t('common.validation.valueBetween', { min: 1, max: 20 }))
                   } else {
                     callback()
                   }
@@ -82,6 +85,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

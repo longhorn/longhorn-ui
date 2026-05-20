@@ -93,7 +93,7 @@ class EditableDiskList extends React.Component {
 
   validatePath = (rule, value, callback) => {
     if (value && Object.values(this.props.form.getFieldsValue().disks).filter(d => formatPath(d.path) === formatPath(value)).length > 1) {
-      callback('This directory already exists')
+      callback(this.props.t('editableDisk.validation.pathExists'))
     } else {
       callback()
     }
@@ -102,10 +102,10 @@ class EditableDiskList extends React.Component {
   validateName = (rule, value, callback) => {
     let reg = /^[a-zA-Z0-9][a-zA-Z0-9_.-]+$/
     if (!reg.test(value)) {
-      callback('The input is not valid Name')
+      callback(this.props.t('editableDisk.validation.invalidName'))
     }
     if (value && Object.values(this.props.form.getFieldsValue().disks).filter(d => d.name === value).length > 1) {
-      callback('This name already exists')
+      callback(this.props.t('editableDisk.validation.nameExists'))
     } else {
       callback()
     }
@@ -124,7 +124,7 @@ class EditableDiskList extends React.Component {
   render() {
     const data = this.state.data
     const originDisks = this.originDisks
-    const { form, node } = this.props
+    const { form, node, t } = this.props
     const { getFieldDecorator } = form
 
     return (
@@ -132,7 +132,7 @@ class EditableDiskList extends React.Component {
         <div style={{ display: 'flex' }}>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Node Scheduling
+              {t('editableDisk.nodeScheduling')}
             </div>
             <div className={styles.control} style={{ width: '210px' }}>
               <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -140,8 +140,8 @@ class EditableDiskList extends React.Component {
                   initialValue: node.allowScheduling,
                 })(
                   <RadioGroup>
-                    <Radio value>Enable</Radio>
-                    <Radio value={false}>Disable</Radio>
+                    <Radio value>{t('common.enable')}</Radio>
+                    <Radio value={false}>{t('common.disable')}</Radio>
                   </RadioGroup>
                 )}
               </FormItem>
@@ -149,7 +149,7 @@ class EditableDiskList extends React.Component {
           </div>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Eviction Requested
+              {t('editableDisk.eviction')}
             </div>
             <div className={styles.control} style={{ width: '210px' }}>
               <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -157,8 +157,8 @@ class EditableDiskList extends React.Component {
                   initialValue: node.evictionRequested,
                 })(
                   <RadioGroup>
-                    <Radio value={true}>True</Radio>
-                    <Radio value={false}>False</Radio>
+                    <Radio value={true}>{t('common.true')}</Radio>
+                    <Radio value={false}>{t('common.false')}</Radio>
                   </RadioGroup>
                 )}
               </FormItem>
@@ -168,7 +168,7 @@ class EditableDiskList extends React.Component {
         <div style={{ display: 'flex' }}>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Instance Manager CPU Request
+              {t('editableDisk.instanceManagerCpu')}
             </div>
             <div className={styles.control} style={{ marginTop: 10 }}>
               <div style={{ display: 'flex' }}>
@@ -183,13 +183,13 @@ class EditableDiskList extends React.Component {
         <div style={{ display: 'flex' }}>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Node Tags
+              {t('editableDisk.tags')}
             </div>
             <div className={styles.control} style={{ width: '500px', lineHeight: '40px' }}>
               <div>
                 {getFieldDecorator('tags', {
                   initialValue: node.tags,
-                })(<DistTag nodeBoolean={true} tags={node.tags} changeTags={(tags) => { form.setFieldsValue({ tags }) }} />)}
+                })(<DistTag nodeBoolean={true} tags={node.tags} changeTags={(tags) => { form.setFieldsValue({ tags }) }} t={t} />)}
               </div>
             </div>
           </div>
@@ -197,16 +197,16 @@ class EditableDiskList extends React.Component {
         <div style={{ display: 'flex' }}>
           <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '15px 30px' }}>
             <div className={styles.label}>
-              Conditions
+              {t('editableDisk.conditions.title')}
             </div>
             <div className={styles.control} style={{ lineHeight: '40px' }}>
               {node && node.conditions && Object.keys(node.conditions).map((key) => {
                 let title = (<div>
-                  {node.conditions[key] && node.conditions[key].lastProbeTime && node.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(node.conditions[key].lastProbeTime)}</div> : ''}
-                  {node.conditions[key] && node.conditions[key].lastTransitionTime && node.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(node.conditions[key].lastTransitionTime)}</div> : ''}
-                  {node.conditions[key] && node.conditions[key].message && node.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {node.conditions[key].message}</div> : ''}
-                  {node.conditions[key] && node.conditions[key].reason && node.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {node.conditions[key].reason}</div> : ''}
-                  {node.conditions[key] && node.conditions[key].status && node.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {node.conditions[key].status}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].lastProbeTime && node.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.lastProbe')}: {formatDate(node.conditions[key].lastProbeTime)}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].lastTransitionTime && node.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.lastTransition')}: {formatDate(node.conditions[key].lastTransitionTime)}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].message && node.conditions[key].message ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.message')}: {node.conditions[key].message}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].reason && node.conditions[key].reason ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.reason')}: {node.conditions[key].reason}</div> : ''}
+                  {node.conditions[key] && node.conditions[key].status && node.conditions[key].status ? <div style={{ marginBottom: 5 }}>{t('columns.status')}: {node.conditions[key].status}</div> : ''}
                 </div>)
                 return (<Tooltip key={key} title={title}><div style={{ marginRight: 40 }}>
                     {node.conditions[key].status && node.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" /> }
@@ -216,9 +216,9 @@ class EditableDiskList extends React.Component {
              </div>
           </div>
         </div>
-        {data.map((d, i) => (<EditableDiskItem key={i} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} validateName={this.validateName} />))}
+        {data.map((d, i) => (<EditableDiskItem key={i} disk={d} form={form} isNew={!originDisks[d.id]} onRemove={this.onRemove} onRestore={this.onRestore} validatePath={this.validatePath} validateName={this.validateName} t={t} />))}
         <div style={{ textAlign: 'right' }}>
-          <Button style={{ backgroundColor: '#eef0f1' }} onClick={() => this.onAdd()}> Add Disk </Button>
+          <Button style={{ backgroundColor: '#eef0f1' }} onClick={() => this.onAdd()}> {t('addDisk.title')} </Button>
         </div>
       </Form>
     )
@@ -226,6 +226,7 @@ class EditableDiskList extends React.Component {
 }
 
 EditableDiskList.propTypes = {
+  t: PropTypes.func,
   form: PropTypes.object,
   node: PropTypes.object,
 }

@@ -2,15 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function actions({ selected, deleteOrphanedData }) {
+function actions({ selected, deleteOrphanedData, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete ${record.name}?`,
+          title: t('orphanedDataActions.modal.delete.title', { name: record.name }),
           width: 560,
           onOk() {
             deleteOrphanedData(record)
@@ -22,7 +24,7 @@ function actions({ selected, deleteOrphanedData }) {
   }
 
   const availableActions = [
-    { key: 'delete', name: 'Delete' },
+    { key: 'delete', name: t('common.delete') },
   ]
 
   return (
@@ -35,6 +37,7 @@ function actions({ selected, deleteOrphanedData }) {
 actions.propTypes = {
   selected: PropTypes.object,
   deleteOrphanedData: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default actions
+export default withTranslation()(actions)

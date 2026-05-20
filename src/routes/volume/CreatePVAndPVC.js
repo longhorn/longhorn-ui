@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Input, Checkbox, Alert, Radio, Icon, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
 import style from './CreatePVAndPVC.less'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -40,6 +42,7 @@ const modal = ({
     getFieldsValue,
     setFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -56,7 +59,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create PV/PVC',
+    title: t('createPVAndPVC.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -85,33 +88,33 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="PV Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.pvName')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('pvName', {
-            initialValue: '<Volume Name>',
+            initialValue: t('createPVAndPVC.placeholders.volumeName'),
             rules: [
               {
                 required: false,
-                message: 'Please input pvName',
+                message: t('createPVAndPVC.validation.pvNameRequired'),
               },
             ],
           })(<Input disabled={defaultBool} />)}
         </FormItem>
-        <FormItem label="Access Mode" {...formItemLayout}>
-          <Input disabled={true} value={'<Volume Access Mode>'} />
+        <FormItem label={t('columns.accessMode')} {...formItemLayout}>
+          <Input disabled={true} value={t('createPVAndPVC.placeholders.volumeAccessMode')} />
         </FormItem>
-        <FormItem label="Storage Class Name" {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.storageClassName')} {...formItemLayout}>
           {getFieldDecorator('storageClassName', {
             initialValue: '',
           })(<div className={style.storageClassName}>
             <Input disabled={item.pvNameDisabled} />
-            <Tooltip title={'If no value is provided, Longhorn will first utilize the storageClassName stored in the backup volume if the volume is being restored from a backup. Otherwise, Longhorn will use the storageClassName specified in the default setting.'}>
+            <Tooltip title={t('createPVAndPVC.tooltips.storageClassName')}>
               <span className={style.icon}>
                 <Icon type="info-circle" />
               </span>
             </Tooltip>
           </div>)}
         </FormItem>
-        <FormItem label="File System" {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.fileSystem')} {...formItemLayout}>
           {getFieldDecorator('fsType', {
             initialValue: 'ext4',
           })(
@@ -123,34 +126,34 @@ const modal = ({
         </FormItem>
         <div style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
-            <FormItem label="Create PVC" hasFeedback {...formItemLayout2}>
+            <FormItem label={t('createPVAndPVC.fields.createPVC')} hasFeedback {...formItemLayout2}>
               <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>
             </FormItem>
           </div>
           <div style={{ flex: 1 }}>
-            <FormItem label="Use Previous PVC" hasFeedback {...formItemLayout2}>
+            <FormItem label={t('createPVAndPVC.fields.usePreviousPVC')} hasFeedback {...formItemLayout2}>
               <Checkbox checked={previousChecked} disabled={hasPreviousPVC()} onChange={onPreviousChange}></Checkbox>
             </FormItem>
           </div>
         </div>
-        <FormItem label="Namespace" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.namespace')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('namespace', {
             initialValue: item,
             rules: [
               {
                 required: !nameSpaceDisabled && (hasNewlyEnteredPVC() || !previousChecked),
-                message: 'Please input namespace',
+                message: t('createPVAndPVC.validation.namespaceRequired'),
               },
             ],
           })(<Input disabled={nameSpaceDisabled || (previousChecked && !hasNewlyEnteredPVC())} />)}
         </FormItem>
-        <FormItem label="PVC Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.pvcName')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('pvcName', {
-            initialValue: '<Volume Name>',
+            initialValue: t('createPVAndPVC.placeholders.volumeName'),
             rules: [
               {
                 required: false,
-                message: 'Please input pvcName',
+                message: t('createPVAndPVC.validation.pvcNameRequired'),
               },
             ],
           })(<Input disabled={defaultBool} />)}
@@ -158,7 +161,7 @@ const modal = ({
       </Form>
 
       {previousChecked ? <div style={{ marginTop: 20 }}>
-        <Alert message="If volume has a default namespace, pvc uses this namespace, if not, it uses the newly entered namespace" type="info" showIcon />
+        <Alert message={t('createPVAndPVC.previousPVCMessage')} type="info" showIcon />
       </div> : ''}
     </ModalBlur>
   )
@@ -177,6 +180,7 @@ modal.propTypes = {
   selectedRows: PropTypes.array,
   setPreviousChange: PropTypes.func,
   previousChecked: PropTypes.bool,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

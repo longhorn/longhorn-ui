@@ -2,9 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function actions({ selected, deleteBackupTarget, editBackupTarget }) {
+function actions({ selected, deleteBackupTarget, editBackupTarget, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
@@ -14,9 +16,9 @@ function actions({ selected, deleteBackupTarget, editBackupTarget }) {
       case 'delete':
         confirm({
           width: 'fit-content',
-          okText: 'Delete',
+          okText: t('common.delete'),
           okType: 'danger',
-          title: <p>Are you sure you want to delete <strong>{record.name}</strong> backup target ?</p>,
+          title: <p>{t('backupTargetActions.modal.delete.title', { backupTargetName: record.name })}</p>,
           onOk() {
             deleteBackupTarget(record)
           },
@@ -28,14 +30,14 @@ function actions({ selected, deleteBackupTarget, editBackupTarget }) {
 
   const deleteActions = ({
     disabled: selected.name === 'default',
-    tooltip: selected.name === 'default' ? 'Default backup target can not be deleted' : '',
+    tooltip: selected.name === 'default' ? t('backupTargetActions.deleteTooltip.defaultTarget') : '',
   })
 
   const availableActions = [
-    { key: 'edit', name: 'Edit' },
+    { key: 'edit', name: t('common.edit') },
     {
       key: 'delete',
-      name: 'Delete',
+      name: t('common.delete'),
       disabled: deleteActions.disabled,
       tooltip: deleteActions.tooltip
     }
@@ -53,6 +55,7 @@ actions.propTypes = {
   selected: PropTypes.object,
   deleteBackupTarget: PropTypes.func,
   editBackupTarget: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default actions
+export default withTranslation()(actions)

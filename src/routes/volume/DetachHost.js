@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Checkbox, Alert } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const formItemLayout = {
@@ -32,6 +33,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -58,7 +60,7 @@ const modal = ({
     return null
   }
   const modalOpts = {
-    title: `Are you sure you want to detach volume ${items.map((item) => `${item.name}`).join(', ')} ?`,
+    title: t('detachHost.title', { volumes: items.map((item) => `${item.name}`).join(', ') }),
     visible,
     onCancel,
     width: 1040,
@@ -74,7 +76,7 @@ const modal = ({
     if (attachments.some(att => att.attachmentType === 'csi-attacher' && att.satisfied)) {
       return (
         <div>
-          Forcing this volume to detach could break its connection to Kubernetes&apos;s VolumeAttachment resources. This could prevent your applications from attaching volumes correctly, potentially causing Pods to fail or leading to data loss.
+          {t('detachHost.alerts.csiAttacherWarning')}
         </div>
       )
     }
@@ -82,9 +84,7 @@ const modal = ({
     if (item?.kubernetesStatus?.workloadsStatus && !item.kubernetesStatus.lastPodRefAt) {
       return (
         <div>
-          Detaching a Volume when it is being used by a running Kubernetes Pod will result in
-          crashing of the Pod and possible loss of data. The Volume cannot be used by the
-          Kubernetes again until the original Pod is deleted. Are you sure you want to detach the volume?
+          {t('detachHost.alerts.runningPodWarning')}
         </div>
       )
     }
@@ -95,7 +95,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal" {...formItemLayout}>
-        <FormItem label="Force Detach" valuepropname={'checked'} {...formItemLayoutCheckBox}>
+        <FormItem label={t('detachHost.fields.forceDetach')} valuepropname={'checked'} {...formItemLayoutCheckBox}>
           {getFieldDecorator('forceDetach', {
             initialValue: false,
             valuePropName: 'checked',
@@ -119,6 +119,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   items: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

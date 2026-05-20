@@ -5,6 +5,7 @@ import { Snapshot } from '../../../components'
 import CreateBackupModal from './CreateBackupModal'
 import styles from './index.less'
 import { disabledSnapshotAction } from '../helper/index'
+import { withTranslation } from 'react-i18next'
 
 class Snapshots extends React.Component {
   constructor(props) {
@@ -218,6 +219,7 @@ class Snapshots extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     if (!this.props.volume) {
       return null
     }
@@ -243,12 +245,12 @@ class Snapshots extends React.Component {
 
     const createBackupTooltipMessage = () => {
       if (!volBackupTargetAvailable) {
-        return `Backup target ${volBackupTarget} is unavailable.`
+        return t('snapshots.createBackupTooltip.backupTargetUnavailable', { target: volBackupTarget })
       }
       if (this.props.volume.standby) {
-        return 'Unable to create backup for DR volume.'
+        return t('snapshots.createBackupTooltip.drVolume')
       }
-      return 'Create a new backup.'
+      return t('snapshots.createBackupTooltip.default')
     }
 
     const treeProps = {
@@ -285,7 +287,7 @@ class Snapshots extends React.Component {
         return (
           <div style={{ position: 'absolute', top: 0, left: 0, background: 'rgba(255,255,255,.8)', width: '100%', height: '100%', zIndex: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Tooltip placement="top" title={purgeStatus.statusErrorMsg}>
-              <Progress type="circle" format={percent => `Deleting ${percent}%`} strokeWidth={5} percent={purgeStatus.progress}></Progress>
+              <Progress type="circle" format={percent => t('snapshots.purgeProgress.format', { percent })} strokeWidth={5} percent={purgeStatus.progress}></Progress>
             </Tooltip>
           </div>
         )
@@ -296,20 +298,20 @@ class Snapshots extends React.Component {
 
     return (
       <Card title={<div className={styles.header}>
-        <div>Snapshots and Backups</div>
+        <div>{t('snapshots.title')}</div>
         <div>
-          <Tooltip placement="top" title={this.props.volume.standby ? 'Unable to create snapshot for DR volume' : "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."}>
+          <Tooltip placement="top" title={this.props.volume.standby ? t('snapshots.createSnapshotTooltip.drVolume') : t('snapshots.createSnapshotTooltip.default')}>
               <Button disabled={createSnapshotDisabled}
                 icon="scan"
                 onClick={() => { this.onAction({ type: 'snapshotCRCreate' }) }}
                 type="primary">
-                Take Snapshot
+                {t('snapshots.takeSnapshotButton')}
               </Button>
             </Tooltip>
             &nbsp;
             <Tooltip placement="top" title={createBackupTooltipMessage()}>
               <Button disabled={disableBackup} icon="copy" onClick={() => { this.onAction({ type: 'backup' }) }} type="primary">
-                Create Backup
+                {t('snapshots.createBackupButton')}
               </Button>
             </Tooltip>
         </div>
@@ -322,7 +324,7 @@ class Snapshots extends React.Component {
           </div>
         </div>
         <div style={{ position: 'absolute', top: 80, right: 30 }}>
-          Show System Snapshots: &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
+          {t('snapshots.showSystemSnapshots')} &nbsp; <Switch onChange={() => { this.onAction({ type: 'toggleShowRemoved' }) }} checked={this.props.showRemoved} />
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
         {this.state.createBackBySnapshotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapshotModalKey} {...this.createBackupBySnapshotModal()} /> : ''}
@@ -332,6 +334,7 @@ class Snapshots extends React.Component {
 }
 
 Snapshots.propTypes = {
+  t: PropTypes.func,
   volumeId: PropTypes.string,
   dispatch: PropTypes.func,
   volume: PropTypes.object,
@@ -344,4 +347,4 @@ Snapshots.propTypes = {
   backupTarget: PropTypes.object
 }
 
-export default Snapshots
+export default withTranslation()(Snapshots)

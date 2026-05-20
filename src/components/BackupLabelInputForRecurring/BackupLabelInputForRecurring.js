@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Icon, Button } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 
 class BackupLabelInputForRecurring extends React.Component {
@@ -64,6 +65,7 @@ class BackupLabelInputForRecurring extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const { getFieldDecorator, getFieldValue } = this.props.form
     const formItemLayoutWithOutLabel = {
       wrapperCol: {
@@ -87,10 +89,10 @@ class BackupLabelInputForRecurring extends React.Component {
             {
               required: true,
               whitespace: true,
-              message: 'key is required',
+              message: t('backupLabelInput.keyRequiredMessage'),
             },
           ],
-        })(<Input placeholder="Labels Key" style={{ marginRight: 8 }} />)}
+        })(<Input placeholder={t('backupLabelInput.labelsKeyPlaceholder')} style={{ marginRight: 8 }} />)}
       </Form.Item>
       <Form.Item
         required={false}
@@ -104,10 +106,10 @@ class BackupLabelInputForRecurring extends React.Component {
             {
               required: true,
               whitespace: true,
-              message: 'value is required',
+              message: t('backupLabelInput.valueRequiredMessage'),
             },
           ],
-        })(<Input placeholder="Labels Value" style={{ marginRight: 8 }} />)}
+        })(<Input placeholder={t('backupLabelInputForRecurring.labelsValuePlaceholder')} style={{ marginRight: 8 }} />)}
       </Form.Item>{keys.length > 0 ? (
         <Icon
           style={{ marginTop: '12px' }}
@@ -122,7 +124,7 @@ class BackupLabelInputForRecurring extends React.Component {
         {formItems}
         <Form.Item style={{ marginBottom: '0px' }} {...formItemLayoutWithOutLabel}>
           <Button type="dashed" onClick={this.add} style={{ width: '100%' }}>
-            <Icon type="plus" /> Add Labels for Backup
+            <Icon type="plus" /> {t('backupLabelInputForRecurring.addLabelsForBackupButton')}
           </Button>
         </Form.Item>
       </Form>
@@ -133,6 +135,7 @@ class BackupLabelInputForRecurring extends React.Component {
 BackupLabelInputForRecurring.propTypes = {
   form: PropTypes.object,
   labelsProps: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
-export default BackupLabelInputForRecurring
+export default withTranslation()(BackupLabelInputForRecurring)

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Icon } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -25,6 +26,7 @@ const modal = ({
     getFieldDecorator,
     getFieldValue,
   },
+  t,
 }) => {
   function handleOk() {
     const backupTarget = backupTargets.find(bkTarget => bkTarget.name === getFieldValue('backupTargetName'))
@@ -41,7 +43,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create Backup Backing Image',
+    title: t('createBackupBackingImageModal.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -50,10 +52,10 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <p type="warning">
-        <Icon style={{ marginRight: '10px' }} type="exclamation-circle" />Choose a backup target to backup <strong>{backingImage.name}</strong> backing image
+        <Icon style={{ marginRight: '10px' }} type="exclamation-circle" />{t('createBackupBackingImageModal.warningMessage', { name: backingImage.name })}
       </p>
       <div style={{ display: 'flex' }}>
-        <FormItem label="Backup Target" style={{ width: '100%' }} {...formItemLayout}>
+        <FormItem label={t('createBackupBackingImageModal.form.backupTarget.label')} style={{ width: '100%' }} {...formItemLayout}>
           {getFieldDecorator('backupTargetName', {
             initialValue: backupTargets.find(bk => bk.name === 'default')?.name || '',
           })(
@@ -75,6 +77,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

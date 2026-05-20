@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { groupBy } from './helper'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -25,6 +27,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -49,7 +52,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Replicas Auto Balance',
+    title: t('updateReplicaAutoBalanceModal.title'),
     visible,
     onCancel,
     width: 710,
@@ -73,14 +76,14 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Replicas Auto Balance" {...formItemLayout}>
+        <FormItem label={t('updateReplicaAutoBalanceModal.fields.replicasAutoBalance')} {...formItemLayout}>
         {getFieldDecorator('replicaAutoBalance', {
           initialValue,
         })(<Select>
-            <Option key={'ignored'} value={'ignored'}>ignored (follow the global setting)</Option>
-            <Option key={'disabled'} value={'disabled'}>disabled</Option>
-            <Option key={'least-effort'} value={'least-effort'}>least-effort</Option>
-            <Option key={'best-effort'} value={'best-effort'}>best-effort</Option>
+            <Option key={'ignored'} value={'ignored'}>{t('createVolume.options.ignored')}</Option>
+            <Option key={'disabled'} value={'disabled'}>{t('createVolume.options.disabled')}</Option>
+            <Option key={'least-effort'} value={'least-effort'}>{t('createVolume.options.leastEffort')}</Option>
+            <Option key={'best-effort'} value={'best-effort'}>{t('createVolume.options.bestEffort')}</Option>
           </Select>)}
         </FormItem>
       </Form>
@@ -94,6 +97,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   items: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

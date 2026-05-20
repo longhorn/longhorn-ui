@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -23,6 +25,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -64,7 +67,7 @@ const modal = ({
   let initialValue = ''
 
   const modalOpts = {
-    title: 'Update Replica Rebuilding Bandwidth Limit',
+    title: t('updateReplicaRebuildingBandwidthLimitModal.title.updateReplicaRebuildingBandwidthLimit'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -86,16 +89,16 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Replica Rebuilding Bandwidth Limit" hasFeedback {...formItemLayout}>
+        <FormItem label={t('updateReplicaRebuildingBandwidthLimitModal.form.replicaRebuildingBandwidthLimit.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('replicaRebuildingBandwidthLimit', {
             initialValue,
             rules: [
               {
                 required: true,
-                message: 'Please input the number of limit',
+                message: t('updateReplicaRebuildingBandwidthLimitModal.form.replicaRebuildingBandwidthLimit.validationMessage'),
               },
             ],
-          })(<InputNumber placeholder="various" min={0} step={1} />)}
+          })(<InputNumber placeholder={t('updateReplicaRebuildingBandwidthLimitModal.form.replicaRebuildingBandwidthLimit.placeholder')} min={0} step={1} />)}
         </FormItem>
       </Form>
     </ModalBlur>
@@ -108,6 +111,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   items: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

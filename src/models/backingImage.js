@@ -16,6 +16,7 @@ import { delay } from 'dva/saga'
 import { wsChanges, updateState } from '../utils/websocket'
 import { enableQueryData } from '../utils/dataDependency'
 import { sortByCreatedTime } from '../utils/sort'
+import i18n from '../i18n'
 
 export default {
   ws: null,
@@ -88,12 +89,12 @@ export default {
       if (url) {
         const resp = yield call(execAction, url)
         if (resp && resp.status === 200) {
-          message.success(`Successfully backed up ${payload.name} backing image`)
+          message.success(i18n.t('models.backingImage.createBackupBackingImage.success', { name: payload.name }))
         }
         yield delay(1000)
         yield put({ type: 'queryBackupBackingImage' })
       } else {
-        message.error('Failed to create backup, missing create backup backing image URL')
+        message.error(i18n.t('models.backingImage.createBackupBackingImage.missingUrl'))
       }
     },
     *create({
@@ -124,7 +125,7 @@ export default {
           }
         }
         if (callback) {
-          !canUpload && message.error('Timeout waiting for the upload service initialization, please delete then recreate Backing Image.')
+          !canUpload && message.error(i18n.t('models.backingImage.create.uploadServiceTimeout'))
           callback(resp, canUpload)
         }
       } else {
@@ -153,11 +154,11 @@ export default {
       if (restoreUrl) {
         const resp = yield call(execAction, restoreUrl, payload.params)
         if (resp && resp.status === 200) {
-          message.success(`Successfully restore ${payload.item.name} backing image`)
+          message.success(i18n.t('models.backingImage.restoreBackingImage.success', { name: payload.item.name }))
         }
         yield put({ type: 'query' })
       } else {
-        message.error('Missing restore backup backing image url')
+        message.error(i18n.t('models.backingImage.restoreBackingImage.missingUrl'))
       }
     },
     *deleteBackupBackingImage({
@@ -173,7 +174,7 @@ export default {
     }, { call, put }) {
       const resp = yield call(execAction, url, payload)
       if (resp && resp.status === 200) {
-        message.success(`Successfully backup backing image ${payload.backingImageName}`, 5)
+        message.success(i18n.t('models.backingImage.createBackingImageBackup.success', { backingImageName: payload.backingImageName }), 5)
       }
       yield put({ type: 'query' })
     },
@@ -267,7 +268,7 @@ export default {
       yield put({ type: 'app/resetbackingImageUploadPercent' })
       yield put({ type: 'app/stopBackingImageUpload' })
       if (resp && resp.code !== 200) {
-        message.error(`Upload failed! please delete then recreate Backing Image. ${resp.data}`)
+        message.error(i18n.t('models.backingImage.singleInterfaceUpload.failed', { error: resp.data }))
       }
     },
     *startWS({

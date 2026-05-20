@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Table, Tooltip } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 class InstanceManagerComponent extends React.Component {
   render() {
@@ -10,27 +11,28 @@ class InstanceManagerComponent extends React.Component {
     const defaultInstanceManager = this.props.defaultInstanceManager
     const defaultEngineImage = this.props.defaultEngineImage
     const currentNode = this.props.currentNode
+    const t = this.props.t
 
     let data = []
-    let engineimageObj = { name: 'Engine Image', image: defaultEngineImage.value, state: 'not deployed', id: 'engineRowKey' }
+    let engineimageObj = { name: t('instanceManagerComponent.name.engineImage'), image: defaultEngineImage.value, state: t('instanceManagerComponent.state.notDeployed'), id: 'engineRowKey' }
 
     engineimage.forEach((item) => {
       if (defaultEngineImage.value === item.image && item.nodeDeploymentMap && item.nodeDeploymentMap[currentNode.id]) {
-        engineimageObj.state = 'deployed'
+        engineimageObj.state = t('instanceManagerComponent.state.deployed')
       }
     })
     data.push(engineimageObj)
 
     instanceManagerData.forEach((item) => {
-      let instanceManagerObj = { name: 'Instance Manager', image: 'N/A', state: 'N/A', id: 'instanceRowKey' }
+      let instanceManagerObj = { name: t('instanceManagerComponent.name.instanceManager'), image: 'N/A', state: 'N/A', id: 'instanceRowKey' }
       if (defaultInstanceManager.value === item.image && item.nodeID === currentNode.id) {
         instanceManagerObj.image = item.image
         // Engine will deprecated in v1.6.x
         if (item.managerType === 'engine') {
-          instanceManagerObj.name = `${instanceManagerObj.name} (Deprecated)`
+          instanceManagerObj.name = `${instanceManagerObj.name} (${t('instanceManagerComponent.text.deprecated')})`
           let replicaCurrentState = item.replicaCurrentState
           !currentNode.disks ? replicaCurrentState = 'N/A' : ''
-          instanceManagerObj.state = `Engine: ${item.currentState}  |  Replica: ${replicaCurrentState}`
+          instanceManagerObj.state = `${t('instanceManagerComponent.state.engine')}: ${item.currentState}  |  {t('instanceManagerComponent.state.replica')}: ${replicaCurrentState}`
         } else if (item.managerType === 'aio') {
           instanceManagerObj.state = item.currentState
         }
@@ -40,19 +42,19 @@ class InstanceManagerComponent extends React.Component {
 
     const columns = [
       {
-        title: 'Name',
+        title: t('columns.name'),
         key: 'name',
         width: 220,
         render: (record) => {
           return (
-            <Tooltip title={record.name === 'EngineImage' ? 'Provides the binary to start and communicate with the volume engine/replicas' : 'Manages the engine/replica instances’ life cycle on the node'}>
+            <Tooltip title={record.name === t('instanceManagerComponent.name.engineImage') ? t('instanceManagerComponent.tooltip.engineImage') : t('instanceManagerComponent.tooltip.instanceManager')}>
               <div>{record.name}</div>
             </Tooltip>
           )
         },
       },
       {
-        title: 'Image',
+        title: t('columns.image'),
         key: 'version',
         width: 220,
         render: (record) => {
@@ -62,7 +64,7 @@ class InstanceManagerComponent extends React.Component {
         },
       },
       {
-        title: 'State',
+        title: t('columns.state'),
         key: 'state',
         width: 200,
         render: (record) => {
@@ -89,6 +91,7 @@ class InstanceManagerComponent extends React.Component {
 }
 
 InstanceManagerComponent.propTypes = {
+  t: PropTypes.func,
   host: PropTypes.object,
   engineimage: PropTypes.object,
   defaultInstanceManager: PropTypes.object,
@@ -96,4 +99,4 @@ InstanceManagerComponent.propTypes = {
   currentNode: PropTypes.object,
 }
 
-export default connect(({ host, engineimage }) => ({ host, engineimage }))(InstanceManagerComponent)
+export default connect(({ host, engineimage }) => ({ host, engineimage }))(withTranslation()(InstanceManagerComponent))

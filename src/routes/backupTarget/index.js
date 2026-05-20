@@ -11,6 +11,7 @@ import BackupTargetBulkActions from './BackupTargetBulkActions'
 import { timeDurationStrToInt } from '../../utils/formatter'
 import queryString from 'query-string'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 const filterDataByField = (backupTargetData, field, value) => {
   if (!field) {
@@ -90,7 +91,7 @@ class BackupTarget extends React.Component {
   }
 
   render() {
-    const { dispatch, loading, location } = this.props
+    const { dispatch, loading, location, t } = this.props
     const { createBackupTargetModalVisible, editBackupTargetModalVisible, selectedEditRow } = this.state
     const { data, selectedRows } = this.props.backupTarget
     const { field, value } = queryString.parse(this.props.location.search)
@@ -174,15 +175,15 @@ class BackupTarget extends React.Component {
       location,
       defaultField: 'name',
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'backupTargetURL', name: 'URL' },
-        { value: 'credentialSecret', name: 'Credential Secret' },
-        { value: 'pollInterval', name: 'Poll Interval' },
-        { value: 'available', name: 'Status' },
+        { value: 'name', name: t('common.name') },
+        { value: 'backupTargetURL', name: t('backupTarget.filter.fieldOptions.backupTargetURL') },
+        { value: 'credentialSecret', name: t('backupTarget.filter.fieldOptions.credentialSecret') },
+        { value: 'pollInterval', name: t('backupTarget.filter.fieldOptions.pollInterval') },
+        { value: 'available', name: t('backupTarget.filter.fieldOptions.available') },
       ],
       availableOption: [
-        { value: 'available', name: 'Available' },
-        { value: 'error', name: 'Error' },
+        { value: 'available', name: t('backupTarget.filter.availableOptions.available') },
+        { value: 'error', name: t('backupTarget.filter.availableOptions.error') },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
@@ -215,7 +216,7 @@ class BackupTarget extends React.Component {
           </Col>
         </Row>
         <Button className="out-container-button" size="large" type="primary" disabled={loading} onClick={() => this.handleCreateModalOpen()}>
-          Create Backup Target
+          {t('backupTarget.button.createBackupTarget')}
         </Button>
         <BackupTargetList {...backupTargetListProps} />
         {createBackupTargetModalVisible && <CreateBackupTargetModal {...createBackupTargetModalProps} />}
@@ -231,6 +232,7 @@ BackupTarget.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default connect(({ app, backupTarget, loading }) => ({ app, backupTarget, loading: loading.models.backupTarget }))(BackupTarget)
+export default withTranslation()(connect(({ app, backupTarget, loading }) => ({ app, backupTarget, loading: loading.models.backupTarget }))(BackupTarget))

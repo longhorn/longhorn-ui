@@ -5,15 +5,16 @@ import classnames from 'classnames'
 import { formatDate } from '../../utils/formatDate'
 import EngineImageActions from './EngineImageActions'
 import { LinkTo } from '../../components'
+import { withTranslation } from 'react-i18next'
 
-function list({ loading, dataSource, deleteEngineImage }) {
+function list({ loading, dataSource, deleteEngineImage, t }) {
   const engineImageActionsProps = {
     deleteEngineImage,
   }
 
   const columns = [
     {
-      title: 'Image',
+      title: t('columns.image'),
       dataIndex: 'image',
       key: 'image',
       width: 300,
@@ -27,19 +28,19 @@ function list({ loading, dataSource, deleteEngineImage }) {
         )
       },
     }, {
-      title: 'Status',
+      title: t('columns.status'),
       dataIndex: 'state',
       key: 'state',
       width: 100,
       render: (text, record) => {
         return (
           <div className={classnames({ [record.incompatible ? 'incompatible' : text.toLowerCase()]: true, capitalize: true })}>
-            {record.incompatible ? 'Incompatible' : text.hyphenToHump()}
+            {record.incompatible ? t('engineImageList.status.incompatible') : text.hyphenToHump()}
           </div>
         )
       },
     }, {
-      title: 'Default',
+      title: t('columns.default'),
       dataIndex: 'default',
       key: 'default',
       width: 200,
@@ -49,7 +50,7 @@ function list({ loading, dataSource, deleteEngineImage }) {
         )
       },
     }, {
-      title: 'Reference Count',
+      title: t('columns.referenceCount'),
       dataIndex: 'refCount',
       key: 'refCount',
       width: 200,
@@ -59,7 +60,7 @@ function list({ loading, dataSource, deleteEngineImage }) {
         )
       },
     }, {
-      title: 'Build Date',
+      title: t('columns.buildDate'),
       dataIndex: 'buildDate',
       key: 'buildDate',
       width: 200,
@@ -103,6 +104,7 @@ list.propTypes = {
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   deleteEngineImage: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default list
+export default withTranslation()(list)

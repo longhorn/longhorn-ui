@@ -5,6 +5,7 @@ import { formatDate } from '../../utils/formatDate'
 import { ModalBlur } from '../../components'
 import style from './Salvage.less'
 import diskUnhealthyImage from '../../assets/images/disk-unhealthy.png'
+import { withTranslation } from 'react-i18next'
 
 const getReplicaShortName = (name) => {
   const ary = name.split('-')
@@ -12,9 +13,9 @@ const getReplicaShortName = (name) => {
   return ary.slice(len - 3, len).join('-')
 }
 
-const Replica = ({ item, toggleSelect, selected, hosts }) => {
+const Replica = ({ item, toggleSelect, selected, hosts, t }) => {
   const cNames = classnames(style.replica, { [style.selected]: selected })
-  const failedAt = item.failedAt ? formatDate(item.failedAt) : 'N/A'
+  const failedAt = item.failedAt ? formatDate(item.failedAt) : t('salvage.notAvailable')
   const host = hosts.find(h => h.id === item.hostId)
   return (
     <div onClick={() => toggleSelect(item.name)} className={cNames}>
@@ -31,11 +32,11 @@ const Replica = ({ item, toggleSelect, selected, hosts }) => {
         </span>
       </div>
       <div style={{ textAlign: 'center', marginTop: 15 }}>
-        <h3>{(host && host.name) || 'N/A'}</h3>
-        <p style={{ color: 'gray' }}>Host</p>
+        <h3>{(host && host.name) || t('salvage.notAvailable')}</h3>
+        <p style={{ color: 'gray' }}>{t('salvage.host')}</p>
       </div>
       <div style={{ textAlign: 'center', marginTop: 10 }} className="faulted">
-        Failed At: {failedAt}
+        {t('salvage.failedAt')}: {failedAt}
       </div>
     </div>
   )
@@ -46,6 +47,7 @@ Replica.propTypes = {
   toggleSelect: PropTypes.func.isRequired,
   selected: PropTypes.bool.isRequired,
   hosts: PropTypes.array,
+  t: PropTypes.func,
 }
 
 class Salvage extends React.Component {
@@ -89,6 +91,7 @@ class Salvage extends React.Component {
       visible,
       onCancel,
       onOk,
+      t,
     } = this.props
 
     const handleOk = () => {
@@ -110,7 +113,7 @@ class Salvage extends React.Component {
     }
 
     const modalOpts = {
-      title: 'Select one or more replicas to salvage',
+      title: t('salvage.title'),
       visible,
       onCancel: handleCancel,
       width: 1040,
@@ -128,6 +131,7 @@ class Salvage extends React.Component {
         key={r.name}
         item={r}
         hosts={hosts}
+        t={t}
       />
     ))
 
@@ -139,10 +143,10 @@ class Salvage extends React.Component {
         <div style={{ textAlign: 'right' }}>
           <p>
             <span className="healthy"> {this.selectedReplicaNames.length} </span>
-             replicas selected
+            {t('salvage.replicasSelected')}
           </p>
           {
-            this.state.showErrorMessage && this.selectedReplicaNames.length === 0 ? <p className="faulted">Please select at least one replica.</p> : null
+            this.state.showErrorMessage && this.selectedReplicaNames.length === 0 ? <p className="faulted">{t('salvage.selectAtLeastOne')}</p> : null
           }
         </div>
       </ModalBlur>
@@ -156,6 +160,7 @@ Salvage.propTypes = {
   item: PropTypes.object,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default Salvage
+export default withTranslation()(Salvage)

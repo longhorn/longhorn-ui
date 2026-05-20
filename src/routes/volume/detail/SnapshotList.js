@@ -5,6 +5,7 @@ import moment from 'moment'
 import styles from './index.less'
 import { formatDate } from '../../../utils/formatDate'
 import { formatSnapshot, formatMib } from '../../../utils/formatter'
+import { withTranslation } from 'react-i18next'
 
 class SnapshotList extends React.Component {
   constructor(props) {
@@ -39,46 +40,47 @@ class SnapshotList extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     let dataSource = []
     const columns = [
       {
-        title: 'Type',
+        title: t('columns.type'),
         key: 'type',
         width: 120,
         render: (record) => {
-          return (<div>{record.backupStatusObject ? 'Backup' : 'Snapshot'}</div>)
+          return (<div>{record.backupStatusObject ? t('snapshotList.type.backup') : t('snapshotList.type.snapshot')}</div>)
         },
       },
       {
-        title: 'Name',
+        title: t('columns.name'),
         key: 'name',
         render: (record) => {
           return (<div>{record.name}</div>)
         },
       },
       {
-        title: 'Size',
+        title: t('columns.size'),
         key: 'size',
         render: (record) => {
           return (<div>{record.backupStatusObject && record.backupStatusObject.size ? formatMib(record.backupStatusObject.size) : formatMib(record.size)}</div>)
         },
       },
       {
-        title: 'ID',
+        title: t('columns.id'),
         key: 'id',
         render: (record) => {
           return (<div>{record.id}</div>)
         },
       },
       {
-        title: 'Created',
+        title: t('columns.created'),
         key: 'created',
         render: (record) => {
           return (<div>{formatDate(record.created)}</div>)
         },
       },
       {
-        title: 'Replicas',
+        title: t('columns.replicas'),
         key: 'Replicas',
         render: (record) => {
           if (record.backupStatusObject && record.backupStatusObject.replicas) {
@@ -88,7 +90,7 @@ class SnapshotList extends React.Component {
         },
       },
       {
-        title: 'Backups',
+        title: t('columns.backups'),
         key: 'backupIds',
         render: (record) => {
           if (record.backupStatusObject && record.backupStatusObject.backupIds) {
@@ -106,14 +108,14 @@ class SnapshotList extends React.Component {
     }
 
     const parentIdElement = (snapshot) => {
-      return (<div style={{ textAlign: 'left' }}>Parent ID: <span style={{ marginLeft: 10 }}>{snapshot.parent}</span></div>)
+      return (<div style={{ textAlign: 'left' }}>{t('snapshotList.parentId')}: <span style={{ marginLeft: 10 }}>{snapshot.parent}</span></div>)
     }
 
     return (<Card bodyStyle={{ padding: 0 }}
       title={<div className={styles.header}>
       <div className="title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Tooltip title={this.state.toggleSnapshotListVisible ? 'Click to Collapse' : 'Click to Expand'}>
-          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleSnapshotList()} />Snapshots and Backups List</div>
+        <Tooltip title={this.state.toggleSnapshotListVisible ? t('snapshotList.tooltip.collapse') : t('snapshotList.tooltip.expand')}>
+          <div><Icon type={this.state.iconType} style={{ marginRight: 10 }} onClick={() => this.toggleSnapshotList()} />{t('snapshotList.title')}</div>
         </Tooltip>
       </div></div>}
       bordered={false}>{this.state.toggleSnapshotListVisible ? <div style={{ padding: 24 }}>
@@ -130,8 +132,9 @@ class SnapshotList extends React.Component {
 }
 
 SnapshotList.propTypes = {
+  t: PropTypes.func,
   dataSource: PropTypes.array,
   selectedVolume: PropTypes.object,
 }
 
-export default SnapshotList
+export default withTranslation()(SnapshotList)

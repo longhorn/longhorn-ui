@@ -6,6 +6,8 @@ import styles from './setting.less'
 import { classnames } from '../../utils'
 import { LH_UI_VERSION } from '../../utils/constants'
 import { safeParseJSON } from '../../utils/formatDate'
+import { withTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const FormItem = Form.Item
 const { Option } = Select
@@ -21,6 +23,8 @@ const form = ({
   onSubmit,
   onInputChange,
   resetChangedSettings,
+  t,
+  lang
 }) => {
   const unAppliedDangerZoneSettings = data?.filter(d => d.definition.category === 'danger Zone' && d.applied === false).map(d => d.definition.displayName) || []
 
@@ -102,6 +106,10 @@ const form = ({
     const engineValues = isEngineSpecific ? safeParseJSON(setting.value || setting.definition.default) : {}
     const engines = isEngineSpecific && Object.keys(engineValues).length ? Object.keys(engineValues) : [null]
 
+    const hasTranslation = i18next.exists(`settings.${setting.name}.displayName`, { lng: lang })
+    const displayName = hasTranslation ? t(`settings.${setting.name}.displayName`) : setting.definition.displayName
+    const description = hasTranslation ? t(`settings.${setting.name}.description`) : setting.definition.description
+
     return (
       <FormItem
         key={setting.id}
@@ -112,7 +120,7 @@ const form = ({
           className={setting.definition.required ? 'ant-form-item-required' : ''}
           style={{ fontSize: 14, fontWeight: 700, marginRight: 10 }}
         >
-          {fieldKey}{type === 'bool' || type === 'int' ? ':' : ''}
+          {displayName}{type === 'bool' || type === 'int' ? ':' : ''}
         </span>
 
         {isEngineSpecific ? engines.map(engine => {
@@ -122,7 +130,7 @@ const form = ({
 
           return (
             <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div className={styles.dataEngineLabel}>{`${engine.firstUpperCase()} Data Engine:`}</div>
+              <div className={styles.dataEngineLabel}>{`${engine.firstUpperCase()} ${t('setting.dataEngineLabel')}:`}</div>
               {getFieldDecorator(name, {
                 rules: parseSettingRules(setting),
                 initialValue: type === 'bool' ? value === 'true' || value === true : value,
@@ -139,7 +147,7 @@ const form = ({
         )}
 
         <small style={{ color: '#7f868d', fontSize: 13 }}>
-          <ReactMarkdown className={styles.info} source={setting.definition.description} />
+          <ReactMarkdown className={styles.info} source={description} />
         </small>
       </FormItem>
     )
@@ -176,20 +184,31 @@ const form = ({
   }).map(item => (
     <div key={item}>
       <div className={classnames(styles.fieldset, { [styles.dangerZone]: item === 'danger Zone' })}>
-        <span className={styles.fieldsetLabel}>{item}</span>
+        <span className={styles.fieldsetLabel}>
+          {(() => {
+            if (item === 'danger Zone') return t('setting.categories.dangerZone')
+            if (item === 'general') return t('setting.categories.general')
+            if (item === 'backup') return t('setting.categories.backup')
+            if (item === 'scheduling') return t('setting.categories.scheduling')
+            if (item === 'snapshot') return t('setting.categories.snapshot')
+            if (item === 'orphan') return t('setting.categories.orphan')
+            if (item === 'system info') return t('setting.categories.systemInfo')
+            return item
+          })()}
+        </span>
         {item === 'danger Zone' && (
           <Alert
             style={{ marginBottom: '1rem', marginTop: '1rem' }}
             message={
             <div className={styles.description}>
               <span>
-              Some <a target="blank" href={`https://longhorn.io/docs/${LH_UI_VERSION}/references/settings/#danger-zone`}>Danger Zone settings</a> are not immediately applied when one or more volumes are still attached. Ensure that all volumes are detached before configuring the settings.
+              {t('setting.dangerZoneAlert.message.part1')} <a target="blank" href={`https://longhorn.io/docs/${LH_UI_VERSION}/references/settings/#danger-zone`}>{t('setting.dangerZoneAlert.message.dangerZoneSettingsLink')}</a> {t('setting.dangerZoneAlert.message.part2')}
               </span>
               {unAppliedDangerZoneSettings.length > 0 && (
                 <>
                   <br />
                   <br />
-                  The following {unAppliedDangerZoneSettings.length === 1 ? 'setting has not' : 'settings have not'} been applied:
+                  {t('setting.dangerZoneAlert.unappliedSettingsTitle', { count: unAppliedDangerZoneSettings.length, settings: unAppliedDangerZoneSettings.length === 1 ? t('setting.dangerZoneAlert.settingSingular') : t('setting.dangerZoneAlert.settingPlural') })}:
                   <ul>
                     {unAppliedDangerZoneSettings.map(settingName => <li key={settingName}>{settingName}</li>)}
                   </ul>
@@ -219,7 +238,7 @@ const form = ({
                 type="primary"
                 htmlType="submit"
               >
-                Save
+                {t('common.save')}
               </Button>
             </div>
         )}
@@ -236,6 +255,8 @@ form.propTypes = {
   loading: PropTypes.bool,
   onInputChange: PropTypes.func,
   resetChangedSettings: PropTypes.func,
+  t: PropTypes.func.isRequired,
+  app: PropTypes.object,
 }
 
-export default Form.create()(form)
+export default withTranslation()(Form.create()(form))

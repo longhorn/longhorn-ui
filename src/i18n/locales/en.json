@@ -1,0 +1,2777 @@
+{
+  "common": {
+    "total": "Total",
+    "reset": "Reset",
+    "ok": "OK",
+    "noTitle": "No Title",
+    "noData": "No Data",
+    "name": "Name",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "enable": "Enable",
+    "disable": "Disable",
+    "true": "True",
+    "false": "False",
+    "yes": "Yes",
+    "no": "No",
+    "delete": "Delete",
+    "updateField": "Update {{fieldName}}",
+    "edit": "Edit",
+    "create": "Create",
+    "error": "Error",
+    "numberOfReplicas": "Number of Replicas",
+    "frontend": "Frontend",
+    "nodeTag": "Node Tag",
+    "diskTag": "Disk Tag",
+    "backingImage": "Backing Image",
+    "encrypted": "Encrypted",
+    "validation": {
+      "required": "required field",
+      "cannotBeEmpty": "Can not be empty",
+      "frontendRequired": "Please select a frontend",
+      "sizeRequired": "Please input volume size",
+      "replicasRequired": "Please input the number of replicas",
+      "vEngineDisabled": "{{v}} data engine is not enabled",
+      "valueBetween": "The value should be between {{min}} and {{max}}"
+    }
+  },
+  "columns": {
+    "state": "State",
+    "name": "Name",
+    "size": "Size",
+    "actualSize": "Actual Size",
+    "created": "Created",
+    "dataEngine": "Data Engine",
+    "pvPvc": "PV/PVC",
+    "namespace": "Namespace",
+    "attachedTo": "Attached To",
+    "schedule": "Schedule",
+    "dataLocality": "Data Locality",
+    "replicasRunningDesired": "Replicas (Running/Desired)",
+    "accessMode": "Access Mode",
+    "offlineRebuilding": "Offline Replica Rebuilding",
+    "replicaRebuildingBandwidthLimit": "Replica Rebuilding Bandwidth Limit",
+    "lastBackupAt": "Last Backup At",
+    "operation": "Operation",
+    "status": "Status",
+    "replicas": "Replicas",
+    "type": "Type",
+    "retain": "Retain",
+    "concurrency": "Concurrency",
+    "parameters": "Parameters",
+    "labels": "Labels",
+    "groups": "Groups",
+    "backupTarget": "Backup Target",
+    "createdAt": "Created At",
+    "workloadPod": "Workload/Pod",
+    "id": "ID",
+    "volume": "Volume",
+    "creationState": "Creation State",
+    "backupMode": "Backup Mode",
+    "backupModeDefault": "incremental",
+    "backupBlockSize": "Backup Block Size",
+    "backupBlockSizeError": "Error",
+    "snapshotName": "Snapshot Name",
+    "reUploadedDataSize": "Re-Uploaded Data Size",
+    "newlyUploadedDataSize": "Newly Uploaded Data Size",
+    "snapshotCreated": "Snapshot Created",
+    "url": "URL",
+    "createdTime": "Created Time",
+    "credentialSecret": "Credential Secret",
+    "pollInterval": "Poll Interval",
+    "version": "Version",
+    "age": "Age",
+    "error": "Error",
+    "uuid": "UUID",
+    "actualSizeTooltip": "The physical storage space currently consumed by the image file on the host's file system",
+    "virtualSize": "Virtual Size",
+    "virtualSizeTooltip": "The total logical capacity of the disk that the image represents",
+    "createdFrom": "Created From",
+    "minimumCopies": "Minimum Copies",
+    "nodeTags": "Node Tags",
+    "diskTags": "Disk Tags",
+    "disk": "Disk",
+    "node": "Node",
+    "diskName": "Disk Name",
+    "diskPath": "Disk Path",
+    "directoryName": "Directory Name",
+    "instanceName": "Instance Name",
+    "instanceManager": "Instance Manager",
+    "instanceType": "Instance Type",
+    "image": "Image",
+    "default": "Default",
+    "referenceCount": "Reference Count",
+    "buildDate": "Build Date",
+    "refCountVolume": "Ref Count Volume",
+    "instanceManagerImage": "Instance Manager Image",
+    "attachmentID": "Attachment ID",
+    "attachmentType": "Attachment Type",
+    "nodeID": "Node ID",
+    "satisfied": "Satisfied",
+    "lastTransitionTime": "Last Transition Time",
+    "kind": "Kind",
+    "source": "Source",
+    "firstTime": "First Time",
+    "lastTime": "Last Time",
+    "reason": "Reason",
+    "message": "Message",
+    "backups": "Backups"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "node": "Nodes",
+    "volume": "Volumes",
+    "detail": "Detail",
+    "recurringJob": "Recurring Jobs",
+    "backupAndRestore": "Backup and Restore",
+    "backup": "Backups",
+    "backupTarget": "Backup Targets",
+    "systemBackups": "System Backups",
+    "advanced": "Advanced",
+    "backingImage": "Backing Images",
+    "orphanedData": "Orphan Resources",
+    "engineimage": "Engine Images",
+    "instanceManager": "Instance Manager Images",
+    "setting": "Settings"
+  },
+  "resource": {
+    "storage": {
+      "schedulableStorage": "Schedulable storage",
+      "reservedStorage": "Reserved storage",
+      "usedStorage": "Used storage",
+      "disabledStorage": "Disabled storage",
+      "schedulable": "Schedulable",
+      "reserved": "Reserved",
+      "used": "Used",
+      "disabled": "Disabled",
+      "title": "Storage Schedulable",
+      "blockTitle": "Storage Schedulable (Block)",
+      "empty": "No Storage"
+    },
+    "volume": {
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "inProgress": "In Progress",
+      "faulted": "Faulted",
+      "detached": "Detached",
+      "single": "Volume",
+      "plural": "Volumes",
+      "empty": "No Volume"
+    },
+    "node": {
+      "schedulable": "Schedulable",
+      "unschedulable": "Unschedulable",
+      "down": "Down",
+      "disabled": "Disabled",
+      "autoEvicting": "Auto Evicting",
+      "single": "Node",
+      "plural": "Nodes",
+      "empty": "No Node"
+    }
+  },
+  "eventLogs": {
+    "title": "Event Log",
+    "columns": {
+      "lastSeen": "Last Seen",
+      "firstSeen": "First Seen",
+      "count": "Count",
+      "kind": "Kind",
+      "type": "Type",
+      "reason": "Reason",
+      "source": "Source",
+      "message": "Message"
+    },
+    "search": {
+      "name": "Search name",
+      "source": "Search source"
+    }
+  },
+  "footer": {
+    "upgrade": {
+      "available": "Longhorn {{version}} is now available!",
+      "alt": "Upgrade"
+    },
+    "links": {
+      "documentation": "Documentation",
+      "generateSupportBundle": "Generate Support Bundle",
+      "fileIssue": "File an Issue",
+      "slack": "Slack"
+    },
+    "stableVersions": {
+      "newer": "Newer Stable Versions ({{versions}})"
+    }
+  },
+  "stableVersions": {
+    "title": "Newer Stable Versions",
+    "description": {
+      "beforeLink": "We only show the latest stable version of Longhorn minor releases. For the full list, please check out the",
+      "link": "release page"
+    }
+  },
+  "filter": {
+    "go": "Go",
+    "current": "Current Filter: {{value}}",
+    "collapseAll": "Collapse All",
+    "expandAll": "Expand All"
+  },
+  "hostBulkActions": {
+    "actions": {
+      "delete": "Delete",
+      "editNode": "Edit Node"
+    },
+    "confirmDelete": "Are you sure you want to delete node(s) {{nodes}}?",
+    "messages": {
+      "deleteFirst": "Kubernetes node must be deleted first"
+    }
+  },
+  "hostList": {
+    "columns": {
+      "readiness": "Readiness",
+      "replicas": "Replicas",
+      "allocated": "Allocated",
+      "used": "Used",
+      "tags": "Tags",
+      "operation": "Operation"
+    },
+    "status": {
+      "notReady": "NotReady",
+      "ready": "Ready",
+      "deploying": "Deploying"
+    },
+    "tooltip": {
+      "region": "Region",
+      "zone": "Zone",
+      "replicaSize": "Replica Size",
+      "backingImageSize": "Backing Image Size",
+      "totalUsage": "Total Usage"
+    },
+    "text": {
+      "reserved": "Reserved"
+    },
+    "modal": {
+      "components": "Components"
+    }
+  },
+  "diskList": {
+    "title": "Disks",
+    "columns": {
+      "id": "ID",
+      "diskType": "Disk Type",
+      "path": "Path",
+      "replicas": "Replicas",
+      "allocated": "Allocated",
+      "used": "Used",
+      "tags": "Tags",
+      "healthStatus": "Health Status"
+    },
+    "status": {
+      "error": "Error",
+      "disabled": "Disabled",
+      "unschedulable": "Unschedulable",
+      "schedulable": "Schedulable"
+    },
+    "healthStatus": {
+      "failed": "Failed",
+      "passed": "Passed",
+      "unknown": "Unknown",
+      "warning": "Warning"
+    },
+    "text": {
+      "reserved": "Reserved"
+    }
+  },
+  "hostActions": {
+    "confirm": {
+      "deleteTitle": "Are you sure you want to delete node {{name}}?"
+    },
+    "menu": {
+      "editNodeAndDisks": "Edit node and disks",
+      "removeNode": "Remove Node",
+      "nodeMustNotBeDown": "Node must not be down",
+      "nodeMustBeDown": "Kubernetes node status must be down first"
+    }
+  },
+  "instanceManagerComponent": {
+    "name": {
+      "engineImage": "Engine Image",
+      "instanceManager": "Instance Manager"
+    },
+    "state": {
+      "notDeployed": "not deployed",
+      "deployed": "deployed",
+      "engine": "Engine",
+      "replica": "Replica"
+    },
+    "text": {
+      "deprecated": "Deprecated"
+    },
+    "columns": {
+      "image": "Image",
+      "state": "State"
+    },
+    "tooltip": {
+      "engineImage": "Provides the binary to start and communicate with the volume engine/replicas",
+      "instanceManager": "Manages the engine/replica instances’ life cycle on the node"
+    }
+  },
+  "addDisk": {
+    "title": "Add Disk",
+    "path": {
+      "label": "Path",
+      "placeholder": "A Linux directory path like \"/foo/bar\""
+    },
+    "labels": {
+      "label": "Labels",
+      "placeholder": "A comma-separated list of strings, 10-20 chars"
+    }
+  },
+  "hostReplica": {
+    "title": "Replicas on {{name}}"
+  },
+  "editDisk": {
+    "title": "Edit Node and Disks"
+  },
+  "editableDisk": {
+    "nodeScheduling": "Node Scheduling",
+    "eviction": "Eviction Requested",
+    "instanceManagerCpu": "Instance Manager CPU Request",
+    "tags": "Node Tags",
+    "conditions": {
+      "title": "Conditions",
+      "lastProbe": "Last Probe Time",
+      "lastTransition": "Last Transition Time",
+      "message": "Message",
+      "reason": "Reason"
+    },
+    "validation": {
+      "pathExists": "This directory already exists",
+      "invalidName": "The input is not valid Name",
+      "nameExists": "This name already exists",
+      "required": "Please Input Path!"
+    },
+    "storage": {
+      "available": "Storage Available",
+      "scheduled": "Storage Scheduled",
+      "max": "Storage Max",
+      "reserved": "Storage Reserved"
+    },
+    "type": "Disk Type",
+    "path": "Path",
+    "pathPlaceholder": "Path mounted by the disk, e.g. /mnt/disk1",
+    "scheduling": "Scheduling",
+    "tooltip": {
+      "cannotDelete": "To delete this disk, disable scheduling and ensure that no replicas and backing images are in use"
+    },
+    "types": {
+      "filesystem": "File System",
+      "block": "Block"
+    }
+  },
+  "tagComponent": {
+    "newNodeTag": "New Node Tag",
+    "newDiskTag": "New Disk Tag"
+  },
+  "bulkEditNode": {
+    "title": "Edit Node",
+    "nodeScheduling": "Node Scheduling",
+    "evictionRequested": "Eviction Requested",
+    "evictionRequired": "Eviction Requested is required"
+  },
+  "replicaActions": {
+    "deleteConfirm": "Are you sure you want to delete replicas {{replicas}} ?"
+  },
+  "replicaList": {
+    "deleteConfirm": "Are you sure you want to delete replica {{replicaName}}?",
+    "status": {
+      "healthy": "Healthy",
+      "rebuilding": "Rebuilding",
+      "error": "Error",
+      "unknown": "Unknown",
+      "failed": "Failed",
+      "stopped": "Stopped"
+    },
+    "deleteTooltip": "Replica belongs to volume currently {{volumeState}}. Volume must be attached or detached."
+  },
+  "volume": {
+    "cancelExpansion": {
+      "confirmTitle": "Are you sure to cancel expansion?",
+      "description": "This operation is used to cancel the expansion if the volume cannot complete the expansion and gets stuck there. Once the expansion is complete, it cannot be rolled back or canceled",
+      "pvcWarning": {
+        "part1": "If the in-progress expansion you want to cancel is triggered by the PVC size update, this operation will not help revert the PVC. Since the PVC size can not shrink, users need to clean up then recreate the PVC and PV after the expansion canceling success:",
+        "step1": "Update the field spec.persistentVolumeReclaimPolicy to Retain for the corresponding PV.",
+        "step2": "Delete then recreate the related PVC and PV."
+      }
+    },
+    "buttons": {
+      "createVolume": "Create Volume",
+      "customColumn": "Custom Column"
+    },
+    "filter": {
+      "stateOptions": {
+        "healthy": "Healthy",
+        "inProgress": "In Progress",
+        "degraded": "Degraded",
+        "fault": "Fault",
+        "detached": "Detached"
+      },
+      "redundancyOptions": {
+        "limited": "Limited"
+      },
+      "pvStatusOptions": {
+        "none": "None",
+        "available": "Available",
+        "bound": "Bound",
+        "released": "Released"
+      },
+      "fieldOptions": {
+        "node": "Node",
+        "namespace": "Namespace",
+        "nodeRedundancy": "Node redundancy",
+        "engineImageUpgradable": "Engine image upgradable",
+        "pvName": "PV Name",
+        "pvcName": "PVC Name",
+        "pvStatus": "PV Status",
+        "scheduled": "Scheduled",
+        "revisionCounterDisabled": "Revision Counter Disabled"
+      }
+    },
+    "volumeHelper": {
+      "softAntiAffinity": {
+        "replicaSoftAntiAffinity": "Replica Soft Anti Affinity",
+        "replicaZoneSoftAntiAffinity": "Replica Zone Soft Anti Affinity",
+        "replicaDiskSoftAntiAffinity": "Replica Disk Soft Anti Affinity"
+      }
+    }
+    
+  },
+  "volumeList": {
+    "status": {
+      "restoring": "Restoring",
+      "rebuilding": "Rebuilding",
+      "notReadyForWorkload": "Not ready for workload. {{reason}}",
+      "volumeFaulted": "Volume Faulted",
+      "volumeUnderMaintenance": "Volume may be under maintenance or in the restore process."
+    },
+    "tooltips": {
+      "encryptedVolume": "Encrypted Volume",
+      "attachedNodeDown": "The attached node is down",
+      "noDataLocality": "Volume does not have data locality! There is no healthy replica on the same node as the engine",
+      "drVolumeRestoring": "Disaster Recovery Volume restore in progress",
+      "drVolume": "Disaster Recovery Volume",
+      "volumeCannotBeScheduled": "The volume cannot be scheduled",
+      "lastNamespace": "Last Namespace",
+      "lastTimeUsed": "Last time used"
+    },
+    "expansionError": "Expansion Error",
+    "expansionNote": "Note: You can cancel the expansion to avoid volume crash",
+    "expansionInProgress": "The volume is in expansion progress from size {{currentSize}} to size {{expectedSize}}",
+    "pvFields": {
+      "pvName": "PV Name",
+      "pvStatus": "PV Status",
+      "lastTimeBoundWithPVC": "Last time bound with PVC",
+      "lastBounded": "Last Bounded",
+      "pvcName": "PVC Name"
+    },
+    "pvStates": {
+      "available": "Available",
+      "bound": "Bound",
+      "released": "Released"
+    },
+    "onHost": "on"
+  },
+  "volumeActions": {
+    "modal": {
+      "delete": {
+        "hasPvTooltipText": "The following resources associated with this volume ({{name}}) will be deleted:",
+        "pvName": "PV Name: {{name}}",
+        "pvcName": "PVC Name: {{name}}",
+        "podName": "Pod Name: {{name}} ({{status}})",
+        "attachedWarning": "The volume is attached on {{hostId}}. Deleting this volume may cause errors for any running applications using this volume!",
+        "workloadWarning": "The following workload(s) depend on this volume ({{name}}) and may encounter errors once it is deleted:",
+        "confirmation": "Are you sure you want to delete volume ({{name}}) ?",
+        "okText": "Delete"
+      },
+      "rollback": {
+        "title": "Are you sure you want to rollback volume {{name}}?"
+      },
+      "trimFilesystem": {
+        "title": "Are you sure you want to trim the filesystem?"
+      }
+    },
+    "tooltips": {
+      "rwxDetach": "The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume"
+    },
+    "actions": {
+      "attach": "Attach",
+      "detach": "Detach",
+      "salvage": "Salvage",
+      "upgrade": "Upgrade",
+      "rollback": "Rollback",
+      "engineUpgrade": "Upgrade Engine",
+      "updateReplicaCount": "Update Replicas Count",
+      "updateDataLocality": "Update Data Locality",
+      "updateSnapshotDataIntegrity": "Snapshot Data Integrity",
+      "updateAccessMode": "Update Access Mode",
+      "updateBackupTarget": "Update Backup Target",
+      "updateReplicaAutoBalance": "Update Replicas Auto Balance",
+      "allowSnapshotsRemovalDuringTrim": "Allow Snapshots Removal During Trim",
+      "updateReplicaSoftAntiAffinity": "Update Replica Soft Anti Affinity",
+      "updateReplicaZoneSoftAntiAffinity": "Update Replica Zone Soft Anti Affinity",
+      "updateSnapshotMaxCount": "Update Snapshot Max Count",
+      "updateSnapshotMaxSize": "Update Snapshot Max Size",
+      "updateReplicaDiskSoftAntiAffinity": "Update Replica Disk Soft Anti Affinity",
+      "updateFreezeFilesystemForSnapshot": "Update Freeze Filesystem For Snapshot",
+      "offlineReplicaRebuilding": "Update Offline Replica Rebuilding",
+      "updateReplicaRebuildingBandwidthLimit": "Update Replica Rebuilding Bandwidth Limit",
+      "updateUblkNumberOfQueue": "Update UBLK Number of Queue",
+      "updateUblkQueueDepth": "Update UBLK Queue Depth",
+      "cloneVolume": "Clone Volume",
+      "expandVolume": "Expand Volume",
+      "cancelExpansion": "Cancel Expansion",
+      "pvAndpvcCreate": "Create PV/PVC",
+      "activateDisasterRecoveryVolume": "Activate Disaster Recovery Volume",
+      "trimFilesystem": "Trim Filesystem",
+      "backups": "Backups",
+      "delete": "Delete"
+    }
+  },
+  "volumeBulkActions": {
+    "deleteWarning": {
+      "pvName": "PV Name",
+      "pvcName": "PVC Name",
+      "podName": "Pod Name",
+      "attachedVolumes": "Some of the selected volumes ({{volumes}}) are attached to a node and may cause errors in any applications using them once they are deleted.",
+      "workloadVolumes": "Some of the selected volumes ({{volumes}}) have workloads associated with them which may encounter errors once the volume(s) are deleted:",
+      "pvResources": "The following resources (PersistentVolumes and PersistentVolumeClaims) associated with these volumes(s) ({{volumes}}) will be deleted:",
+      "confirmDelete": "Are you sure you want to delete volume(s) ({{volumes}})?"
+    },
+    "trimConfirm": "Are you sure you want to trim ({{volumes}}) Filesystem?",
+    "actions": {
+      "createBackup": "Create Backup",
+      "upgradeEngine": "Upgrade Engine",
+      "rebuildConcurrentSyncLimit": "Update Rebuild Concurrent Sync Limit"
+    }
+  },
+  "workloadDetailModal": {
+    "title": {
+      "backupCreated": "Workload/Pod Status When Backup Created",
+      "workloadPod": "Workload/Pod"
+    },
+    "fields": {
+      "createdTime": "Created Time",
+      "lastTimeUsedByPod": "Last time used by Pod",
+      "workloadName": "Workload Name",
+      "workloadType": "Workload Type",
+      "podName": "Pod Name",
+      "podStatus": "Pod Status"
+    },
+    "prefixes": {
+      "last": "Last"
+    }
+  },
+  "changeVolumeModal": {
+    "title": "Activate Disaster Recovery Volume"
+  },
+  "bulkCloneVolumeModal": {
+    "title": "Clone Volumes",
+    "applySuccess": "Successfully apply {{volumeName}} config to all other cloned volumes",
+    "applyTooltip": "Apply {{volumeName}} configuration to other cloned volumes, this action will overwrite your previous filled-in configurations",
+    "tabSwitchError": "Please correct the error fields before switching to another tab",
+    "applyAll": "Apply All"
+  },
+  "accessModes": {
+    "rwo": "ReadWriteOnce",
+    "rwop": "ReadWriteOncePod",
+    "rwx": "ReadWriteMany"
+  },
+  "bulkChangeVolumeModal": {
+    "title": "Activate Disaster Recovery Volume",
+    "fields": {
+      "selectedVolumes": "Selected Volume(s)"
+    }
+  },
+  "expansionVolumeSizeModal": {
+    "title": "Expand Volume",
+    "maintenanceModeWarning": "Longhorn will not expand the filesystem for the volume in maintenance mode. There is no available frontend for filesystem expansion",
+    "validation": {
+      "sizeMustBeLarger": "Size should be larger than {{minSize}} {{unit}}",
+      "sizeMustBeMultipleOfMi": "Expansion volume size must be a multiple of Mi (1Gi = 1024Mi). e.g {{exampleSize}}",
+      "noDecimalsForMi": "Decimals are not allowed",
+      "unitRequired": "Please select your unit!"
+    }
+  },
+  "createVolume": {
+    "title": "Create Volume",
+    "dataSourceAlert": "The volume size is set to the selected volume size. Mismatched size will cause create volume failed.",
+    "created": "created",
+    "advancedConfigurations": "Advanced Configurations",
+    "fields": {
+      "ublkNumberOfQueue": "UBLK Number of Queue",
+      "ublkQueueDepth": "UBLK Queue Depth",
+      "dataLocality": "Data Locality",
+      "dataSource": "Data Source",
+      "volume": "Volume",
+      "snapshot": "Snapshot",
+      "backupTarget": "Backup Target",
+      "snapshotDataIntegrity": "Snapshot Data Integrity",
+      "snapshotMaxCount": "Snapshot Max Count",
+      "snapshotMaxSize": "Snapshot Max Size",
+      "replicasAutoBalance": "Replicas Auto Balance",
+      "allowSnapshotRemovalDuringTrim": "Allow Snapshot Removal During Trim",
+      "replicaSoftAntiAffinity": "Replica Soft Anti Affinity",
+      "replicaZoneSoftAntiAffinity": "Replica Zone Soft Anti Affinity",
+      "replicaDiskSoftAntiAffinity": "Replica Disk Soft Anti Affinity",
+      "freezeFilesystemForSnapshot": "Freeze Filesystem For Snapshot",
+      "offlineRebuilding": "Offline Replica Rebuilding",
+      "replicaRebuildingBandwidthLimit": "Replica Rebuilding Bandwidth Limit",
+      "disableRevisionCounter": "Disable Revision Counter",
+      "rebuildConcurrentSyncLimit": "Rebuild Concurrent Sync Limit"
+    },
+    "dataSourceOptions": {
+      "Volume": "Volume",
+      "VolumeSnapshot": "Volume Snapshot"
+    },
+    "validation": {
+      "nameRequired": "Please input volume name",
+      "sizeDecimal": "This value should have at most two decimal places",
+      "sizeMinMi": "The volume size must be greater than 10 Mi",
+      "sizeNoDecimalMi": "Decimals are not allowed",
+      "unitRequired": "Please select your unit!",
+      "replicasInteger": "The value must be a positive integer",
+      "ublkNumberOfQueueRequired": "Please input the UBLK number of the queue",
+      "ublkQueueDepthRequired": "Please input the UBLK queue depth",
+      "rebuildConcurrentSyncLimit": "Value must be between 0 and 5"
+    },
+    "tooltips": {
+      "dataSource": "Choose data source from existing volume or snapshot. Longhorn will clone the volume data from selected data source",
+      "setInheritGlobal": "Set {{value}} to inherit global settings",
+      "snapshotMaxSize": "Set '0' for unrestricted size or at least twice volume size"
+    },
+    "options": {
+      "ignored": "ignored (follow the global setting)",
+      "disabled": "disabled",
+      "enabled": "enabled",
+      "leastEffort": "least-effort",
+      "bestEffort": "best-effort"
+    }
+  },
+  "customColumn": {
+    "title": "Custom Column"
+  },
+  "createPVAndPVC": {
+    "title": "Create PV/PVC",
+    "fields": {
+      "pvName": "PV Name",
+      "storageClassName": "Storage Class Name",
+      "fileSystem": "File System",
+      "createPVC": "Create PVC",
+      "usePreviousPVC": "Use Previous PVC",
+      "namespace": "Namespace",
+      "pvcName": "PVC Name",
+      "secretNamespace": "Secret Namespace",
+      "secretName": "Secret Name"
+    },
+    "placeholders": {
+      "volumeName": "<Volume Name>",
+      "volumeAccessMode": "<Volume Access Mode>"
+    },
+    "validation": {
+      "pvNameRequired": "Please input pvName",
+      "namespaceRequired": "Please input namespace",
+      "pvcNameRequired": "Please input pvcName"
+    },
+    "tooltips": {
+      "storageClassName": "If no value is provided, Longhorn will first utilize the storageClassName stored in the backup volume if the volume is being restored from a backup. Otherwise, Longhorn will use the storageClassName specified in the default setting."
+    },
+    "previousPVCMessage": "If volume has a default namespace, pvc uses this namespace, if not, it uses the newly entered namespace"
+  },
+  "attachHost": {
+    "title": "Attach to host",
+    "fields": {
+      "host": "Host",
+      "maintenance": "Maintenance"
+    },
+    "validation": {
+      "hostRequired": "Please select a host to attach"
+    },
+    "rwxWarning": "RWX volumes can only be manually attached in maintenance mode."
+  },
+  "detachHost": {
+    "title": "Are you sure you want to detach volume {{volumes}}?",
+    "fields": {
+      "forceDetach": "Force Detach"
+    },
+    "alerts": {
+      "csiAttacherWarning": "Forcing this volume to detach could break its connection to Kubernetes's VolumeAttachment resources. This could prevent your applications from attaching volumes correctly, potentially causing Pods to fail or leading to data loss.",
+      "runningPodWarning": "Detaching a Volume when it is being used by a running Kubernetes Pod will result in crashing of the Pod and possible loss of data. The Volume cannot be used by the Kubernetes again until the original Pod is deleted. Are you sure you want to detach the volume?"
+    }
+  },
+  "engineUpgrade": {
+    "title": "Upgrade Engine Image",
+    "fields": {
+      "engineImage": "Engine Image"
+    },
+    "validation": {
+      "imageRequired": "Please select an engine image to upgrade"
+    }
+  },
+  "cloneVolume": {
+    "title": {
+      "volume": "Clone Volume from {{volumeName}}",
+      "snapshot": "Clone Volume from {{volumeName}} snapshot {{snapshotName}}"
+    },
+    "defaultName": "cloned-{{volumeName}}",
+    "infoMessage": "Longhorn will auto attach the new volume, perform cloning from specified volume, and then detach it",
+    "fields": {
+      "cloneMode": "Clone Mode"
+    }
+  },
+  "salvage": {
+    "title": "Select one or more replicas to salvage",
+    "notAvailable": "N/A",
+    "host": "Host",
+    "failedAt": "Failed At",
+    "replicasSelected": "replicas selected",
+    "selectAtLeastOne": "Please select at least one replica."
+  },
+  "updateReplicaCount": {
+    "title": "Update Replicas Count"
+  },
+  "updateBulkReplicaCount": {
+    "title": "Update Replicas Count",
+    "placeholders": {
+      "various": "various"
+    }
+  },
+  "updateDataLocality": {
+    "title": "Update Data Locality",
+    "fields": {
+      "dataLocality": "Data Locality"
+    }
+  },
+  "updateSnapshotMaxCountModal": {
+    "title": "Update Snapshot Max Count",
+    "fields": {
+      "maxCount": "Max Count"
+    },
+    "validation": {
+      "snapshotMaxCountRequired": "Please input volume snapshotMaxCount"
+    }
+  },
+  "updateSnapshotMaxSizeModal": {
+    "title": "Update Snapshot Max Size",
+    "fields": {
+      "maxSize": "Max Size",
+      "unit": "Unit"
+    },
+    "validation": {
+      "snapshotMaxSizeRequired": "Please input volume snapshotMaxSize",
+      "unitRequired": "Please select a value!"
+    },
+    "placeholders": {
+      "selectUnit": "Select a value"
+    }
+  },
+  "updateBulkDataLocality": {
+    "title": "Update Data Locality",
+    "fields": {
+      "dataLocality": "Data Locality"
+    },
+    "placeholders": {
+      "various": "various"
+    }
+  },
+  "updateAccessMode": {
+    "title": "Update Access Mode"
+  },
+  "updateReplicaAutoBalanceModal": {
+    "title": "Update Replicas Auto Balance",
+    "fields": {
+      "replicasAutoBalance": "Replicas Auto Balance"
+    }
+  },
+  "updateUnmapMarkSnapChainRemovedModal": {
+    "title": {
+      "allowSnapshotsRemoval": "Allow Snapshots Removal During Trim"
+    },
+    "form": {
+      "option": {
+        "label": "Option"
+      },
+      "warning": {
+        "message": "This action may override the global setting “Remove Snapshots During Filesystem Trim”"
+      }
+    }
+  },
+  "updateSnapshotDataIntegrityModal": {
+    "title": {
+      "snapshotDataIntegrity": "Snapshot Data Integrity"
+    },
+    "form": {
+      "option": {
+        "label": "Option"
+      },
+      "warning": {
+        "message": "This action may override the global setting “Snapshot Data Integrity”"
+      }
+    }
+  },
+  "updateFreezeFilesystemForSnapshotModal": {
+    "title": {
+      "updateFreezeFilesystemForSnapshot": "Update Freeze Filesystem For Snapshot"
+    },
+    "form": {
+      "option": {
+        "label": "Option"
+      },
+      "warning": {
+        "message": "This action may override the global setting “Freeze Filesystem For Snapshot”"
+      }
+    }
+  },
+  "createBackupModal": {
+    "title": {
+      "createBackup": "Create Backup"
+    },
+    "warning": {
+      "createBackupMessage": "Create backup action could take a while depending on the actual size of the volume and network bandwidth."
+    },
+    "form": {
+      "fullBackup": {
+        "label": "Full Backup"
+      }
+    }
+  },
+  "updateBackupTargetModal": {
+    "title": {
+      "updateBackupTarget": "Update Backup Target"
+    },
+    "form": {
+      "backupTarget": {
+        "label": "BackupTarget"
+      }
+    }
+  },
+  "updateReplicaRebuildingBandwidthLimitModal": {
+    "title": {
+      "updateReplicaRebuildingBandwidthLimit": "Update Replica Rebuilding Bandwidth Limit"
+    },
+    "form": {
+      "replicaRebuildingBandwidthLimit": {
+        "label": "Replica Rebuilding Bandwidth Limit",
+        "placeholder": "various",
+        "validationMessage": "Please input the number of limit"
+      }
+    }
+  },
+  "updateUblkParamsModal": {
+    "title": {
+      "updateField": "Update {{fieldLabel}}"
+    },
+    "fields": {
+      "ublkNumberOfQueue": {
+        "label": "UBLK Number of Queues",
+        "requiredMessage": "Please input the UBLK number of queues"
+      },
+      "ublkQueueDepth": {
+        "label": "UBLK Queue Depth",
+        "requiredMessage": "Please input the UBLK queue depth"
+      }
+    }
+  },
+  "recurringJob": {
+    "filter": {
+      "fieldOptions": {
+        "groups": "Group",
+        "label": "Label",
+        "type": "Type"
+      }
+    },
+    "button": {
+      "createRecurringJob": "Create Recurring Job"
+    }
+  },
+  "recurringJobActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete Recurring Job {{recurringJobName}}?",
+        "description": "If the recurring job {{recurringJobName}} is the last one of a job group, Longhorn will remove the group from all volumes automatically."
+      }
+    }
+  },
+  "recurringJobBulkActions": {
+    "modal": {
+      "delete": {
+        "description": "If one of the recurring job ({{recurringJobNames}}) is the last one of a job group, Longhorn will remove the group from all volumes automatically."
+      }
+    }
+  },
+  "createRecurringJob": {
+    "modal": {
+      "title": "{{action}} Recurring Job"
+    },
+    "form": {
+      "name": {
+        "validationMessage": "Please input Recurring Job name"
+      },
+      "task": {
+        "label": "Task",
+        "options": {
+          "backup": "Backup",
+          "snapshot": "Snapshot",
+          "snapshotDelete": "Snapshot Delete",
+          "snapshotCleanup": "Snapshot Cleanup",
+          "systemBackup": "System Backup",
+          "filesystemTrim": "Filesystem Trim"
+        }
+      },
+      "forceCreate": {
+        "label": "Force Create",
+        "tooltip": "Create {{backupOrSnapshot}} periodically, even if expired {{backupOrSnapshot}} cannot be cleaned up.",
+        "backupPlural": "backups",
+        "snapshotPlural": "snapshots"
+      },
+      "retain": {
+        "label": "Retain"
+      },
+      "concurrency": {
+        "label": "Concurrency"
+      },
+      "cron": {
+        "label": "Cron",
+        "validationMessage": "Please edit cron expressions",
+        "editButton": "Edit"
+      },
+      "parameters": {
+        "label": "Parameters",
+        "valueValidationMessage": "Value is required"
+      },
+      "groups": {
+        "label": "Groups",
+        "placeholder": "Group name",
+        "validationMessage": "Please input Group Name",
+        "addGroupButton": "Add Group",
+        "addDefaultGroupButton": "Add to default group",
+        "defaultGroupTooltip": "Volume with no recurring jobs or groups will automatically apply to the recurring jobs in the default group."
+      },
+      "labels": {
+        "label": "Labels",
+        "keyPlaceholder": "key",
+        "valuePlaceholder": "value",
+        "addLabelButton": "Add Label"
+      }
+    }
+  },
+  "backup": {
+    "tabs": {
+      "volume": "Volume"
+    }
+  },
+  "backupVolume": {
+    "modal": {
+      "deleteAllBackups": {
+        "title": "Are you sure delete all the backups?",
+        "content": "If there is backup restore process in progress using the backups of this volume (including DR volumes), deleting the backup volume will result in restore failure and the volume in the restore process will become FAULTED. Are you sure you want to delete this backup volume?"
+      }
+    },
+    "backingImageInfo": {
+      "title": "Backing Image Info",
+      "backingImageName": "Backing Image Name",
+      "backingImageChecksum": "Backing Image Checksum"
+    },
+    "filter": {
+      "fieldOptions": {
+        "backupTargetName": "Backup Target"
+      }
+    }
+  },
+  "backupBackingImage": {
+    "filter": {
+      "fieldOptions": {
+        "state": "State",
+        "url": "URL",
+        "backupTargetName": "Backup Target"
+      }
+    }
+  },
+  "backupVolumeList": {
+    "tooltips": {
+      "pvName": "PV Name",
+      "pvStatus": "PV Status",
+      "lastTimeBoundWithPVC": "Last time bound with PVC",
+      "lastBounded": "Last Bounded",
+      "pvcName": "PVC Name",
+      "lastTimeUsed": "Last time used"
+    },
+    "pvStatuses": {
+      "available": "Available",
+      "bound": "Bound",
+      "released": "Released"
+    },
+    "operationOptions": {
+      "createDisasterRecoveryVolume": "Create Disaster Recovery Volume",
+      "restoreLatestBackup": "Restore Latest Backup",
+      "syncBackupVolume": "Sync Backup Volume",
+      "deleteAllBackups": "Delete All Backups",
+      "backingImageInfo": "Backing Image Info",
+      "noBackingImageTooltip": "No backing image is used"
+    },
+    "table": {
+      "noVolumeSelected": "Please select a volume first"
+    }
+  },
+  "backupBulkActions": {
+    "actions": {
+      "restoreLatestBackup": "Restore Latest Backup",
+      "bulkCreateDisasterRecoveryVolume": "Create Disaster Recovery Volume",
+      "syncAllBackupVolumes": "Sync All Backup Volumes"
+    }
+  },
+  "restoreBackupModal": {
+    "modal": {
+      "title": "Restore Backup {{backupName}}"
+    },
+    "warning": {
+      "sameNameMessage": "The restore volume name ({{volumeName}}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well."
+    },
+    "form": {
+      "name": {
+        "validationMessage": "Volume name is required"
+      },
+      "usePreviousName": {
+        "label": "Use Previous Name"
+      },
+      "dataEngine": {
+        "validationMessage": "Please select the data engine"
+      },
+      "numberOfReplicas": {
+        "validationMessage": "Please input the number of replicas"
+      },
+      "restoreVolumeRecurringJob": {
+        "label": "Restore Volume Recurring Job",
+        "options": {
+          "enabled": "Enabled",
+          "disabled": "Disabled",
+          "ignored": "Ignored (follow the global setting)"
+        }
+      },
+      "backupBlockSize": {
+        "options": {
+          "ignored": "Ignored (follow the global setting)"
+        }
+      }
+    }
+  },
+  "bulkRestoreBackupModal": {
+    "modal": {
+      "title": "Restore Multiple Latest Backups"
+    },
+    "messages": {
+      "applyAllSuccess": "Successfully apply {{volumeName}} config to all other restore volumes",
+      "correctErrorsBeforeSwitch": "Please correct the error fields before switching to another tab"
+    },
+    "warning": {
+      "sameNameMessage": "1. If there is another volume with the same name ({{volumeName}}), the restore action will fail.\n2. The restore volume name ({{volumeName}}) is the same as this backup volume, by which the backups created after restoration reside in this backup volume as well."
+    },
+    "tooltips": {
+      "applyAll": "Apply this {{volumeName}} config to all the other restore volumes, this action will overwrite your previous filled in configs"
+    },
+    "buttons": {
+      "applyAll": "Apply All"
+    },
+    "form": {
+      "volumeName": {
+        "label": "Volume Name",
+        "validationMessage": "Volume name is required"
+      },
+      "latestBackup": {
+        "label": "Latest Backup"
+      }
+    }
+  },
+  "createStandbyVolumeModal": {
+    "modal": {
+      "title": "Create Disaster Recovery Volume"
+    },
+    "warning": {
+      "sameNameMessage": "The DR volume name ({{volumeName}}) is the same as that of this backup volume, by which the backups created after restoration reside in this backup volume as well."
+    },
+    "form": {
+      "name": {
+        "validationMessage": "Volume name is required"
+      },
+      "size": {
+        "validator": {
+          "decimalPlaces": "This value should have at most two decimal places"
+        }
+      },
+      "dataEngine": {
+        "validationMessage": "Please select the data engine"
+      },
+      "numberOfReplicas": {
+        "validationMessage": "Please input the number of replicas",
+        "validator": {
+          "positiveInteger": "The value must be a positive integer"
+        }
+      },
+      "backupBlockSize": {
+        "options": {
+          "ignored": "Ignored (follow the global setting)"
+        }
+      },
+      "backupUrl": {
+        "label": "Backup Url",
+        "validationMessage": "Please input Backup Url"
+      }
+    }
+  },
+  "bulkCreateStandbyVolumeModal": {
+    "modal": {
+      "title": "Create Multiple Disaster Recovery Volumes"
+    },
+    "messages": {
+      "applyAllSuccess": "Successfully apply {{volumeName}} config to all other disaster recovery volumes",
+      "correctErrorsBeforeSwitch": "Please correct the error fields before switching to another tab"
+    },
+    "warning": {
+      "sameNameMessage": "If there is another volume with the same name ({{volumeName}}), the create DR volume will fail."
+    },
+    "tooltips": {
+      "applyAll": "Apply this {{volumeName}} config to all the other disaster recovery volumes, this action will overwrite your previous filled in configs"
+    },
+    "buttons": {
+      "applyAll": "Apply All"
+    },
+    "form": {
+      "volumeName": {
+        "label": "Volume Name"
+      }
+    }
+  },
+  "backupDetail": {
+    "modal": {
+      "deleteAllBackups": {
+        "title": "Are you sure delete all the backups?",
+        "content": "If there is backup restore process in progress using the backups of this volume (including DR volumes), deleting the backup volume will result in restore failure and the volume in the restore process will become FAULTED. Are you sure you want to delete this backup volume?"
+      }
+    },
+    "dropdown": {
+      "createDisasterRecoveryVolume": "Create Disaster Recovery Volume",
+      "deleteAllBackups": "Delete All Backups"
+    }
+  },
+  "showBackupLabels": {
+    "descriptions": {
+      "backupLabels": {
+        "title": "Backup Labels"
+      },
+      "kubernetesStatus": {
+        "title": "Kubernetes Status When Backup Created",
+        "createdTime": "Created Time",
+        "namespace": "Namespace",
+        "pvName": "PV Name",
+        "pvcName": "PVC Name",
+        "pvStatus": "PV Status",
+        "workloadsStatus": "Workloads Status",
+        "podName": "Pod Name",
+        "workloadName": "Workload Name",
+        "workloadType": "Workload Type",
+        "podStatus": "Pod Status"
+      }
+    }
+  },
+  "backupList": {
+    "backupUrl": {
+      "title": "Backup URL",
+      "copySuccess": "Copied",
+      "copyFailed": "Copy failed"
+    },
+    "copySuccess": "Copied",
+    "copyFailed": "Copy failed",
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete backup {{backupName}} ?",
+        "content": "If there is backup restore process in progress using this backup (including DR volumes), deleting the backup will result in restore failure and volume in the restore process will become FAULTED. Are you sure you want to delete this backup?"
+      }
+    },
+    "tooltips": {
+      "pvName": "PV Name",
+      "pvStatus": "PV Status",
+      "lastTimeBoundWithPVC": "Last time bound with PVC",
+      "lastBounded": "Last Bounded",
+      "pvcName": "PVC Name",
+      "lastTimeUsed": "Last time used"
+    },
+    "pvStatuses": {
+      "available": "Available",
+      "bound": "Bound",
+      "released": "Released"
+    },
+    "operationOptions": {
+      "delete": "Delete",
+      "restore": "Restore",
+      "getUrl": "Get URL"
+    },
+    "table": {
+      "emptyText": "No Data",
+      "noVolumeSelected": "Please select a volume first"
+    }
+  },
+  "backupBackingImageList": {
+    "copySuccess": "Copied",
+    "copyFailed": "Copy failed",
+    "tooltips": {
+      "encryptedBackingImage": "Encrypted Backing Image Backup"
+    }
+  },
+  "backupBackingImageActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete {{backupName}} backing image backup?"
+      }
+    },
+    "actions": {
+      "restore": "Restore",
+      "restoreTooltip": "Only complete state backup can be restored"
+    }
+  },
+  "backupBackingImageBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure to delete below {{count}} backup backing image(s)?"
+      }
+    }
+  },
+  "restoreBackupBackingImageModal": {
+    "modal": {
+      "title": "Restore Backing Image"
+    },
+    "form": {
+      "backup": {
+        "label": "Backup"
+      },
+      "secret": {
+        "label": "Secret"
+      },
+      "secretNamespace": {
+        "label": "Secret Namespace"
+      }
+    }
+  },
+  "backupTarget": {
+    "filter": {
+      "fieldOptions": {
+        "backupTargetURL": "URL",
+        "credentialSecret": "Credential Secret",
+        "pollInterval": "Poll Interval",
+        "available": "Status"
+      },
+      "availableOptions": {
+        "available": "Available",
+        "error": "Error"
+      }
+    },
+    "button": {
+      "createBackupTarget": "Create Backup Target"
+    }
+  },
+  "backupTargetList": {
+    "status": {
+      "available": "Available",
+      "error": "Error"
+    }
+  },
+  "backupTargetActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete {{backupTargetName}} backup target ?"
+      }
+    },
+    "deleteTooltip": {
+      "defaultTarget": "Default backup target can not be deleted"
+    }
+  },
+  "backupTargetBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete the following {{count}} backup target(s)?"
+      }
+    }
+  },
+  "createBackupTargetModal": {
+    "title": "Create Backup Target",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Backup target name is required",
+          "duplicate": "\"{{value}}\" is duplicated to existing backup target name"
+        }
+      },
+      "url": {
+        "label": "URL"
+      },
+      "credentialSecret": {
+        "label": "Credential Secret"
+      },
+      "pollInterval": {
+        "label": "Poll Interval",
+        "seconds": "seconds",
+        "tooltip": "Set 0 to disable the polling"
+      }
+    }
+  },
+  "editBackupTargetModal": {
+    "title": "Edit Backup Target {{name}}",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Backup target name is required"
+        }
+      },
+      "url": {
+        "label": "URL"
+      },
+      "credentialSecret": {
+        "label": "Credential Secret"
+      },
+      "pollInterval": {
+        "label": "Poll Interval",
+        "seconds": "seconds",
+        "tooltip": "Set 0 to disable the polling"
+      }
+    }
+  },
+  "systemBackups": {
+    "systemRestores": {
+      "title": "System Restore"
+    },
+    "filter": {
+      "fieldOption": {
+        "state": "State",
+        "version": "Version"
+      }
+    }
+  },
+  "systemBackupsAction": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete System Backup {{name}}?"
+      }
+    },
+    "actions": {
+      "restore": "Restore"
+    }
+  },
+  "systemBackupsBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete System Backups {{names}}?"
+      }
+    }
+  },
+  "systemRestoresAction": {
+    "modal": {
+      "delete": {
+        "title": {
+          "default": "Are you sure you want to delete System Restore {{name}}?",
+          "inProgress": "Are you sure you want to delete System Restore {{name}}"
+        },
+        "warningMessage": "Deleting restoring system backup will abort the remaining resource rollout. An incomplete restore may cause Longhorn system resource inconsistencies leading to unexpected behavior."
+      }
+    }
+  },
+  "createSystemBackup": {
+    "title": "Create System Backup",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Please input System backup name"
+        }
+      },
+      "volumeBackupPolicy": {
+        "label": "Volume Backup Policy",
+        "options": {
+          "ifNotPresent": "If-Not-Present",
+          "always": "Always",
+          "disabled": "Disabled"
+        }
+      }
+    }
+  },
+  "createSystemRestore": {
+    "title": "Restore System Backup",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Please input System Restore name."
+        }
+      },
+      "version": {
+        "label": "Version",
+        "rules": {
+          "required": "Please input version."
+        }
+      },
+      "systemBackup": {
+        "label": "System Backup",
+        "rules": {
+          "required": "Please input System backup name."
+        }
+      }
+    }
+  },
+  "backingImage": {
+    "notification": {
+      "upload": {
+        "warning": "Do not refresh or close this page, otherwise the upload will be interrupted."
+      }
+    },
+    "button": {
+      "createBackingImage": "Create Backing Image"
+    },
+    "backupBackingImage": {
+      "title": "Backing Image Backup"
+    },
+    "upload": {
+      "status": "Uploading"
+    },
+    "filter": {
+      "fieldOption": {
+        "uuid": "UUID",
+        "sourceType": "Created From",
+        "minNumberOfCopies": "Minimum Copies",
+        "nodeSelector": "Node Tags",
+        "diskSelector": "Disk Tags"
+      },
+      "createdFromOption": {
+        "download": "download",
+        "upload": "upload",
+        "exportFromVolume": "export-from-volume",
+        "clone": "clone",
+        "restore": "restore"
+      }
+    }
+  },
+  "backingImageList": {
+    "dynamicStateIcon": {
+      "deleting": "Deleting backing image"
+    },
+    "staticStateIcon": {
+      "encrypted": "Encrypted Backing Image",
+      "unavailable": "The backingImage is unavailable"
+    }
+  },
+  "backingImageActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete {{name}} backing image?"
+      }
+    },
+    "tooltips": {
+      "missingReadyDisk": "Missing disk with ready state"
+    },
+    "actions": {
+      "updateMinCopies": "Update Minimum Copies Count",
+      "backup": "Back Up",
+      "download": "Download"
+    }
+  },
+  "backingImageBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete the following {{count}} backing image(s)?"
+      },
+      "download": {
+        "title": "The following backing image(s) with <1>Ready</1> status disk will be downloaded.",
+        "note": "Note: You need to allow Automatic Downloads in browser settings to download multiple files at once.",
+        "okText": "Download"
+      },
+      "backup": {
+        "title": "Are you sure you want to backup the following <1>Ready</1> status backing image(s)?",
+        "backupTargetLabel": "Backup Target",
+        "okText": "Backup"
+      }
+    },
+    "actions": {
+      "download": "Download",
+      "backup": "Backup"
+    }
+  },
+  "updateMinCopiesCount": {
+    "title": "Update Minimum Copies Count",
+    "form": {
+      "minNumberOfCopies": {
+        "label": "Minimum Number of Copies",
+        "rules": {
+          "required": "Please input the copies number"
+        }
+      }
+    }
+  },
+  "createBackingImage": {
+    "title": "Create Backing Image",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Please input backing image name"
+        }
+      },
+      "createdFrom": {
+        "label": "Created From",
+        "options": {
+          "download": "Download From URL",
+          "upload": "Upload From Local",
+          "volume": "Export From a Longhorn Volume",
+          "clone": "Clone From Existing Backing Image"
+        }
+      },
+      "volumeName": {
+        "label": "Volume Name",
+        "rules": {
+          "required": "Please select an existing volume"
+        }
+      },
+      "exportedBackingImageType": {
+        "label": "Exported Backing Image Type",
+        "options": {
+          "raw": "raw",
+          "qcow2": "qcow2"
+        }
+      },
+      "url": {
+        "label": "URL",
+        "rules": {
+          "required": "Please input backing image url"
+        }
+      },
+      "file": {
+        "label": "File",
+        "uploadButton": "Upload",
+        "rules": {
+          "required": "Please upload backing image file",
+          "multipleOf512": "Must be a multiple of 512 bytes"
+        }
+      },
+      "expectedChecksum": {
+        "label": "Expected Checksum",
+        "placeholder": "Ask Longhorn to validate the SHA512 checksum if it is specified here."
+      },
+      "sourceBackingImage": {
+        "label": "Source Backing Image"
+      },
+      "encryption": {
+        "label": "Encryption",
+        "options": {
+          "encrypt": "encrypt",
+          "decrypt": "decrypt",
+          "ignore": "ignore (simply copy the backing image)"
+        }
+      },
+      "secret": {
+        "label": "Secret",
+        "rules": {
+          "required": "Please input secret name"
+        }
+      },
+      "secretNamespace": {
+        "label": "Secret Namespace",
+        "rules": {
+          "required": "Please input secret namespace"
+        }
+      },
+      "minNumberOfCopies": {
+        "label": "Minimum Number of Copies",
+        "rules": {
+          "required": "Please input the min number of copies"
+        }
+      },
+      "dataEngine": {
+        "rules": {
+          "notEnabled": "{{value}} data engine is not enabled"
+        },
+        "options": {
+          "v1": "v1",
+          "v2": "v2"
+        }
+      }
+    }
+  },
+  "diskStateMapDetail": {
+    "modal": {
+      "cleanUp": {
+        "title": "Are you sure to clean up the image file from the disk ({{disk}})?"
+      }
+    },
+    "actions": {
+      "cleanUp": "Clean Up"
+    },
+    "createdFrom": {
+      "download": "Download from URL",
+      "upload": "Upload",
+      "exportFromVolume": "Export from a Longhorn volume",
+      "clone": "Clone from existing backing image",
+      "restore": "Restore from backup backing image"
+    },
+    "details": {
+      "uuid": "UUID",
+      "createdFrom": "Created From",
+      "parametersDuringCreation": "Parameters During Creation",
+      "empty": "empty",
+      "expectedChecksum": "Expected SHA512 Checksum",
+      "currentChecksum": "Current SHA512 Checksum",
+      "checksumMatchTooltip": "Current checksum is the same as the expected value",
+      "checksumMismatchTooltip": "Current checksum doesn't match the expected value",
+      "verified": "Verified",
+      "failed": "Failed"
+    }
+  },
+  "createBackupBackingImageModal": {
+    "title": "Create Backup Backing Image",
+    "warningMessage": "Choose a backup target to backup {{name}} backing image",
+    "form": {
+      "backupTarget": {
+        "label": "Backup Target"
+      }
+    }
+  },
+  "diskStateMapActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to remove the image file from the disks ?"
+      }
+    },
+    "button": {
+      "cleanUp": "Clean Up"
+    }
+  },
+  "orphanedData": {
+    "tabs": {
+      "replicaData": "Replica Data",
+      "instances": "Instances"
+    }
+  },
+  "replicaDataOrphans": {
+    "filter": {
+      "fieldOption": {
+        "node": "Node",
+        "diskName": "Disk Name",
+        "diskPath": "Disk Path",
+        "directoryName": "Directory Name"
+      }
+    }
+  },
+  "orphanedDataActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete {{name}}?"
+      }
+    }
+  },
+  "instanceOrphans": {
+    "filter": {
+      "fieldOption": {
+        "node": "Node",
+        "instanceName": "Instance Name",
+        "instanceManager": "Instance Manager",
+        "orphanType": "Instance Type"
+      }
+    }
+  },
+  "engineImage": {
+    "filter": {
+      "fieldOption": {
+        "image": "Image"
+      }
+    },
+    "button": {
+      "deployEngineImage": "Deploy Engine Image"
+    }
+  },
+  "createEngineImage": {
+    "title": "Create Engine Image",
+    "form": {
+      "image": {
+        "label": "Image",
+        "rules": {
+          "required": "Please input engine image"
+        }
+      }
+    }
+  },
+  "engineImageList": {
+    "status": {
+      "incompatible": "Incompatible"
+    }
+  },
+  "engineImageActions": {
+    "modal": {
+      "delete": {
+        "title": "Are you sure you want to delete engine image {{name}}?"
+      }
+    }
+  },
+  "engineImageFilter": {
+    "selectOptions": {
+      "image": "image"
+    },
+    "button": {
+      "createEngineImage": "Create Engine Image"
+    }
+  },
+  "engineImageDetail": {
+    "title": "Engine Image Detail"
+  },
+  "engineImageInfo": {
+    "fields": {
+      "buildDate": "Build Date",
+      "default": "Default",
+      "cliAPIVersion": "CLIAPIVersion",
+      "controllerAPIVersion": "ControllerAPIVersion",
+      "image": "Image",
+      "refCount": "RefCount",
+      "noRefSince": "NoRefSince",
+      "nodeDeploymentMap": "NodeDeploymentMap"
+    },
+    "status": {
+      "incompatible": "Incompatible"
+    }
+  },
+  "instanceManager": {
+    "filter": {
+      "fieldOption": {
+        "nodeID": "Node",
+        "managerType": "Type",
+        "currentState": "State",
+        "image": "Instance Manager Image"
+      }
+    }
+  },
+  "volumeDetail": {
+    "cancelExpansion": {
+      "title": "Are you sure to cancel expansion?",
+      "description": "This operation is used to cancel the expansion if the volume cannot complete the expansion and gets stuck there. Once the expansion is complete, it cannot be rolled back or canceled",
+      "message": {
+        "part1": "If the in-progress expansion you want to cancel is triggered by the PVC size update, this operation will not help revert the PVC. Since the PVC size can not shrink, users need to clean up then recreate the PVC and PV after the expansion canceling success:",
+        "step1": "Update the field spec.persistentVolumeReclaimPolicy to Retain for the corresponding PV.",
+        "step2": "Delete then recreate the related PVC and PV."
+      }
+    },
+    "cards": {
+      "volumeDetails": "Volume Details",
+      "replicas": "Replicas"
+    }
+  },
+  "volumeInfo": {
+    "alerts": {
+      "schedulingFailure": {
+        "title": "Scheduling Failure",
+        "errorMessage": "Error Message"
+      }
+    },
+    "state": {
+      "label": " State:"
+    },
+    "health": {
+      "label": " Health:",
+      "attachedNodeDown": "The attached node is down",
+      "dataLocalityWarning": "Volume does not have data locality! There is no healthy replica on the same node as the engine"
+    },
+    "readyForWorkload": {
+      "label": " Ready for workload:",
+      "ready": "Ready",
+      "notReady": "Not Ready",
+      "notReadyTooltip": "Not ready for workload. {{robustness}}",
+      "volumeFaulted": "Volume Faulted",
+      "volumeUnderMaintenance": "Volume may be under maintenance or in the restore process."
+    },
+    "conditions": {
+      "label": " Conditions:"
+    },
+    "frontend": {
+      "disabledTooltip": "Attach volume without enabling frontend. Volume data will not be accessible while attached."
+    },
+    "ublk": {
+      "numberOfQueues": " Ublk Number of Queues:",
+      "queueDepth": " Ublk Queue Depth:"
+    },
+    "backupTarget": {
+      "label": " Backup Target:"
+    },
+    "attachedNodeAndEndpoint": {
+      "label": " Attached Node & Endpoint:"
+    },
+    "attachedNode": {
+      "label": " Attached Node:"
+    },
+    "size": {
+      "tooltip": "Amount of space available to the volume when in use. This is the size that you specified when you created the volume."
+    },
+    "actualSize": {
+      "label": "Actual Size",
+      "tooltip": "Amount of space used by the volume head and snapshots. This can exceed the value of the \"Size\" field.",
+      "unknown": "Unknown"
+    },
+    "dataLocality": {
+      "label": " Data Locality:"
+    },
+    "backingImageSize": {
+      "label": " Backing Image Size:"
+    },
+    "engineImage": {
+      "label": "Engine Image",
+      "tooltip": "Provides the binary to start and communicate with the volume engine/replicas."
+    },
+    "created": {
+      "label": " Created:"
+    },
+    "nodeTags": {
+      "label": " Node Tags:"
+    },
+    "diskTags": {
+      "label": " Disk Tags:"
+    },
+    "lastBackup": {
+      "label": " Last Backup:"
+    },
+    "lastBackupAt": {
+      "label": " Last Backup At:"
+    },
+    "replicaAutoBalance": {
+      "label": " Replicas Auto Balance:"
+    },
+    "snapshotDataIntegrity": {
+      "label": " Snapshot Data Integrity:"
+    },
+    "snapshotMaxCount": {
+      "label": " Snapshot Max Count:"
+    },
+    "snapshotMaxSize": {
+      "label": " Snapshot Max Size:"
+    },
+    "instanceManager": {
+      "label": "Instance Manager",
+      "tooltip": "Manages the engine/replica instances' life cycle on the node."
+    },
+    "allowSnapshotsRemovalDuringTrim": {
+      "label": " Allow Snapshots Removal During Trim:"
+    },
+    "replicaSoftAntiAffinity": {
+      "label": " Replica Soft Anti Affinity:"
+    },
+    "replicaZoneSoftAntiAffinity": {
+      "label": " Replica Zone Soft Anti Affinity:"
+    },
+    "replicaDiskSoftAntiAffinity": {
+      "label": " Replica Disk Soft Anti Affinity:"
+    },
+    "freezeFilesystemForSnapshot": {
+      "label": " Freeze Filesystem For Snapshot:"
+    },
+    "offlineReplicaRebuilding": {
+      "label": " Offline Replica Rebuilding:"
+    },
+    "replicaRebuildingBandwidthLimit": {
+      "label": " Replica Rebuilding Bandwidth Limit:"
+    },
+    "restoring": {
+      "label": " Restoring:"
+    },
+    "volumeSize": {
+      "expansionError": "Expansion Error",
+      "expansionNote": "Note: You can cancel the expansion to avoid volume crash",
+      "expansionInProgress": "The volume is in expansion progress from size {{currentSize}} to size {{expectedSize}}"
+    },
+    "globalSettingTooltip": "The is the default option that instructs Longhorn to inherit from the global setting.",
+    "kubernetesStatus": {
+      "lastPodName": "Last Pod Name:",
+      "podName": " Pod Name:",
+      "podStatus": " Pod Status:",
+      "lastWorkloadName": "Last Workload Name:",
+      "workloadName": " Workload Name:",
+      "lastWorkloadType": "Last Workload Type:",
+      "workloadType": " Workload Type:",
+      "lastTimeBoundWithPVC": " Last time bound with PVC:",
+      "lastTimeUsedByPod": " Last time used by Pod:",
+      "lastNamespace": "Last Namespace:",
+      "namespace": " Namespace:",
+      "lastBoundedPVCName": "Last Bounded PVC Name:",
+      "pvcName": " PVC Name:",
+      "pvName": " PV Name:",
+      "pvStatus": " PV Status:"
+    },
+    "revisionCounterDisabled": {
+      "label": "Revision Counter Disabled:"
+    }
+  },
+  "engineImageUpgradeTooltip": {
+    "currentVersion": "Current engine image: {{version}}",
+    "latestVersionAvailable": "Engine image {{version}} is now available!"
+  },
+  "replicaHATooltip": {
+    "warning": "Limited node redundancy: at least one healthy replica is running at the same node as another",
+    "danger": "No node redundancy: all the healthy replicas are running on the same node"
+  },
+  "conditionTooltip": {
+    "lastProbeTime": "Last Probe Time",
+    "lastTransitionTime": "Last Transition Time",
+    "message": "Message",
+    "reason": "Reason",
+    "suggestion": "Suggestion",
+    "tooManySnapshots": {
+      "notExceeded": "The snapshot number threshold ({{computedThreshold}}) has not been exceeded",
+      "suggestion": "Try to delete unused snapshots to free up space if needed"
+    }
+  },
+  "volumeAttachment": {
+    "title": "Volume Attachments",
+    "error": {
+      "defaultMessage": "Failed to fetch volume attachments"
+    },
+    "satisfied": {
+      "notSatisfied": "Not satisfied"
+    }
+  },
+  "snapshots": {
+    "title": "Snapshots and Backups",
+    "takeSnapshotButton": "Take Snapshot",
+    "createBackupButton": "Create Backup",
+    "showSystemSnapshots": "Show System Snapshots:",
+    "createSnapshotTooltip": {
+      "drVolume": "Unable to create snapshot for DR volume",
+      "default": "Create a new snapshot. You can create a backup by clicking any snapshot below and selecting 'Backup'."
+    },
+    "createBackupTooltip": {
+      "backupTargetUnavailable": "Backup target {{target}} is unavailable.",
+      "drVolume": "Unable to create backup for DR volume.",
+      "default": "Create a new backup."
+    },
+    "purgeProgress": {
+      "format": "Deleting {{percent}}%"
+    }
+  },
+  "recurringJobDetail": {
+    "title": "Recurring Jobs Schedule",
+    "tabs": {
+      "job": "Job",
+      "group": "Group"
+    },
+    "addButton": "Add",
+    "tooltips": {
+      "recurringJobNotExist": "Recurring Job doesn't exist",
+      "recurringJobGroupNotExist": "Recurring Job Group doesn't exist",
+      "noDefaultGroupJobs": "No Recurring job is set to default Group"
+    },
+    "message": {
+      "getRecurringJobFailed": "Get Recurring Job failed"
+    },
+    "bulkDeleteJob": {
+      "confirmTitle": "Are you sure you want to remove Recurring Job {{jobs}} from {{volume}}?"
+    },
+    "bulkDeleteJobGroup": {
+      "confirmTitle": "Are you sure you want to remove Recurring Job Group {{groups}} from {{volume}}?"
+    },
+    "modalGroupDetail": {
+      "title": "Recurring Job"
+    }
+  },
+  "eventList": {
+    "title": "Event Log",
+    "tooltip": {
+      "expand": "Click to Expand",
+      "collapse": "Click to Collapse"
+    }
+  },
+  "snapshotList": {
+    "title": "Snapshots and Backups List",
+    "tooltip": {
+      "expand": "Click to Expand",
+      "collapse": "Click to Collapse"
+    },
+    "type": {
+      "snapshot": "Snapshot",
+      "backup": "Backup"
+    },
+    "parentId": "Parent ID"
+  },
+  "addRecurringJobOrGroupModal": {
+    "title": {
+      "job": "Add Recurring Job",
+      "group": "Add Recurring Job Group"
+    },
+    "label": {
+      "jobName": "Recurring Job Name",
+      "groupName": "Recurring Job Group Name"
+    },
+    "validation": {
+      "required": "Please Select Recurring Job Name"
+    }
+  },
+  "createRecurringJobDetail": {
+    "modal": {
+      "title": "{{action}} Recurring Job"
+    },
+    "tabs": {
+      "new": "New",
+      "existing": "Existing"
+    },
+    "form": {
+      "task": "Task",
+      "forceCreate": "Force Create",
+      "retain": "Retain",
+      "concurrency": "Concurrency",
+      "cron": "Cron",
+      "parameters": "Parameters",
+      "groups": "Groups",
+      "labels": "Labels",
+      "existingJobName": "Recurring Job Name"
+    },
+    "tooltip": {
+      "forceCreate": "Create {{type}} periodically, even if expired {{itemType}} cannot be cleaned up.",
+      "backups": "backups",
+      "snapshots": "snapshots",
+      "defaultGroup": "Volume with no recurring jobs or groups will automatically apply to the recurring jobs in the default group."
+    },
+    "validation": {
+      "nameRequired": "Please input Recurring Job name",
+      "groupNameRequired": "Please input Group Name",
+      "valueRequired": "Value is required",
+      "existingJobRequired": "Please Select Recurring Job Name"
+    },
+    "placeholder": {
+      "groupName": "Group name"
+    }
+  },
+  "expansionErrorDetail": {
+    "lastExpansionFailedAt": "Last expansion failed at {{lastExpansionFailedAt}},",
+    "clickToViewErrorDetails": "Click to view error details",
+    "clickToCloseErrorDetails": "Click to close error details"
+  },
+  "autoComplete": {
+    "volumeNamePlaceholder": "Volume Name"
+  },
+  "backupLabelInput": {
+    "keyRequiredMessage": "key is required",
+    "labelsKeyPlaceholder": "Labels Key",
+    "valueRequiredMessage": "value is required",
+    "valuePlaceholder": "Value",
+    "removeLabelTooltip": "Remove label",
+    "labelsLabel": "Labels",
+    "addLabelsButton": "Add Labels"
+  },
+  "backupLabelInputForRecurring": {
+    "addLabelsForBackupButton": "Add Labels for Backup",
+    "labelsValuePlaceholder": "Labels Value"
+  },
+  "bundlesModel": {
+    "title": "Generate Support Bundle",
+    "form": {
+      "issueURLLabel": "Issue URL",
+      "descriptionLabel": "Description"
+    },
+    "validation": {
+      "descriptionRequired": "Please fill in support bundle's issue description"
+    }
+  },
+  "reactCron": {
+    "tabs": {
+      "cron": "Cron",
+      "generateCron": "Generate Cron"
+    },
+    "steps": {
+      "minutes": "Minutes",
+      "hour": "Hour",
+      "day": "Day",
+      "month": "Month"
+    },
+    "weekDays": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "common": {
+      "every": "Every",
+      "minuteUnit": "minute(s)",
+      "hourUnit": "hour(s)",
+      "dayUnit": "day(s)",
+      "monthUnit": "month(s)",
+      "startingAt": "starting at",
+      "startingOn": "starting on",
+      "startingAtThe": "starting at the",
+      "minutes": "minutes",
+      "hour": "hour",
+      "month": "month",
+      "and": "and",
+      "pleaseSelect": "Please select"
+    },
+    "minutes": {
+      "everyMinutes": "Every minutes",
+      "specificMinutes": "Specific minutes (choose one or many)",
+      "everyMinutesBetween": "Every minutes between"
+    },
+    "hour": {
+      "everyHour": "Every hour",
+      "specificHour": "Specific hour (choose one or many)",
+      "everyHourBetween": "Every hour between"
+    },
+    "day": {
+      "everyDay": "Every day",
+      "specificDayOfWeek": "Specific day of week (choose one or many)",
+      "specificDayOfMonth": "Specific day of month (choose one or many)",
+      "onTheLastDayOfTheMonth": "On the last day of the month",
+      "onTheLastWeekdayOfTheMonth": "On the last weekday of the month",
+      "onTheLast": "On the last",
+      "ofTheMonth": "of the month",
+      "daysBeforeTheEndOfTheMonth": "day(s) before the end of the month",
+      "nearestWeekdayToThe": "Nearest weekday (Monday to Friday) to the",
+      "onThe": "On The"
+    },
+    "month": {
+      "everyMonth": "Every month",
+      "specificMonth": "Specific month (choose one or many)",
+      "everyMonthBetween": "Every month between"
+    },
+    "buttons": {
+      "previous": "Previous",
+      "next": "Next",
+      "done": "Done"
+    },
+    "error": {
+      "cronExpressionFormatError": "Cron expression format error"
+    }
+  },
+  "replica": {
+    "deleteConfirm": {
+      "title": "Are you sure you want to delete replica {{replicaName}}?"
+    },
+    "modeInfo": {
+      "healthy": "Healthy",
+      "rebuilding": "Rebuilding...",
+      "failed": "Failed"
+    },
+    "deleteTooltip": {
+      "volumeNotAttached": "Replica belongs to volume currently {{volState}}. Volume must be attached."
+    },
+    "progressTooltip": {
+      "restoring": "Restoring {{progress}}%",
+      "deletingSnapshot": "Deleting Snapshot {{progress}}%",
+      "rebuilding": "Rebuilding {{progress}}%"
+    },
+    "fromReplica": {
+      "synchronizingFrom": "Synchronizing from Replica:"
+    },
+    "hostTooltip": {
+      "region": "region",
+      "zone": "zone"
+    },
+    "common": {
+      "notAvailable": "N/A",
+      "node": "Node"
+    },
+    "instanceManagerTooltip": "Instance Manager",
+    "status": {
+      "running": "Running",
+      "stopped": "Stopped"
+    },
+    "dropOption": {
+      "delete": "Delete"
+    }
+  },
+  "schedule": {
+    "common": {
+      "every": "Every",
+      "at": "at",
+      "on": "on",
+      "onThe": "on the"
+    },
+    "periods": {
+      "minute": "minute",
+      "hour": "hour",
+      "day": "day",
+      "week": "week",
+      "month": "month",
+      "year": "year"
+    },
+    "hour": {
+      "minutesPastTheHour": "minutes past the hour"
+    },
+    "weekDays": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "days": {
+      "1st": "1st",
+      "2nd": "2nd",
+      "3rd": "3rd",
+      "4th": "4th",
+      "5th": "5th",
+      "6th": "6th",
+      "7th": "7th",
+      "8th": "8th",
+      "9th": "9th",
+      "10th": "10th",
+      "11th": "11th",
+      "12th": "12th",
+      "13th": "13th",
+      "14th": "14th",
+      "15th": "15th",
+      "16th": "16th",
+      "17th": "17th",
+      "18th": "18th",
+      "19th": "19th",
+      "20th": "20th",
+      "21st": "21st",
+      "22nd": "22nd",
+      "23rd": "23rd",
+      "24th": "24th",
+      "25th": "25th",
+      "26th": "26th",
+      "27th": "27th",
+      "28th": "28th",
+      "29th": "29th",
+      "30th": "30th",
+      "31st": "31st"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "year": {
+      "of": "of"
+    }
+  },
+  "search": {
+    "goButton": "Go"
+  },
+  "snapshot": {
+    "tooltip": {
+      "created": "Created",
+      "createdByUser": "Created By User",
+      "removed": "Removed",
+      "progress": "Progress",
+      "replicas": "Replicas",
+      "backups": "Backups",
+      "backupURL": "Backup URL"
+    },
+    "volumeHead": "Volume Head",
+    "modal": {
+      "cannotRevertTitle": "Cannot revert with frontend enabled",
+      "confirmSnapshotRevertTitle": "Confirm snapshot revert?",
+      "reattachInMaintenanceMode": "Please reattach the volume in maintenance mode to revert the volume.",
+      "workloadShutdownNeeded": "Workload shutdown might be needed."
+    },
+    "dropdown": {
+      "revert": "Revert",
+      "backUp": "Back Up",
+      "cloneVolume": "Clone Volume",
+      "delete": "Delete",
+      "takeSnapshot": "Take Snapshot"
+    }
+  },
+  "volumeStatus": {
+    "upgradingEngineTooltip": "Volume engine is being upgraded from {{from}} to {{to}}"
+  },
+  "setting": {
+    "dataEngineLabel": "Data Engine",
+    "categories": {
+      "general": "General",
+      "backup": "Backup",
+      "scheduling": "Scheduling",
+      "dangerZone": "Danger Zone",
+      "snapshot": "Snapshot",
+      "orphan": "Orphan",
+      "systemInfo": "System Info"
+    },
+    "dangerZoneAlert": {
+      "message": {
+        "part1": "Some",
+        "dangerZoneSettingsLink": "Danger Zone settings",
+        "part2": "are not immediately applied when one or more volumes are still attached. Ensure that all volumes are detached before configuring the settings."
+      },
+      "unappliedSettingsTitle": "The following {{count}} {{settings}} have not been applied:",
+      "settingSingular": "setting has",
+      "settingPlural": "settings have"
+    }
+  },
+  "leaveSettingsModal": {
+    "title": "Leave General Settings ?",
+    "okText": "Leave",
+    "unsavedChangesMessage": "You have unsaved changes below.",
+    "confirmMessage": "Are you sure you want to leave this page?"
+  },
+  "latestBackup": {
+    "noBackupYet": "no backup yet"
+  },
+  "storageInfo": {
+    "schedulable": "Schedulable",
+    "available": "Available",
+    "reserved": "Reserved",
+    "maximum": "Maximum",
+    "scheduled": "Scheduled"
+  },
+  "models": {
+    "backupTarget": {
+      "create": {
+        "success": "Successfully created backup target {name}."
+      }
+    },
+    "app": {
+      "supportbundles": {
+        "error": "Download failed: support bundle creation is still in progress"
+      }
+    },
+    "backingImage": {
+      "createBackupBackingImage": {
+        "success": "Successfully backed up {{name}} backing image",
+        "missingUrl": "Failed to create backup, missing create backup backing image URL"
+      },
+      "create": {
+        "uploadServiceTimeout": "Timeout waiting for the upload service initialization, please delete then recreate Backing Image."
+      },
+      "restoreBackingImage": {
+        "success": "Successfully restore {{name}} backing image",
+        "missingUrl": "Missing restore backup backing image url"
+      },
+      "createBackingImageBackup": {
+        "success": "Successfully backup backing image {{backingImageName}}"
+      },
+      "singleInterfaceUpload": {
+        "failed": "Upload failed! please delete then recreate Backing Image. {{error}}"
+      }
+    },
+    "backup": {
+      "queryBackupTarget": {
+        "noBackupTarget": "No backup target is available, please go to Backup Target page to create one"
+      },
+      "restoreBulkBackup": {
+        "success": "Successfully restore backup volume {{name}}"
+      },
+      "syncBackupVolume": {
+        "success": "Successfully trigger backup volume {{name}} synchronization"
+      },
+      "syncAllBackupVolumes": {
+        "success": "Successfully trigger all backup volumes synchronization"
+      },
+      "bulkCreateVolume": {
+        "success": "Successfully create DR volume {{name}}"
+      }
+    },
+    "volume": {
+      "createClonedVolume": {
+        "success": "New volume ({{name}}) created successfully"
+      },
+      "getSingleVolumeSnapshots": {
+        "failed": "Failed to get {{name}} snapshots"
+      }
+    }
+  },
+  "settings": {
+    "allow-collecting-longhorn-usage-metrics": {
+      "displayName": "Allow Collecting Longhorn Usage Metrics",
+      "description": "Enabling this setting will allow Longhorn to provide additional usage metrics to https://metrics.longhorn.io/.\nThis information will help us better understand how Longhorn is being used, which will ultimately contribute to future improvements."
+    },
+    "allow-empty-disk-selector-volume": {
+      "displayName": "Allow Scheduling Empty Disk Selector Volumes To Any Disk",
+      "description": "Allow replica of the volume without disk selector to be scheduled on disk with tags, default true"
+    },
+    "allow-empty-node-selector-volume": {
+      "displayName": "Allow Scheduling Empty Node Selector Volumes To Any Node",
+      "description": "Allow replica of the volume without node selector to be scheduled on node with tags, default true"
+    },
+    "allow-recurring-job-while-volume-detached": {
+      "displayName": "Allow Recurring Job While Volume Is Detached",
+      "description": "If this setting is enabled, Longhorn will automatically attaches the volume and takes snapshot/backup when it is the time to do recurring snapshot/backup. \n\nNote that the volume is not ready for workload during the period when the volume was automatically attached. Workload will have to wait until the recurring job finishes."
+    },
+    "allow-volume-creation-with-degraded-availability": {
+      "displayName": "Allow Volume Creation with Degraded Availability",
+      "description": "This setting allows user to create and attach a volume that doesn't have all the replicas scheduled at the time of creation."
+    },
+    "auto-cleanup-recurring-job-backup-snapshot": {
+      "displayName": "Automatically Cleanup Recurring Job Backup Snapshot",
+      "description": "This setting enables Longhorn to automatically cleanup the snapshot generated by a recurring backup job."
+    },
+    "auto-cleanup-snapshot-after-on-demand-backup-completed": {
+      "displayName": "Automatically Cleanup Snapshot After On-Demand Backup Completed",
+      "description": "This setting allows users to trigger automatically delete the backup snapshot after the on-demand backup is completed."
+    },
+    "auto-cleanup-system-generated-snapshot": {
+      "displayName": "Automatically Cleanup System Generated Snapshot",
+      "description": "This setting enables Longhorn to automatically cleanup the system generated snapshot before and after replica rebuilding."
+    },
+    "auto-cleanup-when-delete-backup": {
+      "displayName": "Automatically Cleanup Snapshot When Deleting Backup",
+      "description": "This setting enables Longhorn to automatically cleanup snapshots when removing backup."
+    },
+    "auto-delete-pod-when-volume-detached-unexpectedly": {
+      "displayName": "Automatically Delete Workload Pod when The Volume Is Detached Unexpectedly",
+      "description": "If enabled, Longhorn will automatically delete the workload pod that is managed by a controller (e.g. deployment, statefulset, daemonset, etc...) when Longhorn volume is detached unexpectedly (e.g. during Kubernetes upgrade, Docker reboot, or network disconnect). By deleting the pod, its controller restarts the pod and Kubernetes handles volume reattachment and remount. \n\nIf disabled, Longhorn will not delete the workload pod that is managed by a controller. You will have to manually restart the pod to reattach and remount the volume. \n\n**Note:** This setting doesn't apply to the workload pods that don't have a controller. Longhorn never deletes them."
+    },
+    "auto-salvage": {
+      "displayName": "Automatic salvage",
+      "description": "If enabled, volumes will be automatically salvaged when all the replicas become faulty e.g. due to network disconnection. Longhorn will try to figure out which replica(s) are usable, then use them for the volume."
+    },
+    "backing-image-cleanup-wait-interval": {
+      "displayName": "Backing Image Cleanup Wait Interval",
+      "description": "In minutes. The interval determines how long Longhorn will wait before cleaning up the backing image file when there is no replica in the disk using it."
+    },
+    "backing-image-recovery-wait-interval": {
+      "displayName": "Backing Image Recovery Wait Interval",
+      "description": "In seconds. The interval determines how long Longhorn will wait before re-downloading the backing image file when all disk files of this backing image become failed or unknown. \n\nWARNING: \n\n  - This recovery only works for the backing image of which the creation type is \"download\". \n\n  - File state \"unknown\" means the related manager pods on the pod is not running or the node itself is down/disconnected."
+    },
+    "backup-compression-method": {
+      "displayName": "Backup Compression Method",
+      "description": "This setting allows users to specify backup compression method.\n\nAvailable options are: \n\n- **none**: Disable the compression method. Suitable for multimedia data such as encoded images and videos. \n\n- **lz4**: Fast compression method. Suitable for flat files. \n\n- **gzip**: A bit of higher compression ratio but relatively slow."
+    },
+    "backup-concurrent-limit": {
+      "displayName": "Backup Concurrent Limit Per Backup",
+      "description": "This setting controls how many worker threads per backup concurrently."
+    },
+    "backup-execution-timeout": {
+      "displayName": "Backup Execution Timeout",
+      "description": "Number of minutes that Longhorn allows for the backup execution. The default value is 1."
+    },
+    "blacklist-for-auto-delete-pod-when-volume-detached-unexpectedly": {
+      "displayName": "Blacklist for Automatically Delete Workload Pod when The Volume Is Detached Unexpectedly",
+      "description": "Blacklist of controller api/kind values for the setting Automatically Delete Workload Pod when the Volume Is Detached UnexpectedlyIf a workload pod is managed by a controller whose api/kind is listed in this blacklist, Longhorn will not automatically delete the pod when its volume is unexpectedly detached.\n\nMultiple controller apiVersion/kind entries can be specified, separated by semicolons. For example: `apps/StatefulSet;apps/DaemonSet`.\n\n**Note:** The controller api/kind is case sensitive and must exactly match the api/kind in the workload pod's owner reference."
+    },
+    "concurrent-automatic-engine-upgrade-per-node-limit": {
+      "displayName": "Concurrent Automatic Engine Upgrade Per Node Limit",
+      "description": "This setting controls how Longhorn automatically upgrades volumes' engines after upgrading Longhorn manager. The value of this setting specifies the maximum number of engines per node that are allowed to upgrade to the default engine image at the same time. If the value is 0, Longhorn will not automatically upgrade volumes' engines to default version."
+    },
+    "concurrent-backing-image-replenish-per-node-limit": {
+      "displayName": "Concurrent Backing Image Replenish Per Node Limit",
+      "description": "This setting controls how many backing images copy on a node can be replenished simultaneously. \n\nTypically, Longhorn can block the backing image copy starting once the current replenishing count on a node exceeds the limit. But when the value is 0, it means disabling the backing image replenish."
+    },
+    "concurrent-replica-rebuild-per-node-limit": {
+      "displayName": "Concurrent Replica Rebuild Per Node Limit",
+      "description": "This setting controls how many replicas on a node can be rebuilt simultaneously. \n\nTypically, Longhorn can block the replica starting once the current rebuilding count on a node exceeds the limit. But when the value is 0, it means disabling the replica rebuilding. \n\nWARNING: \n\n  - The old setting \"Disable Replica Rebuild\" is replaced by this setting. \n\n  - Different from relying on replica starting delay to limit the concurrent rebuilding, if the rebuilding is disabled, replica object replenishment will be directly skipped. \n\n  - When the value is 0, the eviction and data locality feature won't work. But this shouldn't have any impact to any current replica rebuild and backup restore."
+    },
+    "concurrent-volume-backup-restore-per-node-limit": {
+      "displayName": "Concurrent Volume Backup Restore Per Node Limit",
+      "description": "This setting controls how many volumes on a node can restore the backup concurrently.\n\nLonghorn blocks the backup restore once the restoring volume count exceeds the limit.\n\nSet the value to **0** to disable backup restore."
+    },
+    "crd-api-version": {
+      "displayName": "Custom Resource API Version",
+      "description": "The current customer resource's API version, e.g. longhorn.io/v1beta2. Set by manager automatically"
+    },
+    "create-default-disk-labeled-nodes": {
+      "displayName": "Create Default Disk on Labeled Nodes",
+      "description": "Create default Disk automatically only on Nodes with the label \"node.longhorn.io/create-default-disk=true\" if no other disks exist. If disabled, the default disk will be created on all new nodes when each node is first added."
+    },
+    "current-longhorn-version": {
+      "displayName": "Current Longhorn Version",
+      "description": "The current Longhorn version."
+    },
+    "data-engine-cpu-mask": {
+      "displayName": "Data Engine CPU Mask",
+      "description": "Applies only to the V2 Data Engine. Specifies the CPU cores on which the Storage Performance Development Kit (SPDK) target daemon runs. The daemon is deployed in each Instance Manager pod. Ensure that the number of assigned cores does not exceed the guaranteed Instance Manager CPUs for the V2 Data Engine. The default value is 0x1."
+    },
+    "data-engine-hugepage-enabled": {
+      "displayName": "Data Engine Hugepage Enabled",
+      "description": "Applies only to the V2 Data Engine. Enables hugepages for the Storage Performance Development Kit (SPDK) target daemon. If disabled, legacy memory is used. Allocation size is set via the Data Engine Memory Size setting."
+    },
+    "data-engine-interrupt-mode-enabled": {
+      "displayName": "Enable Interrupt Mode for Data Engine",
+      "description": "Specifies whether the Storage Performance Development Kit (SPDK) target daemon should run in interrupt mode. This setting is applicable only when the V2 Data Engine is enabled. \n\n  - DO NOT CHANGE THIS SETTING WITH ATTACHED VOLUMES. Longhorn will block this setting update when there are attached v2 volumes. \n\n  - `true`: Enables interrupt mode, which may reduce CPU usage. \n\n  - `false`: Uses polling mode for maximum performance."
+    },
+    "data-engine-log-flags": {
+      "displayName": "Data Engine Log Flags",
+      "description": "Applies only to the V2 Data Engine. Specifies the log flags for the Storage Performance Development Kit (SPDK) target daemon."
+    },
+    "data-engine-log-level": {
+      "displayName": "Data Engine Log Level",
+      "description": "Applies only to the V2 Data Engine. Specifies the log level for the Storage Performance Development Kit (SPDK) target daemon. Supported values are: Error, Warning, Notice, Info, and Debug. The default is Notice."
+    },
+    "data-engine-memory-size": {
+      "displayName": "Data Engine Memory Size",
+      "description": "Applies only to the V2 Data Engine. Specifies the memory size, in MiB, allocated to the Storage Performance Development Kit (SPDK) target daemon. When hugepage is enabled, this defines the hugepage size; when legacy memory is used, hugepage is disabled."
+    },
+    "default-backing-image-manager-image": {
+      "displayName": "Default Backing Image Manager Image",
+      "description": "The default backing image manager image used by the manager. Can be changed on the manager starting command line only"
+    },
+    "default-backup-block-size": {
+      "displayName": "Default Backup Block Size",
+      "description": "Specifies the default backup block size, in MiB, used when creating a new volume. Supported values are 2 or 16."
+    },
+    "default-data-locality": {
+      "displayName": "Default Data Locality",
+      "description": "We say a Longhorn volume has data locality if there is a local replica of the volume on the same node as the pod which is using the volume.\n\nThis setting specifies the default data locality when a volume is created from the Longhorn UI. For Kubernetes configuration, update the `dataLocality` in the StorageClass\n\nThe available modes are: \n\n- **disabled**. This is the default option. There may or may not be a replica on the same node as the attached volume (workload)\n- **best-effort**. This option instructs Longhorn to try to keep a replica on the same node as the attached volume (workload). Longhorn will not stop the volume, even if it cannot keep a replica local to the attached volume (workload) due to environment limitation, e.g. not enough disk space, incompatible disk tags, etc.\n- **strict-local**. This option enforces Longhorn keep the only one replica on the same node as the attached volume."
+    },
+    "default-data-path": {
+      "displayName": "Default Data Path",
+      "description": "Default path to use for storing data on a host. An absolute directory path indicates a filesystem-type disk used by the V1 Data Engine, while a path to a block device indicates a block-type disk used by the V2 Data Engine."
+    },
+    "default-engine-image": {
+      "displayName": "Default Engine Image",
+      "description": "The default engine image used by the manager. Can be changed on the manager starting command line only.\n\n**Note:** This engine image is required only for the V1 Data Engine and is not used by the V2 Data Engine."
+    },
+    "default-instance-manager-image": {
+      "displayName": "Default Instance Manager Image",
+      "description": "The default instance manager image used by the manager. Can be changed on the manager starting command line only"
+    },
+    "default-longhorn-static-storage-class": {
+      "displayName": "Default Longhorn Static StorageClass Name",
+      "description": "The 'storageClassName' is given to PVs and PVCs that are created for an existing Longhorn volume. The StorageClass name can also be used as a label, so it is possible to use a Longhorn StorageClass to bind a workload to an existing PV without creating a Kubernetes StorageClass object."
+    },
+    "default-min-number-of-backing-image-copies": {
+      "displayName": "Default Minimum Number of BackingImage Copies",
+      "description": "The default minimum number of backing image copies Longhorn maintains"
+    },
+    "default-replica-count": {
+      "displayName": "Default Replica Count",
+      "description": "The default number of replicas when a volume is created from the Longhorn UI. For Kubernetes configuration, update the `numberOfReplicas` in the StorageClass"
+    },
+    "deleting-confirmation-flag": {
+      "displayName": "Deleting Confirmation Flag",
+      "description": "This flag is designed to prevent Longhorn from being accidentally uninstalled which will lead to data lost. \n\nSet this flag to **true** to allow Longhorn uninstallation. If this flag **false**, Longhorn uninstallation job will fail."
+    },
+    "detach-manually-attached-volumes-when-cordoned": {
+      "displayName": "Detach Manually Attached Volumes When Cordoned",
+      "description": "Automatically detach volumes that are attached manually when node is cordoned."
+    },
+    "disable-revision-counter": {
+      "displayName": "Disable Revision Counter",
+      "description": "This setting is only for volumes created by UI. By default, this is true meaning Longhorn will not have revision counter file to track every write to the volume. During the salvage recovering, Longhorn will use the 'volume-head-xxx.img' file last modification time and file size to pick the replica candidate to recover the whole volume. If this setting is false, there will be a revision counter file to track every write to the volume. During salvage recovering Longhorn will pick the replica with largest revision counter as candidate to recover the whole volume."
+    },
+    "disable-scheduling-on-cordoned-node": {
+      "displayName": "Disable Scheduling On Cordoned Node",
+      "description": "Disable Longhorn manager to schedule replica on Kubernetes cordoned node"
+    },
+    "disable-snapshot-purge": {
+      "displayName": "Disable Snapshot Purge",
+      "description": "Temporarily prevent all attempts to purge volume snapshots"
+    },
+    "engine-replica-timeout": {
+      "displayName": "Engine Replica Timeout",
+      "description": "The time in seconds will wait for a response from a replica before marking it as failed. Values between 8 and 30 are allowed. The engine replica timeout is only in effect while there are I/O requests outstanding.\n\nThis setting only applies to additional replicas. A V1 engine marks the last active replica as failed only after twice the configured number of seconds (timeout value x 2) have passed. This behavior is intended to balance volume responsiveness with volume availability.\n\n- The engine can quickly (after the configured timeout) ignore individual replicas that become unresponsive in favor of other available ones. This ensures future I/O will not be held up. \n\n- The engine waits on the last replica (until twice the configured timeout) to prevent unnecessarily crashing as a result of having no available backends."
+    },
+    "failed-backup-ttl": {
+      "displayName": "Failed Backup Time to Live",
+      "description": "In minutes. This setting determines how long Longhorn will keep the backup resource that was failed. Set to 0 to disable the auto-deletion.\nFailed backups will be checked and cleaned up during backupstore polling which is controlled by **Backupstore Poll Interval** setting.\nHence this value determines the minimal wait interval of the cleanup. And the actual cleanup interval is multiple of **Backupstore Poll Interval**.\nDisabling **Backupstore Poll Interval** also means to disable failed backup auto-deletion."
+    },
+    "fast-replica-rebuild-enabled": {
+      "displayName": "Fast Replica Rebuild Enabled",
+      "description": "This setting enables the fast replica rebuilding feature. It relies on the checksums of snapshot disk files, so setting the snapshot-data-integrity to **enable** or **fast-check** is a prerequisite."
+    },
+    "freeze-filesystem-for-snapshot": {
+      "displayName": "Freeze Filesystem For Snapshot",
+      "description": "This setting only applies to volumes with the Kubernetes volume mode `Filesystem`. When enabled, Longhorn freezes the volume's filesystem immediately before creating a user-initiated snapshot. When disabled or when the Kubernetes volume mode is `Block`, Longhorn instead attempts a system sync before creating a user-initiated snapshot. \n\nWhen this setting is disabled, all data is flushed to disk just before the snapshot is created, but Longhorn cannot completely block write attempts during the brief interval between the system sync and snapshot creation. I/O is not paused during the system sync, so workloads likely do not notice that a snapshot is being created.\n\nThe default option for this setting is `false` because kernels with version `v5.17` or earlier may not respond correctly when a volume crashes while a freeze is ongoing. This is not likely to happen but if it does, an affected kernel will not allow you to unmount the filesystem or stop processes using the filesystem without rebooting the node. Only enable this setting if you plan to use kernels with version `5.17` or later, and ext4 or XFS filesystems.\n\nYou can override this setting (using the field freezeFilesystemForSnapshot) for specific volumes through the Longhorn UI, a StorageClass, or direct changes to an existing volume."
+    },
+    "guaranteed-instance-manager-cpu": {
+      "displayName": "Guaranteed Instance Manager CPU",
+      "description": "Percentage of the total allocatable CPU resources on each node to be reserved for each instance manager pod. For example, 10 means 10% of the total CPU on a node will be allocated to each instance manager pod on this node. This will help maintain engine and replica stability during high node workload. \n\nIn order to prevent unexpected volume instance (engine/replica) crash as well as guarantee a relative acceptable IO performance, you can use the following formula to calculate a value for this setting: \n\n`Guaranteed Instance Manager CPU = The estimated max Longhorn volume engine and replica count on a node * 0.1 / The total allocatable CPUs on the node * 100` \n\nThe result of above calculation doesn't mean that's the maximum CPU resources the Longhorn workloads require. To fully exploit the Longhorn volume I/O performance, you can allocate/guarantee more CPU resources via this setting. \n\nIf it's hard to estimate the usage now, you can leave it with the default value, which is 12%. Then you can tune it when there is no running workload using Longhorn volumes. \n\nWARNING: \n\n  - Value 0 means unsetting CPU requests for instance manager pods. \n\n  - Considering the possible new instance manager pods in the further system upgrade, this float value ranges from 0 to 40. \n\n  - One more set of instance manager pods may need to be deployed when the Longhorn system is upgraded. If current available CPUs of the nodes are not enough for the new instance manager pods, you need to detach the volumes using the oldest instance manager pods so that Longhorn can clean up the old pods automatically and release the CPU resources. And the new pods with the latest instance manager image will be launched then. \n\n  - This global setting will be ignored for a node if the field \"InstanceManagerCPURequest\" on the node is set. \n\n  - After this setting is changed, the instance manager pod using this global setting will be automatically restarted without instances running on the instance manager. \n\n  - For the v2 Data Engine, the Storage Performance Development Kit (SPDK) target daemon inside each instance manager pod uses one or more dedicated CPU cores. Setting a minimum CPU usage is critical to maintaining stability during periods of high node load."
+    },
+    "instance-manager-pod-liveness-probe-timeout": {
+      "displayName": "Instance Manager Pod Liveness Probe Timeout",
+      "description": "In seconds. The setting specifies the timeout for the instance manager pod liveness probe. The default value is 10 seconds.\n\nWARNING: \n\n  - When applying the setting, Longhorn will try to restart all instance-manager pods if all volumes are detached and eventually restart the instance manager pod without instances running on the instance manager."
+    },
+    "kubernetes-cluster-autoscaler-enabled": {
+      "displayName": "Kubernetes Cluster Autoscaler Enabled (Experimental)",
+      "description": "Setting that notifies Longhorn that the cluster is using the Kubernetes Cluster Autoscaler. \n\nLonghorn prevents data loss by only allowing the Cluster Autoscaler to scale down a node that met all conditions: \n\n  - No volume attached to the node \n\n  - Is not the last node containing the replica of any volume. \n\n  - Is not running backing image components pod. \n\n  - Is not running share manager components pod."
+    },
+    "latest-longhorn-version": {
+      "displayName": "Latest Longhorn Version",
+      "description": "The latest version of Longhorn available. Updated by Upgrade Checker automatically"
+    },
+    "log-level": {
+      "displayName": "Log Level",
+      "description": "The log level Panic, Fatal, Error, Warn, Info, Debug, Trace used in longhorn manager. By default Info."
+    },
+    "log-path": {
+      "displayName": "Log Path",
+      "description": "Specifies the directory on the host where Longhorn stores log files for the instance manager pod. Currently, it is only used for instance manager pods in the v2 data engine."
+    },
+    "long-grpc-timeout": {
+      "displayName": "Long gRPC Timeout",
+      "description": "Number of seconds that Longhorn allows for the completion of replica rebuilding and snapshot cloning operations."
+    },
+    "node-down-pod-deletion-policy": {
+      "displayName": "Pod Deletion Policy When Node is Down",
+      "description": "Defines the Longhorn action when a Volume is stuck with a StatefulSet/Deployment Pod on a node that is down.\n- **do-nothing** is the default Kubernetes behavior of never force deleting StatefulSet/Deployment terminating pods. Since the pod on the node that is down isn't removed, Longhorn volumes are stuck on nodes that are down.\n- **delete-statefulset-pod** Longhorn will force delete StatefulSet terminating pods on nodes that are down to release Longhorn volumes so that Kubernetes can spin up replacement pods.\n- **delete-deployment-pod** Longhorn will force delete Deployment terminating pods on nodes that are down to release Longhorn volumes so that Kubernetes can spin up replacement pods.\n- **delete-both-statefulset-and-deployment-pod** Longhorn will force delete StatefulSet/Deployment terminating pods on nodes that are down to release Longhorn volumes so that Kubernetes can spin up replacement pods."
+    },
+    "node-drain-policy": {
+      "displayName": "Node Drain Policy",
+      "description": "Define the policy to use when a node with the last healthy replica of a volume is drained.\n- **block-for-eviction** Longhorn will automatically evict all replicas and block the drain until eviction is complete.\n- **block-for-eviction-if-contains-last-replica** Longhorn will automatically evict any replicas that don't have a healthy counterpart and block the drain until eviction is complete.\n- **block-if-contains-last-replica** Longhorn will block the drain when the node contains the last healthy replica of a volume.\n- **allow-if-replica-is-stopped** Longhorn will allow the drain when the node contains the last healthy replica of a volume but the replica is stopped. WARNING: possible data loss if the node is removed after draining. Select this option if you want to drain the node and do in-place upgrade/maintenance.\n- **always-allow** Longhorn will allow the drain even though the node contains the last healthy replica of a volume. WARNING: possible data loss if the node is removed after draining. Also possible data corruption if the last replica was running during the draining."
+    },
+    "offline-replica-rebuilding": {
+      "displayName": "Offline Replica Rebuilding",
+      "description": "Enables automatic rebuilding of degraded replicas while the volume is detached. This setting only takes effect if the individual volume setting is set to `ignored` or `enabled`. \n\nAvailable options: \n\n- **true**: Enables offline replica rebuilding for all detached volumes, unless overridden by individual volume settings. \n\n- **false**: Disables offline replica rebuilding globally, unless overridden by individual volume settings. \n\n**Note:** Offline rebuilding applies only when a volume is detached. Volumes in a faulted state will not trigger offline rebuilding."
+    },
+    "orphan-resource-auto-deletion": {
+      "displayName": "Orphan Resource Auto-Deletion",
+      "description": "This setting allows Longhorn to automatically delete orphan resources and their corresponding orphaned resources. \n\nOrphan resources located on nodes that are in down or unknown state will not be cleaned up automatically. \n\nList the enabled resource types in a semicolon-separated list. \n\nAvailable items are: \n\n- **replica-data**: replica data store \n\n- **instance**: engine and replica runtime instance"
+    },
+    "orphan-resource-auto-deletion-grace-period": {
+      "displayName": "Orphan Resource Auto-Deletion Grace Period",
+      "description": "Specifies the wait time, in seconds, before Longhorn automatically deletes an orphaned Custom Resource (CR) and its associated resources. \n\n**Note:** If a user manually deletes an orphaned CR, the deletion occurs immediately and does not respect this grace period."
+    },
+    "priority-class": {
+      "displayName": "Priority Class",
+      "description": "The name of the Priority Class to set on the Longhorn components. This can help prevent Longhorn components from being evicted under Node Pressure. \nLonghorn system contains user deployed components (e.g, Longhorn manager, Longhorn driver, Longhorn UI) and system managed components (e.g, instance manager, engine image, CSI driver, etc.) Note that this setting only sets Priority Class for system managed components. Depending on how you deployed Longhorn, you need to set Priority Class for user deployed components in Helm chart or deployment YAML file."
+    },
+    "recurring-failed-jobs-history-limit": {
+      "displayName": "Cronjob Failed Jobs History Limit",
+      "description": "This setting specifies how many failed backup or snapshot job histories should be retained.\n\nHistory will not be retained if the value is 0."
+    },
+    "recurring-job-max-retention": {
+      "displayName": "Maximum Retention Number for Recurring Job",
+      "description": "This setting specifies how many snapshots or backups should be retained."
+    },
+    "recurring-successful-jobs-history-limit": {
+      "displayName": "Cronjob Successful Jobs History Limit",
+      "description": "This setting specifies how many successful backup or snapshot job histories should be retained. \n\nHistory will not be retained if the value is 0."
+    },
+    "registry-secret": {
+      "displayName": "Registry secret",
+      "description": "The Kubernetes Secret name"
+    },
+    "remove-snapshots-during-filesystem-trim": {
+      "displayName": "Remove Snapshots During Filesystem Trim",
+      "description": "This setting allows Longhorn filesystem trim feature to automatically mark the latest snapshot and its ancestors as removed and stops at the snapshot containing multiple children.\n\nSince Longhorn filesystem trim feature can be applied to the volume head and the followed continuous removed or system snapshots only, trying to trim a removed file from a valid snapshot will do nothing but the filesystem will discard this kind of in-memory trimmable file info. Later on if you mark the snapshot as removed and want to retry the trim, you may need to unmount and remount the filesystem so that the filesystem can recollect the trimmable file info."
+    },
+    "replica-auto-balance": {
+      "displayName": "Replica Auto Balance",
+      "description": "Enable this setting automatically rebalances replicas when discovered an available node.\n\nThe available global options are: \n\n- **disabled**. This is the default option. No replica auto-balance will be done.\n- **least-effort**. This option instructs Longhorn to balance replicas for minimal redundancy.\n- **best-effort**. This option instructs Longhorn to balance replicas for even redundancy.\n\nLonghorn also support individual volume setting. The setting can be specified on Volume page, this overrules the global setting.\n\nThe available volume setting options are: \n\n- **ignored**. This is the default option that instructs Longhorn to inherit from the global setting.\n- **disabled**. This option instructs Longhorn no replica auto-balance should be done.\n- **least-effort**. This option instructs Longhorn to balance replicas for minimal redundancy.\n- **best-effort**. This option instructs Longhorn to balance replicas for even redundancy."
+    },
+    "replica-auto-balance-disk-pressure-percentage": {
+      "displayName": "Replica Auto Balance Disk Pressure Threshold (%)",
+      "description": "Percentage of currently used storage that triggers automatic replica rebalancing.\n\nWhen the threshold is reached, Longhorn automatically rebuilds replicas that are under disk pressure on another disk within the same node.\n\nTo disable this feature, set the value to 0.\n\n**Note:** This setting takes effect only when the following conditions are met:\n- **Replica Auto Balance** is set to **best-effort**.\n- At least one other disk on the node has sufficient available space.\n\n**Note:** This feature is not affected by the **Replica Node Level Soft Anti-Affinity** setting."
+    },
+    "replica-disk-soft-anti-affinity": {
+      "displayName": "Replica Disk Level Soft Anti-Affinity",
+      "description": "Allow scheduling on disks with existing healthy replicas of the same volume"
+    },
+    "replica-file-sync-http-client-timeout": {
+      "displayName": "Timeout of HTTP Client to Replica File Sync Server",
+      "description": "In seconds. The setting specifies the HTTP client timeout to the file sync server."
+    },
+    "replica-rebuilding-bandwidth-limit": {
+      "displayName": "Replica Rebuilding Bandwidth Limit",
+      "description": "Applies only to the V2 Data Engine. Specifies the default write bandwidth limit, in megabytes per second (MB/s), for volume replica rebuilding.If this value is set to 0, there will be no write bandwidth limitation. Individual volumes can override this setting by specifying their own rebuilding bandwidth limit."
+    },
+    "replica-replenishment-wait-interval": {
+      "displayName": "Replica Replenishment Wait Interval",
+      "description": "In seconds. The interval determines how long Longhorn will wait at least in order to reuse the existing data on a failed replica rather than directly creating a new replica for a degraded volume.\nWarning: This option works only when there is a failed replica in the volume. And this option may block the rebuilding for a while in the case."
+    },
+    "replica-soft-anti-affinity": {
+      "displayName": "Replica Node Level Soft Anti-Affinity",
+      "description": "Allow scheduling on nodes with existing healthy replicas of the same volume"
+    },
+    "replica-zone-soft-anti-affinity": {
+      "displayName": "Replica Zone Level Soft Anti-Affinity",
+      "description": "Allow scheduling new Replicas of Volume to the Nodes in the same Zone as existing healthy Replicas. Nodes don't belong to any Zone will be treated as in the same Zone. Notice that Longhorn relies on label `topology.kubernetes.io/zone=<Zone name of the node>` in the Kubernetes node object to identify the zone."
+    },
+    "restore-concurrent-limit": {
+      "displayName": "Restore Concurrent Limit Per Backup",
+      "description": "This setting controls how many worker threads per restore concurrently."
+    },
+    "restore-volume-recurring-jobs": {
+      "displayName": "Restore Volume Recurring Jobs",
+      "description": "Restore recurring jobs from the backup volume on the backup target and create recurring jobs if not exist during a backup restoration.\n\nLonghorn also supports individual volume setting. The setting can be specified on Backup page when making a backup restoration, this overrules the global setting.\n\nThe available volume setting options are: \n\n- **ignored**. This is the default option that instructs Longhorn to inherit from the global setting.\n- **enabled**. This option instructs Longhorn to restore recurring jobs/groups from the backup target forcibly.\n- **disabled**. This option instructs Longhorn no restoring recurring jobs/groups should be done."
+    },
+    "rwx-volume-fast-failover": {
+      "displayName": "RWX Volume Fast Failover",
+      "description": "Turn on logic to detect and move stale RWX volumes quickly (Experimental)"
+    },
+    "snapshot-data-integrity": {
+      "displayName": "Snapshot Data Integrity",
+      "description": "This setting allows users to enable or disable snapshot hashing and data integrity checking. \n\nAvailable options are: \n\n- **disabled**: Disable snapshot disk file hashing and data integrity checking. \n\n- **enabled**: Enables periodic snapshot disk file hashing and data integrity checking. To detect the filesystem-unaware corruption caused by bit rot or other issues in snapshot disk files, Longhorn system periodically hashes files and finds corrupted ones. Hence, the system performance will be impacted during the periodical checking. \n\n- **fast-check**: Enable snapshot disk file hashing and fast data integrity checking. Longhorn system only hashes snapshot disk files if their are not hashed or the modification time are changed. In this mode, filesystem-unaware corruption cannot be detected, but the impact on system performance can be minimized."
+    },
+    "snapshot-data-integrity-cronjob": {
+      "displayName": "Snapshot Data Integrity Check CronJob",
+      "description": "Unix-cron string format. The setting specifies when Longhorn checks the data integrity of snapshot disk files. \n\nWarning: Hashing snapshot disk files impacts the performance of the system. It is recommended to run data integrity checks during off-peak times and to reduce the frequency of checks."
+    },
+    "snapshot-data-integrity-immediate-check-after-snapshot-creation": {
+      "displayName": "Immediate Snapshot Data Integrity Check After Creating a Snapshot",
+      "description": "Hashing snapshot disk files impacts the performance of the system. The immediate snapshot hashing and checking can be disabled to minimize the impact after creating a snapshot."
+    },
+    "snapshot-max-count": {
+      "displayName": "Snapshot Maximum Count",
+      "description": "Maximum snapshot count for a volume. The value should be between 2 to 250"
+    },
+    "stable-longhorn-versions": {
+      "displayName": "Stable Longhorn Versions",
+      "description": "The latest stable version of every minor release line. Updated by Upgrade Checker automatically"
+    },
+    "storage-minimal-available-percentage": {
+      "displayName": "Storage Minimal Available Percentage",
+      "description": "If the minimum available disk capacity exceeds the actual percentage of available disk capacity, the disk becomes unschedulable until more space is freed up."
+    },
+    "storage-network": {
+      "displayName": "Storage Network",
+      "description": "Longhorn uses the storage network for in-cluster data traffic. Leave this blank to use the Kubernetes cluster network. \n\nTo segregate the storage network, input the pre-existing NetworkAttachmentDefinition in **<namespace>/<name>** format. \n\nBy default, this setting applies only to RWO (Read-Write-Once) volumes. For RWX (Read-Write-Many) volumes, enable 'Storage Network for RWX Volume' setting.\n\nWARNING: \n\n  - The cluster must have pre-existing Multus installed, and NetworkAttachmentDefinition IPs are reachable between nodes. \n\n  - When applying the setting, Longhorn will try to restart all instance-manager, and backing-image-manager pods if all volumes are detached and eventually restart the instance manager pod without instances running on the instance manager."
+    },
+    "storage-network-for-rwx-volume-enabled": {
+      "displayName": "Storage Network for RWX Volume Enabled",
+      "description": "This setting allows Longhorn to use the storage network for RWX (Read-Write-Many) volume.\n\nWARNING: \n\n  - This setting should change after all Longhorn RWX volumes are detached because some Longhorn component pods will be recreated to apply the setting. \n\n  - When this setting is enabled, the RWX volumes are mounted with the storage network within the CSI plugin pod container network namespace. As a result, restarting the CSI plugin pod when there are attached RWX volumes may lead to its data path become unresponsive. When this occurs, you must restart the workload pod to re-establish the mount connection. Alternatively, you can enable the 'Automatically Delete Workload Pod when The Volume Is Detached Unexpectedly' setting to allow Longhorn to automatically delete the workload pod."
+    },
+    "storage-over-provisioning-percentage": {
+      "displayName": "Storage Over Provisioning Percentage",
+      "description": "The over-provisioning percentage defines how much storage can be allocated relative to the hard drive's capacity"
+    },
+    "storage-reserved-percentage-for-default-disk": {
+      "displayName": "Storage Reserved Percentage For Default Disk",
+      "description": "The reserved percentage specifies the percentage of disk space that will not be allocated to the default disk on each new Longhorn node"
+    },
+    "support-bundle-failed-history-limit": {
+      "displayName": "SupportBundle Failed History Limit",
+      "description": "This setting specifies how many failed support bundles can exist in the cluster.\n\nThe retained failed support bundle is for analysis purposes and needs to clean up manually.\n\nSet this value to **0** to have Longhorn automatically purge all failed support bundles."
+    },
+    "support-bundle-manager-image": {
+      "displayName": "Support Bundle Manager Image",
+      "description": "The support bundle manager image for the support bundle generation."
+    },
+    "support-bundle-node-collection-timeout": {
+      "displayName": "Timeout for Support Bundle Node Collection",
+      "description": "In minutes. The timeout for collecting node bundles for support bundle generation. The default value is 30.\n\nWhen the timeout is reached, the support bundle generation will proceed without requiring the collection of node bundles."
+    },
+    "system-managed-components-node-selector": {
+      "displayName": "System Managed Components Node Selector",
+      "description": "If you want to restrict Longhorn components to only run on particular set of nodes, you can set node selector for **all** Longhorn components. Longhorn system contains user deployed components (e.g, Longhorn manager, Longhorn driver, Longhorn UI) and system managed components (e.g, instance manager, engine image, CSI driver, etc.) You must follow the below order when set the node selector:\n\n1. Set node selector for user deployed components in Helm chart or deployment YAML file depending on how you deployed Longhorn.\n\n2. Set node selector for system managed components in here.\n\nAll Longhorn volumes should be detached before modifying node selector settings. We recommend setting node selector during Longhorn deployment because the Longhorn system cannot be operated during the update. Multiple label key-value pairs are separated by semicolon. For example: \n\n* `label-key1=label-value1; label-key2=label-value2` \n\nPlease see the documentation at https://longhorn.io for more detailed instructions about changing node selector"
+    },
+    "system-managed-pods-image-pull-policy": {
+      "displayName": "System Managed Pod Image Pull Policy",
+      "description": "This setting defines the Image Pull Policy of Longhorn system managed pods, e.g. instance manager, engine image, CSI driver, etc. The new Image Pull Policy will only apply after the system managed pods restart."
+    },
+    "taint-toleration": {
+      "displayName": "Kubernetes Taint Toleration",
+      "description": "If you want to dedicate nodes to just store Longhorn replicas and reject other general workloads, you can set tolerations for **all** Longhorn components and add taints to the nodes dedicated for storage. Longhorn system contains user deployed components (e.g, Longhorn manager, Longhorn driver, Longhorn UI) and system managed components (e.g, instance manager, engine image, CSI driver, etc.) This setting only sets taint tolerations for system managed components. Depending on how you deployed Longhorn, you need to set taint tolerations for user deployed components in Helm chart or deployment YAML file. All Longhorn volumes should be detached before modifying toleration settings. We recommend setting tolerations during Longhorn deployment because the Longhorn system cannot be operated during the update. Multiple tolerations can be set here, and these tolerations are separated by semicolon. For example: \n\n* `key1=value1:NoSchedule; key2:NoExecute:` this toleration tolerates everything because an empty key with operator `Exists` matches all keys, values and effects \n\n* `key1=value1:`  this toleration has empty effect. It matches all effects with key `key1` \n\nBecause `kubernetes.io` is used as the key of all Kubernetes default tolerations, it should not be used in the toleration settings."
+    },
+    "upgrade-checker": {
+      "displayName": "Enable Upgrade Checker",
+      "description": "Upgrade Checker will check for new Longhorn version periodically. When there is a new version available, a notification will appear in the UI"
+    },
+    "upgrade-responder-url": {
+      "displayName": "Upgrade Responder URL",
+      "description": "The Upgrade Responder sends a notification whenever a new Longhorn version that you can upgrade to becomes available"
+    },
+    "v1-data-engine": {
+      "displayName": "V1 Data Engine",
+      "description": "Setting that allows you to enable the V1 Data Engine. \n\n  - DO NOT CHANGE THIS SETTING WITH ATTACHED VOLUMES. Longhorn will block this setting update when there are attached v1 volumes."
+    },
+    "v2-data-engine": {
+      "displayName": "V2 Data Engine",
+      "description": "This setting allows users to activate v2 data engine which is based on SPDK. Currently, it is in the experimental phase and should not be utilized in a production environment.\n\n  - DO NOT CHANGE THIS SETTING WITH ATTACHED VOLUMES. Longhorn will block this setting update when there are attached v2 volumes. \n\n  - When the V2 Data Engine is enabled, each instance-manager pod utilizes 1 CPU core. This high CPU usage is attributed to the Storage Performance Development Kit (SPDK) target daemon running within each instance-manager pod. The the SPDK target daemon is responsible for handling input/output (IO) operations and requires intensive polling. As a result, it consumes 100% of a dedicated CPU core to efficiently manage and process the IO requests, ensuring optimal performance and responsiveness for storage operations."
+    }
+  }
+}

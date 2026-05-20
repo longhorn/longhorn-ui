@@ -4,6 +4,7 @@ import { Form } from 'antd'
 import { ModalBlur } from '../../components'
 import EditableDiskList from './components/EditableDiskList'
 import { byteToGi, giToByte } from './helper/index'
+import { withTranslation } from 'react-i18next'
 
 const modal = ({
   form,
@@ -11,6 +12,7 @@ const modal = ({
   visible,
   onCancel,
   onOk,
+  t
 }) => {
   if (!node) {
     return null
@@ -67,18 +69,19 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Edit Node and Disks',
+    title: t('editDisk.title'),
     visible,
     onCancel,
     onOk: handleOk,
     width: 850,
-    okText: 'Save',
+    okText: t('common.save'),
     style: { top: 0 },
   }
 
   const EditableDiskListProps = {
     form,
     node,
+    t
   }
 
   return (
@@ -89,6 +92,7 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   form: PropTypes.object.isRequired,
   node: PropTypes.object,
   visible: PropTypes.bool,
@@ -96,4 +100,4 @@ modal.propTypes = {
   onOk: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

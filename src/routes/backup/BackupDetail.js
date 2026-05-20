@@ -10,10 +10,11 @@ import { sortBackups } from '../../utils/sort'
 import ShowBackupLabels from './ShowBackupLabels'
 import CreateStandbyVolumeModal from './CreateStandbyVolumeModal'
 import WorkloadDetailModal from '../volume/WorkloadDetailModal'
+import { withTranslation } from 'react-i18next'
 
 const { confirm } = Modal
 
-function Backup({ backup, volume, setting, backingImage, loading, location, dispatch }) {
+function Backup({ backup, volume, setting, backingImage, loading, location, dispatch, t }) {
   const { backupVolumes, backupData, restoreBackupModalVisible, restoreBackupModalKey, currentItem, sorter, showBackupLabelsModalKey, backupLabel, showBackuplabelsModalVisible, createVolumeStandModalKey, createVolumeStandModalVisible, baseImage, size, lastBackupUrl, blockSize, workloadDetailModalVisible, workloadDetailModalItem, workloadDetailModalKey, previousChecked, tagsLoading, nodeTags, diskTags } = backup
 
   const volumeList = volume.data
@@ -134,11 +135,11 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
 
   const showDeleteConfirm = () => {
     confirm({
-      title: 'Are you sure delete all the backups?',
-      content: 'If there is backup restore process in progress using the backups of this volume (including DR volumes), deleting the backup volume will result in restore failure and the volume in the restore process will become FAULTED. Are you sure you want to delete this backup volume?',
-      okText: 'Yes',
+      title: t('backupDetail.modal.deleteAllBackups.title'),
+      content: t('backupDetail.modal.deleteAllBackups.content'),
+      okText: t('common.yes'),
       okType: 'danger',
-      cancelText: 'No',
+      cancelText: t('common.no'),
       onOk() {
         dispatch({
           type: 'backup/deleteAllBackups',
@@ -207,8 +208,8 @@ function Backup({ backup, volume, setting, backingImage, loading, location, disp
       <div style={{ position: 'absolute', top: '-50px', right: '20px', display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
         <DropOption
           menuOptions={[
-            { key: 'recovery', name: 'Create Disaster Recovery Volume', disabled: currentBackUp && !currentBackUp.lastBackupName },
-            { key: 'deleteAll', name: 'Delete All Backups' },
+            { key: 'recovery', name: t('backupDetail.dropdown.createDisasterRecoveryVolume'), disabled: currentBackUp && !currentBackUp.lastBackupName },
+            { key: 'deleteAll', name: t('backupDetail.dropdown.deleteAllBackups') },
           ]}
           onMenuClick={e => handleMenuClick(currentBackUp, e)}
         />
@@ -230,10 +231,11 @@ Backup.propTypes = {
   setting: PropTypes.object,
   volume: PropTypes.object,
   backingImage: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
-export default connect(({
+export default withTranslation()(connect(({
   backup, setting, loading, volume, backingImage,
 }) => ({
   backup, setting, loading: loading.models.backup, volume, backingImage,
-}))(Backup)
+}))(Backup))

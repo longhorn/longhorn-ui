@@ -8,6 +8,7 @@ import ReplicaDataOrphansList from './ReplicaDataOrphansList'
 import OrphanedDataBulkActions from './OrphanedDataBulkActions'
 import queryString from 'query-string'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 class ReplicaDataOrphans extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class ReplicaDataOrphans extends React.Component {
   }
 
   render() {
-    const { loading, dispatch, location, orphanedData } = this.props
+    const { loading, dispatch, location, orphanedData, t } = this.props
     const data = orphanedData.data
     const me = this
 
@@ -84,10 +85,10 @@ class ReplicaDataOrphans extends React.Component {
       location,
       defaultField: 'node',
       fieldOption: [
-        { value: 'node', name: 'Node' },
-        { value: 'diskName', name: 'Disk Name' },
-        { value: 'diskPath', name: 'Disk Path' },
-        { value: 'directoryName', name: 'Directory Name' },
+        { value: 'node', name: t('replicaDataOrphans.filter.fieldOption.node') },
+        { value: 'diskName', name: t('replicaDataOrphans.filter.fieldOption.diskName') },
+        { value: 'diskPath', name: t('replicaDataOrphans.filter.fieldOption.diskPath') },
+        { value: 'directoryName', name: t('replicaDataOrphans.filter.fieldOption.directoryName') },
       ],
       onSearch({ field: filterField, value: filterValue }) {
         const searchQuery = filterField && filterValue
@@ -120,6 +121,7 @@ ReplicaDataOrphans.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default connect(({ orphanedData, loading }) => ({ orphanedData, loading: loading.models.orphanedData }))(ReplicaDataOrphans)
+export default withTranslation()(connect(({ orphanedData, loading }) => ({ orphanedData, loading: loading.models.orphanedData }))(ReplicaDataOrphans))

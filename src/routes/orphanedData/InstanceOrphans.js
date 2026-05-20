@@ -8,6 +8,7 @@ import InstanceOrphansList from './InstanceOrphansList'
 import OrphanedDataBulkActions from './OrphanedDataBulkActions'
 import queryString from 'query-string'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 class InstanceOrphans extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class InstanceOrphans extends React.Component {
   }
 
   render() {
-    const { loading, dispatch, location, orphanedData } = this.props
+    const { loading, dispatch, location, orphanedData, t } = this.props
     const data = orphanedData.data
     const me = this
 
@@ -84,11 +85,11 @@ class InstanceOrphans extends React.Component {
       location,
       defaultField: 'node',
       fieldOption: [
-        { value: 'node', name: 'Node' },
-        { value: 'instanceName', name: 'Instance Name' },
-        { value: 'instanceManager', name: 'Instance Manager' },
-        { value: 'orphanType', name: 'Instance Type' },
-        { value: 'dataEngine', name: 'Data Engine' },
+        { value: 'node', name: t('instanceOrphans.filter.fieldOption.node') },
+        { value: 'instanceName', name: t('instanceOrphans.filter.fieldOption.instanceName') },
+        { value: 'instanceManager', name: t('instanceOrphans.filter.fieldOption.instanceManager') },
+        { value: 'orphanType', name: t('instanceOrphans.filter.fieldOption.orphanType') },
+        { value: 'dataEngine', name: t('columns.dataEngine') },
       ],
       onSearch({ field: filterField, value: filterValue }) {
         const searchQuery = filterField && filterValue
@@ -123,6 +124,7 @@ InstanceOrphans.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default connect(({ orphanedData, loading }) => ({ orphanedData, loading: loading.models.orphanedData }))(InstanceOrphans)
+export default withTranslation()(connect(({ orphanedData, loading }) => ({ orphanedData, loading: loading.models.orphanedData }))(InstanceOrphans))

@@ -3,14 +3,15 @@ import PropTypes from 'prop-types'
 import { Icon, Card } from 'antd'
 import { LinkTo } from '../../../components'
 import styles from './numberCard.less'
+import { withTranslation } from 'react-i18next'
 
-function NumberCard({ icon, color, title, number, linkTo, loading }) {
+function NumberCard({ icon, color, title, number, linkTo, loading, t }) {
   return (
     <Card className={styles.numberCard} bordered={false} bodyStyle={{ padding: 0 }}>
       <LinkTo to={{ pathname: linkTo }}>
         <Icon className={styles.iconWarp} style={{ color }} type={icon} />
         <div className={styles.content}>
-          <p className={styles.title}>{title || 'No Title'}</p>
+          <p className={styles.title}>{title || t('common.noTitle')}</p>
           <p className={styles.number}>
             {loading ? <Icon type="loading" /> : number}
           </p>
@@ -21,6 +22,7 @@ function NumberCard({ icon, color, title, number, linkTo, loading }) {
 }
 
 NumberCard.propTypes = {
+  t: PropTypes.func,
   icon: PropTypes.string,
   color: PropTypes.string,
   title: PropTypes.string,
@@ -29,4 +31,4 @@ NumberCard.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default NumberCard
+export default withTranslation()(NumberCard)

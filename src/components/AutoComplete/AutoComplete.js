@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { AutoComplete } from 'antd'
+import { withTranslation } from 'react-i18next'
 
 const { Option } = AutoComplete
 
@@ -18,10 +19,11 @@ class Complete extends React.Component {
   };
 
   render() {
+    const { t } = this.props
     const { result } = this.state
     const children = result.map(item => <Option key={item}>{item}</Option>)
     return (
-      <AutoComplete style={{ width: '100%' }} onChange={this.props.autoCompleteChange} onSearch={this.handleSearch} placeholder="Volume Name">
+      <AutoComplete style={{ width: '100%' }} onChange={this.props.autoCompleteChange} onSearch={this.handleSearch} placeholder={t('autoComplete.volumeNamePlaceholder')}>
         {children}
       </AutoComplete>
     )
@@ -31,6 +33,7 @@ class Complete extends React.Component {
 Complete.propTypes = {
   options: PropTypes.array,
   autoCompleteChange: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default Complete
+export default withTranslation()(Complete)

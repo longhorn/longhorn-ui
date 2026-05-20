@@ -8,6 +8,7 @@ import { Filter } from '../../components/index'
 import InstanceManagerList from './InstanceManagerList'
 import RefCountVolumeModal from './RefCountVolumeModal'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 class InstanceManager extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class InstanceManager extends React.Component {
   }
 
   render() {
-    const { loading, location, dispatch, instanceManager, volume } = this.props
+    const { loading, location, dispatch, instanceManager, volume, t } = this.props
     const instanceManagerData = instanceManager.data
     const volumeData = volume.data
     const me = this
@@ -64,11 +65,11 @@ class InstanceManager extends React.Component {
       location,
       defaultField: 'name',
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'nodeID', name: 'Node' },
-        { value: 'managerType', name: 'Type' },
-        { value: 'currentState', name: 'State' },
-        { value: 'image', name: 'Instance Manager Image' },
+        { value: 'name', name: t('common.name') },
+        { value: 'nodeID', name: t('instanceManager.filter.fieldOption.nodeID') },
+        { value: 'managerType', name: t('instanceManager.filter.fieldOption.managerType') },
+        { value: 'currentState', name: t('instanceManager.filter.fieldOption.currentState') },
+        { value: 'image', name: t('instanceManager.filter.fieldOption.image') },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter
@@ -135,6 +136,7 @@ InstanceManager.propTypes = {
   loading: PropTypes.bool,
   location: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default connect(({ instanceManager, volume, loading }) => ({ instanceManager, volume, loading: loading.models.engineimage }))(InstanceManager)
+export default withTranslation()(connect(({ instanceManager, volume, loading }) => ({ instanceManager, volume, loading: loading.models.engineimage }))(InstanceManager))
