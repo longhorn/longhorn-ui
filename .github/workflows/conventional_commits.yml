@@ -19,6 +19,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Lint Commits
+      if: ${{ !startsWith(github.event.pull_request.head.ref, 'dependabot/') }}
       uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6
     - name: Lint Pull Request
       uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
