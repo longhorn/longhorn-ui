@@ -108,7 +108,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     },
   }
 
-  const versionHref = currentVersion === 'dev' ? 'https://github.com/longhorn/longhorn/releases' : `https://github.com/longhorn/longhorn/releases/tag/v${currentVersion}`
+  const versionHref = currentVersion === 'dev' ? 'https://github.com/longhorn/longhorn/releases' : `https://github.com/longhorn/longhorn/releases/tag/${currentVersion}`
 
   return (
     <div className={styles.footer}>
