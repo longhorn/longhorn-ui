@@ -108,6 +108,11 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     },
   }
 
+<<<<<<< HEAD
+=======
+  const versionHref = currentVersion === 'dev' ? 'https://github.com/longhorn/longhorn/releases' : `https://github.com/longhorn/longhorn/releases/tag/${currentVersion}`
+
+>>>>>>> 1e058cd (fix: removed extra v from current version-release)
   return (
     <div className={styles.footer}>
       <Row type="flex" justify="space-between">
