@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -61,10 +61,6 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
-  const [replicaDisabled, setReplicaDisabled] = useState(
-    getFieldValue('cloneMode') === 'linked-clone'
-  )
-
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -170,14 +166,6 @@ const modal = ({
           })(
             <Select
               disabled={volume.dataEngine === 'v1'}
-              onChange={(value) => {
-                if (value === 'linked-clone') {
-                  setFieldsValue({ numberOfReplicas: 1 })
-                  setReplicaDisabled(true)
-                } else {
-                  setReplicaDisabled(false)
-                }
-              }}
             >
               <Option key="full-copy" value="full-copy">full-copy</Option>
               {volume.dataEngine === 'v2' && (
@@ -210,7 +198,7 @@ const modal = ({
                 },
               },
             ],
-          })(<InputNumber disabled={replicaDisabled} />)}
+          })(<InputNumber />)}
         </FormItem>
         <FormItem label="Frontend" hasFeedback {...formItemLayout}>
           {getFieldDecorator('frontend', {
