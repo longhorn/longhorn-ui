@@ -23,4 +23,4 @@ envsubst '${LONGHORN_MANAGER_IP},${LONGHORN_UI_PORT},${IPV6_LISTEN}' \
     < $TEMPLATE > $FINAL_CONF
 
 # Start Nginx
-nginx -c $FINAL_CONF -g 'daemon off;'
+exec nginx -c $FINAL_CONF -g 'daemon off;'
