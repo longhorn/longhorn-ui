@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
@@ -13,6 +14,7 @@ function actions({
   downloadBackingImage,
   showUpdateMinCopiesCount,
   openBackupBackingImageModal,
+  t,
 }) {
   const { backupTargetAvailable, backupTargetMessage } = backupProps
 
@@ -21,9 +23,9 @@ function actions({
     switch (event.key) {
       case 'delete':
         confirm({
-          okText: 'Delete',
+          okText: t('common.delete'),
           okType: 'danger',
-          title: `Are you sure you want to delete ${record.name} backing image ?`,
+          title: t('backingImageActions.modal.delete.title', { name: record.name }),
           onOk() {
             deleteBackingImage(record)
           },
@@ -48,31 +50,31 @@ function actions({
     if (!backupTargetAvailable) {
       return backupTargetMessage
     }
-    return disableAction ? 'Missing disk with ready state' : ''
+    return disableAction ? t('backingImageActions.tooltips.missingReadyDisk') : ''
   }
 
   const availableActions = [
     {
       key: 'updateMinCopies',
-      name: 'Update Minimum Copies Count',
+      name: t('backingImageActions.actions.updateMinCopies'),
       disabled: disableAction,
-      tooltip: disableAction ? 'Missing disk with ready state' : ''
+      tooltip: disableAction ? t('backingImageActions.tooltips.missingReadyDisk') : ''
     },
     {
       key: 'backup',
-      name: ' Back Up',
+      name: t('backingImageActions.actions.backup'),
       disabled: disableAction || backupTargetAvailable === false,
       tooltip: getBackupActionTooltip()
     },
     {
       key: 'download',
-      name: 'Download',
+      name: t('backingImageActions.actions.download'),
       disabled: disableAction || selected.dataEngine === 'v2',
-      tooltip: disableAction ? 'Missing disk with ready state' : ''
+      tooltip: disableAction ? t('backingImageActions.tooltips.missingReadyDisk') : ''
     },
     {
       key: 'delete',
-      name: 'Delete'
+      name: t('common.delete')
     },
   ]
 
@@ -90,6 +92,7 @@ actions.propTypes = {
   showUpdateMinCopiesCount: PropTypes.func,
   backupProps: PropTypes.object,
   openBackupBackingImageModal: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default actions
+export default withTranslation()(actions)

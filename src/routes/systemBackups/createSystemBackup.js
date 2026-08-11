@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -24,6 +26,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -41,7 +44,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create System Backup',
+    title: t('createSystemBackup.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -50,24 +53,24 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.name')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
             initialValue: item.name,
             rules: [
               {
                 required: true,
-                message: 'Please input System backup name',
+                message: t('createSystemBackup.form.name.rules.required'),
               },
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="Volume Backup Policy" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createSystemBackup.form.volumeBackupPolicy.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('volumeBackupPolicy', {
             initialValue: 'if-not-present',
           })(<Select>
-            <Option key={'present'} value={'if-not-present'}>If-Not-Present</Option>
-            <Option key={'always'} value={'always'}>Always</Option>
-            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
+            <Option key={'present'} value={'if-not-present'}>{t('createSystemBackup.form.volumeBackupPolicy.options.ifNotPresent')}</Option>
+            <Option key={'always'} value={'always'}>{t('createSystemBackup.form.volumeBackupPolicy.options.always')}</Option>
+            <Option key={'disabled'} value={'disabled'}>{t('createSystemBackup.form.volumeBackupPolicy.options.disabled')}</Option>
           </Select>)}
         </FormItem>
       </Form>
@@ -81,6 +84,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

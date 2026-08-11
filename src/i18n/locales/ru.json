@@ -1,0 +1,2776 @@
+{
+  "common": {
+    "total": "Всего",
+    "reset": "Сброс",
+    "ok": "OK",
+    "noTitle": "Без названия",
+    "noData": "Нет данных",
+    "name": "Имя",
+    "close": "Закрыть",
+    "save": "Сохранить",
+    "cancel": "Отменить",
+    "enable": "Включить",
+    "disable": "Отключить",
+    "true": "Да",
+    "false": "Нет",
+    "yes": "Да",
+    "no": "Нет",
+    "delete": "Удалить",
+    "updateField": "Обновить {{fieldName}}",
+    "edit": "Редактировать",
+    "create": "Создать",
+    "error": "Ошибка",
+    "numberOfReplicas": "Количество реплик",
+    "frontend": "Фронтенд",
+    "nodeTag": "Тег узла",
+    "diskTag": "Тег диска",
+    "backingImage": "Базовый образ",
+    "encrypted": "Зашифрованный",
+    "validation": {
+      "required": "обязательное поле",
+      "cannotBeEmpty": "Не может быть пустым",
+      "frontendRequired": "Пожалуйста, выберите фронтенд",
+      "sizeRequired": "Пожалуйста, введите размер тома",
+      "replicasRequired": "Пожалуйста, введите количество реплик",
+      "vEngineDisabled": "Движок данных {{v}} не включен",
+      "valueBetween": "Значение должно быть от {{min}} до {{max}}"
+    }
+  },
+  "columns": {
+    "state": "Состояние",
+    "name": "Имя",
+    "size": "Размер",
+    "actualSize": "Фактический размер",
+    "created": "Создан",
+    "dataEngine": "Движок данных",
+    "pvPvc": "PV/PVC",
+    "namespace": "Пространство имён",
+    "attachedTo": "Прикреплён к",
+    "schedule": "Расписание",
+    "dataLocality": "Локальность данных",
+    "replicas": "Реплики",
+    "replicasRunningDesired": "Реплики (Работают/Требуется)",
+    "accessMode": "Режим доступа",
+    "offlineRebuilding": "Восстановление реплик в автономном режиме",
+    "replicaRebuildingBandwidthLimit": "Ограничение пропускной способности восстановления реплик",
+    "lastBackupAt": "Последнее резервное копирование",
+    "operation": "Операция",
+    "status": "Статус",
+    "type": "Тип",
+    "retain": "Хранить",
+    "concurrency": "Параллелизм",
+    "parameters": "Параметры",
+    "labels": "Метки",
+    "groups": "Группы",
+    "backupTarget": "Цель резервного копирования",
+    "createdAt": "Создано",
+    "workloadPod": "Workload/Pod",
+    "id": "ID",
+    "volume": "Том",
+    "creationState": "Состояние создания",
+    "backupMode": "Режим резервного копирования",
+    "backupModeDefault": "инкрементальный",
+    "backupBlockSize": "Размер блока резервной копии",
+    "backupBlockSizeError": "Ошибка",
+    "snapshotName": "Имя снимка",
+    "reUploadedDataSize": "Повторно загруженный размер данных",
+    "newlyUploadedDataSize": "Недавно загруженный размер данных",
+    "snapshotCreated": "Снимок создан",
+    "url": "URL",
+    "createdTime": "Время создания",
+    "credentialSecret": "Секрет учетных данных",
+    "pollInterval": "Интервал опроса",
+    "version": "Версия",
+    "age": "Возраст",
+    "error": "Ошибка",
+    "uuid": "UUID",
+    "actualSizeTooltip": "Физическое пространство хранения, занимаемое файлом образа в файловой системе хоста",
+    "virtualSize": "Виртуальный размер",
+    "virtualSizeTooltip": "Общая логическая емкость диска, которую представляет образ",
+    "createdFrom": "Создано из",
+    "minimumCopies": "Мин. количество копий",
+    "nodeTags": "Теги узлов",
+    "diskTags": "Теги дисков",
+    "disk": "Диск",
+    "node": "Узел",
+    "diskName": "Имя диска",
+    "diskPath": "Путь к диску",
+    "directoryName": "Имя директории",
+    "instanceName": "Имя экземпляра",
+    "instanceManager": "Менеджер экземпляров",
+    "instanceType": "Тип экземпляра",
+    "image": "Образ",
+    "default": "По умолчанию",
+    "referenceCount": "Количество ссылок",
+    "buildDate": "Дата сборки",
+    "refCountVolume": "Количество ссылок томов",
+    "instanceManagerImage": "Образ менеджера экземпляров",
+    "attachmentID": "ID присоединения",
+    "attachmentType": "Тип присоединения",
+    "nodeID": "ID узла",
+    "satisfied": "Выполнено",
+    "lastTransitionTime": "Время последнего перехода",
+    "kind": "Вид",
+    "source": "Источник",
+    "firstTime": "Первое время",
+    "lastTime": "Последнее время",
+    "reason": "Причина",
+    "message": "Сообщение",
+    "backups": "Резервные копии"
+  },
+  "menu": {
+    "dashboard": "Панель управления",
+    "node": "Узлы",
+    "volume": "Тома",
+    "detail": "Детали",
+    "recurringJob": "Периодические задания",
+    "backupAndRestore": "Резерв и восстановление",
+    "backup": "Резервные копии",
+    "backupTarget": "Цели резервного копирования",
+    "systemBackups": "Системные резервные копии",
+    "advanced": "Дополнительно",
+    "backingImage": "Базовые образы",
+    "orphanedData": "Потерянные ресурсы",
+    "engineimage": "Образы движка",
+    "instanceManager": "Образы менеджера инстансов",
+    "setting": "Настройки"
+  },
+  "resource": {
+    "storage": {
+      "schedulableStorage": "Доступное хранилище",
+      "reservedStorage": "Зарезервированное хранилище",
+      "usedStorage": "Используемое хранилище",
+      "disabledStorage": "Отключённое хранилище",
+      "schedulable": "Доступно",
+      "reserved": "Зарезервировано",
+      "used": "Используется",
+      "disabled": "Отключено",
+      "title": "Планируемое хранилище",
+      "blockTitle": "Планируемое хранилище (Блочное)",
+      "empty": "Хранилище отсутствует"
+    },
+    "volume": {
+      "healthy": "Здоровые",
+      "degraded": "Деградированные",
+      "inProgress": "В процессе",
+      "faulted": "С ошибкой",
+      "detached": "Отсоединённые",
+      "single": "Том",
+      "plural": "Тома",
+      "empty": "Нет томов"
+    },
+    "node": {
+      "schedulable": "Доступно для планирования",
+      "unschedulable": "Недоступно для планирования",
+      "down": "Не работает",
+      "disabled": "Отключён",
+      "autoEvicting": "Автоматическое вытеснение",
+      "single": "Узел",
+      "plural": "Узлы",
+      "empty": "Нет узлов"
+    }
+  },
+  "eventLogs": {
+    "title": "Журнал событий",
+    "columns": {
+      "lastSeen": "Последнее появление",
+      "firstSeen": "Первое появление",
+      "count": "Количество",
+      "kind": "Тип объекта",
+      "type": "Тип",
+      "reason": "Причина",
+      "source": "Источник",
+      "message": "Сообщение"
+    },
+    "search": {
+      "name": "Поиск по имени",
+      "source": "Поиск по источнику"
+    }
+  },
+  "footer": {
+    "upgrade": {
+      "available": "Доступна новая версия Longhorn {{version}}!",
+      "alt": "Обновление"
+    },
+    "links": {
+      "documentation": "Документация",
+      "generateSupportBundle": "Создать пакет поддержки",
+      "fileIssue": "Сообщить о проблеме",
+      "slack": "Slack"
+    },
+    "stableVersions": {
+      "newer": "Новые стабильные версии ({{versions}})"
+    }
+  },
+  "stableVersions": {
+    "title": "Новые стабильные версии",
+    "description": {
+      "beforeLink": "Мы показываем только последнюю стабильную версию минорных релизов Longhorn. Полный список доступен на",
+      "link": "странице релизов"
+    }
+  },
+  "filter": {
+    "go": "Применить",
+    "current": "Текущий фильтр: {{value}}",
+    "collapseAll": "Свернуть все",
+    "expandAll": "Развернуть все"
+  },
+  "hostBulkActions": {
+    "actions": {
+      "delete": "Удалить",
+      "editNode": "Редактировать узел"
+    },
+    "confirmDelete": "Вы уверены, что хотите удалить узел(ы) {{nodes}}?",
+    "messages": {
+      "deleteFirst": "Сначала необходимо удалить узел Kubernetes"
+    }
+  },
+  "hostList": {
+    "columns": {
+      "readiness": "Готовность",
+      "replicas": "Реплики",
+      "allocated": "Выделено",
+      "used": "Использовано",
+      "tags": "Теги",
+      "operation": "Действие"
+    },
+    "status": {
+      "notReady": "Не готов",
+      "ready": "Готов",
+      "deploying": "Разворачивается"
+    },
+    "tooltip": {
+      "region": "Регион",
+      "zone": "Зона",
+      "replicaSize": "Размер реплики",
+      "backingImageSize": "Размер базового образа",
+      "totalUsage": "Общее использование"
+    },
+    "text": {
+      "reserved": "Зарезервировано"
+    },
+    "modal": {
+      "components": "Компоненты"
+    }
+  },
+  "diskList": {
+    "title": "Диски",
+    "columns": {
+      "id": "ID",
+      "diskType": "Тип диска",
+      "path": "Путь",
+      "replicas": "Реплики",
+      "allocated": "Выделено",
+      "used": "Использовано",
+      "tags": "Теги",
+      "healthStatus": "Состояние"
+    },
+    "status": {
+      "error": "Ошибка",
+      "disabled": "Отключен",
+      "unschedulable": "Не назначаемый",
+      "schedulable": "Назначаемый"
+    },
+    "healthStatus": {
+      "failed": "Неудачно",
+      "passed": "Успешно",
+      "unknown": "Неизвестно",
+      "warning": "Предупреждение"
+    },
+    "text": {
+      "reserved": "Зарезервировано"
+    }
+  },
+  "hostActions": {
+    "confirm": {
+      "deleteTitle": "Вы уверены, что хотите удалить узел {{name}}?"
+    },
+    "menu": {
+      "editNodeAndDisks": "Редактировать узел и диски",
+      "removeNode": "Удалить узел",
+      "nodeMustNotBeDown": "Узел не должен быть недоступен",
+      "nodeMustBeDown": "Статус узла Kubernetes должен быть недоступен"
+    }
+  },
+  "instanceManagerComponent": {
+    "name": {
+      "engineImage": "Образ движка (Engine Image)",
+      "instanceManager": "Менеджер экземпляров"
+    },
+    "state": {
+      "notDeployed": "не развернут",
+      "deployed": "развернут",
+      "engine": "Engine",
+      "replica": "Реплика"
+    },
+    "text": {
+      "deprecated": "Устарело"
+    },
+    "columns": {
+      "image": "Образ",
+      "state": "Состояние"
+    },
+    "tooltip": {
+      "engineImage": "Образ, содержащий программу для управления работой тома (engine) и его реплик",
+      "instanceManager": "Компонент, управляющий созданием и работой процессов движка и реплик на узле"
+    }
+  },
+  "addDisk": {
+    "title": "Добавить диск",
+    "path": {
+      "label": "Путь",
+      "placeholder": "Путь в файловой системе Linux, например \"/foo/bar\""
+    },
+    "labels": {
+      "label": "Метки",
+      "placeholder": "Список строк через запятую, 10–20 символов"
+    }
+  },
+  "hostReplica": {
+    "title": "Реплики на узле {{name}}"
+  },
+  "editDisk": {
+    "title": "Редактировать узел и диски"
+  },
+  "editableDisk": {
+    "nodeScheduling": "Планирование узла",
+    "eviction": "Запрошено вытеснение",
+    "instanceManagerCpu": "Запрос CPU Instance Manager",
+    "tags": "Теги узла",
+    "conditions": {
+      "title": "Состояния",
+      "lastProbe": "Последняя проверка",
+      "lastTransition": "Последний переход",
+      "message": "Сообщение",
+      "reason": "Причина"
+    },
+    "validation": {
+      "pathExists": "Этот каталог уже существует",
+      "invalidName": "Недопустимое имя",
+      "nameExists": "Это имя уже существует",
+      "required": "Поле обязательно для заполнения"
+    },
+    "storage": {
+      "available": "Доступное хранилище",
+      "scheduled": "Запланированное хранилище",
+      "max": "Максимальный объём",
+      "reserved": "Зарезервированное хранилище"
+    },
+    "type": "Тип диска",
+    "path": "Путь",
+    "pathPlaceholder": "Путь монтирования диска, например /mnt/disk1",
+    "scheduling": "Планирование",
+    "tooltip": {
+      "cannotDelete": "Чтобы удалить диск, отключите планирование и убедитесь, что реплики и backing images не используются"
+    },
+    "types": {
+      "filesystem": "Файловая система",
+      "block": "Блочный"
+    }
+  },
+  "tagComponent": {
+    "newNodeTag": "Новый тег узла",
+    "newDiskTag": "Новый тег диска"
+  },
+  "bulkEditNode": {
+    "title": "Редактировать узел",
+    "nodeScheduling": "Планирование узла",
+    "evictionRequested": "Запрос на вытеснение",
+    "evictionRequired": "Поле «Запрос на вытеснение» обязательно"
+  },
+  "replicaActions": {
+    "deleteConfirm": "Вы уверены, что хотите удалить реплики {{replicas}} ?"
+  },
+  "replicaList": {
+    "deleteConfirm": "Вы уверены, что хотите удалить реплику {{replicaName}}?",
+    "status": {
+      "healthy": "Здоровая",
+      "rebuilding": "Перестраивается",
+      "error": "Ошибка",
+      "unknown": "Неизвестно",
+      "failed": "Неудачно",
+      "stopped": "Остановлена"
+    },
+    "deleteTooltip": "Реплика принадлежит тому, который сейчас {{volumeState}}. Том должен быть прикреплён или отсоединён."
+  },
+  "volume": {
+    "cancelExpansion": {
+      "confirmTitle": "Вы уверены, что хотите отменить расширение?",
+      "description": "Эта операция используется для отмены расширения, если том не может завершить расширение и застревает. После завершения расширения его нельзя откатить или отменить",
+      "pvcWarning": {
+        "part1": "Если расширение, которое вы хотите отменить, было запущено обновлением размера PVC, эта операция не поможет вернуть PVC. Поскольку размер PVC не может уменьшаться, пользователям необходимо очистить, а затем воссоздать PVC и PV после успешной отмены расширения:",
+        "step1": "Обновите поле spec.persistentVolumeReclaimPolicy на Retain для соответствующего PV.",
+        "step2": "Удалите, а затем воссоздайте связанные PVC и PV."
+      }
+    },
+    "buttons": {
+      "createVolume": "Создать том",
+      "customColumn": "Настройка колонок"
+    },
+    "filter": {
+      "stateOptions": {
+        "healthy": "Здоровый",
+        "inProgress": "В процессе",
+        "degraded": "Деградированный",
+        "fault": "Неисправный",
+        "detached": "Отсоединённый"
+      },
+      "redundancyOptions": {
+        "limited": "Ограниченно"
+      },
+      "pvStatusOptions": {
+        "none": "Нет",
+        "available": "Доступен",
+        "bound": "Привязан",
+        "released": "Освобождён"
+      },
+      "fieldOptions": {
+        "node": "Узел",
+        "namespace": "Пространство имён",
+        "nodeRedundancy": "Избыточность узлов",
+        "engineImageUpgradable": "Движок можно обновить",
+        "pvName": "Имя PV",
+        "pvcName": "Имя PVC",
+        "pvStatus": "Статус PV",
+        "scheduled": "Запланирован",
+        "revisionCounterDisabled": "Счётчик ревизий отключён"
+      }
+    },
+    "volumeHelper": {
+      "softAntiAffinity": {
+        "replicaSoftAntiAffinity": "Мягкая анти-аффинность реплик",
+        "replicaZoneSoftAntiAffinity": "Мягкая анти-аффинность зон реплик",
+        "replicaDiskSoftAntiAffinity": "Мягкая анти-аффинность дисков реплик"
+      }
+    }
+  },
+  "volumeList": {
+    "status": {
+      "restoring": "Восстановление",
+      "rebuilding": "Перестроение",
+      "notReadyForWorkload": "Не готово для рабочих нагрузок. {{reason}}",
+      "volumeFaulted": "Том повреждён",
+      "volumeUnderMaintenance": "Том может находиться на обслуживании или в процессе восстановления."
+    },
+    "tooltips": {
+      "encryptedVolume": "Зашифрованный том",
+      "attachedNodeDown": "Присоединённый узел не работает",
+      "noDataLocality": "Том не имеет локальности данных! Нет здоровых реплик на том же узле, что и движок",
+      "drVolumeRestoring": "Восстановление тома аварийного восстановления в процессе",
+      "drVolume": "Том аварийного восстановления",
+      "volumeCannotBeScheduled": "Том не может быть запланирован",
+      "lastNamespace": "Последнее пространство имён",
+      "lastTimeUsed": "Последнее время использования"
+    },
+    "expansionError": "Ошибка расширения",
+    "expansionNote": "Примечание: Вы можете отменить расширение, чтобы избежать сбоя тома",
+    "expansionInProgress": "Том находится в процессе расширения с размера {{currentSize}} до размера {{expectedSize}}",
+    "pvFields": {
+      "pvName": "Имя PV",
+      "pvStatus": "Статус PV",
+      "lastTimeBoundWithPVC": "Последнее время привязки к PVC",
+      "lastBounded": "Последний привязанный",
+      "pvcName": "Имя PVC"
+    },
+    "pvStates": {
+      "available": "Доступен",
+      "bound": "Привязан",
+      "released": "Освобождён"
+    },
+    "onHost": "на"
+  },
+  "volumeActions": {
+    "modal": {
+      "delete": {
+        "hasPvTooltipText": "Следующие ресурсы, связанные с этим томом ({{name}}), будут удалены:",
+        "pvName": "Имя PV: {{name}}",
+        "pvcName": "Имя PVC: {{name}}",
+        "podName": "Имя Pod: {{name}} ({{status}})",
+        "attachedWarning": "Том подключен на {{hostId}}. Удаление этого тома может вызвать ошибки у любых работающих приложений, использующих этот том!",
+        "workloadWarning": "Следующие рабочие нагрузки зависят от этого тома ({{name}}) и могут столкнуться с ошибками после его удаления:",
+        "confirmation": "Вы уверены, что хотите удалить том ({{name}})?",
+        "okText": "Удалить"
+      },
+      "rollback": {
+        "title": "Вы уверены, что хотите откатить том {{name}}?"
+      },
+      "trimFilesystem": {
+        "title": "Вы уверены, что хотите обрезать файловую систему?"
+      }
+    },
+    "tooltips": {
+      "rwxDetach": "Режим доступа к тому `ReadWriteMany`. Пожалуйста, убедитесь, что рабочие нагрузки масштабированы до нуля, прежде чем пытаться отключить том"
+    },
+    "actions": {
+      "attach": "Подключить",
+      "detach": "Отключить",
+      "salvage": "Восстановить",
+      "upgrade": "Обновить",
+      "rollback": "Откатить",
+      "engineUpgrade": "Обновить движок",
+      "updateReplicaCount": "Обновить количество реплик",
+      "updateDataLocality": "Обновить локализацию данных",
+      "updateSnapshotDataIntegrity": "Целостность данных снимков",
+      "updateAccessMode": "Обновить режим доступа",
+      "updateBackupTarget": "Обновить цель резервного копирования",
+      "updateReplicaAutoBalance": "Обновить авто-балансировку реплик",
+      "allowSnapshotsRemovalDuringTrim": "Разрешить удаление снимков при обрезке",
+      "updateReplicaSoftAntiAffinity": "Обновить мягкую анти-аффинность реплик",
+      "updateReplicaZoneSoftAntiAffinity": "Обновить мягкую анти-аффинность зон реплик",
+      "updateSnapshotMaxCount": "Обновить максимальное количество снимков",
+      "updateSnapshotMaxSize": "Обновить максимальный размер снимков",
+      "updateReplicaDiskSoftAntiAffinity": "Обновить мягкую анти-аффинность дисков реплик",
+      "updateFreezeFilesystemForSnapshot": "Обновить заморозку файловой системы для снимков",
+      "offlineReplicaRebuilding": "Обновить автономное восстановление реплик",
+      "updateReplicaRebuildingBandwidthLimit": "Обновить лимит пропускной способности восстановления реплик",
+      "updateUblkNumberOfQueue": "Обновить количество очередей UBLK",
+      "updateUblkQueueDepth": "Обновить глубину очереди UBLK",
+      "cloneVolume": "Клонировать том",
+      "expandVolume": "Расширить том",
+      "cancelExpansion": "Отменить расширение",
+      "pvAndpvcCreate": "Создать PV/PVC",
+      "activateDisasterRecoveryVolume": "Активировать том аварийного восстановления",
+      "trimFilesystem": "Обрезать файловую систему",
+      "backups": "Резервные копии",
+      "delete": "Удалить"
+    }
+  },
+  "volumeBulkActions": {
+    "deleteWarning": {
+      "pvName": "Имя PV",
+      "pvcName": "Имя PVC",
+      "podName": "Имя Pod",
+      "attachedVolumes": "Некоторые из выбранных томов ({{volumes}}) прикреплены к узлу, и их удаление может вызвать ошибки в приложениях, использующих их.",
+      "workloadVolumes": "Некоторые из выбранных томов ({{volumes}}) имеют связанные рабочие нагрузки, которые могут столкнуться с ошибками после удаления томов:",
+      "pvResources": "Следующие ресурсы (PersistentVolumes и PersistentVolumeClaims), связанные с этими томами ({{volumes}}), будут удалены:",
+      "confirmDelete": "Вы уверены, что хотите удалить том(ы) ({{volumes}})?"
+    },
+    "trimConfirm": "Вы уверены, что хотите выполнить trim файловой системы для ({{volumes}})?",
+    "actions": {
+      "createBackup": "Создать резервную копию",
+      "upgradeEngine": "Обновить движок",
+      "rebuildConcurrentSyncLimit": "Обновить лимит одновременной синхронизации перестроения"
+    }
+  },
+  "workloadDetailModal": {
+    "title": {
+      "backupCreated": "Статус Workload/Pod при создании резервной копии",
+      "workloadPod": "Workload/Pod"
+    },
+    "fields": {
+      "createdTime": "Время создания",
+      "lastTimeUsedByPod": "Последнее использование Pod",
+      "workloadName": "Имя Workload",
+      "workloadType": "Тип Workload",
+      "podName": "Имя Pod",
+      "podStatus": "Статус Pod"
+    },
+    "prefixes": {
+      "last": "Последний"
+    }
+  },
+  "changeVolumeModal": {
+    "title": "Активировать том аварийного восстановления"
+  },
+  "bulkCloneVolumeModal": {
+    "title": "Клонировать тома",
+    "applySuccess": "Конфигурация {{volumeName}} успешно применена ко всем другим клонированным томам",
+    "applyTooltip": "Применить конфигурацию {{volumeName}} к другим клонированным томам, это действие перезапишет ваши ранее заполненные конфигурации",
+    "tabSwitchError": "Пожалуйста, исправьте поля с ошибками перед переключением на другую вкладку",
+    "applyAll": "Применить ко всем"
+  },
+  "accessModes": {
+    "rwo": "ReadWriteOnce",
+    "rwop": "ReadWriteOncePod",
+    "rwx": "ReadWriteMany"
+  },
+  "bulkChangeVolumeModal": {
+    "title": "Активировать том аварийного восстановления",
+    "fields": {
+      "selectedVolumes": "Выбранные том(ы)"
+    }
+  },
+  "expansionVolumeSizeModal": {
+    "title": "Расширить том",
+    "maintenanceModeWarning": "Longhorn не будет расширять файловую систему для тома в режиме обслуживания. Нет доступного фронтенда для расширения файловой системы",
+    "validation": {
+      "sizeMustBeLarger": "Размер должен быть больше {{minSize}} {{unit}}",
+      "sizeMustBeMultipleOfMi": "Размер расширения тома должен быть кратен Mi (1Gi = 1024Mi). Например {{exampleSize}}",
+      "noDecimalsForMi": "Десятичные дроби не допускаются",
+      "unitRequired": "Пожалуйста, выберите единицу измерения!"
+    }
+  },
+  "createVolume": {
+    "title": "Создать том",
+    "dataSourceAlert": "Размер тома установлен в соответствии с выбранным размером тома. Несоответствие размера приведет к сбою создания тома.",
+    "created": "создан",
+    "advancedConfigurations": "Расширенные настройки",
+    "fields": {
+      "ublkNumberOfQueue": "Количество очередей UBLK",
+      "ublkQueueDepth": "Глубина очереди UBLK",
+      "dataLocality": "Локальность данных",
+      "dataSource": "Источник данных",
+      "volume": "Том",
+      "snapshot": "Снимок",
+      "backupTarget": "Цель резервного копирования",
+      "snapshotDataIntegrity": "Целостность данных снимков",
+      "snapshotMaxCount": "Максимальное количество снимков",
+      "snapshotMaxSize": "Максимальный размер снимков",
+      "replicasAutoBalance": "Авто-балансировка реплик",
+      "allowSnapshotRemovalDuringTrim": "Разрешить удаление снимков во время Trim",
+      "replicaSoftAntiAffinity": "Мягкая анти-аффинность реплик",
+      "replicaZoneSoftAntiAffinity": "Мягкая анти-аффинность реплик по зонам",
+      "replicaDiskSoftAntiAffinity": "Мягкая анти-аффинность реплик по дискам",
+      "freezeFilesystemForSnapshot": "Заморозка файловой системы для снимков",
+      "offlineRebuilding": "Восстановление реплик в автономном режиме",
+      "replicaRebuildingBandwidthLimit": "Ограничение пропускной способности восстановления реплик",
+      "disableRevisionCounter": "Отключить счетчик ревизий",
+      "rebuildConcurrentSyncLimit": "Лимит одновременной синхронизации перестроения"
+    },
+    "dataSourceOptions": {
+      "Volume": "Том",
+      "VolumeSnapshot": "Снимок тома"
+    },
+    "validation": {
+      "nameRequired": "Пожалуйста, введите имя тома",
+      "sizeDecimal": "Это значение должно иметь не более двух десятичных знаков",
+      "sizeMinMi": "Размер тома должен быть больше 10 Mi",
+      "sizeNoDecimalMi": "Десятичные дроли не допускаются",
+      "unitRequired": "Пожалуйста, выберите единицу измерения!",
+      "replicasInteger": "Значение должно быть положительным целым числом",
+      "ublkNumberOfQueueRequired": "Пожалуйста, введите количество очередей UBLK",
+      "ublkQueueDepthRequired": "Пожалуйста, введите глубину очереди UBLK",
+      "rebuildConcurrentSyncLimit": "Значение должно быть от 0 до 5"
+    },
+    "tooltips": {
+      "dataSource": "Выберите источник данных из существующего тома или снимка. Longhorn будет клонировать данные тома из выбранного источника данных",
+      "setInheritGlobal": "Установите {{value}} для наследования глобальных настроек",
+      "snapshotMaxSize": "Установите '0' для неограниченного размера или как минимум в два раза больше размера тома"
+    },
+    "options": {
+      "ignored": "игнорировать (следовать глобальным настройкам)",
+      "disabled": "отключено",
+      "enabled": "включено",
+      "leastEffort": "наименьшие усилия",
+      "bestEffort": "наилучшие усилия"
+    }
+  },
+  "customColumn": {
+    "title": "Настройка колонок"
+  },
+  "createPVAndPVC": {
+    "title": "Создать PV/PVC",
+    "fields": {
+      "pvName": "Имя PV",
+      "storageClassName": "Имя класса хранения",
+      "fileSystem": "Файловая система",
+      "createPVC": "Создать PVC",
+      "usePreviousPVC": "Использовать предыдущий PVC",
+      "namespace": "Пространство имён",
+      "pvcName": "Имя PVC",
+      "secretNamespace": "Пространство имён секрета",
+      "secretName": "Имя секрета"
+    },
+    "placeholders": {
+      "volumeName": "<Имя тома>",
+      "volumeAccessMode": "<Режим доступа тома>"
+    },
+    "validation": {
+      "pvNameRequired": "Пожалуйста, введите имя PV",
+      "namespaceRequired": "Пожалуйста, введите пространство имён",
+      "pvcNameRequired": "Пожалуйста, введите имя PVC"
+    },
+    "tooltips": {
+      "storageClassName": "Если значение не указано, Longhorn сначала использует storageClassName, сохраненный в резервной копии тома, если том восстанавливается из резервной копии. В противном случае Longhorn будет использовать storageClassName, указанный в настройках по умолчанию."
+    },
+    "previousPVCMessage": "Если том имеет пространство имён по умолчанию, PVC использует это пространство имён, в противном случае используется вновь введенное пространство имён"
+  },
+  "attachHost": {
+    "title": "Прикрепить к хосту",
+    "fields": {
+      "host": "Хост",
+      "maintenance": "Обслуживание"
+    },
+    "validation": {
+      "hostRequired": "Пожалуйста, выберите хост для прикрепления"
+    },
+    "rwxWarning": "Тома RWX могут быть прикреплены вручную только в режиме обслуживания."
+  },
+  "detachHost": {
+    "title": "Вы уверены, что хотите открепить том {{volumes}}?",
+    "fields": {
+      "forceDetach": "Принудительно открепить"
+    },
+    "alerts": {
+      "csiAttacherWarning": "Принудительное отсоединение этого тома может нарушить его связь с ресурсами VolumeAttachment Kubernetes. Это может помешать вашим приложениям правильно подключать тома, потенциально вызывая сбои Pod или потерю данных.",
+      "runningPodWarning": "Отсоединение тома, когда он используется запущенным Pod Kubernetes, приведет к сбою Pod и возможной потере данных. Том не сможет использоваться Kubernetes снова, пока исходный Pod не будет удален. Вы уверены, что хотите отсоединить том?"
+    }
+  },
+  "engineUpgrade": {
+    "title": "Обновить образ движка",
+    "fields": {
+      "engineImage": "Образ движка"
+    },
+    "validation": {
+      "imageRequired": "Пожалуйста, выберите образ движка для обновления"
+    }
+  },
+  "cloneVolume": {
+    "title": {
+      "volume": "Клонировать том из {{volumeName}}",
+      "snapshot": "Клонировать том из снимка {{snapshotName}} тома {{volumeName}}"
+    },
+    "defaultName": "клонированный-{{volumeName}}",
+    "infoMessage": "Longhorn автоматически прикрепит новый том, выполнит клонирование из указанного тома, а затем отсоединит его",
+    "fields": {
+      "cloneMode": "Режим клонирования"
+    }
+  },
+  "salvage": {
+    "title": "Выберите одну или несколько реплик для восстановления",
+    "notAvailable": "Н/Д",
+    "host": "Хост",
+    "failedAt": "Время сбоя",
+    "replicasSelected": "реплик выбрано",
+    "selectAtLeastOne": "Пожалуйста, выберите хотя бы одну реплику."
+  },
+  "updateReplicaCount": {
+    "title": "Обновить количество реплик"
+  },
+  "updateBulkReplicaCount": {
+    "title": "Обновить количество реплик",
+    "placeholders": {
+      "various": "различные"
+    }
+  },
+  "updateDataLocality": {
+    "title": "Обновить локальность данных",
+    "fields": {
+      "dataLocality": "Локальность данных"
+    }
+  },
+  "updateSnapshotMaxCountModal": {
+    "title": "Обновить максимальное количество снимков",
+    "fields": {
+      "maxCount": "Максимальное количество"
+    },
+    "validation": {
+      "snapshotMaxCountRequired": "Пожалуйста, введите snapshotMaxCount тома"
+    }
+  },
+  "updateSnapshotMaxSizeModal": {
+    "title": "Обновить максимальный размер снимков",
+    "fields": {
+      "maxSize": "Максимальный размер",
+      "unit": "Единица измерения"
+    },
+    "validation": {
+      "snapshotMaxSizeRequired": "Пожалуйста, введите snapshotMaxSize тома",
+      "unitRequired": "Пожалуйста, выберите значение!"
+    },
+    "placeholders": {
+      "selectUnit": "Выберите значение"
+    }
+  },
+  "updateBulkDataLocality": {
+    "title": "Обновить локальность данных",
+    "fields": {
+      "dataLocality": "Локальность данных"
+    },
+    "placeholders": {
+      "various": "различные"
+    }
+  },
+  "updateAccessMode": {
+    "title": "Обновить режим доступа"
+  },
+  "updateReplicaAutoBalanceModal": {
+    "title": "Обновить авто-балансировку реплик",
+    "fields": {
+      "replicasAutoBalance": "Авто-балансировка реплик"
+    }
+  },
+  "updateUnmapMarkSnapChainRemovedModal": {
+    "title": {
+      "allowSnapshotsRemoval": "Разрешить удаление снимков при обрезке"
+    },
+    "form": {
+      "option": {
+        "label": "Опция"
+      },
+      "warning": {
+        "message": "Это действие может переопределить глобальную настройку «Удалять снимки при обрезке файловой системы»"
+      }
+    }
+  },
+  "updateSnapshotDataIntegrityModal": {
+    "title": {
+      "snapshotDataIntegrity": "Целостность данных снимков"
+    },
+    "form": {
+      "option": {
+        "label": "Опция"
+      },
+      "warning": {
+        "message": "Это действие может переопределить глобальную настройку «Целостность данных снимков»"
+      }
+    }
+  },
+  "updateFreezeFilesystemForSnapshotModal": {
+    "title": {
+      "updateFreezeFilesystemForSnapshot": "Обновить заморозку файловой системы для снимка"
+    },
+    "form": {
+      "option": {
+        "label": "Опция"
+      },
+      "warning": {
+        "message": "Это действие может переопределить глобальную настройку «Заморозка файловой системы для снимка»"
+      }
+    }
+  },
+  "createBackupModal": {
+    "title": {
+      "createBackup": "Создать резервную копию"
+    },
+    "warning": {
+      "createBackupMessage": "Создание резервной копии может занять некоторое время в зависимости от фактического размера тома и пропускной способности сети."
+    },
+    "form": {
+      "fullBackup": {
+        "label": "Полная резервная копия"
+      }
+    }
+  },
+  "updateBackupTargetModal": {
+    "title": {
+      "updateBackupTarget": "Обновить цель резервного копирования"
+    },
+    "form": {
+      "backupTarget": {
+        "label": "Цель резервного копирования"
+      }
+    }
+  },
+  "updateReplicaRebuildingBandwidthLimitModal": {
+    "title": {
+      "updateReplicaRebuildingBandwidthLimit": "Обновить ограничение пропускной способности перестроения реплик"
+    },
+    "form": {
+      "replicaRebuildingBandwidthLimit": {
+        "label": "Ограничение пропускной способности перестроения реплик",
+        "placeholder": "различные",
+        "validationMessage": "Пожалуйста, введите ограничение"
+      }
+    }
+  },
+  "updateUblkParamsModal": {
+    "title": {
+      "updateField": "Обновить {{fieldLabel}}"
+    },
+    "fields": {
+      "ublkNumberOfQueue": {
+        "label": "Количество очередей UBLK",
+        "requiredMessage": "Пожалуйста, введите количество очередей UBLK"
+      },
+      "ublkQueueDepth": {
+        "label": "Глубина очереди UBLK",
+        "requiredMessage": "Пожалуйста, введите глубину очереди UBLK"
+      }
+    }
+  },
+  "recurringJob": {
+    "filter": {
+      "fieldOptions": {
+        "groups": "Группа",
+        "label": "Метка",
+        "type": "Тип"
+      }
+    },
+    "button": {
+      "createRecurringJob": "Создать повторяющуюся задачу"
+    }
+  },
+  "recurringJobActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить повторяющуюся задачу {{recurringJobName}}?",
+        "description": "Если повторяющаяся задача {{recurringJobName}} является последней в группе заданий, Longhorn автоматически удалит группу со всех томов."
+      }
+    }
+  },
+  "recurringJobBulkActions": {
+    "modal": {
+      "delete": {
+        "description": "Если одна из повторяющихся задач ({{recurringJobNames}}) является последней в группе заданий, Longhorn автоматически удалит группу со всех томов."
+      }
+    }
+  },
+  "createRecurringJob": {
+    "modal": {
+      "title": "{{action}} повторяющуюся задачу"
+    },
+    "form": {
+      "name": {
+        "validationMessage": "Пожалуйста, введите имя повторяющейся задачи"
+      },
+      "task": {
+        "label": "Задача",
+        "options": {
+          "backup": "Резервное копирование",
+          "snapshot": "Снимок",
+          "snapshotDelete": "Удаление снимка",
+          "snapshotCleanup": "Очистка снимков",
+          "systemBackup": "Системное резервное копирование",
+          "filesystemTrim": "Обрезка файловой системы"
+        }
+      },
+      "forceCreate": {
+        "label": "Принудительное создание",
+        "tooltip": "Создавать {{backupOrSnapshot}} периодически, даже если просроченные {{backupOrSnapshot}} не могут быть очищены.",
+        "backupPlural": "резервные копии",
+        "snapshotPlural": "снимки"
+      },
+      "retain": {
+        "label": "Хранить"
+      },
+      "concurrency": {
+        "label": "Параллелизм"
+      },
+      "cron": {
+        "label": "Cron",
+        "validationMessage": "Пожалуйста, отредактируйте выражение cron",
+        "editButton": "Редактировать"
+      },
+      "parameters": {
+        "label": "Параметры",
+        "valueValidationMessage": "Требуется значение"
+      },
+      "groups": {
+        "label": "Группы",
+        "placeholder": "Имя группы",
+        "validationMessage": "Пожалуйста, введите имя группы",
+        "addGroupButton": "Добавить группу",
+        "addDefaultGroupButton": "Добавить в группу по умолчанию",
+        "defaultGroupTooltip": "Тома без повторяющихся задач или групп автоматически применяют повторяющиеся задачи из группы по умолчанию."
+      },
+      "labels": {
+        "label": "Метки",
+        "keyPlaceholder": "ключ",
+        "valuePlaceholder": "значение",
+        "addLabelButton": "Добавить метку"
+      }
+    }
+  },
+  "backup": {
+    "tabs": {
+      "volume": "Том"
+    }
+  },
+  "backupVolume": {
+    "modal": {
+      "deleteAllBackups": {
+        "title": "Вы уверены, что хотите удалить все резервные копии?",
+        "content": "Если в процессе восстановления используются резервные копии этого тома (включая тома аварийного восстановления), удаление тома резервных копий приведет к сбою восстановления, и том в процессе восстановления перейдет в состояние FAULTED. Вы уверены, что хотите удалить этот том резервных копий?"
+      }
+    },
+    "backingImageInfo": {
+      "title": "Информация о базовом образе",
+      "backingImageName": "Имя базового образа",
+      "backingImageChecksum": "Контрольная сумма базового образа"
+    },
+    "filter": {
+      "fieldOptions": {
+        "backupTargetName": "Цель резервного копирования"
+      }
+    }
+  },
+  "backupBackingImage": {
+    "filter": {
+      "fieldOptions": {
+        "state": "Состояние",
+        "url": "URL",
+        "backupTargetName": "Цель резервного копирования"
+      }
+    }
+  },
+  "backupVolumeList": {
+    "tooltips": {
+      "pvName": "Имя PV",
+      "pvStatus": "Статус PV",
+      "lastTimeBoundWithPVC": "Последнее время связывания с PVC",
+      "lastBounded": "Последнее связанное",
+      "pvcName": "Имя PVC",
+      "lastTimeUsed": "Последнее время использования"
+    },
+    "pvStatuses": {
+      "available": "Доступно",
+      "bound": "Связано",
+      "released": "Освобождено"
+    },
+    "operationOptions": {
+      "createDisasterRecoveryVolume": "Создать том аварийного восстановления",
+      "restoreLatestBackup": "Восстановить последнюю резервную копию",
+      "syncBackupVolume": "Синхронизировать том резервных копий",
+      "deleteAllBackups": "Удалить все резервные копии",
+      "backingImageInfo": "Информация о базовом образе",
+      "noBackingImageTooltip": "Базовый образ не используется"
+    },
+    "table": {
+      "noVolumeSelected": "Пожалуйста, сначала выберите том"
+    }
+  },
+  "backupBulkActions": {
+    "actions": {
+      "restoreLatestBackup": "Восстановить последнюю резервную копию",
+      "bulkCreateDisasterRecoveryVolume": "Создать том аварийного восстановления",
+      "syncAllBackupVolumes": "Синхронизировать все тома резервных копий"
+    }
+  },
+  "restoreBackupModal": {
+    "modal": {
+      "title": "Восстановить резервную копию {{backupName}}"
+    },
+    "warning": {
+      "sameNameMessage": "Имя восстанавливаемого тома ({{volumeName}}) совпадает с именем этого тома резервных копий, поэтому резервные копии, созданные после восстановления, также будут находиться в этом томе резервных копий."
+    },
+    "form": {
+      "name": {
+        "validationMessage": "Имя тома обязательно"
+      },
+      "usePreviousName": {
+        "label": "Использовать предыдущее имя"
+      },
+      "dataEngine": {
+        "validationMessage": "Пожалуйста, выберите движок данных"
+      },
+      "numberOfReplicas": {
+        "validationMessage": "Пожалуйста, введите количество реплик"
+      },
+      "restoreVolumeRecurringJob": {
+        "label": "Повторяющаяся задача для восстанавливаемого тома",
+        "options": {
+          "enabled": "Включено",
+          "disabled": "Отключено",
+          "ignored": "Игнорировать (следовать глобальной настройке)"
+        }
+      },
+      "backupBlockSize": {
+        "options": {
+          "ignored": "Игнорировать (следовать глобальной настройке)"
+        }
+      }
+    }
+  },
+  "bulkRestoreBackupModal": {
+    "modal": {
+      "title": "Восстановить несколько последних резервных копий"
+    },
+    "messages": {
+      "applyAllSuccess": "Конфигурация {{volumeName}} успешно применена ко всем остальным восстанавливаемым томам",
+      "correctErrorsBeforeSwitch": "Пожалуйста, исправьте поля с ошибками перед переключением на другую вкладку"
+    },
+    "warning": {
+      "sameNameMessage": "1. Если существует другой том с таким же именем ({{volumeName}}), восстановление не удастся.\n2. Имя восстанавливаемого тома ({{volumeName}}) совпадает с именем этого тома резервных копий, поэтому резервные копии, созданные после восстановления, также будут находиться в этом томе резервных копий."
+    },
+    "tooltips": {
+      "applyAll": "Применить эту конфигурацию {{volumeName}} ко всем остальным восстанавливаемым томам, это действие перезапишет ваши предыдущие заполненные конфигурации"
+    },
+    "buttons": {
+      "applyAll": "Применить ко всем"
+    },
+    "form": {
+      "volumeName": {
+        "label": "Имя тома",
+        "validationMessage": "Имя тома обязательно"
+      },
+      "latestBackup": {
+        "label": "Последняя резервная копия"
+      }
+    }
+  },
+  "createStandbyVolumeModal": {
+    "modal": {
+      "title": "Создать том аварийного восстановления"
+    },
+    "warning": {
+      "sameNameMessage": "Имя тома аварийного восстановления ({{volumeName}}) совпадает с именем этого тома резервных копий, поэтому резервные копии, созданные после восстановления, также будут находиться в этом томе резервных копий."
+    },
+    "form": {
+      "name": {
+        "validationMessage": "Имя тома обязательно"
+      },
+      "size": {
+        "validator": {
+          "decimalPlaces": "Это значение должно иметь не более двух знаков после запятой"
+        }
+      },
+      "dataEngine": {
+        "validationMessage": "Пожалуйста, выберите движок данных"
+      },
+      "numberOfReplicas": {
+        "validationMessage": "Пожалуйста, введите количество реплик",
+        "validator": {
+          "positiveInteger": "Значение должно быть положительным целым числом"
+        }
+      },
+      "backupBlockSize": {
+        "options": {
+          "ignored": "Игнорировать (следовать глобальной настройке)"
+        }
+      },
+      "backupUrl": {
+        "label": "URL резервной копии",
+        "validationMessage": "Пожалуйста, введите URL резервной копии"
+      }
+    }
+  },
+  "bulkCreateStandbyVolumeModal": {
+    "modal": {
+      "title": "Создать несколько томов аварийного восстановления"
+    },
+    "messages": {
+      "applyAllSuccess": "Конфигурация {{volumeName}} успешно применена ко всем остальным томам аварийного восстановления",
+      "correctErrorsBeforeSwitch": "Пожалуйста, исправьте поля с ошибками перед переключением на другую вкладку"
+    },
+    "warning": {
+      "sameNameMessage": "Если существует другой том с таким же именем ({{volumeName}}), создание тома аварийного восстановления не удастся."
+    },
+    "tooltips": {
+      "applyAll": "Применить эту конфигурацию {{volumeName}} ко всем остальным томам аварийного восстановления, это действие перезапишет ваши предыдущие заполненные конфигурации"
+    },
+    "buttons": {
+      "applyAll": "Применить ко всем"
+    },
+    "form": {
+      "volumeName": {
+        "label": "Имя тома"
+      }
+    }
+  },
+  "backupDetail": {
+    "modal": {
+      "deleteAllBackups": {
+        "title": "Вы уверены, что хотите удалить все резервные копии?",
+        "content": "Если в процессе восстановления используются резервные копии этого тома (включая тома аварийного восстановления), удаление тома резервных копий приведет к сбою восстановления, и том в процессе восстановления перейдет в состояние FAULTED. Вы уверены, что хотите удалить этот том резервных копий?"
+      }
+    },
+    "dropdown": {
+      "createDisasterRecoveryVolume": "Создать том аварийного восстановления",
+      "deleteAllBackups": "Удалить все резервные копии"
+    }
+  },
+  "showBackupLabels": {
+    "descriptions": {
+      "backupLabels": {
+        "title": "Метки резервной копии"
+      },
+      "kubernetesStatus": {
+        "title": "Статус Kubernetes при создании резервной копии",
+        "createdTime": "Время создания",
+        "namespace": "Пространство имен",
+        "pvName": "Имя PV",
+        "pvcName": "Имя PVC",
+        "pvStatus": "Статус PV",
+        "workloadsStatus": "Статус Workload",
+        "podName": "Имя Pod",
+        "workloadName": "Имя Workload",
+        "workloadType": "Тип Workload",
+        "podStatus": "Статус Pod"
+      }
+    }
+  },
+  "backupList": {
+    "backupUrl": {
+      "title": "URL резервной копии",
+      "copySuccess": "Скопировано",
+      "copyFailed": "Не удалось скопировать"
+    },
+    "copySuccess": "Скопировано",
+    "copyFailed": "Не удалось скопировать",
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить резервную копию {{backupName}}?",
+        "content": "Если в процессе восстановления используется эта резервная копия (включая тома аварийного восстановления), удаление резервной копии приведет к сбою восстановления, и том в процессе восстановления перейдет в состояние FAULTED. Вы уверены, что хотите удалить эту резервную копию?"
+      }
+    },
+    "tooltips": {
+      "pvName": "Имя PV",
+      "pvStatus": "Статус PV",
+      "lastTimeBoundWithPVC": "Последнее время связывания с PVC",
+      "lastBounded": "Последнее связанное",
+      "pvcName": "Имя PVC",
+      "lastTimeUsed": "Последнее время использования"
+    },
+    "pvStatuses": {
+      "available": "Доступно",
+      "bound": "Связано",
+      "released": "Освобождено"
+    },
+    "operationOptions": {
+      "delete": "Удалить",
+      "restore": "Восстановить",
+      "getUrl": "Получить URL"
+    },
+    "table": {
+      "emptyText": "Нет данных",
+      "noVolumeSelected": "Пожалуйста, сначала выберите том"
+    }
+  },
+  "backupBackingImageList": {
+    "copySuccess": "Скопировано",
+    "copyFailed": "Не удалось скопировать",
+    "tooltips": {
+      "encryptedBackingImage": "Зашифрованная резервная копия базового образа"
+    }
+  },
+  "backupBackingImageActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить резервную копию базового образа {{backupName}}?"
+      }
+    },
+    "actions": {
+      "restore": "Восстановить",
+      "restoreTooltip": "Только завершенные резервные копии могут быть восстановлены"
+    }
+  },
+  "backupBackingImageBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить следующие {{count}} резервных копий базовых образ(ов)?"
+      }
+    }
+  },
+  "restoreBackupBackingImageModal": {
+    "modal": {
+      "title": "Восстановить базовый образ"
+    },
+    "form": {
+      "backup": {
+        "label": "Резервная копия"
+      },
+      "secret": {
+        "label": "Секрет"
+      },
+      "secretNamespace": {
+        "label": "Пространство имен секрета"
+      }
+    }
+  },
+  "backupTarget": {
+    "filter": {
+      "fieldOptions": {
+        "backupTargetURL": "URL",
+        "credentialSecret": "Секрет учетных данных",
+        "pollInterval": "Интервал опроса",
+        "available": "Статус"
+      },
+      "availableOptions": {
+        "available": "Доступно",
+        "error": "Ошибка"
+      }
+    },
+    "button": {
+      "createBackupTarget": "Создать цель резервного копирования"
+    }
+  },
+  "backupTargetList": {
+    "status": {
+      "available": "Доступно",
+      "error": "Ошибка"
+    }
+  },
+  "backupTargetActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить цель резервного копирования {{backupTargetName}}?"
+      }
+    },
+    "deleteTooltip": {
+      "defaultTarget": "Цель резервного копирования по умолчанию не может быть удалена"
+    }
+  },
+  "backupTargetBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить следующие {{count}} цель(ей) резервного копирования?"
+      }
+    }
+  },
+  "createBackupTargetModal": {
+    "title": "Создать цель резервного копирования",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Имя цели резервного копирования обязательно",
+          "duplicate": "\"{{value}}\" дублирует существующее имя цели резервного копирования"
+        }
+      },
+      "url": {
+        "label": "URL"
+      },
+      "credentialSecret": {
+        "label": "Учетные данные секрета"
+      },
+      "pollInterval": {
+        "label": "Интервал опроса",
+        "seconds": "секунд",
+        "tooltip": "Установите 0 для отключения опроса"
+      }
+    }
+  },
+  "editBackupTargetModal": {
+    "title": "Редактировать цель резервного копирования {{name}}",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Имя цели резервного копирования обязательно"
+        }
+      },
+      "url": {
+        "label": "URL"
+      },
+      "credentialSecret": {
+        "label": "Учетные данные секрета"
+      },
+      "pollInterval": {
+        "label": "Интервал опроса",
+        "seconds": "секунд",
+        "tooltip": "Установите 0 для отключения опроса"
+      }
+    }
+  },
+  "systemBackups": {
+    "systemRestores": {
+      "title": "Восстановление системы"
+    },
+    "filter": {
+      "fieldOption": {
+        "state": "Состояние",
+        "version": "Версия"
+      }
+    }
+  },
+  "systemBackupsAction": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить резервную копию системы {{name}}?"
+      }
+    },
+    "actions": {
+      "restore": "Восстановить"
+    }
+  },
+  "systemBackupsBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить резервные копии системы {{names}}?"
+      }
+    }
+  },
+  "systemRestoresAction": {
+    "modal": {
+      "delete": {
+        "title": {
+          "default": "Вы уверены, что хотите удалить восстановление системы {{name}}?",
+          "inProgress": "Вы уверены, что хотите удалить восстановление системы {{name}}"
+        },
+        "warningMessage": "Удаление восстанавливаемой резервной копии системы приведет к прерыванию развертывания оставшихся ресурсов. Незавершенное восстановление может вызвать несогласованность ресурсов системы Longhorn, что приведет к неожиданному поведению."
+      }
+    }
+  },
+  "createSystemBackup": {
+    "title": "Создать резервную копию системы",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Пожалуйста, введите имя резервной копии системы"
+        }
+      },
+      "volumeBackupPolicy": {
+        "label": "Политика резервного копирования томов",
+        "options": {
+          "ifNotPresent": "Если-отсутствует",
+          "always": "Всегда",
+          "disabled": "Отключено"
+        }
+      }
+    }
+  },
+  "createSystemRestore": {
+    "title": "Восстановить резервную копию системы",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Пожалуйста, введите имя восстановления системы."
+        }
+      },
+      "version": {
+        "label": "Версия",
+        "rules": {
+          "required": "Пожалуйста, введите версию."
+        }
+      },
+      "systemBackup": {
+        "label": "Резервная копия системы",
+        "rules": {
+          "required": "Пожалуйста, введите имя резервной копии системы."
+        }
+      }
+    }
+  },
+  "backingImage": {
+    "notification": {
+      "upload": {
+        "warning": "Не обновляйте и не закрывайте эту страницу, иначе загрузка будет прервана."
+      }
+    },
+    "button": {
+      "createBackingImage": "Создать базовый образ"
+    },
+    "backupBackingImage": {
+      "title": "Резервная копия базового образа"
+    },
+    "upload": {
+      "status": "Загрузка"
+    },
+    "filter": {
+      "fieldOption": {
+        "uuid": "UUID",
+        "sourceType": "Создано из",
+        "minNumberOfCopies": "Минимальное количество копий",
+        "nodeSelector": "Теги узлов",
+        "diskSelector": "Теги дисков"
+      },
+      "createdFromOption": {
+        "download": "скачать",
+        "upload": "загрузить",
+        "exportFromVolume": "экспорт из тома",
+        "clone": "клонировать",
+        "restore": "восстановить"
+      }
+    }
+  },
+  "backingImageList": {
+    "dynamicStateIcon": {
+      "deleting": "Удаление базового образа"
+    },
+    "staticStateIcon": {
+      "encrypted": "Зашифрованный базовый образ",
+      "unavailable": "Базовый образ недоступен"
+    }
+  },
+  "backingImageActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить базовый образ {{name}}?"
+      }
+    },
+    "tooltips": {
+      "missingReadyDisk": "Отсутствует диск в состоянии готовности"
+    },
+    "actions": {
+      "updateMinCopies": "Обновить минимальное количество копий",
+      "backup": "Создать резервную копию",
+      "download": "Скачать"
+    }
+  },
+  "backingImageBulkActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить следующие {{count}} базовый образ(ы)?"
+      },
+      "download": {
+        "title": "Следующий базовый образ(ы) с диском в состоянии <1>Готов1</1> будут загружены.",
+        "note": "Примечание: Вам нужно разрешить Автоматические загрузки в настройках браузера для скачивания нескольких файлов одновременно.",
+        "okText": "Скачать"
+      },
+      "backup": {
+        "title": "Вы уверены, что хотите создать резервную копию следующий базовый образ(ы) в состоянии <1>Готов</1>?",
+        "backupTargetLabel": "Цель резервного копирования",
+        "okText": "Создать резервную копию"
+      }
+    },
+    "actions": {
+      "download": "Скачать",
+      "backup": "Создать резервную копию"
+    }
+  },
+  "updateMinCopiesCount": {
+    "title": "Обновить минимальное количество копий",
+    "form": {
+      "minNumberOfCopies": {
+        "label": "Минимальное количество копий",
+        "rules": {
+          "required": "Пожалуйста, введите количество копий"
+        }
+      }
+    }
+  },
+  "createBackingImage": {
+    "title": "Создать базовый образ",
+    "form": {
+      "name": {
+        "rules": {
+          "required": "Пожалуйста, введите имя базового образа"
+        }
+      },
+      "createdFrom": {
+        "label": "Создано из",
+        "options": {
+          "download": "Загрузить из URL",
+          "upload": "Загрузить с локального устройства",
+          "volume": "Экспортировать из тома Longhorn",
+          "clone": "Клонировать из существующего базового образа"
+        }
+      },
+      "volumeName": {
+        "label": "Имя тома",
+        "rules": {
+          "required": "Пожалуйста, выберите существующий том"
+        }
+      },
+      "exportedBackingImageType": {
+        "label": "Тип экспортируемого базового образа",
+        "options": {
+          "raw": "raw",
+          "qcow2": "qcow2"
+        }
+      },
+      "url": {
+        "label": "URL",
+        "rules": {
+          "required": "Пожалуйста, введите URL базового образа"
+        }
+      },
+      "file": {
+        "label": "Файл",
+        "uploadButton": "Загрузить",
+        "rules": {
+          "required": "Пожалуйста, загрузите файл базового образа",
+          "multipleOf512": "Должно быть кратно 512 байтам"
+        }
+      },
+      "expectedChecksum": {
+        "label": "Ожидаемая контрольная сумма",
+        "placeholder": "Попросите Longhorn проверить контрольную сумму SHA512, если она указана здесь."
+      },
+      "sourceBackingImage": {
+        "label": "Исходный базовый образ"
+      },
+      "encryption": {
+        "label": "Шифрование",
+        "options": {
+          "encrypt": "зашифровать",
+          "decrypt": "расшифровать",
+          "ignore": "игнорировать (просто скопировать базовый образ)"
+        }
+      },
+      "secret": {
+        "label": "Секрет",
+        "rules": {
+          "required": "Пожалуйста, введите имя секрета"
+        }
+      },
+      "secretNamespace": {
+        "label": "Пространство имён секрета",
+        "rules": {
+          "required": "Пожалуйста, введите пространство имён секрета"
+        }
+      },
+      "minNumberOfCopies": {
+        "label": "Минимальное количество копий",
+        "rules": {
+          "required": "Пожалуйста, введите минимальное количество копий"
+        }
+      },
+      "dataEngine": {
+        "rules": {
+          "notEnabled": "Движок данных {{value}} не включен"
+        },
+        "options": {
+          "v1": "v1",
+          "v2": "v2"
+        }
+      }
+    }
+  },
+  "diskStateMapDetail": {
+    "modal": {
+      "cleanUp": {
+        "title": "Вы уверены, что хотите очистить файл образа с диска ({{disk}})?"
+      }
+    },
+    "actions": {
+      "cleanUp": "Очистить"
+    },
+    "createdFrom": {
+      "download": "Загрузить из URL",
+      "upload": "Загрузить",
+      "exportFromVolume": "Экспортировать из тома Longhorn",
+      "clone": "Клонировать из существующего базового образа",
+      "restore": "Восстановить из резервной копии базового образа"
+    },
+    "details": {
+      "uuid": "UUID",
+      "createdFrom": "Создано из",
+      "parametersDuringCreation": "Параметры во время создания",
+      "empty": "пусто",
+      "expectedChecksum": "Ожидаемая контрольная сумма SHA512",
+      "currentChecksum": "Текущая контрольная сумма SHA512",
+      "checksumMatchTooltip": "Текущая контрольная сумма совпадает с ожидаемым значением",
+      "checksumMismatchTooltip": "Текущая контрольная сумма не соответствует ожидаемому значению",
+      "verified": "Проверено",
+      "failed": "Не удалось"
+    }
+  },
+  "createBackupBackingImageModal": {
+    "title": "Создать резервную копию базового образа",
+    "warningMessage": "Выберите цель резервного копирования для создания резервной копии базового образа {{name}}",
+    "form": {
+      "backupTarget": {
+        "label": "Цель резервного копирования"
+      }
+    }
+  },
+  "diskStateMapActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить файл образа с дисков ?"
+      }
+    },
+    "button": {
+      "cleanUp": "Очистить"
+    }
+  },
+  "orphanedData": {
+    "tabs": {
+      "replicaData": "Данные реплик",
+      "instances": "Экземпляры"
+    }
+  },
+  "replicaDataOrphans": {
+    "filter": {
+      "fieldOption": {
+        "node": "Узел",
+        "diskName": "Имя диска",
+        "diskPath": "Путь к диску",
+        "directoryName": "Имя директории"
+      }
+    }
+  },
+  "orphanedDataActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить {{name}}?"
+      }
+    }
+  },
+  "instanceOrphans": {
+    "filter": {
+      "fieldOption": {
+        "node": "Узел",
+        "instanceName": "Имя экземпляра",
+        "instanceManager": "Менеджер экземпляров",
+        "orphanType": "Тип экземпляра"
+      }
+    }
+  },
+  "engineImage": {
+    "filter": {
+      "fieldOption": {
+        "image": "Образ"
+      }
+    },
+    "button": {
+      "deployEngineImage": "Развернуть образ движка"
+    }
+  },
+  "createEngineImage": {
+    "title": "Создать образ движка",
+    "form": {
+      "image": {
+        "label": "Образ",
+        "rules": {
+          "required": "Пожалуйста, введите образ движка"
+        }
+      }
+    }
+  },
+  "engineImageList": {
+    "status": {
+      "incompatible": "Несовместимо"
+    }
+  },
+  "engineImageActions": {
+    "modal": {
+      "delete": {
+        "title": "Вы уверены, что хотите удалить образ движка {{name}}?"
+      }
+    }
+  },
+  "engineImageFilter": {
+    "selectOptions": {
+      "image": "образ"
+    },
+    "button": {
+      "createEngineImage": "Создать образ движка"
+    }
+  },
+  "engineImageDetail": {
+    "title": "Детали образа движка"
+  },
+  "engineImageInfo": {
+    "fields": {
+      "buildDate": "Дата сборки",
+      "default": "По умолчанию",
+      "cliAPIVersion": "CLIAPIVersion",
+      "controllerAPIVersion": "ControllerAPIVersion",
+      "image": "Образ",
+      "refCount": "RefCount",
+      "noRefSince": "NoRefSince",
+      "nodeDeploymentMap": "NodeDeploymentMap"
+    },
+    "status": {
+      "incompatible": "Несовместимо"
+    }
+  },
+  "instanceManager": {
+    "filter": {
+      "fieldOption": {
+        "nodeID": "Узел",
+        "managerType": "Тип",
+        "currentState": "Состояние",
+        "image": "Образ менеджера экземпляров"
+      }
+    }
+  },
+  "volumeDetail": {
+    "cancelExpansion": {
+      "title": "Вы уверены, что хотите отменить расширение?",
+      "description": "Эта операция используется для отмены расширения, если том не может завершить расширение и зависает. После завершения расширение не может быть отменено",
+      "message": {
+        "part1": "Если расширение, которое вы хотите отменить, было инициировано обновлением размера PVC, эта операция не поможет откатить PVC. Поскольку размер PVC не может уменьшаться, пользователям необходимо очистить и воссоздать PVC и PV после успешной отмены расширения:",
+        "step1": "Обновите поле spec.persistentVolumeReclaimPolicy на Retain для соответствующего PV.",
+        "step2": "Удалите и воссоздайте связанные PVC и PV."
+      }
+    },
+    "cards": {
+      "volumeDetails": "Детали тома",
+      "replicas": "Реплики"
+    }
+  },
+  "volumeInfo": {
+    "alerts": {
+      "schedulingFailure": {
+        "title": "Ошибка планирования",
+        "errorMessage": "Сообщение об ошибке"
+      }
+    },
+    "state": {
+      "label": " Состояние:"
+    },
+    "health": {
+      "label": " Состояние здоровья:",
+      "attachedNodeDown": "Подключенный узел недоступен",
+      "dataLocalityWarning": "Том не имеет локализации данных! Нет здоровых реплик на том же узле, что и движок"
+    },
+    "readyForWorkload": {
+      "label": " Готов для рабочей нагрузки:",
+      "ready": "Готов",
+      "notReady": "Не готов",
+      "notReadyTooltip": "Не готов для рабочей нагрузки. {{robustness}}",
+      "volumeFaulted": "Том неисправен",
+      "volumeUnderMaintenance": "Том может находиться на обслуживании или в процессе восстановления."
+    },
+    "conditions": {
+      "label": " Условия:"
+    },
+    "frontend": {
+      "disabledTooltip": "Подключить том без включения фронтенда. Данные тома будут недоступны при подключении."
+    },
+    "ublk": {
+      "numberOfQueues": " Количество очередей Ublk:",
+      "queueDepth": " Глубина очереди Ublk:"
+    },
+    "backupTarget": {
+      "label": " Цель резервного копирования:"
+    },
+    "attachedNodeAndEndpoint": {
+      "label": " Подключенный узел и конечная точка:"
+    },
+    "attachedNode": {
+      "label": " Подключенный узел:"
+    },
+    "size": {
+      "tooltip": "Объем пространства, доступного для тома при использовании. Это размер, который вы указали при создании тома."
+    },
+    "actualSize": {
+      "label": "Фактический размер",
+      "tooltip": "Объем пространства, используемого головой тома и снапшотами. Это может превышать значение поля \"Размер\".",
+      "unknown": "Неизвестно"
+    },
+    "dataLocality": {
+      "label": " Локализация данных:"
+    },
+    "backingImageSize": {
+      "label": " Размер базового образа:"
+    },
+    "engineImage": {
+      "label": "Образ движка",
+      "tooltip": "Предоставляет двоичный файл для запуска и общения с движком/репликами тома."
+    },
+    "created": {
+      "label": " Создан:"
+    },
+    "nodeTags": {
+      "label": " Теги узла:"
+    },
+    "diskTags": {
+      "label": " Теги диска:"
+    },
+    "lastBackup": {
+      "label": " Последнее резервное копирование:"
+    },
+    "lastBackupAt": {
+      "label": " Время последнего резервного копирования:"
+    },
+    "replicaAutoBalance": {
+      "label": " Автобалансировка реплик:"
+    },
+    "snapshotDataIntegrity": {
+      "label": " Целостность данных снапшота:"
+    },
+    "snapshotMaxCount": {
+      "label": " Максимальное количество снапшотов:"
+    },
+    "snapshotMaxSize": {
+      "label": " Максимальный размер снапшота:"
+    },
+    "instanceManager": {
+      "label": "Менеджер экземпляров",
+      "tooltip": "Управляет жизненным циклом экземпляров движка/реплик на узле."
+    },
+    "allowSnapshotsRemovalDuringTrim": {
+      "label": " Разрешить удаление снапшотов во время обрезки:"
+    },
+    "replicaSoftAntiAffinity": {
+      "label": " Мягкая антиаффинность реплик:"
+    },
+    "replicaZoneSoftAntiAffinity": {
+      "label": " Мягкая антиаффинность зон реплик:"
+    },
+    "replicaDiskSoftAntiAffinity": {
+      "label": " Мягкая антиаффинность дисков реплик:"
+    },
+    "freezeFilesystemForSnapshot": {
+      "label": " Заморозка файловой системы для снапшота:"
+    },
+    "offlineReplicaRebuilding": {
+      "label": " Восстановление офлайн-реплик:"
+    },
+    "replicaRebuildingBandwidthLimit": {
+      "label": " Ограничение пропускной способности восстановления реплик:"
+    },
+    "restoring": {
+      "label": " Восстановление:"
+    },
+    "volumeSize": {
+      "expansionError": "Ошибка расширения",
+      "expansionNote": "Примечание: Вы можете отменить расширение, чтобы избежать сбоя тома",
+      "expansionInProgress": "Том находится в процессе расширения с размера {{currentSize}} до размера {{expectedSize}}"
+    },
+    "globalSettingTooltip": "Это параметр по умолчанию, который указывает Longhorn наследовать настройки из глобальных.",
+    "kubernetesStatus": {
+      "lastPodName": "Последнее имя пода:",
+      "podName": " Имя пода:",
+      "podStatus": " Статус пода:",
+      "lastWorkloadName": "Последнее имя рабочей нагрузки:",
+      "workloadName": " Имя рабочей нагрузки:",
+      "lastWorkloadType": "Последний тип рабочей нагрузки:",
+      "workloadType": " Тип рабочей нагрузки:",
+      "lastTimeBoundWithPVC": " Последний раз связан с PVC:",
+      "lastTimeUsedByPod": " Последний раз использован подом:",
+      "lastNamespace": "Последнее пространство имен:",
+      "namespace": " Пространство имен:",
+      "lastBoundedPVCName": "Последнее связанное имя PVC:",
+      "pvcName": " Имя PVC:",
+      "pvName": " Имя PV:",
+      "pvStatus": " Статус PV:"
+    },
+    "revisionCounterDisabled": {
+      "label": "Счетчик ревизий отключен:"
+    }
+  },
+  "engineImageUpgradeTooltip": {
+    "currentVersion": "Текущий образ движка: {{version}}",
+    "latestVersionAvailable": "Образ движка {{version}} теперь доступен!"
+  },
+  "replicaHATooltip": {
+    "warning": "Ограниченная избыточность узлов: хотя бы одна здоровая реплика работает на том же узле, что и другая",
+    "danger": "Нет избыточности узлов: все здоровые реплики работают на одном и том же узле"
+  },
+  "conditionTooltip": {
+    "lastProbeTime": "Время последней проверки",
+    "lastTransitionTime": "Время последнего перехода",
+    "message": "Сообщение",
+    "reason": "Причина",
+    "suggestion": "Предложение",
+    "tooManySnapshots": {
+      "notExceeded": "Пороговое значение количества снапшотов ({{computedThreshold}}) не превышено",
+      "suggestion": "Попробуйте удалить неиспользуемые снапшоты для освобождения места при необходимости"
+    }
+  },
+  "volumeAttachment": {
+    "title": "Присоединения томов",
+    "error": {
+      "defaultMessage": "Не удалось получить присоединения томов"
+    },
+    "satisfied": {
+      "notSatisfied": "Не выполнено"
+    }
+  },
+  "snapshots": {
+    "title": "Снапшоты и резервные копии",
+    "takeSnapshotButton": "Создать снапшот",
+    "createBackupButton": "Создать резервную копию",
+    "showSystemSnapshots": "Показать системные снапшоты:",
+    "createSnapshotTooltip": {
+      "drVolume": "Невозможно создать снапшот для DR тома",
+      "default": "Создать новый снапшот. Вы можете создать резервную копию, нажав на любой снапшот ниже и выбрав 'Резервное копирование'."
+    },
+    "createBackupTooltip": {
+      "backupTargetUnavailable": "Цель резервного копирования {{target}} недоступна.",
+      "drVolume": "Невозможно создать резервную копию для DR тома.",
+      "default": "Создать новую резервную копию."
+    },
+    "purgeProgress": {
+      "format": "Удаление {{percent}}%"
+    }
+  },
+  "recurringJobDetail": {
+    "title": "Расписание повторяющихся заданий",
+    "tabs": {
+      "job": "Задание",
+      "group": "Группа"
+    },
+    "addButton": "Добавить",
+    "tooltips": {
+      "recurringJobNotExist": "Повторяющееся задание не существует",
+      "recurringJobGroupNotExist": "Группа повторяющихся заданий не существует",
+      "noDefaultGroupJobs": "Нет повторяющихся заданий, установленных в группу по умолчанию"
+    },
+    "message": {
+      "getRecurringJobFailed": "Не удалось получить повторяющееся задание"
+    },
+    "bulkDeleteJob": {
+      "confirmTitle": "Вы уверены, что хотите удалить повторяющееся задание {{jobs}} из тома {{volume}}?"
+    },
+    "bulkDeleteJobGroup": {
+      "confirmTitle": "Вы уверены, что хотите удалить группу повторяющихся заданий {{groups}} из тома {{volume}}?"
+    },
+    "modalGroupDetail": {
+      "title": "Повторяющееся задание"
+    }
+  },
+  "eventList": {
+    "title": "Журнал событий",
+    "tooltip": {
+      "expand": "Нажмите, чтобы развернуть",
+      "collapse": "Нажмите, чтобы свернуть"
+    }
+  },
+  "snapshotList": {
+    "title": "Список снапшотов и резервных копий",
+    "tooltip": {
+      "expand": "Нажмите, чтобы развернуть",
+      "collapse": "Нажмите, чтобы свернуть"
+    },
+    "type": {
+      "snapshot": "Снапшот",
+      "backup": "Резервная копия"
+    },
+    "parentId": "Родительский ID"
+  },
+  "addRecurringJobOrGroupModal": {
+    "title": {
+      "job": "Добавить повторяющееся задание",
+      "group": "Добавить группу повторяющихся заданий"
+    },
+    "label": {
+      "jobName": "Имя повторяющегося задания",
+      "groupName": "Имя группы повторяющихся заданий"
+    },
+    "validation": {
+      "required": "Пожалуйста, выберите имя повторяющегося задания"
+    }
+  },
+  "createRecurringJobDetail": {
+    "modal": {
+      "title": "{{action}} повторяющуюся задачу"
+    },
+    "tabs": {
+      "new": "Новое",
+      "existing": "Существующее"
+    },
+    "form": {
+      "task": "Задача",
+      "forceCreate": "Принудительное создание",
+      "retain": "Хранить",
+      "concurrency": "Параллелизм",
+      "cron": "Cron",
+      "parameters": "Параметры",
+      "groups": "Группы",
+      "labels": "Метки",
+      "existingJobName": "Имя повторяющегося задания"
+    },
+    "tooltip": {
+      "forceCreate": "Создавать {{type}} периодически, даже если истекшие {{itemType}} не могут быть очищены.",
+      "backups": "резервные копии",
+      "snapshots": "снапшоты",
+      "defaultGroup": "Том без повторяющихся заданий или групп автоматически будет применять повторяющиеся задания из группы по умолчанию."
+    },
+    "validation": {
+      "nameRequired": "Пожалуйста, введите имя повторяющегося задания",
+      "groupNameRequired": "Пожалуйста, введите имя группы",
+      "valueRequired": "Требуется значение",
+      "existingJobRequired": "Пожалуйста, выберите имя повторяющегося задания"
+    },
+    "placeholder": {
+      "groupName": "Имя группы"
+    }
+  },
+  "expansionErrorDetail": {
+    "lastExpansionFailedAt": "Последнее расширение завершилось ошибкой {{lastExpansionFailedAt}},",
+    "clickToViewErrorDetails": "Нажмите, чтобы просмотреть детали ошибки",
+    "clickToCloseErrorDetails": "Нажмите, чтобы закрыть детали ошибки"
+  },
+  "autoComplete": {
+    "volumeNamePlaceholder": "Имя тома"
+  },
+  "backupLabelInput": {
+    "keyRequiredMessage": "ключ обязателен",
+    "labelsKeyPlaceholder": "Ключ метки",
+    "valueRequiredMessage": "значение обязательно",
+    "valuePlaceholder": "Значение",
+    "removeLabelTooltip": "Удалить метку",
+    "labelsLabel": "Метки",
+    "addLabelsButton": "Добавить метки"
+  },
+  "backupLabelInputForRecurring": {
+    "addLabelsForBackupButton": "Добавить метки для резервной копии",
+    "labelsValuePlaceholder": "Значение метки"
+  },
+  "bundlesModel": {
+    "title": "Создать пакет поддержки",
+    "form": {
+      "issueURLLabel": "URL проблемы",
+      "descriptionLabel": "Описание"
+    },
+    "validation": {
+      "descriptionRequired": "Пожалуйста, заполните описание проблемы для пакета поддержки"
+    }
+  },
+  "reactCron": {
+    "tabs": {
+      "cron": "Cron",
+      "generateCron": "Генерация Cron"
+    },
+    "steps": {
+      "minutes": "Минуты",
+      "hour": "Час",
+      "day": "День",
+      "month": "Месяц"
+    },
+    "weekDays": {
+      "sunday": "Воскресенье",
+      "monday": "Понедельник",
+      "tuesday": "Вторник",
+      "wednesday": "Среда",
+      "thursday": "Четверг",
+      "friday": "Пятница",
+      "saturday": "Суббота"
+    },
+    "common": {
+      "every": "Каждые",
+      "minuteUnit": "минут(ы)",
+      "hourUnit": "час(а)",
+      "dayUnit": "день(дня)",
+      "monthUnit": "месяц(а)",
+      "startingAt": "начиная с",
+      "startingOn": "начиная с",
+      "startingAtThe": "начиная с",
+      "minutes": "минут",
+      "hour": "часа",
+      "month": "месяца",
+      "and": "и",
+      "pleaseSelect": "Пожалуйста, выберите"
+    },
+    "minutes": {
+      "everyMinutes": "Каждую минуту",
+      "specificMinutes": "Конкретные минуты (выберите одну или несколько)",
+      "everyMinutesBetween": "Каждую минуту между"
+    },
+    "hour": {
+      "everyHour": "Каждый час",
+      "specificHour": "Конкретный час (выберите один или несколько)",
+      "everyHourBetween": "Каждый час между"
+    },
+    "day": {
+      "everyDay": "Каждый день",
+      "specificDayOfWeek": "Конкретный день недели (выберите один или несколько)",
+      "specificDayOfMonth": "Конкретный день месяца (выберите один или несколько)",
+      "onTheLastDayOfTheMonth": "В последний день месяца",
+      "onTheLastWeekdayOfTheMonth": "В последний рабочий день месяца",
+      "onTheLast": "В последний",
+      "ofTheMonth": "месяца",
+      "daysBeforeTheEndOfTheMonth": "день(дня) до конца месяца",
+      "nearestWeekdayToThe": "Ближайший рабочий день (с понедельника по пятницу) к",
+      "onThe": "В"
+    },
+    "month": {
+      "everyMonth": "Каждый месяц",
+      "specificMonth": "Конкретный месяц (выберите один или несколько)",
+      "everyMonthBetween": "Каждый месяц между"
+    },
+    "buttons": {
+      "previous": "Назад",
+      "next": "Далее",
+      "done": "Готово"
+    },
+    "error": {
+      "cronExpressionFormatError": "Ошибка формата выражения Cron"
+    }
+  },
+  "replica": {
+    "deleteConfirm": {
+      "title": "Вы уверены, что хотите удалить реплику {{replicaName}}?"
+    },
+    "modeInfo": {
+      "healthy": "Здорова",
+      "rebuilding": "Перестроение...",
+      "failed": "Неисправна"
+    },
+    "deleteTooltip": {
+      "volumeNotAttached": "Реплика принадлежит тому, который сейчас {{volState}}. Том должен быть подключен."
+    },
+    "progressTooltip": {
+      "restoring": "Восстановление {{progress}}%",
+      "deletingSnapshot": "Удаление снепшота {{progress}}%",
+      "rebuilding": "Перестроение {{progress}}%"
+    },
+    "fromReplica": {
+      "synchronizingFrom": "Синхронизация с реплики:"
+    },
+    "hostTooltip": {
+      "region": "регион",
+      "zone": "зона"
+    },
+    "common": {
+      "notAvailable": "Н/Д",
+      "node": "Узел"
+    },
+    "instanceManagerTooltip": "Менеджер экземпляров",
+    "status": {
+      "running": "Запущен",
+      "stopped": "Остановлен"
+    },
+    "dropOption": {
+      "delete": "Удалить"
+    }
+  },
+  "schedule": {
+    "common": {
+      "every": "Каждый",
+      "at": "в",
+      "on": "в",
+      "onThe": "в"
+    },
+    "periods": {
+      "minute": "минуту",
+      "hour": "час",
+      "day": "день",
+      "week": "неделю",
+      "month": "месяц",
+      "year": "год"
+    },
+    "hour": {
+      "minutesPastTheHour": "минут после часа"
+    },
+    "weekDays": {
+      "sunday": "Воскресенье",
+      "monday": "Понедельник",
+      "tuesday": "Вторник",
+      "wednesday": "Среда",
+      "thursday": "Четверг",
+      "friday": "Пятница",
+      "saturday": "Суббота"
+    },
+    "days": {
+      "1st": "1-е",
+      "2nd": "2-е",
+      "3rd": "3-е",
+      "4th": "4-е",
+      "5th": "5-е",
+      "6th": "6-е",
+      "7th": "7-е",
+      "8th": "8-е",
+      "9th": "9-е",
+      "10th": "10-е",
+      "11th": "11-е",
+      "12th": "12-е",
+      "13th": "13-е",
+      "14th": "14-е",
+      "15th": "15-е",
+      "16th": "16-е",
+      "17th": "17-е",
+      "18th": "18-е",
+      "19th": "19-е",
+      "20th": "20-е",
+      "21st": "21-е",
+      "22nd": "22-е",
+      "23rd": "23-е",
+      "24th": "24-е",
+      "25th": "25-е",
+      "26th": "26-е",
+      "27th": "27-е",
+      "28th": "28-е",
+      "29th": "29-е",
+      "30th": "30-е",
+      "31st": "31-е"
+    },
+    "months": {
+      "january": "Январь",
+      "february": "Февраль",
+      "march": "Март",
+      "april": "Апрель",
+      "may": "Май",
+      "june": "Июнь",
+      "july": "Июль",
+      "august": "Август",
+      "september": "Сентябрь",
+      "october": "Октябрь",
+      "november": "Ноябрь",
+      "december": "Декабрь"
+    },
+    "year": {
+      "of": "месяца"
+    }
+  },
+  "search": {
+    "goButton": "Найти"
+  },
+  "snapshot": {
+    "tooltip": {
+      "created": "Создано",
+      "createdByUser": "Создано пользователем",
+      "removed": "Удалено",
+      "progress": "Прогресс",
+      "replicas": "Реплики",
+      "backups": "Резервные копии",
+      "backupURL": "URL резервной копии"
+    },
+    "volumeHead": "Голова тома",
+    "modal": {
+      "cannotRevertTitle": "Невозможно откатить при включенном фронтенде",
+      "confirmSnapshotRevertTitle": "Подтвердить откат снепшота?",
+      "reattachInMaintenanceMode": "Пожалуйста, переподключите том в режиме обслуживания, чтобы выполнить откат.",
+      "workloadShutdownNeeded": "Возможно, потребуется остановить рабочую нагрузку."
+    },
+    "dropdown": {
+      "revert": "Откатить",
+      "backUp": "Создать резервную копию",
+      "cloneVolume": "Клонировать том",
+      "delete": "Удалить",
+      "takeSnapshot": "Создать снепшот"
+    }
+  },
+  "volumeStatus": {
+    "upgradingEngineTooltip": "Движок тома обновляется с {{from}} на {{to}}"
+  },
+  "setting": {
+    "dataEngineLabel": "Движок данных",
+    "categories": {
+      "general": "Основные",
+      "backup": "Резервное копирование",
+      "scheduling": "Планирование",
+      "dangerZone": "Опасная зона",
+      "snapshot": "Снимок",
+      "orphan": "Потерянные ресурсы",
+      "systemInfo": "Информация о системе"
+    },
+    "dangerZoneAlert": {
+      "message": {
+        "part1": "Некоторые",
+        "dangerZoneSettingsLink": "настройки опасной зоны",
+        "part2": "не применяются немедленно, когда один или несколько томов все еще подключены. Убедитесь, что все тома отключены, прежде чем настраивать эти параметры."
+      },
+      "unappliedSettingsTitle": "Следующие {{count}} {{settings}} не были применены:",
+      "settingSingular": "параметр не",
+      "settingPlural": "параметра не"
+    }
+  },
+  "leaveSettingsModal": {
+    "title": "Покинуть общие настройки?",
+    "okText": "Покинуть",
+    "unsavedChangesMessage": "У вас есть несохраненные изменения ниже.",
+    "confirmMessage": "Вы уверены, что хотите покинуть эту страницу?"
+  },
+  "latestBackup": {
+    "noBackupYet": "резервных копий пока нет"
+  },
+  "storageInfo": {
+    "schedulable": "Доступно для планирования",
+    "available": "Доступно",
+    "reserved": "Зарезервировано",
+    "maximum": "Максимум",
+    "scheduled": "Запланировано"
+  },
+  "models": {
+    "backupTarget": {
+      "create": {
+        "success": "Цель резервного копирования {name} успешно создана."
+      }
+    },
+    "app": {
+      "supportbundles": {
+        "error": "Загрузка не удалась: создание support bundle всё ещё выполняется"
+      }
+    },
+    "backingImage": {
+      "createBackupBackingImage": {
+        "success": "Резервная копия базового образа {{name}} успешно создана",
+        "missingUrl": "Не удалось создать резервную копию, отсутствует URL для создания резервной копии базового образа"
+      },
+      "create": {
+        "uploadServiceTimeout": "Истекло время ожидания инициализации службы загрузки, удалите и заново создайте базовый образ."
+      },
+      "restoreBackingImage": {
+        "success": "Базовый образ {{name}} успешно восстановлен",
+        "missingUrl": "Отсутствует URL для восстановления резервной копии базового образа"
+      },
+      "createBackingImageBackup": {
+        "success": "Резервная копия базового образа {{backingImageName}} успешно создана"
+      },
+      "singleInterfaceUpload": {
+        "failed": "Ошибка загрузки! Удалите и заново создайте базовый образ. {{error}}"
+      }
+    },
+    "backup": {
+      "queryBackupTarget": {
+        "noBackupTarget": "Нет доступной цели резервного копирования, перейдите на страницу Backup Target чтобы создать её"
+      },
+      "restoreBulkBackup": {
+        "success": "Том резервной копии {{name}} успешно восстановлен"
+      },
+      "syncBackupVolume": {
+        "success": "Синхронизация тома резервной копии {{name}} успешно запущена"
+      },
+      "syncAllBackupVolumes": {
+        "success": "Синхронизация всех томов резервных копий успешно запущена"
+      },
+      "bulkCreateVolume": {
+        "success": "DR том {{name}} успешно создан"
+      }
+    },
+    "volume": {
+      "createClonedVolume": {
+        "success": "Новый том ({{name}}) успешно создан"
+      },
+      "getSingleVolumeSnapshots": {
+        "failed": "Не удалось получить снимки для тома {{name}}"
+      }
+    }
+  },
+  "settings": {
+    "allow-collecting-longhorn-usage-metrics": {
+      "displayName": "Разрешить сбор метрик использования Longhorn",
+      "description": "Включение этого параметра позволит Longhorn предоставлять дополнительные метрики использования на https://metrics.longhorn.io/.\nЭта информация поможет нам лучше понять, как используется Longhorn, что в конечном итоге будет способствовать будущим улучшениям."
+    },
+    "allow-empty-disk-selector-volume": {
+      "displayName": "Разрешить планирование томов без селектора дисков на любой диск",
+      "description": "Разрешить планирование реплики тома без селектора дисков на диск с тегами, по умолчанию true"
+    },
+    "allow-empty-node-selector-volume": {
+      "displayName": "Разрешить планирование томов без селектора узлов на любой узел",
+      "description": "Разрешить планирование реплики тома без селектора узлов на узел с тегами, по умолчанию true"
+    },
+    "allow-recurring-job-while-volume-detached": {
+      "displayName": "Разрешить периодические задания, когда том отсоединен",
+      "description": "Если этот параметр включен, Longhorn автоматически присоединит том и создаст снимок/резервную копию, когда наступит время для периодического создания снимков/резервных копий.\n\nОбратите внимание, что том не готов к рабочим нагрузкам в период, когда том был автоматически присоединен. Рабочая нагрузка будет ожидать завершения периодического задания."
+    },
+    "allow-volume-creation-with-degraded-availability": {
+      "displayName": "Разрешить создание тома с деградированной доступностью",
+      "description": "Этот параметр позволяет пользователю создать и присоединить том, у которого на момент создания не все реплики запланированы."
+    },
+    "auto-cleanup-recurring-job-backup-snapshot": {
+      "displayName": "Автоматическая очистка снимков периодических заданий резервного копирования",
+      "description": "Этот параметр позволяет Longhorn автоматически очищать снимок, созданный периодическим заданием резервного копирования."
+    },
+    "auto-cleanup-snapshot-after-on-demand-backup-completed": {
+      "displayName": "Автоматическая очистка снимка после завершения резервного копирования по требованию",
+      "description": "Этот параметр позволяет пользователям автоматически удалять снимок резервной копии после завершения резервного копирования по требованию."
+    },
+    "auto-cleanup-system-generated-snapshot": {
+      "displayName": "Автоматическая очистка системных снимков",
+      "description": "Этот параметр позволяет Longhorn автоматически очищать системные снимки до и после перестроения реплики."
+    },
+    "auto-cleanup-when-delete-backup": {
+      "displayName": "Автоматическая очистка снимков при удалении резервной копии",
+      "description": "Этот параметр позволяет Longhorn автоматически очищать снимки при удалении резервной копии."
+    },
+    "auto-delete-pod-when-volume-detached-unexpectedly": {
+      "displayName": "Автоматическое удаление пода рабочей нагрузки при неожиданном отсоединении тома",
+      "description": "Если включено, Longhorn автоматически удалит под рабочей нагрузки, управляемый контроллером (например, deployment, statefulset, daemonset и т.д.), когда том Longhorn будет неожиданно отсоединен (например, во время обновления Kubernetes, перезагрузки Docker или отключения сети). Удаляя под, его контроллер перезапускает под, и Kubernetes обрабатывает повторное присоединение и монтирование тома.\n\nЕсли отключено, Longhorn не будет удалять под рабочей нагрузки, управляемый контроллером. Вам потребуется вручную перезапустить под для повторного присоединения и монтирования тома.\n\n**Примечание:** Этот параметр не применяется к подам рабочих нагрузок, у которых нет контроллера. Longhorn никогда не удаляет их."
+    },
+    "auto-salvage": {
+      "displayName": "Автоматическое восстановление",
+      "description": "Если включено, тома будут автоматически восстанавливаться, когда все реплики станут ошибочными, например, из-за отключения сети. Longhorn попытается определить, какие реплики пригодны к использованию, и затем использовать их для тома."
+    },
+    "backing-image-cleanup-wait-interval": {
+      "displayName": "Интервал ожидания очистки backing-образа",
+      "description": "В минутах. Интервал определяет, как долго Longhorn будет ждать перед очисткой файла backing-образа, когда на диске нет использующей его реплики."
+    },
+    "backing-image-recovery-wait-interval": {
+      "displayName": "Интервал ожидания восстановления backing-образа",
+      "description": "В секундах. Интервал определяет, как долго Longhorn будет ждать перед повторной загрузкой файла backing-образа, когда все файлы диска этого backing-образа стали ошибочными или неизвестными.\n\nПРЕДУПРЕЖДЕНИЕ:\n\n  - Это восстановление работает только для backing-образа, тип создания которого - \"download\".\n\n  - Состояние файла \"unknown\" означает, что соответствующие поды менеджера на поде не запущены или сам узел не работает/отключен."
+    },
+    "backup-compression-method": {
+      "displayName": "Метод сжатия резервных копий",
+      "description": "Этот параметр позволяет пользователям указать метод сжатия резервных копий.\n\nДоступные варианты:\n\n- **none**: Отключить метод сжатия. Подходит для мультимедийных данных, таких как закодированные изображения и видео.\n\n- **lz4**: Быстрый метод сжатия. Подходит для обычных файлов.\n\n- **gzip**: Немного более высокая степень сжатия, но относительно медленный."
+    },
+    "backup-concurrent-limit": {
+      "displayName": "Лимит одновременных операций резервного копирования",
+      "description": "Этот параметр управляет количеством одновременно работающих рабочих потоков на одну резервную копию."
+    },
+    "backup-execution-timeout": {
+      "displayName": "Тайм-аут выполнения резервного копирования",
+      "description": "Количество минут, которое Longhorn отводит на выполнение резервного копирования. Значение по умолчанию - 1."
+    },
+    "blacklist-for-auto-delete-pod-when-volume-detached-unexpectedly": {
+      "displayName": "Черный список для автоматического удаления пода рабочей нагрузки при неожиданном отсоединении тома",
+      "description": "Черный список значений api/kind контроллера для параметра \"Автоматическое удаление пода рабочей нагрузки при неожиданном отсоединении тома\". Если под рабочей нагрузки управляется контроллером, api/kind которого указан в этом черном списке, Longhorn не будет автоматически удалять под при неожиданном отсоединении его тома.\n\nМожно указать несколько записей apiVersion/kind контроллера, разделенных точкой с запятой. Например: `apps/StatefulSet;apps/DaemonSet`.\n\n**Примечание:** api/kind контроллера чувствителен к регистру и должен точно соответствовать api/kind в ссылке владельца пода рабочей нагрузки."
+    },
+    "concurrent-automatic-engine-upgrade-per-node-limit": {
+      "displayName": "Лимит одновременных автоматических обновлений движка на узел",
+      "description": "Этот параметр управляет тем, как Longhorn автоматически обновляет движки томов после обновления Longhorn manager. Значение этого параметра указывает максимальное количество движков на узел, которым разрешено одновременно обновляться до образа движка по умолчанию. Если значение равно 0, Longhorn не будет автоматически обновлять движки томов до версии по умолчанию."
+    },
+    "concurrent-backing-image-replenish-per-node-limit": {
+      "displayName": "Лимит одновременного пополнения backing-образов на узел",
+      "description": "Этот параметр управляет тем, сколько копий backing-образа на узле может быть пополнено одновременно.\n\nОбычно Longhorn может блокировать запуск копирования backing-образа, как только текущее количество пополнений на узле превышает лимит. Но когда значение равно 0, это означает отключение пополнения backing-образов."
+    },
+    "concurrent-replica-rebuild-per-node-limit": {
+      "displayName": "Лимит одновременного перестроения реплик на узел",
+      "description": "Этот параметр управляет тем, сколько реплик на узле может быть перестроено одновременно.\n\nОбычно Longhorn может блокировать запуск реплики, как только текущее количество перестроений на узле превышает лимит. Но когда значение равно 0, это означает отключение перестроения реплик.\n\nПРЕДУПРЕЖДЕНИЕ:\n\n  - Старый параметр \"Disable Replica Rebuild\" заменен этим параметром.\n\n  - В отличие от использования задержки запуска реплики для ограничения одновременного перестроения, если перестроение отключено, пополнение объекта реплики будет напрямую пропущено.\n\n  - Когда значение равно 0, функции вытеснения и локальности данных не будут работать. Но это не должно влиять на текущее перестроение реплик и восстановление из резервной копии."
+    },
+    "concurrent-volume-backup-restore-per-node-limit": {
+      "displayName": "Лимит одновременного восстановления томов из резервной копии на узел",
+      "description": "Этот параметр управляет тем, сколько томов на узле может одновременно восстанавливать резервную копию.\n\nLonghorn блокирует восстановление из резервной копии, как только количество восстанавливаемых томов превышает лимит.\n\nУстановите значение **0**, чтобы отключить восстановление из резервной копии."
+    },
+    "crd-api-version": {
+      "displayName": "Версия API Custom Resource",
+      "description": "Текущая версия API пользовательского ресурса, например longhorn.io/v1beta2. Устанавливается менеджером автоматически"
+    },
+    "create-default-disk-labeled-nodes": {
+      "displayName": "Создавать диск по умолчанию на помеченных узлах",
+      "description": "Автоматически создавать диск по умолчанию только на узлах с меткой \"node.longhorn.io/create-default-disk=true\", если нет других дисков. Если отключено, диск по умолчанию будет создан на всех новых узлах при первом добавлении каждого узла."
+    },
+    "current-longhorn-version": {
+      "displayName": "Текущая версия Longhorn",
+      "description": "Текущая версия Longhorn."
+    },
+    "data-engine-cpu-mask": {
+      "displayName": "Маска CPU для Data Engine",
+      "description": "Применяется только к V2 Data Engine. Указывает ядра CPU, на которых работает демон-цель SPDK (Storage Performance Development Kit). Демон развертывается в каждом поде Instance Manager. Убедитесь, что количество назначенных ядер не превышает гарантированные CPU Instance Manager для V2 Data Engine. Значение по умолчанию - 0x1."
+    },
+    "data-engine-hugepage-enabled": {
+      "displayName": "Использовать огромные страницы для Data Engine",
+      "description": "Применяется только к V2 Data Engine. Включает огромные страницы для демона-цели SPDK. Если отключено, используется обычная память. Размер выделения устанавливается через параметр Data Engine Memory Size."
+    },
+    "data-engine-interrupt-mode-enabled": {
+      "displayName": "Включить режим прерываний для Data Engine",
+      "description": "Указывает, должен ли демон-цель SPDK работать в режиме прерываний. Этот параметр применим только когда включен V2 Data Engine.\n\n  - НЕ ИЗМЕНЯЙТЕ ЭТОТ ПАРАМЕТР С ПРИСОЕДИНЕННЫМИ ТОМАМИ. Longhorn заблокирует обновление этого параметра, когда есть присоединенные v2 тома.\n\n  - `true`: Включает режим прерываний, который может снизить использование CPU.\n\n  - `false`: Использует режим опроса для максимальной производительности."
+    },
+    "data-engine-log-flags": {
+      "displayName": "Флаги журнала Data Engine",
+      "description": "Применяется только к V2 Data Engine. Указывает флаги журнала для демона-цели SPDK."
+    },
+    "data-engine-log-level": {
+      "displayName": "Уровень журнала Data Engine",
+      "description": "Применяется только к V2 Data Engine. Указывает уровень журнала для демона-цели SPDK. Поддерживаемые значения: Error, Warning, Notice, Info, Debug. По умолчанию - Notice."
+    },
+    "data-engine-memory-size": {
+      "displayName": "Размер памяти Data Engine",
+      "description": "Применяется только к V2 Data Engine. Указывает размер памяти в МиБ, выделяемой демону-цели SPDK. Когда включены огромные страницы, это определяет размер огромной страницы; когда используется обычная память, огромные страницы отключены."
+    },
+    "default-backing-image-manager-image": {
+      "displayName": "Образ менеджера backing-образов по умолчанию",
+      "description": "Образ менеджера backing-образов по умолчанию, используемый менеджером. Может быть изменен только в командной строке при запуске менеджера"
+    },
+    "default-backup-block-size": {
+      "displayName": "Размер блока резервного копирования по умолчанию",
+      "description": "Указывает размер блока резервного копирования по умолчанию в МиБ, используемый при создании нового тома. Поддерживаемые значения: 2 или 16."
+    },
+    "default-data-locality": {
+      "displayName": "Локальность данных по умолчанию",
+      "description": "Мы говорим, что том Longhorn имеет локальность данных, если есть локальная реплика тома на том же узле, что и под, который использует том.\n\nЭтот параметр определяет локальность данных по умолчанию при создании тома из UI Longhorn. Для конфигурации Kubernetes обновите `dataLocality` в StorageClass.\n\nДоступные режимы:\n\n- **disabled**. Это опция по умолчанию. Может быть или не быть реплика на том же узле, что и присоединенный том (рабочая нагрузка).\n- **best-effort**. Эта опция указывает Longhorn стараться держать реплику на том же узле, что и присоединенный том (рабочая нагрузка). Longhorn не остановит том, даже если не может держать реплику локально для присоединенного тома (рабочей нагрузки) из-за ограничений среды, например, недостаточно места на диске, несовместимые теги дисков и т.д.\n- **strict-local**. Эта опция заставляет Longhorn держать только одну реплику на том же узле, что и присоединенный том."
+    },
+    "default-data-path": {
+      "displayName": "Путь к данным по умолчанию",
+      "description": "Путь по умолчанию для хранения данных на хосте. Абсолютный путь к каталогу указывает на диск файловой системы, используемый V1 Data Engine, в то время как путь к блочному устройству указывает на диск блочного типа, используемый V2 Data Engine."
+    },
+    "default-engine-image": {
+      "displayName": "Образ движка по умолчанию",
+      "description": "Образ движка по умолчанию, используемый менеджером. Может быть изменен только в командной строке при запуске менеджера.\n\n**Примечание:** Этот образ движка требуется только для V1 Data Engine и не используется V2 Data Engine."
+    },
+    "default-instance-manager-image": {
+      "displayName": "Образ менеджера экземпляров по умолчанию",
+      "description": "Образ менеджера экземпляров по умолчанию, используемый менеджером. Может быть изменен только в командной строке при запуске менеджера"
+    },
+    "default-longhorn-static-storage-class": {
+      "displayName": "Имя статического StorageClass Longhorn по умолчанию",
+      "description": "'storageClassName' присваивается PV и PVC, которые создаются для существующего тома Longhorn. Имя StorageClass также может использоваться как метка, поэтому можно использовать StorageClass Longhorn для привязки рабочей нагрузки к существующему PV без создания объекта Kubernetes StorageClass."
+    },
+    "default-min-number-of-backing-image-copies": {
+      "displayName": "Минимальное количество копий backing-образа по умолчанию",
+      "description": "Минимальное количество копий backing-образа, которое поддерживает Longhorn по умолчанию"
+    },
+    "default-replica-count": {
+      "displayName": "Количество реплик по умолчанию",
+      "description": "Количество реплик по умолчанию при создании тома из UI Longhorn. Для конфигурации Kubernetes обновите `numberOfReplicas` в StorageClass"
+    },
+    "deleting-confirmation-flag": {
+      "displayName": "Флаг подтверждения удаления",
+      "description": "Этот флаг предназначен для предотвращения случайного удаления Longhorn, которое может привести к потере данных.\n\nУстановите этот флаг в **true**, чтобы разрешить удаление Longhorn. Если этот флаг **false**, задание на удаление Longhorn завершится ошибкой."
+    },
+    "detach-manually-attached-volumes-when-cordoned": {
+      "displayName": "Отсоединять вручную присоединенные тома при переводе узла в режим карантина",
+      "description": "Автоматически отсоединять тома, которые были присоединены вручную, когда узел переведен в режим карантина (cordoned)."
+    },
+    "disable-revision-counter": {
+      "displayName": "Отключить счетчик ревизий",
+      "description": "Этот параметр только для томов, созданных через UI. По умолчанию true, что означает, что Longhorn не будет иметь файл счетчика ревизий для отслеживания каждой записи в том. Во время восстановления Longhorn будет использовать время последней модификации и размер файла 'volume-head-xxx.img' для выбора кандидата реплики для восстановления всего тома. Если этот параметр false, будет файл счетчика ревизий для отслеживания каждой записи в том. Во время восстановления Longhorn выберет реплику с наибольшим счетчиком ревизий как кандидата для восстановления всего тома."
+    },
+    "disable-scheduling-on-cordoned-node": {
+      "displayName": "Отключить планирование на узле в режиме карантина",
+      "description": "Отключить планирование реплик Longhorn менеджером на узле Kubernetes, переведенном в режим карантина (cordoned)"
+    },
+    "disable-snapshot-purge": {
+      "displayName": "Отключить очистку снимков",
+      "description": "Временно предотвратить все попытки очистки снимков тома"
+    },
+    "engine-replica-timeout": {
+      "displayName": "Тайм-аут реплики движка",
+      "description": "Время в секундах ожидания ответа от реплики перед пометкой ее как ошибочной. Допустимы значения от 8 до 30. Тайм-аут реплики движка действует только при наличии ожидающих запросов ввода-вывода.\n\nЭтот параметр применяется только к дополнительным репликам. Движок V1 помечает последнюю активную реплику как ошибочную только после истечения удвоенного настроенного количества секунд (значение тайм-аута x 2). Такое поведение предназначено для балансировки между отзывчивостью тома и доступностью тома.\n\n- Движок может быстро (после настроенного тайм-аута) игнорировать отдельные реплики, которые перестали отвечать, в пользу других доступных. Это гарантирует, что будущие операции ввода-вывода не будут задерживаться.\n\n- Движок ожидает последнюю реплику (до удвоенного настроенного тайм-аута), чтобы предотвратить ненужный сбой из-за отсутствия доступных бэкендов."
+    },
+    "failed-backup-ttl": {
+      "displayName": "Время жизни неудачной резервной копии",
+      "description": "В минутах. Этот параметр определяет, как долго Longhorn будет хранить ресурс резервной копии, которая завершилась неудачей. Установите 0 для отключения автоудаления.\nНеудачные резервные копии будут проверяться и очищаться во время опроса backupstore, который контролируется параметром **Backupstore Poll Interval**.\nТаким образом, это значение определяет минимальный интервал ожидания очистки. А фактический интервал очистки кратен **Backupstore Poll Interval**.\nОтключение **Backupstore Poll Interval** также означает отключение автоудаления неудачных резервных копий."
+    },
+    "fast-replica-rebuild-enabled": {
+      "displayName": "Быстрое перестроение реплик",
+      "description": "Этот параметр включает функцию быстрого перестроения реплик. Она основана на контрольных суммах файлов снимков диска, поэтому установка snapshot-data-integrity в **enable** или **fast-check** является обязательным условием."
+    },
+    "freeze-filesystem-for-snapshot": {
+      "displayName": "Заморозить файловую систему для снимка",
+      "description": "Этот параметр применяется только к томам с режимом тома Kubernetes `Filesystem`. Когда включено, Longhorn замораживает файловую систему тома непосредственно перед созданием инициированного пользователем снимка. Когда отключено или когда режим тома Kubernetes - `Block`, Longhorn вместо этого пытается выполнить системную синхронизацию перед созданием инициированного пользователем снимка.\n\nКогда этот параметр отключен, все данные сбрасываются на диск непосредственно перед созданием снимка, но Longhorn не может полностью блокировать попытки записи в короткий интервал между системной синхронизацией и созданием снимка. Ввод-вывод не приостанавливается во время системной синхронизации, поэтому рабочие нагрузки, скорее всего, не заметят, что создается снимок.\n\nЗначение по умолчанию для этого параметра - `false`, потому что ядра версии `v5.17` или ранее могут некорректно реагировать, когда том выходит из строя во время заморозки. Это маловероятно, но если это произойдет, затронутое ядро не позволит вам отмонтировать файловую систему или остановить процессы, использующие файловую систему, без перезагрузки узла. Включайте этот параметр, только если вы планируете использовать ядра версии `5.17` или новее и файловые системы ext4 или XFS.\n\nВы можете переопределить этот параметр (используя поле freezeFilesystemForSnapshot) для конкретных томов через UI Longhorn, StorageClass или прямые изменения существующего тома."
+    },
+    "guaranteed-instance-manager-cpu": {
+      "displayName": "Гарантированный CPU для менеджера экземпляров",
+      "description": "Процент от общих выделяемых ресурсов CPU на каждом узле, резервируемый для каждого пода менеджера экземпляров. Например, 10 означает, что 10% от общего CPU на узле будет выделено каждому поду менеджера экземпляров на этом узле. Это поможет поддерживать стабильность движка и реплик при высокой нагрузке на узел.\n\nЧтобы предотвратить неожиданный сбой экземпляра тома (движок/реплика), а также гарантировать относительно приемлемую производительность ввода-вывода, вы можете использовать следующую формулу для расчета значения этого параметра:\n\n`Гарантированный CPU менеджера экземпляров = Предполагаемое максимальное количество движков томов Longhorn и реплик на узле * 0.1 / Общее количество выделяемых CPU на узле * 100`\n\nРезультат вышеуказанного расчета не означает, что это максимальные ресурсы CPU, необходимые рабочим нагрузкам Longhorn. Чтобы полностью использовать производительность ввода-вывода томов Longhorn, вы можете выделить/гарантировать больше ресурсов CPU через этот параметр.\n\nЕсли сейчас трудно оценить использование, вы можете оставить значение по умолчанию - 12%. Затем вы можете настроить его, когда нет запущенных рабочих нагрузок, использующих тома Longhorn.\n\nПРЕДУПРЕЖДЕНИЕ:\n\n  - Значение 0 означает снятие запросов CPU для подов менеджера экземпляров.\n\n  - Учитывая возможные новые поды менеджера экземпляров в дальнейшем обновлении системы, это значение с плавающей точкой находится в диапазоне от 0 до 40.\n\n  - Еще один набор подов менеджера экземпляров может потребоваться развернуть при обновлении системы Longhorn. Если текущих доступных CPU узлов недостаточно для новых подов менеджера экземпляров, вам необходимо отсоединить тома, использующие самые старые поды менеджера экземпляров, чтобы Longhorn мог автоматически очистить старые поды и освободить ресурсы CPU. Затем будут запущены новые поды с последним образом менеджера экземпляров.\n\n  - Этот глобальный параметр будет игнорироваться для узла, если на узле установлено поле \"InstanceManagerCPURequest\".\n\n  - После изменения этого параметра под менеджера экземпляров, использующий этот глобальный параметр, будет автоматически перезапущен без запущенных экземпляров на менеджере экземпляров.\n\n  - Для V2 Data Engine демон-цель SPDK внутри каждого пода менеджера экземпляров использует одно или несколько выделенных ядер CPU. Установка минимального использования CPU имеет решающее значение для поддержания стабильности в периоды высокой нагрузки на узел."
+    },
+    "instance-manager-pod-liveness-probe-timeout": {
+      "displayName": "Тайм-аут проверки живости пода менеджера экземпляров",
+      "description": "В секундах. Параметр указывает тайм-аут для проверки живости пода менеджера экземпляров. Значение по умолчанию - 10 секунд.\n\nПРЕДУПРЕЖДЕНИЕ:\n\n  - При применении параметра Longhorn попытается перезапустить все поды менеджера экземпляров, если все тома отсоединены, и в конечном итоге перезапустит под менеджера экземпляров без запущенных экземпляров на менеджере экземпляров."
+    },
+    "kubernetes-cluster-autoscaler-enabled": {
+      "displayName": "Включить Kubernetes Cluster Autoscaler (Экспериментально)",
+      "description": "Параметр, уведомляющий Longhorn о том, что кластер использует Kubernetes Cluster Autoscaler.\n\nLonghorn предотвращает потерю данных, разрешая Cluster Autoscaler масштабировать узел только при соблюдении всех условий:\n\n  - Нет тома, присоединенного к узлу.\n\n  - Не является последним узлом, содержащим реплику любого тома.\n\n  - Не запускает под компонентов backing-образа.\n\n  - Не запускает под компонентов менеджера общих ресурсов."
+    },
+    "latest-longhorn-version": {
+      "displayName": "Последняя версия Longhorn",
+      "description": "Последняя доступная версия Longhorn. Обновляется автоматически Upgrade Checker"
+    },
+    "log-level": {
+      "displayName": "Уровень журнала",
+      "description": "Уровень журнала Panic, Fatal, Error, Warn, Info, Debug, Trace, используемый в менеджере Longhorn. По умолчанию Info."
+    },
+    "log-path": {
+      "displayName": "Путь к журналам",
+      "description": "Указывает каталог на хосте, где Longhorn хранит файлы журналов для пода менеджера экземпляров. В настоящее время используется только для подов менеджера экземпляров в v2 data engine."
+    },
+    "long-grpc-timeout": {
+      "displayName": "Длительный тайм-аут gRPC",
+      "description": "Количество секунд, которое Longhorn отводит на завершение операций перестроения реплик и клонирования снимков."
+    },
+    "node-down-pod-deletion-policy": {
+      "displayName": "Политика удаления пода при недоступности узла",
+      "description": "Определяет действие Longhorn, когда том зависает с подом StatefulSet/Deployment на узле, который недоступен.\n- **do-nothing** - поведение Kubernetes по умолчанию, никогда не принудительно удалять завершающиеся поды StatefulSet/Deployment. Поскольку под на недоступном узле не удаляется, тома Longhorn зависают на недоступных узлах.\n- **delete-statefulset-pod** - Longhorn принудительно удалит завершающиеся поды StatefulSet на недоступных узлах, чтобы освободить тома Longhorn, и Kubernetes сможет запустить заменяющие поды.\n- **delete-deployment-pod** - Longhorn принудительно удалит завершающиеся поды Deployment на недоступных узлах, чтобы освободить тома Longhorn, и Kubernetes сможет запустить заменяющие поды.\n- **delete-both-statefulset-and-deployment-pod** - Longhorn принудительно удалит завершающиеся поды StatefulSet/Deployment на недоступных узлах, чтобы освободить тома Longhorn, и Kubernetes сможет запустить заменяющие поды."
+    },
+    "node-drain-policy": {
+      "displayName": "Политика при дренаже узла",
+      "description": "Определяет политику, используемую при дренаже узла с последней здоровой репликой тома.\n- **block-for-eviction** - Longhorn автоматически вытеснит все реплики и заблокирует дренаж до завершения вытеснения.\n- **block-for-eviction-if-contains-last-replica** - Longhorn автоматически вытеснит любые реплики, у которых нет здорового аналога, и заблокирует дренаж до завершения вытеснения.\n- **block-if-contains-last-replica** - Longhorn заблокирует дренаж, когда узел содержит последнюю здоровую реплику тома.\n- **allow-if-replica-is-stopped** - Longhorn разрешит дренаж, когда узел содержит последнюю здоровую реплику тома, но реплика остановлена. ПРЕДУПРЕЖДЕНИЕ: возможна потеря данных, если узел будет удален после дренажа. Выберите эту опцию, если вы хотите выполнить дренаж узла и провести обновление/обслуживание на месте.\n- **always-allow** - Longhorn разрешит дренаж, даже если узел содержит последнюю здоровую реплику тома. ПРЕДУПРЕЖДЕНИЕ: возможна потеря данных, если узел будет удален после дренажа. Также возможно повреждение данных, если последняя реплика работала во время дренажа."
+    },
+    "offline-replica-rebuilding": {
+      "displayName": "Автономное перестроение реплик",
+      "description": "Включает автоматическое перестроение деградированных реплик, пока том отсоединен. Этот параметр действует только если индивидуальный параметр тома установлен в `ignored` или `enabled`.\n\nДоступные варианты:\n\n- **true**: Включает автономное перестроение реплик для всех отсоединенных томов, если не переопределено индивидуальными настройками тома.\n\n- **false**: Отключает автономное перестроение реплик глобально, если не переопределено индивидуальными настройками тома.\n\n**Примечание:** Автономное перестроение применяется только когда том отсоединен. Тома в состоянии ошибки не запустят автономное перестроение."
+    },
+    "orphan-resource-auto-deletion": {
+      "displayName": "Автоудаление осиротевших ресурсов",
+      "description": "Этот параметр позволяет Longhorn автоматически удалять осиротевшие ресурсы и соответствующие им осиротевшие данные.\n\nОсиротевшие ресурсы, находящиеся на узлах, которые находятся в состоянии down или unknown, не будут очищены автоматически.\n\nПеречислите включенные типы ресурсов в списке, разделенном точкой с запятой.\n\nДоступные элементы:\n\n- **replica-data**: хранилище данных реплики\n\n- **instance**: экземпляр движка и реплики времени выполнения"
+    },
+    "orphan-resource-auto-deletion-grace-period": {
+      "displayName": "Льготный период автоудаления осиротевших ресурсов",
+      "description": "Указывает время ожидания в секундах перед автоматическим удалением Longhorn осиротевшего пользовательского ресурса (CR) и связанных с ним ресурсов.\n\n**Примечание:** Если пользователь вручную удаляет осиротевший CR, удаление происходит немедленно и не учитывает этот льготный период."
+    },
+    "priority-class": {
+      "displayName": "Класс приоритета",
+      "description": "Имя класса приоритета для установки на компоненты Longhorn. Это может помочь предотвратить вытеснение компонентов Longhorn при давлении на узел.\nСистема Longhorn содержит компоненты, развернутые пользователем (например, Longhorn manager, Longhorn driver, Longhorn UI) и компоненты, управляемые системой (например, менеджер экземпляров, образ движка, CSI драйвер и т.д.). Обратите внимание, что этот параметр устанавливает класс приоритета только для компонентов, управляемых системой. В зависимости от того, как вы развернули Longhorn, вам необходимо установить класс приоритета для компонентов, развернутых пользователем, в Helm chart или в YAML файле развертывания."
+    },
+    "recurring-failed-jobs-history-limit": {
+      "displayName": "Лимит истории неудачных заданий cronjob",
+      "description": "Этот параметр указывает, сколько историй неудачных заданий резервного копирования или снимков должно сохраняться.\n\nИстория не будет сохраняться, если значение равно 0."
+    },
+    "recurring-job-max-retention": {
+      "displayName": "Максимальное количество сохраняемых для периодического задания",
+      "description": "Этот параметр указывает, сколько снимков или резервных копий должно сохраняться."
+    },
+    "recurring-successful-jobs-history-limit": {
+      "displayName": "Лимит истории успешных заданий cronjob",
+      "description": "Этот параметр указывает, сколько историй успешных заданий резервного копирования или снимков должно сохраняться.\n\nИстория не будет сохраняться, если значение равно 0."
+    },
+    "registry-secret": {
+      "displayName": "Секрет реестра",
+      "description": "Имя Kubernetes Secret"
+    },
+    "remove-snapshots-during-filesystem-trim": {
+      "displayName": "Удалять снимки во время обрезки файловой системы",
+      "description": "Этот параметр позволяет функции обрезки файловой системы Longhorn автоматически помечать последний снимок и его предков как удаленные и останавливается на снимке, содержащем несколько дочерних элементов.\n\nПоскольку функция обрезки файловой системы Longhorn может применяться только к голове тома и следующим за ней непрерывно удаленным или системным снимкам, попытка обрезать удаленный файл из действительного снимка ничего не даст, но файловая система отбросит такого рода информацию об обрезаемых файлах в памяти. Позже, если вы пометите снимок как удаленный и захотите повторить обрезку, вам может потребоваться отмонтировать и снова смонтировать файловую систему, чтобы файловая система могла повторно собрать информацию об обрезаемых файлах."
+    },
+    "replica-auto-balance": {
+      "displayName": "Автобалансировка реплик",
+      "description": "Включение этого параметра автоматически перебалансирует реплики при обнаружении доступного узла.\n\nДоступные глобальные варианты:\n\n- **disabled**. Это опция по умолчанию. Автобалансировка реплик не будет выполняться.\n- **least-effort**. Эта опция указывает Longhorn балансировать реплики для минимальной избыточности.\n- **best-effort**. Эта опция указывает Longhorn балансировать реплики для равномерной избыточности.\n\nLonghorn также поддерживает индивидуальную настройку тома. Параметр может быть указан на странице Volume, это переопределяет глобальную настройку.\n\nДоступные варианты настройки тома:\n\n- **ignored**. Это опция по умолчанию, которая указывает Longhorn наследовать глобальную настройку.\n- **disabled**. Эта опция указывает, что автобалансировка реплик не должна выполняться.\n- **least-effort**. Эта опция указывает Longhorn балансировать реплики для минимальной избыточности.\n- **best-effort**. Эта опция указывает Longhorn балансировать реплики для равномерной избыточности."
+    },
+    "replica-auto-balance-disk-pressure-percentage": {
+      "displayName": "Порог давления на диск для автобалансировки реплик (%)",
+      "description": "Процент используемого хранилища, который запускает автоматическую балансировку реплик.\n\nКогда порог достигнут, Longhorn автоматически перестраивает реплики, находящиеся под давлением на диске, на другой диск в пределах того же узла.\n\nЧтобы отключить эту функцию, установите значение 0.\n\n**Примечание:** Этот параметр действует только при выполнении следующих условий:\n- **Автобалансировка реплик** установлена в **best-effort**.\n- По крайней мере один другой диск на узле имеет достаточное свободное пространство.\n\n**Примечание:** На эту функцию не влияет параметр **Мягкая анти-аффинность реплик на уровне узлов**."
+    },
+    "replica-disk-soft-anti-affinity": {
+      "displayName": "Мягкая анти-аффинность реплик на уровне дисков",
+      "description": "Разрешить планирование на дисках с существующими здоровыми репликами того же тома"
+    },
+    "replica-file-sync-http-client-timeout": {
+      "displayName": "Тайм-аут HTTP клиента к серверу синхронизации файлов реплик",
+      "description": "В секундах. Параметр указывает тайм-аут HTTP клиента к серверу синхронизации файлов."
+    },
+    "replica-rebuilding-bandwidth-limit": {
+      "displayName": "Лимит пропускной способности перестроения реплик",
+      "description": "Применяется только к V2 Data Engine. Указывает лимит пропускной способности записи по умолчанию в мегабайтах в секунду (МБ/с) для перестроения реплик тома. Если это значение установлено в 0, ограничения пропускной способности записи не будет. Индивидуальные тома могут переопределить этот параметр, указав свой собственный лимит пропускной способности перестроения."
+    },
+    "replica-replenishment-wait-interval": {
+      "displayName": "Интервал ожидания пополнения реплик",
+      "description": "В секундах. Интервал определяет, как долго Longhorn будет ждать, по крайней мере, для повторного использования существующих данных на ошибочной реплике, вместо непосредственного создания новой реплики для деградированного тома.\nПредупреждение: Эта опция работает только при наличии ошибочной реплики в томе. И эта опция может заблокировать перестроение на некоторое время в этом случае."
+    },
+    "replica-soft-anti-affinity": {
+      "displayName": "Мягкая анти-аффинность реплик на уровне узлов",
+      "description": "Разрешить планирование на узлах с существующими здоровыми репликами того же тома"
+    },
+    "replica-zone-soft-anti-affinity": {
+      "displayName": "Мягкая анти-аффинность реплик на уровне зон",
+      "description": "Разрешить планирование новых реплик тома на узлы в той же зоне, что и существующие здоровые реплики. Узлы, не принадлежащие ни к какой зоне, будут рассматриваться как находящиеся в одной зоне. Обратите внимание, что Longhorn полагается на метку `topology.kubernetes.io/zone=<Имя зоны узла>` в объекте узла Kubernetes для идентификации зоны."
+    },
+    "restore-concurrent-limit": {
+      "displayName": "Лимит одновременного восстановления на резервную копию",
+      "description": "Этот параметр управляет количеством одновременно работающих рабочих потоков на одно восстановление."
+    },
+    "restore-volume-recurring-jobs": {
+      "displayName": "Восстанавливать периодические задания тома",
+      "description": "Восстанавливать периодические задания из тома резервной копии на целевом объекте резервного копирования и создавать периодические задания, если они не существуют, во время восстановления из резервной копии.\n\nLonghorn также поддерживает индивидуальную настройку тома. Параметр может быть указан на странице Backup при выполнении восстановления из резервной копии, это переопределяет глобальную настройку.\n\nДоступные варианты настройки тома:\n\n- **ignored**. Это опция по умолчанию, которая указывает Longhorn наследовать глобальную настройку.\n- **enabled**. Эта опция принудительно указывает Longhorn восстанавливать периодические задания/группы из целевого объекта резервного копирования.\n- **disabled**. Эта опция указывает, что восстановление периодических заданий/групп не должно выполняться."
+    },
+    "rwx-volume-fast-failover": {
+      "displayName": "Быстрое переключение при отказе RWX томов",
+      "description": "Включить логику быстрого обнаружения и перемещения устаревших RWX томов (Экспериментально)"
+    },
+    "snapshot-data-integrity": {
+      "displayName": "Целостность данных снимков",
+      "description": "Этот параметр позволяет пользователям включить или отключить хеширование снимков и проверку целостности данных.\n\nДоступные варианты:\n\n- **disabled**: Отключить хеширование файлов диска снимков и проверку целостности данных.\n\n- **enabled**: Включает периодическое хеширование файлов диска снимков и проверку целостности данных. Для обнаружения повреждений, не связанных с файловой системой, вызванных битовой гнилью или другими проблемами в файлах диска снимков, система Longhorn периодически хеширует файлы и находит поврежденные. Следовательно, производительность системы будет снижена во время периодической проверки.\n\n- **fast-check**: Включает хеширование файлов диска снимков и быструю проверку целостности данных. Система Longhorn хеширует файлы диска снимков только в том случае, если они не хешированы или время изменения изменено. В этом режиме повреждения, не связанные с файловой системой, не могут быть обнаружены, но влияние на производительность системы может быть минимизировано."
+    },
+    "snapshot-data-integrity-cronjob": {
+      "displayName": "CronJob проверки целостности данных снимков",
+      "description": "Формат строки Unix-cron. Параметр определяет, когда Longhorn проверяет целостность данных файлов диска снимков.\n\nПредупреждение: Хеширование файлов диска снимков влияет на производительность системы. Рекомендуется выполнять проверки целостности данных в непиковое время и уменьшить частоту проверок."
+    },
+    "snapshot-data-integrity-immediate-check-after-snapshot-creation": {
+      "displayName": "Немедленная проверка целостности данных снимка после создания",
+      "description": "Хеширование файлов диска снимков влияет на производительность системы. Немедленное хеширование и проверка снимка могут быть отключены для минимизации влияния после создания снимка."
+    },
+    "snapshot-max-count": {
+      "displayName": "Максимальное количество снимков",
+      "description": "Максимальное количество снимков для тома. Значение должно быть от 2 до 250"
+    },
+    "stable-longhorn-versions": {
+      "displayName": "Стабильные версии Longhorn",
+      "description": "Последняя стабильная версия каждой линии минорных релизов. Обновляется автоматически Upgrade Checker"
+    },
+    "storage-minimal-available-percentage": {
+      "displayName": "Минимальный процент доступного хранилища",
+      "description": "Если минимальная доступная емкость диска превышает фактический процент доступной емкости диска, диск становится непригодным для планирования до тех пор, пока не освободится больше места."
+    },
+    "storage-network": {
+      "displayName": "Сеть хранения",
+      "description": "Longhorn использует сеть хранения для внутрикластерного трафика данных. Оставьте это поле пустым для использования сети кластера Kubernetes.\n\nДля изоляции сети хранения введите предварительно существующее NetworkAttachmentDefinition в формате **<namespace>/<name>**.\n\nПо умолчанию этот параметр применяется только к томам RWO (Read-Write-Once). Для томов RWX (Read-Write-Many) включите параметр 'Сеть хранения для RWX тома'.\n\nПРЕДУПРЕЖДЕНИЕ:\n\n  - В кластере должен быть предварительно установлен Multus, и IP-адреса NetworkAttachmentDefinition должны быть достижимы между узлами.\n\n  - При применении параметра Longhorn попытается перезапустить все поды менеджера экземпляров и менеджера backing-образов, если все тома отсоединены, и в конечном итоге перезапустит под менеджера экземпляров без запущенных экземпляров на менеджере экземпляров."
+    },
+    "storage-network-for-rwx-volume-enabled": {
+      "displayName": "Сеть хранения для RWX тома",
+      "description": "Этот параметр позволяет Longhorn использовать сеть хранения для томов RWX (Read-Write-Many).\n\nПРЕДУПРЕЖДЕНИЕ:\n\n  - Этот параметр следует изменять после отсоединения всех RWX томов Longhorn, потому что некоторые поды компонентов Longhorn будут пересозданы для применения параметра.\n\n  - Когда этот параметр включен, RWX тома монтируются с сетью хранения в пространстве имен сети контейнера пода плагина CSI. В результате перезапуск пода плагина CSI при наличии присоединенных RWX томов может привести к тому, что его путь данных перестанет отвечать. Когда это происходит, вы должны перезапустить под рабочей нагрузки для восстановления соединения монтирования. Альтернативно, вы можете включить параметр 'Автоматическое удаление пода рабочей нагрузки при неожиданном отсоединении тома', чтобы разрешить Longhorn автоматически удалять под рабочей нагрузки."
+    },
+    "storage-over-provisioning-percentage": {
+      "displayName": "Процент избыточного выделения хранилища",
+      "description": "Процент избыточного выделения определяет, сколько хранилища может быть выделено относительно емкости жесткого диска"
+    },
+    "storage-reserved-percentage-for-default-disk": {
+      "displayName": "Процент зарезервированного хранилища для диска по умолчанию",
+      "description": "Зарезервированный процент указывает процент дискового пространства, который не будет выделен диску по умолчанию на каждом новом узле Longhorn"
+    },
+    "support-bundle-failed-history-limit": {
+      "displayName": "Лимит истории неудачных support bundle",
+      "description": "Этот параметр указывает, сколько неудачных support bundle может существовать в кластере.\n\nСохраненный неудачный support bundle предназначен для целей анализа и требует ручной очистки.\n\nУстановите это значение в **0**, чтобы Longhorn автоматически удалял все неудачные support bundle."
+    },
+    "support-bundle-manager-image": {
+      "displayName": "Образ менеджера support bundle",
+      "description": "Образ менеджера support bundle для генерации support bundle."
+    },
+    "support-bundle-node-collection-timeout": {
+      "displayName": "Тайм-аут сбора узлов для support bundle",
+      "description": "В минутах. Тайм-аут для сбора пакетов узлов для генерации support bundle. Значение по умолчанию - 30.\n\nКогда тайм-аут достигнут, генерация support bundle продолжится без требования сбора пакетов узлов."
+    },
+    "system-managed-components-node-selector": {
+      "displayName": "Селектор узлов для компонентов, управляемых системой",
+      "description": "Если вы хотите ограничить работу компонентов Longhorn только определенным набором узлов, вы можете установить селектор узлов для **всех** компонентов Longhorn. Система Longhorn содержит компоненты, развернутые пользователем (например, Longhorn manager, Longhorn driver, Longhorn UI) и компоненты, управляемые системой (например, менеджер экземпляров, образ движка, CSI драйвер и т.д.). Вы должны следовать следующему порядку при установке селектора узлов:\n\n1. Установите селектор узлов для компонентов, развернутых пользователем, в Helm chart или в YAML файле развертывания, в зависимости от того, как вы развернули Longhorn.\n\n2. Установите селектор узлов для компонентов, управляемых системой, здесь.\n\nВсе тома Longhorn должны быть отсоединены перед изменением настроек селектора узлов. Мы рекомендуем устанавливать селектор узлов во время развертывания Longhorn, потому что система Longhorn не может работать во время обновления. Несколько пар ключ-значение меток разделяются точкой с запятой. Например:\n\n* `label-key1=label-value1; label-key2=label-value2`\n\nПожалуйста, обратитесь к документации на https://longhorn.io для более подробных инструкций по изменению селектора узлов"
+    },
+    "system-managed-pods-image-pull-policy": {
+      "displayName": "Политика извлечения образов для подов, управляемых системой",
+      "description": "Этот параметр определяет политику извлечения образов для подов, управляемых системой Longhorn, например, менеджер экземпляров, образ движка, CSI драйвер и т.д. Новая политика извлечения образов будет применяться только после перезапуска подов, управляемых системой."
+    },
+    "taint-toleration": {
+      "displayName": "Toleration для taints Kubernetes",
+      "description": "Если вы хотите выделить узлы только для хранения реплик Longhorn и отклонять другие общие рабочие нагрузки, вы можете установить tolerations для **всех** компонентов Longhorn и добавить taints на узлы, выделенные для хранения. Система Longhorn содержит компоненты, развернутые пользователем (например, Longhorn manager, Longhorn driver, Longhorn UI) и компоненты, управляемые системой (например, менеджер экземпляров, образ движка, CSI драйвер и т.д.). Этот параметр устанавливает tolerations для taints только для компонентов, управляемых системой. В зависимости от того, как вы развернули Longhorn, вам необходимо установить tolerations для taints для компонентов, развернутых пользователем, в Helm chart или в YAML файле развертывания. Все тома Longhorn должны быть отсоединены перед изменением настроек tolerations. Мы рекомендуем устанавливать tolerations во время развертывания Longhorn, потому что система Longhorn не может работать во время обновления. Здесь можно установить несколько tolerations, и эти tolerations разделяются точкой с запятой. Например:\n\n* `key1=value1:NoSchedule; key2:NoExecute:` этот toleration терпит всё, потому что пустой ключ с оператором `Exists` соответствует всем ключам, значениям и эффектам.\n\n* `key1=value1:` этот toleration имеет пустой эффект. Он соответствует всем эффектам с ключом `key1`.\n\nПоскольку `kubernetes.io` используется как ключ всех tolerations по умолчанию в Kubernetes, он не должен использоваться в настройках tolerations."
+    },
+    "upgrade-checker": {
+      "displayName": "Включить проверку обновлений",
+      "description": "Проверка обновлений будет периодически проверять наличие новой версии Longhorn. Когда доступна новая версия, в интерфейсе появится уведомление"
+    },
+    "upgrade-responder-url": {
+      "displayName": "URL ответчика обновлений",
+      "description": "Ответчик обновлений отправляет уведомление, когда становится доступной новая версия Longhorn, на которую вы можете обновиться"
+    },
+    "v1-data-engine": {
+      "displayName": "V1 Data Engine",
+      "description": "Параметр, позволяющий включить V1 Data Engine.\n\n  - НЕ ИЗМЕНЯЙТЕ ЭТОТ ПАРАМЕТР С ПРИСОЕДИНЕННЫМИ ТОМАМИ. Longhorn заблокирует обновление этого параметра, когда есть присоединенные v1 тома."
+    },
+    "v2-data-engine": {
+      "displayName": "V2 Data Engine",
+      "description": "Этот параметр позволяет пользователям активировать v2 data engine, основанный на SPDK. В настоящее время он находится в экспериментальной фазе и не должен использоваться в производственной среде.\n\n  - НЕ ИЗМЕНЯЙТЕ ЭТОТ ПАРАМЕТР С ПРИСОЕДИНЕННЫМИ ТОМАМИ. Longhorn заблокирует обновление этого параметра, когда есть присоединенные v2 тома.\n\n  - Когда V2 Data Engine включен, каждый под менеджера экземпляров использует 1 ядро CPU. Такое высокое использование CPU обусловлено демоном-целью SPDK, работающим внутри каждого пода менеджера экземпляров. Демон-цель SPDK отвечает за обработку операций ввода-вывода и требует интенсивного опроса. В результате он потребляет 100% выделенного ядра CPU для эффективного управления и обработки запросов ввода-вывода, обеспечивая оптимальную производительность и отзывчивость операций хранения."
+    }
+  }
+}

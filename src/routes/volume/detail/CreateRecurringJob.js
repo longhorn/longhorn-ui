@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Icon, Button, Select, Checkbox, InputNumber, Tabs, Tooltip } from 'antd'
 import { ModalBlur, ReactCron } from '../../../components'
+import { withTranslation } from 'react-i18next'
 
 const Option = Select.Option
 const FormItem = Form.Item
@@ -47,6 +48,7 @@ const noRetain = (val) => {
 }
 
 const modal = ({
+  t,
   item,
   recurringJobOptions,
   visible,
@@ -122,7 +124,7 @@ const modal = ({
     })
   }
   const modalOpts = {
-    title: `${isEdit ? 'Edit' : 'Create'} Recurring Job`,
+    title: t('createRecurringJob.modal.title', { action: isEdit ? t('common.edit') : t('common.create') }),
     visible,
     onCancel,
     width: 800,
@@ -191,7 +193,7 @@ const modal = ({
   const formKeys = keys.map((k, index) => (
     <Form.Item
       {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-      label={index === 0 ? 'Groups' : ''}
+      label={index === 0 ? t('createRecurringJobDetail.form.groups') : ''}
       key={k.index}
     >
       {getFieldDecorator(`groups[${k.index}]`, {
@@ -201,10 +203,10 @@ const modal = ({
           {
             required: false,
             whitespace: true,
-            message: 'Please input Group Name',
+            message: t('createRecurringJobDetail.validation.groupNameRequired'),
           },
         ],
-      })(<Input placeholder="Group name" style={{ width: '80%', marginRight: 8 }} />)}
+      })(<Input placeholder={t('createRecurringJobDetail.placeholder.groupName')} style={{ width: '80%', marginRight: 8 }} />)}
       {keys.length > 1 ? (
         <Icon
           className="dynamic-delete-button"
@@ -247,7 +249,7 @@ const modal = ({
       <div style={{ width: '45%', paddingLeft: '55px' }}>
         <Form.Item
           {...(index === 0 ? formItemForAddLabels : formItemLayoutWithOutForAddLabels)}
-          label={index === 0 ? 'Labels' : ''}
+          label={index === 0 ? t('createRecurringJobDetail.form.labels') : ''}
           key={`${k}-key`}
         >
           {getFieldDecorator(`labels[${k}].key`, {
@@ -304,21 +306,21 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Tabs tabPosition={'top'} type="card" onChange={changeTab} defaultActiveKey="1">
-          <TabPane tab="New" key="new">
+          <TabPane tab={t('createRecurringJobDetail.tabs.new')} key="new">
             <Form layout="horizontal">
-              <FormItem label="Name" hasFeedback {...formItemLayout}>
+              <FormItem label={t('common.name')} hasFeedback {...formItemLayout}>
                 {getFieldDecorator('name', {
                   initialValue: isEdit ? item.name : nameGeneration,
                   rules: [
                     {
                       required: true,
-                      message: 'Please input Recurring Job name',
+                      message: t('createRecurringJobDetail.validation.nameRequired'),
                     },
                   ],
                 })(<Input disabled={isEdit || addForVolume} style={{ width: '80%' }} />)}
               </FormItem>
               <div style={{ display: 'flex' }}>
-                <FormItem label="Task" hasFeedback style={{ flex: 1 }} labelCol={{ span: showForceCreateCheckbox() ? 7 : 4 }} wrapperCol={{ span: 17 }}>
+                <FormItem label={t('createRecurringJobDetail.form.task')} hasFeedback style={{ flex: 1 }} labelCol={{ span: showForceCreateCheckbox() ? 7 : 4 }} wrapperCol={{ span: 17 }}>
                   {getFieldDecorator('task', {
                     initialValue: isEdit ? item.task : 'snapshot',
                     rules: [
@@ -327,17 +329,20 @@ const modal = ({
                       },
                     ],
                   })(<Select disabled={isEdit} style={{ width: '80%' }} onChange={onChangeTask}>
-                      <Option value="backup">Backup</Option>
-                      <Option value="snapshot">Snapshot</Option>
-                      <Option value="snapshot-delete">Snapshot Delete</Option>
-                      <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
-                      <Option value="filesystem-trim">Filesystem Trim</Option>
+                      <Option value="backup">{t('createRecurringJob.form.task.options.backup')}</Option>
+                      <Option value="snapshot">{t('createRecurringJob.form.task.options.snapshot')}</Option>
+                      <Option value="snapshot-delete">{t('createRecurringJob.form.task.options.snapshotDelete')}</Option>
+                      <Option value="snapshot-cleanup">{t('createRecurringJob.form.task.options.snapshotCleanup')}</Option>
+                      <Option value="filesystem-trim">{t('createRecurringJob.form.task.options.filesystemTrim')}</Option>
                   </Select>)}
                 </FormItem>
                 {showForceCreateCheckbox() && <Tooltip
                   placement="topLeft"
-                  title={`Create ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} periodically, even if expired ${getFieldValue('task') === 'backup' ? 'backups' : 'snapshots'} cannot be cleaned up.`}>
-                    <FormItem label="Force Create" style={{ width: 325 }} labelCol={{ span: 8 }} wrapperCol={{ span: 4 }}>
+                  title={t('createRecurringJobDetail.tooltip.forceCreate', {
+                    type: getFieldValue('task') === 'backup' ? t('createRecurringJobDetail.tooltip.backups') : t('createRecurringJobDetail.tooltip.snapshots'),
+                    itemType: getFieldValue('task') === 'backup' ? t('createRecurringJobDetail.tooltip.backups') : t('createRecurringJobDetail.tooltip.snapshots')
+                  })}>
+                    <FormItem label={t('createRecurringJobDetail.form.forceCreate')} style={{ width: 325 }} labelCol={{ span: 8 }} wrapperCol={{ span: 4 }}>
                       {getFieldDecorator('forceCreate', {
                         valuePropName: 'checked',
                         initialValue: false,
@@ -345,7 +350,7 @@ const modal = ({
                     </FormItem>
                 </Tooltip>}
               </div>
-              <FormItem label="Retain" hasFeedback {...formItemLayout}>
+              <FormItem label={t('createRecurringJobDetail.form.retain')} hasFeedback {...formItemLayout}>
                 {getFieldDecorator('retain', {
                   initialValue: isEdit ? item.retain : 1,
                   rules: [
@@ -355,7 +360,7 @@ const modal = ({
                   ],
                 })(<InputNumber disabled={noRetain(getFieldValue('task'))} style={{ width: '80%' }} min={0} />)}
               </FormItem>
-              <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
+              <FormItem label={t('createRecurringJobDetail.form.concurrency')} hasFeedback {...formItemLayout}>
                 {getFieldDecorator('concurrency', {
                   initialValue: isEdit ? item.concurrency : 1,
                   rules: [
@@ -365,21 +370,21 @@ const modal = ({
                   ],
                 })(<InputNumber style={{ width: '80%' }} min={1} />)}
               </FormItem>
-              <FormItem label="Cron" {...formItemLayout}>
+              <FormItem label={t('createRecurringJobDetail.form.cron')} {...formItemLayout}>
                 {getFieldDecorator('cron', {
                   initialValue: isEdit ? item.cron : cronProps.cron,
                   rules: [
                     {
                       required: true,
-                      message: 'Please edit cron expressions',
+                      message: t('createRecurringJob.form.cron.validationMessage'),
                     },
                   ],
                 })(<Input disabled={true} style={{ width: '80%' }} />)}
-                <Button style={{ marginLeft: 5 }} onClick={cronProps.openCronModal}>Edit</Button>
+                <Button style={{ marginLeft: 5 }} onClick={cronProps.openCronModal}>{t('common.edit')}</Button>
               </FormItem>
               {showParametersField && (
                 <div style={{ display: 'flex' }}>
-                  <FormItem label="Parameters" style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                  <FormItem label={t('createRecurringJobDetail.form.parameters')} style={{ flex: '1 50%' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                     {getFieldDecorator('parametersKey', {
                       initialValue: isEdit && item?.parameters && Object.keys(item.parameters)[0] ? Object.keys(item.parameters)[0] : '',
 
@@ -393,7 +398,7 @@ const modal = ({
                       rules: [
                         {
                           required: isParametersValueRequired,
-                          message: 'Value is required',
+                          message: t('createRecurringJobDetail.validation.valueRequired'),
                         },
                       ],
                     })(<InputNumber min={0} style={{ width: '66%' }} />)}
@@ -404,13 +409,13 @@ const modal = ({
               <Form.Item {...formItemLayoutWithOutLabel}>
                 <span style={{ width: '38%', display: 'inline-block', marginRight: 10 }}>
                   <Button type="dashed" style={{ width: '100%' }} onClick={add}>
-                    <Icon type="plus" /> Add Group
+                    <Icon type="plus" /> {t('createRecurringJob.form.groups.addGroupButton')}
                   </Button>
                 </span>
                 <span style={{ width: '38%', display: 'inline-block', marginLeft: 10 }}>
                   <Button type="dashed" style={{ width: '100%' }} disabled={disableAddDefaultGroup} onClick={addDefaultGroup}>
-                    <Tooltip title={'Volume with no recurring jobs or groups will automatically apply to the recurring jobs in the default group.'}>
-                      <Icon type="plus" /> Add to default group
+                    <Tooltip title={t('createRecurringJobDetail.tooltip.defaultGroup')}>
+                      <Icon type="plus" /> {t('createRecurringJob.form.groups.addDefaultGroupButton')}
                     </Tooltip>
                   </Button>
                 </span>
@@ -418,20 +423,20 @@ const modal = ({
               {formLabels}
               <Form.Item {...formItemLayoutWithOutLabel}>
                 <Button type="dashed" onClick={addLabel} style={{ width: '80%' }}>
-                  <Icon type="plus" /> Add Label
+                  <Icon type="plus" /> {t('createRecurringJob.form.labels.addLabelButton')}
                 </Button>
               </Form.Item>
             </Form>
           </TabPane>
-          <TabPane tab="Existing" key="exit">
+          <TabPane tab={t('createRecurringJobDetail.tabs.existing')} key="exit">
             <Form layout="horizontal">
-              <FormItem label={'Recurring Job Name'} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+              <FormItem label={t('createRecurringJobDetail.form.existingJobName')} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
               {getFieldDecorator('exitName', {
                 initialValue: '',
                 rules: [
                   {
                     required: !getFieldValue('isNew'),
-                    message: 'Please Select Recurring Job Name',
+                    message: t('createRecurringJobDetail.validation.existingJobRequired'),
                   },
                 ],
               })(<Select>
@@ -451,6 +456,7 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -462,4 +468,4 @@ modal.propTypes = {
   recurringJobOptions: PropTypes.array,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

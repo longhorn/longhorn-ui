@@ -11,6 +11,7 @@ import C from '../../utils/constants'
 import CreateSystemBackup from './createSystemBackup'
 import CreateSystemRestore from './createSystemRestore'
 import { Filter } from '../../components/index'
+import { withTranslation } from 'react-i18next'
 
 class SystemBackups extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class SystemBackups extends React.Component {
   }
 
   render() {
-    const { loading, dispatch, location } = this.props
+    const { loading, dispatch, location, t } = this.props
     const me = this
     let { systemBackupsData, systemRestoresData } = this.props.systemBackups
 
@@ -198,9 +199,9 @@ class SystemBackups extends React.Component {
       location,
       defaultField: 'name',
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'state', name: 'State' },
-        { value: 'version', name: 'Version' },
+        { value: 'name', name: t('common.name') },
+        { value: 'state', name: t('systemBackups.filter.fieldOption.state') },
+        { value: 'version', name: t('systemBackups.filter.fieldOption.version') },
       ],
       onSearch(filter) {
         dispatch({
@@ -214,9 +215,9 @@ class SystemBackups extends React.Component {
       location,
       defaultField: 'name',
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'state', name: 'State' },
-        { value: 'version', name: 'Version' },
+        { value: 'name', name: t('common.name') },
+        { value: 'state', name: t('systemBackups.filter.fieldOption.state') },
+        { value: 'version', name: t('systemBackups.filter.fieldOption.version') },
       ],
       onSearch(filter) {
         dispatch({
@@ -241,7 +242,7 @@ class SystemBackups extends React.Component {
         </div>
         <div className={style.systemRestores}>
           <Icon type="file-done" />
-          <span style={{ marginLeft: '4px' }}>System Restore</span>
+          <span style={{ marginLeft: '4px' }}>{t('systemBackups.systemRestores.title')}</span>
         </div>
         <div id="systemRestoresTable" style={{ height: '43%', padding: '8px 12px 0px' }}>
           <Row gutter={24}>
@@ -268,6 +269,7 @@ SystemBackups.propTypes = {
   backup: PropTypes.object,
   location: PropTypes.object,
   backupTarget: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default connect(({ systemBackups, backup, loading, backupTarget }) => ({ systemBackups, backup, backupTarget, loading: loading.models.systemBackups }))(SystemBackups)
+export default withTranslation()(connect(({ systemBackups, backup, loading, backupTarget }) => ({ systemBackups, backup, backupTarget, loading: loading.models.systemBackups }))(SystemBackups))

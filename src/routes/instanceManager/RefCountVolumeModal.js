@@ -7,14 +7,16 @@ import { formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
 import { ModalBlur } from '../../components'
 import { LinkTo } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const modal = ({
   visible,
   onOk,
   dataSource,
+  t,
 }) => {
   const modalOpts = {
-    title: 'Volumes',
+    title: t('resource.volume.plural'),
     visible,
     onOk,
     onCancel: onOk,
@@ -23,7 +25,7 @@ const modal = ({
   }
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => sortTable(a, b, 'name'),
@@ -36,7 +38,7 @@ const modal = ({
       },
     },
     {
-      title: 'Size',
+      title: t('columns.size'),
       dataIndex: 'size',
       key: 'size',
       sorter: (a, b) => sortTable(a, b, 'size'),
@@ -49,7 +51,7 @@ const modal = ({
       },
     },
     {
-      title: 'Created',
+      title: t('columns.created'),
       dataIndex: 'created',
       key: 'created',
       sorter: (a, b) => sortTableByUTCDate(a, b, 'created'),
@@ -84,6 +86,7 @@ modal.propTypes = {
   dataSource: PropTypes.array,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default modal
+export default withTranslation()(modal)

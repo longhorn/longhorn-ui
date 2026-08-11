@@ -9,8 +9,9 @@ import upgradeIcon from '../../assets/images/upgrade.svg'
 import semver from 'semver'
 import BundlesModel from './BundlesModel'
 import StableLonghornVersions from './StableLonghornVersions'
+import { withTranslation } from 'react-i18next'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, dispatch, t }) {
   const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -46,14 +47,15 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
     gtStableLonghornVersions = gtCurrentLonghornVersionsList.slice(0, 3).join(' ')
     gtStableLonghornVersions += ', ...'
   }
+
   let versionTag = false
   semver.valid(currentVersion) && semver.valid(latestVersion) ? versionTag = semver.lt(currentVersion, latestVersion) : versionTag = false
   let upgrade = ''
   if (checkUpgrade && currentVersion !== 'dev' && latestVersion !== '' && versionTag) {
-    const upgradeTooltip = `Longhorn ${latestVersion} is now available!`
+    const upgradeTooltip = t('footer.upgrade.available', { version: latestVersion })
     upgrade = (
       <Tooltip placement="topLeft" title={upgradeTooltip}>
-        <img src={upgradeIcon} alt="Upgrade"></img>
+        <img src={upgradeIcon} alt={t('footer.upgrade.alt')}></img>
       </Tooltip>
     )
   }
@@ -116,11 +118,11 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
         <Col>
           {upgrade}
           <a target="blank" href={versionHref}>{currentVersion}</a>
-          <a target="blank" href="https://longhorn.io/docs">Documentation</a>
-          <a target="blank" onClick={showBundlesModel}>Generate Support Bundle</a>
-          <a target="blank" href={issueHref}>File an Issue</a>
-          <a target="blank" href="https://slack.cncf.io/">Slack</a>
-          {gtCurrentLonghornVersionsList && gtCurrentLonghornVersionsList.length > 0 ? <a target="blank" onClick={showStableLonghornVersions}>{`Newer Stable Versions (${gtStableLonghornVersions})`}</a> : ''}
+          <a target="blank" href="https://longhorn.io/docs">{t('footer.links.documentation')}</a>
+          <a target="blank" onClick={showBundlesModel}>{t('footer.links.generateSupportBundle')}</a>
+          <a target="blank" href={issueHref}>{t('footer.links.fileIssue')}</a>
+          <a target="blank" href="https://slack.cncf.io/">{t('footer.links.slack')}</a>
+          {gtCurrentLonghornVersionsList && gtCurrentLonghornVersionsList.length > 0 ? <a target="blank" onClick={showStableLonghornVersions}>{t('footer.stableVersions.newer', { versions: gtStableLonghornVersions })}</a> : ''}
         </Col>
         <Col>
           {getStatusIcon(volume)}
@@ -145,6 +147,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
 }
 
 Footer.propTypes = {
+  t: PropTypes.func,
   host: PropTypes.object,
   volume: PropTypes.object,
   setting: PropTypes.object,
@@ -159,4 +162,4 @@ Footer.propTypes = {
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups }))(withTranslation()(Footer))

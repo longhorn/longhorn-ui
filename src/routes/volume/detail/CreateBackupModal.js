@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Alert, Checkbox } from 'antd'
 import { ModalBlur } from '../../../components'
 import { BackupLabelInput } from '../../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 
@@ -32,6 +33,7 @@ const modal = ({
     getFieldValue,
     setFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -47,7 +49,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create Backup',
+    title: t('createBackupModal.title.createBackup'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -63,10 +65,10 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <Alert showIcon message="Create backup action could take a while depending on the actual size of the volume and network bandwidth." type="warning" />
+      <Alert showIcon message={t('createBackupModal.warning.createBackupMessage')} type="warning" />
       <div style={{ marginTop: '16px' }}>
         <BackupLabelInput form={form} />
-        <FormItem label="Full Backup" {...formItemLayout}>
+        <FormItem label={t('createBackupModal.form.fullBackup.label')} {...formItemLayout}>
           {getFieldDecorator('fullBackup', {
             valuePropName: 'checked',
             initialValue: false,
@@ -84,6 +86,7 @@ modal.propTypes = {
   item: PropTypes.object,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

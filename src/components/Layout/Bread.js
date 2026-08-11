@@ -4,6 +4,7 @@ import { Breadcrumb, Icon } from 'antd'
 import styles from './Bread.less'
 import { menu } from '../../utils'
 import { LinkTo } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 
 let pathSet = []
@@ -15,7 +16,9 @@ const getPathSet = function (menuArray, parentPath) {
       name: item.name,
       icon: item.icon || '',
       clickable: item.clickable === undefined,
+      key: item.key, // add key for translations
     }
+
     if (item.child) {
       // setting This menu is a bit special
       // the page below the menu is actually the root page
@@ -31,7 +34,7 @@ const getPathSet = function (menuArray, parentPath) {
 
 getPathSet(menu)
 
-function Bread({ location }) {
+function Bread({ location, t }) {
   let pathNames = []
   const paths = {}
 
@@ -51,9 +54,10 @@ function Bread({ location }) {
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {
       pathSet[item] = {
-        name: paths[key],
+        name: paths[key], // possible bug, key goes to name for Backup and Restore menu
         clickable: true,
         path: location.pathname.split('/').splice(0, key + 2).join('/'),
+        key: paths[key], // add key for translations
       }
     }
     return (
@@ -62,8 +66,8 @@ function Bread({ location }) {
           ? <Icon type={pathSet[item].icon} />
           : ''}
         {
-          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{pathSet[item].name}</span> : <LinkTo to={{ pathname: pathSet[item].path }}>
-              {pathSet[item].name}
+          ((pathNames.length - 1 === key) || !pathSet[item].clickable) ? <span>{t(`menu.${pathSet[item].key}`)}</span> : <LinkTo to={{ pathname: pathSet[item].path }}>
+              {t(`menu.${pathSet[item].key}`)}
             </LinkTo>
         }
       </Breadcrumb.Item>
@@ -80,7 +84,8 @@ function Bread({ location }) {
 }
 
 Bread.propTypes = {
+  t: PropTypes.func,
   location: PropTypes.object,
 }
 
-export default Bread
+export default withTranslation()(Bread)

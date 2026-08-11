@@ -10,20 +10,21 @@ import { setSortOrder } from '../../utils/store'
 import { pagination } from '../../utils/page'
 import style from './backupList.less'
 import C from '../../utils/constants'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-const BackupUrl = ({ url = '' }) => {
+const BackupUrl = ({ url = '', t }) => {
   const onCopy = (_text, copySuccess) => {
     if (copySuccess) {
-      message.success('Copied', 1.5)
+      message.success(t('backupList.backupUrl.copySuccess'), 1.5)
     } else {
-      message.error('Copy failed', 1.5)
+      message.error(t('backupList.backupUrl.copyFailed'), 1.5)
     }
   }
   return (
     <div>
-      <h3> Backup URL </h3>
+      <h3>{t('backupList.backupUrl.title')}</h3>
       <div>
         <Input defaultValue={url} style={{ width: '95%' }} />
         <CopyToClipboard onCopy={onCopy} text={url}>
@@ -36,6 +37,7 @@ const BackupUrl = ({ url = '' }) => {
 
 BackupUrl.propTypes = {
   url: PropTypes.string,
+  t: PropTypes.func.isRequired,
 }
 
 class List extends React.Component {
@@ -86,15 +88,16 @@ class List extends React.Component {
   }
 
   onCopy = (_text, copySuccess) => {
+    const { t } = this.props
     if (copySuccess) {
-      message.success('Copied', 1.5)
+      message.success(t('backupList.copySuccess'), 1.5)
     } else {
-      message.error('Copy failed', 1.5)
+      message.error(t('backupList.copyFailed'), 1.5)
     }
   }
 
   render() {
-    const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f } = this.props
+    const { backup, loading, showRestoreBackup, showBackupLabels, deleteBackup, sorter, onSorterChange, showWorkloadsStatusDetail = f => f, t } = this.props
     const dataSource = backup || []
     const handleMenuClick = (record, event) => {
       switch (event.key) {
@@ -104,8 +107,8 @@ class List extends React.Component {
         case 'delete':
           confirm({
             width: '800px',
-            title: `Are you sure you want to delete backup ${record.name} ?`,
-            content: 'If there is backup restore process in progress using this backup (including DR volumes), deleting the backup will result in restore failure and volume in the restore process will become FAULTED. Are you sure you want to delete this backup?',
+            title: t('backupList.modal.delete.title', { backupName: record.name }),
+            content: t('backupList.modal.delete.content'),
             onOk() {
               deleteBackup(record)
             },
@@ -114,7 +117,7 @@ class List extends React.Component {
         case 'getUrl':
           Modal.info({
             width: '800px',
-            content: <BackupUrl url={record.url} />,
+            content: <BackupUrl url={record.url} t={t} />,
           })
           break
         default:
@@ -123,7 +126,7 @@ class List extends React.Component {
 
     const columns = [
       {
-        title: 'ID',
+        title: t('columns.id'),
         dataIndex: 'id',
         key: 'id',
         width: 100,
@@ -136,7 +139,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Volume',
+        title: t('columns.volume'),
         dataIndex: 'volumeName',
         key: 'volumeName',
         width: 120,
@@ -155,7 +158,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Creation State',
+        title: t('columns.creationState'),
         dataIndex: 'state',
         key: 'state',
         width: 120,
@@ -178,7 +181,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Backup Mode',
+        title: t('columns.backupMode'),
         dataIndex: 'backupMode',
         key: 'backupMode',
         width: 120,
@@ -186,13 +189,13 @@ class List extends React.Component {
         render: (text) => {
           return (
             <div>
-              {text || 'incremental'}
+              {text || t('columns.backupModeDefault')}
             </div>
           )
         },
       },
       {
-        title: 'Backup Block Size',
+        title: t('columns.backupBlockSize'),
         dataIndex: 'blockSize',
         key: 'blockSize',
         width: 150,
@@ -200,7 +203,7 @@ class List extends React.Component {
         render: (text, record) => {
           if (record.state === 'Completed') {
             if (String(text) === '-1') {
-              return <span className="error">Error</span>
+              return <span className="error">{t('columns.backupBlockSizeError')}</span>
             }
             return formatMib(text)
           }
@@ -208,7 +211,7 @@ class List extends React.Component {
         }
       },
       {
-        title: 'Backup Target',
+        title: t('columns.backupTarget'),
         dataIndex: 'backupTargetName',
         key: 'backupTargetName',
         width: 120,
@@ -220,7 +223,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Snapshot Name',
+        title: t('columns.snapshotName'),
         dataIndex: 'snapshotName',
         key: 'snapshotName',
         align: 'center',
@@ -234,7 +237,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Size',
+        title: t('columns.size'),
         dataIndex: 'size',
         key: 'size',
         width: 90,
@@ -247,7 +250,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Re-Uploaded Data Size',
+        title: t('columns.reUploadedDataSize'),
         dataIndex: 'reUploadedDataSize',
         key: 'reUploadedDataSize',
         width: 150,
@@ -260,7 +263,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Newly Uploaded Data Size',
+        title: t('columns.newlyUploadedDataSize'),
         dataIndex: 'newlyUploadDataSize',
         key: 'newlyUploadDataSize',
         width: 150,
@@ -273,7 +276,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'PV/PVC',
+        title: t('columns.pvPvc'),
         dataIndex: 'labels',
         key: 'KubernetesStatus',
         width: 90,
@@ -284,23 +287,23 @@ class List extends React.Component {
             storageObj = this.formatData(record.KubernetesStatus)
           }
           let title = (<div>
-            <div><span>PV Name</span><span>: </span><span>{storageObj.pvName}</span></div>
-            <div><span>PV Status</span><span>: </span><span>{storageObj.pvStatus}</span></div>
-            { storageObj.lastPVCRefAt ? <div><span>Last time bound with PVC</span><span> : </span><span>{formatDate(storageObj.lastPVCRefAt)}</span></div> : ''}
-            { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? 'Last Bounded' : ''} PVC Name</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
+            <div><span>{t('backupList.tooltips.pvName')}</span><span>: </span><span>{storageObj.pvName}</span></div>
+            <div><span>{t('backupList.tooltips.pvStatus')}</span><span>: </span><span>{storageObj.pvStatus}</span></div>
+            { storageObj.lastPVCRefAt ? <div><span>{t('backupList.tooltips.lastTimeBoundWithPVC')}</span><span> : </span><span>{formatDate(storageObj.lastPVCRefAt)}</span></div> : ''}
+            { storageObj.pvcName ? <div><span>{ storageObj.lastPVCRefAt ? t('backupList.tooltips.lastBounded') : ''} {t('backupList.tooltips.pvcName')}</span><span>: </span><span>{storageObj.pvcName}</span></div> : ''}
           </div>)
           let content = (() => {
             if (!storageObj.pvName) {
               return ''
             }
             if (storageObj.pvName && !storageObj.pvcName && !storageObj.namespace) {
-              return <div>Available</div>
+              return <div>{t('backupList.pvStatuses.available')}</div>
             }
             if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && !storageObj.lastPVCRefAt) {
-              return <div>Bound</div>
+              return <div>{t('backupList.pvStatuses.bound')}</div>
             }
             if (storageObj.pvName && storageObj.pvcName && storageObj.namespace && storageObj.lastPVCRefAt) {
-              return <div>Released</div>
+              return <div>{t('backupList.pvStatuses.released')}</div>
             }
             return ''
           })()
@@ -313,7 +316,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Workload/Pod',
+        title: t('columns.workloadPod'),
         dataIndex: 'labels',
         key: 'WorkloadNameAndPodName',
         width: 150,
@@ -325,7 +328,7 @@ class List extends React.Component {
             storageObj.snapshotCreated = record.snapshotCreated ? record.snapshotCreated : ''
           }
 
-          const title = storageObj.lastPodRefAt ? <div><div>Last time used: {formatDate(storageObj.lastPodRefAt)}</div></div> : ''
+          const title = storageObj.lastPodRefAt ? <div><div>{t('backupList.tooltips.lastTimeUsed')}: {formatDate(storageObj.lastPodRefAt)}</div></div> : ''
           const ele = storageObj.workloadsStatus && storageObj.workloadsStatus.length ? storageObj.workloadsStatus.map((item, index) => {
             return <div key={index}>{item.podName}</div>
           }) : ''
@@ -346,14 +349,13 @@ class List extends React.Component {
             <Tooltip placement="top" title={title}>
               <a onClick={() => { showWorkloadsStatusDetail(storageObj) }} className={style.workloadContainer} style={storageObj.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
                 {ele}
-                {/* <div>{ currentVolume.controllers ? currentVolume.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div> */}
               </a>
             </Tooltip>
           )
         },
       },
       {
-        title: 'Snapshot Created',
+        title: t('columns.snapshotCreated'),
         dataIndex: 'snapshotCreated',
         key: 'snapshotCreated',
         width: 150,
@@ -366,7 +368,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Labels',
+        title: t('columns.labels'),
         dataIndex: 'labels',
         key: 'labels',
         width: 80,
@@ -382,16 +384,16 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Operation',
+        title: t('columns.operation'),
         key: 'operation',
         width: 120,
         fixed: 'right',
         render: (text, record) => {
           return (
             <DropOption menuOptions={[
-              { key: 'delete', name: 'Delete' },
-              { key: 'restore', name: 'Restore', disabled: (record && record.messages && record.messages.error) || !record.url },
-              { key: 'getUrl', name: 'Get URL', disabled: (record && record.messages && record.messages.error) || !record.url },
+              { key: 'delete', name: t('backupList.operationOptions.delete') },
+              { key: 'restore', name: t('backupList.operationOptions.restore'), disabled: (record && record.messages && record.messages.error) || !record.url },
+              { key: 'getUrl', name: t('backupList.operationOptions.getUrl'), disabled: (record && record.messages && record.messages.error) || !record.url },
             ]}
               onMenuClick={e => handleMenuClick(record, e)}
             />
@@ -405,7 +407,7 @@ class List extends React.Component {
     }
     setSortOrder(columns, sorter)
     const locale = {
-      emptyText: backup ? 'No Data' : 'Please select a volume first',
+      emptyText: backup ? t('backupList.table.emptyText') : t('backupList.table.noVolumeSelected'),
     }
 
     return (
@@ -438,6 +440,7 @@ List.propTypes = {
   showWorkloadsStatusDetail: PropTypes.func,
   dispatch: PropTypes.func,
   volumeList: PropTypes.array,
+  t: PropTypes.func.isRequired,
 }
 
-export default List
+export default withTranslation()(List)

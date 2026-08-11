@@ -239,11 +239,11 @@ export function getUpdateDataLocalityModalProps(volume, visible, defaultDataLoca
   }
 }
 
-export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch) {
+export function getUnmapMarkSnapChainRemovedModalProps(volume, visible, dispatch, t) {
   let option = [
-    { key: 'enabled', value: 'enabled' },
-    { key: 'disabled', value: 'disabled' },
-    { key: 'ignored (follow the global setting)', value: 'ignored' },
+    { value: 'enabled', label: t('createVolume.options.enabled') },
+    { value: 'disabled', label: t('createVolume.options.disabled') },
+    { value: 'ignored', label: t('createVolume.options.ignored') },
   ]
 
   return {
@@ -303,11 +303,11 @@ export function getUpdateSnapshotDataIntegrityProps(volume, visible, defaultSnap
   }
 }
 
-export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch) {
+export function getBulkUnmapMarkSnapChainRemovedModalProps(volumes, visible, dispatch, t) {
   let option = [
-    { key: 'enabled', value: 'enabled' },
-    { key: 'disabled', value: 'disabled' },
-    { key: 'ignored (follow the global setting)', value: 'ignored' },
+    { value: 'enabled', label: t('createVolume.options.enabled') },
+    { value: 'disabled', label: t('createVolume.options.disabled') },
+    { value: 'ignored', label: t('createVolume.options.ignored') },
   ]
 
   return {
@@ -399,11 +399,11 @@ export function getUpdateBulkDataLocalityModalProps(volumes, visible, defaultDat
   }
 }
 
-export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, dispatch) {
+export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, dispatch, t) {
   let option = [
-    { key: 'enabled', value: 'enabled' },
-    { key: 'disabled', value: 'disabled' },
-    { key: 'ignored (follow the global setting)', value: 'ignored' },
+    { value: 'enabled', label: t('createVolume.options.enabled') },
+    { value: 'disabled', label: t('createVolume.options.disabled') },
+    { value: 'ignored', label: t('createVolume.options.ignored') },
   ]
 
   return {
@@ -431,11 +431,11 @@ export function getUpdateFreezeFilesystemForSnapshotModalProps(volume, visible, 
   }
 }
 
-export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visible, dispatch) {
+export function getUpdateBulkFreezeFilesystemForSnapshotModalProps(volumes, visible, dispatch, t) {
   const option = [
-    { key: 'enabled', value: 'enabled' },
-    { key: 'disabled', value: 'disabled' },
-    { key: 'ignored (follow the global setting)', value: 'ignored' },
+    { value: 'enabled', label: t('createVolume.options.enabled') },
+    { value: 'disabled', label: t('createVolume.options.disabled') },
+    { value: 'ignored', label: t('createVolume.options.ignored') },
   ]
 
   return {
@@ -590,7 +590,7 @@ export function getUpdateReplicaAutoBalanceModalProps(volumes, visible, dispatch
   }
 }
 
-export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch) {
+export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, updateReplicaSoftAntiAffinityVisible, softAntiAffinityKey, dispatch, t) {
   let replicaSoftAntiAffinityVolumes = []
   let fields = {}
   switch (softAntiAffinityKey) {
@@ -598,7 +598,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       fields = {
         actionKey: 'updateReplicaSoftAntiAffinity',
         key: 'replicaSoftAntiAffinity',
-        name: 'Replica Soft Anti Affinity',
+        name: t('volumeHelper.softAntiAffinity.replicaSoftAntiAffinity'),
       }
       replicaSoftAntiAffinityVolumes = [volume]
       break
@@ -606,7 +606,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       fields = {
         actionKey: 'updateReplicaSoftAntiAffinity',
         key: 'replicaSoftAntiAffinity',
-        name: 'Replica Soft Anti Affinity',
+        name: t('volumeHelper.softAntiAffinity.replicaSoftAntiAffinity'),
       }
       replicaSoftAntiAffinityVolumes = volumes
       break
@@ -614,7 +614,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       fields = {
         actionKey: 'updateReplicaZoneSoftAntiAffinity',
         key: 'replicaZoneSoftAntiAffinity',
-        name: 'Replica Zone Soft Anti Affinity',
+        name: t('volumeHelper.softAntiAffinity.replicaZoneSoftAntiAffinity'),
       }
       replicaSoftAntiAffinityVolumes = [volume]
       break
@@ -622,7 +622,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       fields = {
         actionKey: 'updateReplicaZoneSoftAntiAffinity',
         key: 'replicaZoneSoftAntiAffinity',
-        name: 'Replica Zone Soft Anti Affinity',
+        name: t('volumeHelper.softAntiAffinity.replicaZoneSoftAntiAffinity'),
       }
       replicaSoftAntiAffinityVolumes = volumes
       break
@@ -630,7 +630,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       fields = {
         actionKey: 'updateReplicaDiskSoftAntiAffinity',
         key: 'replicaDiskSoftAntiAffinity',
-        name: 'Replica Disk Soft Anti Affinity',
+        name: t('volumeHelper.softAntiAffinity.replicaDiskSoftAntiAffinity'),
       }
       replicaSoftAntiAffinityVolumes = [volume]
       break
@@ -638,7 +638,7 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       fields = {
         actionKey: 'updateReplicaDiskSoftAntiAffinity',
         key: 'replicaDiskSoftAntiAffinity',
-        name: 'Replica Disk Soft Anti Affinity',
+        name: t('volumeHelper.softAntiAffinity.replicaDiskSoftAntiAffinity'),
       }
       replicaSoftAntiAffinityVolumes = volumes
       break
@@ -665,22 +665,22 @@ export function getUpdateReplicaSoftAntiAffinityModalProps(volume, volumes, upda
       })
     },
     options: [
-      { value: 'enabled', label: 'enabled' },
-      { value: 'disabled', label: 'disabled' },
-      { value: 'ignored', label: 'ignored (follow the global setting)' },
+      { value: 'enabled', label: t('createVolume.options.enabled') },
+      { value: 'disabled', label: t('createVolume.options.disabled') },
+      { value: 'ignored', label: t('createVolume.options.ignored') },
     ],
     fields,
   }
 }
 
-export function getOfflineRebuildingModalProps(volumes, visible, dispatch) {
+export function getOfflineRebuildingModalProps(volumes, visible, dispatch, t) {
   return {
     visible,
     items: volumes,
     options: [
-      { value: 'enabled', label: 'enabled' },
-      { value: 'disabled', label: 'disabled' },
-      { value: 'ignored', label: 'ignored (follow the global setting)' },
+      { value: 'enabled', label: t('createVolume.options.enabled') },
+      { value: 'disabled', label: t('createVolume.options.disabled') },
+      { value: 'ignored', label: t('createVolume.options.ignored') },
     ],
     fields: {
       actionKey: 'offlineReplicaRebuilding',

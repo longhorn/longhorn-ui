@@ -2,16 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { List } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const modal = ({
   visible,
   versions,
   onOk,
   onCancel,
+  t
 }) => {
   const title = (<div>
-    <div>Newer Stable Versions</div>
-    <small style={{ color: '#9c9c9c' }}>We only show the latest stable version of Longhorn minor releases. For the full list, please check out the <a target="blank" href="https://github.com/longhorn/longhorn/releases">release page</a></small>
+    <div>{t('stableVersions.title')}</div>
+    <small style={{ color: '#9c9c9c' }}>
+      {t('stableVersions.description.beforeLink')}{' '}
+      <a
+        target="blank"
+        href="https://github.com/longhorn/longhorn/releases"
+      >
+        {t('stableVersions.description.link')}
+      </a>
+    </small>
   </div>)
   const modalOpts = {
     title,
@@ -34,10 +44,11 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   visible: PropTypes.bool,
   versions: PropTypes.array,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
 }
 
-export default modal
+export default withTranslation()(modal)

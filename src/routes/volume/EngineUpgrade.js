@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const formItemLayout = {
@@ -25,6 +26,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -39,7 +41,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Upgrade Engine Image',
+    title: t('engineUpgrade.title'),
     visible,
     onCancel,
     width: 1040,
@@ -60,12 +62,12 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Engine Image" hasFeedback {...formItemLayout}>
+        <FormItem label={t('engineUpgrade.fields.engineImage')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('image', {
             rules: [
               {
                 required: true,
-                message: 'Please select an engine image to upgrade',
+                message: t('engineUpgrade.validation.imageRequired'),
               },
             ],
           })(<Select style={{ width: '100%' }} size="large">
@@ -85,6 +87,7 @@ modal.propTypes = {
   onOk: PropTypes.func,
   engineImages: PropTypes.array,
   engineUpgradePerNodeLimit: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

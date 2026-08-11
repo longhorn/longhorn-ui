@@ -15,7 +15,7 @@ const FormItem = Form.Item
 const RadioGroup = Radio.Group
 const Option = Select.Option
 
-function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath, validateName = f => f }) {
+function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath, validateName = f => f, t }) {
   const { getFieldDecorator, getFieldsValue } = form
   const canBeRemoved = () => {
     return disk.storageScheduled === 0 && getFieldsValue().disks[disk.id].allowScheduling === false
@@ -26,7 +26,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
     } else if (canBeRemoved()) {
       return (<a onClick={() => onRemove(disk.id)}><IconRemove /></a>)
     }
-    return <Tooltip placement="top" title="To delete this disk, disable scheduling and ensure that no replicas and backing images are in use"><span><IconRemove disabled /></span></Tooltip>
+    return <Tooltip placement="top" title={t('editableDisk.tooltip.cannotDelete')}><span><IconRemove disabled /></span></Tooltip>
   }
 
   // Because the parameters passed need to be retained, the content of the form is retained
@@ -35,21 +35,21 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       <div style={{ width: '99%', padding: '0px 15px', lineHeight: '40px' }}>
         {getFieldDecorator(`disks['${disk.id}']['tags']`, {
           initialValue: disk.tags,
-        })(<DistTag tags={disk.tags} changeTags={(tags) => { form.setFieldsValue({ [`disks['${disk.id}']['tags']`]: tags }) }} />)}
+        })(<DistTag tags={disk.tags} changeTags={(tags) => { form.setFieldsValue({ [`disks['${disk.id}']['tags']`]: tags }) }} t={t} />)}
       </div>
       {disk.conditions ? <div style={{ display: 'flex' }}>
         <div className={styles.formItem} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div className={styles.label}>
-            Conditions
+            {t('editableDisk.conditions.title')}
           </div>
           <div className={styles.control} style={{ lineHeight: '40px' }}>
             {disk && disk.conditions && Object.keys(disk.conditions).map((key) => {
               let title = (<div>
-                {disk.conditions[key] && disk.conditions[key].lastProbeTime && disk.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>Last Probe Time: {formatDate(disk.conditions[key].lastProbeTime)}</div> : ''}
-                {disk.conditions[key] && disk.conditions[key].lastTransitionTime && disk.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>Last Transition Time: {formatDate(disk.conditions[key].lastTransitionTime)}</div> : ''}
-                {disk.conditions[key] && disk.conditions[key].message && disk.conditions[key].message ? <div style={{ marginBottom: 5 }}>Message: {disk.conditions[key].message}</div> : ''}
-                {disk.conditions[key] && disk.conditions[key].reason && disk.conditions[key].reason ? <div style={{ marginBottom: 5 }}>Reason: {disk.conditions[key].reason}</div> : ''}
-                {disk.conditions[key] && disk.conditions[key].status && disk.conditions[key].status ? <div style={{ marginBottom: 5 }}>Status: {disk.conditions[key].status}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].lastProbeTime && disk.conditions[key].lastProbeTime ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.lastProbe')}: {formatDate(disk.conditions[key].lastProbeTime)}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].lastTransitionTime && disk.conditions[key].lastTransitionTime ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.lastTransition')}: {formatDate(disk.conditions[key].lastTransitionTime)}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].message && disk.conditions[key].message ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.message')}: {disk.conditions[key].message}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].reason && disk.conditions[key].reason ? <div style={{ marginBottom: 5 }}>{t('editableDisk.conditions.reason')}: {disk.conditions[key].reason}</div> : ''}
+                {disk.conditions[key] && disk.conditions[key].status && disk.conditions[key].status ? <div style={{ marginBottom: 5 }}>{t('columns.status')}: {disk.conditions[key].status}</div> : ''}
               </div>)
               return (<Tooltip key={key} title={title}><div style={{ marginRight: 40 }}>
                   {disk.conditions[key].status && disk.conditions[key].status.toLowerCase() === 'true' ? <Icon className="healthy" style={{ marginRight: 5 }} type="check-circle" /> : <Icon className="faulted" style={{ marginRight: 5 }} type="exclamation-circle" /> }
@@ -62,7 +62,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       <div style={{ width: '99%', display: 'flex', justifyContent: 'space-between' }}>
         <div className={styles.formItem} style={{ width: '30%' }}>
           <div className={styles.label}>
-            Storage Available
+            {t('editableDisk.storage.available')}
           </div>
           <div className={styles.control} style={{ padding: '5px 15px' }}>
             {byteToGi(disk.storageAvailable)}Gi
@@ -79,7 +79,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         </div>
         <div className={styles.formItem} style={{ width: '30%' }}>
           <div className={styles.label}>
-            Storage Scheduled
+            {t('editableDisk.storage.scheduled')}
           </div>
           <div className={styles.control} style={{ padding: '5px 15px' }}>
            {byteToGi(disk.storageScheduled)}Gi
@@ -96,7 +96,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         </div>
         <div className={styles.formItem} style={{ width: '30%' }}>
           <div className={styles.label}>
-            Storage Max
+            {t('editableDisk.storage.max')}
           </div>
           <div className={styles.control} style={{ padding: '5px 15px' }}>
           {byteToGi(disk.storageMaximum)}Gi
@@ -115,14 +115,14 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       <div className={styles.formItem} style={{ width: '99%' }}>
         <div className={styles.control}>
           <div className={styles.label}>
-            Name
+            {t('common.name')}
           </div>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['name']`, {
               initialValue: disk.name,
               rules: [{
                 required: true,
-                message: 'Please Input Path!',
+                message: t('editableDisk.validation.required'),
               }, {
                 validator: validateName,
               }],
@@ -132,32 +132,32 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
         </div>
         <div className={styles.control}>
           <div className={styles.label}>
-            Disk Type
+            {t('editableDisk.type')}
           </div>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['diskType']`, {
               initialValue: disk.diskType,
             })(<Select disabled={disk.deleted || !isNew}>
-              <Option value="filesystem">File System</Option>
-              <Option value="block">Block</Option>
+              <Option value="filesystem">{t('editableDisk.types.filesystem')}</Option>
+              <Option value="block">{t('editableDisk.types.block')}</Option>
             </Select>)}
           </FormItem>
         </div>
         <div className={styles.control}>
           <div className={styles.label}>
-            Path
+            {t('editableDisk.path')}
           </div>
           <FormItem style={{ margin: 0 }}>
             {getFieldDecorator(`disks['${disk.id}']['path']`, {
               rules: [{
                 required: true,
-                message: 'Please Input Path!',
+                message: t('editableDisk.validation.required'),
               }, {
                 validator: validatePath,
               }],
               initialValue: disk.path,
             })(<PathInput
-              placeholder="Path mounted by the disk, e.g. /mnt/disk1"
+              placeholder={t('editableDisk.pathPlaceholder')}
               diskTypeIsFilesystem={getFieldsValue().disks[disk.id].diskType === 'filesystem'}
               readOnly={disk.deleted || !isNew} />)}
           </FormItem>
@@ -165,7 +165,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       </div>
       <div className={styles.formItem}>
         <div className={styles.label}>
-          Storage Reserved
+          {t('editableDisk.storage.reserved')}
         </div>
         <div className={styles.control}>
           <FormItem style={{ margin: 0 }}>
@@ -191,7 +191,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       </div> */}
       <div className={styles.formItem}>
         <div className={styles.label}>
-          Scheduling
+          {t('editableDisk.scheduling')}
         </div>
         <div className={styles.control} style={{ width: '210px' }}>
           <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -199,8 +199,8 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               initialValue: disk.allowScheduling,
             })(
               <RadioGroup disabled={disk.deleted}>
-                <Radio value>Enable</Radio>
-                <Radio value={false}>Disable</Radio>
+                <Radio value>{t('common.enable')}</Radio>
+                <Radio value={false}>{t('common.disable')}</Radio>
               </RadioGroup>
             )}
           </FormItem>
@@ -208,7 +208,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
       </div>
       <div className={styles.formItem}>
         <div className={styles.label}>
-          Eviction Requested
+          {t('editableDisk.eviction')}
         </div>
         <div className={styles.control} style={{ width: '210px' }}>
           <FormItem style={{ margin: '3px 0px 0px 0px' }}>
@@ -216,8 +216,8 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
               initialValue: disk.evictionRequested,
             })(
               <RadioGroup disabled={disk.deleted}>
-                <Radio value={true}>True</Radio>
-                <Radio value={false}>False</Radio>
+                <Radio value={true}>{t('common.true')}</Radio>
+                <Radio value={false}>{t('common.false')}</Radio>
               </RadioGroup>
             )}
           </FormItem>
@@ -241,6 +241,7 @@ function EditableDiskItem({ isNew, disk, form, onRestore, onRemove, validatePath
 }
 
 EditableDiskItem.propTypes = {
+  t: PropTypes.func,
   disk: PropTypes.object,
   form: PropTypes.object,
   isNew: PropTypes.bool,

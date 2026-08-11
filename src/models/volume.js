@@ -7,6 +7,7 @@ import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import i18n from '../i18n'
 
 export default {
   namespace: 'volume',
@@ -219,7 +220,7 @@ export default {
       yield put({ type: 'hideCloneVolumeModal' })
       const resp = yield call(create, payload)
       if (resp && resp.status === 200) {
-        message.success(`New volume (${payload.name}) created successfully`, 5)
+        message.success(i18n.t('models.volume.createClonedVolume.success', { name: payload.name }), 5)
         yield put({ type: 'query' })
       }
     },
@@ -280,7 +281,7 @@ export default {
       if (resp?.status === 200 && resp.data) {
         yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions: resp.data } })
       } else {
-        message.error(`Failed to get ${payload.name} snapshots`, 5)
+        message.error(i18n.t('models.volume.getSingleVolumeSnapshots.failed', { name: payload.name }), 5)
         yield put({ type: 'setSnapshotsData', payload: { snapshotsOptions: [] } })
       }
     },

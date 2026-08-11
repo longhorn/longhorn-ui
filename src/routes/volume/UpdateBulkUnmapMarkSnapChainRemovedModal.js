@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Alert } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -25,6 +27,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -41,7 +44,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Allow Snapshots Removal During Trim',
+    title: t('updateUnmapMarkSnapChainRemovedModal.title.allowSnapshotsRemoval'),
     visible,
     onCancel,
     width: 600,
@@ -53,7 +56,7 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Option" {...formItemLayout}>
+        <FormItem label={t('updateUnmapMarkSnapChainRemovedModal.form.option.label')} {...formItemLayout}>
           {getFieldDecorator('unmapMarkSnapChainRemoved', {
             initialValue: 'ignored',
           })(<Select>
@@ -61,7 +64,7 @@ const modal = ({
           </Select>)}
           <Alert
             style={{ marginTop: 10 }}
-            message="This action may override the global setting “Remove Snapshots During Filesystem Trim”"
+            message={t('updateUnmapMarkSnapChainRemovedModal.form.warning.message')}
             type="warning"
           />
         </FormItem>
@@ -77,6 +80,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   items: PropTypes.array,
   onOk: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

@@ -3,15 +3,16 @@ import PropTypes from 'prop-types'
 import { Tooltip } from 'antd'
 import highAvailabilityRed from '../../assets/images/high-availability-red.svg'
 import highAvailabilityYellow from '../../assets/images/high-availability-yellow.svg'
+import { withTranslation } from 'react-i18next'
 
-export default function ReplicaHATooltip({ type = 'warning' }) {
+function ReplicaHATooltip({ t, type = 'warning' }) {
   let content = ''
   let icon = ''
   if (type === 'warning') {
-    content = 'Limited node redundancy: at least one healthy replica is running at the same node as another'
+    content = t('replicaHATooltip.warning')
     icon = highAvailabilityYellow
   } else if (type === 'danger') {
-    content = 'No node redundancy: all the healthy replicas are running on the same node'
+    content = t('replicaHATooltip.danger')
     icon = highAvailabilityRed
   }
 
@@ -27,5 +28,8 @@ export default function ReplicaHATooltip({ type = 'warning' }) {
 }
 
 ReplicaHATooltip.propTypes = {
+  t: PropTypes.func,
   type: PropTypes.string,
 }
+
+export default withTranslation()(ReplicaHATooltip)

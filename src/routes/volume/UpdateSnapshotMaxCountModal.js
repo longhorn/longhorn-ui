@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -19,6 +21,7 @@ const modal = ({
   onCancel,
   onOk,
   form: { getFieldDecorator, getFieldsValue, validateFields },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -34,7 +37,7 @@ const modal = ({
     })
   }
   const modalOpts = {
-    title: 'Update Snapshot Max Count',
+    title: t('updateSnapshotMaxCountModal.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -47,13 +50,13 @@ const modal = ({
         {...formItemLayout}
         style={{ display: 'flex', gap: 10 }}
       >
-        <FormItem label="Max Count">
+        <FormItem label={t('updateSnapshotMaxCountModal.fields.maxCount')}>
           {getFieldDecorator('snapshotMaxCount', {
             initialValue: item.snapshotMaxCount,
             rules: [
               {
                 required: true,
-                message: 'Please input volume snapshotMaxCount',
+                message: t('updateSnapshotMaxCountModal.validation.snapshotMaxCountRequired'),
               },
             ],
           })(<InputNumber style={{ width: '270px' }} />)}
@@ -71,6 +74,7 @@ modal.propTypes = {
   selected: PropTypes.object,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

@@ -5,6 +5,7 @@ import { Form, Input, Select, Upload, Button, Icon, InputNumber, Spin } from 'an
 import { ModalBlur } from '../../components'
 import { hasReadyBackingDisk } from '../../utils/status'
 import { safeParseJSON } from '../../utils/formatDate'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -88,7 +89,8 @@ const modal = ({
     setFieldsValue,
   },
   v1DataEngineEnabled = true,
-  v2DataEngineEnabled = false
+  v2DataEngineEnabled = false,
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -101,7 +103,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create Backing Image',
+    title: t('createBackingImage.title'),
     visible,
     onCancel,
     width: 1040,
@@ -133,18 +135,18 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.name')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
             initialValue: item.name,
             rules: [
               {
                 required: true,
-                message: 'Please input backing image name',
+                message: t('createBackingImage.form.name.rules.required'),
               },
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="Created From" {...formItemLayout}>
+        <FormItem label={t('createBackingImage.form.createdFrom.label')} {...formItemLayout}>
           {getFieldDecorator('sourceType', {
             valuePropName: 'sourceType',
             initialValue: 'download',
@@ -154,29 +156,29 @@ const modal = ({
               },
             ],
           })(<Select defaultValue={'download'} onChange={() => {}}>
-            <Option value={'download'}>Download From URL</Option>
-            <Option value={'upload'}>Upload From Local</Option>
-            <Option value={'volume'}>Export From a Longhorn Volume</Option>
-            <Option value={'clone'}>Clone From Existing Backing Image</Option>
+            <Option value={'download'}>{t('createBackingImage.form.createdFrom.options.download')}</Option>
+            <Option value={'upload'}>{t('createBackingImage.form.createdFrom.options.upload')}</Option>
+            <Option value={'volume'}>{t('createBackingImage.form.createdFrom.options.volume')}</Option>
+            <Option value={'clone'}>{t('createBackingImage.form.createdFrom.options.clone')}</Option>
           </Select>)}
         </FormItem>
         {/* Display when select type = volume */}
         {allowDisplayTypes(creationType, ['volume']) && (
           <>
-            <FormItem label="Volume Name" {...formItemLayout}>
+            <FormItem label={t('createBackingImage.form.volumeName.label')} {...formItemLayout}>
               {getFieldDecorator('volumeName', {
                 initialValue: '',
                 rules: [
                   {
                     required: creationType === 'volume',
-                    message: 'Please select an existing volume',
+                    message: t('createBackingImage.form.volumeName.rules.required'),
                   },
                 ],
               })(<Select>
             {volumeNameOptions.map(vol => <Option key={vol} value={vol}>{vol}</Option>)}
           </Select>)}
             </FormItem>
-            <FormItem label="Exported Backing Image Type" {...formItemLayout}>
+            <FormItem label={t('createBackingImage.form.exportedBackingImageType.label')} {...formItemLayout}>
               {getFieldDecorator('exportType', {
                 valuePropName: 'exportType',
                 initialValue: 'raw',
@@ -186,21 +188,21 @@ const modal = ({
                   },
                 ],
               })(<Select defaultValue={'raw'}>
-                <Option value={'raw'}>raw</Option>
-                <Option value={'qcow2'}>qcow2</Option>
+                <Option value={'raw'}>{t('createBackingImage.form.exportedBackingImageType.options.raw')}</Option>
+                <Option value={'qcow2'}>{t('createBackingImage.form.exportedBackingImageType.options.qcow2')}</Option>
               </Select>)}
             </FormItem>
           </>
         )}
         {/* Display when select type = download */}
         {allowDisplayTypes(creationType, ['download']) && (
-          <FormItem label="URL" {...formItemLayout}>
+          <FormItem label={t('createBackingImage.form.url.label')} {...formItemLayout}>
           {getFieldDecorator('url', {
             initialValue: item.url,
             rules: [
               {
                 required: creationType === 'download',
-                message: 'Please input backing image url',
+                message: t('createBackingImage.form.url.rules.required'),
               },
             ],
           })(<Input disabled={!(creationType === 'download')} />)}
@@ -208,14 +210,14 @@ const modal = ({
         )}
         {/* Display when select type = upload */}
         {allowDisplayTypes(creationType, ['upload']) && (
-          <FormItem label="File" {...formItemLayout}>
+          <FormItem label={t('createBackingImage.form.file.label')} {...formItemLayout}>
           {getFieldDecorator('fileContainer', {
             valuePropName: 'fileContainer',
             initialValue: null,
             rules: [
               {
                 required: creationType === 'upload',
-                message: 'Please upload backing image file',
+                message: t('createBackingImage.form.file.rules.required'),
               },
               {
                 validator: (_rule, value, callback) => {
@@ -227,7 +229,7 @@ const modal = ({
                     if (size % 512 === 0) {
                       callback()
                     } else {
-                      callback('Must be a multiple of 512 bytes')
+                      callback(t('createBackingImage.form.file.rules.multipleOf512'))
                     }
                   } else {
                     callback()
@@ -237,14 +239,14 @@ const modal = ({
             ],
           })(<Upload {...uploadProps}>
             <Button disabled={!(creationType === 'upload')}>
-              <Icon type="upload" /> Upload
+              <Icon type="upload" /> {t('createBackingImage.form.file.uploadButton')}
             </Button>
           </Upload>)}
           <span style={{ marginLeft: 10 }}>{ getFieldsValue().fileContainer && getFieldsValue().fileContainer.file ? getFieldsValue().fileContainer.file.name : ''}</span>
           </FormItem>
         )}
         {allowDisplayTypes(creationType, ['download', 'upload']) && (
-          <FormItem label="Expected Checksum" {...formItemLayout}>
+          <FormItem label={t('createBackingImage.form.expectedChecksum.label')} {...formItemLayout}>
             {getFieldDecorator('expectedChecksum', {
               initialValue: '',
               rules: [
@@ -252,14 +254,14 @@ const modal = ({
                   required: false,
                 },
               ],
-            })(<Input placeholder="Ask Longhorn to validate the SHA512 checksum if it is specified here." />)}
+            })(<Input placeholder={t('createBackingImage.form.expectedChecksum.placeholder')} />)}
           </FormItem>
         )}
 
         {/* Display when select type = clone */}
         {allowDisplayTypes(creationType, ['clone']) && (
           <>
-            <FormItem label="Source Backing Image" {...formItemLayout}>
+            <FormItem label={t('createBackingImage.form.sourceBackingImage.label')} {...formItemLayout}>
             {getFieldDecorator('sourceBackingImage', {
               valuePropName: 'sourceBackingImage',
               initialValue: availBackingImages[0]?.name || '',
@@ -272,7 +274,7 @@ const modal = ({
               {availBackingImages.map(image => <Option key={image.name} value={image.name}>{image.name}</Option>)}
             </Select>)}
             </FormItem>
-            <FormItem label="Encryption" {...formItemLayout}>
+            <FormItem label={t('createBackingImage.form.encryption.label')} {...formItemLayout}>
               {getFieldDecorator('encryption', {
                 valuePropName: 'encryption',
                 initialValue: 'encrypt',
@@ -282,54 +284,54 @@ const modal = ({
                   },
                 ],
               })(<Select defaultValue="encrypt">
-                  <Option key="encrypt" value="encrypt">encrypt</Option>
-                  <Option key="decrypt" value="decrypt">decrypt</Option>
-                  <Option key="ignore" value="ignore">ignore (simply copy the backing image)</Option>
+                  <Option key="encrypt" value="encrypt">{t('createBackingImage.form.encryption.options.encrypt')}</Option>
+                  <Option key="decrypt" value="decrypt">{t('createBackingImage.form.encryption.options.decrypt')}</Option>
+                  <Option key="ignore" value="ignore">{t('createBackingImage.form.encryption.options.ignore')}</Option>
               </Select>)}
             </FormItem>
-            <FormItem label="Secret" hasFeedback {...formItemLayout}>
+            <FormItem label={t('createBackingImage.form.secret.label')} hasFeedback {...formItemLayout}>
               {getFieldDecorator('secret', {
                 initialValue: '',
                 rules: [
                   {
                     required: creationType === 'clone' && ['encrypt', 'decrypt'].includes(getFieldValue('encryption')),
-                    message: 'Please input secret name',
+                    message: t('createBackingImage.form.secret.rules.required'),
                   },
                 ],
               })(<Input />)}
             </FormItem>
-            <FormItem label="Secret Namespace" hasFeedback {...formItemLayout}>
+            <FormItem label={t('createBackingImage.form.secretNamespace.label')} hasFeedback {...formItemLayout}>
               {getFieldDecorator('secretNamespace', {
                 initialValue: item.name,
                 rules: [
                   {
                     required: creationType === 'clone' && ['encrypt', 'decrypt'].includes(getFieldValue('encryption')),
-                    message: 'Please input secret namespace',
+                    message: t('createBackingImage.form.secretNamespace.rules.required'),
                   },
                 ],
               })(<Input />)}
             </FormItem>
           </>
         )}
-        <FormItem label="Minimum Number of Copies" {...formItemLayout}>
+        <FormItem label={t('createBackingImage.form.minNumberOfCopies.label')} {...formItemLayout}>
           {getFieldDecorator('minNumberOfCopies', {
             initialValue: initialReplicas,
             rules: [
               {
                 required: true,
-                message: 'Please input the min number of copies',
+                message: t('createBackingImage.form.minNumberOfCopies.rules.required'),
               },
             ],
           })(<InputNumber min={1} />)}
         </FormItem>
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+        <FormItem label={t('columns.dataEngine')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: initialDataEngine,
             rules: [
               {
                 validator: (_rule, value, callback) => {
                   if ((value === 'v1' && !v1DataEngineEnabled) || (value === 'v2' && !v2DataEngineEnabled)) {
-                    callback(`${value} data engine is not enabled`)
+                    callback(t('createBackingImage.form.dataEngine.rules.notEnabled', { value }))
                   } else {
                     callback()
                   }
@@ -338,13 +340,13 @@ const modal = ({
             ],
           })(
             <Select onChange={handleDataEngineChange}>
-              <Option value="v1">v1</Option>
-              <Option value="v2">v2</Option>
+              <Option value="v1">{t('createBackingImage.form.dataEngine.options.v1')}</Option>
+              <Option value="v2">{t('createBackingImage.form.dataEngine.options.v2')}</Option>
             </Select>
           )}
         </FormItem>
         <Spin spinning={tagsLoading}>
-          <FormItem label="Node Tag" {...formItemLayout}>
+          <FormItem label={t('common.nodeTag')} {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
               initialValue: [],
             })(<Select mode="multiple">
@@ -353,7 +355,7 @@ const modal = ({
           </FormItem>
         </Spin>
         <Spin spinning={tagsLoading}>
-          <FormItem label="Disk Tag" {...formItemLayout}>
+          <FormItem label={t('common.diskTag')} {...formItemLayout}>
             {getFieldDecorator('diskSelector', {
               initialValue: [],
             })(<Select mode="multiple">
@@ -380,6 +382,7 @@ modal.propTypes = {
   backingImageOptions: PropTypes.array,
   v1DataEngineEnabled: PropTypes.bool,
   v2DataEngineEnabled: PropTypes.bool,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

@@ -4,6 +4,7 @@ import { Button, Form } from 'antd'
 import ReplicaActions from './ReplicaActions'
 import ReplicaList from './ReplicaList'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const modal = ({
   selected,
@@ -15,15 +16,16 @@ const modal = ({
   rowSelection,
   replicaModalDeleteDisabled,
   replicaModalDeleteLoading,
+  t
 }) => {
   const modalOpts = {
-    title: `Replicas on ${selected.name}`,
+    title: t('hostReplica.title', { name: selected.name }),
     visible,
     onCancel,
     width: 800,
     footer: [
       <Button key="submit" size="large" onClick={onCancel}>
-        Close
+        {t('common.close')}
       </Button>,
     ],
   }
@@ -53,6 +55,7 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   selected: PropTypes.object,
@@ -64,4 +67,4 @@ modal.propTypes = {
   replicaModalDeleteLoading: PropTypes.bool,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

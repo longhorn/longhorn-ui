@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
 import style from './systemBackupsBulkActions.less'
 import { getAvailableBackupTargets } from '../../utils/backupTarget'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSystemBackup, backupTarget }) {
+function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSystemBackup, backupTarget, t }) {
   const createBtnDisable = getAvailableBackupTargets(backupTarget).length === 0
   const handleClick = (action) => {
     switch (action) {
@@ -15,7 +16,7 @@ function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSys
         break
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete System Backups ${selectedRows.map(item => item.name).join(',')} ?`,
+          title: t('systemBackupsBulkActions.modal.delete.title', { names: selectedRows.map(item => item.name).join(',') }),
           onOk() {
             deleteSystemBackups(selectedRows)
           },
@@ -27,8 +28,8 @@ function bulkActions({ selectedRows, backupProps, deleteSystemBackups, createSys
 
   const { backupTargetAvailable, backupTargetMessage } = backupProps
   const allActions = [
-    { key: 'create', name: 'Create', disabled: createBtnDisable || backupTargetAvailable === false, tooltip: backupTargetAvailable === false ? backupTargetMessage : '' },
-    { key: 'delete', name: 'Delete', disabled: selectedRows.length === 0 },
+    { key: 'create', name: t('common.create'), disabled: createBtnDisable || backupTargetAvailable === false, tooltip: backupTargetAvailable === false ? backupTargetMessage : '' },
+    { key: 'delete', name: t('common.delete'), disabled: selectedRows.length === 0 },
   ]
 
   return (
@@ -51,6 +52,7 @@ bulkActions.propTypes = {
   deleteSystemBackups: PropTypes.func,
   createSystemBackup: PropTypes.func,
   backupTarget: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

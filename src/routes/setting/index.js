@@ -80,7 +80,7 @@ class Setting extends React.Component {
   }
 
   render() {
-    const { setting, dispatch, loading } = this.props
+    const { setting, dispatch, loading, lang } = this.props
     const { modalVisible, changedSettings } = this.state
     const { data, saving } = setting
 
@@ -88,6 +88,7 @@ class Setting extends React.Component {
       data,
       saving,
       loading,
+      lang,
       onSubmit(payload) {
         dispatch({
           type: 'setting/update',
@@ -123,6 +124,7 @@ Setting.propTypes = {
   dispatch: PropTypes.func,
   loading: PropTypes.bool,
   history: PropTypes.object,
+  lang: PropTypes.string,
 }
 
-export default connect(({ setting, loading }) => ({ setting, loading: loading.models.setting }))(Setting)
+export default connect(({ setting, loading, app }) => ({ setting, loading: loading.models.setting, lang: app.lang }))(Setting)

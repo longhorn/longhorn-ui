@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Spin, Select, message, Popover, Alert, Tabs, Button, Checkbox, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
 import { safeParseJSON } from '../../utils/formatDate'
+import { withTranslation } from 'react-i18next'
 
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -37,6 +38,7 @@ const modal = ({
     getFieldValue,
     setFieldsValue,
   },
+  t,
 }) => {
   const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
 
@@ -122,7 +124,7 @@ const modal = ({
       })
       return newConfigs
     })
-    message.success(`Successfully apply ${getFieldValue('name')} config to all other restore volumes`, 5)
+    message.success(t('bulkRestoreBackupModal.messages.applyAllSuccess', { volumeName: getFieldValue('name') }), 5)
   }
 
   const allFieldsError = { ...getFieldsError() }
@@ -130,7 +132,7 @@ const modal = ({
 
   const handleTabClick = (key) => {
     if (hasFieldsError) {
-      message.error('Please correct the error fields before switching to another tab', 5)
+      message.error(t('bulkRestoreBackupModal.messages.correctErrorsBeforeSwitch'), 5)
       return
     }
     validateFields((errors) => {
@@ -158,28 +160,24 @@ const modal = ({
   }
 
   const showWarning = backupVolumes?.some((backupVolume) => backupVolume.name === getFieldsValue().name)
-  const alertMessage = <p>
-    1. If there is another volume with the same name ({getFieldsValue().name}), the restore action will fail.
-    <br />
-    2. The restore volume name ({getFieldsValue().name}) is the same as this backup volume, by which the backups created after restoration reside in this backup volume as well.
-    </p>
+  const alertMessage = t('bulkRestoreBackupModal.warning.sameNameMessage', { volumeName: getFieldsValue().name })
 
-  const tooltipTitle = `Apply this ${getFieldValue('name')} config to all the other restore volumes, this action will overwrite your previous filled in configs`
+  const tooltipTitle = t('bulkRestoreBackupModal.tooltips.applyAll', { volumeName: getFieldValue('name') })
   const modalOpts = {
-    title: 'Restore Multiple Latest Backups',
+    title: t('bulkRestoreBackupModal.modal.title'),
     visible,
     onOk: handleOk,
     onCancel,
     width: 700,
     footer: [
       <Button key="cancel" onClick={onCancel}>
-        Cancel
+        {t('common.cancel')}
       </Button>,
       <Tooltip key="applyAllTooltip" overlayStyle={{ width: 300 }} placement="top" title={tooltipTitle}>
-        <Button key="applyAll" style={{ marginLeft: 8 }} onClick={handleApplyAll} disabled={hasFieldsError}> Apply All </Button>
+        <Button key="applyAll" style={{ marginLeft: 8 }} onClick={handleApplyAll} disabled={hasFieldsError}> {t('bulkRestoreBackupModal.buttons.applyAll')} </Button>
       </Tooltip>,
       <Button key="submit" style={{ marginLeft: 8 }} type="success" onClick={handleOk} disabled={hasFieldsError}>
-        Ok
+        {t('common.ok')}
       </Button>,
     ],
   }
@@ -202,32 +200,32 @@ const modal = ({
             <Alert message={alertMessage} type="warning" />
           </div>
         }>
-          <FormItem label="Volume Name" hasFeedback {...formItemLayout}>
+          <FormItem label={t('bulkRestoreBackupModal.form.volumeName.label')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('name', {
               initialValue: item.name,
               rules: [
                 {
                   required: true,
-                  message: 'Volume name is required',
+                  message: t('bulkRestoreBackupModal.form.volumeName.validationMessage'),
                 },
               ],
             })(<Input onChange={handleNameChange} />)}
           </FormItem>
         </Popover>
-        <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+        <FormItem label={t('columns.dataEngine')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: item.dataEngine,
             rules: [
               {
                 required: true,
-                message: 'Please select the data engine',
+                message: t('restoreBackupModal.form.dataEngine.validationMessage'),
               },
               {
                 validator: (_rule, value, callback) => {
                   if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
+                    callback(t('common.validation.vEngineDisabled', { v: 'v1' }))
                   } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
+                    callback(t('common.validation.vEngineDisabled', { v: 'v2' }))
                   }
                   callback()
                 },
@@ -238,56 +236,56 @@ const modal = ({
             <Option key={'v2'} value={'v2'}>v2</Option>
           </Select>)}
         </FormItem>
-        <FormItem label="Number of Replicas" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.numberOfReplicas')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('numberOfReplicas', {
             initialValue: item.numberOfReplicas,
             rules: [
               {
                 required: true,
-                message: 'Please input the number of replicas',
+                message: t('restoreBackupModal.form.numberOfReplicas.validationMessage'),
               },
             ],
           })(<InputNumber min={1} max={10} onChange={handleReplicasNumberChange} />)
           }
         </FormItem>
-        <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
+        <FormItem label={t('columns.accessMode')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode,
           })(<Select onSelect={handleAccessModeChange}>
-            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
-            <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
-            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>{t('accessModes.rwo')}</Option>
+            <Option key={'ReadWriteOncePod'} value={'rwop'}>{t('accessModes.rwop')}</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>{t('accessModes.rwx')}</Option>
           </Select>)}
         </FormItem>
-        <FormItem label="Latest Backup" hasFeedback {...formItemLayout}>
+        <FormItem label={t('bulkRestoreBackupModal.form.latestBackup.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('latestBackup', {
             initialValue: item.latestBackup,
           })(<Input disabled />)}
         </FormItem>
-        <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.backingImage')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,
           })(<Select disabled>
             { backingImages.map(backingImage => <Option key={backingImage.name} value={backingImage.name}>{backingImage.name}</Option>) }
           </Select>)}
         </FormItem>
-        <FormItem label="Encrypted" {...formItemLayout}>
+        <FormItem label={t('common.encrypted')} {...formItemLayout}>
           {getFieldDecorator('encrypted', {
             valuePropName: 'checked',
             initialValue: item.encrypted || false,
           })(<Checkbox onChange={handleEncryptedCheck} />)}
         </FormItem>
-        <FormItem label="Restore Volume Recurring Job" hasFeedback {...formItemLayout}>
+        <FormItem label={t('restoreBackupModal.form.restoreVolumeRecurringJob.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('restoreVolumeRecurringJob', {
             initialValue: 'ignored',
           })(<Select onSelect={handleRecurringJobChange}>
-            <Option key={'enabled'} value={'enabled'}>Enabled</Option>
-            <Option key={'disabled'} value={'disabled'}>Disabled</Option>
-            <Option key={'ignored'} value={'ignored'}>Ignored (follow the global setting)</Option>
+            <Option key={'enabled'} value={'enabled'}>{t('restoreBackupModal.form.restoreVolumeRecurringJob.options.enabled')}</Option>
+            <Option key={'disabled'} value={'disabled'}>{t('restoreBackupModal.form.restoreVolumeRecurringJob.options.disabled')}</Option>
+            <Option key={'ignored'} value={'ignored'}>{t('restoreBackupModal.form.restoreVolumeRecurringJob.options.ignored')}</Option>
           </Select>)}
         </FormItem>
         <Spin spinning={tagsLoading}>
-          <FormItem label="Node Tag" hasFeedback {...formItemLayout}>
+          <FormItem label={t('common.nodeTag')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('nodeSelector', {
               initialValue: [],
             })(<Select mode="tags" onSelect={handleNodeTagAdd} onDeselect={handleNodeTagRemove}>
@@ -296,7 +294,7 @@ const modal = ({
           </FormItem>
         </Spin>
         <Spin spinning={tagsLoading}>
-          <FormItem label="Disk Tag" hasFeedback {...formItemLayout}>
+          <FormItem label={t('common.diskTag')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('diskSelector', {
               initialValue: [],
             })(<Select mode="tags" onSelect={handleDiskTagAdd} onDeselect={handleDiskTagRemove}>
@@ -304,14 +302,14 @@ const modal = ({
             </Select>)}
           </FormItem>
         </Spin>
-        <FormItem label="Backup Block Size" hasFeedback {...formItemLayout}>
+        <FormItem label={t('columns.backupBlockSize')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('backupBlockSize', {
             initialValue: ['0', '2097152', '16777216'].includes(String(item.backupBlockSize))
               ? String(item.backupBlockSize)
               : '0',
           })(
             <Select>
-              <Option key="ignored" value="0">Ignored (follow the global setting)</Option>
+              <Option key="ignored" value="0">{t('restoreBackupModal.form.backupBlockSize.options.ignored')}</Option>
               <Option key="2Mi" value="2097152">2 Mi</Option>
               <Option key="16Mi" value="16777216">16 Mi</Option>
             </Select>
@@ -335,6 +333,7 @@ modal.propTypes = {
   v2DataEngineEnabled: PropTypes.bool,
   tagsLoading: PropTypes.bool,
   form: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

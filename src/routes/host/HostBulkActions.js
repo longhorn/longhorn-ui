@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Tooltip } from 'antd'
 import style from './HostBulkActions.less'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEditNodeModal }) {
+function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEditNodeModal, t }) {
   const handleClick = (action) => {
     switch (action) {
       case 'delete':
@@ -13,7 +14,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEdi
           bulkDeleteHost(selectedRows)
         } else {
           confirm({
-            title: `Are you sure you want to delete node(s) ${selectedRows.map(item => item.name).join(', ')} ?`,
+            title: t('hostBulkActions.confirmDelete', { nodes: selectedRows.map(item => item.name).join(', ') }),
             onOk() {
               bulkDeleteHost(selectedRows)
             },
@@ -29,7 +30,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEdi
 
   const allActions = [
     { key: 'delete',
-      name: 'Delete',
+      name: t('hostBulkActions.actions.delete'),
       disabled() {
         return (selectedRows.length === 0 || selectedRows.some((item) => {
           if (item && item.status && item.status.key !== 'down') {
@@ -40,7 +41,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEdi
       },
     },
     { key: 'editNode',
-      name: 'Edit Node',
+      name: t('hostBulkActions.actions.editNode'),
       disabled() {
         return selectedRows.length === 0 || selectedRows.some((item) => {
           if (item && item.status && item.status.key === 'down') {
@@ -57,7 +58,7 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEdi
       return true
     }
     return false
-  }) ? 'Kubernetes node must be deleted first' : ''
+  }) ? t('hostBulkActions.messages.deleteFirst') : ''
 
   return (
     <div className={style.bulkActions}>
@@ -76,10 +77,11 @@ function bulkActions({ selectedRows, bulkDeleteHost, commandKeyDown, showBulkEdi
 }
 
 bulkActions.propTypes = {
+  t: PropTypes.func,
   selectedRows: PropTypes.array,
   bulkDeleteHost: PropTypes.func,
   showBulkEditNodeModal: PropTypes.func,
   commandKeyDown: PropTypes.bool,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

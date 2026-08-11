@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Modal } from 'antd'
+import { withTranslation } from 'react-i18next'
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -22,6 +23,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -37,7 +39,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Add Disk',
+    title: t('addDisk.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -46,27 +48,27 @@ const modal = ({
   return (
     <Modal {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Path" hasFeedback {...formItemLayout}>
+        <FormItem label={t('addDisk.path.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('path', {
             initialValue: item.path,
             rules: [
               {
                 required: true,
-                message: 'required field',
+                message: t('common.validation.required'),
               },
             ],
-          })(<Input placeholder="A Linux directaory path like “/foo/bar”" />)}
+          })(<Input placeholder={t('addDisk.path.placeholder')} />)}
         </FormItem>
-        <FormItem label="Labels" hasFeedback {...formItemLayout}>
+        <FormItem label={t('addDisk.labels.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('labels', {
             initialValue: item.labels,
             rules: [
               {
                 required: true,
-                message: 'required field',
+                message: t('common.validation.required'),
               },
             ],
-          })(<Input placeholder="A comma-separate list of strings, 10-20 chars" />)}
+          })(<Input placeholder={t('addDisk.labels.placeholder')} />)}
         </FormItem>
       </Form>
     </Modal>
@@ -74,6 +76,7 @@ const modal = ({
 }
 
 modal.propTypes = {
+  t: PropTypes.func,
   form: PropTypes.object.isRequired,
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -81,4 +84,4 @@ modal.propTypes = {
   onOk: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

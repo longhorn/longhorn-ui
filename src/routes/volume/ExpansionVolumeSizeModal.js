@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, InputNumber, Alert, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -26,6 +28,7 @@ const modal = ({
     getFieldsValue,
     setFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -41,7 +44,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Expand Volume',
+    title: t('expansionVolumeSizeModal.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -72,7 +75,7 @@ const modal = ({
     setFieldsValue({ size: currentSize.toFixed(2), unit: value })
   }
 
-  const messageDisableFrontend = selected && selected.disableFrontend ? 'Longhorn will not expand the filesystem for the volume in maintenance mode. There is no available frontend for filesystem expansion' : ''
+  const messageDisableFrontend = selected && selected.disableFrontend ? t('expansionVolumeSizeModal.maintenanceModeWarning') : ''
 
   return (
     <ModalBlur {...modalOpts}>
@@ -80,13 +83,13 @@ const modal = ({
         <Alert style={{ paddingLeft: '40px' }} message={messageDisableFrontend} type="info" showIcon />
       </div> : ''}
       <Form layout="horizontal" {...formItemLayout} style={{ display: 'flex' }}>
-        <FormItem label="Size" style={{ flex: 0.7 }}>
+        <FormItem label={t('columns.size')} style={{ flex: 0.7 }}>
           {getFieldDecorator('size', {
             initialValue: minValue,
             rules: [
               {
                 required: true,
-                message: 'Please input volume size',
+                message: t('common.validation.sizeRequired'),
               }, {
                 validator: (rule, value, callback) => {
                   if (value === '' || typeof value !== 'number') {
@@ -95,13 +98,13 @@ const modal = ({
                   }
 
                   if (value < 0 || value > 65536) {
-                    callback('The value should be between 0 and 65535')
+                    callback(t('common.validation.valueBetween', { min: 0, max: 65536 }))
                   } else if (value <= formatSize()) {
-                    callback(`Size should be larger than ${formatSize()} ${getFieldsValue().unit}`)
+                    callback(t('expansionVolumeSizeModal.validation.sizeMustBeLarger', { minSize: formatSize(), unit: getFieldsValue().unit }))
                   } else if ((value * 1024) % 1 !== 0 && getFieldsValue().unit === 'Gi') {
-                    callback(`Expansion volume size must be a multiple of Mi (1Gi = 1024Mi). e.g ${parseInt(value * 1024, 10) / 1024}`)
+                    callback(t('expansionVolumeSizeModal.validation.sizeMustBeMultipleOfMi', { exampleSize: parseInt(value * 1024, 10) / 1024 }))
                   } else if (value % 1 !== 0 && getFieldsValue().unit === 'Mi') {
-                    callback('Decimals are not allowed')
+                    callback(t('expansionVolumeSizeModal.validation.noDecimalsForMi'))
                   } else {
                     callback()
                   }
@@ -113,7 +116,7 @@ const modal = ({
         <FormItem style={{ flex: 0.2, marginLeft: 5 }}>
           {getFieldDecorator('unit', {
             initialValue: item.unit,
-            rules: [{ required: true, message: 'Please select your unit!' }],
+            rules: [{ required: true, message: t('expansionVolumeSizeModal.validation.unitRequired') }],
           })(
             <Select
               style={{ width: '100px' }}
@@ -137,6 +140,7 @@ modal.propTypes = {
   selected: PropTypes.object,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

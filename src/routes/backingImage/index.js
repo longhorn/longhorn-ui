@@ -13,6 +13,7 @@ import BackupBackingImage from './BackupBackingImage'
 import { filterBackingImage } from './utils'
 import { getBackupTargets } from '../../utils/backupTarget'
 import style from './BackingImage.less'
+import { withTranslation } from 'react-i18next'
 
 class BackingImage extends React.Component {
   constructor(props) {
@@ -92,7 +93,7 @@ class BackingImage extends React.Component {
 
   render() {
     const { data: settingData } = this.props.setting
-    const { dispatch, loading, location, backupTarget } = this.props
+    const { dispatch, loading, location, backupTarget, t } = this.props
     const { uploadFile, handleBackupBackingImageModalOpen, handleBackupBackingImageModalClose } = this
     const { backupBackingImageModalVisible, selectedBackingImage } = this.state
     const { data: volumeData } = this.props.volume
@@ -218,7 +219,7 @@ class BackingImage extends React.Component {
         if (newBackingImage.sourceType === 'upload') {
           delete payload.fileContainer
           notification.warning({
-            message: 'Do not refresh or close this page, otherwise the upload will be interrupted.',
+            message: t('backingImage.notification.upload.warning'),
             key: 'uploadNotification',
             duration: 0,
           })
@@ -298,19 +299,19 @@ class BackingImage extends React.Component {
       location,
       defaultField: 'name',
       fieldOption: [
-        { value: 'name', name: 'Name' },
-        { value: 'uuid', name: 'UUID' },
-        { value: 'sourceType', name: 'Created From' },
-        { value: 'minNumberOfCopies', name: 'Minimum Copies' },
-        { value: 'nodeSelector', name: 'Node Tags' },
-        { value: 'diskSelector', name: 'Disk Tags' },
+        { value: 'name', name: t('common.name') },
+        { value: 'uuid', name: t('backingImage.filter.fieldOption.uuid') },
+        { value: 'sourceType', name: t('backingImage.filter.fieldOption.sourceType') },
+        { value: 'minNumberOfCopies', name: t('backingImage.filter.fieldOption.minNumberOfCopies') },
+        { value: 'nodeSelector', name: t('backingImage.filter.fieldOption.nodeSelector') },
+        { value: 'diskSelector', name: t('backingImage.filter.fieldOption.diskSelector') },
       ],
       createdFromOption: [
-        { value: 'download', name: 'download' },
-        { value: 'upload', name: 'upload' },
-        { value: 'export-from-volume', name: 'export-from-volume' },
-        { value: 'clone', name: 'clone' },
-        { value: 'restore', name: 'restore' },
+        { value: 'download', name: t('backingImage.filter.createdFromOption.download') },
+        { value: 'upload', name: t('backingImage.filter.createdFromOption.upload') },
+        { value: 'export-from-volume', name: t('backingImage.filter.createdFromOption.exportFromVolume') },
+        { value: 'clone', name: t('backingImage.filter.createdFromOption.clone') },
+        { value: 'restore', name: t('backingImage.filter.createdFromOption.restore') },
       ],
       onSearch(filter) {
         dispatch({
@@ -380,7 +381,7 @@ class BackingImage extends React.Component {
             </Col>
           </Row>
           <Button className="out-container-button" size="large" type="primary" disabled={inUploadProgress || loading} onClick={addBackingImage}>
-            Create Backing Image
+            {t('backingImage.button.createBackingImage')}
           </Button>
           <Row style={{ marginBottom: 8, height: 'calc(100% - 48px)' }}>
             <BackingImageList {...backingImageListProps} />
@@ -388,7 +389,7 @@ class BackingImage extends React.Component {
         </div>
         <div className={style.backupBackingImageTitle}>
           <Icon type="file-image" className="ant-breadcrumb anticon" style={{ display: 'flex', alignItems: 'center' }} />
-          <span style={{ marginLeft: '4px' }}>Backing Image Backup</span>
+          <span style={{ marginLeft: '4px' }}>{t('backingImage.backupBackingImage.title')}</span>
         </div>
         <BackupBackingImage
           className={style.backupBackingImage}
@@ -399,7 +400,7 @@ class BackingImage extends React.Component {
         {inUploadProgress && (
           <div className={style.backingImageUploadingContainer}>
             <Progress percent={backingImageUploadPercent} />
-            <span>Uploading</span>
+            <span>{t('backingImage.upload.status')}</span>
           </div>
         )}
         { minCopiesCountModalVisible && <UpdateMinCopiesCount {...minCopiesCountProps} />}
@@ -421,6 +422,7 @@ BackingImage.propTypes = {
   volume: PropTypes.object,
   backup: PropTypes.object,
   dispatch: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default connect(({ app, setting, backup, backupTarget, volume, backingImage, loading }) => ({ app, setting, backupTarget, volume, backup, backingImage, loading: loading.models.backingImage }))(BackingImage)
+export default withTranslation()(connect(({ app, setting, backup, backupTarget, volume, backingImage, loading }) => ({ app, setting, backupTarget, volume, backup, backingImage, loading: loading.models.backingImage }))(BackingImage))

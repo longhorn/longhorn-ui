@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, InputNumber, Select } from 'antd'
 const { Option } = Select
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -20,6 +22,7 @@ const modal = ({
   onCancel,
   onOk,
   form: { getFieldDecorator, getFieldsValue, setFieldsValue },
+  t,
 }) => {
   function handleOk() {
     const { snapshotMaxSize, unit } = getFieldsValue()
@@ -57,7 +60,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Snapshot Max Size',
+    title: t('updateSnapshotMaxSizeModal.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -70,23 +73,23 @@ const modal = ({
         {...formItemLayout}
         style={{ display: 'flex', flexDirection: 'column' }}
       >
-        <FormItem label="Max Size">
+        <FormItem label={t('updateSnapshotMaxSizeModal.fields.maxSize')}>
           {getFieldDecorator('snapshotMaxSize', {
             initialValue: minValue,
             rules: [
               {
                 required: true,
-                message: 'Please input volume snapshotMaxSize',
+                message: t('updateSnapshotMaxSizeModal.validation.snapshotMaxSizeRequired'),
               },
             ],
           })(<InputNumber style={{ width: '270px' }} />)}
         </FormItem>
-        <FormItem label="Unit">
+        <FormItem label={t('updateSnapshotMaxSizeModal.fields.unit')}>
           {getFieldDecorator('unit', {
             initialValue: 'Gi',
-            rules: [{ required: true, message: 'Please select a value!' }],
+            rules: [{ required: true, message: t('updateSnapshotMaxSizeModal.validation.unitRequired') }],
           })(
-            <Select placeholder="Select a value" onChange={unitChange}>
+            <Select placeholder={t('updateSnapshotMaxSizeModal.placeholders.selectUnit')} onChange={unitChange}>
               <Option value="Gi">Gi</Option>
               <Option value="Mi">Mi</Option>
             </Select>
@@ -105,6 +108,7 @@ modal.propTypes = {
   selected: PropTypes.object,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

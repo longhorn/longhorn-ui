@@ -6,6 +6,7 @@ import { pagination } from '../../utils/page'
 import { formatMib } from '../../utils/formatter'
 import { nodeTagColor, diskTagColor } from '../../utils/constants'
 import styles from './BackingImageList.less'
+import { withTranslation } from 'react-i18next'
 
 function list({
   loading,
@@ -19,6 +20,7 @@ function list({
   downloadBackingImage,
   showUpdateMinCopiesCount,
   height,
+  t,
 }) {
   const backingImageActionsProps = {
     deleteBackingImage,
@@ -33,7 +35,7 @@ function list({
     if (record.deletionTimestamp) {
       // Deleting
       return (
-        <Tooltip title="Deleting backing image">
+        <Tooltip title={t('backingImageList.dynamicStateIcon.deleting')}>
           <Icon type="delete" className="color-error" />
         </Tooltip>
       )
@@ -45,7 +47,7 @@ function list({
     if (record.secret !== '' || record.secretNamespace !== '') {
       // encrypted backing image
       return (
-        <Tooltip title="Encrypted Backing Image">
+        <Tooltip title={t('common.encrypted')}>
           <Icon className="color-warning" type="lock" />
         </Tooltip>
       )
@@ -53,7 +55,7 @@ function list({
 
     if (record.diskFileStatusMap && Object.values(record.diskFileStatusMap).every((diskStatus) => diskStatus.state.includes('failed'))) {
       // unavailable backing image
-      return (<Tooltip title={'The backingImage is unavailable'}><Icon type="warning" style={{ marginLeft: 10, color: '#f5222d' }} /></Tooltip>)
+      return (<Tooltip title={t('backingImageList.staticStateIcon.unavailable')}><Icon type="warning" style={{ marginLeft: 10, color: '#f5222d' }} /></Tooltip>)
     }
 
     return ''
@@ -61,7 +63,7 @@ function list({
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
       width: 180,
@@ -76,7 +78,7 @@ function list({
         )
       },
     }, {
-      title: 'UUID',
+      title: t('columns.uuid'),
       dataIndex: 'uuid',
       key: 'uuid',
       width: 140,
@@ -89,8 +91,8 @@ function list({
     }, {
       title: (
         <span>
-          Actual Size&nbsp;
-          <Tooltip title="The physical storage space currently consumed by the image file on the host's file system">
+          {t('columns.actualSize')}&nbsp;
+          <Tooltip title={t('columns.actualSizeTooltip')}>
             <Icon type="exclamation-circle" />
           </Tooltip>
         </span>
@@ -110,8 +112,8 @@ function list({
     {
       title: (
         <span>
-          Virtual Size&nbsp;
-          <Tooltip title="The total logical capacity of the disk that the image represents">
+          {t('columns.virtualSize')}&nbsp;
+          <Tooltip title={t('columns.virtualSizeTooltip')}>
             <Icon type="exclamation-circle" />
           </Tooltip>
         </span>
@@ -129,7 +131,7 @@ function list({
       },
     },
     {
-      title: 'Created From',
+      title: t('columns.createdFrom'),
       dataIndex: 'sourceType',
       key: 'sourceType',
       width: 120,
@@ -142,7 +144,7 @@ function list({
         )
       },
     }, {
-      title: 'Minimum Copies',
+      title: t('columns.minimumCopies'),
       dataIndex: 'minNumberOfCopies',
       key: 'minNumberOfCopies',
       width: 130,
@@ -155,7 +157,7 @@ function list({
         )
       },
     }, {
-      title: 'Data Engine',
+      title: t('columns.dataEngine'),
       dataIndex: 'dataEngine',
       key: 'dataEngine',
       width: 130,
@@ -168,7 +170,7 @@ function list({
         )
       },
     }, {
-      title: 'Node Tags',
+      title: t('columns.nodeTags'),
       key: 'nodeSelector',
       dataIndex: 'nodeSelector',
       width: 120,
@@ -190,7 +192,7 @@ function list({
       },
     },
     {
-      title: 'Disk Tags',
+      title: t('columns.diskTags'),
       key: 'diskSelector',
       dataIndex: 'diskSelector',
       width: 120,
@@ -211,7 +213,7 @@ function list({
         )
       },
     }, {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 120,
       render: (text, record) => {
@@ -249,6 +251,7 @@ list.propTypes = {
   rowSelection: PropTypes.object,
   height: PropTypes.number,
   backupProps: PropTypes.object,
+  t: PropTypes.func,
 }
 
-export default list
+export default withTranslation()(list)

@@ -5,15 +5,16 @@ import { pagination } from '../../utils/page'
 import { sortTable, sortTableByUTCDate } from '../../utils/sort'
 import { formatDate } from '../../utils/formatDate'
 import SystemRestoresAction from './systemRestoresAction'
+import { withTranslation } from 'react-i18next'
 
-function list({ loading, dataSource, height, rowSelection, deleteSystemRestore }) {
+function list({ loading, dataSource, height, rowSelection, deleteSystemRestore, t }) {
   const systemRestoresActionsProps = {
     deleteSystemRestore,
   }
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       width: 120,
       key: 'name',
@@ -27,7 +28,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemRestore }
       },
     },
     {
-      title: 'Version',
+      title: t('columns.version'),
       dataIndex: 'version',
       width: 120,
       key: 'version',
@@ -41,7 +42,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemRestore }
       },
     },
     {
-      title: 'State',
+      title: t('columns.state'),
       dataIndex: 'state',
       width: 120,
       key: 'state',
@@ -55,7 +56,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemRestore }
       },
     },
     {
-      title: 'Age',
+      title: t('columns.age'),
       dataIndex: 'createdAt',
       width: 120,
       key: 'createdAt',
@@ -69,7 +70,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemRestore }
       },
     },
     {
-      title: 'Error',
+      title: t('columns.error'),
       dataIndex: 'error',
       width: 220,
       key: 'error',
@@ -83,7 +84,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemRestore }
       },
     },
     {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 110,
       fixed: 'right',
@@ -125,6 +126,7 @@ list.propTypes = {
   rowSelection: PropTypes.object,
   height: PropTypes.number,
   deleteSystemRestore: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default list
+export default withTranslation()(list)

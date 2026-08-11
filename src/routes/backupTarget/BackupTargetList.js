@@ -4,11 +4,12 @@ import { Table, Tooltip, Icon } from 'antd'
 import BackupTargetActions from './BackupTargetActions'
 import { pagination } from '../../utils/page'
 import style from './BackupTargetList.less'
+import { withTranslation } from 'react-i18next'
 
-function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSelection, height }) {
+function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSelection, height, t }) {
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
       width: 150,
@@ -19,7 +20,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
         )
       },
     }, {
-      title: 'URL',
+      title: t('columns.url'),
       dataIndex: 'backupTargetURL',
       key: 'backupTargetURL',
       width: 220,
@@ -30,7 +31,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
         )
       },
     }, {
-      title: 'Credential Secret',
+      title: t('columns.credentialSecret'),
       dataIndex: 'credentialSecret',
       key: 'credentialSecret',
       width: 150,
@@ -41,7 +42,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
         )
       },
     }, {
-      title: 'Poll Interval',
+      title: t('columns.pollInterval'),
       dataIndex: 'pollInterval',
       key: 'pollInterval',
       width: 100,
@@ -52,7 +53,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
         )
       },
     }, {
-      title: 'Status',
+      title: t('columns.status'),
       dataIndex: 'available',
       key: 'available',
       width: 90,
@@ -61,7 +62,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
         return (
           <div className={style.statusWrapper}>
             <div className={`${style.status} ${text === true ? 'healthy' : 'error'}`}>
-              {text === true ? 'Available' : 'Error'}
+              {text === true ? t('backupTargetList.status.available') : t('backupTargetList.status.error')}
             </div>
             {record.message && (
               <Tooltip title={record.message}>
@@ -72,7 +73,7 @@ function list({ loading, dataSource, deleteBackupTarget, editBackupTarget, rowSe
         )
       },
     }, {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 110,
       fixed: 'right',
@@ -109,6 +110,7 @@ list.propTypes = {
   rowSelection: PropTypes.object,
   deleteBackupTarget: PropTypes.func,
   editBackupTarget: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default list
+export default withTranslation()(list)

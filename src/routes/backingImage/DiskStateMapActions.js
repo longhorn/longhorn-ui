@@ -1,15 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function DiskStateMapActions({ selectedRows, deleteButtonDisabled, deleteButtonLoading, deleteDisksOnBackingImage }) {
+function DiskStateMapActions({ selectedRows, deleteButtonDisabled, deleteButtonLoading, deleteDisksOnBackingImage, t }) {
   const deleteButtonClick = () => {
     confirm({
       width: 'fit-content',
       title: (
           <>
-            <p>Are you sure you want to remove the image file from the disks ?</p>
+            <p>{t('diskStateMapActions.modal.delete.title')}</p>
             <ul>
               {selectedRows.map(item => <li>{item.disk}</li>)}
             </ul>
@@ -29,7 +31,7 @@ function DiskStateMapActions({ selectedRows, deleteButtonDisabled, deleteButtonL
   }
 
   return (
-    <Button {...deleteButtonProps}>Clean Up</Button>
+    <Button {...deleteButtonProps}>{t('diskStateMapActions.button.cleanUp')}</Button>
   )
 }
 
@@ -38,6 +40,7 @@ DiskStateMapActions.propTypes = {
   deleteButtonDisabled: PropTypes.bool,
   deleteButtonLoading: PropTypes.bool,
   deleteDisksOnBackingImage: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default DiskStateMapActions
+export default withTranslation()(DiskStateMapActions)

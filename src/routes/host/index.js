@@ -10,8 +10,9 @@ import HostReplica from './HostReplica'
 import HostFilter from './HostFilter'
 import BulkEditNode from './BulkEditNode'
 import { filterNode, schedulableNode, unschedulableNode, schedulingDisabledNode, downNode, getNodeStatus, autoEvictingNode } from '../../utils/filter'
+import { withTranslation } from 'react-i18next'
 
-function Host({ host, volume, setting, loading, dispatch, location }) {
+function Host({ host, volume, setting, loading, dispatch, location, t }) {
   let hostList = null
   let hostFilter = null
   const { data, selected, modalVisible, replicaModalVisible, addDiskModalVisible, editDisksModalVisible, diskReplicaModalVisible, instanceManagerVisible, selectedHostRows, currentNode, editBulkNodesModalVisible } = host
@@ -157,6 +158,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   }
 
   const hostListProps = {
+    t,
     dataSource: nodes,
     dispatch,
     instanceManagerVisible,
@@ -316,22 +318,23 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
   }
 
   const hostFilterProps = {
+    t,
     location,
     defaultField: 'name',
     selectedHostRows,
     dispatch,
     stateOption: [
-      { value: 'schedulable', name: 'Schedulable' },
-      { value: 'unschedulable', name: 'Unschedulable' },
-      { value: 'autoEvicting', name: 'AutoEvicting' },
-      { value: 'schedulingDisabled', name: 'Disabled' },
-      { value: 'down', name: 'Down' },
+      { value: 'schedulable', name: t('resource.node.schedulable') },
+      { value: 'unschedulable', name: t('resource.node.unschedulable') },
+      { value: 'autoEvicting', name: t('resource.node.autoEvicting') },
+      { value: 'schedulingDisabled', name: t('resource.node.disabled') },
+      { value: 'down', name: t('resource.node.down') },
     ],
     fieldOption: [
-      { value: 'name', name: 'Name' },
-      { value: 'status', name: 'Status' },
-      { value: 'NodeTag', name: 'Node Tag' },
-      { value: 'DiskTag', name: 'Disk Tag' },
+      { value: 'name', name: t('common.name') },
+      { value: 'status', name: t('columns.status') },
+      { value: 'NodeTag', name: t('common.nodeTag') },
+      { value: 'DiskTag', name: t('common.diskTag') },
     ],
     expandAll() {
       hostList && hostList.expandAll()
@@ -370,6 +373,7 @@ function Host({ host, volume, setting, loading, dispatch, location }) {
 }
 
 Host.propTypes = {
+  t: PropTypes.func,
   host: PropTypes.object,
   volume: PropTypes.object,
   setting: PropTypes.object,
@@ -378,4 +382,4 @@ Host.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default connect(({ volume, host, setting, loading }) => ({ volume, host, setting, loading: loading.models.host }))(Host)
+export default connect(({ volume, host, setting, loading }) => ({ volume, host, setting, loading: loading.models.host }))(withTranslation()(Host))

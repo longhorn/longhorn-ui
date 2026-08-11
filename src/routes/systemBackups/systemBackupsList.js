@@ -5,8 +5,9 @@ import { pagination } from '../../utils/page'
 import { sortTable, sortTableByUTCDate } from '../../utils/sort'
 import SystemBackupsAction from './systemBackupsAction'
 import { formatDate } from '../../utils/formatDate'
+import { withTranslation } from 'react-i18next'
 
-function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, createSystemRestore }) {
+function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, createSystemRestore, t }) {
   const systemBackupActionsProps = {
     deleteSystemBackup,
     createSystemRestore,
@@ -14,7 +15,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
 
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       width: 120,
       key: 'name',
@@ -28,7 +29,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
       },
     },
     {
-      title: 'Version',
+      title: t('columns.version'),
       dataIndex: 'version',
       width: 120,
       key: 'version',
@@ -42,7 +43,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
       },
     },
     {
-      title: 'State',
+      title: t('columns.state'),
       dataIndex: 'state',
       width: 120,
       key: 'state',
@@ -56,7 +57,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
       },
     },
     {
-      title: 'Age',
+      title: t('columns.age'),
       dataIndex: 'createdAt',
       width: 120,
       key: 'createdAt',
@@ -70,7 +71,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
       },
     },
     {
-      title: 'Error',
+      title: t('columns.error'),
       dataIndex: 'error',
       width: 220,
       key: 'error',
@@ -84,7 +85,7 @@ function list({ loading, dataSource, height, rowSelection, deleteSystemBackup, c
       },
     },
     {
-      title: 'Operation',
+      title: t('columns.operation'),
       key: 'operation',
       width: 110,
       fixed: 'right',
@@ -127,6 +128,7 @@ list.propTypes = {
   height: PropTypes.number,
   deleteSystemBackup: PropTypes.func,
   createSystemRestore: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default list
+export default withTranslation()(list)

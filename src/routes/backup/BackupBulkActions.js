@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'antd'
 import style from './BackupBulkActions.less'
+import { withTranslation } from 'react-i18next'
 
-function bulkActions({ selectedRows, backupVolumes, restoreLatestBackup, showBulkCreateDisasterRecoveryVolume, syncAllBackupVolumes }) {
+function bulkActions({ selectedRows, backupVolumes, restoreLatestBackup, showBulkCreateDisasterRecoveryVolume, syncAllBackupVolumes, t }) {
   const handleClick = (action) => {
     switch (action) {
       case 'restoreLatestBackup':
@@ -20,9 +21,9 @@ function bulkActions({ selectedRows, backupVolumes, restoreLatestBackup, showBul
   }
 
   const allActions = [
-    { key: 'restoreLatestBackup', name: 'Restore Latest Backup', disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName || (record.messages && record.messages.error)) } },
-    { key: 'bulkCreateDisasterRecoveryVolume', name: 'Create Disaster Recovery Volume', disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName || (record.messages && record.messages.error)) } },
-    { key: 'syncAllBackupVolumes', name: 'Sync All Backup Volumes', disabled() { return backupVolumes.length === 0 } },
+    { key: 'restoreLatestBackup', name: t('backupBulkActions.actions.restoreLatestBackup'), disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName || (record.messages && record.messages.error)) } },
+    { key: 'bulkCreateDisasterRecoveryVolume', name: t('backupBulkActions.actions.bulkCreateDisasterRecoveryVolume'), disabled() { return selectedRows.length === 0 || selectedRows.some(record => !record.lastBackupName || (record.messages && record.messages.error)) } },
+    { key: 'syncAllBackupVolumes', name: t('backupBulkActions.actions.syncAllBackupVolumes'), disabled() { return backupVolumes.length === 0 } },
   ]
 
   return (
@@ -44,6 +45,8 @@ bulkActions.propTypes = {
   backupVolumes: PropTypes.array,
   restoreLatestBackup: PropTypes.func,
   showBulkCreateDisasterRecoveryVolume: PropTypes.func,
+  syncAllBackupVolumes: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -24,6 +26,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -40,7 +43,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Update Access Mode',
+    title: t('updateAccessMode.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -51,13 +54,13 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Access Mode" {...formItemLayout}>
+        <FormItem label={t('columns.accessMode')} {...formItemLayout}>
         {getFieldDecorator('accessMode', {
           initialValue: item.accessMode,
         })(<Select>
-          <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
-          <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
-          <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+          <Option key={'ReadWriteOnce'} value={'rwo'}>{t('accessModes.rwo')}</Option>
+          <Option key={'ReadWriteOncePod'} value={'rwop'}>{t('accessModes.rwop')}</Option>
+          <Option key={'ReadWriteMany'} value={'rwx'}>{t('accessModes.rwx')}</Option>
           </Select>)}
         </FormItem>
       </Form>
@@ -72,6 +75,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))

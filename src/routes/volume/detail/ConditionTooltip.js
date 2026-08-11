@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { formatDate } from '../../../utils/formatDate'
 import { Icon, Tooltip } from 'antd'
+import { withTranslation } from 'react-i18next'
 
-const toolTipContent = (field, prefix, value = '') => {
+const toolTipContent = (field, prefix, value = '', t) => {
   if (!field) return null
-  const text = prefix === 'Last Probe Time' || prefix === 'Last Transition Time' ? formatDate(value) : value
+  const text = prefix === t('conditionTooltip.lastProbeTime') || prefix === t('conditionTooltip.lastTransitionTime') ? formatDate(value) : value
   return (<div style={{ marginBottom: 5 }}>{prefix}: {text}</div>)
 }
 
@@ -14,7 +15,7 @@ const parsePositiveNumber = (value) => {
   return Number.isFinite(num) && num > 0 ? num : null
 }
 
-function ConditionTooltip({ selectedVolume, conditionKey, snapshotWarningThreshold }) {
+function ConditionTooltip({ t, selectedVolume, conditionKey, snapshotWarningThreshold }) {
   let icon = <Icon style={{ marginRight: 5 }} type="exclamation-circle" />
   let conditionClassName = ''
   const { type, lastProbeTime, lastTransitionTime, message, reason, status } = selectedVolume.conditions[conditionKey] || {}
@@ -24,12 +25,12 @@ function ConditionTooltip({ selectedVolume, conditionKey, snapshotWarningThresho
   )
   let title = selectedVolume.conditions[conditionKey] ? (
     <div>
-      {toolTipContent(type, 'Name', type)}
-      {toolTipContent(lastProbeTime, 'Last Probe Time', lastProbeTime)}
-      {toolTipContent(lastTransitionTime, 'Last Transition Time', lastTransitionTime)}
-      {toolTipContent(message, 'Message', message)}
-      {toolTipContent(reason, 'Reason', reason)}
-      {toolTipContent(status, 'Status', status)}
+      {toolTipContent(type, t('common.name'), type, t)}
+      {toolTipContent(lastProbeTime, t('conditionTooltip.lastProbeTime'), lastProbeTime, t)}
+      {toolTipContent(lastTransitionTime, t('conditionTooltip.lastTransitionTime'), lastTransitionTime, t)}
+      {toolTipContent(message, t('conditionTooltip.message'), message, t)}
+      {toolTipContent(reason, t('conditionTooltip.reason'), reason, t)}
+      {toolTipContent(status, t('columns.status'), status, t)}
     </div>) : ''
 
   switch (conditionKey) {
@@ -38,22 +39,22 @@ function ConditionTooltip({ selectedVolume, conditionKey, snapshotWarningThresho
         icon = <Icon style={{ marginRight: 5 }} type="exclamation-circle" />
         title = (
           <div>
-            {toolTipContent(type, 'Name', type) }
-            {toolTipContent(lastTransitionTime, 'Last Transition Time', lastTransitionTime)}
-            {toolTipContent(status, 'Status', `The snapshot number threshold (${computedThreshold}) has not been exceeded`)}
+            {toolTipContent(type, t('common.name'), type, t) }
+            {toolTipContent(lastTransitionTime, t('conditionTooltip.lastTransitionTime'), lastTransitionTime, t)}
+            {toolTipContent(status, t('columns.status'), t('conditionTooltip.tooManySnapshots.notExceeded', { computedThreshold }), t)}
           </div>
         )
       } else {
         conditionClassName = 'faulted' // red
         title = (
           <div>
-            {toolTipContent(type, 'Name', type)}
-            {toolTipContent(lastProbeTime, 'Last Probe Time', lastProbeTime)}
-            {toolTipContent(lastTransitionTime, 'Last Transition Time', lastTransitionTime)}
-            {toolTipContent(message, 'Message', message)}
-            {toolTipContent(reason, 'Reason', reason)}
-            {toolTipContent(reason, 'Suggestion', 'Try to delete unused snapshots to free up space if needed')}
-            {toolTipContent(status, 'Status', status)}
+            {toolTipContent(type, t('common.name'), type, t)}
+            {toolTipContent(lastProbeTime, t('conditionTooltip.lastProbeTime'), lastProbeTime, t)}
+            {toolTipContent(lastTransitionTime, t('conditionTooltip.lastTransitionTime'), lastTransitionTime, t)}
+            {toolTipContent(message, t('conditionTooltip.message'), message, t)}
+            {toolTipContent(reason, t('conditionTooltip.reason'), reason, t)}
+            {toolTipContent(reason, t('conditionTooltip.suggestion'), t('conditionTooltip.tooManySnapshots.suggestion'), t)}
+            {toolTipContent(status, t('columns.status'), status, t)}
           </div>
         )
       }
@@ -90,9 +91,10 @@ function ConditionTooltip({ selectedVolume, conditionKey, snapshotWarningThresho
 }
 
 ConditionTooltip.propTypes = {
+  t: PropTypes.func,
   selectedVolume: PropTypes.object,
   conditionKey: PropTypes.string,
   snapshotWarningThreshold: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
-export default ConditionTooltip
+export default withTranslation()(ConditionTooltip)

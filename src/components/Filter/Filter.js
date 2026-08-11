@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Select, Input, Button, Form, Popover } from 'antd'
 import queryString from 'query-string'
 import styles from './Filter.less'
+import { withTranslation } from 'react-i18next'
 
 const Option = Select.Option
 
@@ -92,8 +93,9 @@ class Filter extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const {
-      field = this.props.defaultField || 'Name',
+      field = this.props.defaultField || t('common.name'),
       value = '',
       stateValue = '',
       nodeRedundancyValue = '',
@@ -218,7 +220,7 @@ class Filter extends React.Component {
 
     for (let key in defaultContent) {
       if (defaultContent[key] !== '' && key !== 'field' && this.state[key] !== defaultContent[key]) {
-        content = (<div style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{`Current Filter: ${defaultContent[key]}`}</div>)
+        content = (<div style={{ maxWidth: '200px', wordBreak: 'break-word' }}>{t('filter.current', { value: defaultContent[key] })}</div>)
         popoverVisible = true
       }
     }
@@ -232,7 +234,7 @@ class Filter extends React.Component {
             </Select>
           </Popover>
           { valueForm }
-          <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>Go</Button>
+          <Button size="large" style={{ height: '36px' }} htmlType="submit" type="primary" onClick={this.handleSubmit}>{t('filter.go')}</Button>
         </Input.Group>
       </Form>
     )
@@ -240,6 +242,7 @@ class Filter extends React.Component {
 }
 
 Filter.propTypes = {
+  t: PropTypes.func,
   onSearch: PropTypes.func,
   form: PropTypes.object,
   location: PropTypes.object,
@@ -257,4 +260,4 @@ Filter.propTypes = {
   availableOption: PropTypes.array,
 }
 
-export default Filter
+export default withTranslation()(Filter)

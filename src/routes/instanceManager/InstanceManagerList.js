@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import { Table } from 'antd'
 import { pagination } from '../../utils/page'
 import { sortTable } from '../../utils/sort'
-function list({ loading, dataSource, height, showRefCountVolumeModal }) {
+import { withTranslation } from 'react-i18next'
+
+function list({ loading, dataSource, height, showRefCountVolumeModal, t }) {
   const columns = [
     {
-      title: 'Name',
+      title: t('columns.name'),
       dataIndex: 'name',
       width: 220,
       key: 'name',
@@ -20,7 +22,7 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
       },
     },
     {
-      title: 'State',
+      title: t('columns.state'),
       dataIndex: 'currentState',
       width: 150,
       key: 'currentState',
@@ -34,7 +36,7 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
       },
     },
     {
-      title: 'Type',
+      title: t('columns.type'),
       dataIndex: 'managerType',
       width: 150,
       key: 'managerType',
@@ -48,7 +50,7 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
       },
     },
     {
-      title: 'Ref Count Volume',
+      title: t('columns.refCountVolume'),
       dataIndex: 'volume',
       width: 220,
       key: 'volume',
@@ -70,7 +72,7 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
       },
     },
     {
-      title: 'Node',
+      title: t('columns.node'),
       dataIndex: 'nodeID',
       width: 150,
       key: 'nodeID',
@@ -84,7 +86,7 @@ function list({ loading, dataSource, height, showRefCountVolumeModal }) {
       },
     },
     {
-      title: 'Instance Manager Image',
+      title: t('columns.instanceManagerImage'),
       dataIndex: 'image',
       width: 280,
       key: 'image',
@@ -129,6 +131,7 @@ list.propTypes = {
   dataSource: PropTypes.array,
   height: PropTypes.number,
   showRefCountVolumeModal: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default list
+export default withTranslation()(list)

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Select, } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const { Item: FormItem } = Form
 const { Option } = Select
@@ -26,7 +27,8 @@ const modal = ({
     getFieldValue,
   },
   v1DataEngineEnabled = true,
-  v2DataEngineEnabled = false
+  v2DataEngineEnabled = false,
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -43,7 +45,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Restore Backing Image',
+    title: t('restoreBackupBackingImageModal.modal.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -52,29 +54,29 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Backup" {...formItemLayout}>
+        <FormItem label={t('restoreBackupBackingImageModal.form.backup.label')} {...formItemLayout}>
           {getFieldDecorator('backup', { initialValue: item.name || '' })(<Input disabled={!!item.name} />)}
         </FormItem>
         {item.secret && (
-          <FormItem label="Secret" hasFeedback {...formItemLayout}>
+          <FormItem label={t('restoreBackupBackingImageModal.form.secret.label')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('secret', { initialValue: item.secret })(<Input disabled />)}
           </FormItem>
         )}
         {item.secretNamespace && (
-          <FormItem label="Secret Namespace" hasFeedback {...formItemLayout}>
+          <FormItem label={t('restoreBackupBackingImageModal.form.secretNamespace.label')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('secretNamespace', { initialValue: item.secretNamespace })(<Input disabled />)}
           </FormItem>
         )}
-         <FormItem label="Data Engine" hasFeedback {...formItemLayout}>
+         <FormItem label={t('columns.dataEngine')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataEngine', {
             initialValue: v1DataEngineEnabled ? 'v1' : 'v2',
             rules: [
               {
                 validator: (_rule, value, callback) => {
                   if (value === 'v1' && !v1DataEngineEnabled) {
-                    callback('v1 data engine is not enabled')
+                    callback(t('common.validation.vEngineDisabled', { v: 'v1' }))
                   } else if (value === 'v2' && !v2DataEngineEnabled) {
-                    callback('v2 data engine is not enabled')
+                    callback(t('common.validation.vEngineDisabled', { v: 'v2' }))
                   }
                   callback()
                 },
@@ -98,6 +100,7 @@ modal.propTypes = {
   onOk: PropTypes.func,
   v1DataEngineEnabled: PropTypes.bool,
   v2DataEngineEnabled: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

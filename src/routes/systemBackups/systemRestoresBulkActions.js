@@ -2,18 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Alert, Icon } from 'antd'
 import style from './systemBackupsBulkActions.less'
+import { withTranslation } from 'react-i18next'
 
 const confirm = Modal.confirm
 
-function bulkActions({ selectedRows, deleteSystemRestores }) {
+function bulkActions({ selectedRows, deleteSystemRestores, t }) {
   const handleClick = (action) => {
-    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {selectedRows.map(item => item.name).join(',')} ?</div>
+    let title = <div><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />{t('systemRestoresAction.modal.delete.title.default', { name: selectedRows.map(item => item.name).join(',') })}</div>
     let restoring = selectedRows.some((item) => item.state === 'Pending' || item.state === 'Restoring' || item.state === 'Downloading')
     if (restoring) {
       title = (<div>
-        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />Are you sure you want to delete System Restore {selectedRows.map(item => item.name).join(',')}</div>
+        <div style={{ marginBottom: 10 }}><Icon style={{ marginRight: 5 }} className="color-warning" type="info-circle" />{t('systemRestoresAction.modal.delete.title.inProgress', { name: selectedRows.map(item => item.name).join(',') })}</div>
         <Alert
-          message={'Deleting restoring system backup will abort the remaining resource rollout. An incomplete restore may cause Longhorn system resource inconsistencies leading to unexpected behavior.'}
+          message={t('systemRestoresAction.modal.delete.warningMessage')}
           type="warning"
         />
       </div>)
@@ -34,7 +35,7 @@ function bulkActions({ selectedRows, deleteSystemRestores }) {
   }
   const disabled = selectedRows.length === 0
   const allActions = [
-    { key: 'delete', name: 'Delete', disabled },
+    { key: 'delete', name: t('common.delete'), disabled },
   ]
 
   return (
@@ -54,6 +55,7 @@ function bulkActions({ selectedRows, deleteSystemRestores }) {
 bulkActions.propTypes = {
   selectedRows: PropTypes.array,
   deleteSystemRestores: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default bulkActions
+export default withTranslation()(bulkActions)

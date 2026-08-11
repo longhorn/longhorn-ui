@@ -76,7 +76,7 @@ class HostFilter extends React.Component {
   }
 
   render() {
-    const { location, onSearch, stateOption, fieldOption, selectedHostRows, defaultField } = this.props
+    const { location, onSearch, stateOption, fieldOption, selectedHostRows, defaultField, t } = this.props
     const searchGroupProps = {
       location,
       defaultField,
@@ -91,7 +91,7 @@ class HostFilter extends React.Component {
       <Row gutter={24}>
         <Col lg={16} md={14} sm={24} xs={24}>
           <div style={{ display: 'flex' }}>
-            <Button size="large" type="primary" onClick={() => this.toggleExpand()}>{this.state.isAllExpanded ? 'Collapse' : 'Expand'} All</Button>
+            <Button size="large" type="primary" onClick={() => this.toggleExpand()}>{this.state.isAllExpanded ? t('filter.collapseAll') : t('filter.expandAll')}</Button>
             <HostBulkActions {...this.state.HostBulkActionsProps} commandKeyDown={this.state.commandKeyDown} selectedRows={selectedHostRows} />
           </div>
         </Col>
@@ -104,6 +104,7 @@ class HostFilter extends React.Component {
 }
 
 HostFilter.propTypes = {
+  t: PropTypes.func,
   onSearch: PropTypes.func,
   location: PropTypes.object,
   defaultField: PropTypes.string,

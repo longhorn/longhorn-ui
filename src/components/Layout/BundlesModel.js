@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Progress } from 'antd'
 import { ModalBlur } from '../index'
+import { withTranslation } from 'react-i18next'
 const FormItem = Form.Item
 const { TextArea } = Input
 
@@ -20,6 +21,7 @@ const modal = ({
   okText,
   modalButtonDisabled,
   progressPercentage,
+  t,
   form: {
     getFieldDecorator,
     validateFields,
@@ -39,7 +41,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Generate Support Bundle',
+    title: t('bundlesModel.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -52,19 +54,19 @@ const modal = ({
     <ModalBlur {...modalOpts}>
       <div style={{ position: 'relative' }}>
         <Form layout="horizontal">
-          <FormItem label="Issue URL" hasFeedback {...formItemLayout}>
+          <FormItem label={t('bundlesModel.form.issueURLLabel')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('issueURL', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
-          <FormItem label="Description" hasFeedback {...formItemLayout}>
+          <FormItem label={t('bundlesModel.form.descriptionLabel')} hasFeedback {...formItemLayout}>
             {getFieldDecorator('description', {
               initialValue: '',
               rules: [
                 {
                   required: true,
                   whitespace: true,
-                  message: "Please fill in support bundle's issue description",
+                  message: t('bundlesModel.validation.descriptionRequired'),
                 },
               ],
             })(<TextArea autoSize={{ minRows: 6, maxRows: 10 }} />)}
@@ -92,6 +94,7 @@ modal.propTypes = {
   okText: PropTypes.string,
   modalButtonDisabled: PropTypes.bool,
   progressPercentage: PropTypes.number,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

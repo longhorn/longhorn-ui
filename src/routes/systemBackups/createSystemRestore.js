@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -23,6 +25,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -40,7 +43,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Restore System Backup',
+    title: t('createSystemRestore.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -49,35 +52,35 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('common.name')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
             initialValue: item.name,
             rules: [
               {
                 required: true,
-                message: 'Please input System Restore name.',
+                message: t('createSystemRestore.form.name.rules.required'),
               },
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="Version" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createSystemRestore.form.version.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('version', {
             initialValue: item.version,
             rules: [
               {
                 required: true,
-                message: 'Please input version.',
+                message: t('createSystemRestore.form.version.rules.required'),
               },
             ],
           })(<Input disabled={true} />)}
         </FormItem>
-        <FormItem label="System Backup" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createSystemRestore.form.systemBackup.label')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('systemBackup', {
             initialValue: item.systemBackup,
             rules: [
               {
                 required: true,
-                message: 'Please input System backup name.',
+                message: t('createSystemRestore.form.systemBackup.rules.required'),
               },
             ],
           })(<Input disabled={true} />)}
@@ -93,6 +96,7 @@ modal.propTypes = {
   onCancel: PropTypes.func,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default withTranslation()(Form.create()(modal))

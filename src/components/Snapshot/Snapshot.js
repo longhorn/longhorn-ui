@@ -4,6 +4,7 @@ import { Tree, Icon, Menu, Dropdown, Button, Tooltip, Progress, Spin, Modal } fr
 import { formatSnapshot, formatMib } from '../../utils/formatter'
 import { formatDate } from '../../utils/formatDate'
 import { disabledSnapshotAction } from '../../routes/volume/helper/index'
+import { withTranslation } from 'react-i18next'
 import './Snapshot.less'
 
 const TreeNode = Tree.TreeNode
@@ -17,24 +18,25 @@ function StartPoint() {
 
 // display volume head
 function VolumeHead(props) {
+  const { t } = props
   return (
     props ? (<Tooltip placement="right"
       autoAdjustOverflow={false}
       title={<div>
-      <p className="snapshot-name">Name: {props.name}</p>
-      <p className="snapshot-created">Created: {props.created}</p>
-      <p className="snapshot-name">Size: {formatMib(props.size)}</p>
-      <p className="snapshot-name">Created By User: {props.usercreated ? 'True' : 'False'}</p>
+      <p className="snapshot-name">{t('common.name')}: {props.name}</p>
+      <p className="snapshot-created">{t('snapshot.tooltip.created')}: {props.created}</p>
+      <p className="snapshot-name">{t('columns.size')}: {formatMib(props.size)}</p>
+      <p className="snapshot-name">{t('snapshot.tooltip.createdByUser')}: {props.usercreated ? t('common.true') : t('common.false')}</p>
     </div>}>
     <div className="snapshot-current-desc">
       <Button>
-        <Icon type="caret-right" />Volume Head
+        <Icon type="caret-right" />{t('snapshot.volumeHead')}
         </Button>
     </div>
     </Tooltip>) : (
       <div className="snapshot-current-desc">
         <Button>
-          <Icon type="caret-right" />Volume Head
+          <Icon type="caret-right" />{t('snapshot.volumeHead')}
         </Button>
       </div>)
   )
@@ -45,10 +47,12 @@ VolumeHead.propTypes = {
   created: PropTypes.string,
   size: PropTypes.string,
   usercreated: PropTypes.string,
+  t: PropTypes.func.isRequired,
 }
 
 // render each snapshot action dropdown
 function SnapshotIcon(props, snapshotProps) {
+  const { t } = snapshotProps
   function doAction(key) {
     snapshotProps.onAction({
       type: key,
@@ -63,10 +67,10 @@ function SnapshotIcon(props, snapshotProps) {
     if (key === 'snapshotRevert' && snapshotProps && snapshotProps.volume) {
       const title = (
         <div>
-          <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> {!snapshotProps.volume.disableFrontend ? 'Cannot revert with frontend enabled' : 'Confirm snapshot revert?' }</h3>
+          <h3 style={{ margin: 0, padding: 0, marginTop: -2 }}> {!snapshotProps.volume.disableFrontend ? t('snapshot.modal.cannotRevertTitle') : t('snapshot.modal.confirmSnapshotRevertTitle') }</h3>
           {!snapshotProps.volume.disableFrontend ? (<div style={{ marginTop: '15px' }}>
-              <p>Please reattach the volume in maintenance mode to revert the volume.</p>
-              <p>Workload shutdown might be needed.</p>
+              <p>{t('snapshot.modal.reattachInMaintenanceMode')}</p>
+              <p>{t('snapshot.modal.workloadShutdownNeeded')}</p>
             </div>) : ''
           }
         </div>
@@ -75,8 +79,8 @@ function SnapshotIcon(props, snapshotProps) {
       if (snapshotProps && snapshotProps.volume && snapshotProps.volume.disableFrontend) {
         Modal.confirm({
           title,
-          okText: 'Ok',
-          cancelText: 'Cancel',
+          okText: t('common.ok'),
+          cancelText: t('common.cancel'),
           onOk: () => {
             doAction('snapshotRevert')
           },
@@ -97,36 +101,36 @@ function SnapshotIcon(props, snapshotProps) {
       onClick={onClick}
     >
       { props.usercreated && !snapshotObject.removed ? <Menu.Item className="revert-menu-item" key="snapshotRevert">
-          {snapshotProps.volume.disableFrontend ? <div style={{ padding: '0px 12px' }}>Revert</div> : <Tooltip title={<div>
-            <p>Please reattach the volume in maintenance mode to revert the volume.</p>
-            <p>Workload shutdown might be needed.</p>
-          </div>}><div className="disable-dropdown-menu">Revert</div></Tooltip> }
+          {snapshotProps.volume.disableFrontend ? <div style={{ padding: '0px 12px' }}>{t('snapshot.dropdown.revert')}</div> : <Tooltip title={<div>
+            <p>{t('snapshot.modal.reattachInMaintenanceMode')}</p>
+            <p>{t('snapshot.modal.workloadShutdownNeeded')}</p>
+          </div>}><div className="disable-dropdown-menu">{t('snapshot.dropdown.revert')}</div></Tooltip> }
         </Menu.Item> : ''
       }
       { props.usercreated && !snapshotObject.removed ? (
         <Menu.Item key="snapshotBackup" className="revert-menu-item">
           { !snapshotProps.disableBackup ? (
-            <div style={{ padding: '0px 12px' }}>Back Up</div>
+            <div style={{ padding: '0px 12px' }}>{t('snapshot.dropdown.backUp')}</div>
           ) : (
             <Tooltip title={snapshotProps.disableBackupMessage}>
-              <div className="disable-dropdown-menu">Back up</div>
+              <div className="disable-dropdown-menu">{t('snapshot.dropdown.backUp')}</div>
             </Tooltip>
           )}
         </Menu.Item>
       ) : ''
       }
       <Menu.Item key="cloneVolumeFromSnapshot">
-        <div style={{ padding: '0px 12px' }}>Clone Volume</div>
+        <div style={{ padding: '0px 12px' }}>{t('snapshot.dropdown.cloneVolume')}</div>
       </Menu.Item>
       <Menu.Item key="snapshotDelete">
-        <div style={{ padding: '0px 12px' }}>Delete</div>
+        <div style={{ padding: '0px 12px' }}>{t('snapshot.dropdown.delete')}</div>
       </Menu.Item>
     </Menu>
   )
   let backupStatusObject = snapshotObject.backupStatusObject
   let backupStatusHasError = backupStatusObject && backupStatusObject.backupError && backupStatusObject.backupError.length > 0
   let backupStatusErrorMsg = backupStatusHasError ? <div>{ backupStatusObject.backupError.map((ele, index) => {
-    return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : 'Error'}: {ele.error}</p>
+    return <p key={index} className="snapshot-name">{ele.replica ? ele.replica : t('common.error')}: {ele.error}</p>
   }) }</div> : ''
 
   /**
@@ -166,17 +170,17 @@ function SnapshotIcon(props, snapshotProps) {
       <Tooltip placement="right"
         autoAdjustOverflow={false}
         title={<div>
-        <p className="snapshot-name">Name: {snapshotObject.name}</p>
-        <p className="snapshot-created">Created: {snapshotObject.created}</p>
-        <p className="snapshot-name">Size: {backupStatusObject && backupStatusObject.progress === 100 ? formatMib(backupStatusObject.size) : formatMib(snapshotObject.size)}</p>
-        <p className="snapshot-name">Created By User: {snapshotObject.usercreated ? 'True' : 'False'}</p>
-        <p className="snapshot-name">Removed: {snapshotObject.removed ? 'True' : 'False'}</p>
+        <p className="snapshot-name">{t('common.name')}: {snapshotObject.name}</p>
+        <p className="snapshot-created">{t('snapshot.tooltip.created')}: {snapshotObject.created}</p>
+        <p className="snapshot-name">{t('columns.size')}: {backupStatusObject && backupStatusObject.progress === 100 ? formatMib(backupStatusObject.size) : formatMib(snapshotObject.size)}</p>
+        <p className="snapshot-name">{t('snapshot.tooltip.createdByUser')}: {snapshotObject.usercreated ? t('common.true') : t('common.false')}</p>
+        <p className="snapshot-name">{t('snapshot.tooltip.removed')}: {snapshotObject.removed ? t('common.true') : t('common.false')}</p>
         {
           backupStatusObject ? <div>
-            <p className="snapshot-created">Progress: {backupStatusObject.progress}%</p>
-           {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>Replicas: {backupStatusObject.replicas}</p>}
-           {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>Backups: {backupStatusObject.backupIds}</p>}
-            {/* <p className="snapshot-created">Backup URL: {backupStatusObject.backupURL}</p> */}
+            <p className="snapshot-created">{t('snapshot.tooltip.progress')}: {backupStatusObject.progress}%</p>
+           {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>{t('snapshot.tooltip.replicas')}: {backupStatusObject.replicas}</p>}
+           {backupStatusObject.replicas && <p className="snapshot-created" style={{ wordBreak: 'break-all' }}>{t('snapshot.tooltip.backups')}: {backupStatusObject.backupIds}</p>}
+            {/* <p className="snapshot-created">{t('snapshot.tooltip.backupURL')}: {backupStatusObject.backupURL}</p> */}
             {backupStatusErrorMsg}</div> : ''
         }
       </div>}>
@@ -207,6 +211,7 @@ SnapshotIcon.propTypes = {
 
 // render volume head point with take snapshot action
 function CurrentPoint(props) {
+  const { t } = props
   function onClick() {
     props.onAction({
       type: 'snapshotCRCreate',
@@ -218,7 +223,7 @@ function CurrentPoint(props) {
   const menu = (
     <Menu onClick={onClick}>
       <Menu.Item key="1" disabled={disabledSnapshotAction(props.volume, props.state)}>
-        <span>Take Snapshot</span>
+        <span>{t('snapshot.dropdown.takeSnapshot')}</span>
       </Menu.Item>
     </Menu>
   )
@@ -228,7 +233,7 @@ function CurrentPoint(props) {
       trigger={['click']}
       key={props.volume.id}
     >
-      {VolumeHead(props.volumeHead)}
+      {VolumeHead({ ...props.volumeHead, t })}
     </Dropdown>
   )
 }
@@ -237,6 +242,7 @@ CurrentPoint.propTypes = {
   volume: PropTypes.object,
   state: PropTypes.bool,
   volumeHead: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
 const loop = (data, props) => data.map((item) => {
@@ -266,10 +272,11 @@ class Snapshot extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     let props = this.props
     let children = null
     if (props.snapshotTree) {
-      children = props.snapshotTree.length > 0 ? loop(props.snapshotTree, props) : <TreeNode key="1" title={CurrentPoint(props)} />
+      children = props.snapshotTree.length > 0 ? loop(props.snapshotTree, { ...props, t }) : <TreeNode key="1" title={CurrentPoint({ ...props, t })} />
       if (props.loading || this.state.loadingState !== props.loading) {
         this.state.loadingState = props.loading
         this.state.loading = true
@@ -322,6 +329,7 @@ Snapshot.propTypes = {
   state: PropTypes.bool,
   volumeHead: PropTypes.object,
   disableBackup: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 }
 
-export default Snapshot
+export default withTranslation()(Snapshot)

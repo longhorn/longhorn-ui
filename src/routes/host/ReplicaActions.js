@@ -1,12 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'antd'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function ReplicaActions({ selectedRows, selectedRowKeys, deleteButtonDisabled, deleteButtonLoading, deleteReplicas }) {
+function ReplicaActions({ selectedRows, selectedRowKeys, deleteButtonDisabled, deleteButtonLoading, deleteReplicas, t }) {
   const deleteButtonClick = () => {
     confirm({
-      title: `Are you sure you want to delete replicas ${selectedRowKeys} ?`,
+      title: t('replicaActions.deleteConfirm', { replicas: selectedRowKeys.join(', ') }),
       onOk() {
         deleteReplicas(selectedRows)
       },
@@ -21,7 +23,7 @@ function ReplicaActions({ selectedRows, selectedRowKeys, deleteButtonDisabled, d
   }
 
   return (
-    <Button {...deleteButtonProps}>Delete</Button>
+    <Button {...deleteButtonProps}>{t('common.delete')}</Button>
   )
 }
 
@@ -31,6 +33,7 @@ ReplicaActions.propTypes = {
   deleteButtonDisabled: PropTypes.bool,
   deleteButtonLoading: PropTypes.bool,
   deleteReplicas: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default ReplicaActions
+export default withTranslation()(ReplicaActions)

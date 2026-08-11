@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Modal, Button } from 'antd'
 import './ModalBlur.less'
+import { withTranslation } from 'react-i18next'
 
 class ModalBlur extends React.Component {
   componentDidMount() {
@@ -55,12 +56,13 @@ class ModalBlur extends React.Component {
   width = this.props.width ? this.props.width : 'auto'
 
   render() {
-    let item = this.props.hasOnCancel ? '' : <Button key="cancel" onClick={this.onCancel}>Cancel</Button>
+    const t = this.props.t
+    let item = this.props.hasOnCancel ? '' : <Button key="cancel" onClick={this.onCancel}>{t('common.cancel')}</Button>
     return (
       <Modal footer={[
         item,
         <Button loading={this.props.disabled} disabled={this.props.disabled} width={this.width} key="ok" type="success" onClick={this.onOk}>
-          {this.props.okText ? this.props.okText : 'OK'}
+          {this.props.okText ? this.props.okText : t('common.ok')}
         </Button>,
       ]}
         {...this.props}>
@@ -70,6 +72,7 @@ class ModalBlur extends React.Component {
 }
 
 ModalBlur.propTypes = {
+  t: PropTypes.func,
   visible: PropTypes.bool,
   dispatch: PropTypes.func,
   onCancel: PropTypes.func,
@@ -80,4 +83,4 @@ ModalBlur.propTypes = {
   disabled: PropTypes.bool,
 }
 
-export default connect(({ app }) => ({ app }))(ModalBlur)
+export default connect(({ app }) => ({ app }))(withTranslation()(ModalBlur))

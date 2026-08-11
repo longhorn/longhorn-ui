@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import { ModalBlur } from '../../components'
+import { withTranslation } from 'react-i18next'
 
 const FormItem = Form.Item
 
@@ -17,23 +18,24 @@ const UpdateUblkParamsModal = ({
   onOk,
   field,
   form: { getFieldDecorator, validateFields, getFieldsValue },
+  t,
 }) => {
   if (!items) return null
 
   const FIELD_CONFIG = {
     ublkNumberOfQueue: {
-      label: 'UBLK Number of Queues',
-      requiredMessage: 'Please input the UBLK number of queues',
+      labelKey: 'updateUblkParamsModal.fields.ublkNumberOfQueue.label',
+      requiredMessageKey: 'updateUblkParamsModal.fields.ublkNumberOfQueue.requiredMessage',
       actionKey: 'updateUblkNumberOfQueue',
     },
     ublkQueueDepth: {
-      label: 'UBLK Queue Depth',
-      requiredMessage: 'Please input the UBLK queue depth',
+      labelKey: 'updateUblkParamsModal.fields.ublkQueueDepth.label',
+      requiredMessageKey: 'updateUblkParamsModal.fields.ublkQueueDepth.requiredMessage',
       actionKey: 'updateUblkQueueDepth',
     },
   }
 
-  const { label: fieldLabel, requiredMessage, actionKey } = FIELD_CONFIG[field]
+  const { labelKey, requiredMessageKey, actionKey } = FIELD_CONFIG[field]
 
   let initialValue = ''
   if (items.length === 1) {
@@ -71,7 +73,7 @@ const UpdateUblkParamsModal = ({
   }
 
   const modalOpts = {
-    title: `Update ${fieldLabel}`,
+    title: t('updateUblkParamsModal.title.updateField', { fieldLabel: t(labelKey) }),
     visible,
     onCancel,
     onOk: handleOk,
@@ -81,13 +83,13 @@ const UpdateUblkParamsModal = ({
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
         <FormItem
-          label={fieldLabel}
+          label={t(labelKey)}
           hasFeedback
           {...formItemLayout}
         >
           {getFieldDecorator(field, {
             initialValue,
-            rules: [{ required: true, message: requiredMessage }],
+            rules: [{ required: true, message: t(requiredMessageKey) }],
           })(
             <InputNumber min={0} step={1} />
           )}
@@ -104,6 +106,7 @@ UpdateUblkParamsModal.propTypes = {
   onOk: PropTypes.func,
   items: PropTypes.array,
   field: PropTypes.string,
+  t: PropTypes.func.isRequired,
 }
 
-export default Form.create()(UpdateUblkParamsModal)
+export default withTranslation()(Form.create()(UpdateUblkParamsModal))

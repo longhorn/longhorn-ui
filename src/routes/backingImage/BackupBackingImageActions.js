@@ -2,17 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function BackupBackingImageBulkActions({ selected, deleteBackupBackingImage, restoreBackingImage }) {
+function BackupBackingImageBulkActions({ selected, deleteBackupBackingImage, restoreBackingImage, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'delete':
         confirm({
-          okText: 'Delete',
+          okText: t('common.delete'),
           okType: 'danger',
-          title: <p>Are you sure you want to delete <strong>{record.name}</strong> backing image backup ?</p>,
+          title: t('backupBackingImageActions.modal.delete.title', { backupName: record.name }),
           onOk() {
             deleteBackupBackingImage(record)
           },
@@ -28,8 +30,8 @@ function BackupBackingImageBulkActions({ selected, deleteBackupBackingImage, res
   const disableRestoreAction = selected.state !== 'Completed'
 
   const availableActions = [
-    { key: 'restore', name: 'Restore', disabled: disableRestoreAction, tooltip: disableRestoreAction ? 'Only complete state backup can be restored' : '' },
-    { key: 'delete', name: 'Delete' },
+    { key: 'restore', name: t('backupBackingImageActions.actions.restore'), disabled: disableRestoreAction, tooltip: disableRestoreAction ? t('backupBackingImageActions.actions.restoreTooltip') : '' },
+    { key: 'delete', name: t('common.delete') },
   ]
 
   return (
@@ -43,6 +45,7 @@ BackupBackingImageBulkActions.propTypes = {
   selected: PropTypes.object,
   deleteBackupBackingImage: PropTypes.func,
   restoreBackingImage: PropTypes.func,
+  t: PropTypes.func.isRequired,
 }
 
-export default BackupBackingImageBulkActions
+export default withTranslation()(BackupBackingImageBulkActions)

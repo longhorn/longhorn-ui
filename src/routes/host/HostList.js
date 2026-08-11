@@ -173,11 +173,11 @@ class List extends React.Component {
 
   conditionsIsReady = (record) => {
     if (record && record.status && record.status.name.toLowerCase() === 'down') {
-      return 'NotReady'
+      return this.props.t('hostList.status.notReady')
     } else if (record && record.conditions && record.conditions.Ready && record.conditions.Ready.type === 'Ready') {
-      return 'Ready'
+      return this.props.t('hostList.status.ready')
     } else {
-      return 'Deploying'
+      return this.props.t('hostList.status.deploying')
     }
   }
 
@@ -201,7 +201,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, deleteHost, showEditDisksModal, showDiskReplicaModal, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f } = this.props
+    const { loading, dataSource, storageOverProvisioningPercentage, minimalSchedulingQuotaWarning, showReplicaModal, deleteHost, showEditDisksModal, showDiskReplicaModal, onSorterChange, defaultInstanceManager, defaultEngineImage, currentNode = f => f, t } = this.props
     const hostActionsProps = {
       showEditDisksModal,
       deleteHost,
@@ -209,7 +209,7 @@ class List extends React.Component {
 
     const columns = [
       {
-        title: <span style={{ display: 'inline-block', padding: '0 0 0 30px' }}>Status</span>,
+        title: <span style={{ display: 'inline-block', padding: '0 0 0 30px' }}>{t('columns.status')}</span>,
         dataIndex: 'conditions.Ready.status',
         key: 'status',
         width: 180,
@@ -231,7 +231,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Readiness',
+        title: t('hostList.columns.readiness'),
         dataIndex: 'readiness',
         key: 'readiness',
         width: 110,
@@ -244,7 +244,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Name',
+        title: t('common.name'),
         dataIndex: 'name',
         key: 'name',
         width: 240,
@@ -253,13 +253,13 @@ class List extends React.Component {
         render: (text, record) => {
           return (
             <div style={{ textAlign: 'center' }}>
-              <div>{text} {record && (record.region || record.zone) ? <Tooltip title={<span> region: {record.region} <br></br> zone: {record.zone} </span>}><Icon style={{ marginLeft: '5px', color: '#108ee9' }} type="environment" /></Tooltip> : '' } </div>
+              <div>{text} {record && (record.region || record.zone) ? <Tooltip title={<span> {t('hostList.tooltip.region')}: {record.region} <br></br> {t('hostList.tooltip.zone')}: {record.zone} </span>}><Icon style={{ marginLeft: '5px', color: '#108ee9' }} type="environment" /></Tooltip> : '' } </div>
               <div className={styles.secondLabel} style={{ color: '#b9b9b9' }}>{record.address}</div>
             </div>
           )
         },
       }, {
-        title: 'Replicas',
+        title: t('hostList.columns.replicas'),
         dataIndex: 'replicas',
         key: 'replicas',
         width: 120,
@@ -273,7 +273,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Allocated',
+        title: t('hostList.columns.allocated'),
         dataIndex: 'storageScheduled',
         key: 'allocated',
         width: 160,
@@ -290,9 +290,9 @@ class List extends React.Component {
 
           const renderTooltipContent = () => (
             <div className={styles.allocatedTooltip}>
-              <span>Replica Size: {byteToGi(replicaAllocated)} Gi</span>
-              <span>Backing Image Size: {byteToGi(backingImageAllocated)} Gi</span>
-              <span>Total Usage: {percent}%</span>
+              <span>{t('hostList.tooltip.replicaSize')}: {byteToGi(replicaAllocated)} Gi</span>
+              <span>{t('hostList.tooltip.backingImageSize')}: {byteToGi(backingImageAllocated)} Gi</span>
+              <span>{t('hostList.tooltip.totalUsage')}: {percent}%</span>
             </div>
           )
           const tooltipContent = renderTooltipContent()
@@ -318,7 +318,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Used',
+        title: t('hostList.columns.used'),
         key: 'used',
         width: 160,
         className: styles.used,
@@ -331,7 +331,7 @@ class List extends React.Component {
           return (
             <div>
               <div>
-                <Tooltip title={`Total usage: ${p}%`}>
+                <Tooltip title={`${t('hostList.tooltip.totalUsage')}: ${p}%`}>
                   <Progress strokeWidth={14} status={getStorageProgressStatus(minimalSchedulingQuotaWarning, p)} percent={p > 100 ? 100 : p} showInfo={false} />
                 </Tooltip>
               </div>
@@ -342,7 +342,7 @@ class List extends React.Component {
           )
         },
       }, {
-        title: 'Size',
+        title: t('columns.size'),
         key: 'size',
         width: 180,
         className: styles.size,
@@ -353,13 +353,13 @@ class List extends React.Component {
           return (
             <div>
               <div>{formatMib(total < 0 ? 0 : total)}</div>
-              <div className={styles.secondLabel} style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} Reserved` : null}</div>
+              <div className={styles.secondLabel} style={{ color: '#b9b9b9', height: '22px' }}>{reserved > 0 ? `+${formatMib(reserved)} ${t('hostList.text.reserved')}` : null}</div>
             </div>
           )
         },
       },
       {
-        title: 'Tags',
+        title: t('hostList.columns.tags'),
         key: 'tags',
         width: 170,
         className: styles.size,
@@ -386,7 +386,7 @@ class List extends React.Component {
         },
       },
       {
-        title: 'Operation',
+        title: t('hostList.columns.operation'),
         key: 'operation',
         width: 120,
         render: (text, record) => {
@@ -437,7 +437,7 @@ class List extends React.Component {
           rowKey={record => record.id}
           scroll={{ x: 1440, y: dataSource.length > 0 ? this.state.height : 0 }}
         />
-        <ModalBlur width={980} title={'Components'} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
+        <ModalBlur width={980} title={t('hostList.modal.components')} visible={this.props.instanceManagerVisible} onCancel={() => { this.modalBlurCancel() }} onOk={() => { this.modalBlurOk() }} hasOnCancel={true}>
           <InstanceManagerComponent defaultInstanceManager={defaultInstanceManager} defaultEngineImage={defaultEngineImage} currentNode={currentNode} />
         </ModalBlur>
       </div>
@@ -446,6 +446,7 @@ class List extends React.Component {
 }
 
 List.propTypes = {
+  t: PropTypes.func,
   loading: PropTypes.bool,
   dataSource: PropTypes.array,
   storageOverProvisioningPercentage: PropTypes.number,

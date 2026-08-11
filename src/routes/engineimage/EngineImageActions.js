@@ -2,15 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
+import { withTranslation } from 'react-i18next'
+
 const confirm = Modal.confirm
 
-function actions({ selected, deleteEngineImage }) {
+function actions({ selected, deleteEngineImage, t }) {
   const handleMenuClick = (event, record) => {
     event.domEvent?.stopPropagation?.()
     switch (event.key) {
       case 'delete':
         confirm({
-          title: `Are you sure you want to delete engine image ${record.name}?`,
+          title: t('engineImageActions.modal.delete.title', { name: record.name }),
           onOk() {
             deleteEngineImage(record)
           },
@@ -20,7 +22,7 @@ function actions({ selected, deleteEngineImage }) {
     }
   }
 
-  const availableActions = [{ key: 'delete', name: 'Delete', disabled: selected.default }]
+  const availableActions = [{ key: 'delete', name: t('common.delete'), disabled: selected.default }]
 
   return (
     <DropOption menuOptions={availableActions}
@@ -32,6 +34,7 @@ function actions({ selected, deleteEngineImage }) {
 actions.propTypes = {
   selected: PropTypes.object,
   deleteEngineImage: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default actions
+export default withTranslation()(actions)

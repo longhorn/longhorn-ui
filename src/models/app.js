@@ -3,6 +3,8 @@ import { getSupportbundles, getSupportbundlesStepTwo } from '../services/app'
 import { getDataDependency } from '../utils/dataDependency'
 import queryString from 'query-string'
 import { message } from 'antd'
+import i18n from '../i18n'
+import { COOKIE_LOCALE, getCookie, setCookie } from '../utils/cookie'
 
 message.config({
   top: 60,
@@ -25,6 +27,7 @@ export default {
     backingImageUploadStarted: false,
     stableLonghornVersionslVisible: false,
     stableLonghornVersionsKey: Math.random(),
+    lang: getCookie(COOKIE_LOCALE) || 'ru',
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -84,7 +87,7 @@ export default {
         if (dataStepTwo.state === 'ReadyForDownload') {
           window.location.href = `${ window.__pathname_prefix__ }${ window.__pathname_prefix__.endsWith('/') ? '' : '/'}v1/supportbundles/${data.id}/${data.name}/download` // eslint-disable-line
         } else {
-          message.error('Download failed support bundle creation is still in progress')
+          message.error(i18n.t('models.app.supportbundles.error'))
         }
         yield put({ type: 'hideBundlesModel' })
       }
@@ -188,5 +191,15 @@ export default {
         backingImageUploadStarted: false,
       }
     },
+    setLang(state, { payload }) {
+      i18n.changeLanguage(payload)
+
+      setCookie(COOKIE_LOCALE, payload, 365)
+
+      return {
+        ...state,
+        lang: payload,
+      }
+    }
   },
 }

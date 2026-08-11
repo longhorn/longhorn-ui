@@ -13,6 +13,7 @@ import { Filter } from '../../components/index'
 import BackupBulkActions from './BackupBulkActions'
 import WorkloadDetailModal from '../volume/WorkloadDetailModal'
 import styles from './BackupVolume.less'
+import { withTranslation } from 'react-i18next'
 
 const { confirm, info } = Modal
 
@@ -29,7 +30,7 @@ const filterBackupVolumes = (backupVolumes, field, value) => {
     }
   })
 }
-function BackupVolume({ backup, loading, setting, backingImage, dispatch, location }) {
+function BackupVolume({ backup, loading, setting, backingImage, dispatch, location, t }) {
   location.search = location.search || ''
   // currentItem || currentBackupVolume. The currentItem was a wrong decision at the beginning of the design. It was originally to simplify the transfer of attributes without complete assignment.
   // When backup supports ws, currentItem will be refactored to currentBackupVolume
@@ -46,11 +47,11 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
   const v2DataEngineEnabled = v2DataEngineEnabledSetting?.value === 'true'
   const showDeleteConfirm = (record) => {
     confirm({
-      title: 'Are you sure delete all the backups?',
-      content: 'If there is backup restore process in progress using the backups of this volume (including DR volumes), deleting the backup volume will result in restore failure and the volume in the restore process will become FAULTED. Are you sure you want to delete this backup volume?',
-      okText: 'Yes',
+      title: t('backupVolume.modal.deleteAllBackups.title'),
+      content: t('backupVolume.modal.deleteAllBackups.content'),
+      okText: t('common.yes'),
       okType: 'danger',
-      cancelText: 'No',
+      cancelText: t('common.no'),
       onOk() {
         dispatch({
           type: 'backup/deleteAllBackups',
@@ -61,13 +62,13 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
   }
   const showBackingImageInfo = (record) => {
     let content = record.backingImageName || record.backingImageURL ? (<Descriptions title="" bordered>
-      <Descriptions.Item label={<div style={{ width: '150px' }}>Backing Image Name</div>} span={3}><div style={{ width: '280px' }}>{record.backingImageName}</div></Descriptions.Item>
-      <Descriptions.Item label={<div style={{ width: '150px' }}>Backing Image Checksum</div>} span={3}><div style={{ width: '280px' }}>{record.backingImageChecksum}</div></Descriptions.Item>
-    </Descriptions>) : (<div style={{ textAlign: 'center' }}>No Data</div>)
+      <Descriptions.Item label={<div style={{ width: '150px' }}>{t('backupVolume.backingImageInfo.backingImageName')}</div>} span={3}><div style={{ width: '280px' }}>{record.backingImageName}</div></Descriptions.Item>
+      <Descriptions.Item label={<div style={{ width: '150px' }}>{t('backupVolume.backingImageInfo.backingImageChecksum')}</div>} span={3}><div style={{ width: '280px' }}>{record.backingImageChecksum}</div></Descriptions.Item>
+    </Descriptions>) : (<div style={{ textAlign: 'center' }}>{t('common.noData')}</div>)
     info({
-      title: 'Backing Image Info',
+      title: t('backupVolume.backingImageInfo.title'),
       content,
-      okText: 'OK',
+      okText: t('common.ok'),
       width: 860,
     })
   }
@@ -158,8 +159,8 @@ function BackupVolume({ backup, loading, setting, backingImage, dispatch, locati
     location,
     defaultField: 'volumeName',
     fieldOption: [
-      { value: 'volumeName', name: 'Name' },
-      { value: 'backupTargetName', name: 'Backup Target' },
+      { value: 'volumeName', name: t('common.name') },
+      { value: 'backupTargetName', name: t('backupVolume.filter.fieldOptions.backupTargetName') },
     ],
     onSearch(filter) {
       const { field: filterField, value: filterValue } = filter
@@ -357,6 +358,7 @@ BackupVolume.propTypes = {
   loading: PropTypes.bool,
   setting: PropTypes.object,
   backingImage: PropTypes.object,
+  t: PropTypes.func.isRequired,
 }
 
-export default connect(({ backup, setting, backingImage, loading }) => ({ backup, setting, backingImage, loading: loading.models.backup }))(BackupVolume)
+export default withTranslation()(connect(({ backup, setting, backingImage, loading }) => ({ backup, setting, backingImage, loading: loading.models.backup }))(BackupVolume))

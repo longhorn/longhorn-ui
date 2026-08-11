@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Input, Checkbox, Radio, Select, Icon, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
 import style from './CreatePVAndPVC.less'
+import { withTranslation } from 'react-i18next'
+
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -38,6 +40,7 @@ const modal = ({
     getFieldsValue,
     setFieldsValue,
   },
+  t,
 }) => {
   function handleOk() {
     validateFields((errors) => {
@@ -52,7 +55,7 @@ const modal = ({
   }
 
   const modalOpts = {
-    title: 'Create PV/PVC',
+    title: t('createPVAndPVC.title'),
     visible,
     onCancel,
     onOk: handleOk,
@@ -71,47 +74,47 @@ const modal = ({
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="PV Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.pvName')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('pvName', {
             initialValue: item.defaultPVName,
             rules: [
               {
                 required: true,
-                message: 'Please input pvName',
+                message: t('createPVAndPVC.validation.pvNameRequired'),
               },
             ],
           })(<Input disabled={item.pvNameDisabled} />)}
         </FormItem>
-        <FormItem label="Access Mode" {...formItemLayout}>
+        <FormItem label={t('columns.accessMode')} {...formItemLayout}>
           <Select disabled={true} value={item.accessMode}>
-            <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
-            <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
-            <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
+            <Option key={'ReadWriteOnce'} value={'rwo'}>{t('accessModes.rwo')}</Option>
+            <Option key={'ReadWriteOncePod'} value={'rwop'}>{t('accessModes.rwop')}</Option>
+            <Option key={'ReadWriteMany'} value={'rwx'}>{t('accessModes.rwx')}</Option>
           </Select>
         </FormItem>
-        { (item.encrypted && !item.pvNameDisabled) && <FormItem label="Secret Namespace" {...formItemLayout}>
+        { (item.encrypted && !item.pvNameDisabled) && <FormItem label={t('createPVAndPVC.fields.secretNamespace')} {...formItemLayout}>
           {getFieldDecorator('secretNamespace', {
             initialValue: '',
           })(<Input disabled={false} />)}
         </FormItem>}
-        { (item.encrypted && !item.pvNameDisabled) && <FormItem label="Secret Name" {...formItemLayout}>
+        { (item.encrypted && !item.pvNameDisabled) && <FormItem label={t('createPVAndPVC.fields.secretName')} {...formItemLayout}>
           {getFieldDecorator('secretName', {
             initialValue: '',
           })(<Input disabled={false} />)}
         </FormItem>}
-        <FormItem label="Storage Class Name" {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.storageClassName')} {...formItemLayout}>
           {getFieldDecorator('storageClassName', {
             initialValue: '',
           })(<div className={style.storageClassName}>
             <Input disabled={item.pvNameDisabled} />
-            <Tooltip title={'If no value is provided, Longhorn will first utilize the storageClassName stored in the backup volume if the volume is being restored from a backup. Otherwise, Longhorn will use the storageClassName specified in the default setting.'}>
+            <Tooltip title={t('createPVAndPVC.tooltips.storageClassName')}>
               <span className={style.icon}>
                 <Icon type="info-circle" />
               </span>
             </Tooltip>
           </div>)}
         </FormItem>
-        <FormItem label="File System" {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.fileSystem')} {...formItemLayout}>
           {getFieldDecorator('fsType', {
             initialValue: 'ext4',
           })(
@@ -123,34 +126,34 @@ const modal = ({
         </FormItem>
         <div style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
-            <FormItem label="Create PVC" hasFeedback {...formItemLayout2}>
+            <FormItem label={t('createPVAndPVC.fields.createPVC')} hasFeedback {...formItemLayout2}>
               <Checkbox checked={!nameSpaceDisabled} onChange={onInnerChange}></Checkbox>
             </FormItem>
           </div>
           <div style={{ flex: 1 }}>
-            <FormItem label="Use Previous PVC" hasFeedback {...formItemLayout2}>
+            <FormItem label={t('createPVAndPVC.fields.usePreviousPVC')} hasFeedback {...formItemLayout2}>
               <Checkbox checked={previousChecked} disabled={!selected.lastPVCRefAt || nameSpaceDisabled} onChange={onPreviousChange}></Checkbox>
             </FormItem>
           </div>
         </div>
-        <FormItem label="PVC Name" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.pvcName')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('pvcName', {
             initialValue: item.defaultPVCName,
             rules: [
               {
                 required: !nameSpaceDisabled,
-                message: 'Please input pvcName',
+                message: t('createPVAndPVC.validation.pvcNameRequired'),
               },
             ],
           })(<Input disabled={nameSpaceDisabled} />)}
         </FormItem>
-        <FormItem label="Namespace" hasFeedback {...formItemLayout}>
+        <FormItem label={t('createPVAndPVC.fields.namespace')} hasFeedback {...formItemLayout}>
           {getFieldDecorator('namespace', {
             initialValue: item.previousNamespace,
             rules: [
               {
                 required: !nameSpaceDisabled,
-                message: 'Please input namespace',
+                message: t('createPVAndPVC.validation.namespaceRequired'),
               },
             ],
           })(<Input disabled={nameSpaceDisabled} />)}
@@ -172,6 +175,7 @@ modal.propTypes = {
   hosts: PropTypes.array,
   nameSpaceDisabled: PropTypes.bool,
   setPreviousChange: PropTypes.func,
+  t: PropTypes.func,
 }
 
-export default Form.create()(modal)
+export default Form.create()(withTranslation()(modal))
