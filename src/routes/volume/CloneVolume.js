@@ -58,7 +58,6 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
-    setFieldsValue,
   },
 }) => {
   function handleOk() {
