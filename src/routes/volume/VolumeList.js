@@ -418,14 +418,17 @@ function list({
       sorter: (a, b) => sortTable(a, b, 'WorkloadName'),
       render: (text, record) => {
         const title = text.lastPodRefAt ? <div><div>Last time used: {formatDate(text.lastPodRefAt)}</div></div> : ''
-        const ele = text.podList.length ? text.podList.map((item, index) => {
-          return <div key={index}>{item.podName}</div>
-        }) : ''
+        const maxDisplayPods = 3
+        const podsToDisplay = text.podList.slice(0, maxDisplayPods)
+        const ele = podsToDisplay.length ? podsToDisplay.map((item) => <div key={`${item.workloadName}-${item.podName}`}>{item.podName}</div>) : null
+        const hasMorePods = text.podList.length > maxDisplayPods
+        const morePods = hasMorePods ? <div style={{ color: '#108ee9', fontWeight: 'bold' }}>Show all ({text.podList.length})...</div> : null
         return (
           <Tooltip placement="top" title={title}>
             <a onClick={() => { showWorkloadsStatusDetail(text) }} className={style.workloadContainer} style={{ margin: 0 }}>
               <div style={text.lastPodRefAt && ele ? { background: 'rgba(241, 196, 15, 0.1)', padding: '5px' } : {}}>
                 {ele}
+                {morePods}
               </div>
               <div>{record.controllers ? record.controllers.map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId ? <span>on {item.hostId}</span> : <span></span>}</div>) : ''}</div>
             </a>

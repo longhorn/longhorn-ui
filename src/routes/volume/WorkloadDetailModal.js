@@ -35,8 +35,8 @@ const modal = ({
 
   return (
     <ModalBlur {...modalOpts}>
-      <div style={{ width: '100%', overflow: 'auto' }}>
-        <div style={{ display: 'flex', whiteSpace: 'nowrap', width: '100%' }}>
+      <div style={{ width: '100%', maxHeight: '60vh', overflow: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           {CardItem}
         </div>
       </div>
