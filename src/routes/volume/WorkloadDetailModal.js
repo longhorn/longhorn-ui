@@ -54,8 +54,8 @@ const modal = ({
           <span style={{ marginLeft: 10, color: '#666' }}>{filteredPodList.length} / {podList.length} pods</span>
         </div>
       ) : ''}
-      <div style={{ width: '100%', overflow: 'auto' }}>
-        <div style={{ display: 'flex', whiteSpace: 'nowrap', width: '100%' }}>
+      <div style={{ width: '100%', maxHeight: '60vh', overflow: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           {CardItem}
         </div>
         {keyword && !filteredPodList.length ? <div style={{ color: '#666', textAlign: 'center', padding: 24 }}>No pods match the filter</div> : ''}
