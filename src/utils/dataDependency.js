@@ -144,6 +144,16 @@ const dependency = {
       key: 'systemBackups',
     }],
   },
+  snapshotGroup: {
+    path: '/snapshotGroup',
+    runWs: [{
+      ns: 'volume',
+      key: 'volumes',
+    }, {
+      ns: 'snapshotGroup',
+      key: 'snapshotgroups',
+    }],
+  },
 }
 const list = [{
   ns: 'volume',
@@ -187,6 +197,9 @@ const list = [{
 }, {
   ns: 'systemBackups',
   key: 'systemrestores',
+}, {
+  ns: 'snapshotGroup',
+  key: 'snapshotgroups',
 }]
 
 const httpDataDependency = {
@@ -202,6 +215,7 @@ const httpDataDependency = {
   '/instanceManager': ['volume', 'instanceManager'],
   '/orphanedData': ['orphanedData'],
   '/systemBackups': ['systemBackups', 'backup'],
+  '/snapshotGroup': ['volume', 'snapshotGroup'],
 }
 
 export function getDataDependency(pathName) {
