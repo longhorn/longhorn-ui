@@ -7,6 +7,7 @@ import queryString from 'query-string'
 import moment from 'moment'
 import VolumeActions from '../VolumeActions'
 import VolumeInfo from './VolumeInfo'
+import CreateSnapshotGroupModal from '../../snapshotGroup/CreateSnapshotGroupModal'
 import styles from './index.less'
 import AttachHost from '../AttachHost'
 import DetachHost from '../DetachHost'
@@ -132,7 +133,8 @@ function VolumeDetail({
   loadingVolumeAttachments,
   setting,
   backingImage,
-  recurringJob
+  recurringJob,
+  snapshotGroup
 }) {
   const {
     data,
@@ -301,6 +303,12 @@ function VolumeDetail({
       dispatch(routerRedux.push({
         pathname: `/volume/${record.name}/snapshots`,
       }))
+    },
+    showCreateSnapshotGroup(record) {
+      dispatch({
+        type: 'snapshotGroup/showCreateModal',
+        payload: { createItem: { volumes: [record.name] } },
+      })
     },
     showRecurring(record) {
       dispatch({
@@ -779,6 +787,27 @@ function VolumeDetail({
     },
   }
 
+  const createSnapshotGroupModalProps = {
+    item: snapshotGroup.createItem,
+    visible: snapshotGroup.createModalVisible,
+    volumeOptions: (data || []).map(item => item.name),
+    previewData: snapshotGroup.previewData,
+    previewLoading: snapshotGroup.previewLoading,
+    errorMessage: snapshotGroup.createModalError,
+    onCancel() {
+      dispatch({ type: 'snapshotGroup/hideCreateModal' })
+    },
+    onOk(payload) {
+      dispatch({ type: 'snapshotGroup/create', payload })
+    },
+    onPreview(payload) {
+      dispatch({ type: 'snapshotGroup/preview', payload })
+    },
+    onClearPreview() {
+      dispatch({ type: 'snapshotGroup/setPreviewData', payload: [] })
+    },
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div>
@@ -837,6 +866,7 @@ function VolumeDetail({
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
         {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
         {isRebuildConcurrentSyncLimitModalVisible ? <RebuildConcurrentSyncLimitModal key={isRebuildConcurrentSyncLimitModalVisible} {...rebuildConcurrentSyncLimitModalProps} /> : null}
+        {snapshotGroup.createModalVisible ? <CreateSnapshotGroupModal key={snapshotGroup.createModalKey} {...createSnapshotGroupModalProps} /> : null}
       </div>
     </div>
   )
@@ -858,6 +888,7 @@ VolumeDetail.propTypes = {
   setting: PropTypes.object,
   backingImage: PropTypes.object,
   recurringJob: PropTypes.object,
+  snapshotGroup: PropTypes.object,
   loadingVolumeAttachments: PropTypes.bool
 }
 
@@ -873,7 +904,8 @@ export default connect(({
   eventlog,
   setting,
   backingImage,
-  recurringJob
+  recurringJob,
+  snapshotGroup
 }, { match }) => {
   const volumeId = match.params.id
   const volumeAttachment = volumeAttachments.data ? volumeAttachments.data[volumeId] : null
@@ -892,6 +924,7 @@ export default connect(({
     eventlog,
     setting,
     backingImage,
-    recurringJob
+    recurringJob,
+    snapshotGroup
   }
 })(VolumeDetail)

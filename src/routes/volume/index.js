@@ -46,6 +46,7 @@ import Salvage from './Salvage'
 import { Filter, ExpansionErrorDetail } from '../../components/index'
 import { isRestoring } from './helper'
 import VolumeBulkActions from './VolumeBulkActions'
+import CreateSnapshotGroupModal from '../snapshotGroup/CreateSnapshotGroupModal'
 import {
   getAttachHostModalProps,
   getEngineUpgradeModalProps,
@@ -127,6 +128,13 @@ class Volume extends React.Component {
         commandKeyDown: true,
       })
     }
+  }
+
+  showCreateSnapshotGroup = (volumes = []) => {
+    this.props.dispatch({
+      type: 'snapshotGroup/showCreateModal',
+      payload: { createItem: { volumes: volumes.map(item => item.name || item) } },
+    })
   }
 
   render() {
@@ -358,6 +366,9 @@ class Volume extends React.Component {
         dispatch(routerRedux.push({
           pathname: `/volume/${record.name}/snapshots`,
         }))
+      },
+      showCreateSnapshotGroup: (record) => {
+        me.showCreateSnapshotGroup([record])
       },
       showRecurring(record) {
         dispatch({
@@ -1063,6 +1074,9 @@ class Volume extends React.Component {
       engineImages,
       engineUpgradePerNodeLimit,
       commandKeyDown: this.state.commandKeyDown,
+      createSnapshotGroup(records) {
+        me.showCreateSnapshotGroup(records)
+      },
       // For create backup
       backupTargetAvailable,
       backupTargetMessage,
@@ -1373,6 +1387,28 @@ class Volume extends React.Component {
     const ublkParamsModalProps = getUblkParamsModalProps(selectedRows, isUblkParamsModalVisible, ublkParamsField, dispatch)
     const rebuildConcurrentSyncLimitModalProps = getRebuildConcurrentSyncLimitModalProps(selectedRows, isRebuildConcurrentSyncLimitModalVisible, dispatch)
 
+    const { createModalVisible: snapshotGroupModalVisible, createModalKey: snapshotGroupModalKey, createModalError: snapshotGroupModalError, createItem: snapshotGroupCreateItem, previewData: snapshotGroupPreviewData, previewLoading: snapshotGroupPreviewLoading } = this.props.snapshotGroup
+    const createSnapshotGroupModalProps = {
+      item: snapshotGroupCreateItem,
+      visible: snapshotGroupModalVisible,
+      volumeOptions: (data || []).map(item => item.name),
+      previewData: snapshotGroupPreviewData,
+      previewLoading: snapshotGroupPreviewLoading,
+      errorMessage: snapshotGroupModalError,
+      onCancel() {
+        dispatch({ type: 'snapshotGroup/hideCreateModal' })
+      },
+      onOk(payload) {
+        dispatch({ type: 'snapshotGroup/create', payload })
+      },
+      onPreview(payload) {
+        dispatch({ type: 'snapshotGroup/preview', payload })
+      },
+      onClearPreview() {
+        dispatch({ type: 'snapshotGroup/setPreviewData', payload: [] })
+      },
+    }
+
     return (
       <div className="content-inner" style={{ display: 'flex', flexDirection: 'column', overflow: 'visible !important' }}>
         <Row gutter={24}>
@@ -1427,6 +1463,7 @@ class Volume extends React.Component {
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
         {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
         {isRebuildConcurrentSyncLimitModalVisible ? <RebuildConcurrentSyncLimitModal key={isRebuildConcurrentSyncLimitModalVisible} {...rebuildConcurrentSyncLimitModalProps} /> : null}
+        {snapshotGroupModalVisible ? <CreateSnapshotGroupModal key={snapshotGroupModalKey} {...createSnapshotGroupModalProps} /> : null}
       </div>
     )
   }
@@ -1445,6 +1482,7 @@ Volume.propTypes = {
   setting: PropTypes.object,
   backingImage: PropTypes.object,
   snapshotModal: PropTypes.object,
+  snapshotGroup: PropTypes.object,
 }
 
 export default connect(({
@@ -1457,5 +1495,6 @@ export default connect(({
   backup,
   backupTarget,
   recurringJob,
+  snapshotGroup,
   loading
-}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, loading: loading.models.volume }))(Volume)
+}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, snapshotGroup, loading: loading.models.volume }))(Volume)

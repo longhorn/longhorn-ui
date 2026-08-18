@@ -5,7 +5,6 @@ import { routerRedux } from 'dva/router'
 import { Row, Col, Table, Tag, Alert, Card, Modal } from 'antd'
 import { DropOption, LinkTo } from '../../../components'
 import { formatDate } from '../../../utils/formatDate'
-import { formatMib } from '../../../utils/formatter'
 const confirm = Modal.confirm
 
 const phaseColorMap = {

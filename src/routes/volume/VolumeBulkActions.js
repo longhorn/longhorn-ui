@@ -37,7 +37,8 @@ function bulkActions({
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
   toggleUblkParamsModal,
-  toggleRebuildConcurrentSyncLimitModal
+  toggleRebuildConcurrentSyncLimitModal,
+  createSnapshotGroup
 }) {
   const deleteWranElement = (rows) => {
     let workloadResources = []
@@ -171,6 +172,9 @@ function bulkActions({
       case 'rebuildConcurrentSyncLimit':
         toggleRebuildConcurrentSyncLimitModal(selectedRows)
         break
+      case 'createSnapshotGroup':
+        createSnapshotGroup(selectedRows)
+        break
       default:
     }
   }
@@ -237,6 +241,7 @@ function bulkActions({
     { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.every((row) => !row.actions?.offlineReplicaRebuilding) } },
     { key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v1') } },
     { key: 'rebuildConcurrentSyncLimit', name: 'Update Rebuild Concurrent Sync Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v2') } },
+    { key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled() { return selectedRows.length === 0 } },
   ]
 
   if (selectedRows.some((row) => row?.frontend === 'ublk')) {
@@ -307,6 +312,7 @@ bulkActions.propTypes = {
   showBulkUnmapMarkSnapChainRemovedModal: PropTypes.func,
   trimBulkFilesystem: PropTypes.func,
   showUpdateBulkFreezeFilesystemForSnapshotModal: PropTypes.func,
+  createSnapshotGroup: PropTypes.func,
 }
 
 export default bulkActions

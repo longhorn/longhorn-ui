@@ -1,5 +1,6 @@
 import { query, get, create, preview, deleteSnapshotGroup } from '../services/snapshotGroup'
 import { message } from 'antd'
+import { routerRedux } from 'dva/router'
 import { wsChanges, updateState } from '../utils/websocket'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
@@ -12,6 +13,7 @@ export default {
     resourceType: 'snapshotGroup',
     selected: null,
     selectedRows: [],
+    createItem: {},
     previewData: [],
     previewLoading: false,
     createModalVisible: false,
@@ -63,6 +65,7 @@ export default {
         if (resp && resp.status >= 200 && resp.status < 300) {
           message.success(`Successfully created snapshot group ${payload.name}.`)
           yield put({ type: 'hideCreateModal' })
+          yield put(routerRedux.push({ pathname: '/snapshotGroup' }))
           yield put({ type: 'query' })
         }
       } catch (error) {
@@ -133,7 +136,7 @@ export default {
       return { ...state, selectedRows: [] }
     },
     showCreateModal(state, action) {
-      return { ...state, ...action.payload, createModalError: '', createModalVisible: true, createModalKey: Math.random() }
+      return { ...state, createItem: action.payload?.createItem || {}, previewData: [], createModalError: '', createModalVisible: true, createModalKey: Math.random() }
     },
     hideCreateModal(state) {
       return { ...state, createModalVisible: false, previewData: [] }

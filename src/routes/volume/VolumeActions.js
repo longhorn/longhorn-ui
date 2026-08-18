@@ -39,6 +39,7 @@ function actions({
   toggleReplicaRebuildingBandwidthLimitModal,
   toggleUblkParamsModal,
   toggleRebuildConcurrentSyncLimitModal,
+  showCreateSnapshotGroup,
   commandKeyDown,
 }) {
   const deleteWranElement = (record) => {
@@ -103,6 +104,9 @@ function actions({
         break
       case 'backups':
         showBackups(record)
+        break
+      case 'createSnapshotGroup':
+        showCreateSnapshotGroup(record)
         break
       case 'cloneVolume':
         showVolumeCloneModal(record)
@@ -291,6 +295,7 @@ function actions({
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
   availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' })
+  availableActions.push({ key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled: selected.standby || isRestoring(selected) })
 
   toggleRollbackAndUpgradeAction(availableActions)
   return (
@@ -309,6 +314,7 @@ actions.propTypes = {
   showEngineUpgrade: PropTypes.func,
   showRecurring: PropTypes.func,
   showSnapshots: PropTypes.func,
+  showCreateSnapshotGroup: PropTypes.func,
   showBackups: PropTypes.func,
   showSalvage: PropTypes.func,
   rollback: PropTypes.func,
