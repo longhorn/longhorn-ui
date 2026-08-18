@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Card, Icon, Tooltip } from 'antd'
 import moment from 'moment'
 import styles from './index.less'
+import { LinkTo } from '../../../components'
 import { formatDate } from '../../../utils/formatDate'
 import { formatSnapshot, formatMib } from '../../../utils/formatter'
 
@@ -52,6 +53,7 @@ class SnapshotList extends React.Component {
       {
         title: 'Name',
         key: 'name',
+        width: 300,
         render: (record) => {
           return (<div>{record.name}</div>)
         },
@@ -66,6 +68,7 @@ class SnapshotList extends React.Component {
       {
         title: 'ID',
         key: 'id',
+        width: 300,
         render: (record) => {
           return (<div>{record.id}</div>)
         },
@@ -75,6 +78,14 @@ class SnapshotList extends React.Component {
         key: 'created',
         render: (record) => {
           return (<div>{formatDate(record.created)}</div>)
+        },
+      },
+      {
+        title: 'Group',
+        key: 'group',
+        render: (record) => {
+          const group = record.snapshotGroup || (record.labels && record.labels['longhorn.io/snapshot-group'])
+          return group ? <LinkTo to={{ pathname: `/snapshotGroup/${group}` }}>{group}</LinkTo> : ''
         },
       },
       {

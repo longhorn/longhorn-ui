@@ -216,9 +216,12 @@ class CreateSnapshotGroupModal extends React.Component {
           </FormItem>
 
           {selectionMode === 'volumes' ? (
-            <FormItem label="Volumes" hasFeedback {...formItemLayout}>
+            <FormItem label="Volumes" hasFeedback={selectedVolumes.length > 0} {...formItemLayout}>
               {getFieldDecorator('volumes', {
                 initialValue: item.volumes || [],
+                rules: [
+                  { required: true, message: 'At least one volume is required' },
+                ],
               })(
                 <Select mode="multiple" placeholder="Select volumes" filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}>
                   {volumeOptions.map(name => <Option key={name} value={name}>{name}</Option>)}
