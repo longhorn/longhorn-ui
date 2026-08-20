@@ -118,9 +118,11 @@ function SnapshotIcon(props, snapshotProps) {
       <Menu.Item key="cloneVolumeFromSnapshot">
         <div style={{ padding: '0px 12px' }}>Clone Volume</div>
       </Menu.Item>
-      <Menu.Item key="snapshotDelete">
-        <div style={{ padding: '0px 12px' }}>Delete</div>
-      </Menu.Item>
+      { !snapshotObject.removed ? (
+        <Menu.Item key="snapshotDelete">
+          <div style={{ padding: '0px 12px' }}>Delete</div>
+        </Menu.Item>
+      ) : '' }
     </Menu>
   )
   let backupStatusObject = snapshotObject.backupStatusObject
