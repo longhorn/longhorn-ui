@@ -22,6 +22,10 @@ module.exports = [
     name: 'Recurring Jobs',
   },
   {
+    key: 'snapshotGroup',
+    name: 'Snapshot Groups',
+  },
+  {
     key: 'backupAndRestore',
     name: 'Backup and Restore',
     child: [

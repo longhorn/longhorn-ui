@@ -10,7 +10,7 @@ import semver from 'semver'
 import BundlesModel from './BundlesModel'
 import StableLonghornVersions from './StableLonghornVersions'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, snapshotGroup, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -136,6 +136,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(backup, 'backups')}
           {getStatusIcon(systemBackups, 'systemBackup')}
           {getStatusIcon(systemBackups, 'systemRestore')}
+          {getStatusIcon(snapshotGroup)}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
         <StableLonghornVersions key={stableLonghornVersionsKey} {...stableLonghornVersionsProps} />
@@ -156,7 +157,8 @@ Footer.propTypes = {
   app: PropTypes.object,
   backup: PropTypes.object,
   systemBackups: PropTypes.object,
+  snapshotGroup: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups, snapshotGroup }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, snapshotGroup }))(Footer)

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Tooltip, Card, Switch, Progress } from 'antd'
+import { Button, Tooltip, Card, Switch, Progress, Modal } from 'antd'
 import { Snapshot } from '../../../components'
 import CreateBackupModal from './CreateBackupModal'
 import styles from './index.less'
@@ -17,6 +17,34 @@ class Snapshots extends React.Component {
       currentSnapshotName: '',
       snapshotBackupUrl: '',
       snapshotListUrl: '',
+      deleteGroupModalVisible: false,
+      pendingDeleteAction: null,
+      pendingGroupName: '',
+    }
+
+    // Perform the actual snapshot delete/purge dispatch (bypassing the group check).
+    this.runSnapshotDelete = (action) => {
+      let additionalActions = [{ url: this.props.volume.actions.snapshotPurge }]
+      let actionType = 'snapshotDelete'
+      let url = this.props.volume.actions.snapshotDelete
+      let params = { name: action.payload && action.payload.snapshot ? action.payload.snapshot.name : undefined }
+      // Only snapshotPurge operations are performed when the snapshot status is marked as removed.
+      if (action.payload?.snapshot?.removed) {
+        additionalActions = []
+        actionType = 'snapshotPurge'
+        url = this.props.volume.actions?.snapshotPurge
+        params = {}
+      }
+      this.props.dispatch({
+        type: 'snapshotModal/snapshotAction',
+        payload: {
+          type: actionType,
+          actions: additionalActions,
+          url,
+          params,
+          querySnapShotUrl: this.props.volume.actions.snapshotList,
+        },
+      })
     }
 
     this.onAction = (action) => {
@@ -58,24 +86,21 @@ class Snapshots extends React.Component {
         return
       }
 
-      let additionalActions = []
-      let actionType = action.type
-      let url = this.props.volume.actions[action.type]
-      let params = {
+      const additionalActions = []
+      const actionType = action.type
+      const url = this.props.volume.actions[action.type]
+      const params = {
         name: action.payload && action.payload.snapshot ? action.payload.snapshot.name : undefined,
       }
 
       if (action.type === 'snapshotDelete') {
-        additionalActions = [{
-          url: this.props.volume.actions.snapshotPurge,
-        }]
-        // Only snapshotPurge operations are performed when the snapshot status is marked as removed.
-        if (action.payload?.snapshot?.removed) {
-          additionalActions = []
-          actionType = 'snapshotPurge'
-          url = this.props.volume.actions?.snapshotPurge
-          params = {}
+        const group = action.payload?.snapshot?.snapshotGroup
+        if (group) {
+          this.setState({ deleteGroupModalVisible: true, pendingDeleteAction: action, pendingGroupName: group })
+          return
         }
+        this.runSnapshotDelete(action)
+        return
       }
       this.props.dispatch({
         type: 'snapshotModal/snapshotAction',
@@ -326,6 +351,33 @@ class Snapshots extends React.Component {
         </div>
         {this.state.createBackModalVisible ? <CreateBackupModal key={this.state.createBackModalKey} {...this.createBackupModal()} /> : ''}
         {this.state.createBackBySnapshotModalVisible ? <CreateBackupModal key={this.state.createBackBySnapshotModalKey} {...this.createBackupBySnapshotModal()} /> : ''}
+        <Modal
+          visible={this.state.deleteGroupModalVisible}
+          title="Confirm Delete Snapshot"
+          onCancel={() => this.setState({ deleteGroupModalVisible: false })}
+          footer={[
+            <Button key="cancel" onClick={() => this.setState({ deleteGroupModalVisible: false })}>Cancel</Button>,
+            <Button
+              key="snapshotOnly"
+              type="danger"
+              onClick={() => {
+                const action = this.state.pendingDeleteAction
+                this.setState({ deleteGroupModalVisible: false })
+                this.runSnapshotDelete(action)
+              }}
+            >Delete snapshot only</Button>,
+            <Button
+              key="entireGroup"
+              type="danger"
+              onClick={() => {
+                this.props.dispatch({ type: 'snapshotGroup/delete', payload: { name: this.state.pendingGroupName } })
+                this.setState({ deleteGroupModalVisible: false })
+              }}
+            >Delete entire group</Button>,
+          ]}
+        >
+          <p>Snapshot &quot;{this.state.pendingDeleteAction?.payload?.snapshot?.name}&quot; belongs to snapshot group &quot;{this.state.pendingGroupName}&quot;. Deleting only this snapshot marks the group <strong>Degraded</strong>; it will no longer represent a complete point-in-time set.</p>
+        </Modal>
       </Card>
     )
   }

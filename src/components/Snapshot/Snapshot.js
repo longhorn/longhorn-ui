@@ -118,9 +118,11 @@ function SnapshotIcon(props, snapshotProps) {
       <Menu.Item key="cloneVolumeFromSnapshot">
         <div style={{ padding: '0px 12px' }}>Clone Volume</div>
       </Menu.Item>
-      <Menu.Item key="snapshotDelete">
-        <div style={{ padding: '0px 12px' }}>Delete</div>
-      </Menu.Item>
+      { !snapshotObject.removed ? (
+        <Menu.Item key="snapshotDelete">
+          <div style={{ padding: '0px 12px' }}>Delete</div>
+        </Menu.Item>
+      ) : '' }
     </Menu>
   )
   let backupStatusObject = snapshotObject.backupStatusObject
@@ -171,6 +173,7 @@ function SnapshotIcon(props, snapshotProps) {
         <p className="snapshot-name">Size: {backupStatusObject && backupStatusObject.progress === 100 ? formatMib(backupStatusObject.size) : formatMib(snapshotObject.size)}</p>
         <p className="snapshot-name">Created By User: {snapshotObject.usercreated ? 'True' : 'False'}</p>
         <p className="snapshot-name">Removed: {snapshotObject.removed ? 'True' : 'False'}</p>
+        {snapshotObject.snapshotGroup ? <p className="snapshot-name">Snapshot Group: {snapshotObject.snapshotGroup}</p> : ''}
         {
           backupStatusObject ? <div>
             <p className="snapshot-created">Progress: {backupStatusObject.progress}%</p>
