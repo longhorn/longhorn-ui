@@ -239,7 +239,7 @@ class CreateSnapshotGroupModal extends React.Component {
                 ],
               })(
                 <Select mode="multiple" placeholder="Select volumes" filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}>
-                  {volumeOptions.map(name => <Option key={name} value={name}>{name}</Option>)}
+                  {volumeOptions.map(option => <Option key={option} value={option}>{option}</Option>)}
                 </Select>
               )}
             </FormItem>
