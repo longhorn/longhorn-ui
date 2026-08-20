@@ -84,8 +84,14 @@ class SnapshotList extends React.Component {
         title: 'Group',
         key: 'group',
         render: (record) => {
-          const group = record.snapshotGroup || (record.labels && record.labels['longhorn.io/snapshot-group'])
-          return group ? <LinkTo to={{ pathname: `/snapshotGroup/${group}` }}>{group}</LinkTo> : ''
+          const group = record.snapshotGroup
+          if (!group) {
+            return ''
+          }
+          // Only link when the group still exists; a deleted group has no detail page.
+          return this.props.snapshotGroups?.includes(group)
+            ? <LinkTo to={{ pathname: `/snapshotGroup/${group}` }}>{group}</LinkTo>
+            : <span>{group}</span>
         },
       },
       {
@@ -143,6 +149,7 @@ class SnapshotList extends React.Component {
 SnapshotList.propTypes = {
   dataSource: PropTypes.array,
   selectedVolume: PropTypes.object,
+  snapshotGroups: PropTypes.array,
 }
 
 export default SnapshotList

@@ -593,6 +593,7 @@ function VolumeDetail({
   const snapshotListProps = {
     dataSource: snapshotModal.data,
     selectedVolume,
+    snapshotGroups: (snapshotGroup.data || []).map(item => item.name),
   }
 
   const eventListProps = {

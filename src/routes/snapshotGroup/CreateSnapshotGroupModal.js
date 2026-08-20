@@ -19,6 +19,7 @@ class CreateSnapshotGroupModal extends React.Component {
       selectionMode: item.volumeSelector ? 'selector' : 'volumes',
       labelRules: this.toKVList(item.labels),
       selectorRules: this.toKVList(item.volumeSelector?.matchLabels),
+      selectorError: '',
     }
     this.previewTimer = null
   }
@@ -68,7 +69,7 @@ class CreateSnapshotGroupModal extends React.Component {
   updateKV = (listName, index, field, value) => {
     const list = [...this.state[listName]]
     list[index] = { ...list[index], [field]: value }
-    this.setState({ [listName]: list }, () => {
+    this.setState({ [listName]: list, selectorError: '' }, () => {
       if (listName === 'selectorRules') {
         this.schedulePreview()
       }
@@ -141,6 +142,17 @@ class CreateSnapshotGroupModal extends React.Component {
           form.setFields({ volumes: { errors: [new Error('At least one volume is required')] } })
           return
         }
+      } else {
+        const matchLabels = {}
+        this.state.selectorRules.forEach(({ key, value }) => {
+          if (key && key.trim() && value && value.trim()) {
+            matchLabels[key.trim()] = value.trim()
+          }
+        })
+        if (Object.keys(matchLabels).length === 0) {
+          this.setState({ selectorError: 'At least one label selector (key and value) is required' })
+          return
+        }
       }
       onOk(this.buildPayload())
     })
@@ -208,7 +220,7 @@ class CreateSnapshotGroupModal extends React.Component {
             })(<Input onChange={this.schedulePreview} />)}
           </FormItem>
 
-          <FormItem label="Select members by" {...formItemLayout}>
+          <FormItem label="Select members by" required {...formItemLayout}>
             <RadioGroup value={selectionMode} onChange={this.handleModeChange}>
               <Radio value="volumes">Volumes</Radio>
               <Radio value="selector">Label selector</Radio>
@@ -229,7 +241,13 @@ class CreateSnapshotGroupModal extends React.Component {
               )}
             </FormItem>
           ) : (
-            <FormItem label="Label selector" {...formItemLayout}>
+            <FormItem
+              label="Label selector"
+              required
+              validateStatus={this.state.selectorError ? 'error' : ''}
+              help={this.state.selectorError || ''}
+              {...formItemLayout}
+            >
               {this.renderKVRules('selectorRules')}
             </FormItem>
           )}
