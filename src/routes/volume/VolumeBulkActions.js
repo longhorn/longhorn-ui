@@ -217,6 +217,7 @@ function bulkActions({
     { key: 'attach', name: 'Attach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !attachable(item)) } },
     { key: 'detach', name: 'Detach', disabled() { return selectedRows.length === 0 || selectedRows.some((item) => !detachable(item)) } },
     { key: 'backup', name: 'Create Backup', disabled() { return selectedRows.length === 0 || hasNonAttachedVolume() || isSnapshotDisabled() || hasDoingState() || isHasStandy() || hasVolumeRestoring() || !backupTargetAvailable }, toolTip: backupTargetMessage },
+    { key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled() { return selectedRows.length === 0 } },
     { key: 'bulkCloneVolume', name: 'Clone Volume', disabled() { return selectedRows.length === 0 || selectedRows.every(item => item.standby || isRestoring(item)) } },
 
   ]
@@ -241,7 +242,6 @@ function bulkActions({
     { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.every((row) => !row.actions?.offlineReplicaRebuilding) } },
     { key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v1') } },
     { key: 'rebuildConcurrentSyncLimit', name: 'Update Rebuild Concurrent Sync Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v2') } },
-    { key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled() { return selectedRows.length === 0 } },
   ]
 
   if (selectedRows.some((row) => row?.frontend === 'ublk')) {

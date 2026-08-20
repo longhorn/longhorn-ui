@@ -81,6 +81,7 @@ class SnapshotGroup extends React.Component {
       },
       recreateSnapshotGroup: (record) => {
         this.handleCreateOpen({
+          name: '',
           volumes: record.spec?.volumes || record.volumes,
           volumeSelector: record.spec?.volumeSelector || record.volumeSelector,
           labels: record.spec?.labels || record.labels,
