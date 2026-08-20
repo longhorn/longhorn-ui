@@ -31,11 +31,8 @@ function actions({ selected, deleteSnapshotGroup, recreateSnapshotGroup }) {
     }
   }
 
-  const phase = record => (record.degraded ? 'Degraded' : (record.status?.phase || record.phase))
-  const canRecreate = ['Failed', 'Degraded'].includes(phase(selected))
-
   const availableActions = [
-    { key: 'recreate', name: 'Recreate', disabled: !canRecreate },
+    { key: 'recreate', name: 'Recreate' },
     { key: 'delete', name: 'Delete' },
   ]
 

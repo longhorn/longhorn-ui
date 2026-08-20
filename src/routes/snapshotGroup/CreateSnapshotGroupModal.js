@@ -188,10 +188,13 @@ class CreateSnapshotGroupModal extends React.Component {
     } = this.props
     const { selectionMode } = this.state
 
-    const selectedVolumes = this.props.form.getFieldValue('volumes') || []
+    const name = this.props.form.getFieldValue('name')
+    // Fallback to item.volumes so OK isn't briefly disabled right after switching modes,
+    // before the volumes field remounts and repopulates its value.
+    const selectedVolumes = this.props.form.getFieldValue('volumes') || item.volumes || []
     // volumes / label selector is required: disable OK when nothing resolves to a member.
     const okDisabled = selectionMode === 'volumes'
-      ? selectedVolumes.length === 0
+      ? (!name || selectedVolumes.length === 0)
       : previewData.length === 0
 
     const modalOpts = {

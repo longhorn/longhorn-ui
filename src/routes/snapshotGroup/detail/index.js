@@ -5,14 +5,8 @@ import { routerRedux } from 'dva/router'
 import { Row, Col, Table, Tag, Alert, Card, Modal } from 'antd'
 import { DropOption, LinkTo } from '../../../components'
 import { formatDate } from '../../../utils/formatDate'
+import { phaseTextColor } from '../SnapshotGroupList'
 const confirm = Modal.confirm
-
-const phaseColorMap = {
-  Ready: 'green',
-  InProgress: 'blue',
-  Failed: 'red',
-  Degraded: 'orange',
-}
 
 class SnapshotGroupDetail extends React.Component {
   componentDidMount() {
@@ -78,7 +72,7 @@ class SnapshotGroupDetail extends React.Component {
         dataIndex: 'readyToUse',
         key: 'readyToUse',
         width: 90,
-        render: text => <Tag color={text ? 'green' : 'red'}>{text ? 'true' : 'false'}</Tag>,
+        render: text => <span style={{ color: text ? '#27ae60' : '#e74c3c' }}>{text ? 'true' : 'false'}</span>,
       },
       { title: 'Created', dataIndex: 'creationTime', key: 'creationTime', width: 180, render: text => formatDate(text) },
       {
@@ -115,7 +109,7 @@ class SnapshotGroupDetail extends React.Component {
           <Col xs={24} style={{ marginBottom: 16 }}>
             <Card bordered={false}>
               <Row gutter={24} style={{ marginBottom: 16 }}>
-                <Col span={8}><strong>Status:</strong> <Tag color={phaseColorMap[phase] || 'default'}>{phase}</Tag></Col>
+                <Col span={8}><strong>Status:</strong> <span style={{ color: phaseTextColor[phase] || 'inherit' }}>{phase}</span></Col>
                 <Col span={8}><strong>Deadline:</strong> {spec.deadlineSeconds}s</Col>
                 <Col span={8}><strong>Creation time:</strong> {status.creationTime || '-'}</Col>
               </Row>

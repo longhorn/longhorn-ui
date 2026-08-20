@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Tag } from 'antd'
+import { Table } from 'antd'
 import { LinkTo } from '../../components'
 import SnapshotGroupActions from './SnapshotGroupActions'
 import { pagination } from '../../utils/page'
 import { formatDate } from '../../utils/formatDate'
 
-const phaseColorMap = {
-  Ready: 'green',
-  InProgress: 'blue',
-  Failed: 'red',
-  Degraded: 'orange',
+export const phaseTextColor = {
+  Ready: '#27ae60',
+  InProgress: '#337ab7',
+  Failed: '#e74c3c',
+  Degraded: '#f0ad4e',
 }
 
 function getPhase(record = {}) {
@@ -36,7 +36,7 @@ function list({ loading, dataSource, deleteSnapshotGroup, recreateSnapshotGroup,
       render: (text, record) => {
         const phase = getPhase(record)
         return (
-          <Tag color={phaseColorMap[phase] || 'default'}>{phase}</Tag>
+          <span style={{ color: phaseTextColor[phase] || 'inherit' }}>{phase}</span>
         )
       },
     }, {
