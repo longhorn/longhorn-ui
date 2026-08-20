@@ -110,7 +110,7 @@ class SnapshotGroupDetail extends React.Component {
             <Card bordered={false}>
               <Row gutter={24} style={{ marginBottom: 16 }}>
                 <Col span={8}><strong>Status:</strong> <span style={{ color: phaseTextColor[phase] || 'inherit' }}>{phase}</span></Col>
-                <Col span={8}><strong>Deadline:</strong> {spec.deadlineSeconds}s</Col>
+                <Col span={8}><strong>Deadline:</strong> {spec.deadlineSeconds != null ? `${spec.deadlineSeconds}s` : '-'}</Col>
                 <Col span={8}><strong>Creation time:</strong> {status.creationTime || '-'}</Col>
               </Row>
               <Row gutter={24} style={{ marginBottom: 16 }}>
