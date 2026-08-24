@@ -115,6 +115,8 @@ class RecurringJob extends React.Component {
           return item.task === value
         }
         return false
+      } else if (field === 'retentionPolicy' && value !== '') {
+        return (item.retentionPolicy || 'count-based') === value
       }
       return true
     })
@@ -212,6 +214,11 @@ class RecurringJob extends React.Component {
         { value: 'groups', name: 'Group' },
         { value: 'label', name: 'Label' },
         { value: 'type', name: 'Type' },
+        { value: 'retentionPolicy', name: 'Retention Policy' },
+      ],
+      retentionPolicyOption: [
+        { value: 'count-based', name: 'Count-based' },
+        { value: 'age-based', name: 'Age-based' },
       ],
       onSearch(filter) {
         const { field: filterField, value: filterValue } = filter

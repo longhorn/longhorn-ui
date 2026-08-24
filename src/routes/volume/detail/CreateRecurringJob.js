@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Icon, Button, Select, Checkbox, InputNumber, Tabs, Tooltip } from 'antd'
+import { Form, Input, Icon, Button, Select, Checkbox, InputNumber, Tabs, Tooltip, Radio } from 'antd'
 import { ModalBlur, ReactCron } from '../../../components'
 
 const Option = Select.Option
@@ -15,7 +15,7 @@ const formItemLayout = {
     span: 4,
   },
   wrapperCol: {
-    span: 17,
+    span: 20,
   },
 }
 
@@ -46,6 +46,20 @@ const noRetain = (val) => {
   return val === 'snapshot-cleanup' || val === 'filesystem-trim'
 }
 
+// Tasks that support the age-based retention policy (system-backup isn't offered here).
+const AGE_BASED_TASKS = ['backup', 'snapshot']
+
+// Parse a Go duration string (e.g. "2h30m", "8760h", "10m") into hours + minutes.
+const parseRetainAge = (str) => {
+  if (!str) {
+    return { hours: 0, minutes: 0 }
+  }
+  const h = /(\d+)h/.exec(str)
+  const m = /(\d+)m/.exec(str)
+  const total = (h ? parseInt(h[1], 10) * 60 : 0) + (m ? parseInt(m[1], 10) : 0)
+  return { hours: Math.floor(total / 60), minutes: total % 60 }
+}
+
 const modal = ({
   item,
   recurringJobOptions,
@@ -60,6 +74,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
+    getFieldError,
     setFieldsValue,
   },
 }) => {
@@ -105,6 +120,14 @@ const modal = ({
       if (data.keysForlabels) {
         delete data.keysForlabels
       }
+      // Build the age-based retainAge duration (e.g. "2h30m") and drop the helper inputs.
+      if (data.retentionPolicy === 'age-based') {
+        const hours = Number(data.retainAgeHours) || 0
+        const minutes = Number(data.retainAgeMinutes) || 0
+        data.retainAge = `${hours}h${minutes}m`
+      }
+      delete data.retainAgeHours
+      delete data.retainAgeMinutes
       delete data.defaultGroup
       if (data.parametersKey && data.parametersValue?.toString()) {
         data.parameters = {}
@@ -166,6 +189,12 @@ const modal = ({
       cron: cronProps.cron,
     })
     cronProps.onCronCancel()
+  }
+  const onChangeRetentionPolicy = (e) => {
+    // Age-based only supports backup / snapshot tasks here.
+    if (e.target.value === 'age-based' && !AGE_BASED_TASKS.includes(getFieldValue('task'))) {
+      setFieldsValue({ task: 'snapshot' })
+    }
   }
   const onChangeTask = (val) => {
     if (noRetain(val)) {
@@ -301,6 +330,9 @@ const modal = ({
 
   const isParametersValueRequired = !!getFieldValue('parametersKey')
   const showParametersField = getFieldValue('task') === 'backup' || getFieldValue('task') === 'backup-force-create'
+  const retentionPolicy = getFieldValue('retentionPolicy') || (isEdit ? item.retentionPolicy : '') || 'count-based'
+  const isAgeBased = retentionPolicy === 'age-based'
+  const initialRetainAge = parseRetainAge(isEdit ? item.retainAge : '')
   return (
     <ModalBlur {...modalOpts}>
       <Tabs tabPosition={'top'} type="card" onChange={changeTab} defaultActiveKey="1">
@@ -317,6 +349,22 @@ const modal = ({
                   ],
                 })(<Input disabled={isEdit || addForVolume} style={{ width: '80%' }} />)}
               </FormItem>
+              <FormItem label="Retention Policy" required {...formItemLayout}>
+                {getFieldDecorator('retentionPolicy', {
+                  initialValue: isEdit ? (item.retentionPolicy || 'count-based') : 'count-based',
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please select a retention policy',
+                    },
+                  ],
+                })(
+                  <Radio.Group disabled={isEdit} onChange={onChangeRetentionPolicy} style={{ marginLeft: 8, display: 'inline-flex', alignItems: 'center' }}>
+                    <Radio value="count-based" style={{ display: 'inline-flex', alignItems: 'center' }}>Count-based</Radio>
+                    <Radio value="age-based" style={{ display: 'inline-flex', alignItems: 'center' }}>Age-based</Radio>
+                  </Radio.Group>
+                )}
+              </FormItem>
               <div style={{ display: 'flex' }}>
                 <FormItem label="Task" hasFeedback style={{ flex: 1 }} labelCol={{ span: showForceCreateCheckbox() ? 7 : 4 }} wrapperCol={{ span: 17 }}>
                   {getFieldDecorator('task', {
@@ -327,11 +375,16 @@ const modal = ({
                       },
                     ],
                   })(<Select disabled={isEdit} style={{ width: '80%' }} onChange={onChangeTask}>
-                      <Option value="backup">Backup</Option>
-                      <Option value="snapshot">Snapshot</Option>
-                      <Option value="snapshot-delete">Snapshot Delete</Option>
-                      <Option value="snapshot-cleanup">Snapshot Cleanup</Option>
-                      <Option value="filesystem-trim">Filesystem Trim</Option>
+                      {isAgeBased ? [
+                        <Option key="backup" value="backup">Backup</Option>,
+                        <Option key="snapshot" value="snapshot">Snapshot</Option>,
+                      ] : [
+                        <Option key="backup" value="backup">Backup</Option>,
+                        <Option key="snapshot" value="snapshot">Snapshot</Option>,
+                        <Option key="snapshot-delete" value="snapshot-delete">Snapshot Delete</Option>,
+                        <Option key="snapshot-cleanup" value="snapshot-cleanup">Snapshot Cleanup</Option>,
+                        <Option key="filesystem-trim" value="filesystem-trim">Filesystem Trim</Option>,
+                      ]}
                   </Select>)}
                 </FormItem>
                 {showForceCreateCheckbox() && <Tooltip
@@ -345,16 +398,41 @@ const modal = ({
                     </FormItem>
                 </Tooltip>}
               </div>
-              <FormItem label="Retain" hasFeedback {...formItemLayout}>
+              <FormItem label="Retain" hasFeedback {...formItemLayout} style={{ display: isAgeBased ? 'none' : undefined }}>
                 {getFieldDecorator('retain', {
                   initialValue: isEdit ? item.retain : 1,
                   rules: [
                     {
-                      required: true,
+                      required: !isAgeBased,
                     },
                   ],
                 })(<InputNumber disabled={noRetain(getFieldValue('task'))} style={{ width: '80%' }} min={0} />)}
               </FormItem>
+              {isAgeBased && (
+                <FormItem label="Retain Age" required {...formItemLayout}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <FormItem style={{ marginBottom: 0, marginRight: 8 }} help={''}>
+                      {getFieldDecorator('retainAgeHours', {
+                        initialValue: initialRetainAge.hours,
+                        rules: [{ required: true, message: 'retainAgeHours is required' }],
+                      })(<InputNumber min={0} style={{ width: 120 }} />)}
+                    </FormItem>
+                    <span style={{ marginRight: 8 }}>hours</span>
+                    <FormItem style={{ marginBottom: 0, marginRight: 8 }} help={''}>
+                      {getFieldDecorator('retainAgeMinutes', {
+                        initialValue: initialRetainAge.minutes,
+                        rules: [{ required: true, message: 'retainAgeMinutes is required' }],
+                      })(<InputNumber min={0} style={{ width: 120 }} />)}
+                    </FormItem>
+                    <span>minutes</span>
+                    {(getFieldError('retainAgeHours') || getFieldError('retainAgeMinutes')) && (
+                      <span style={{ lineHeight: 1.5, marginLeft: 12, color: '#f5222d' }}>
+                        {[...(getFieldError('retainAgeHours') || []), ...(getFieldError('retainAgeMinutes') || [])].join(', ')}
+                      </span>
+                    )}
+                  </div>
+                </FormItem>
+              )}
               <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
                 {getFieldDecorator('concurrency', {
                   initialValue: isEdit ? item.concurrency : 1,
