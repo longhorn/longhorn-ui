@@ -13,7 +13,7 @@ const formItemLayout = {
     span: 4,
   },
   wrapperCol: {
-    span: 17,
+    span: 20,
   },
 }
 
@@ -71,6 +71,7 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
+    getFieldError,
     setFieldsValue,
   },
 }) => {
@@ -412,18 +413,27 @@ const modal = ({
           })(<InputNumber disabled={noRetain(getFieldValue('task'))} style={{ width: '80%' }} min={0} />)}
         </FormItem>
         {isAgeBased && (
-          <FormItem label="Retain Age" hasFeedback {...formItemLayout}>
+          <FormItem label="Retain Age" required {...formItemLayout}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              {getFieldDecorator('retainAgeHours', {
-                initialValue: initialRetainAge.hours,
-                rules: [{ required: true }],
-              })(<InputNumber min={0} style={{ width: 120 }} />)}
-              <span style={{ margin: '0 8px' }}>hours</span>
-              {getFieldDecorator('retainAgeMinutes', {
-                initialValue: initialRetainAge.minutes,
-                rules: [{ required: true }],
-              })(<InputNumber min={0} style={{ width: 120 }} />)}
-              <span style={{ marginLeft: 8 }}>minutes</span>
+              <FormItem style={{ marginBottom: 0, marginRight: 8 }} help={''}>
+                {getFieldDecorator('retainAgeHours', {
+                  initialValue: initialRetainAge.hours,
+                  rules: [{ required: true, message: 'retainAgeHours is required' }],
+                })(<InputNumber min={0} style={{ width: 120 }} />)}
+              </FormItem>
+              <span style={{ marginRight: 8 }}>hours</span>
+              <FormItem style={{ marginBottom: 0, marginRight: 8 }} help={''}>
+                {getFieldDecorator('retainAgeMinutes', {
+                  initialValue: initialRetainAge.minutes,
+                  rules: [{ required: true, message: 'retainAgeMinutes is required' }],
+                })(<InputNumber min={0} style={{ width: 120 }} />)}
+              </FormItem>
+              <span>minutes</span>
+              {(getFieldError('retainAgeHours') || getFieldError('retainAgeMinutes')) && (
+                <span style={{ lineHeight: 1.5, marginLeft: 12, color: '#f5222d' }}>
+                  {[...(getFieldError('retainAgeHours') || []), ...(getFieldError('retainAgeMinutes') || [])].join(', ')}
+                </span>
+              )}
             </div>
           </FormItem>
         )}

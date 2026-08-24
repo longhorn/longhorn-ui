@@ -40,7 +40,7 @@ class Filter extends React.Component {
   handleSubmit = () => {
     if (this.props.onSearch) {
       this.setState(
-        (prevState) => ({ value: prevState.value.trim() }),
+        (prevState) => ({ value: (prevState.value || '').trim() }),
         () => this.props.onSearch({ ...this.state })
       )
     }
@@ -88,6 +88,11 @@ class Filter extends React.Component {
   }
 
   handleFieldChange = (field) => {
+    // Retention policy filtering defaults to count-based.
+    if (field === 'retentionPolicy') {
+      this.setState({ ...this.state, field, value: 'count-based' })
+      return
+    }
     this.setState({ ...this.state, field })
   }
 
@@ -211,6 +216,20 @@ class Filter extends React.Component {
           {this.props.availableOption.map(item => (<Option key={item.name} value={item.value}>{item.name}</Option>))}
         </Select>
       )
+    } else if (this.state.field === 'retentionPolicy' && this.props.retentionPolicyOption) {
+      valueForm = (
+        <Select
+          key="retentionPolicy"
+          style={{ width: '100%' }}
+          size="large"
+          allowClear
+          value={this.state.value || undefined}
+          defaultValue="count-based"
+          onChange={this.handleAvailableValueChange}
+        >
+          {this.props.retentionPolicyOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
+        </Select>
+      )
     }
 
     let content = ''
@@ -255,6 +274,7 @@ Filter.propTypes = {
   recurringJobIsGroupOption: PropTypes.array,
   createdFromOption: PropTypes.array,
   availableOption: PropTypes.array,
+  retentionPolicyOption: PropTypes.array,
 }
 
 export default Filter

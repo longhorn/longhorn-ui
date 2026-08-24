@@ -13,7 +13,7 @@ const DropOption = ({ onMenuClick, menuOptions = [], buttonStyle, dropdownProps,
   })
   return (<Dropdown
     placement="bottomLeft"
-    trigger="click"
+    trigger={['click']}
     overlay={<Menu onClick={onMenuClick} style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>{menu}</Menu>}
     {...dropdownProps}
   >
