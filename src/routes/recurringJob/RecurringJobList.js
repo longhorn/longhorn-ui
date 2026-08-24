@@ -45,12 +45,30 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
         )
       },
     }, {
+      title: 'Retention Policy',
+      key: 'retentionPolicy',
+      width: 140,
+      render: (record) => {
+        return (
+          <div>{record.retentionPolicy || 'count-based'}</div>
+        )
+      },
+    }, {
       title: 'Retain',
       key: 'retain',
       width: 120,
       render: (record) => {
         return (
-          <div>{record.retain}</div>
+          <div>{record.retentionPolicy === 'age-based' ? '-' : record.retain}</div>
+        )
+      },
+    }, {
+      title: 'Retain Age',
+      key: 'retainAge',
+      width: 120,
+      render: (record) => {
+        return (
+          <div>{record.retentionPolicy === 'age-based' ? record.retainAge : '-'}</div>
         )
       },
     }, {
@@ -65,7 +83,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
     }, {
       title: 'Parameters',
       key: 'parameters',
-      width: 200,
+      width: 160,
       render: (record) => {
         return (
           <div>{record.parameters && Object.keys(record.parameters).map((key) => {
@@ -77,7 +95,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       title: 'Labels',
       dataIndex: 'labels',
       key: 'labels',
-      width: 200,
+      width: 160,
       render: (text, record) => {
         return (
           <div>{record.labels && Object.keys(record.labels).map((key) => {
@@ -89,7 +107,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       title: 'Groups',
       dataIndex: 'groups',
       key: 'groups',
-      width: 200,
+      width: 120,
       render: (text, record) => {
         return (
           <div>{record.groups && record.groups.join(', ')}</div>
