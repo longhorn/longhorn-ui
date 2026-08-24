@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table } from 'antd'
+import { Table, Tag } from 'antd'
 import RecurringJobActions from './RecurringJobActions'
 import prettyCron from '../../utils/prettycron'
 import { pagination } from '../../utils/page'
@@ -99,8 +99,8 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       render: (text, record) => {
         return (
           <div>{record.labels && Object.keys(record.labels).map((key) => {
-            return key ? `${key}: ${record.labels[key]}` : ''
-          }).join(', ')}</div>
+            return key ? <Tag key={key}>{`${key}: ${record.labels[key]}`}</Tag> : ''
+          })}</div>
         )
       },
     }, {
