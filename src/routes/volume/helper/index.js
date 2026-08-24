@@ -744,6 +744,26 @@ export function getUblkParamsModalProps(volumes, visible, field, dispatch) {
   }
 }
 
+export function getNvmfIoQueuesModalProps(volumes, visible, dispatch) {
+  return {
+    visible,
+    field: 'nvmfIoQueues',
+    items: volumes,
+    onOk(v, urls) {
+      dispatch({
+        type: 'volume/updateNvmfIoQueues',
+        payload: { params: v, urls },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'volume/toggleNvmfIoQueuesModal',
+        payload: { isNvmfIoQueuesModalVisible: false }
+      })
+    },
+  }
+}
+
 export function getRebuildConcurrentSyncLimitModalProps(volumes, visible, dispatch) {
   return {
     visible,

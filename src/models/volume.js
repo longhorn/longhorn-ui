@@ -121,6 +121,7 @@ export default {
     isReplicaRebuildingBandwidthLimitModalVisible: false,
     ublkParamsField: '',
     isUblkParamsModalVisible: false,
+    isNvmfIoQueuesModalVisible: false,
     isRebuildConcurrentSyncLimitModalVisible: false
   },
   subscriptions: {
@@ -492,6 +493,19 @@ export default {
           selectedRows: [],
           isUblkParamsModalVisible: false,
           ublkParamsField: '',
+        }
+      })
+      yield payload.urls.map(url => call(execAction, url, payload.params))
+      yield put({ type: 'query' })
+    },
+    *updateNvmfIoQueues({
+      payload,
+    }, { call, put }) {
+      yield put({
+        type: 'volume/toggleNvmfIoQueuesModal',
+        payload: {
+          selectedRows: [],
+          isNvmfIoQueuesModalVisible: false,
         }
       })
       yield payload.urls.map(url => call(execAction, url, payload.params))
@@ -1121,6 +1135,15 @@ export default {
         selectedRows: selectedRows ?? state.selectedRows,
         ublkParamsField: key,
         isUblkParamsModalVisible: isUblkParamsModalVisible ?? state.isUblkParamsModalVisible,
+      }
+    },
+    toggleNvmfIoQueuesModal(state, action = {}) {
+      const { selectedRows = [], isNvmfIoQueuesModalVisible } = action.payload || {}
+
+      return {
+        ...state,
+        selectedRows: selectedRows ?? state.selectedRows,
+        isNvmfIoQueuesModalVisible: isNvmfIoQueuesModalVisible ?? state.isNvmfIoQueuesModalVisible,
       }
     },
     toggleRebuildConcurrentSyncLimitModal(state, action = {}) {

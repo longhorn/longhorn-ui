@@ -272,6 +272,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           </div>
         </>
       )}
+      {selectedVolume.frontend === 'nvmf' && (
+        <div className={styles.row}>
+          <span className={styles.label}>NVMf IO Queues:</span>
+          {selectedVolume.nvmfIoQueues}
+        </div>
+      )}
       <div className={styles.row}>
         <span className={styles.label}> Backup Target:</span>
         {selectedVolume.backupTargetName || ''}

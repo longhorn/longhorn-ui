@@ -31,6 +31,11 @@ const UpdateUblkParamsModal = ({
       requiredMessage: 'Please input the UBLK queue depth',
       actionKey: 'updateUblkQueueDepth',
     },
+    nvmfIoQueues: {
+      label: 'NVMf IO Queues',
+      requiredMessage: 'Please input the NVMf IO queues',
+      actionKey: 'updateNvmfIoQueues',
+    },
   }
 
   const { label: fieldLabel, requiredMessage, actionKey } = FIELD_CONFIG[field]

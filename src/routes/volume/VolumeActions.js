@@ -38,6 +38,7 @@ function actions({
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
   toggleUblkParamsModal,
+  toggleNvmfIoQueuesModal,
   toggleRebuildConcurrentSyncLimitModal,
   commandKeyDown,
 }) {
@@ -186,6 +187,9 @@ function actions({
       case 'updateUblkQueueDepth':
         toggleUblkParamsModal(record, 'ublkQueueDepth')
         break
+      case 'updateNvmfIoQueues':
+        toggleNvmfIoQueuesModal(record)
+        break
       case 'rebuildConcurrentSyncLimit':
         toggleRebuildConcurrentSyncLimitModal(record)
         break
@@ -281,6 +285,10 @@ function actions({
     availableActions.push({ key: 'updateUblkQueueDepth', name: 'Update UBLK Queue Depth', disabled: selected.state !== 'detached' })
   }
 
+  if (selected.frontend === 'nvmf') {
+    availableActions.push({ key: 'updateNvmfIoQueues', name: 'Update NVMf IO Queues', disabled: selected.state !== 'detached' })
+  }
+
   availableActions.push({ key: 'cloneVolume', name: 'Clone Volume', disabled: selected.standby || isRestoring(selected) })
   availableActions.push({ key: 'expandVolume', name: 'Expand Volume', disabled: selected?.conditions?.Scheduled?.status?.toLowerCase() !== 'true' })
   if (selected.controllers && selected.controllers[0] && !selected.controllers[0].isExpanding && selected.controllers[0].size !== 0 && selected.controllers[0].size !== selected.size && selected.controllers[0].size !== '0') {
@@ -329,6 +337,7 @@ actions.propTypes = {
   showUpdateSnapshotDataIntegrityModal: PropTypes.func,
   engineUpgradePerNodeLimit: PropTypes.object,
   showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
+  toggleNvmfIoQueuesModal: PropTypes.func,
 }
 
 export default actions

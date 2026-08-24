@@ -205,6 +205,7 @@ const modal = ({
   const parsedReplicas = safeParseJSON(item.numberOfReplicas || '{}')
   const parsedUblkNumberOfQueue = safeParseJSON(item.ublkNumberOfQueue || '{}')
   const parsedUblkQueueDepth = safeParseJSON(item.ublkQueueDepth || '{}')
+  const parsedNvmfIoQueues = safeParseJSON(item.nvmfIoQueues || '{}')
 
   const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
   const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
@@ -212,6 +213,7 @@ const modal = ({
   const currentDataEngine = getFieldValue('dataEngine')
   const initialUblkNumberOfQueue = Number(parsedUblkNumberOfQueue[currentDataEngine] ?? 0)
   const initialUblkQueueDepth = Number(parsedUblkQueueDepth[currentDataEngine] ?? 0)
+  const initialNvmfIoQueues = Number(parsedNvmfIoQueues[currentDataEngine] ?? 0)
 
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
@@ -383,6 +385,19 @@ const modal = ({
               )
             })}
           </>
+        )}
+        {getFieldValue('frontend') === 'nvmf' && (
+          <FormItem label="NVMf IO Queues" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('nvmfIoQueues', {
+              initialValue: initialNvmfIoQueues,
+              rules: [{ required: true, message: 'Please input the NVMf IO queues' }],
+            })(
+              <InputNumber
+                parser={(value) => Number(String(value).replace(/[^\d]/g, ''))}
+                min={0}
+              />
+            )}
+          </FormItem>
         )}
         <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataLocality', {

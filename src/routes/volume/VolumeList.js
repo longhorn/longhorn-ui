@@ -62,6 +62,7 @@ function list({
   toggleOfflineRebuildingModal,
   toggleReplicaRebuildingBandwidthLimitModal,
   toggleUblkParamsModal,
+  toggleNvmfIoQueuesModal,
   toggleRebuildConcurrentSyncLimitModal,
   onRowClick = f => f,
 }) {
@@ -105,6 +106,7 @@ function list({
     toggleOfflineRebuildingModal,
     toggleReplicaRebuildingBandwidthLimitModal,
     toggleUblkParamsModal,
+    toggleNvmfIoQueuesModal,
     toggleRebuildConcurrentSyncLimitModal,
     onRowClick,
   }
@@ -649,6 +651,8 @@ list.propTypes = {
   showUpdateFreezeFilesystemForSnapshotModal: PropTypes.func,
   toggleOfflineRebuildingModal: PropTypes.func,
   toggleReplicaRebuildingBandwidthLimitModal: PropTypes.func,
+  toggleUblkParamsModal: PropTypes.func,
+  toggleNvmfIoQueuesModal: PropTypes.func,
 }
 
 export default list

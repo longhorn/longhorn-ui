@@ -72,6 +72,7 @@ import {
   getOfflineRebuildingModalProps,
   getReplicaRebuildingBandwidthLimitModalProps,
   getUblkParamsModalProps,
+  getNvmfIoQueuesModalProps,
   getRebuildConcurrentSyncLimitModalProps
 } from './helper'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
@@ -227,6 +228,7 @@ class Volume extends React.Component {
       isReplicaRebuildingBandwidthLimitModalVisible,
       ublkParamsField,
       isUblkParamsModalVisible,
+      isNvmfIoQueuesModalVisible,
       isRebuildConcurrentSyncLimitModalVisible
     } = this.props.volume
     const hosts = this.props.host.data
@@ -244,6 +246,7 @@ class Volume extends React.Component {
     const defaultNumberOfReplicas = defaultReplicaCountSetting?.value || ''
     const defaultUblkNumberOfQueue = settings.find(s => s.id === 'default-ublk-number-of-queue')?.value
     const defaultUblkQueueDepth = settings.find(s => s.id === 'default-ublk-queue-depth')?.value
+    const defaultNvmfIoQueues = settings.find(s => s.id === 'default-nvmf-io-queues')?.value
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
     const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
@@ -664,6 +667,15 @@ class Volume extends React.Component {
           },
         })
       },
+      toggleNvmfIoQueuesModal(record) {
+        dispatch({
+          type: 'volume/toggleNvmfIoQueuesModal',
+          payload: {
+            selectedRows: [record],
+            isNvmfIoQueuesModalVisible: true
+          },
+        })
+      },
       toggleRebuildConcurrentSyncLimitModal(record) {
         dispatch({
           type: 'volume/toggleRebuildConcurrentSyncLimitModal',
@@ -832,6 +844,7 @@ class Volume extends React.Component {
         numberOfReplicas: defaultNumberOfReplicas,
         ublkNumberOfQueue: defaultUblkNumberOfQueue,
         ublkQueueDepth: defaultUblkQueueDepth,
+        nvmfIoQueues: defaultNvmfIoQueues,
         size: 20,
         iops: 1000,
         unit: 'Gi',
@@ -1249,6 +1262,15 @@ class Volume extends React.Component {
           },
         })
       },
+      toggleNvmfIoQueuesModal(record) {
+        dispatch({
+          type: 'volume/toggleNvmfIoQueuesModal',
+          payload: {
+            selectedRows: record,
+            isNvmfIoQueuesModalVisible: true
+          },
+        })
+      },
       toggleRebuildConcurrentSyncLimitModal(record) {
         dispatch({
           type: 'volume/toggleRebuildConcurrentSyncLimitModal',
@@ -1371,6 +1393,7 @@ class Volume extends React.Component {
     const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
     const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps(selectedRows, isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
     const ublkParamsModalProps = getUblkParamsModalProps(selectedRows, isUblkParamsModalVisible, ublkParamsField, dispatch)
+    const nvmfIoQueuesModalProps = getNvmfIoQueuesModalProps(selectedRows, isNvmfIoQueuesModalVisible, dispatch)
     const rebuildConcurrentSyncLimitModalProps = getRebuildConcurrentSyncLimitModalProps(selectedRows, isRebuildConcurrentSyncLimitModalVisible, dispatch)
 
     return (
@@ -1426,6 +1449,7 @@ class Volume extends React.Component {
         {isOfflineRebuildingModalVisible ? <CommonModal key={isOfflineRebuildingModalVisible} {...offlineRebuildingModalProps} /> : null}
         {isReplicaRebuildingBandwidthLimitModalVisible ? <UpdateReplicaRebuildingBandwidthLimitModal key={isReplicaRebuildingBandwidthLimitModalVisible} {...replicaRebuildingBandwidthLimitModalProps} /> : null}
         {isUblkParamsModalVisible ? <UpdateUblkParamsModal key={isUblkParamsModalVisible} {...ublkParamsModalProps} /> : null}
+        {isNvmfIoQueuesModalVisible ? <UpdateUblkParamsModal key={isNvmfIoQueuesModalVisible} {...nvmfIoQueuesModalProps} /> : null}
         {isRebuildConcurrentSyncLimitModalVisible ? <RebuildConcurrentSyncLimitModal key={isRebuildConcurrentSyncLimitModalVisible} {...rebuildConcurrentSyncLimitModalProps} /> : null}
       </div>
     )
