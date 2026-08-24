@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, Tabs, Button, Table, message, Icon, Tooltip, Modal } from 'antd'
+import { Card, Tabs, Button, Table, message, Icon, Tooltip, Modal, Tag } from 'antd'
 import prettyCron from '../../../utils/prettycron'
 import { ModalBlur } from '../../../components'
 import CreateRecurringJob from './CreateRecurringJob'
@@ -409,7 +409,7 @@ class RecurringJob extends React.Component {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        width: 200,
+        width: 180,
         render: (text, record) => {
           return (
             <div>
@@ -432,7 +432,7 @@ class RecurringJob extends React.Component {
         title: 'Groups',
         dataIndex: 'groups',
         key: 'groups',
-        width: 200,
+        width: 100,
         render: (text, record) => {
           return (
             <div>{record.groups && record.groups.join(', ')}</div>
@@ -451,15 +451,12 @@ class RecurringJob extends React.Component {
           )
         },
       }, {
-        title: 'Labels',
-        dataIndex: 'labels',
-        key: 'labels',
-        width: 200,
-        render: (text, record) => {
+        title: 'Retention Policy',
+        key: 'retentionPolicy',
+        width: 140,
+        render: (record) => {
           return (
-            <div>{record.labels && Object.keys(record.labels).map((key) => {
-              return key ? `${key}: ${record.labels[key]}` : ''
-            }).join(', ')}</div>
+            <div>{record.retentionPolicy || 'count-based'}</div>
           )
         },
       }, {
@@ -468,7 +465,16 @@ class RecurringJob extends React.Component {
         width: 120,
         render: (record) => {
           return (
-            <div>{record.retain}</div>
+            <div>{record.retentionPolicy === 'age-based' ? '-' : record.retain}</div>
+          )
+        },
+      }, {
+        title: 'Retain Age',
+        key: 'retainAge',
+        width: 120,
+        render: (record) => {
+          return (
+            <div>{record.retentionPolicy === 'age-based' ? record.retainAge : '-'}</div>
           )
         },
       }, {
@@ -482,10 +488,22 @@ class RecurringJob extends React.Component {
         },
       },
       {
+        title: 'Labels',
+        dataIndex: 'labels',
+        key: 'labels',
+        width: 150,
+        render: (text, record) => {
+          return (
+            <div>{record.labels && Object.keys(record.labels).map((key) => {
+              return key ? <Tag key={key}>{`${key}: ${record.labels[key]}`}</Tag> : ''
+            })}</div>
+          )
+        },
+      }, {
         title: 'Operation',
         key: 'operation',
         fixed: 'right',
-        width: 110,
+        width: 120,
         render: (text, record) => {
           return (
             <RecurringJobActions {...recurringVolumeJobActionsProps} selected={record} />
