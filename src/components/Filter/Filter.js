@@ -224,7 +224,6 @@ class Filter extends React.Component {
           size="large"
           allowClear
           value={this.state.value || undefined}
-          defaultValue="count-based"
           onChange={this.handleAvailableValueChange}
         >
           {this.props.retentionPolicyOption.map(item => (<Option key={item.value} value={item.value}>{item.name}</Option>))}
