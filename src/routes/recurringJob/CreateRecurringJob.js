@@ -335,6 +335,8 @@ const modal = ({
   const systemBackupParameterOptions = ['if-not-present', 'always', 'disabled']
   const retentionPolicy = getFieldValue('retentionPolicy') || (isEdit ? item.retentionPolicy : '') || 'count-based'
   const isAgeBased = retentionPolicy === 'age-based'
+  // Retention policy is only editable when the task is backup / snapshot / system-backup.
+  const canEditRetentionPolicy = AGE_BASED_TASKS.includes((getFieldValue('task') || '').replace('-force-create', ''))
   const initialRetainAge = parseRetainAge(isEdit ? item.retainAge : '')
 
   return (
@@ -361,7 +363,7 @@ const modal = ({
               },
             ],
           })(
-            <Radio.Group disabled={isEdit} onChange={onChangeRetentionPolicy} style={{ marginTop: 8, marginLeft: 8, display: 'inline-flex', alignItems: 'center' }}>
+            <Radio.Group disabled={isEdit && !canEditRetentionPolicy} onChange={onChangeRetentionPolicy} style={{ marginTop: 8, marginLeft: 8, display: 'inline-flex', alignItems: 'center' }}>
               <Radio value="count-based" style={{ display: 'inline-flex', alignItems: 'center' }}>Count-based</Radio>
               <Radio value="age-based" style={{ display: 'inline-flex', alignItems: 'center' }}>Age-based</Radio>
             </Radio.Group>
