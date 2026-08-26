@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, Tabs, Button, Table, message, Icon, Tooltip, Modal, Tag } from 'antd'
 import prettyCron from '../../../utils/prettycron'
+import { formatRetainAge } from '../../../utils/recurringJob'
 import { ModalBlur } from '../../../components'
 import CreateRecurringJob from './CreateRecurringJob'
 import EditRecurringJob from '../../recurringJob/CreateRecurringJob'
@@ -474,7 +475,7 @@ class RecurringJob extends React.Component {
         width: 120,
         render: (record) => {
           return (
-            <div>{record.retentionPolicy === 'age-based' ? record.retainAge : '-'}</div>
+            <div>{record.retentionPolicy === 'age-based' ? formatRetainAge(record.retainAge) : '-'}</div>
           )
         },
       }, {

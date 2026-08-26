@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Table, Tag } from 'antd'
 import RecurringJobActions from './RecurringJobActions'
 import prettyCron from '../../utils/prettycron'
+import { formatRetainAge } from '../../utils/recurringJob'
 import { pagination } from '../../utils/page'
 
 function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, editRecurringJob }) {
@@ -68,7 +69,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       width: 120,
       render: (record) => {
         return (
-          <div>{record.retentionPolicy === 'age-based' ? record.retainAge : '-'}</div>
+          <div>{record.retentionPolicy === 'age-based' ? formatRetainAge(record.retainAge) : '-'}</div>
         )
       },
     }, {
