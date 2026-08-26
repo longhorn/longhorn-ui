@@ -111,11 +111,14 @@ const modal = ({
         delete data.keysForlabels
       }
       // Build the age-based retainAge duration (e.g. "2h30m") and drop the helper inputs.
+      // Days are folded into hours so the API only receives XhXm (e.g. 1d1h -> 25h).
       if (data.retentionPolicy === 'age-based') {
-        const hours = Number(data.retainAgeHours) || 0
+        const days = Number(data.retainAgeDays) || 0
+        const hours = (Number(data.retainAgeHours) || 0) + days * 24
         const minutes = Number(data.retainAgeMinutes) || 0
         data.retainAge = `${hours}h${minutes}m`
       }
+      delete data.retainAgeDays
       delete data.retainAgeHours
       delete data.retainAgeMinutes
       delete data.defaultGroup
@@ -404,6 +407,13 @@ const modal = ({
                 <FormItem label="Retain Age" required {...formItemLayout}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <FormItem style={{ marginBottom: 0, marginRight: 8 }} help={''}>
+                      {getFieldDecorator('retainAgeDays', {
+                        initialValue: initialRetainAge.days,
+                        rules: [{ required: true, message: 'retainAgeDays is required' }],
+                      })(<InputNumber min={0} style={{ width: 120 }} />)}
+                    </FormItem>
+                    <span style={{ marginRight: 8 }}>days</span>
+                    <FormItem style={{ marginBottom: 0, marginRight: 8 }} help={''}>
                       {getFieldDecorator('retainAgeHours', {
                         initialValue: initialRetainAge.hours,
                         rules: [{ required: true, message: 'retainAgeHours is required' }],
@@ -417,12 +427,12 @@ const modal = ({
                       })(<InputNumber min={0} style={{ width: 120 }} />)}
                     </FormItem>
                     <span>minutes</span>
-                    {(getFieldError('retainAgeHours') || getFieldError('retainAgeMinutes')) && (
-                      <span style={{ lineHeight: 1.5, marginLeft: 12, color: '#f5222d' }}>
-                        {[...(getFieldError('retainAgeHours') || []), ...(getFieldError('retainAgeMinutes') || [])].join(', ')}
-                      </span>
-                    )}
                   </div>
+                  {(getFieldError('retainAgeDays') || getFieldError('retainAgeHours') || getFieldError('retainAgeMinutes')) && (
+                    <div style={{ lineHeight: 1.5, marginTop: 4, color: '#f5222d' }}>
+                      {[...(getFieldError('retainAgeDays') || []), ...(getFieldError('retainAgeHours') || []), ...(getFieldError('retainAgeMinutes') || [])].join(', ')}
+                    </div>
+                  )}
                 </FormItem>
               )}
               <FormItem label="Concurrency" hasFeedback {...formItemLayout}>
