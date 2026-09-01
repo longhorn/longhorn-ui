@@ -16,6 +16,9 @@ const formItemLayout = {
   },
 }
 
+// trimLeftAndRight is a String.prototype extension, so it throws on non-strings.
+const toTrimmedString = (value) => (typeof value === 'string' ? value.trimLeftAndRight() : '')
+
 const modal = ({
   item = {},
   visible,
@@ -44,11 +47,18 @@ const modal = ({
       }
       // use the backup target name from the original backupVolume
       const targetBackupVolume = backupVolumes.find(bkVol => bkVol.volumeName === item.volumeName) || {}
+      const { linkedCloneSourceVolume, linkedCloneSourceSnapshot, ...fields } = getFieldsValue()
       const data = {
-        ...getFieldsValue(),
+        ...fields,
         fromBackup: item.fromBackup,
         backupTargetName: targetBackupVolume?.backupTargetName || '',
-        volumeName: getFieldsValue().name,
+        volumeName: fields.name,
+      }
+      const trimmedLinkedCloneSourceVolume = toTrimmedString(linkedCloneSourceVolume)
+      const trimmedLinkedCloneSourceSnapshot = toTrimmedString(linkedCloneSourceSnapshot)
+      if (fields.dataEngine === 'v2' && trimmedLinkedCloneSourceVolume && trimmedLinkedCloneSourceSnapshot) {
+        data.dataSource = `snap://${trimmedLinkedCloneSourceVolume}/${trimmedLinkedCloneSourceSnapshot}`
+        data.cloneMode = 'linked-clone'
       }
       if (data.name && typeof data.name === 'string') {
         data.name = data.name.trimLeftAndRight()
@@ -77,6 +87,12 @@ const modal = ({
   const parsedReplicas = safeParseJSON(item.numberOfReplicas)
   const initialDataEngine = v1DataEngineEnabled ? 'v1' : 'v2'
   const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
+  const targetBackupVolume = backupVolumes?.find(bkVol => bkVol.volumeName === item.volumeName) || {}
+  const selectedDataEngine = getFieldsValue().dataEngine || initialDataEngine
+  // Seed the form with strings only, so the values coming back out are safe to trim.
+  const defaultLinkedCloneSourceVolume = toTrimmedString(targetBackupVolume.linkedCloneSourceVolume)
+  const defaultLinkedCloneSourceSnapshot = toTrimmedString(targetBackupVolume.linkedCloneSourceSnapshot)
+  const showLinkedCloneSource = Boolean(defaultLinkedCloneSourceVolume) && selectedDataEngine === 'v2'
 
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
@@ -204,6 +220,33 @@ const modal = ({
             </Select>
           )}
         </FormItem>
+        { showLinkedCloneSource && <Alert
+            style={{ marginBottom: 16 }}
+            type="info"
+            message="This backup was taken from a linked-clone volume, so it only contains the data written by the clone itself. The restored volume is linked to the source snapshot below to recover the rest, and both fields are required."
+          />}
+        { showLinkedCloneSource && <FormItem label="Linked Clone Source Volume" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('linkedCloneSourceVolume', {
+            initialValue: defaultLinkedCloneSourceVolume,
+            rules: [
+              {
+                required: true,
+                message: 'Linked clone source volume is required',
+              },
+            ],
+          })(<Input />)}
+        </FormItem>}
+        { showLinkedCloneSource && <FormItem label="Linked Clone Source Snapshot" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('linkedCloneSourceSnapshot', {
+            initialValue: defaultLinkedCloneSourceSnapshot,
+            rules: [
+              {
+                required: true,
+                message: 'Linked clone source snapshot is required',
+              },
+            ],
+          })(<Input />)}
+        </FormItem>}
       </Form>
     </ModalBlur>
   )
