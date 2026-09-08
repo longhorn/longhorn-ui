@@ -53,13 +53,17 @@ export function formatSize(selected, unit = 'Gi') {
   return 0
 }
 
+// Parses Go time.Time.String() output, e.g. "2024-12-06 19:07:17 +0000 UTC".
+// The zone abbreviation depends on the manager's timezone (WET, CET, +03, ...),
+// so only the numeric offset is used.
 export function utcStrToDate(utcStr) {
-  const reg = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) \+\d{4} UTC$/
+  const reg = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) ([+-])(\d{2})(\d{2}) \S+$/
   const results = utcStr.match(reg)
-  if (results && results.length === 3) {
+  if (results && results.length === 6) {
     const d = results[1].split('-').map(item => parseInt(item, 10))
     const t = results[2].split(':').map(item => parseInt(item, 10))
-    return new Date(Date.UTC(d[0], d[1] - 1, d[2], t[0], t[1], t[2]))
+    const offsetMinutes = (results[3] === '-' ? -1 : 1) * (parseInt(results[4], 10) * 60 + parseInt(results[5], 10))
+    return new Date(Date.UTC(d[0], d[1] - 1, d[2], t[0], t[1] - offsetMinutes, t[2]))
   }
   return 'Invalid UTC Date'
 }
