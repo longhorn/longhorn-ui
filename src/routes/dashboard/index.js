@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import queryString from 'query-string'
 import { Card } from 'antd'
 import { routerRedux } from 'dva/router'
 import { ResourceOverview, EventLogs } from './components'
+import { updateFavicon } from '../../utils/favicon'
 
 function Dashboard({ host, volume, eventlog, loading, dispatch, location }) {
+  useEffect(() => {
+    updateFavicon(host, volume)
+  }, [host && host.data, volume && volume.data])
+
   let { data: eventlogsData, sorter } = eventlog
   let eventlogs = eventlogsData.map((item) => {
     let obj = {}
