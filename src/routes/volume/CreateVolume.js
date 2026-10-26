@@ -212,6 +212,7 @@ const modal = ({
   const currentDataEngine = getFieldValue('dataEngine')
   const initialUblkNumberOfQueue = Number(parsedUblkNumberOfQueue[currentDataEngine] ?? 0)
   const initialUblkQueueDepth = Number(parsedUblkQueueDepth[currentDataEngine] ?? 0)
+  const globalNvmeTcpNrIoQueues = Number(safeParseJSON(item.defaultNvmeTcpNrIoQueues || '{}').v2 ?? 0)
 
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
@@ -383,6 +384,35 @@ const modal = ({
               )
             })}
           </>
+        )}
+        {getFieldValue('dataEngine') === 'v2' && getFieldValue('frontend') === 'blockdev' && (
+          <FormItem
+            label={
+              <span>
+                NVMe-TCP IO Queues
+                <span style={{
+                  marginLeft: 4,
+                  marginRight: 4,
+                }}>
+                  <Tooltip title={<div>
+                    <p>NVMe-TCP Number Of IO Queues</p>
+                    <p>Set &apos;0&apos; to inherit global settings (currently {globalNvmeTcpNrIoQueues || '0, one queue per CPU core'}).</p>
+                    <p>Applied on the next attach.</p>
+                    <p>The node never creates more queues than it has CPU cores.</p>
+                  </div>}>
+                    <Icon type="question-circle-o" />
+                  </Tooltip>
+                </span>
+              </span>
+            }
+            hasFeedback
+            {...formItemLayout}
+          >
+            {getFieldDecorator('nvmeTcpNrIoQueues', {
+              initialValue: 0,
+              rules: [{ type: 'integer', min: 0, max: 128, message: 'Must be between 0 and 128' }],
+            })(<InputNumber min={0} max={128} precision={0} />)}
+          </FormItem>
         )}
         <FormItem label="Data Locality" hasFeedback {...formItemLayout}>
           {getFieldDecorator('dataLocality', {
