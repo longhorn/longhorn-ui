@@ -55,6 +55,7 @@ const modal = ({
     size: i.size,
     numberOfReplicas: i.numberOfReplicas,
     frontend: i.frontend,
+    nvmeTcpNrIoQueues: i.nvmeTcpNrIoQueues || 0,
     dataLocality: i.dataLocality || defaultDataLocalityValue,
     accessMode: i.accessMode || null,
     backingImage: i.backingImage,
