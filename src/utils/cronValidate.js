@@ -118,19 +118,19 @@ function checkMonthsField(monthsField) {
 
 function checkDayOfWeekField(dayOfWeekField) {
 
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("SUN", "1" )
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("MON", "2" )
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("TUE", "3" )
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("WED", "4" )
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("THU", "5" )
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("FRI", "6" )
-    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("SAT", "7" )        
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("SUN", "0" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("MON", "1" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("TUE", "2" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("WED", "3" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("THU", "4" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("FRI", "5" )
+    dayOfWeekField = dayOfWeekField && dayOfWeekField.replace("SAT", "6" )
 
     if (dayOfWeekField == "?") {
         return true
     }
 
-    return checkField(dayOfWeekField, 1, 7)
+    return checkField(dayOfWeekField, 0, 6)
 }
 
 function checkFieldWithLetter(value, letter, minimalBefore, maximalBefore, minimalAfter, maximalAfter) {
