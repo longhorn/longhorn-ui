@@ -279,6 +279,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
             {renderLabelTooltip(<div>
               <p>NVMe-TCP Number Of IO Queues</p>
               <p>If 0, the volume inherits the global setting.</p>
+              <p>Changes apply on the next attach.</p>
             </div>)}
             <span>:</span>
           </span>
