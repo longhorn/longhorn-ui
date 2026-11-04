@@ -272,6 +272,20 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           </div>
         </>
       )}
+      {selectedVolume.dataEngine === 'v2' && selectedVolume.frontend === 'blockdev' && (
+        <div className={styles.row}>
+          <span className={styles.label}>
+            <span>NVMe-TCP IO Queues</span>
+            {renderLabelTooltip(<div>
+              <p>NVMe-TCP Number Of IO Queues</p>
+              <p>If 0, the volume inherits the global setting.</p>
+              <p>Changes apply on the next attach.</p>
+            </div>)}
+            <span>:</span>
+          </span>
+          {selectedVolume.nvmeTcpNrIoQueues || 0}
+        </div>
+      )}
       <div className={styles.row}>
         <span className={styles.label}> Backup Target:</span>
         {selectedVolume.backupTargetName || ''}

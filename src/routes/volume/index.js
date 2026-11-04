@@ -252,6 +252,7 @@ class Volume extends React.Component {
     const defaultNumberOfReplicas = defaultReplicaCountSetting?.value || ''
     const defaultUblkNumberOfQueue = settings.find(s => s.id === 'default-ublk-number-of-queue')?.value
     const defaultUblkQueueDepth = settings.find(s => s.id === 'default-ublk-queue-depth')?.value
+    const defaultNvmeTcpNrIoQueues = settings.find(s => s.id === 'default-nvme-tcp-nr-io-queues')?.value
     const replicaSoftAntiAffinitySetting = settings.find(s => s.id === 'replica-soft-anti-affinity')
     const engineUpgradePerNodeLimit = settings.find(s => s.id === 'concurrent-automatic-engine-upgrade-per-node-limit')
     const v1DataEngineEnabledSetting = settings.find(s => s.id === 'v1-data-engine')
@@ -843,6 +844,7 @@ class Volume extends React.Component {
         numberOfReplicas: defaultNumberOfReplicas,
         ublkNumberOfQueue: defaultUblkNumberOfQueue,
         ublkQueueDepth: defaultUblkQueueDepth,
+        defaultNvmeTcpNrIoQueues,
         size: 20,
         iops: 1000,
         unit: 'Gi',
