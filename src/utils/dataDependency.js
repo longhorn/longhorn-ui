@@ -52,6 +52,9 @@ const dependency = {
     }, {
       ns: 'recurringJob',
       key: 'recurringjobs',
+    }, {
+      ns: 'shard',
+      key: 'shards',
     }],
   },
   engineimage: {
@@ -200,12 +203,15 @@ const list = [{
 }, {
   ns: 'snapshotGroup',
   key: 'snapshotgroups',
+}, {
+  ns: 'shard',
+  key: 'shards',
 }]
 
 const httpDataDependency = {
   '/dashboard': ['volume', 'host', 'eventlog'],
   '/node': ['volume', 'host', 'setting'],
-  '/volume': ['volume', 'volumeAttachments', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup'],
+  '/volume': ['volume', 'volumeAttachments', 'host', 'setting', 'backupTarget', 'backingImage', 'engineimage', 'recurringJob', 'backup', 'shard'],
   '/engineimage': ['engineimage'],
   '/backingImage': ['volume', 'backingImage', 'backupTarget', 'backup'],
   '/recurringJob': ['recurringJob'],

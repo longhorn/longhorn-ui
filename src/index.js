@@ -15,6 +15,7 @@ import instanceManager from './models/instanceManager'
 import orphanedData from './models/orphanedData'
 import systemBackups from './models/systemBackups'
 import snapshotGroup from './models/snapshotGroup'
+import shard from './models/shard'
 
 // import assets
 import './assets/iconfont/iconfont.eot'
@@ -46,6 +47,7 @@ app.model(instanceManager)
 app.model(orphanedData)
 app.model(systemBackups)
 app.model(snapshotGroup)
+app.model(shard)
 
 // 3. Router
 app.router(routerConfig)
