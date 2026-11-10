@@ -768,6 +768,10 @@ export function getHealthState(state) {
   return state.toLowerCase() === 'unknown' ? 'unknown' : state.hyphenToHump()
 }
 
+export function getNotReadyMessage(volume) {
+  return volume.notReadyMessage ? `Not ready for workload: ${volume.notReadyMessage}` : 'Not ready for workload'
+}
+
 export function needToWaitDone(state, replicas) {
   return state === '' || state.endsWith('ing') || replicas.findIndex(item => item.mode.toLowerCase() === 'wo') > -1
 }
