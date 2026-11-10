@@ -13,7 +13,7 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.0.0",
     "antd": "3.26.20",
-    "axios": "1.15.2",
+    "axios": "1.21.0",
     "classnames": "^2.2.5",
     "cron-parser": "^2.11.0",
     "dva": "^2.4.1",
@@ -119,7 +119,13 @@
     "webpack-manifest-plugin": "^2.0.4"
   },
   "overrides": {
-    "htmlparser2": "^7.0.0"
+    "htmlparser2": "^7.0.0",
+    "immutable": "^3.8.4",
+    "lodash": "^4.18.1",
+    "trim": "0.0.3",
+    "happypack": {
+      "loader-utils": "^1.4.2"
+    }
   },
   "pre-commit": [
     "precommit"
