@@ -7,6 +7,7 @@ import { formatMib } from '../../../utils/formatter'
 import {
   isSchedulingFailure,
   getHealthState,
+  getNotReadyMessage,
   needToWaitDone,
   frontends,
   extractImageVersion,
@@ -232,7 +233,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Ready for workload:</span>
-        {selectedVolume.ready ? <span className="healthy">Ready</span> : <Tooltip title={`Not ready for workload. ${selectedVolume.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `}><span className="faulted">Not Ready</span></Tooltip>}
+        {selectedVolume.ready ? <span className="healthy">Ready</span> : <Tooltip title={getNotReadyMessage(selectedVolume)} overlayStyle={{ maxWidth: 350 }}><span className="faulted">Not Ready</span></Tooltip>}
       </div>
       <div className={styles.row}>
         <div className={styles.formItem} style={{ display: 'flex' }}>

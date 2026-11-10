@@ -6,7 +6,7 @@ import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
 import { formatMib } from '../../utils/formatter'
 import VolumeActions from './VolumeActions'
-import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
+import { isSchedulingFailure, getHealthState, getNotReadyMessage, needToWaitDone, extractImageVersion } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { statusUpgradingEngine } from '../../utils/status'
@@ -182,8 +182,7 @@ function list({
           let attachedNode = record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''
           return item.hostId !== attachedNode
         })
-        let statusForWorkloadMessage = `Not ready for workload. ${record.robustness === 'faulted' ? 'Volume Faulted' : 'Volume may be under maintenance or in the restore process.'} `
-        let statusForWorkload = <Tooltip title={statusForWorkloadMessage}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: 5 }} /></Tooltip>
+        let statusForWorkload = <Tooltip title={getNotReadyMessage(record)} overlayStyle={{ maxWidth: 350 }}><Icon type="exclamation-circle" className="faulted" style={{ marginLeft: 5 }} /></Tooltip>
         let stateText = (() => {
           if (text.hyphenToHump() === 'attached' && record.robustness === 'healthy') {
             return (<div
