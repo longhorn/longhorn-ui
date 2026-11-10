@@ -6,7 +6,7 @@ import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
 import { formatMib } from '../../utils/formatter'
 import VolumeActions from './VolumeActions'
-import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion, isShardedVolume, getVolumeShards } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { statusUpgradingEngine } from '../../utils/status'
@@ -21,6 +21,7 @@ function list({
   dataSource,
   engineImages,
   hosts,
+  shards,
   showAttachHost,
   showEngineUpgrade,
   showRecurring,
@@ -469,6 +470,17 @@ function list({
       key: 'replicas',
       width: 200,
       render: (text, record) => {
+        if (isShardedVolume(record)) {
+          const numberOfHealthyShards = getVolumeShards(record, shards).filter(shard => shard.state === 'normal').length
+          const numberOfShards = record.dataLayout.dataChunks + record.dataLayout.parityChunks
+
+          return (
+            <div>
+              {numberOfHealthyShards} / {numberOfShards} shards
+            </div>
+          )
+        }
+
         // Calculate numberOfRunningReplicas for each volume
         let numberOfRunningReplicas = Array.isArray(record.replicas)
           ? record.replicas.filter(volume => volume.running === true).length
@@ -620,6 +632,7 @@ list.propTypes = {
   engineImages: PropTypes.array,
   customColumnList: PropTypes.array,
   hosts: PropTypes.array,
+  shards: PropTypes.array,
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,

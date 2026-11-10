@@ -779,6 +779,14 @@ export const frontends = [
   { label: 'UBLK', value: 'ublk', dataEngine: ['v2'] },
 ]
 
+export function isShardedVolume(volume) {
+  return volume?.dataLayout?.type === 'sharded'
+}
+
+export function getVolumeShards(volume, shards) {
+  return (shards || []).filter(shard => shard.shardGroupName === volume.name).sort((a, b) => a.slotIndex - b.slotIndex)
+}
+
 export function disabledSnapshotAction(volume, modelState) {
   return !volume.actions || !volume.actions.snapshotCRCreate || !modelState || volume.currentImage !== volume.image || volume.standby
 }
