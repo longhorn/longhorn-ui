@@ -18,6 +18,7 @@ let columnArr = [
 	'lastBackupAt',
 	'actualSize',
 	'dataEngine',
+	'dataLayout',
 ]
 let pageSizeCollectionObject = {
   volumePageSize: 10,
