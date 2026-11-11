@@ -783,6 +783,14 @@ export function isShardedVolume(volume) {
   return volume?.dataLayout?.type === 'sharded'
 }
 
+// Volumes created before sharding have an empty layout type, which the backend reads as replicated.
+export function getDataLayoutText(volume) {
+  if (!isShardedVolume(volume)) {
+    return 'Replicated'
+  }
+  return `Sharded ${volume.dataLayout.dataChunks}+${volume.dataLayout.parityChunks}`
+}
+
 export function getVolumeShards(volume, shards) {
   return (shards || []).filter(shard => shard.shardGroupName === volume.name).sort((a, b) => a.slotIndex - b.slotIndex)
 }

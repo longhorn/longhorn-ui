@@ -6,7 +6,7 @@ import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
 import { formatMib } from '../../utils/formatter'
 import VolumeActions from './VolumeActions'
-import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion, isShardedVolume, getVolumeShards } from './helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion, isShardedVolume, getVolumeShards, getDataLayoutText } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { statusUpgradingEngine } from '../../utils/status'
@@ -361,6 +361,32 @@ function list({
       },
     },
     {
+      title: 'Data Layout',
+      dataIndex: 'dataLayout',
+      key: 'dataLayout',
+      width: 160,
+      sorter: (a, b) => getDataLayoutText(a).localeCompare(getDataLayoutText(b)),
+      render: (text, record) => {
+        if (isShardedVolume(record)) {
+          const { dataChunks, parityChunks } = record.dataLayout
+
+          return (
+            <Tooltip title={`${dataChunks} data and ${parityChunks} parity chunks. Tolerates ${parityChunks} failed ${parityChunks === 1 ? 'shard' : 'shards'}.`}>
+              <div>
+                {getDataLayoutText(record)}
+              </div>
+            </Tooltip>
+          )
+        }
+
+        return (
+          <div>
+            {getDataLayoutText(record)}
+          </div>
+        )
+      },
+    },
+    {
       title: 'PV/PVC',
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
@@ -465,7 +491,7 @@ function list({
       },
     },
     {
-      title: 'Replicas (Running/Desired)',
+      title: 'Replicas / Shards (Running/Desired)',
       dataIndex: 'replicas',
       key: 'replicas',
       width: 200,

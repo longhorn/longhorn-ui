@@ -285,16 +285,18 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Data Engine:</span>
         {selectedVolume.dataEngine}
       </div>
+      <div className={styles.row}>
+        <span className={styles.label}>
+          <span>Data Layout</span>
+          {renderLabelTooltip(isShardedVolume(selectedVolume)
+            ? 'Data is split into data and parity chunks with erasure coding and spread across disks on different nodes. No single node holds a full copy.'
+            : 'Each replica holds a full copy of the data.')}
+          <span>:</span>
+        </span>
+        {isShardedVolume(selectedVolume) ? 'Sharded (Erasure Coding)' : 'Replicated'}
+      </div>
       {isShardedVolume(selectedVolume) && (
         <>
-          <div className={styles.row}>
-            <span className={styles.label}>
-              <span>Data Layout</span>
-              {renderLabelTooltip('Data is split into data and parity chunks with erasure coding and spread across disks on different nodes. No single node holds a full copy.')}
-              <span>:</span>
-            </span>
-            Sharded (Erasure Coding)
-          </div>
           <div className={styles.row}>
             <span className={styles.label}> Data Chunks:</span>
             {selectedVolume.dataLayout.dataChunks}
