@@ -490,7 +490,7 @@ function list({
       },
     },
     {
-      title: 'Replicas / Shards (Running/Desired)',
+      title: 'Replicas (Running/Desired) / Shards (Healthy/Total)',
       dataIndex: 'replicas',
       key: 'replicas',
       width: 200,
@@ -501,7 +501,7 @@ function list({
 
           return (
             <div>
-              {numberOfHealthyShards} / {numberOfShards} shards
+              {numberOfHealthyShards} / {numberOfShards}
             </div>
           )
         }
