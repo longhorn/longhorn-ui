@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Spin } from 'antd'
 import style from '../Replica/Replica.less'
 import Shard from './Shard'
 
-function ShardList({ dataSource, hosts, loading }) {
+function ShardList({ dataSource, hosts }) {
   const [scroll, setScroll] = useState({ start: false, end: true })
 
   const onScroll = ({ target }) => {
@@ -19,9 +18,7 @@ function ShardList({ dataSource, hosts, loading }) {
   return (
     <div onScroll={onScroll} className={cNames}>
       <div className={style.replica}>
-        <Spin spinning={!!loading}>
-          {dataSource.map(item => <Shard key={item.name} item={item} hosts={hosts} />)}
-        </Spin>
+        {dataSource.map(item => <Shard key={item.name} item={item} hosts={hosts} />)}
       </div>
     </div>
   )
@@ -30,7 +27,6 @@ function ShardList({ dataSource, hosts, loading }) {
 ShardList.propTypes = {
   dataSource: PropTypes.array,
   hosts: PropTypes.array,
-  loading: PropTypes.bool,
 }
 
 export default ShardList

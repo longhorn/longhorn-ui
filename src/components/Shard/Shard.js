@@ -12,19 +12,17 @@ const STATE_INFO = {
   failed: { color: '#f15354', text: 'Failed' },
 }
 
-const ROLE_INFO = {
-  data: { color: 'blue', text: 'Data' },
-  parity: { color: 'purple', text: 'Parity' },
+const ROLE_TEXT = {
+  data: 'Data',
+  parity: 'Parity',
 }
 
 function Shard({ item, hosts }) {
   const host = hosts.find(h => h.id === item.nodeID)
   const stateInfo = STATE_INFO[item.state] || { color: 'lightgrey', text: '' }
-  const roleInfo = ROLE_INFO[item.role]
+  const roleText = ROLE_TEXT[item.role]
   const showRebuildProgress = item.state === 'replacing' && item.rebuildProgress > 0 && item.rebuildProgress < 100
-  const stateText = item.state === 'failed' && item.lastFailureTimestamp
-    ? <Tooltip title={`Failed ${formatDate(item.lastFailureTimestamp, false)}`}>{stateInfo.text}</Tooltip>
-    : stateInfo.text
+  const failedAgo = item.state === 'failed' ? formatDate(item.lastFailureTimestamp, false) : ''
 
   return (
     <div style={{ display: 'inline-block', padding: '0px 10px' }}>
@@ -46,8 +44,11 @@ function Shard({ item, hosts }) {
             </Tooltip>
           </div>}
           <p style={{ position: 'absolute', left: 112, bottom: 20, verticalAlign: '100%' }}>
-            {stateText}
+            {stateInfo.text}
           </p>
+          {failedAgo && <div style={{ position: 'absolute', top: '57px', left: 112, height: '44px', justifyContent: 'center', display: 'flex', flexDirection: 'column', fontSize: 12 }}>
+            {failedAgo}
+          </div>}
         </div>
         <div style={{ textAlign: 'center', marginTop: '32px', marginBottom: '10px', padding: '0px 10px' }}>
           <h3>{(host && host.name) || item.nodeID || 'N/A'}</h3>
@@ -58,8 +59,8 @@ function Shard({ item, hosts }) {
             <h3>{item.diskPath || 'N/A'}</h3>
           </Tooltip>
         </div>
-        {roleInfo && <span style={{ position: 'absolute', bottom: 20, left: 20 }}>
-          <Tag color={roleInfo.color}>{roleInfo.text}</Tag>
+        {roleText && <span style={{ position: 'absolute', bottom: 20, left: 20 }}>
+          <Tag>{roleText}</Tag>
         </span>}
         <span style={{ position: 'absolute', bottom: 20, right: 20, color: 'gray' }}>
           {formatMib(item.size)}
