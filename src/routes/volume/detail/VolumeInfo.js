@@ -10,6 +10,7 @@ import {
   needToWaitDone,
   frontends,
   extractImageVersion,
+  isShardedVolume,
 } from '../helper/index'
 import styles from './VolumeInfo.less'
 import { diskTagColor, nodeTagColor } from '../../../utils/constants'
@@ -284,6 +285,36 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Data Engine:</span>
         {selectedVolume.dataEngine}
       </div>
+      <div className={styles.row}>
+        <span className={styles.label}>
+          <span>Data Layout</span>
+          {renderLabelTooltip(isShardedVolume(selectedVolume)
+            ? 'Data is split into data and parity chunks with erasure coding and spread across disks on different nodes. No single node holds a full copy.'
+            : 'Each replica holds a full copy of the data.')}
+          <span>:</span>
+        </span>
+        {isShardedVolume(selectedVolume) ? 'Sharded (Erasure Coding)' : 'Replicated'}
+      </div>
+      {isShardedVolume(selectedVolume) && (
+        <>
+          <div className={styles.row}>
+            <span className={styles.label}> Data Chunks:</span>
+            {selectedVolume.dataLayout.dataChunks}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}>
+              <span>Parity Chunks</span>
+              {renderLabelTooltip('The volume tolerates up to this many failed shards at the same time.')}
+              <span>:</span>
+            </span>
+            {selectedVolume.dataLayout.parityChunks}
+          </div>
+          <div className={styles.row}>
+            <span className={styles.label}> Strip Size:</span>
+            {formatMib(selectedVolume.dataLayout.stripSizeKB * 1024)}
+          </div>
+        </>
+      )}
       {!selectedVolume.disableFrontend ? <div className={styles.row}>
         <span className={styles.label}> Attached Node &amp; Endpoint:</span>
         {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.hostId !== '' && item.endpoint !== '').map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId} <br /> <span style={{ backgroundColor: '#f2f4f5' }}> {item.endpoint} </span></div>) : ''}

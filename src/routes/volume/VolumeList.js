@@ -6,7 +6,7 @@ import classnames from 'classnames'
 import { LinkTo, EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../components'
 import { formatMib } from '../../utils/formatter'
 import VolumeActions from './VolumeActions'
-import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion } from './helper/index'
+import { isSchedulingFailure, getHealthState, needToWaitDone, extractImageVersion, isShardedVolume, getVolumeShards, getDataLayoutText } from './helper/index'
 import { sortTable, sortTableObject, sortTableByUTCDate, sortTableByPVC, sortTableActualSize, sortTableState, sortTableByTimestamp } from '../../utils/sort'
 import { setSortOrder } from '../../utils/store'
 import { statusUpgradingEngine } from '../../utils/status'
@@ -21,6 +21,7 @@ function list({
   dataSource,
   engineImages,
   hosts,
+  shards,
   showAttachHost,
   showEngineUpgrade,
   showRecurring,
@@ -360,6 +361,32 @@ function list({
       },
     },
     {
+      title: 'Data Layout',
+      dataIndex: 'dataLayout',
+      key: 'dataLayout',
+      width: 160,
+      sorter: (a, b) => getDataLayoutText(a).localeCompare(getDataLayoutText(b)),
+      render: (text, record) => {
+        if (isShardedVolume(record)) {
+          const { dataChunks, parityChunks } = record.dataLayout
+
+          return (
+            <Tooltip title={`${dataChunks} data and ${parityChunks} parity chunks. Tolerates ${parityChunks} failed ${parityChunks === 1 ? 'shard' : 'shards'}.`}>
+              <div>
+                {getDataLayoutText(record)}
+              </div>
+            </Tooltip>
+          )
+        }
+
+        return (
+          <div>
+            {getDataLayoutText(record)}
+          </div>
+        )
+      },
+    },
+    {
       title: 'PV/PVC',
       dataIndex: 'kubernetesStatus',
       key: 'kubernetesStatus',
@@ -464,11 +491,29 @@ function list({
       },
     },
     {
-      title: 'Replicas (Running/Desired)',
+      title: (
+        <span>
+          Replicas / Shards&nbsp;
+          <Tooltip title={<span>Replicated volumes: running / desired replicas.<br />Sharded volumes: healthy / total shards.</span>}>
+            <Icon type="exclamation-circle" />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'replicas',
       key: 'replicas',
       width: 200,
       render: (text, record) => {
+        if (isShardedVolume(record)) {
+          const numberOfHealthyShards = getVolumeShards(record, shards).filter(shard => shard.state === 'normal').length
+          const numberOfShards = record.dataLayout.dataChunks + record.dataLayout.parityChunks
+
+          return (
+            <div>
+              {numberOfHealthyShards} / {numberOfShards}
+            </div>
+          )
+        }
+
         // Calculate numberOfRunningReplicas for each volume
         let numberOfRunningReplicas = Array.isArray(record.replicas)
           ? record.replicas.filter(volume => volume.running === true).length
@@ -620,6 +665,7 @@ list.propTypes = {
   engineImages: PropTypes.array,
   customColumnList: PropTypes.array,
   hosts: PropTypes.array,
+  shards: PropTypes.array,
   detach: PropTypes.func,
   deleteVolume: PropTypes.func,
   showAttachHost: PropTypes.func,

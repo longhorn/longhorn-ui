@@ -36,7 +36,7 @@ import UpdateReplicaAutoBalanceModal from '../UpdateReplicaAutoBalanceModal'
 import RebuildConcurrentSyncLimitModal from '../RebuildConcurrentSyncLimitModal'
 import CommonModal from '../components/CommonModal'
 import Salvage from '../Salvage'
-import { ReplicaList, ExpansionErrorDetail } from '../../../components'
+import { ReplicaList, ShardList, ExpansionErrorDetail } from '../../../components'
 import { hasReadyBackingDisk } from '../../../utils/status'
 import {
   getAttachHostModalProps,
@@ -55,7 +55,9 @@ import {
   getOfflineRebuildingModalProps,
   getReplicaRebuildingBandwidthLimitModalProps,
   getUblkParamsModalProps,
-  getRebuildConcurrentSyncLimitModalProps
+  getRebuildConcurrentSyncLimitModalProps,
+  isShardedVolume,
+  getVolumeShards
 } from '../helper'
 import { getBackupTargets } from '../../../utils/backupTarget'
 
@@ -134,7 +136,8 @@ function VolumeDetail({
   setting,
   backingImage,
   recurringJob,
-  snapshotGroup
+  snapshotGroup,
+  shard
 }) {
   const {
     data,
@@ -229,6 +232,11 @@ function VolumeDetail({
     selectedVolume.host = found.name
   }
   selectedVolume.replicas.forEach(replica => { replica.volState = selectedVolume.state })
+
+  const shardListProps = {
+    dataSource: getVolumeShards(selectedVolume, shard.data),
+    hosts,
+  }
 
   const replicaListProps = {
     dataSource: selectedVolume.replicas || [],
@@ -824,9 +832,11 @@ function VolumeDetail({
             </Card>
           </Col>
           <Col md={16} xs={24} style={{ marginBottom: 16 }}>
-            <Card title="Replicas" bordered={false} {...bodyStyle}>
-              <ReplicaList {...replicaListProps} />
-            </Card>
+            {isShardedVolume(selectedVolume) ? <Card title="Shards" bordered={false} {...bodyStyle}>
+                <ShardList {...shardListProps} />
+              </Card> : <Card title="Replicas" bordered={false} {...bodyStyle}>
+                <ReplicaList {...replicaListProps} />
+              </Card>}
           </Col>
            <Col xs={24} style={{ marginBottom: 16 }}>
             <VolumeAttachment volumeAttachment={volumeAttachment} loading={loadingVolumeAttachments} />
@@ -890,6 +900,7 @@ VolumeDetail.propTypes = {
   backingImage: PropTypes.object,
   recurringJob: PropTypes.object,
   snapshotGroup: PropTypes.object,
+  shard: PropTypes.object,
   loadingVolumeAttachments: PropTypes.bool
 }
 
@@ -906,7 +917,8 @@ export default connect(({
   setting,
   backingImage,
   recurringJob,
-  snapshotGroup
+  snapshotGroup,
+  shard
 }, { match }) => {
   const volumeId = match.params.id
   const volumeAttachment = volumeAttachments.data ? volumeAttachments.data[volumeId] : null
@@ -926,6 +938,7 @@ export default connect(({
     setting,
     backingImage,
     recurringJob,
-    snapshotGroup
+    snapshotGroup,
+    shard
   }
 })(VolumeDetail)

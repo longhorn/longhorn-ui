@@ -330,6 +330,7 @@ class Volume extends React.Component {
       engineUpgradePerNodeLimit,
       customColumnList,
       hosts,
+      shards: this.props.shard.data,
       onSorterChange(s) {
         dispatch({
           type: 'volume/updateSorter',
@@ -1483,6 +1484,7 @@ Volume.propTypes = {
   backingImage: PropTypes.object,
   snapshotModal: PropTypes.object,
   snapshotGroup: PropTypes.object,
+  shard: PropTypes.object,
 }
 
 export default connect(({
@@ -1496,5 +1498,6 @@ export default connect(({
   backupTarget,
   recurringJob,
   snapshotGroup,
+  shard,
   loading
-}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, snapshotGroup, loading: loading.models.volume }))(Volume)
+}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, snapshotGroup, shard, loading: loading.models.volume }))(Volume)
