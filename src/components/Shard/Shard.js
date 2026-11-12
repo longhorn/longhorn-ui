@@ -44,7 +44,7 @@ function Shard({ item, hosts }) {
             </Tooltip>
           </div>}
           <p style={{ position: 'absolute', left: 112, bottom: 20, verticalAlign: '100%' }}>
-            {stateInfo.text}
+            {item.state === 'replacing' && !(item.rebuildProgress > 0) ? 'Waiting to rebuild' : stateInfo.text}
           </p>
           {failedAgo && <div style={{ position: 'absolute', top: '57px', left: 112, height: '44px', justifyContent: 'center', display: 'flex', flexDirection: 'column', fontSize: 12 }}>
             {failedAgo}

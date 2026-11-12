@@ -491,7 +491,14 @@ function list({
       },
     },
     {
-      title: 'Replicas (Running/Desired) / Shards (Healthy/Total)',
+      title: (
+        <span>
+          Replicas / Shards&nbsp;
+          <Tooltip title={<span>Replicated volumes: running / desired replicas.<br />Sharded volumes: healthy / total shards.</span>}>
+            <Icon type="exclamation-circle" />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'replicas',
       key: 'replicas',
       width: 200,
