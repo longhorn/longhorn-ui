@@ -394,12 +394,15 @@ const modal = ({
                   marginLeft: 4,
                   marginRight: 4,
                 }}>
-                  <Tooltip title={<div>
-                    <p>NVMe-TCP Number Of IO Queues</p>
-                    <p>Set &apos;0&apos; to inherit global settings (currently {globalNvmeTcpNrIoQueues || '0, one queue per CPU core'}).</p>
-                    <p>Applied on the next attach.</p>
-                    <p>The node never creates more queues than it has CPU cores.</p>
-                  </div>}>
+                  <Tooltip
+                    overlayStyle={{ maxWidth: 250 }}
+                    title={<div>
+                      <p>NVMe-TCP Number Of IO Queues</p>
+                      <p>Set &apos;0&apos; to inherit the global setting “Default NVMe-TCP Number Of IO Queues” (currently {globalNvmeTcpNrIoQueues || '0, one queue per CPU core'}).</p>
+                      <p>Applied on the next attach.</p>
+                      <p>The node never creates more queues than it has CPU cores.</p>
+                    </div>}
+                  >
                     <Icon type="question-circle-o" />
                   </Tooltip>
                 </span>
