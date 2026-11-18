@@ -60,7 +60,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       width: 120,
       render: (record) => {
         return (
-          <div>{record.retentionPolicy === 'age-based' ? '-' : record.retain}</div>
+          <div>{record.retentionPolicy === 'age-based' || record.task === 'snapshot-group' ? '-' : record.retain}</div>
         )
       },
     }, {
@@ -78,7 +78,7 @@ function list({ loading, dataSource, rowSelection, height, deleteRecurringJob, e
       width: 120,
       render: (record) => {
         return (
-          <div>{record.concurrency}</div>
+          <div>{record.task === 'snapshot-group' ? '-' : record.concurrency}</div>
         )
       },
     }, {
