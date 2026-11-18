@@ -10,7 +10,7 @@ import semver from 'semver'
 import BundlesModel from './BundlesModel'
 import StableLonghornVersions from './StableLonghornVersions'
 
-function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, snapshotGroup, dispatch }) {
+function Footer({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, snapshotGroup, shard, dispatch }) {
   const { bundlesropsVisible, bundlesropsKey, stableLonghornVersionslVisible, stableLonghornVersionsKey, okText, modalButtonDisabled, progressPercentage } = app
   const currentVersion = config.version === '${VERSION}' ? 'dev' : config.version // eslint-disable-line no-template-curly-in-string
   const issueHref = 'https://github.com/longhorn/longhorn/issues/new/choose'
@@ -137,6 +137,7 @@ function Footer({ app, host, volume, setting, engineimage, eventlog, backingImag
           {getStatusIcon(systemBackups, 'systemBackup')}
           {getStatusIcon(systemBackups, 'systemRestore')}
           {getStatusIcon(snapshotGroup)}
+          {getStatusIcon(shard)}
         </Col>
         <BundlesModel key={bundlesropsKey} {...createBundlesrops} />
         <StableLonghornVersions key={stableLonghornVersionsKey} {...stableLonghornVersionsProps} />
@@ -158,7 +159,8 @@ Footer.propTypes = {
   backup: PropTypes.object,
   systemBackups: PropTypes.object,
   snapshotGroup: PropTypes.object,
+  shard: PropTypes.object,
   dispatch: PropTypes.func,
 }
 
-export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups, snapshotGroup }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, snapshotGroup }))(Footer)
+export default connect(({ app, host, volume, setting, engineimage, eventlog, backupTarget, backingImage, recurringJob, backup, systemBackups, snapshotGroup, shard }) => ({ app, host, volume, setting, engineimage, eventlog, backingImage, backupTarget, recurringJob, backup, systemBackups, snapshotGroup, shard }))(Footer)

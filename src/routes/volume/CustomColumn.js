@@ -89,7 +89,7 @@ const modal = ({
     },
     {
       value: 'replicas',
-      label: 'Replicas',
+      label: 'Replicas / Shards',
     },
     {
       value: 'dataLocality',
@@ -102,6 +102,10 @@ const modal = ({
     {
       value: 'dataEngine',
       label: 'Data Engine',
+    },
+    {
+      value: 'dataLayout',
+      label: 'Data Layout',
     },
     {
       value: 'offlineRebuilding',

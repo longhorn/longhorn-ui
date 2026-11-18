@@ -7,6 +7,7 @@ import ScheduleText from './ScheduleText/Schedule'
 import ModalBlur from './ModalBlur/ModalBlur'
 import Replica from './Replica/Replica'
 import ReplicaList from './Replica/ReplicaList'
+import ShardList from './Shard/ShardList'
 import LinkTo from './LinkTo/LinkTo'
 import Filter from './Filter/Filter'
 import EngineImageUpgradeTooltip from './Tooltip/EngineImageUpgradeTooltip'
@@ -26,6 +27,7 @@ export {
   Schedule,
   Replica,
   ReplicaList,
+  ShardList,
   LinkTo,
   Filter,
   EngineImageUpgradeTooltip,
