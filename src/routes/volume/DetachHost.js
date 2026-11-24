@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Checkbox, Alert, Select } from 'antd'
 import { ModalBlur } from '../../components'
-import { getDetachRequests, getEngineHost, getRequestedHosts, getUIAttachments } from './helper/sharedBlock'
+import { getDetachNotices, getDetachRequests, getSharedBlockNodes, getUIAttachments, hasNothingToDetach } from './helper/sharedBlock'
 
 const FormItem = Form.Item
 const formItemLayout = {
@@ -23,6 +23,13 @@ const formItemLayoutCheckBox = {
   },
 }
 
+// Enter picks a host in the list. The modal would take it as OK.
+const keepEnterInSelect = (e) => {
+  if (e.keyCode === 13) {
+    e.nativeEvent.stopImmediatePropagation()
+  }
+}
+
 const modal = ({
   items,
   visible,
@@ -35,11 +42,8 @@ const modal = ({
     getFieldValue,
   },
 }) => {
-  // Only a force detach can detach what workloads attached.
   const forceDetach = getFieldValue('forceDetach') || false
-  const sharedBlockVolumes = items?.filter(item => item.sharedBlock) || []
-  const workloadVolumes = sharedBlockVolumes.filter(item => getUIAttachments(item).length === 0)
-  const nothingToDetach = !forceDetach && workloadVolumes.length > 0 && workloadVolumes.length === items.length
+  const nothingToDetach = hasNothingToDetach(items || [], forceDetach)
 
   function handleOk() {
     // The modal also calls this on Enter, when the OK button is disabled.
@@ -59,9 +63,10 @@ const modal = ({
   if (!items) {
     return null
   }
-  const sharedBlockVolume = items.length === 1 ? sharedBlockVolumes[0] : null
-  const uiHosts = getUIAttachments(sharedBlockVolume).map(({ nodeID }) => nodeID)
-  const selectedHosts = getFieldValue('hosts') || []
+  const sharedBlockVolume = items.length === 1 && items[0].sharedBlock ? items[0] : null
+  const uiHosts = [...new Set(getUIAttachments(sharedBlockVolume).map(({ nodeID }) => nodeID))]
+  const defaultHosts = uiHosts.length === 1 ? uiHosts : []
+  const notices = getDetachNotices(items, forceDetach, getFieldValue('hosts') || defaultHosts)
 
   const modalOpts = {
     title: `Are you sure you want to detach volume ${items.map((item) => `${item.name}`).join(', ')} ?`,
@@ -71,21 +76,6 @@ const modal = ({
     onOk: handleOk,
     okDisabled: nothingToDetach,
   }
-
-  const getSharedBlockAlert = () => {
-    if (forceDetach && sharedBlockVolume) {
-      return { type: 'warning', description: `Force Detach detaches the volume from all nodes: ${getRequestedHosts(sharedBlockVolume).join(', ')}.` }
-    }
-    if (!forceDetach && workloadVolumes.length > 0) {
-      return { type: 'warning', description: `${workloadVolumes.map(item => item.name).join(', ')} can only be detached by scaling down the workloads that use it, or with Force Detach.` }
-    }
-    const engineHost = getEngineHost(sharedBlockVolume)
-    if (selectedHosts.includes(engineHost) && getRequestedHosts(sharedBlockVolume).some(host => !selectedHosts.includes(host))) {
-      return { type: 'info', description: `The engine runs on ${engineHost}. The volume stays available there until it is detached from all nodes.` }
-    }
-    return null
-  }
-  const sharedBlockAlert = getSharedBlockAlert()
 
   const getAlertDescription = (item) => {
     // Detaching a shared block volume from a host leaves the workloads on the other attachments alone.
@@ -120,13 +110,18 @@ const modal = ({
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal" {...formItemLayout}>
         {uiHosts.length > 0 && (
-          <FormItem label="Host" {...formItemLayout}>
-            {forceDetach ? <Select mode="multiple" disabled value={getRequestedHosts(sharedBlockVolume)} /> : getFieldDecorator('hosts', {
-              initialValue: uiHosts.length === 1 ? uiHosts : [],
-              rules: [{ type: 'array', required: true, message: 'Please select a host to detach' }],
-            })(<Select mode="multiple">
+          <FormItem label="Host" style={forceDetach ? { display: 'none' } : undefined} {...formItemLayout}>
+            {getFieldDecorator('hosts', {
+              initialValue: defaultHosts,
+              rules: [{ type: 'array', required: !forceDetach, message: 'Please select a host to detach' }],
+            })(<Select mode="multiple" onInputKeyDown={keepEnterInSelect}>
               {uiHosts.map(host => <Select.Option key={host} value={host}>{host}</Select.Option>)}
             </Select>)}
+          </FormItem>
+        )}
+        {sharedBlockVolume && forceDetach && (
+          <FormItem label="Host" {...formItemLayout}>
+            <Select mode="multiple" disabled value={getSharedBlockNodes(sharedBlockVolume).map(({ host }) => host)} />
           </FormItem>
         )}
         <FormItem label="Force Detach" valuepropname={'checked'} {...formItemLayoutCheckBox}>
@@ -135,7 +130,7 @@ const modal = ({
             valuePropName: 'checked',
           })(<Checkbox></Checkbox>)}
         </FormItem>
-        {sharedBlockAlert && <Alert style={{ marginBottom: 12 }} description={sharedBlockAlert.description} type={sharedBlockAlert.type} showIcon />}
+        {notices.map(({ type, text }) => <Alert key={text} style={{ marginBottom: 12 }} description={text} type={type} showIcon />)}
         {items.some(item => getAlertDescription(item)) && (
           <Alert
             description={getAlertDescription(items.find(item => getAlertDescription(item)))}

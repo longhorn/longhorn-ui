@@ -82,6 +82,7 @@ const modal = ({
       return ele.kubernetesStatus && !ele.kubernetesStatus.lastPVCRefAt
     })
   }
+  const hasSharedBlock = selectedRows?.some(row => row.sharedBlock)
   const allSharedBlock = selectedRows?.length > 0 && selectedRows.every(row => row.sharedBlock)
 
   return (
@@ -115,7 +116,7 @@ const modal = ({
         </FormItem>
         {allSharedBlock ? <FormItem label="Volume Mode" {...formItemLayout}>
           <Input disabled value="Block" />
-        </FormItem> : <FormItem label="File System" {...formItemLayout}>
+        </FormItem> : <FormItem label="File System" extra={hasSharedBlock ? 'Shared block volumes get the Block volume mode instead.' : undefined} {...formItemLayout}>
           {getFieldDecorator('fsType', {
             initialValue: 'ext4',
           })(

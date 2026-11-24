@@ -23,6 +23,7 @@ import UpdateFreezeFilesystemForSnapshotModal from '../UpdateFreezeFilesystemFor
 import UpdateReplicaRebuildingBandwidthLimitModal from '../UpdateReplicaRebuildingBandwidthLimitModal'
 import UpdateUblkParamsModal from '../UpdateUblkParamsModal'
 import VolumeAttachment from './VolumeAttachment'
+import { withLiveAttachments } from '../helper/sharedBlock'
 import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
 import EventList from './EventList'
@@ -195,7 +196,7 @@ function VolumeDetail({
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data
-  const selectedVolume = data.find(item => item.id === volumeId)
+  const selectedVolume = withLiveAttachments(data.find(item => item.id === volumeId), volumeAttachment)
   const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
   const backingImageOptions = backingImage?.data?.filter(image => hasReadyBackingDisk(image)) || []
   const settings = setting.data
@@ -668,6 +669,7 @@ function VolumeDetail({
       previousNamespace,
       accessMode: selectedVolume && selectedVolume.accessMode ? selectedVolume.accessMode : 'rwo',
       encrypted: selectedVolume && selectedVolume.encrypted,
+      sharedBlock: selectedVolume?.sharedBlock === true,
     },
     selected: selectedVolume && selectedVolume.kubernetesStatus ? selectedVolume.kubernetesStatus : {},
     visible: createPVAndPVCSingleVisible,

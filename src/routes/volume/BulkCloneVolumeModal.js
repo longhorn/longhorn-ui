@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
-import { isDataLocalityDisabled, useSharedBlockFields } from './helper/sharedBlock'
+import { getSharedBlockFields, isDataLocalityDisabled, useSharedBlockFields } from './helper/sharedBlock'
 import SharedBlockItem from './components/SharedBlockItem'
 import { formatSize } from '../../utils/formatter'
 const TabPane = Tabs.TabPane
@@ -119,18 +119,18 @@ const modal = ({
       if (config.dataEngine === currentConfig.dataEngine) {
         updated.cloneMode = currentConfig.cloneMode
         updated.numberOfReplicas = currentConfig.cloneMode === 'linked-clone' ? 1 : currentConfig.numberOfReplicas
+        updated.sharedBlock = currentConfig.sharedBlock
       }
 
       updated.frontend = currentConfig.frontend
       updated.dataLocality = currentConfig.dataLocality
       updated.accessMode = currentConfig.accessMode
       updated.encrypted = currentConfig.encrypted
-      updated.sharedBlock = config.dataEngine === 'v2' && currentConfig.sharedBlock
       updated.backupTargetName = currentConfig.backupTargetName
       updated.nodeSelector = currentConfig.nodeSelector
       updated.diskSelector = currentConfig.diskSelector
 
-      return updated
+      return updated.sharedBlock ? { ...updated, ...getSharedBlockFields(['accessMode', 'frontend', 'dataLocality'], updated) } : updated
     }))
 
     setReplicaDisabled(currentConfig.cloneMode === 'linked-clone')

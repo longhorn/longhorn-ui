@@ -216,10 +216,16 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
 
   const isSharedBlockAttached = selectedVolume.sharedBlock && selectedVolume.state === 'attached'
 
+  const sharedBlockStatus = {
+    attaching: <span><Icon type="loading" /> Attaching</span>,
+    detaching: <span><Icon type="loading" /> Detaching</span>,
+    released: <span>Stays until the other nodes are detached</span>,
+  }
+
   const renderSharedBlockNode = ({ host, endpoint, isEngine, status }) => (
     <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={host}>
       {host} {isEngine ? <Tooltip title="The engine stays on this node, and the volume available on it, until the volume is detached from all nodes" overlayStyle={{ maxWidth: 350 }}><Tag>Engine</Tag></Tooltip> : ''}
-      {status !== 'attached' ? <span><Icon type="loading" /> {status === 'attaching' ? 'Attaching' : 'Detaching'}</span> : ''}
+      {sharedBlockStatus[status] || ''}
       <br /> <span style={{ backgroundColor: '#f2f4f5' }}> {endpoint} </span>
     </div>
   )

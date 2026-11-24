@@ -7,6 +7,7 @@ import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import { canCreatePV } from '../routes/volume/helper/sharedBlock'
 
 export default {
   namespace: 'volume',
@@ -583,7 +584,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideCreatePVCAndPVSingleModal' })
-      if (payload?.selectedVolume?.kubernetesStatus && !payload.selectedVolume.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
+      if (canCreatePV(payload?.selectedVolume, payload?.params)) {
         let params = { pvName: payload.params.pvName, fsType: payload.params.fsType, storageClassName: payload.params.storageClassName }
         if (payload.selectedVolume.encrypted) {
           Object.assign(params, { secretNamespace: payload.params.secretNamespace, secretName: payload.params.secretName })

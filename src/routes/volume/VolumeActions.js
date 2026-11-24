@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
-import { SHARED_BLOCK_MAX_NODES, reachedMaxNodes } from './helper/sharedBlock'
+import { getAttachDisabledReason } from './helper/sharedBlock'
 const confirm = Modal.confirm
 
 function actions({
@@ -243,7 +243,7 @@ function actions({
   const upgradingEngine = () => selected.currentImage !== selected.image
 
   const allActions = [
-    { key: 'attach', name: 'Attach', disabled: !attachable(selected), tooltip: reachedMaxNodes(selected) ? `A shared block volume can be attached to up to ${SHARED_BLOCK_MAX_NODES} nodes` : '' },
+    { key: 'attach', name: 'Attach', disabled: !attachable(selected), tooltip: getAttachDisabledReason(selected) },
     { key: 'detach', name: 'Detach', disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring(selected) },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.image !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') || selected?.dataEngine === 'v2' },
@@ -295,7 +295,7 @@ function actions({
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
-  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' || selected.sharedBlock, tooltip: selected.sharedBlock ? 'Shared block volumes do not have a filesystem to trim' : '' })
+  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' || selected.sharedBlock, tooltip: selected.sharedBlock ? 'Trimming the filesystem is not supported for shared block volumes' : '' })
   availableActions.push({ key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled: selected.standby || isRestoring(selected) })
 
   toggleRollbackAndUpgradeAction(availableActions)
