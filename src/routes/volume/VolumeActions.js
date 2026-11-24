@@ -295,7 +295,7 @@ function actions({
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
-  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' || selected.sharedBlock, tooltip: selected.sharedBlock ? 'Trimming the filesystem is not supported for shared block volumes' : '' })
+  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' || selected.sharedBlock, tooltip: selected.sharedBlock ? 'Not supported for shared block volumes' : '' })
   availableActions.push({ key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled: selected.standby || isRestoring(selected) })
 
   toggleRollbackAndUpgradeAction(availableActions)

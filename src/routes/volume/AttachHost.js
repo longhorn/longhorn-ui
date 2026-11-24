@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Checkbox, Alert, Row, Col } from 'antd'
 import { ModalBlur } from '../../components'
@@ -34,9 +34,19 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
+    setFieldsValue,
   },
 }) => {
   const maintenanceConflict = isMaintenanceConflict(items || [])
+  // A shared block volume in maintenance mode can only be attached to one node.
+  const hasAttachedVolume = items?.some(canAttachMoreNodes) || false
+
+  // Also when the volume gets attached elsewhere while the dialog is open.
+  useEffect(() => {
+    if (hasAttachedVolume && !maintenanceConflict) {
+      setFieldsValue({ disableFrontend: false })
+    }
+  }, [hasAttachedVolume, maintenanceConflict])
 
   function handleOk() {
     // The modal also calls this on Enter, when the OK button is disabled.
@@ -73,8 +83,6 @@ const modal = ({
 
   // RWX volumes can only be manually attached in maintenance mode, except shared block volumes.
   const hasRwxVolume = items.some(isRegularRwx)
-  // A shared block volume in maintenance mode can only be attached to one node.
-  const hasAttachedVolume = items.some(canAttachMoreNodes)
   const getMaintenanceAlert = () => {
     if (maintenanceConflict) {
       return { type: 'error', message: 'RWX volumes can only be manually attached in maintenance mode, and shared block volumes that are already attached cannot be. Attach them separately.' }

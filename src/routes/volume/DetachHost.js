@@ -67,6 +67,7 @@ const modal = ({
   const uiHosts = [...new Set(getUIAttachments(sharedBlockVolume).map(({ nodeID }) => nodeID))]
   const defaultHosts = uiHosts.length === 1 ? uiHosts : []
   const notices = getDetachNotices(items, forceDetach, getFieldValue('hosts') || defaultHosts)
+  const noticeTypes = [...new Set(notices.map(({ type }) => type))]
 
   const modalOpts = {
     title: `Are you sure you want to detach volume ${items.map((item) => `${item.name}`).join(', ')} ?`,
@@ -130,7 +131,15 @@ const modal = ({
             valuePropName: 'checked',
           })(<Checkbox></Checkbox>)}
         </FormItem>
-        {notices.map(({ type, text }) => <Alert key={text} style={{ marginBottom: 12 }} description={text} type={type} showIcon />)}
+        {noticeTypes.map(noticeType => (
+          <Alert
+            key={noticeType}
+            style={{ marginBottom: 12 }}
+            description={notices.filter(({ type }) => type === noticeType).map(({ text }) => <div key={text}>{text}</div>)}
+            type={noticeType}
+            showIcon
+          />
+        ))}
         {items.some(item => getAlertDescription(item)) && (
           <Alert
             description={getAlertDescription(items.find(item => getAlertDescription(item)))}

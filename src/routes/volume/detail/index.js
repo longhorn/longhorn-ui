@@ -131,6 +131,7 @@ function VolumeDetail({
   volume,
   volumeId,
   volumeAttachment,
+  volumeAttachments,
   loadingVolumeAttachments,
   setting,
   backingImage,
@@ -196,7 +197,7 @@ function VolumeDetail({
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data
-  const selectedVolume = withLiveAttachments(data.find(item => item.id === volumeId), volumeAttachment)
+  const selectedVolume = withLiveAttachments(data.find(item => item.id === volumeId), volumeAttachments)
   const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
   const backingImageOptions = backingImage?.data?.filter(image => hasReadyBackingDisk(image)) || []
   const settings = setting.data
@@ -884,6 +885,7 @@ VolumeDetail.propTypes = {
   volume: PropTypes.object,
   volumeId: PropTypes.string,
   volumeAttachment: PropTypes.object,
+  volumeAttachments: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   backup: PropTypes.object,
@@ -925,6 +927,7 @@ export default connect(({
     volume,
     volumeId,
     volumeAttachment,
+    volumeAttachments,
     engineimage,
     backupTarget,
     loading: loading.models.volume,

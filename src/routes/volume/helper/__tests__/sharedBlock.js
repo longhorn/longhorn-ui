@@ -4,7 +4,6 @@ import { act } from 'react-dom/test-utils'
 import {
   SHARED_BLOCK_MAX_NODES,
   canAttachMoreNodes,
-  canCreatePV,
   getAttachDisabledReason,
   getAttachRequests,
   getDetachNotices,
@@ -31,7 +30,7 @@ const ENDPOINT = '/dev/longhorn/vol'
 
 const ui = (nodeID, rest = {}) => ({ nodeID, attachmentID: `longhorn-ui-${nodeID}`, attachmentType: 'longhorn-api', parameters: { disableFrontend: 'false' }, ...rest })
 const csi = (nodeID) => ui(nodeID, { attachmentID: `csi-${nodeID}`, attachmentType: 'csi-attacher' })
-const other = (nodeID, attachmentType) => ui(nodeID, { attachmentID: `${attachmentType}-${nodeID}`, attachmentType })
+const other = (nodeID, attachmentType) => ui(nodeID, { attachmentID: `${attachmentType}-${nodeID}`, attachmentType, parameters: { disableFrontend: 'any' } })
 const controller = (hostId, endpoint = ENDPOINT) => ({ hostId, endpoint })
 
 const sharedBlockVolume = ({ tickets = [], on = [], ...rest } = {}) => ({
@@ -67,6 +66,7 @@ describe('the nodes of a shared block volume', () => {
     expect(statusOf(sharedBlockVolume({ tickets: [ui('n2')], on: ['n1', 'n2'] }))).toStrictEqual([['n1', 'released'], ['n2', 'attached']])
     expect(statusOf(sharedBlockVolume({ tickets: [ui('n2')], on: [controller('n1', ''), 'n2'] }))).toStrictEqual([['n1', 'attaching'], ['n2', 'attached']])
     expect(statusOf(sharedBlockVolume({ tickets: [other('n1', 'backup-controller')], on: ['n1'] }))).toStrictEqual([['n1', 'attached']])
+    expect(statusOf(sharedBlockVolume({ on: ['n1', 'n2'] }))).toStrictEqual([['n1', 'detaching'], ['n2', 'detaching']])
     expect(statusOf(sharedBlockVolume({ on: [controller('', '')] }))).toStrictEqual([])
   })
 
@@ -97,13 +97,18 @@ describe('the nodes of a shared block volume', () => {
 
   it('uses the attachments of their own stream for shared block volumes', () => {
     const live = { attachments: { a: ui('n9') } }
+    const stream = (socketStatus, data) => ({ socketStatus, data })
+    const volume = { ...volumeOn('n1'), id: 'vol' }
+    const hostsWith = (volumeAttachments) => getRequestedHosts(withLiveAttachments(volume, volumeAttachments))
 
-    expect(getRequestedHosts(withLiveAttachments(volumeOn('n1'), live))).toStrictEqual(['n9'])
-    expect(getRequestedHosts(withLiveAttachments(volumeOn('n1'), { code: 1 }))).toStrictEqual(['n1'])
-    expect(getRequestedHosts(withLiveAttachments(volumeOn('n1'), undefined))).toStrictEqual(['n1'])
-    const regular = regularVolume()
-    expect(withLiveAttachments(regular, live)).toBe(regular)
-    expect(withLiveAttachments(undefined, live)).toBe(undefined)
+    expect(hostsWith(stream('open', { vol: live }))).toStrictEqual(['n9'])
+    expect(hostsWith(stream('closed', { vol: live }))).toStrictEqual(['n1'])
+    expect(hostsWith(stream('open', { vol: { code: 1 } }))).toStrictEqual(['n1'])
+    expect(hostsWith(stream('open', { vol2: live }))).toStrictEqual(['n1'])
+    expect(hostsWith(undefined)).toStrictEqual(['n1'])
+    const regular = regularVolume({ id: 'vol' })
+    expect(withLiveAttachments(regular, stream('open', { vol: live }))).toBe(regular)
+    expect(withLiveAttachments(undefined, stream('open', {}))).toBe(undefined)
   })
 })
 
@@ -123,6 +128,7 @@ describe('attaching', () => {
     expect(getAttachDisabledReason(full())).toMatch(/up to 16 nodes/)
     expect(getAttachDisabledReason(maintenance())).toMatch(/maintenance mode/)
     expect(getAttachDisabledReason({ ...full(), state: 'detached' })).toBe('')
+    expect(getAttachDisabledReason({ ...maintenance(), standby: true })).toBe('')
     expect(getAttachDisabledReason(volumeOn('n1'))).toBe('')
     expect(getAttachDisabledReason(regularVolume({ state: 'attached' }))).toBe('')
   })
@@ -141,6 +147,7 @@ describe('attaching', () => {
       ['/rwo-attach', 'n3', true, 'longhorn-ui'],
     ])
     expect(getAttachRequests([sharedBlockVolume({ state: 'detached' })], 'n1', true)[0].params.disableFrontend).toBe(true)
+    expect(isAttachedTo(sharedBlockVolume({ tickets: [ui('n2')], on: ['n1', 'n2'] }), 'n1')).toBe(false)
     expect(isAttachedTo(regularVolume({ volumeAttachment: { attachments: { a: ui('n1') } } }), 'n1')).toBe(false)
   })
 
@@ -173,6 +180,7 @@ describe('detaching', () => {
     expect(getHostsAfterDetach(sharedBlockVolume({ tickets: [ui('n3')], on: ['n1', 'n3'] }), ['n3'])).toStrictEqual([])
     expect(getHostsAfterDetach(sharedBlockVolume({ tickets: [ui('n2'), csi('n2')], on: ['n1', 'n2'] }), ['n2'])).toStrictEqual(['n1', 'n2'])
     expect(getHostsAfterDetach(sharedBlockVolume({ tickets: [ui('n1'), other('n2', 'backup-controller')], on: ['n2', 'n1'] }), ['n1'])).toStrictEqual(['n2'])
+    expect(getHostsAfterDetach({ ...maintenance(), volumeAttachment: { attachments: { a: ui('n1', { parameters: { disableFrontend: 'true' } }), b: other('n1', 'backup-controller') } } }, ['n1'])).toStrictEqual(['n1'])
     expect(getHostsAfterDetach(sharedBlockVolume({ tickets: [ui('n1'), ui('n4', { parameters: { disableFrontend: 'true' } })], on: ['n1'] }), ['n1'])).toStrictEqual([])
   })
 
@@ -182,7 +190,7 @@ describe('detaching', () => {
     expect(textsOf([volumeOn('n1', 'n2')], false, ['n1', 'n2'])).toStrictEqual([])
     expect(textsOf([volumeOn('n1', 'n2')], false, ['n1'])).toStrictEqual([['info', 'The engine runs on n1. The volume stays available there until it is detached from all nodes.']])
     expect(textsOf([sharedBlockVolume({ tickets: [ui('n3')], on: ['n1', 'n3'] })], false, ['n3'])).toStrictEqual([['warning', 'No other node keeps the volume attached, so this also detaches it from n1, where the engine runs.']])
-    expect(textsOf([sharedBlockVolume({ tickets: [ui('n1'), ui('n2'), csi('n2')], on: ['n1', 'n2'] })], false, ['n2'])).toStrictEqual([['info', 'The volume stays available on n2, which was also attached outside the UI.']])
+    expect(textsOf([sharedBlockVolume({ tickets: [ui('n1'), ui('n2'), csi('n2')], on: ['n1', 'n2'] })], false, ['n2'])).toStrictEqual([['info', 'The volume stays available on n2, also attached outside the UI.']])
     expect(textsOf([regularVolume()], false, [])).toStrictEqual([])
     expect(textsOf([regularVolume()], true)).toStrictEqual([])
   })
@@ -196,16 +204,19 @@ describe('detaching', () => {
 
     expect(text([csi('n1')])).toStrictEqual(['warning', 'vol was not attached from the UI, but by a workload. It can only be detached there, or with Force Detach.'])
     expect(text([other('n1', 'backup-controller'), ui('n1', { attachmentID: 'abc' })])[1]).toBe('vol was not attached from the UI, but by backup-controller and another API client. It can only be detached there, or with Force Detach.')
-    expect(text([])[1]).toBe('vol was not attached from the UI. It can only be detached there, or with Force Detach.')
+    expect(text([])[1]).toBe('vol was not attached from the UI. It can only be detached with Force Detach.')
   })
 
   it('lists the hosts of each shared block volume when detaching several', () => {
     const mixed = sharedBlockVolume({ name: 'mixed', tickets: [ui('n1'), ui('n2'), csi('n3')], on: ['n1', 'n2', 'n3'] })
 
     expect(textsOf([mixed, regularVolume(), volumeOn('n1')], false)).toStrictEqual([
-      ['info', 'mixed is detached from n1, n2 and stays available on n1, n3.'],
+      ['info', 'mixed is detached from n2 and stays available on n1, n3.'],
       ['info', 'vol is detached from n1.'],
     ])
+    expect(textsOf([volumeOn('n1'), regularVolume()], false)).toStrictEqual([['info', 'vol is detached from n1.']])
+    expect(textsOf([sharedBlockVolume({ tickets: [ui('n3')], on: ['n1', 'n3', 'n4'] }), regularVolume()], false)).toStrictEqual([['info', 'vol is detached from n1, n3.']])
+    expect(textsOf([sharedBlockVolume({ tickets: [ui('n1'), csi('n1')], on: ['n1'] }), regularVolume()], false)).toStrictEqual([['info', 'vol stays available on n1.']])
   })
 
   it('is possible whenever the volume is attached, unlike other RWX volumes', () => {
@@ -240,17 +251,6 @@ describe('form fields and conditions', () => {
     expect(isDataLocalityDisabled(true, 'strict-local')).toBe(true)
     expect(isDataLocalityDisabled(true, 'best-effort')).toBe(false)
     expect(isDataLocalityDisabled(false, 'strict-local')).toBe(false)
-  })
-
-  it('creates the PV of a shared block volume without a file system type', () => {
-    const noPV = { kubernetesStatus: { pvName: '' } }
-
-    expect(canCreatePV({ ...noPV, sharedBlock: true }, { pvName: 'pv' })).toBe(true)
-    expect(canCreatePV(noPV, { pvName: 'pv' })).toBe(false)
-    expect(canCreatePV(noPV, { pvName: 'pv', fsType: 'ext4' })).toBe(true)
-    expect(canCreatePV({ ...noPV, sharedBlock: true }, {})).toBe(false)
-    expect(canCreatePV({ kubernetesStatus: { pvName: 'pv' }, sharedBlock: true }, { pvName: 'pv' })).toBe(false)
-    expect(canCreatePV(undefined, undefined)).toBe(false)
   })
 
   it('warns only when the condition is true', () => {

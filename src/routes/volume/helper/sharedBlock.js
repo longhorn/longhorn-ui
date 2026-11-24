@@ -13,14 +13,19 @@ const uniqueSorted = (hosts) => [...new Set(hosts.filter(Boolean))].sort()
 
 const getAttachments = (volume) => Object.values(volume?.volumeAttachment?.attachments || {})
 
-// The backend ignores the attachments that ask for another frontend setting than the volume has.
-const getActiveAttachments = (volume) => getAttachments(volume)
-  .filter(({ parameters }) => (parameters?.disableFrontend === 'true') === (volume.disableFrontend === true))
+// The backend ignores the attachments that ask for another frontend setting than
+// the volume has. Those of backups and so on go with any.
+const getActiveAttachments = (volume) => getAttachments(volume).filter(({ parameters }) => {
+  const { disableFrontend = 'false' } = parameters || {}
+  return !['true', 'false'].includes(disableFrontend) || (disableFrontend === 'true') === (volume.disableFrontend === true)
+})
 
 const isUIAttachment = ({ attachmentID }) => attachmentID === UI_ATTACHMENT_ID || attachmentID?.startsWith(`${UI_ATTACHMENT_ID}-`) === true
 
-// Attachment changes reach the UI sooner on their own stream than with the volume.
-export function withLiveAttachments(volume, volumeAttachment) {
+// Attachment changes reach the UI sooner on their own stream than with the volume,
+// as long as that stream is open.
+export function withLiveAttachments(volume, volumeAttachments) {
+  const volumeAttachment = volumeAttachments?.socketStatus === 'open' ? volumeAttachments.data?.[volume?.id] : null
   return volume?.sharedBlock && volumeAttachment?.attachments ? { ...volume, volumeAttachment } : volume
 }
 
@@ -55,6 +60,7 @@ export function getSharedBlockNodes(volume) {
   const controllers = (volume?.controllers || []).filter(({ hostId }) => hostId)
   const engineHost = getEngineHost(volume)
   const requestedHosts = getRequestedHosts(volume)
+  const activeAttachments = getActiveAttachments(volume)
   const hosts = uniqueSorted([...controllers.map(({ hostId }) => hostId), ...requestedHosts])
 
   return hosts
@@ -65,8 +71,8 @@ export function getSharedBlockNodes(volume) {
       let status = endpoint ? 'attached' : 'attaching'
       if (!isEngine && !requestedHosts.includes(host)) {
         status = 'detaching'
-      } else if (isEngine && endpoint && !getActiveAttachments(volume).some(({ nodeID }) => nodeID === host)) {
-        status = 'released'
+      } else if (isEngine && endpoint && !activeAttachments.some(({ nodeID }) => nodeID === host)) {
+        status = activeAttachments.length > 0 ? 'released' : 'detaching'
       }
       return { host, endpoint, isEngine, status }
     })
@@ -96,7 +102,7 @@ export function canAttachMoreNodes(volume) {
 }
 
 export function getAttachDisabledReason(volume) {
-  if (volume?.sharedBlock !== true || volume.state !== 'attached' || canAttachMoreNodes(volume)) {
+  if (volume?.sharedBlock !== true || volume.standby || volume.state !== 'attached' || canAttachMoreNodes(volume)) {
     return ''
   }
   return isLive(volume)
@@ -172,13 +178,20 @@ export function getDetachNotices(volumes, forceDetach, chosenHosts = []) {
     const uiHosts = uniqueSorted(getUIAttachments(volume).map(({ nodeID }) => nodeID))
     if (uiHosts.length === 0) {
       const attachers = [...new Set(getAttachments(volume).map(({ attachmentType }) => ATTACHERS[attachmentType] || attachmentType))]
-      return [{ type: 'warning', text: `${name} was not attached from the UI${attachers.length > 0 ? `, but by ${attachers.join(' and ')}` : ''}. It can only be detached there, or with Force Detach.` }]
+      return [{
+        type: 'warning',
+        text: attachers.length > 0
+          ? `${name} was not attached from the UI, but by ${attachers.join(' and ')}. It can only be detached there, or with Force Detach.`
+          : `${name} was not attached from the UI. It can only be detached with Force Detach.`,
+      }]
     }
 
     const hosts = single ? chosenHosts : uiHosts
     const after = getHostsAfterDetach(volume, hosts)
     if (!single) {
-      return [{ type: 'info', text: `${name} is detached from ${hosts.join(', ')}${after.length > 0 ? ` and stays available on ${after.join(', ')}` : ''}.` }]
+      const lost = getSharedBlockNodes(volume).filter(({ host, status }) => status !== 'detaching' && !after.includes(host)).map(({ host }) => host)
+      const parts = [['is detached from', lost], ['stays available on', after]].filter(([, list]) => list.length > 0)
+      return [{ type: 'info', text: `${name} ${parts.map(([text, list]) => `${text} ${list.join(', ')}`).join(' and ')}.` }]
     }
     if (hosts.length === 0) {
       return []
@@ -188,7 +201,7 @@ export function getDetachNotices(volumes, forceDetach, chosenHosts = []) {
     const keptByOthers = hosts.filter((host) => after.includes(host) && host !== engineHost)
     return [
       after.length > 0 && hosts.includes(engineHost) && { type: 'info', text: `The engine runs on ${engineHost}. The volume stays available there until it is detached from all nodes.` },
-      keptByOthers.length > 0 && { type: 'info', text: `The volume stays available on ${keptByOthers.join(', ')}, which was also attached outside the UI.` },
+      keptByOthers.length > 0 && { type: 'info', text: `The volume stays available on ${keptByOthers.join(', ')}, also attached outside the UI.` },
       after.length === 0 && engineHost && !hosts.includes(engineHost) && { type: 'warning', text: `No other node keeps the volume attached, so this also detaches it from ${engineHost}, where the engine runs.` },
     ].filter(Boolean)
   })
@@ -199,11 +212,6 @@ export function getDetachNotices(volumes, forceDetach, chosenHosts = []) {
 export function hasNothingToDetach(volumes, forceDetach) {
   return !forceDetach && volumes.length > 0
     && volumes.every((volume) => volume.sharedBlock && getUIAttachments(volume).length === 0)
-}
-
-// A shared block volume is only used as a block device, so it needs no file system type.
-export function canCreatePV(volume, params) {
-  return Boolean(volume?.kubernetesStatus && !volume.kubernetesStatus.pvName && params?.pvName && (params.fsType || volume.sharedBlock))
 }
 
 export function isUnreservedSharedAccess(volume) {

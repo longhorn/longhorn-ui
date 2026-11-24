@@ -7,7 +7,7 @@ import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
-import { canCreatePV } from '../routes/volume/helper/sharedBlock'
+import { canCreatePV } from '../utils/pv'
 
 export default {
   namespace: 'volume',

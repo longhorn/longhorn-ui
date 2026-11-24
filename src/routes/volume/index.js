@@ -282,7 +282,7 @@ class Volume extends React.Component {
       detached: detachedVolume,
       faulted: faultedVolume,
     }
-    const data = storedVolumes.map(item => withLiveAttachments(item, volumeAttachments?.data?.[item.id]))
+    const data = storedVolumes.map(item => withLiveAttachments(item, volumeAttachments))
     const getLiveVolumes = (items) => items.map(item => data.find(volume => volume.id === item.id) || item)
     let volumes = data
     // TODO: extract these filter functions to a separate file
