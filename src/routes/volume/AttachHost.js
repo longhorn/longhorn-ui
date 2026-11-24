@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Checkbox, Alert, Row, Col } from 'antd'
 import { ModalBlur } from '../../components'
+import { canAttachMoreNodes, getAttachRequests, isAttachedTo, isMaintenanceConflict, isRegularRwx } from './helper/sharedBlock'
 
 const FormItem = Form.Item
 const formItemLayout = {
@@ -32,9 +33,26 @@ const modal = ({
     getFieldDecorator,
     validateFields,
     getFieldsValue,
+    getFieldValue,
+    setFieldsValue,
   },
 }) => {
+  const maintenanceConflict = isMaintenanceConflict(items || [])
+  // A shared block volume in maintenance mode can only be attached to one node.
+  const hasAttachedVolume = items?.some(canAttachMoreNodes) || false
+
+  // Also when the volume gets attached elsewhere while the dialog is open.
+  useEffect(() => {
+    if (hasAttachedVolume && !maintenanceConflict) {
+      setFieldsValue({ disableFrontend: false })
+    }
+  }, [hasAttachedVolume, maintenanceConflict])
+
   function handleOk() {
+    // The modal also calls this on Enter, when the OK button is disabled.
+    if (maintenanceConflict) {
+      return
+    }
     validateFields((errors) => {
       if (errors) {
         return
@@ -42,7 +60,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      onOk(data.host, data.disableFrontend, items.map(item => item.actions.attach))
+      onOk(getAttachRequests(items, data.host, data.disableFrontend))
     })
   }
 
@@ -52,17 +70,29 @@ const modal = ({
     onCancel,
     width: 1040,
     onOk: handleOk,
+    okDisabled: maintenanceConflict,
   }
 
-  const options = hosts.filter(host => host.conditions && host.conditions.Ready && host.conditions.Ready.status.toLowerCase() === 'true').map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
   if (!items || items.length === 0) {
     return null
   }
 
-  // RWX volumes can only be manually attached in maintenance mode.
-  const hasRwxVolume = items && items.some((item) => {
-    return item.accessMode === 'rwx' && !item.migratable
-  })
+  const options = hosts.filter(host => host.conditions && host.conditions.Ready && host.conditions.Ready.status.toLowerCase() === 'true')
+    .filter(host => !items.every(item => isAttachedTo(item, host.id)))
+    .map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
+
+  // RWX volumes can only be manually attached in maintenance mode, except shared block volumes.
+  const hasRwxVolume = items.some(isRegularRwx)
+  const getMaintenanceAlert = () => {
+    if (maintenanceConflict) {
+      return { type: 'error', message: 'RWX volumes can only be manually attached in maintenance mode, and shared block volumes that are already attached cannot be. Attach them separately.' }
+    }
+    return hasRwxVolume
+      ? { type: 'warning', message: 'RWX volumes can only be manually attached in maintenance mode.' }
+      : { type: 'info', message: 'Shared block volumes that are already attached cannot be attached to more nodes in maintenance mode.' }
+  }
+  const selectedHost = getFieldValue('host')
+  const skippedVolumes = items.filter(item => isAttachedTo(item, selectedHost)).map(item => item.name)
 
   return (
     <ModalBlur {...modalOpts}>
@@ -75,7 +105,7 @@ const modal = ({
                 message: 'Please select a host to attach',
               },
             ],
-          })(<Select style={{ width: '100%' }} size="large">
+          })(<Select style={{ width: '100%' }} size="large" notFoundContent={hasAttachedVolume ? 'No more nodes to attach to' : undefined}>
             {options}
           </Select>)}
         </FormItem>
@@ -88,12 +118,17 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Checkbox disabled={hasRwxVolume}></Checkbox>)}
+          })(<Checkbox disabled={hasRwxVolume || hasAttachedVolume}></Checkbox>)}
         </FormItem>
       </Form>
-      { hasRwxVolume ? <Row>
+      { hasRwxVolume || hasAttachedVolume ? <Row>
         <Col span={18} style={{ marginLeft: 100 }}>
-          <Alert message="RWX volumes can only be manually attached in maintenance mode." type="warning" showIcon />
+          <Alert {...getMaintenanceAlert()} showIcon />
+        </Col>
+      </Row> : '' }
+      { skippedVolumes.length > 0 ? <Row style={{ marginTop: 12 }}>
+        <Col span={18} style={{ marginLeft: 100 }}>
+          <Alert message={`Already attached to ${selectedHost}, so skipped: ${skippedVolumes.join(', ')}.`} type="info" showIcon />
         </Col>
       </Row> : '' }
     </ModalBlur>

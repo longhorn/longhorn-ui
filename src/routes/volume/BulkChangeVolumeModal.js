@@ -45,6 +45,7 @@ const modal = ({
     onOk: handleOk,
   }
 
+  const hasSharedBlock = items.some((item) => item.sharedBlock)
   const selectedVolumes = items.map((item) => `${item.name}`).join(', ')
   return (
     <ModalBlur {...modalOpts}>
@@ -62,7 +63,7 @@ const modal = ({
               },
             ],
           })(<Select>
-          { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
+          { frontends.filter(opt => !hasSharedBlock || opt.value === 'blockdev').map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
           </Select>)}
         </FormItem>
       </Form>

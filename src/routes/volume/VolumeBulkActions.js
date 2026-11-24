@@ -185,7 +185,7 @@ function bulkActions({
   const disableUpdateBulkReplicaCount = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaCount)
   const disableUpdateBulkDataLocality = () => selectedRows.some(item => !item.actions || !item.actions.updateDataLocality)
   const disableUpdateReplicaAutoBalance = () => selectedRows.some(item => !item.actions || !item.actions.updateReplicaAutoBalance)
-  const disableUpdateAccessMode = () => selectedRows.some(item => (item.kubernetesStatus && item.kubernetesStatus.pvStatus) || !item.actions || !item.actions.updateAccessMode)
+  const disableUpdateAccessMode = () => selectedRows.some(item => (item.kubernetesStatus && item.kubernetesStatus.pvStatus) || !item.actions || !item.actions.updateAccessMode || item.sharedBlock)
   const isHasStandy = () => selectedRows.some(item => item.standby)
   const canUpgradeEngine = () => selectedRows.some(item => (item.state !== 'detached' && item.state !== 'attached'))
   const isFaulted = () => selectedRows.some(item => item.robustness === 'faulted')
@@ -207,6 +207,7 @@ function bulkActions({
   }
   const disableExpandVolume = () => selectedRows.some(item => item.conditions?.Scheduled?.status?.toLowerCase() !== 'true')
   const upgradingEngine = () => selectedRows.some((item) => item.currentImage !== item.image)
+  const hasSharedBlock = () => selectedRows.some(item => item.sharedBlock)
   const notAttached = () => selectedRows.some(item => item.state !== 'attached')
   /*
   * PV/PVC decides whether to disable it
@@ -237,7 +238,7 @@ function bulkActions({
     { key: 'updateReplicaSoftAntiAffinity', name: 'Update Replica Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaZoneSoftAntiAffinity', name: 'Update Replica Zone Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
     { key: 'updateReplicaDiskSoftAntiAffinity', name: 'Update Replica Disk Soft Anti Affinity', disabled() { return selectedRows.length === 0 } },
-    { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() } },
+    { key: 'trimFilesystem', name: 'Trim Filesystem', disabled() { return selectedRows.length === 0 || notAttached() || hasSharedBlock() } },
     { key: 'updateFreezeFilesystemForSnapshot', name: 'Update Freeze Filesystem For Snapshot', disabled() { return selectedRows.length === 0 } },
     { key: 'offlineReplicaRebuilding', name: 'Update Offline Replica Rebuilding', disabled() { return selectedRows.length === 0 || selectedRows.every((row) => !row.actions?.offlineReplicaRebuilding) } },
     { key: 'updateReplicaRebuildingBandwidthLimit', name: 'Update Replica Rebuilding Bandwidth Limit', disabled() { return selectedRows.length === 0 || selectedRows.some((row) => row?.dataEngine === 'v1') } },

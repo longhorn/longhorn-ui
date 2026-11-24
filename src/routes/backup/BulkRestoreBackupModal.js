@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Spin, Select, message, Popover, Alert, Tabs, Button, Checkbox, Tooltip } from 'antd'
 import { ModalBlur } from '../../components'
 import { safeParseJSON } from '../../utils/formatDate'
+import { useSharedBlockFields } from '../volume/helper/sharedBlock'
+import SharedBlockItem from '../volume/components/SharedBlockItem'
 
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -53,6 +55,7 @@ const modal = ({
       backingImage: i.backingImage,
       fromBackup: i.fromBackup,
       encrypted: false,
+      sharedBlock: false,
       restoreVolumeRecurringJob: 'ignored',
       nodeSelector: i.nodeSelector || [],
       diskSelector: i.diskSelector || [],
@@ -61,26 +64,34 @@ const modal = ({
   })
   const [currentTab, setCurrentTab] = useState(0)
   const [restoreBackupConfigs, setRestoreBackupConfigs] = useState(initConfigs)
+  const item = restoreBackupConfigs[currentTab] || {}
 
   const handleOk = () => onOk(restoreBackupConfigs)
 
-  const updateRestoreBackupConfigs = (key, newValue) => {
+  const updateAllRestoreBackupConfigs = (newValues) => {
     setRestoreBackupConfigs(prev => {
       const newConfigs = [...prev]
       const data = {
         ...getFieldsValue(),
-        [key]: newValue,
+        ...newValues,
         fromBackup: items[currentTab]?.fromBackup || '',
       }
       newConfigs.splice(currentTab, 1, data)
       return newConfigs
     })
   }
+  const updateRestoreBackupConfigs = (key, newValue) => updateAllRestoreBackupConfigs({ [key]: newValue })
 
   const handleNameChange = (e) => updateRestoreBackupConfigs('name', e.target.value)
   const handleReplicasNumberChange = (newNumber) => updateRestoreBackupConfigs('numberOfReplicas', newNumber)
   const handleEncryptedCheck = (e) => updateRestoreBackupConfigs('encrypted', e.target.checked)
-  const handleDataEngineChange = (value) => updateRestoreBackupConfigs('dataEngine', value)
+  const setSharedBlockFields = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode'], currentTab)
+  const handleSharedBlockChange = (checked) => updateAllRestoreBackupConfigs({ ...setSharedBlockFields(checked), sharedBlock: checked })
+  const handleDataEngineChange = (value) => {
+    const sharedBlockFields = item.sharedBlock ? { ...setSharedBlockFields(false), sharedBlock: false } : {}
+    setFieldsValue({ sharedBlock: false })
+    updateAllRestoreBackupConfigs({ ...sharedBlockFields, dataEngine: value })
+  }
   const handleAccessModeChange = (value) => updateRestoreBackupConfigs('accessMode', value)
   const handleRecurringJobChange = (value) => updateRestoreBackupConfigs('restoreVolumeRecurringJob', value)
   const handleNodeTagRemove = (value) => {
@@ -109,6 +120,7 @@ const modal = ({
       dataEngine: getFieldValue('dataEngine'),
       accessMode: getFieldValue('accessMode'),
       encrypted: getFieldValue('encrypted') || false,
+      sharedBlock: getFieldValue('sharedBlock') || false,
       restoreVolumeRecurringJob: getFieldValue('restoreVolumeRecurringJob'),
       nodeSelector: getFieldValue('nodeSelector'),
       diskSelector: getFieldValue('diskSelector'),
@@ -150,6 +162,7 @@ const modal = ({
         latestBackup: nextConfig.latestBackup,
         backingImage: nextConfig.backingImage,
         encrypted: nextConfig.encrypted,
+        sharedBlock: nextConfig.sharedBlock,
         restoreVolumeRecurringJob: nextConfig.restoreVolumeRecurringJob,
         nodeSelector: nextConfig.nodeSelector,
         diskSelector: nextConfig.diskSelector,
@@ -184,7 +197,6 @@ const modal = ({
     ],
   }
 
-  const item = restoreBackupConfigs[currentTab] || {}
   const activeKey = item.latestBackup
 
   return (
@@ -253,12 +265,13 @@ const modal = ({
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode,
-          })(<Select onSelect={handleAccessModeChange}>
+          })(<Select disabled={item.sharedBlock} onSelect={handleAccessModeChange}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={item.dataEngine} initialValue={item.sharedBlock} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Latest Backup" hasFeedback {...formItemLayout}>
           {getFieldDecorator('latestBackup', {
             initialValue: item.latestBackup,

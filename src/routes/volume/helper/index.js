@@ -1,3 +1,5 @@
+import { canAttachMoreNodes } from './sharedBlock'
+
 export function isSchedulingFailure(volume) {
   // volume.conditions.scheduled.status may be equal to 'Unknown' or 'True' or 'False', only 'False' value is scheduling failure
   // volume.conditions may be empty object({})
@@ -9,14 +11,10 @@ export function getAttachHostModalProps(volumes, hosts, visible, dispatch) {
     items: volumes,
     visible,
     hosts,
-    onOk(selectedHost, disableFrontend, urls) {
+    onOk(requests) {
       dispatch({
         type: 'volume/attach',
-        payload: {
-          host: selectedHost,
-          disableFrontend,
-          url: urls[0],
-        },
+        payload: requests,
       })
     },
     onCancel() {
@@ -804,7 +802,7 @@ export function detachable(volume) {
   if (volume.standby || isRestoring(volume)) {
     return false
   }
-  if (volume.accessMode === 'rwx') {
+  if (volume.accessMode === 'rwx' && !volume.sharedBlock) {
     if (volume.migratable) {
       return volume.state === 'attached' && volume.controllers && volume.controllers.length <= 1
     }
@@ -818,7 +816,7 @@ export function attachable(volume) {
   if (isRestoring(volume)) {
     return false
   }
-  return volume.state === 'detached'
+  return volume.state === 'detached' || canAttachMoreNodes(volume)
 }
 
 export function groupBy(objectArray, property) {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import { DropOption } from '../../components'
 import { detachable, attachable, isRestoring } from './helper'
+import { getAttachDisabledReason } from './helper/sharedBlock'
 const confirm = Modal.confirm
 
 function actions({
@@ -63,7 +64,7 @@ function actions({
     }
 
     return (<div>
-      {record.state === 'attached' ? <div>{`The volume is attached on ${record.controllers && record.controllers[0] && record.controllers[0].hostId ? record.controllers[0].hostId : ''}. Deleting this volume may cause errors for any running applications using this volume!`} </div> : ''}
+      {record.state === 'attached' ? <div>{`The volume is attached on ${(record.controllers || []).map(item => item.hostId).filter(Boolean).join(', ')}. Deleting this volume may cause errors for any running applications using this volume!`} </div> : ''}
       {workloadResources ? <div> { `The following workload(s) depend on this volume (${record.name}) and may encounter errors once it is deleted:` }</div> : '' }
       {workloadResources}
       {hasPvTooltipText}
@@ -213,7 +214,7 @@ function actions({
   }
 
   const isRwxVolumeWithWorkload = () => {
-    return selected.accessMode === 'rwx' && selected.kubernetesStatus.workloadsStatus && selected.kubernetesStatus.workloadsStatus.length > 0 && selected.kubernetesStatus.lastPodRefAt === ''
+    return selected.accessMode === 'rwx' && !selected.sharedBlock && selected.kubernetesStatus.workloadsStatus && selected.kubernetesStatus.workloadsStatus.length > 0 && selected.kubernetesStatus.lastPodRefAt === ''
   }
 
   const canUpdateDataLocality = () => {
@@ -242,14 +243,14 @@ function actions({
   const upgradingEngine = () => selected.currentImage !== selected.image
 
   const allActions = [
-    { key: 'attach', name: 'Attach', disabled: !attachable(selected) },
+    { key: 'attach', name: 'Attach', disabled: !attachable(selected), tooltip: getAttachDisabledReason(selected) },
     { key: 'detach', name: 'Detach', disabled: !detachable(selected), tooltip: isRwxVolumeWithWorkload() ? 'The volume access mode is `ReadWriteMany`, Please ensure that the workloads are scaled down before trying to detach the volume' : '' },
     { key: 'salvage', name: 'Salvage', disabled: isRestoring(selected) },
     { key: 'engineUpgrade', name: 'Upgrade Engine', disabled: isAutomaticallyUpgradeEngine() || (engineImages.findIndex(engineImage => selected.image !== engineImage.image) === -1) || isRestoring(selected) || (selected.state !== 'detached' && selected.state !== 'attached') || selected?.dataEngine === 'v2' },
     { key: 'updateReplicaCount', name: 'Update Replicas Count', disabled: selected.state !== 'attached' || isRestoring(selected) || selected.standby || upgradingEngine() },
     { key: 'updateDataLocality', name: 'Update Data Locality', disabled: !canUpdateDataLocality() || upgradingEngine() },
     { key: 'updateSnapshotDataIntegrity', name: 'Snapshot Data Integrity', disabled: false },
-    { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() },
+    { key: 'updateAccessMode', name: 'Update Access Mode', disabled: (selected.kubernetesStatus && selected.kubernetesStatus.pvStatus) || !canUpdateAccessMode() || selected.sharedBlock, tooltip: selected.sharedBlock ? 'Shared block volumes require the ReadWriteMany access mode' : '' },
     { key: 'updateBackupTargetName', name: 'Update Backup Target' },
     { key: 'updateReplicaAutoBalance', name: 'Update Replicas Auto Balance', disabled: !canUpdateReplicaAutoBalance() },
     { key: 'updateUnmapMarkSnapChainRemoved', name: 'Allow Snapshots Removal During Trim', disabled: false },
@@ -294,7 +295,7 @@ function actions({
   if (selected.standby) {
     availableActions.push({ key: 'changeVolume', name: 'Activate Disaster Recovery Volume', disabled: !selected.standby })
   }
-  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' })
+  availableActions.push({ key: 'trimFilesystem', name: 'Trim Filesystem', disabled: selected.state !== 'attached' || selected.sharedBlock, tooltip: selected.sharedBlock ? 'Not supported for shared block volumes' : '' })
   availableActions.push({ key: 'createSnapshotGroup', name: 'Create Snapshot Group', disabled: selected.standby || isRestoring(selected) })
 
   toggleRollbackAndUpgradeAction(availableActions)

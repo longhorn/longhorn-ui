@@ -12,6 +12,7 @@ import {
   frontends,
   extractImageVersion,
 } from '../helper/index'
+import { getSharedBlockNodes, isUnreservedSharedAccess } from '../helper/sharedBlock'
 import styles from './VolumeInfo.less'
 import { diskTagColor, nodeTagColor } from '../../../utils/constants'
 import { EngineImageUpgradeTooltip, ReplicaHATooltip } from '../../../components'
@@ -213,6 +214,22 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
     </Tooltip>
   )
 
+  const isSharedBlockAttached = selectedVolume.sharedBlock && selectedVolume.state === 'attached'
+
+  const sharedBlockStatus = {
+    attaching: <span><Icon type="loading" /> Attaching</span>,
+    detaching: <span><Icon type="loading" /> Detaching</span>,
+    released: <span>Stays until the other nodes are detached</span>,
+  }
+
+  const renderSharedBlockNode = ({ host, endpoint, isEngine, status }) => (
+    <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={host}>
+      {host} {isEngine ? <Tooltip title="The engine stays on this node, and the volume available on it, until the volume is detached from all nodes" overlayStyle={{ maxWidth: 350 }}><Tag>Engine</Tag></Tooltip> : ''}
+      {sharedBlockStatus[status] || ''}
+      <br /> <span style={{ backgroundColor: '#f2f4f5' }}> {endpoint} </span>
+    </div>
+  )
+
   return (
     <div>
       {errorMsg}
@@ -230,6 +247,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           {ha} {healthState}
         </span>
         {dataLocalityWarn ? <Tooltip title={'Volume does not have data locality! There is no healthy replica on the same node as the engine'}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
+        {isUnreservedSharedAccess(selectedVolume) ? <Tooltip title={selectedVolume.conditions.UnreservedSharedAccess.message} overlayStyle={{ maxWidth: 350 }}><Icon style={{ fontSize: '16px', marginLeft: 6 }} className="color-warning" type="warning" /></Tooltip> : ''}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Ready for workload:</span>
@@ -240,9 +258,9 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           <span className={styles.label}>
             Conditions:
           </span>
-          <div className={styles.control} style={{ display: 'flex' }}>
+          <div className={styles.control} style={{ display: 'flex', flexWrap: 'wrap' }}>
             {selectedVolume?.conditions
-              && ['Restore', 'Scheduled', 'TooManySnapshots', 'OfflineRebuilding']
+              && ['Restore', 'Scheduled', 'TooManySnapshots', 'OfflineRebuilding', 'UnreservedSharedAccess']
                 .filter((key) => selectedVolume.conditions[key])
                 .map((key) => (
                   <ConditionTooltip
@@ -301,7 +319,8 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
       </div>
       {!selectedVolume.disableFrontend ? <div className={styles.row}>
         <span className={styles.label}> Attached Node &amp; Endpoint:</span>
-        {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.hostId !== '' && item.endpoint !== '').map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId} <br /> <span style={{ backgroundColor: '#f2f4f5' }}> {item.endpoint} </span></div>) : ''}
+        {isSharedBlockAttached ? getSharedBlockNodes(selectedVolume).map(renderSharedBlockNode) : ''}
+        {selectedVolume.controllers && !isSharedBlockAttached ? selectedVolume.controllers.filter(item => item.hostId !== '' && item.endpoint !== '').map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId} <br /> <span style={{ backgroundColor: '#f2f4f5' }}> {item.endpoint} </span></div>) : ''}
       </div> : <div className={styles.row}>
         <span className={styles.label}> Attached Node:</span>
         {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.hostId !== '').map(item => <div style={{ fontFamily: 'monospace', margin: '2px 0px' }} key={item.hostId}>{item.hostId}</div>) : ''}
@@ -330,6 +349,12 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
         <span className={styles.label}> Access Mode:</span>
         {accessModeObject[selectedVolume.accessMode] ? accessModeObject[selectedVolume.accessMode] : ''}
       </div>
+      {selectedVolume.dataEngine === 'v2' && (
+        <div className={styles.row}>
+          <span className={styles.label}> Shared Block:</span>
+          {selectedVolume.sharedBlock ? 'True' : 'False'}
+        </div>
+      )}
       {currentBackingImage ? <div>
         <div className={styles.row}>
           <span className={styles.label}> Backing Image:</span>
@@ -402,7 +427,7 @@ function VolumeInfo({ selectedVolume, snapshotModalState, engineImages, hosts, c
           {renderLabelTooltip('Manages the engine/replica instances’ life cycle on the node.')}
           <span>:</span>
         </span>
-        {selectedVolume.controllers ? selectedVolume.controllers.filter(item => item.instanceManagerName !== '').map(item => <div key={item.hostId} style={{ fontFamily: 'monospace', margin: '2px 0px' }}> <span style={{ backgroundColor: '#f2f4f5' }}> {item.instanceManagerName} </span></div>) : ''}
+        {selectedVolume.controllers ? selectedVolume.controllers.filter((item, index, all) => item.instanceManagerName !== '' && all.findIndex(other => other.instanceManagerName === item.instanceManagerName) === index).map(item => <div key={item.hostId} style={{ fontFamily: 'monospace', margin: '2px 0px' }}> <span style={{ backgroundColor: '#f2f4f5' }}> {item.instanceManagerName} </span></div>) : ''}
       </div>
       <div className={styles.row}>
         <span className={styles.label}> Allow Snapshots Removal During Trim:</span>

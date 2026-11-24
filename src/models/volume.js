@@ -7,6 +7,7 @@ import { routerRedux } from 'dva/router'
 import { getSorter, saveSorter } from '../utils/store'
 import queryString from 'query-string'
 import { enableQueryData } from '../utils/dataDependency'
+import { canCreatePV } from '../utils/pv'
 
 export default {
   namespace: 'volume',
@@ -71,6 +72,7 @@ export default {
     updateBulkFreezeFilesystemForSnapshotModalVisible: false,
     isDetachBulk: false,
     changeVolumeActivate: '',
+    changeVolumeSharedBlock: false,
     defaultPvOrPvcName: '',
     defaultNamespace: '',
     defaultPVName: '',
@@ -190,13 +192,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideAttachHostModal' })
-      yield call(execAction, payload.url, {
-        hostId: payload.host,
-        disableFrontend: payload.disableFrontend,
-        AttachedBy: '',
-        attacherType: '',
-        AttachmentID: 'longhorn-ui',
-      })
+      yield payload.map(item => call(execAction, item.url, item.params))
       yield put({ type: 'query' })
     },
     *salvage({
@@ -527,13 +523,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideBulkAttachHostModal' })
-      yield payload.urls.map(url => call(execAction, url, {
-        hostId: payload.host,
-        disableFrontend: payload.disableFrontend,
-        AttachedBy: '',
-        attacherType: '',
-        AttachmentID: 'longhorn-ui',
-      }))
+      yield payload.map(item => call(execAction, item.url, item.params))
       yield put({ type: 'query' })
     },
     *bulkBackup({
@@ -594,7 +584,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideCreatePVCAndPVSingleModal' })
-      if (payload?.selectedVolume?.kubernetesStatus && !payload.selectedVolume.kubernetesStatus.pvName && payload.params && payload.params.pvName && payload.params.fsType) {
+      if (canCreatePV(payload?.selectedVolume, payload?.params)) {
         let params = { pvName: payload.params.pvName, fsType: payload.params.fsType, storageClassName: payload.params.storageClassName }
         if (payload.selectedVolume.encrypted) {
           Object.assign(params, { secretNamespace: payload.params.secretNamespace, secretName: payload.params.secretName })
@@ -818,10 +808,10 @@ export default {
       return { ...state, ...action.payload }
     },
     showChangeVolumeModal(state, action) {
-      return { ...state, changeVolumeActivate: action.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
+      return { ...state, ...action.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
     },
     hideChangeVolumeModal(state) {
-      return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
+      return { ...state, changeVolumeActivate: '', changeVolumeSharedBlock: false, changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
     },
     showBulkChangeVolumeModal(state) {
       return { ...state, bulkChangeVolumeModalVisible: true, bulkChangeVolumeModalKey: Math.random() }

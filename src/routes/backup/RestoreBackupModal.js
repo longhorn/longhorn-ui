@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Checkbox, Spin, Select, Popover, Alert } from 'antd'
 import { ModalBlur } from '../../components'
 import { safeParseJSON } from '../../utils/formatDate'
+import { useSharedBlockFields } from '../volume/helper/sharedBlock'
+import SharedBlockItem from '../volume/components/SharedBlockItem'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -40,6 +42,8 @@ const modal = ({
     setFieldsValue,
   },
 }) => {
+  const handleSharedBlockChange = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode'])
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -89,6 +93,7 @@ const modal = ({
   const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
   const targetBackupVolume = backupVolumes?.find(bkVol => bkVol.volumeName === item.volumeName) || {}
   const selectedDataEngine = getFieldsValue().dataEngine || initialDataEngine
+  const sharedBlock = getFieldsValue().sharedBlock
   // Seed the form with strings only, so the values coming back out are safe to trim.
   const defaultLinkedCloneSourceVolume = toTrimmedString(targetBackupVolume.linkedCloneSourceVolume)
   const defaultLinkedCloneSourceSnapshot = toTrimmedString(targetBackupVolume.linkedCloneSourceSnapshot)
@@ -97,7 +102,10 @@ const modal = ({
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
     const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
-    setFieldsValue({ ...getFieldsValue(), numberOfReplicas: replicas }) // update number of replicas
+    if (sharedBlock) {
+      handleSharedBlockChange(false)
+    }
+    setFieldsValue({ ...getFieldsValue(), numberOfReplicas: replicas, sharedBlock: false }) // update number of replicas
   }
 
   return (
@@ -161,12 +169,13 @@ const modal = ({
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode,
-          })(<Select>
+          })(<Select disabled={sharedBlock}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={selectedDataEngine} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,

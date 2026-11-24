@@ -16,6 +16,7 @@ const formItemLayout = {
 }
 
 const modal = ({
+  sharedBlock,
   visible,
   onCancel,
   onOk,
@@ -57,7 +58,7 @@ const modal = ({
               },
             ],
           })(<Select>
-          { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
+          { frontends.filter(opt => !sharedBlock || opt.value === 'blockdev').map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
           </Select>)}
         </FormItem>
       </Form>
@@ -70,6 +71,7 @@ modal.propTypes = {
   visible: PropTypes.bool,
   onCancel: PropTypes.func,
   item: PropTypes.object,
+  sharedBlock: PropTypes.bool,
   onOk: PropTypes.func,
   hosts: PropTypes.array,
 }

@@ -15,6 +15,8 @@ import {
 } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
+import { isDataLocalityDisabled, useSharedBlockFields } from './helper/sharedBlock'
+import SharedBlockItem from './components/SharedBlockItem'
 import { formatSize } from '../../utils/formatter'
 import { formatDate, safeParseJSON } from '../../utils/formatDate'
 import { sortByCreatedTime } from '../../utils/sort'
@@ -126,6 +128,7 @@ const modal = ({
   },
 }) => {
   const [filteredBackingImages, setFilteredBackingImages] = useState([])
+  const handleSharedBlockChange = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode', 'frontend', 'dataLocality'])
 
   useEffect(() => {
     const dataEngine = getFieldValue('dataEngine')
@@ -210,12 +213,16 @@ const modal = ({
   const initialReplicas = parseInt(parsedReplicas[initialDataEngine] ?? 3, 10)
 
   const currentDataEngine = getFieldValue('dataEngine')
+  const sharedBlock = getFieldValue('sharedBlock')
   const initialUblkNumberOfQueue = Number(parsedUblkNumberOfQueue[currentDataEngine] ?? 0)
   const initialUblkQueueDepth = Number(parsedUblkQueueDepth[currentDataEngine] ?? 0)
   const globalNvmeTcpNrIoQueues = Number(safeParseJSON(item.defaultNvmeTcpNrIoQueues || '{}').v2 ?? 0)
 
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
+    if (sharedBlock) {
+      handleSharedBlockChange(false)
+    }
     const fields = getFieldsValue()
     const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
 
@@ -226,6 +233,7 @@ const modal = ({
       numberOfReplicas: replicas, // update number of replicas
       backingImage: '',
       frontend: frontends[0].value,
+      sharedBlock: false,
       dataSourceVolume: '',
       dataSourceSnapshot: '',
     })
@@ -342,7 +350,7 @@ const modal = ({
             initialValue: frontends[0].value,
             rules: [{ required: true, message: 'Please select a frontend' }],
           })(
-            <Select>
+            <Select disabled={sharedBlock}>
               {frontends.map(({ value, label, dataEngine }) => {
                 const selectedDataEngine = getFieldValue('dataEngine')
                 return dataEngine.includes(selectedDataEngine) ? (
@@ -421,18 +429,19 @@ const modal = ({
           {getFieldDecorator('dataLocality', {
             initialValue: defaultDataLocalityValue,
           })(<Select>
-          { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
+          { defaultDataLocalityOption.map(value => <Option key={value} value={value} disabled={isDataLocalityDisabled(sharedBlock, value)}>{value}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: 'rwo',
-          })(<Select>
+          })(<Select disabled={sharedBlock}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={currentDataEngine} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: '',

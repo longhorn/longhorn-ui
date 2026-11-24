@@ -23,6 +23,7 @@ import UpdateFreezeFilesystemForSnapshotModal from '../UpdateFreezeFilesystemFor
 import UpdateReplicaRebuildingBandwidthLimitModal from '../UpdateReplicaRebuildingBandwidthLimitModal'
 import UpdateUblkParamsModal from '../UpdateUblkParamsModal'
 import VolumeAttachment from './VolumeAttachment'
+import { withLiveAttachments } from '../helper/sharedBlock'
 import Snapshots from './Snapshots'
 import RecurringJob from './RecurringJob'
 import EventList from './EventList'
@@ -130,6 +131,7 @@ function VolumeDetail({
   volume,
   volumeId,
   volumeAttachment,
+  volumeAttachments,
   loadingVolumeAttachments,
   setting,
   backingImage,
@@ -157,6 +159,7 @@ function VolumeDetail({
     nameSpaceDisabled,
     changeVolumeModalKey,
     changeVolumeActivate,
+    changeVolumeSharedBlock,
     changeVolumeModalVisible,
     previousChecked,
     volumeCloneModalVisible,
@@ -194,7 +197,7 @@ function VolumeDetail({
   const { data: recurringJobData } = recurringJob
   const hosts = host.data
   const engineImages = engineimage.data
-  const selectedVolume = data.find(item => item.id === volumeId)
+  const selectedVolume = withLiveAttachments(data.find(item => item.id === volumeId), volumeAttachments)
   const currentBackingImage = selectedVolume && selectedVolume.backingImage && backingImage.data ? backingImage.data.find(item => item.name === selectedVolume.backingImage) : null
   const backingImageOptions = backingImage?.data?.filter(image => hasReadyBackingDisk(image)) || []
   const settings = setting.data
@@ -423,7 +426,10 @@ function VolumeDetail({
     changeVolume(record) {
       dispatch({
         type: 'volume/showChangeVolumeModal',
-        payload: record.actions.activate,
+        payload: {
+          changeVolumeActivate: record.actions.activate,
+          changeVolumeSharedBlock: record.sharedBlock === true,
+        },
       })
     },
     showExpansionVolumeSizeModal(record) {
@@ -664,6 +670,7 @@ function VolumeDetail({
       previousNamespace,
       accessMode: selectedVolume && selectedVolume.accessMode ? selectedVolume.accessMode : 'rwo',
       encrypted: selectedVolume && selectedVolume.encrypted,
+      sharedBlock: selectedVolume?.sharedBlock === true,
     },
     selected: selectedVolume && selectedVolume.kubernetesStatus ? selectedVolume.kubernetesStatus : {},
     visible: createPVAndPVCSingleVisible,
@@ -723,6 +730,7 @@ function VolumeDetail({
     item: {
       frontend: 'iscsi',
     },
+    sharedBlock: changeVolumeSharedBlock,
     hosts,
     visible: changeVolumeModalVisible,
     onOk(newVolume) {
@@ -877,6 +885,7 @@ VolumeDetail.propTypes = {
   volume: PropTypes.object,
   volumeId: PropTypes.string,
   volumeAttachment: PropTypes.object,
+  volumeAttachments: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   backup: PropTypes.object,
@@ -918,6 +927,7 @@ export default connect(({
     volume,
     volumeId,
     volumeAttachment,
+    volumeAttachments,
     engineimage,
     backupTarget,
     loading: loading.models.volume,

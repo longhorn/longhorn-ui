@@ -75,6 +75,7 @@ import {
   getUblkParamsModalProps,
   getRebuildConcurrentSyncLimitModalProps
 } from './helper'
+import { withLiveAttachments } from './helper/sharedBlock'
 import { healthyVolume, inProgressVolume, degradedVolume, detachedVolume, faultedVolume, filterVolume, isVolumeImageUpgradable, isVolumeSchedule } from '../../utils/filter'
 import C from '../../utils/constants'
 import { hasReadyBackingDisk } from '../../utils/status'
@@ -139,13 +140,13 @@ class Volume extends React.Component {
 
   render() {
     const me = this
-    const { dispatch, loading, location } = this.props
+    const { dispatch, loading, location, volumeAttachments } = this.props
     const {
       selected,
       snapshotsOptions,
       cloneVolumeType,
       selectedRows,
-      data,
+      data: storedVolumes,
       createPVAndPVCVisible,
       createPVAndPVCSingleVisible,
       createVolumeModalVisible,
@@ -181,6 +182,7 @@ class Volume extends React.Component {
       changeVolumeModalVisible,
       bulkChangeVolumeModalVisible,
       changeVolumeActivate,
+      changeVolumeSharedBlock,
       nodeTags,
       diskTags,
       tagsLoading,
@@ -280,6 +282,8 @@ class Volume extends React.Component {
       detached: detachedVolume,
       faulted: faultedVolume,
     }
+    const data = storedVolumes.map(item => withLiveAttachments(item, volumeAttachments))
+    const getLiveVolumes = (items) => items.map(item => data.find(volume => volume.id === item.id) || item)
     let volumes = data
     // TODO: extract these filter functions to a separate file
     if (field && field === 'status' && volumeFilterMap[stateValue]) {
@@ -572,7 +576,10 @@ class Volume extends React.Component {
       changeVolume(record) {
         dispatch({
           type: 'volume/showChangeVolumeModal',
-          payload: record.actions.activate,
+          payload: {
+            changeVolumeActivate: record.actions.activate,
+            changeVolumeSharedBlock: record.sharedBlock === true,
+          },
         })
       },
       onRowClick(record, flag) {
@@ -758,20 +765,16 @@ class Volume extends React.Component {
       },
     }
 
-    const attachHostModalProps = getAttachHostModalProps(selected ? [selected] : [], hosts, attachHostModalVisible, dispatch)
+    const attachHostModalProps = getAttachHostModalProps(selected ? getLiveVolumes([selected]) : [], hosts, attachHostModalVisible, dispatch)
 
     const bulkAttachHostModalProps = {
-      items: selectedRows,
+      items: getLiveVolumes(selectedRows),
       visible: bulkAttachHostModalVisible,
       hosts,
-      onOk(selectedHost, disableFrontend, urls) {
+      onOk(requests) {
         dispatch({
           type: 'volume/bulkAttach',
-          payload: {
-            host: selectedHost,
-            disableFrontend,
-            urls,
-          },
+          payload: requests,
         })
       },
       onCancel() {
@@ -940,6 +943,7 @@ class Volume extends React.Component {
       item: {
         frontend: 'iscsi',
       },
+      sharedBlock: changeVolumeSharedBlock,
       hosts,
       visible: changeVolumeModalVisible,
       onOk(newVolume) {
@@ -1038,6 +1042,7 @@ class Volume extends React.Component {
         previousNamespace,
         pvNameDisabled,
         accessMode: selected && selected.accessMode ? selected.accessMode : 'rwo',
+        sharedBlock: selected?.sharedBlock === true,
         encrypted: selected && selected.encrypted,
       },
       selected: selected && selected.kubernetesStatus ? selected.kubernetesStatus : {},
@@ -1383,7 +1388,7 @@ class Volume extends React.Component {
     const bulkUnmapMarkSnapChainRemovedModalProps = getBulkUnmapMarkSnapChainRemovedModalProps(selectedRows, bulkUnmapMarkSnapChainRemovedModalVisible, dispatch)
     const updateFreezeFilesystemForSnapshotModalProps = getUpdateFreezeFilesystemForSnapshotModalProps(selected, updateFreezeFilesystemForSnapshotModalVisible, dispatch)
     const updateBulkFreezeFilesystemForSnapshotModalProps = getUpdateBulkFreezeFilesystemForSnapshotModalProps(selectedRows, updateBulkFreezeFilesystemForSnapshotModalVisible, dispatch)
-    const detachHostModalProps = getDetachHostModalProps(!isBulkDetach && selected ? [selected] : selectedRows, detachHostModalVisible, dispatch)
+    const detachHostModalProps = getDetachHostModalProps(getLiveVolumes(!isBulkDetach && selected ? [selected] : selectedRows), detachHostModalVisible, dispatch)
     const offlineRebuildingModalProps = getOfflineRebuildingModalProps(selectedRows, isOfflineRebuildingModalVisible, dispatch)
     const replicaRebuildingBandwidthLimitModalProps = getReplicaRebuildingBandwidthLimitModalProps(selectedRows, isReplicaRebuildingBandwidthLimitModalVisible, dispatch)
     const ublkParamsModalProps = getUblkParamsModalProps(selectedRows, isUblkParamsModalVisible, ublkParamsField, dispatch)
@@ -1485,6 +1490,7 @@ Volume.propTypes = {
   backingImage: PropTypes.object,
   snapshotModal: PropTypes.object,
   snapshotGroup: PropTypes.object,
+  volumeAttachments: PropTypes.object,
 }
 
 export default connect(({
@@ -1498,5 +1504,6 @@ export default connect(({
   backupTarget,
   recurringJob,
   snapshotGroup,
+  volumeAttachments,
   loading
-}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, snapshotGroup, loading: loading.models.volume }))(Volume)
+}) => ({ snapshotModal, engineimage, host, volume, setting, backingImage, backup, backupTarget, recurringJob, snapshotGroup, volumeAttachments, loading: loading.models.volume }))(Volume)
