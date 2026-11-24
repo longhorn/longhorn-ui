@@ -71,6 +71,7 @@ export default {
     updateBulkFreezeFilesystemForSnapshotModalVisible: false,
     isDetachBulk: false,
     changeVolumeActivate: '',
+    changeVolumeSharedBlock: false,
     defaultPvOrPvcName: '',
     defaultNamespace: '',
     defaultPVName: '',
@@ -190,13 +191,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideAttachHostModal' })
-      yield call(execAction, payload.url, {
-        hostId: payload.host,
-        disableFrontend: payload.disableFrontend,
-        AttachedBy: '',
-        attacherType: '',
-        AttachmentID: 'longhorn-ui',
-      })
+      yield payload.map(item => call(execAction, item.url, item.params))
       yield put({ type: 'query' })
     },
     *salvage({
@@ -527,13 +522,7 @@ export default {
       payload,
     }, { call, put }) {
       yield put({ type: 'hideBulkAttachHostModal' })
-      yield payload.urls.map(url => call(execAction, url, {
-        hostId: payload.host,
-        disableFrontend: payload.disableFrontend,
-        AttachedBy: '',
-        attacherType: '',
-        AttachmentID: 'longhorn-ui',
-      }))
+      yield payload.map(item => call(execAction, item.url, item.params))
       yield put({ type: 'query' })
     },
     *bulkBackup({
@@ -818,10 +807,10 @@ export default {
       return { ...state, ...action.payload }
     },
     showChangeVolumeModal(state, action) {
-      return { ...state, changeVolumeActivate: action.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
+      return { ...state, ...action.payload, changeVolumeModalVisible: true, changeVolumeModalKey: Math.random() }
     },
     hideChangeVolumeModal(state) {
-      return { ...state, changeVolumeActivate: '', changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
+      return { ...state, changeVolumeActivate: '', changeVolumeSharedBlock: false, changeVolumeModalVisible: false, changeVolumeModalKey: Math.random() }
     },
     showBulkChangeVolumeModal(state) {
       return { ...state, bulkChangeVolumeModalVisible: true, bulkChangeVolumeModalKey: Math.random() }

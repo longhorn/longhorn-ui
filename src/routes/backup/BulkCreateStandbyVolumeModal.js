@@ -4,6 +4,8 @@ import { Form, InputNumber, Select, message, Spin, Checkbox, Tooltip, Tabs, Butt
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formatter'
 import { safeParseJSON } from '../../utils/formatDate'
+import { useSharedBlockFields } from '../volume/helper/sharedBlock'
+import SharedBlockItem from '../volume/components/SharedBlockItem'
 
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -52,12 +54,14 @@ const modal = ({
     accessMode: i.accessMode || null,
     backingImage: i.backingImage,
     encrypted: false,
+    sharedBlock: false,
     nodeSelector: [],
     diskSelector: [],
     backupBlockSize: i.blockSize || '0'
   }))
   const [currentTab, setCurrentTab] = useState(0)
   const [drVolumeConfigs, setDrVolumeConfigs] = useState(initConfigs)
+  const item = drVolumeConfigs[currentTab] || {}
 
   function handleOk() {
     const data = drVolumeConfigs.map((config, index) => ({
@@ -78,6 +82,7 @@ const modal = ({
       dataEngine: getFieldValue('dataEngine'),
       accessMode: getFieldValue('accessMode'),
       encrypted: getFieldValue('encrypted') || false,
+      sharedBlock: getFieldValue('sharedBlock') || false,
       nodeSelector: getFieldValue('nodeSelector'),
       diskSelector: getFieldValue('diskSelector'),
     }
@@ -96,26 +101,29 @@ const modal = ({
   const allFieldsError = { ...getFieldsError() }
   const hasFieldsError = Object.values(allFieldsError).some(fieldError => fieldError !== undefined) || false
 
-  const updateDrVolumeConfigs = (key, newValue) => {
+  const updateAllDrVolumeConfigs = (newValues) => {
     setDrVolumeConfigs(prev => {
       const newConfigs = [...prev]
       const data = {
         ...getFieldsValue(),
-        [key]: newValue,
+        ...newValues,
       }
       newConfigs.splice(currentTab, 1, data)
       return newConfigs
     })
   }
+  const updateDrVolumeConfigs = (key, newValue) => updateAllDrVolumeConfigs({ [key]: newValue })
 
   const handleNameChange = (e) => updateDrVolumeConfigs('name', e.target.value)
   const handleReplicasNumberChange = (newNumber) => updateDrVolumeConfigs('numberOfReplicas', newNumber)
   const handleEncryptedCheck = (e) => updateDrVolumeConfigs('encrypted', e.target.checked)
+  const setSharedBlockFields = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode'], currentTab)
+  const handleSharedBlockChange = (checked) => updateAllDrVolumeConfigs({ ...setSharedBlockFields(checked), sharedBlock: checked })
   const handleDataEngineChange = (value) => {
     const replicas = parseInt(parsedReplicas[value] ?? 3, 10)
-    updateDrVolumeConfigs('dataEngine', value)
-    updateDrVolumeConfigs('numberOfReplicas', replicas)
-    setFieldsValue({ numberOfReplicas: replicas })
+    const sharedBlockFields = item.sharedBlock ? setSharedBlockFields(false) : {}
+    updateAllDrVolumeConfigs({ ...sharedBlockFields, sharedBlock: false, dataEngine: value, numberOfReplicas: replicas })
+    setFieldsValue({ numberOfReplicas: replicas, sharedBlock: false })
   }
   const handleAccessModeChange = (value) => updateDrVolumeConfigs('accessMode', value)
   const handleNodeTagRemove = (value) => {
@@ -158,6 +166,7 @@ const modal = ({
         accessMode: nextConfig.accessMode,
         backingImage: nextConfig.backingImage,
         encrypted: nextConfig.encrypted,
+        sharedBlock: nextConfig.sharedBlock,
         nodeSelector: nextConfig.nodeSelector,
         diskSelector: nextConfig.diskSelector,
       })
@@ -187,7 +196,6 @@ const modal = ({
   const alertMessage = <p>
     If there is another volume with the same name ({getFieldsValue().name}), the create DR volume will fail.
   </p>
-  const item = drVolumeConfigs[currentTab] || {}
   const activeKey = items[currentTab].volumeName
 
   return (
@@ -266,12 +274,13 @@ const modal = ({
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode,
-          })(<Select onSelect={handleAccessModeChange}>
+          })(<Select disabled={item.sharedBlock} onSelect={handleAccessModeChange}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={getFieldValue('dataEngine') || initialDataEngine} initialValue={item.sharedBlock} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,

@@ -181,6 +181,7 @@ class Volume extends React.Component {
       changeVolumeModalVisible,
       bulkChangeVolumeModalVisible,
       changeVolumeActivate,
+      changeVolumeSharedBlock,
       nodeTags,
       diskTags,
       tagsLoading,
@@ -572,7 +573,10 @@ class Volume extends React.Component {
       changeVolume(record) {
         dispatch({
           type: 'volume/showChangeVolumeModal',
-          payload: record.actions.activate,
+          payload: {
+            changeVolumeActivate: record.actions.activate,
+            changeVolumeSharedBlock: record.sharedBlock === true,
+          },
         })
       },
       onRowClick(record, flag) {
@@ -764,14 +768,10 @@ class Volume extends React.Component {
       items: selectedRows,
       visible: bulkAttachHostModalVisible,
       hosts,
-      onOk(selectedHost, disableFrontend, urls) {
+      onOk(requests) {
         dispatch({
           type: 'volume/bulkAttach',
-          payload: {
-            host: selectedHost,
-            disableFrontend,
-            urls,
-          },
+          payload: requests,
         })
       },
       onCancel() {
@@ -940,6 +940,7 @@ class Volume extends React.Component {
       item: {
         frontend: 'iscsi',
       },
+      sharedBlock: changeVolumeSharedBlock,
       hosts,
       visible: changeVolumeModalVisible,
       onOk(newVolume) {
@@ -1038,6 +1039,7 @@ class Volume extends React.Component {
         previousNamespace,
         pvNameDisabled,
         accessMode: selected && selected.accessMode ? selected.accessMode : 'rwo',
+        sharedBlock: selected?.sharedBlock === true,
         encrypted: selected && selected.encrypted,
       },
       selected: selected && selected.kubernetesStatus ? selected.kubernetesStatus : {},

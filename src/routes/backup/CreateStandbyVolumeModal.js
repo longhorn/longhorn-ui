@@ -4,6 +4,8 @@ import { Form, Input, InputNumber, Select, Spin, Checkbox, Alert, Popover } from
 import { ModalBlur } from '../../components'
 import { formatMib } from '../../utils/formatter'
 import { safeParseJSON } from '../../utils/formatDate'
+import { useSharedBlockFields } from '../volume/helper/sharedBlock'
+import SharedBlockItem from '../volume/components/SharedBlockItem'
 
 const FormItem = Form.Item
 const { Option } = Select
@@ -33,9 +35,13 @@ const modal = ({
     getFieldDecorator,
     validateFields,
     getFieldsValue,
+    getFieldValue,
     setFieldsValue
   },
 }) => {
+  const sharedBlock = getFieldValue('sharedBlock')
+  const handleSharedBlockChange = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode'])
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -66,7 +72,10 @@ const modal = ({
   // filter options based on selected data engine version
   const handleDataEngineChange = (engine) => {
     const replicas = parseInt(parsedReplicas[engine] ?? 3, 10)
-    setFieldsValue({ ...getFieldsValue(), numberOfReplicas: replicas }) // update number of replicas
+    if (sharedBlock) {
+      handleSharedBlockChange(false)
+    }
+    setFieldsValue({ ...getFieldsValue(), numberOfReplicas: replicas, sharedBlock: false }) // update number of replicas
   }
 
   return (
@@ -167,12 +176,13 @@ const modal = ({
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: 'rwo',
-          })(<Select>
+          })(<Select disabled={sharedBlock}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={getFieldValue('dataEngine') || initialDataEngine} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage,

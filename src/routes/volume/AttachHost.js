@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select, Checkbox, Alert, Row, Col } from 'antd'
 import { ModalBlur } from '../../components'
+import { canAttachMoreNodes, getAttachRequests, isAttachedTo } from './helper/sharedBlock'
 
 const FormItem = Form.Item
 const formItemLayout = {
@@ -42,7 +43,7 @@ const modal = ({
       const data = {
         ...getFieldsValue(),
       }
-      onOk(data.host, data.disableFrontend, items.map(item => item.actions.attach))
+      onOk(getAttachRequests(items, data.host, data.disableFrontend))
     })
   }
 
@@ -54,15 +55,23 @@ const modal = ({
     onOk: handleOk,
   }
 
-  const options = hosts.filter(host => host.conditions && host.conditions.Ready && host.conditions.Ready.status.toLowerCase() === 'true').map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
   if (!items || items.length === 0) {
     return null
   }
 
-  // RWX volumes can only be manually attached in maintenance mode.
+  const options = hosts.filter(host => host.conditions && host.conditions.Ready && host.conditions.Ready.status.toLowerCase() === 'true')
+    .filter(host => !items.every(item => isAttachedTo(item, host.id)))
+    .map(host => <Select.Option key={host.name} value={host.id}>{host.name}</Select.Option>)
+
+  // RWX volumes can only be manually attached in maintenance mode, except shared block volumes.
   const hasRwxVolume = items && items.some((item) => {
-    return item.accessMode === 'rwx' && !item.migratable
+    return item.accessMode === 'rwx' && !item.migratable && !item.sharedBlock
   })
+  // A shared block volume in maintenance mode can only be attached to one node.
+  const hasAttachedVolume = items.some(canAttachMoreNodes)
+  const maintenanceMessage = hasRwxVolume
+    ? 'RWX volumes can only be manually attached in maintenance mode.'
+    : 'Shared block volumes that are already attached cannot be attached to more nodes in maintenance mode.'
 
   return (
     <ModalBlur {...modalOpts}>
@@ -75,7 +84,7 @@ const modal = ({
                 message: 'Please select a host to attach',
               },
             ],
-          })(<Select style={{ width: '100%' }} size="large">
+          })(<Select style={{ width: '100%' }} size="large" notFoundContent="No more nodes to attach to">
             {options}
           </Select>)}
         </FormItem>
@@ -88,12 +97,12 @@ const modal = ({
                 required: false,
               },
             ],
-          })(<Checkbox disabled={hasRwxVolume}></Checkbox>)}
+          })(<Checkbox disabled={hasRwxVolume || hasAttachedVolume}></Checkbox>)}
         </FormItem>
       </Form>
-      { hasRwxVolume ? <Row>
+      { hasRwxVolume || hasAttachedVolume ? <Row>
         <Col span={18} style={{ marginLeft: 100 }}>
-          <Alert message="RWX volumes can only be manually attached in maintenance mode." type="warning" showIcon />
+          <Alert message={maintenanceMessage} type={hasRwxVolume ? 'warning' : 'info'} showIcon />
         </Col>
       </Row> : '' }
     </ModalBlur>

@@ -15,6 +15,7 @@ import style from './VolumeList.less'
 import { isVolumeImageUpgradable, isVolumeReplicaNotRedundancy, isVolumeRelicaLimited } from '../../utils/filter'
 import IconBackup from '../../components/Icon/IconBackup'
 import IconStandBackup from '../../components/Icon/IconStandBackup'
+import { getSharedBlockProgress, isUnreservedSharedAccess } from './helper/sharedBlock'
 
 function list({
   loading,
@@ -214,6 +215,7 @@ function list({
         let restoreProgress = statusProgress(record.restoreStatus, 'isRestoring')
         let rebuildProgress = statusProgress(record.rebuildStatus, 'isRebuilding')
         let isEncrypted = record && record.encrypted
+        const sharedBlockProgress = getSharedBlockProgress(record)
 
         return (
           <div className={classnames({ [text.toLowerCase()]: true, capitalize: true }, style.volumeState)} style={{ position: 'relative' }}>
@@ -235,7 +237,12 @@ function list({
                 <Icon style={{ fontSize: '16px', marginLeft: 10 }} className="color-warning" type="warning" />
               </Tooltip>
             )}
-            {needToWaitDone(text, record.replicas) ? <Icon type="loading" style={{ marginLeft: 5 }} /> : null}
+            {isUnreservedSharedAccess(record) && (
+              <Tooltip title={record.conditions.UnreservedSharedAccess.message} overlayStyle={{ maxWidth: 350 }}>
+                <Icon style={{ fontSize: '16px', marginLeft: 10 }} className="color-warning" type="warning" />
+              </Tooltip>
+            )}
+            {needToWaitDone(text, record.replicas) || sharedBlockProgress ? <Tooltip title={sharedBlockProgress}><Icon type="loading" style={{ marginLeft: 5 }} /></Tooltip> : null}
           </div>
         )
       },
@@ -485,7 +492,7 @@ function list({
       dataIndex: 'accessMode',
       key: 'accessMode',
       width: 200,
-      render: (text) => {
+      render: (text, record) => {
         const accessModeObject = {
           rwo: 'ReadWriteOnce',
           rwop: 'ReadWriteOncePod',
@@ -494,6 +501,7 @@ function list({
         return (
           <div>
             {accessModeObject[text] ? accessModeObject[text] : ''}
+            {record.sharedBlock ? <div>(Shared Block)</div> : null}
           </div>
         )
       },

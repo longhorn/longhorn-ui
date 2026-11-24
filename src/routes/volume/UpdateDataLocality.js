@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Select } from 'antd'
 import { ModalBlur } from '../../components'
+import { isDataLocalityDisabled } from './helper/sharedBlock'
 const FormItem = Form.Item
 const { Option } = Select
 
@@ -56,7 +57,7 @@ const modal = ({
           {getFieldDecorator('dataLocality', {
             initialValue: item.dataLocality,
           })(<Select>
-          { option.map(value => <Option key={value} value={value}>{value}</Option>) }
+          { option.map(value => <Option key={value} value={value} disabled={isDataLocalityDisabled(item.sharedBlock, value)}>{value}</Option>) }
           </Select>)}
         </FormItem>
       </Form>

@@ -15,6 +15,8 @@ import {
 } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
+import { isDataLocalityDisabled, useSharedBlockFields } from './helper/sharedBlock'
+import SharedBlockItem from './components/SharedBlockItem'
 import { formatSize } from '../../utils/formatter'
 const TabPane = Tabs.TabPane
 const FormItem = Form.Item
@@ -62,6 +64,7 @@ const modal = ({
     backupTargetName: i.backupTargetName || 'default',
     dataSource: i.name,
     encrypted: i.encrypted || false,
+    sharedBlock: i.sharedBlock || false,
     dataEngine: i.dataEngine || 'v1',
     nodeSelector: i.nodeSelector || [],
     diskSelector: i.diskSelector || [],
@@ -79,18 +82,19 @@ const modal = ({
     }))
     onOk(data)
   }
-  const updateVolumeConfig = (key, newValue) => {
+  const updateVolumeConfigs = (newValues) => {
     setVolumeConfigs(prev => {
       const newConfigs = [...prev]
       const current = newConfigs[tabIndex]
       const data = {
         ...current,
-        [key]: newValue,
+        ...newValues,
       }
       newConfigs.splice(tabIndex, 1, data)
       return newConfigs
     })
   }
+  const updateVolumeConfig = (key, newValue) => updateVolumeConfigs({ [key]: newValue })
 
   const handleApplyAll = () => {
     const currentConfig = {
@@ -99,6 +103,7 @@ const modal = ({
       dataLocality: getFieldValue('dataLocality'),
       accessMode: getFieldValue('accessMode'),
       encrypted: getFieldValue('encrypted') || false,
+      sharedBlock: getFieldValue('sharedBlock') || false,
       dataEngine: getFieldValue('dataEngine'),
       backupTargetName: getFieldValue('backupTargetName'),
       nodeSelector: getFieldValue('nodeSelector'),
@@ -120,6 +125,7 @@ const modal = ({
       updated.dataLocality = currentConfig.dataLocality
       updated.accessMode = currentConfig.accessMode
       updated.encrypted = currentConfig.encrypted
+      updated.sharedBlock = config.dataEngine === 'v2' && currentConfig.sharedBlock
       updated.backupTargetName = currentConfig.backupTargetName
       updated.nodeSelector = currentConfig.nodeSelector
       updated.diskSelector = currentConfig.diskSelector
@@ -162,6 +168,7 @@ const modal = ({
         accessMode: current.accessMode,
         backingImage: current.backingImage,
         encrypted: current.encrypted,
+        sharedBlock: current.sharedBlock,
         dataEngine: current.dataEngine,
         backupTargetName: current.backupTargetName,
         nodeSelector: current.nodeSelector,
@@ -190,6 +197,8 @@ const modal = ({
   const handleAccessModeChange = (value) => updateVolumeConfig('accessMode', value)
   const handleBackupTargetNameChange = (value) => updateVolumeConfig('backupTargetName', value)
   const handleEncryptedCheck = (e) => updateVolumeConfig('encrypted', e.target.checked)
+  const setSharedBlockFields = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode', 'frontend', 'dataLocality'], tabIndex)
+  const handleSharedBlockChange = (checked) => updateVolumeConfigs({ ...setSharedBlockFields(checked), sharedBlock: checked })
   const handleNodeTagRemove = (value) => {
     const oldNodeTags = volumeConfigs[tabIndex]?.nodeSelector
     const newNodeSelector = oldNodeTags?.filter(tag => tag !== value) || []
@@ -361,7 +370,7 @@ const modal = ({
                 message: 'Please select a frontend',
               },
             ],
-          })(<Select onSelect={handleFrontendChange}>
+          })(<Select disabled={item.sharedBlock} onSelect={handleFrontendChange}>
           { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
           </Select>)}
         </FormItem>
@@ -369,18 +378,19 @@ const modal = ({
           {getFieldDecorator('dataLocality', {
             initialValue: item.dataLocality || defaultDataLocalityValue,
           })(<Select onSelect={handleDataLocalityChange}>
-          { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
+          { defaultDataLocalityOption.map(value => <Option key={value} value={value} disabled={isDataLocalityDisabled(item.sharedBlock, value)}>{value}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: item.accessMode || 'rwo',
-          })(<Select onSelect={handleAccessModeChange}>
+          })(<Select disabled={item.sharedBlock} onSelect={handleAccessModeChange}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={item.dataEngine} initialValue={item.sharedBlock} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: item.backingImage || '',

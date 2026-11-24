@@ -157,6 +157,7 @@ function VolumeDetail({
     nameSpaceDisabled,
     changeVolumeModalKey,
     changeVolumeActivate,
+    changeVolumeSharedBlock,
     changeVolumeModalVisible,
     previousChecked,
     volumeCloneModalVisible,
@@ -423,7 +424,10 @@ function VolumeDetail({
     changeVolume(record) {
       dispatch({
         type: 'volume/showChangeVolumeModal',
-        payload: record.actions.activate,
+        payload: {
+          changeVolumeActivate: record.actions.activate,
+          changeVolumeSharedBlock: record.sharedBlock === true,
+        },
       })
     },
     showExpansionVolumeSizeModal(record) {
@@ -723,6 +727,7 @@ function VolumeDetail({
     item: {
       frontend: 'iscsi',
     },
+    sharedBlock: changeVolumeSharedBlock,
     hosts,
     visible: changeVolumeModalVisible,
     onOk(newVolume) {

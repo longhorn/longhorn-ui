@@ -11,6 +11,8 @@ import {
 } from 'antd'
 import { ModalBlur } from '../../components'
 import { frontends } from './helper/index'
+import { isDataLocalityDisabled, useSharedBlockFields } from './helper/sharedBlock'
+import SharedBlockItem from './components/SharedBlockItem'
 import { formatSize } from '../../utils/formatter'
 
 const FormItem = Form.Item
@@ -58,8 +60,12 @@ const modal = ({
     validateFields,
     getFieldsValue,
     getFieldValue,
+    setFieldsValue,
   },
 }) => {
+  const sharedBlock = getFieldValue('sharedBlock') ?? volume.sharedBlock
+  const handleSharedBlockChange = useSharedBlockFields({ getFieldsValue, setFieldsValue }, ['accessMode', 'frontend', 'dataLocality'])
+
   function handleOk() {
     validateFields((errors) => {
       if (errors) {
@@ -208,7 +214,7 @@ const modal = ({
                 message: 'Please select a frontend',
               },
             ],
-          })(<Select>
+          })(<Select disabled={sharedBlock}>
           { frontends.map(opt => <Option key={opt.value} value={opt.value}>{opt.label}</Option>) }
           </Select>)}
         </FormItem>
@@ -216,18 +222,19 @@ const modal = ({
           {getFieldDecorator('dataLocality', {
             initialValue: volume.dataLocality || defaultDataLocalityValue,
           })(<Select>
-          { defaultDataLocalityOption.map(value => <Option key={value} value={value}>{value}</Option>) }
+          { defaultDataLocalityOption.map(value => <Option key={value} value={value} disabled={isDataLocalityDisabled(sharedBlock, value)}>{value}</Option>) }
           </Select>)}
         </FormItem>
         <FormItem label="Access Mode" hasFeedback {...formItemLayout}>
           {getFieldDecorator('accessMode', {
             initialValue: volume.accessMode || 'rwo',
-          })(<Select>
+          })(<Select disabled={sharedBlock}>
             <Option key={'ReadWriteOnce'} value={'rwo'}>ReadWriteOnce</Option>
             <Option key={'ReadWriteOncePod'} value={'rwop'}>ReadWriteOncePod</Option>
             <Option key={'ReadWriteMany'} value={'rwx'}>ReadWriteMany</Option>
           </Select>)}
         </FormItem>
+        <SharedBlockItem getFieldDecorator={getFieldDecorator} dataEngine={volume.dataEngine} initialValue={volume.sharedBlock} onChange={handleSharedBlockChange} formItemLayout={formItemLayout} />
         <FormItem label="Backing Image" hasFeedback {...formItemLayout}>
           {getFieldDecorator('backingImage', {
             initialValue: volume.backingImage || '',

@@ -82,6 +82,8 @@ const modal = ({
       return ele.kubernetesStatus && !ele.kubernetesStatus.lastPVCRefAt
     })
   }
+  const allSharedBlock = selectedRows?.length > 0 && selectedRows.every(row => row.sharedBlock)
+
   return (
     <ModalBlur {...modalOpts}>
       <Form layout="horizontal">
@@ -111,7 +113,9 @@ const modal = ({
             </Tooltip>
           </div>)}
         </FormItem>
-        <FormItem label="File System" {...formItemLayout}>
+        {allSharedBlock ? <FormItem label="Volume Mode" {...formItemLayout}>
+          <Input disabled value="Block" />
+        </FormItem> : <FormItem label="File System" {...formItemLayout}>
           {getFieldDecorator('fsType', {
             initialValue: 'ext4',
           })(
@@ -120,7 +124,7 @@ const modal = ({
               <Radio value="xfs">XFS</Radio>
             </Radio.Group>,
           )}
-        </FormItem>
+        </FormItem>}
         <div style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
             <FormItem label="Create PVC" hasFeedback {...formItemLayout2}>
