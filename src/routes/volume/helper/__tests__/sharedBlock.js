@@ -129,6 +129,7 @@ describe('attaching', () => {
     expect(getAttachDisabledReason(maintenance())).toMatch(/maintenance mode/)
     expect(getAttachDisabledReason({ ...full(), state: 'detached' })).toBe('')
     expect(getAttachDisabledReason({ ...maintenance(), standby: true })).toBe('')
+    expect(getAttachDisabledReason(sharedBlockVolume({ disableFrontend: true, tickets: [other('n1', 'volume-clone-controller')], on: [controller('n1', '')] }))).toBe('')
     expect(getAttachDisabledReason(volumeOn('n1'))).toBe('')
     expect(getAttachDisabledReason(regularVolume({ state: 'attached' }))).toBe('')
   })
@@ -215,6 +216,7 @@ describe('detaching', () => {
       ['info', 'vol is detached from n1.'],
     ])
     expect(textsOf([volumeOn('n1'), regularVolume()], false)).toStrictEqual([['info', 'vol is detached from n1.']])
+    expect(textsOf([sharedBlockVolume({ tickets: [ui('n4', { parameters: { disableFrontend: 'true' } })] }), regularVolume()], false)).toStrictEqual([])
     expect(textsOf([sharedBlockVolume({ tickets: [ui('n3')], on: ['n1', 'n3', 'n4'] }), regularVolume()], false)).toStrictEqual([['info', 'vol is detached from n1, n3.']])
     expect(textsOf([sharedBlockVolume({ tickets: [ui('n1'), csi('n1')], on: ['n1'] }), regularVolume()], false)).toStrictEqual([['info', 'vol stays available on n1.']])
   })

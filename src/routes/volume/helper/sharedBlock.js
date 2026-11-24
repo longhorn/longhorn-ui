@@ -105,9 +105,11 @@ export function getAttachDisabledReason(volume) {
   if (volume?.sharedBlock !== true || volume.standby || volume.state !== 'attached' || canAttachMoreNodes(volume)) {
     return ''
   }
-  return isLive(volume)
-    ? `A shared block volume can be attached to up to ${SHARED_BLOCK_MAX_NODES} nodes`
-    : 'A shared block volume in maintenance mode can only be attached to one node'
+  if (isLive(volume)) {
+    return `A shared block volume can be attached to up to ${SHARED_BLOCK_MAX_NODES} nodes`
+  }
+  // Longhorn also attaches a volume without its frontend, to clone it for example.
+  return getRequestedHosts(volume).length > 0 ? 'A shared block volume in maintenance mode can only be attached to one node' : ''
 }
 
 export function isAttachedTo(volume, host) {
@@ -191,7 +193,7 @@ export function getDetachNotices(volumes, forceDetach, chosenHosts = []) {
     if (!single) {
       const lost = getSharedBlockNodes(volume).filter(({ host, status }) => status !== 'detaching' && !after.includes(host)).map(({ host }) => host)
       const parts = [['is detached from', lost], ['stays available on', after]].filter(([, list]) => list.length > 0)
-      return [{ type: 'info', text: `${name} ${parts.map(([text, list]) => `${text} ${list.join(', ')}`).join(' and ')}.` }]
+      return parts.length === 0 ? [] : [{ type: 'info', text: `${name} ${parts.map(([text, list]) => `${text} ${list.join(', ')}`).join(' and ')}.` }]
     }
     if (hosts.length === 0) {
       return []
